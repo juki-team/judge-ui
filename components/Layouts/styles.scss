@@ -1,0 +1,21 @@
+@import "@bit/juki-team.juki.base-ui/components/styles/abstracts/index";
+
+.title-layout {
+  background-color: var(--t-color-white);
+  height: 128px;
+  
+  > div {
+    width: var(--screen-content-width);
+  }
+}
+
+.content-layout {
+  height: calc(100vh - 64px - 128px);
+  padding: var(--pad-m) 0;
+  box-sizing: border-box;
+  
+  > div {
+    height: 100%;
+    width: var(--screen-content-width);
+  }
+}

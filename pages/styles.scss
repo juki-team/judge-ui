@@ -1,0 +1,14 @@
+@import "@bit/juki-team.juki.base-ui/components/styles/base/_index.scss";
+@import "components/NavigationBar/styles";
+@import "components/Layouts/styles";
+
+body {
+  margin: 0;
+  
+  background-color: var(--t-color-white-2);
+  
+  .jk-app {
+    width: 100vw;
+    height: 100vh;
+  }
+}
