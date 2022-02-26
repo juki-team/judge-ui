@@ -125,9 +125,9 @@ function Problems() {
   
   return (
     <div>
-      <TitleLayout>
+      {/* <TitleLayout>
         <h3>Problems</h3>
-      </TitleLayout>
+      </TitleLayout> */}
       <ContentLayout>
         <div className="main-content">
           <DataViewer<ProblemsTable>

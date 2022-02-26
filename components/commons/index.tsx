@@ -42,6 +42,7 @@ export {
   UpIcon,
   PlusIcon,
   Field,
+  DateField,
 } from '@bit/juki-team.juki.base-ui';
 export type { DataViewerHeadersType, FilterSelectOfflineType } from '@bit/juki-team.juki.base-ui';
 
