@@ -1,5 +1,9 @@
-import useSWR from 'swr';
+import { useRouter as useNextRouter } from 'next/router';
+import { useCallback, useMemo } from 'react';
+import useSWR, { useSWRConfig } from 'swr';
 import { DELETE, GET, POST, PUT } from '../helpers/services';
+import { JUDGE_API_V1 } from '../services/judge';
+import { Status } from '../types';
 
 export {
   useOutsideAlerter, useNotification,
@@ -39,4 +43,33 @@ export const useFetcher = (url: string, options?: {
     error,
     isLoading: !error && !data,
   };
+};
+
+export const useRouter = () => {
+  const { query, ...rest } = useNextRouter();
+  
+  const queryObject = useMemo(() => {
+    const searchParamsObject = {};
+    Object.entries(query).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        searchParamsObject[key] = [value];
+      } else {
+        searchParamsObject[key] = value;
+      }
+    });
+    return searchParamsObject;
+  }, [query]);
+  
+  return { query, queryObject, ...rest };
+};
+
+export const useRequestLoader = (path: string) => {
+  
+  const { mutate } = useSWRConfig();
+  
+  return useCallback(async ({ setLoading }) => {
+    setLoading([1, Status.LOADING]);
+    await mutate(path);
+    setLoading([1, Status.SUCCESS]);
+  }, []);
 };

@@ -1,27 +1,26 @@
-import { useRouter } from 'next/router';
-import { useCallback, useMemo } from 'react';
-import { useSWRConfig } from 'swr';
+import { useMemo } from 'react';
 import {
   ButtonLoader,
   ContentLayout,
   DataViewer,
   DataViewerHeadersType,
   Field,
+  FilterSelectOfflineType,
   PlusIcon,
   T,
   TextField,
   TextHeadCell,
   TitleLayout,
 } from '../components';
-import { ROUTES } from '../config/constants';
-import { can } from '../helpers';
-import { useFetcher } from '../hooks';
+import { PROBLEM_STATUS, ROUTES } from '../config/constants';
+import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from '../helpers';
+import { useFetcher, useRequestLoader, useRouter } from '../hooks';
 import { JUDGE_API_V1 } from '../services/judge';
 import { useUserState } from '../store';
-import { ProblemStatus, ProblemTab, Status } from '../types';
+import { ProblemStatus, ProblemTab } from '../types';
 
 type ProblemsTable = {
-  id: string,
+  id: number,
   name: string,
   tags: string[],
   status: ProblemStatus,
@@ -30,6 +29,7 @@ type ProblemsTable = {
 function Problems() {
   
   const { data: response } = useFetcher(JUDGE_API_V1.PROBLEM.PROBLEM());
+  const user = useUserState();
   
   const tags = new Set<string>();
   (response?.list || []).forEach(problem => {
@@ -40,29 +40,32 @@ function Problems() {
   
   const columns: DataViewerHeadersType<ProblemsTable>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T>id</T>} />,
+      head: <TextHeadCell text={<T className="text-uppercase">id</T>} />,
       index: 'id',
       field: ({ record: { id } }) => (
-        <TextField text={id} label={<T>id</T>} />
+        <TextField text={id} label={<T className="text-uppercase">id</T>} />
       ),
       sort: { compareFn: () => (rowA, rowB) => +rowA.id - +rowB.id },
-      filter: { type: 'text' },
+      filter: {
+        type: 'text-auto',
+        getValue: ({ record: { id } }) => '' + id,
+      },
       cardPosition: 'topLeft',
       minWidth: 100,
     },
     {
-      head: <TextHeadCell text={<T>problem name</T>} />,
+      head: <TextHeadCell text={<T className="text-uppercase">problem name</T>} />,
       index: 'name',
       field: ({ record: { name } }) => (
-        <TextField text={name} label={<T>problem name</T>} />
+        <TextField text={name} label={<T className="text-uppercase">problem name</T>} />
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
-      filter: { type: 'text' },
+      filter: { type: 'text-auto' },
       cardPosition: 'center',
       minWidth: 300,
     },
     {
-      head: <TextHeadCell text={<T>tags</T>} />,
+      head: <TextHeadCell text={<T className="text-uppercase">tags</T>} />,
       index: 'tags',
       field: ({ record: { tags } }) => (
         <Field className="jk-row pad">
@@ -70,28 +73,46 @@ function Problems() {
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.tags.length - rowB.tags.length },
-      filter: { type: 'select-auto', getValue: () => 'test', options: allTags.map(tag => ({ value: tag, label: tag })) },
+      filter: {
+        type: 'select',
+        options: allTags.map(tag => ({ value: tag, label: tag })),
+        callbackFn: ({ selectedOptions }) => ({ tags }) => tags.some(tag => selectedOptions.some(({ value }) => value === tag)),
+      } as FilterSelectOfflineType<ProblemsTable>,
       cardPosition: 'bottom',
       minWidth: 200,
     },
-  ], [allTags]);
+    ...(can.viewStatusProblem(user) ? [
+      {
+        head: <TextHeadCell text={<T className="text-uppercase">visibility</T>} />,
+        index: 'status',
+        field: ({ record: { status } }) => (
+          <TextField
+            text={<T className="text-capitalize">{PROBLEM_STATUS[status].print}</T>}
+            label={<T className="text-uppercase">visibility</T>}
+          />
+        ),
+        sort: { compareFn: () => (rowA, rowB) => rowB.status.localeCompare(rowA.status) },
+        filter: {
+          type: 'select-auto',
+          options: ([
+            ProblemStatus.ARCHIVED,
+            ProblemStatus.RESERVED,
+            ProblemStatus.PRIVATE,
+            ProblemStatus.PUBLIC,
+          ] as ProblemStatus[]).map(status => ({
+            value: status,
+            label: <T className="text-capitalize">{PROBLEM_STATUS[status].print}</T>,
+          })),
+        },
+        cardPosition: 'topRight',
+        minWidth: 200,
+      } as DataViewerHeadersType<ProblemsTable>,
+    ] : []),
+  ], [user, allTags]);
   
-  const { query, push } = useRouter();
+  const { queryObject, push } = useRouter();
   
-  const searchParamsObject = useMemo(() => {
-    const searchParamsObject = {};
-    Object.entries(query).forEach(([key, value]) => {
-      if (typeof value === 'string') {
-        searchParamsObject[key] = [value];
-      } else {
-        searchParamsObject[key] = value;
-      }
-    });
-    return searchParamsObject;
-  }, [query]);
-  
-  const { mutate } = useSWRConfig();
-  const user = useUserState();
+  const request = useRequestLoader(JUDGE_API_V1.PROBLEM.PROBLEM());
   
   const data: ProblemsTable[] = (response?.list || []).map(user => (
     {
@@ -101,19 +122,6 @@ function Problems() {
       status: user.status,
     } as ProblemsTable
   ));
-  
-  const request = useCallback(async ({ sort, filter, setLoading }) => {
-    setLoading([1, Status.LOADING]);
-    await mutate(JUDGE_API_V1.PROBLEM.PROBLEM());
-    setLoading([1, Status.SUCCESS]);
-  }, []);
-  
-  const buttonLoaderLink = (route) => async setLoader => {
-    const now = new Date().getTime();
-    setLoader([now, Status.LOADING]);
-    await push(route);
-    setLoader([now, Status.SUCCESS]);
-  };
   
   return (
     <div>
@@ -125,7 +133,7 @@ function Problems() {
           <DataViewer<ProblemsTable>
             headers={columns}
             data={data}
-            rows={{ height: 52 }}
+            rows={{ height: 64 }}
             request={request}
             name="users"
             extraButtons={() => (
@@ -134,15 +142,15 @@ function Problems() {
                   <ButtonLoader
                     size="small"
                     icon={<PlusIcon />}
-                    onClick={buttonLoaderLink(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT))}
+                    onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
                   >
                     <T>create</T>
                   </ButtonLoader>
                 )}
               </div>
             )}
-            searchParamsObject={searchParamsObject}
-            setSearchParamsObject={(params) => push({ query: params })}
+            searchParamsObject={queryObject}
+            setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
           />
         </div>
       </ContentLayout>

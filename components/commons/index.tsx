@@ -43,7 +43,7 @@ export {
   PlusIcon,
   Field,
 } from '@bit/juki-team.juki.base-ui';
-export type { DataViewerHeadersType } from '@bit/juki-team.juki.base-ui';
+export type { DataViewerHeadersType, FilterSelectOfflineType } from '@bit/juki-team.juki.base-ui';
 
 // for MdMathEditor:
 export { classNames, downloadBlobAsFile, useOutsideAlerter } from '@bit/juki-team.juki.base-ui';
