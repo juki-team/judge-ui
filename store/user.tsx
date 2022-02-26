@@ -21,10 +21,10 @@ export const UserContext = createContext<{ user: UserState, setUser: Dispatch<Se
 
 const getUserState = (object: any): UserState => {
   const myPermissions = {
-    [ScopeData.USER]: object?.settings?.find?.(s => s?.key === 'USER')?.value || DEFAULT_PERMISSIONS.USER,
-    [ScopeData.CONTEST]: object?.settings?.find?.(s => s?.key === 'CONTEST')?.value || DEFAULT_PERMISSIONS.CONTEST,
-    [ScopeData.PROBLEM]: object?.settings?.find?.(s => s?.key === 'PROBLEM')?.value || DEFAULT_PERMISSIONS.PROBLEM,
-    [ScopeData.ATTEMPT]: object?.settings?.find?.(s => s?.key === 'ATTEMPT')?.value || DEFAULT_PERMISSIONS.ATTEMPT,
+    [ScopeData.USER]: object?.permissions?.find?.(s => s?.key === 'USER')?.value || DEFAULT_PERMISSIONS.USER,
+    [ScopeData.CONTEST]: object?.permissions?.find?.(s => s?.key === 'CONTEST')?.value || DEFAULT_PERMISSIONS.CONTEST,
+    [ScopeData.PROBLEM]: object?.permissions?.find?.(s => s?.key === 'PROBLEM')?.value || DEFAULT_PERMISSIONS.PROBLEM,
+    [ScopeData.ATTEMPT]: object?.permissions?.find?.(s => s?.key === 'ATTEMPT')?.value || DEFAULT_PERMISSIONS.ATTEMPT,
   };
   
   return {
@@ -53,7 +53,6 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   const { i18n } = useTranslation();
   const { push, locale, pathname, asPath, query } = useRouter();
   const { data, error, isLoading } = useFetcher(JUDGE_API_V1.ACCOUNT.PING());
-  console.log({ i18n, data, error, locale, isLoading });
   
   const [user, setUser] = useState<UserState>(USER_GUEST);
   
@@ -122,9 +121,7 @@ export const useUserDispatch = () => {
         addNotification,
         async (result) => {
           addSuccessNotification(<T className="sentence-case">welcome</T>);
-          console.log('success push start', query);
           await push({ query: addSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
-          console.log('success push end', query);
           setUser(getUserState(result?.object));
         },
         setLoader,

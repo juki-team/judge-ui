@@ -1,4 +1,4 @@
-import { AdminTab, ContestTab, ContestTimeStatus, ProblemTab, ProfileTab } from '../../types';
+import { AdminTab, ContestTab, ProblemTab, ProfileTab } from '../../types';
 
 export enum QueryParam {
   OPEN_DIALOG = 'openDialog',
@@ -79,8 +79,8 @@ export const ROUTES = {
     PAGE: '/about',
   },
   CONTESTS: {
-    LIST_PAGE(type: ContestTimeStatus | typeof _TYPE) {
-      return ['', ROUTES.PARAMS.CONTESTS, type].join('/');
+    LIST() {
+      return ['', ROUTES.PARAMS.CONTESTS].join('/');
     },
     VIEW(key: string, tab: ContestTab | typeof _TAB, subTab?: string, subSubTab?: ProblemTab | typeof _SUB_SUB_TAB) {
       return [
@@ -104,7 +104,7 @@ export const ROUTES = {
     },
   },
   PROBLEMS: {
-    LIST_PAGE() {
+    LIST() {
       return '/' + ROUTES.PARAMS.PROBLEMS;
     },
     CREATE(tab: ProblemTab | typeof _TAB) {

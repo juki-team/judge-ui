@@ -13,10 +13,10 @@ import {
   SettingIcon,
   T,
 } from '..';
-import { OpenDialog, QueryParam } from '../../config/constants';
+import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
 import { isOrHas, removeSubQuery } from '../../helpers';
 import { useUserDispatch, useUserState } from '../../store';
-import { ButtonLoaderStateType, Language, ProfileSettingOptions, Status, Theme } from '../../types';
+import { AdminTab, ButtonLoaderStateType, Language, ProfileSettingOptions, Status, Theme } from '../../types';
 import { Login } from './Login';
 import { LoginUser } from './LoginUser';
 import { SettingsPopover } from './SettingsPopover';
@@ -29,9 +29,9 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const [loader, setLoader] = useState<ButtonLoaderStateType>([0, Status.NONE]);
   
   const menu = [
-    { label: 'contests', selected: ('/' + pathname).includes('//contest'), onClick: () => push('/contests') },
-    { label: 'problems', selected: ('/' + pathname).includes('//problem'), onClick: () => push('/problems') },
-    { label: 'admin', selected: ('/' + pathname).includes('//admin'), onClick: () => push('/admin') },
+    { label: 'contests', selected: ('/' + pathname).includes('//contest'), onClick: () => push(ROUTES.CONTESTS.LIST()) },
+    { label: 'problems', selected: ('/' + pathname).includes('//problem'), onClick: () => push(ROUTES.PROBLEMS.LIST()) },
+    { label: 'admin', selected: ('/' + pathname).includes('//admin'), onClick: () => push(ROUTES.ADMIN.PAGE(AdminTab.USERS)) },
   ];
   
   const user = useUserState();

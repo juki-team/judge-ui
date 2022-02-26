@@ -12,3 +12,14 @@ body {
     height: 100vh;
   }
 }
+
+.main-content {
+  padding: var(--pad-xt) 0 var(--pad-m) 0;
+  height: 100%;
+  box-sizing: border-box;
+  
+  .extra-buttons {
+    margin-left: var(--pad-t);
+  }
+}
+

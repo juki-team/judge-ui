@@ -7,7 +7,6 @@ import {
   ScopeData,
   TeamRole,
   Theme,
-  UserInterface,
   UserRole,
   UserStatus,
 } from '../../types';

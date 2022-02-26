@@ -6,15 +6,19 @@ import {
   ContentLayout,
   DataViewer,
   DataViewerHeadersType,
-  ReloadIcon,
+  Field,
+  PlusIcon,
   T,
   TextField,
   TextHeadCell,
   TitleLayout,
 } from '../components';
+import { ROUTES } from '../config/constants';
+import { can } from '../helpers';
 import { useFetcher } from '../hooks';
 import { JUDGE_API_V1 } from '../services/judge';
-import { ProblemStatus, Status } from '../types';
+import { useUserState } from '../store';
+import { ProblemStatus, ProblemTab, Status } from '../types';
 
 type ProblemsTable = {
   id: string,
@@ -25,6 +29,15 @@ type ProblemsTable = {
 
 function Problems() {
   
+  const { data: response } = useFetcher(JUDGE_API_V1.PROBLEM.PROBLEM());
+  
+  const tags = new Set<string>();
+  (response?.list || []).forEach(problem => {
+    problem.tags.forEach(tag => tags.add(tag));
+  });
+  
+  const allTags: string[] = Array.from(tags);
+  
   const columns: DataViewerHeadersType<ProblemsTable>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T>id</T>} />,
@@ -32,7 +45,7 @@ function Problems() {
       field: ({ record: { id } }) => (
         <TextField text={id} label={<T>id</T>} />
       ),
-      sort: { compareFn: () => (rowA, rowB) => +rowA.id - rowB.id },
+      sort: { compareFn: () => (rowA, rowB) => +rowA.id - +rowB.id },
       filter: { type: 'text' },
       cardPosition: 'topLeft',
       minWidth: 100,
@@ -52,14 +65,16 @@ function Problems() {
       head: <TextHeadCell text={<T>tags</T>} />,
       index: 'tags',
       field: ({ record: { tags } }) => (
-        <TextField text={tags} label={<T>tags</T>} />
+        <Field className="jk-row pad">
+          {tags.map(tag => <div className="jk-tag">{tag}</div>)}
+        </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.tags.length - rowB.tags.length },
-      filter: { type: 'text' },
+      filter: { type: 'select-auto', getValue: () => 'test', options: allTags.map(tag => ({ value: tag, label: tag })) },
       cardPosition: 'bottom',
       minWidth: 200,
     },
-  ], []);
+  ], [allTags]);
   
   const { query, push } = useRouter();
   
@@ -75,11 +90,8 @@ function Problems() {
     return searchParamsObject;
   }, [query]);
   
-  console.log({ query, searchParamsObject });
-  
-  const { data: response, error, isLoading } = useFetcher(JUDGE_API_V1.PROBLEM.PROBLEM());
   const { mutate } = useSWRConfig();
-  console.log({ response, error, isLoading });
+  const user = useUserState();
   
   const data: ProblemsTable[] = (response?.list || []).map(user => (
     {
@@ -91,11 +103,17 @@ function Problems() {
   ));
   
   const request = useCallback(async ({ sort, filter, setLoading }) => {
-    console.log('request', { sort, filter });
     setLoading([1, Status.LOADING]);
     await mutate(JUDGE_API_V1.PROBLEM.PROBLEM());
     setLoading([1, Status.SUCCESS]);
   }, []);
+  
+  const buttonLoaderLink = (route) => async setLoader => {
+    const now = new Date().getTime();
+    setLoader([now, Status.LOADING]);
+    await push(route);
+    setLoader([now, Status.SUCCESS]);
+  };
   
   return (
     <div>
@@ -103,23 +121,30 @@ function Problems() {
         <h3>Problems</h3>
       </TitleLayout>
       <ContentLayout>
-        <DataViewer<ProblemsTable>
-          headers={columns}
-          data={data}
-          rows={{ height: 52 }}
-          request={request}
-          name="users"
-          extraButtons={() => (
-            <ButtonLoader size="small" type="text" icon={<ReloadIcon />} onClick={() => console.log('CLICK')}>
-              <T>download</T>
-            </ButtonLoader>
-          )}
-          searchParamsObject={searchParamsObject}
-          setSearchParamsObject={(params) => {
-            console.log({ params });
-            push({ query: params });
-          }}
-        />
+        <div className="main-content">
+          <DataViewer<ProblemsTable>
+            headers={columns}
+            data={data}
+            rows={{ height: 52 }}
+            request={request}
+            name="users"
+            extraButtons={() => (
+              <div className="extra-buttons">
+                {can.createProblem(user) && (
+                  <ButtonLoader
+                    size="small"
+                    icon={<PlusIcon />}
+                    onClick={buttonLoaderLink(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT))}
+                  >
+                    <T>create</T>
+                  </ButtonLoader>
+                )}
+              </div>
+            )}
+            searchParamsObject={searchParamsObject}
+            setSearchParamsObject={(params) => push({ query: params })}
+          />
+        </div>
       </ContentLayout>
     </div>
   );

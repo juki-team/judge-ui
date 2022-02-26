@@ -40,6 +40,8 @@ export {
   TextField,
   Tooltip,
   UpIcon,
+  PlusIcon,
+  Field,
 } from '@bit/juki-team.juki.base-ui';
 export type { DataViewerHeadersType } from '@bit/juki-team.juki.base-ui';
 
