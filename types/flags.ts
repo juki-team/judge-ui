@@ -1,4 +1,4 @@
-import { NotificationType } from '~/types';
+import { NotificationType } from '../types';
 
 export interface FlagsState {
   openLoginModal: boolean,
@@ -37,14 +37,3 @@ export interface FlagsStateOptions {
     duration?: number,
   } | null
 }
-
-export enum FlagsActions {
-  UPDATE_FLAGS = 'UPDATE_FLAGS',
-}
-
-interface UpdateFlagsType {
-  type: FlagsActions.UPDATE_FLAGS,
-  flags: FlagsStateOptions
-}
-
-export type FlagActionTypes = UpdateFlagsType;

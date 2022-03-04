@@ -1,9 +1,8 @@
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { DELETE, GET, POST, PUT } from '../helpers/services';
-import { JUDGE_API_V1 } from '../services/judge';
-import { Status } from '../types';
+import { clean, DELETE, GET, POST, PUT } from '../helpers/services';
+import { ContentResponseType, ContentsResponseType, Status } from '../types';
 
 export {
   useOutsideAlerter, useNotification,
@@ -22,10 +21,10 @@ const fetcher = (url: string, method?: typeof POST | typeof PUT | typeof DELETE 
     credentials: 'include',
     ...(body ? { body } : {}),
     ...(signal ? { signal } : {}),
-  }).then((res) => res.json());
+  }).then((res) => res.text());
 };
 
-export const useFetcher = (url: string, options?: {
+export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url: string, options?: {
   revalidateIfStale?: boolean,
   revalidateOnFocus?: boolean,
   revalidateOnReconnect?: boolean,
@@ -38,11 +37,14 @@ export const useFetcher = (url: string, options?: {
   } = options || {};
   
   const { data, error } = useSWR(url, fetcher, { revalidateIfStale, revalidateOnFocus, revalidateOnReconnect });
-  return {
-    data,
+  
+  console.log('useFetcher', { data, error });
+  
+  return useMemo(() => ({
+    data: clean<T>(data),
     error,
-    isLoading: !error && !data,
-  };
+    isLoading: error === undefined && data === undefined,
+  }), [data, error]);
 };
 
 export const useRouter = () => {

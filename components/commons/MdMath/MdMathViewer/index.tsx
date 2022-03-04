@@ -7,7 +7,7 @@ import rehypeKatex from 'rehype-katex';
 import gfm from 'remark-gfm';
 import RemarkMathPlugin from 'remark-math';
 import { CodeViewer, ExternalLinkIcon } from '../../';
-import { ProgrammingLanguage } from '../../../';
+import { ProgrammingLanguage } from '../../../../types';
 import { getCommands, hxRender, imgAlignStyle, textAlignStyle } from './utils';
 
 const hx = ({ children, level }: { children: ReactNode & ReactNode[], level: number }) => {

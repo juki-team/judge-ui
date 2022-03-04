@@ -1,9 +1,4 @@
-import { Judge } from './judge';
-
-export enum ContestStatus {
-  ACTIVE = 'ACTIVE',
-  ARCHIVED = 'ARCHIVED'
-}
+import { Judge, ProblemVerdict, ProgrammingLanguage } from '../types';
 
 export type MetaProblemSearcher = {
   name: string,
@@ -43,4 +38,14 @@ export enum ContestSettingsParams {
   FROZEN = 'frozen',
   MANUAL_JUDGE = 'manualJudge',
   NUMBER_MANUAL_JUDGES = 'numberManualJudges'
+}
+
+export interface Submission {
+  answer: ProblemVerdict,
+  submitId: string,
+  when: number,
+  timeUsed: number,
+  memoryUsed: number,
+  language: ProgrammingLanguage,
+  submitPoints: number,
 }

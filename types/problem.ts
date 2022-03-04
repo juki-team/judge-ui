@@ -1,5 +1,4 @@
-import { ProblemMode, ProblemStatus, ProblemType, ProgrammingLanguage } from '@bit/juki-team.juki.commons';
-import { Judge, PagedArray } from '~/types';
+import { Judge, PagedArray, ProblemMode, ProblemStatus, ProblemType, ProgrammingLanguage } from '../types';
 import { Submission } from './contest';
 
 export interface TestSampleType {
@@ -69,25 +68,3 @@ export interface ProblemMetaState {
   tags: Array<string>,
   successRate: number
 }
-
-export enum ProblemActions {
-  UPDATE_PROBLEMS = 'UPDATE_PROBLEMS'
-}
-
-interface UpdateProblemsType {
-  type: ProblemActions.UPDATE_PROBLEMS,
-  problems: Array<ProblemState>
-}
-
-export type ProblemActionTypes = UpdateProblemsType;
-
-export enum ProblemsListActions {
-  REPLACE_PROBLEMS_LIST = 'REPLACE_PROBLEMS_LIST'
-}
-
-interface ReplaceProblemsListType {
-  type: ProblemsListActions.REPLACE_PROBLEMS_LIST,
-  problems: Array<string>
-}
-
-export type ProblemsListActionTypes = ReplaceProblemsListType;

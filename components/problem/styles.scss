@@ -1,0 +1,67 @@
+@import "@bit/juki-team.juki.base-ui/components/styles/abstracts/index";
+
+.problem-info {
+  position: sticky !important;
+  top: 0;
+}
+
+.groups-popover {
+  width: 150px;
+}
+
+.problem-info.horizontal {
+  padding: 0;
+  
+  .label {
+    font-weight: var(--weight-semi-bold);
+    line-height: 14px;
+  }
+  
+  > div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    
+    > span {
+      > span:nth-child(2) {
+        display: none;
+      }
+    }
+  }
+}
+
+.problem-content {
+  .points {
+    padding-left: var(--pad-m);
+  }
+  
+  > div:first-child {
+    flex: 3;
+  }
+  
+  > div:last-child {
+    flex: 1;
+  }
+}
+
+.sample-text-content {
+  width: calc(100% - var(--pad-xh));
+  padding: var(--pad-xt);
+  border: 1px solid var(--t-color-shadow);
+  
+  > span {
+    background-color: var(--t-color-shadow-lightest) !important;
+    white-space: pre;
+    font-family: monospace;
+  }
+}
+
+.problem-samples-boxa {
+  .problem-sample-box {
+    .problem-sample-actions-box {
+      width: var(--pad-xl);
+      flex-direction: column;
+    }
+  }
+}

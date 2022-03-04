@@ -10,14 +10,13 @@ import {
   T,
   TextField,
   TextHeadCell,
-  TitleLayout,
 } from '../components';
 import { PROBLEM_STATUS, ROUTES } from '../config/constants';
 import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from '../helpers';
 import { useFetcher, useRequestLoader, useRouter } from '../hooks';
 import { JUDGE_API_V1 } from '../services/judge';
 import { useUserState } from '../store';
-import { ProblemStatus, ProblemTab } from '../types';
+import { ContentsResponseType, ProblemStatus, ProblemTab } from '../types';
 
 type ProblemsTable = {
   id: number,
@@ -28,11 +27,11 @@ type ProblemsTable = {
 
 function Problems() {
   
-  const { data: response } = useFetcher(JUDGE_API_V1.PROBLEM.PROBLEM());
+  const { data: response } = useFetcher<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM());
   const user = useUserState();
   
   const tags = new Set<string>();
-  (response?.list || []).forEach(problem => {
+  (response.success ? response.contents : []).forEach(problem => {
     problem.tags.forEach(tag => tags.add(tag));
   });
   
@@ -42,8 +41,10 @@ function Problems() {
     {
       head: <TextHeadCell text={<T className="text-uppercase">id</T>} />,
       index: 'id',
-      field: ({ record: { id } }) => (
-        <TextField text={id} label={<T className="text-uppercase">id</T>} />
+      field: ({ record: { id }, isCard }) => (
+        <Field className="jk-row jk-link text-semi-bold" onClick={() => push(ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT))}>
+          {id}
+        </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => +rowA.id - +rowB.id },
       filter: {
@@ -56,8 +57,10 @@ function Problems() {
     {
       head: <TextHeadCell text={<T className="text-uppercase">problem name</T>} />,
       index: 'name',
-      field: ({ record: { name } }) => (
-        <TextField text={name} label={<T className="text-uppercase">problem name</T>} />
+      field: ({ record: { id, name } }) => (
+        <Field className="jk-row jk-link text-semi-bold" onClick={() => push(ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT))}>
+          {name}
+        </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
       filter: { type: 'text-auto' },
@@ -79,7 +82,7 @@ function Problems() {
         callbackFn: ({ selectedOptions }) => ({ tags }) => tags.some(tag => selectedOptions.some(({ value }) => value === tag)),
       } as FilterSelectOfflineType<ProblemsTable>,
       cardPosition: 'bottom',
-      minWidth: 200,
+      minWidth: 400,
     },
     ...(can.viewStatusProblem(user) ? [
       {
@@ -114,7 +117,7 @@ function Problems() {
   
   const request = useRequestLoader(JUDGE_API_V1.PROBLEM.PROBLEM());
   
-  const data: ProblemsTable[] = (response?.list || []).map(user => (
+  const data: ProblemsTable[] = (response.success ? response.contents : []).map(user => (
     {
       id: user.id,
       name: user.name,
@@ -126,8 +129,8 @@ function Problems() {
   return (
     <div>
       {/* <TitleLayout>
-        <h3>Problems</h3>
-      </TitleLayout> */}
+       <h3>Problems</h3>
+       </TitleLayout> */}
       <ContentLayout>
         <div className="main-content">
           <DataViewer<ProblemsTable>

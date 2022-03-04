@@ -1,48 +1,27 @@
 import { useMemo } from 'react';
-import {
-  ContentLayout,
-  DataViewer,
-  DataViewerHeadersType,
-  Field,
-  T,
-  TextField,
-  TextHeadCell,
-  TitleLayout,
-  DateField,
-} from '../components';
-import { contestStatusCalculation } from '../helpers';
+import { ContentLayout, DataViewer, DataViewerHeadersType, DateField, Field, T, TextField, TextHeadCell } from '../components';
+import { contestStatusCalculation, searchParamsObjectTypeToQuery } from '../helpers';
 import { useFetcher, useRequestLoader, useRouter } from '../hooks';
 import { JUDGE_API_V1 } from '../services/judge';
-import { ContestStatus } from '../types';
+import { ContentsResponseType } from '../types';
 
 type SettingsOptions = {
   start: Date,
   languages: [],
   frozen: string,
 }
-type TimingOptions = {
-  duration: Date,
-}
+
 type ContestTable = {
   id: string,
   name: string,
-  tags: string[],
-  status: ContestStatus,
   settings: SettingsOptions,
-  timing: TimingOptions,
   totalRegistered: number,
   stateContest: string,
 }
-function Contests() {
 
-  const { data: response } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST());
+function Contests() {
   
-  const tags = new Set<string>();
-  (response?.list || []).forEach(problem => {
-    problem.tags.forEach(tag => tags.add(tag));
-  });
-  
-  const allTags: string[] = Array.from(tags);
+  const { data: response } = useFetcher<ContentsResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST());
   
   const columns: DataViewerHeadersType<ContestTable>[] = useMemo(() => [
     {
@@ -51,25 +30,27 @@ function Contests() {
       field: ({ record: { stateContest } }) => (
         <Field className="jk-row pad">
           <div className={`jk-tag ${stateContest === 'past' ? 'success' : (stateContest === 'upcoming' ? 'info' : 'error')}`}>
-            {stateContest} 
+            {stateContest}
           </div>
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
-      filter: { type: 'select-auto', options: [
-        {
-          value: 'upcoming',
-          label: <T className="text-capitalize">upcoming</T>
-        },
-        {
-          value: 'live',
-          label: <T className="text-capitalize">live</T>
-        },
-        {
-          value: 'past',
-          label: <T className="text-capitalize">past</T>
-        },
-      ] },
+      filter: {
+        type: 'select-auto', options: [
+          {
+            value: 'upcoming',
+            label: <T className="text-capitalize">upcoming</T>,
+          },
+          {
+            value: 'live',
+            label: <T className="text-capitalize">live</T>,
+          },
+          {
+            value: 'past',
+            label: <T className="text-capitalize">past</T>,
+          },
+        ],
+      },
       cardPosition: 'center',
       minWidth: 140,
     },
@@ -99,37 +80,32 @@ function Contests() {
       head: <TextHeadCell text={<T className="text-uppercase">registered</T>} />,
       index: 'registered',
       field: ({ record: { totalRegistered } }) => (
-        <TextField text={totalRegistered} label={<T>registered</T>}/>
+        <TextField text={totalRegistered} label={<T>registered</T>} />
       ),
       sort: { compareFn: () => (rowA, rowB) => +rowA.totalRegistered - +rowB.totalRegistered },
       filter: { type: 'text-auto', getValue: ({ record: { totalRegistered } }) => '' + totalRegistered },
       cardPosition: 'center',
       minWidth: 100,
     },
-  ], [allTags]);
+  ], []);
   
   const { queryObject, push } = useRouter();
   
-  const data: ContestTable[] = (response?.list || []).map(contest => (
-    {
-      id: contest.key,
-      name: contest.name,
-      tags: contest.tags,
-      status: contest.status,
-      settings: contest.settings,
-      timing: contest.timing,
-      totalRegistered: contest.totalRegistered,
-      stateContest: contestStatusCalculation(contest),
-    } as ContestTable
-  ));
+  const data: ContestTable[] = (response.success ? response?.contents : []).map(contest => ({
+    id: contest.key,
+    name: contest.name,
+    settings: contest.settings,
+    totalRegistered: contest.totalRegistered,
+    stateContest: contestStatusCalculation(new Date(contest.settings.start), contest.timing.duration),
+  }));
   
-  const request = useRequestLoader(JUDGE_API_V1.CONTEST.CONTEST())
+  const request = useRequestLoader(JUDGE_API_V1.CONTEST.CONTEST());
   
   return (
     <div>
       {/* <TitleLayout>
-        <h3>Contest</h3>
-      </TitleLayout> */}
+       <h3>Contest</h3>
+       </TitleLayout> */}
       <ContentLayout>
         <div className="main-content">
           <DataViewer<ContestTable>
@@ -152,7 +128,7 @@ function Contests() {
             //   </div>
             // )}
             searchParamsObject={queryObject}
-            setSearchParamsObject={(params) => push({ query: params })}
+            setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
           />
         </div>
       </ContentLayout>

@@ -1,6 +1,7 @@
 @import "@bit/juki-team.juki.base-ui/components/styles/base/_index.scss";
 @import "components/NavigationBar/styles";
 @import "components/Layouts/styles";
+@import "components/problem/styles";
 
 body {
   margin: 0;
@@ -14,12 +15,31 @@ body {
 }
 
 .main-content {
-  padding: var(--pad-xt) 0 var(--pad-m) 0;
-  height: 100%;
+  padding: var(--pad-m) 0 var(--pad-m) 0;
+  height: calc(100vh - var(--heigh-horizontal-menu));
   box-sizing: border-box;
+  
+  > section > div > div > h3 {
+    text-align: center;
+  }
   
   .extra-buttons {
     margin-left: var(--pad-t);
   }
+  
+  .jk-tabs-layout {
+    height: calc(100% - 96px);
+    
+    &:before {
+      display: none;
+    }
+    
+    .jk-tabs-content {
+      margin-top: var(--pad-t);
+      background-color: var(--t-color-white);
+      height: calc(100% - 60px);
+      @extend .jk-border-radius;
+      overflow-x: auto;
+    }
+  }
 }
-

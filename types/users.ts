@@ -1,4 +1,4 @@
-import { UserStatus, Judge, ScopeData } from '~/types';
+import { Judge, ScopeData, UserStatus } from '../types';
 
 interface Settings {
   key: string,
@@ -27,14 +27,3 @@ export interface UserState {
   passPermissions: { [key: string]: string },
   settings: { [key: string]: Settings }
 }
-
-export enum UserActions {
-  REPLACE_USERS = 'REPLACE_USERS'
-}
-
-interface ReplaceUsersType {
-  type: UserActions.REPLACE_USERS,
-  users: Array<UserState>
-}
-
-export type UsersActionTypes = ReplaceUsersType;

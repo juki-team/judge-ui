@@ -31,7 +31,7 @@ export {
   Popover,
   ReloadIcon,
   SaveIcon,
-  SettingIcon,
+  CodeRunnerEditor, SettingIcon,
   TextHeadCell,
   SignUpModal,
   SplitPane,
@@ -39,12 +39,22 @@ export {
   TextArea,
   TextField,
   Tooltip,
+  NotFound,
   UpIcon,
   PlusIcon,
   Field,
+  LoaderLayer,
+  DeleteIcon,
+  CopyIcon,
+  CopyToClipboard,
+  Tabs,
+  CodeEditorTheme,
+  CodeEditorKeyMap,
   DateField,
 } from '@bit/juki-team.juki.base-ui';
-export type { DataViewerHeadersType, FilterSelectOfflineType } from '@bit/juki-team.juki.base-ui';
+export type {
+  DataViewerHeadersType, FilterSelectOfflineType, CodeEditorTestCasesType,
+} from '@bit/juki-team.juki.base-ui';
 
 // for MdMathEditor:
 export { classNames, downloadBlobAsFile, useOutsideAlerter } from '@bit/juki-team.juki.base-ui';
@@ -52,3 +62,4 @@ export { classNames, downloadBlobAsFile, useOutsideAlerter } from '@bit/juki-tea
 import dynamic from 'next/dynamic';
 
 export const MdMathEditor = dynamic(() => import('./MdMathEditor'), { ssr: false });
+export const MdMathViewer = dynamic(() => import('./MdMathViewer'), { ssr: false });

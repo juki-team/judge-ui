@@ -14,19 +14,19 @@ export const buttonLoaderLink = (fun) => async setLoader => {
   setLoader([now, Status.SUCCESS]);
 };
 
-export const contestStatusCalculation = (contest) => {
-  const currentDateMiliseconds = new Date().getTime();
-  const startContestDateMiliseconds = new Date(contest.settings.start).getTime();
-  const endContestDateMiliseconds = startContestDateMiliseconds + contest.timing.duration;
+export const contestStatusCalculation = (startDate: Date, duration: number) => {
+  const currentDateMilliseconds = new Date().getTime();
+  const startContestDateMilliseconds = startDate.getTime();
+  const endContestDateMilliseconds = startContestDateMilliseconds + duration;
   let contestStatus = 'upcoming';
   
-  if ( currentDateMiliseconds > startContestDateMiliseconds && currentDateMiliseconds < endContestDateMiliseconds ) {
-    contestStatus= 'live';
-  } else if ( currentDateMiliseconds > startContestDateMiliseconds ) {
-    contestStatus = 'past'
+  if (currentDateMilliseconds > startContestDateMilliseconds && currentDateMilliseconds < endContestDateMilliseconds) {
+    contestStatus = 'live';
+  } else if (currentDateMilliseconds > startContestDateMilliseconds) {
+    contestStatus = 'past';
   }
   return contestStatus;
-}
+};
 
 export * from './permissions';
 export * from './routes';

@@ -4,7 +4,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "update-bit": "rm -rf node_modules/@bit && rm -rf .next && rm -f yarn.lock && yarn"
+    "bit:pull": "rm -rf node_modules/@bit && rm -rf .next && rm -f yarn.lock && yarn"
   },
   "dependencies": {
     "@bit/juki-team.juki.base-ui": "^0.0.1",

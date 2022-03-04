@@ -7,7 +7,7 @@ import { addSubQuery, isStringJson } from '../helpers';
 import { actionLoaderWrapper, authorizedRequest, clean, POST, PUT } from '../helpers/services';
 import { useFetcher, useNotification } from '../hooks';
 import { JUDGE_API_V1 } from '../services/judge';
-import { Language, LoaderAction, ProfileSettingOptions, ScopeData, Status, UserInterface } from '../types';
+import { ContentResponseType, Language, LoaderAction, ProfileSettingOptions, ScopeData, Status, UserInterface } from '../types';
 
 export interface UserState extends UserInterface {
   isLogged: boolean;
@@ -52,13 +52,13 @@ const getUserState = (object: any): UserState => {
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   const { i18n } = useTranslation();
   const { push, locale, pathname, asPath, query } = useRouter();
-  const { data, error, isLoading } = useFetcher(JUDGE_API_V1.ACCOUNT.PING());
+  const { data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.ACCOUNT.PING());
   
   const [user, setUser] = useState<UserState>(USER_GUEST);
   
   useEffect(() => {
     if (data?.success) {
-      setUser(getUserState(data?.object));
+      setUser(getUserState(data?.content));
     }
   }, [data]);
   
@@ -98,10 +98,13 @@ export const useUserDispatch = () => {
     setUser,
     signIn: (nickname: string, password: string, setLoader: LoaderAction) => {
       actionLoaderWrapper(
-        async () => clean(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), POST, JSON.stringify({ nickname, password }))),
+        async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), POST, JSON.stringify({
+          nickname,
+          password,
+        }))),
         addNotification,
         (result) => {
-          setUser(getUserState(result?.object));
+          setUser(getUserState(result.content));
           addSuccessNotification(<T className="sentence-case">welcome back</T>);
         },
         setLoader,
@@ -110,7 +113,7 @@ export const useUserDispatch = () => {
     signUp: async (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: LoaderAction) => {
       await actionLoaderWrapper(
         async () => {
-          return clean(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), POST, JSON.stringify({
+          return clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), POST, JSON.stringify({
             givenName,
             familyName,
             nickname,
@@ -122,7 +125,7 @@ export const useUserDispatch = () => {
         async (result) => {
           addSuccessNotification(<T className="sentence-case">welcome</T>);
           await push({ query: addSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
-          setUser(getUserState(result?.object));
+          setUser(getUserState(result.content));
         },
         setLoader,
       );
@@ -158,11 +161,11 @@ export const useUserDispatch = () => {
         { key: ProfileSettingOptions.THEME, value: account.preferredTheme },
       ];
       return await actionLoaderWrapper(
-        async () => clean(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), PUT, JSON.stringify(accountBody))),
+        async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), PUT, JSON.stringify(accountBody))),
         addNotification,
         (result) => {
           addSuccessNotification(<T className="sentence-case">your personal information has been updated</T>);
-          setUser(getUserState(result.object));
+          setUser(getUserState(result.content));
         },
         setLoader,
         (result) => {

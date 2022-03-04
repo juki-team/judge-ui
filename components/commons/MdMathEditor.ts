@@ -1,1 +1,1 @@
-export { MdMathEditor as default } from './MdMath';
+export { MdMathEditor as default } from './MdMath/MdMathEditor';
