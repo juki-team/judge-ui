@@ -48,9 +48,11 @@ export {
   CopyIcon,
   CopyToClipboard,
   Tabs,
+  Select,
   CodeEditorTheme,
   CodeEditorKeyMap,
   DateField,
+  useNotification,
 } from '@bit/juki-team.juki.base-ui';
 export type {
   DataViewerHeadersType, FilterSelectOfflineType, CodeEditorTestCasesType,

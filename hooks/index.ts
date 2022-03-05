@@ -69,9 +69,10 @@ export const useRequestLoader = (path: string) => {
   
   const { mutate } = useSWRConfig();
   
-  return useCallback(async ({ setLoading }) => {
-    setLoading([1, Status.LOADING]);
+  return useCallback(async (props?) => {
+    const { setLoading } = props || {};
+    setLoading?.([1, Status.LOADING]);
     await mutate(path);
-    setLoading([1, Status.SUCCESS]);
+    setLoading?.([1, Status.SUCCESS]);
   }, []);
 };

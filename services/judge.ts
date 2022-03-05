@@ -114,6 +114,11 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/clarification/${idClarification}/answer`;
     },
   },
+  ADMIN: {
+    ADMIN: (page?: string, size?: string) => {
+      return `${JUDGE_BACKEND_BASE_URL}/api/user?page=${page}&size=${size}`;
+    },
+  },
   UPLOAD: () => {
     return `${JUDGE_BACKEND_BASE_URL}/api/problem/file/update`;
   },
