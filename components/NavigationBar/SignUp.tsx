@@ -3,7 +3,7 @@ import { removeSubQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useUserDispatch } from 'store';
-import { SetLoaderStatusOnClickType, SignUpInput } from 'types';
+import { SetLoaderStatusOnClickType, SignUpInputType } from 'types';
 import { SignUpModal } from '../';
 
 export const SignUp = () => {
@@ -11,7 +11,7 @@ export const SignUp = () => {
   const { signUp } = useUserDispatch();
   const { push, query } = useRouter();
   
-  const onSubmit = async (data: SignUpInput, setLoading: SetLoaderStatusOnClickType) => {
+  const onSubmit = async (data: SignUpInputType, setLoading: SetLoaderStatusOnClickType) => {
     await signUp(data.givenName, data.familyName, data.nickname, data.email, data.password, setLoading);
   };
   

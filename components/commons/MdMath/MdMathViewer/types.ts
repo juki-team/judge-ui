@@ -1,4 +1,4 @@
-import { Theme } from '../../../';
+import { Theme } from 'types';
 
 export type CommandsObject = {
   textAlign?: string,

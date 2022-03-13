@@ -3,7 +3,7 @@ import { addSubQuery, removeSubQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useUserDispatch } from 'store';
-import { LoginInput, SetLoaderStatusOnClickType } from 'types';
+import { LoginInputType, SetLoaderStatusOnClickType } from 'types';
 import { LoginModal } from '../';
 
 export const Login = () => {
@@ -11,7 +11,7 @@ export const Login = () => {
   const { query, push } = useRouter();
   const { signIn } = useUserDispatch();
   
-  const onSubmit = (data: LoginInput, setLoading: SetLoaderStatusOnClickType) => {
+  const onSubmit = (data: LoginInputType, setLoading: SetLoaderStatusOnClickType) => {
     signIn(data.nickname, data.password, setLoading);
   };
   

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { consoleWarn, request, settings } from '../../';
+import { consoleWarn, request, settings } from '../../../helpers';
 
 export const publishNote = async (source: string) => {
   const { status, data } = await request(...settings.UTILS_API.POST_PUBLIC_NOTE(JSON.stringify({ source: source.trim() })));
