@@ -2,7 +2,6 @@ import { ScopeData, UserInterface as _UserInterface } from '@bit/juki-team.juki.
 
 export * from './commons';
 export * from './contest';
-export * from './loading';
 export * from './problem';
 export * from './routing';
 
@@ -38,8 +37,11 @@ export interface UserInterface extends _UserInterface {
   myPermissions: { [key in ScopeData]: string },
 }
 
-export { NotificationType } from '@bit/juki-team.juki.base-ui';
+export { NotificationType, Period } from '@bit/juki-team.juki.base-ui';
 export type {
-  ButtonLoaderActionType, ButtonLoaderStateType, LoginInput, NewNotificationType, SignUpInput,
+  FilterTextOfflineType,
+  LoaderStatusOnClickType,
+  SetLoaderStatusOnClickType, LoginInputType, NewNotificationType, SignUpInputType,
+  SetLoaderStatusType,
+  ButtonLoaderOnClickType,
 } from '@bit/juki-team.juki.base-ui';
-

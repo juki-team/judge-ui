@@ -1,8 +1,9 @@
+import { DELETE, GET, POST, PUT } from 'config/constants';
+import { clean } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { clean, DELETE, GET, POST, PUT } from '../helpers/services';
-import { ContentResponseType, ContentsResponseType, Status } from '../types';
+import { ContentResponseType, ContentsResponseType, Status } from 'types';
 
 export {
   useOutsideAlerter, useNotification,
@@ -38,10 +39,8 @@ export const useFetcher = <T extends (ContentResponseType<any> | ContentsRespons
   
   const { data, error } = useSWR(url, fetcher, { revalidateIfStale, revalidateOnFocus, revalidateOnReconnect });
   
-  console.log('useFetcher', { data, error });
-  
   return useMemo(() => ({
-    data: clean<T>(data),
+    data: data ? clean<T>(data) : undefined,
     error,
     isLoading: error === undefined && data === undefined,
   }), [data, error]);
@@ -65,14 +64,22 @@ export const useRouter = () => {
   return { query, queryObject, ...rest };
 };
 
-export const useRequestLoader = (path: string) => {
+export const useRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string) => {
   
   const { mutate } = useSWRConfig();
+  const { data, error, isLoading } = useFetcher<T>(url);
   
-  return useCallback(async (props?) => {
-    const { setLoading } = props || {};
-    setLoading?.([1, Status.LOADING]);
-    await mutate(path);
-    setLoading?.([1, Status.SUCCESS]);
-  }, []);
+  const refresh = useCallback(async (props?) => {
+    const { setLoaderStatus } = props || {};
+    setLoaderStatus?.(Status.LOADING);
+    await mutate(url);
+    setLoaderStatus?.(Status.SUCCESS);
+  }, [data]);
+  
+  return {
+    data,
+    error,
+    isLoading,
+    refresh,
+  };
 };

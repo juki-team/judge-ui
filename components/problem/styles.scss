@@ -14,7 +14,7 @@
   
   .label {
     font-weight: var(--weight-semi-bold);
-    line-height: 14px;
+    line-height: 16px;
   }
   
   > div {
@@ -22,6 +22,7 @@
     flex-direction: column-reverse;
     justify-content: center;
     align-items: center;
+    line-height: 14px;
     
     > span {
       > span:nth-child(2) {
@@ -57,11 +58,16 @@
   }
 }
 
-.problem-samples-boxa {
-  .problem-sample-box {
-    .problem-sample-actions-box {
-      width: var(--pad-xl);
-      flex-direction: column;
+.permissions-box {
+  .permission {
+    .label-permission {
+      width: 80px;
+    }
+    
+    input {
+      padding: 0;
+      width: 20px;
+      text-align: center;
     }
   }
 }

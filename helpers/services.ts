@@ -1,12 +1,12 @@
-import { ERROR } from '../config/constants';
+import { DELETE, ERROR, GET, POST, PUT } from 'config/constants';
 import {
   ContentResponseType,
   ContentsResponseType,
   ErrorCode,
   ErrorResponseType,
-  LoaderAction,
   NewNotificationType,
   NotificationType,
+  SetLoaderStatusOnClickType,
   Status,
 } from '../types';
 import { consoleWarn, isStringJson } from './index';
@@ -28,6 +28,19 @@ export const clean = <T extends ContentResponseType<any> | ContentsResponseType<
       } as T;
     }
     if (Object.keys(responseJson).length === 2 && typeof responseJson.object === 'object') {
+      if (Array.isArray(responseJson.object.content) && typeof responseJson.object.size === 'number' && typeof responseJson.object.totalElements === 'number' && typeof responseJson.object.number === 'number') {
+        return {
+          success: true,
+          message: '',
+          meta: {
+            page: responseJson.object.number,
+            size: responseJson.object.size,
+            totalElements: responseJson.object.totalElements,
+            sort: [],
+          },
+          contents: responseJson.object.content,
+        } as T;
+      }
       return {
         success: true,
         message: '',
@@ -48,11 +61,6 @@ export const clean = <T extends ContentResponseType<any> | ContentsResponseType<
   }
 };
 
-export const GET = 'GET';
-export const POST = 'POST';
-export const PUT = 'PUT';
-export const DELETE = 'DELETE';
-
 export const authorizedRequest = async (url: string, method?: typeof POST | typeof PUT | typeof DELETE | typeof GET, body?: string, signal?: AbortSignal) => {
   const requestHeaders: HeadersInit = new Headers();
   requestHeaders.set('Accept', 'application/json');
@@ -72,46 +80,63 @@ export const authorizedRequest = async (url: string, method?: typeof POST | type
       if (signal?.aborted) {
         return JSON.stringify({
           success: false,
-          message: ERROR[ErrorCode.ERR9997],
-          errorCode: ErrorCode.ERR9997,
-        });
+          message: ERROR[ErrorCode.ERR9997].message,
+          errors: [{ code: ErrorCode.ERR9997, detail: `[${method}] ${url} \n ${body}` }],
+        } as ErrorResponseType);
       }
-      return 'FETCH CATCH ERROR :' + JSON.stringify({ url, error });
+      return JSON.stringify({
+        success: false,
+        message: ERROR[ErrorCode.ERR9998].message,
+        errors: [{ code: ErrorCode.ERR9998, detail: `FETCH CATCH ERROR : ` + JSON.stringify({ method, url, body, error }) }],
+      } as ErrorResponseType);
     });
 };
 
-export const actionLoaderWrapper = async <T>(request: () => Promise<ErrorResponseType | T>, addNotification: (props: NewNotificationType) => void, onSuccess: (result: T) => void, setLoader?: LoaderAction, onFailure?: (result: ErrorResponseType) => void) => {
+export const actionLoaderWrapper = async <T extends ContentResponseType<any> | ContentsResponseType<any>>({
+  request,
+  addNotification,
+  setLoader,
+  onError,
+  onSuccess,
+}: {
+  request: () => Promise<ErrorResponseType | T>,
+  addNotification: (props: NewNotificationType) => void,
+  setLoader?: SetLoaderStatusOnClickType,
+  onSuccess?: (result: T) => void,
+  onError?: (result: ErrorResponseType) => void
+}) => {
   const timeStamp = new Date().getTime();
-  setLoader?.([timeStamp, Status.LOADING]);
-  const result: any = await request();
+  setLoader?.(Status.LOADING, timeStamp);
+  const result = await request();
+  console.log({ result });
   if (result) {
-    if (result.success === Status.SUCCESS) {
-      setLoader?.(prevState => prevState[0] === timeStamp ? [timeStamp, Status.SUCCESS] : prevState);
+    if (result.success === true) {
+      setLoader?.(prevState => prevState[1] === timeStamp ? [Status.SUCCESS, timeStamp] : prevState);
       await onSuccess(result);
     } else {
       let setError = true;
       if (setLoader) {
         setError = false;
-        setLoader((prevState: any) => {
-          if (!setError && prevState[0] === timeStamp) {
+        setLoader((prevState) => {
+          if (!setError && prevState[1] === timeStamp) {
             setError = true;
-            if (result.errorCode !== ErrorCode.ERR9997) {
-              return [timeStamp, Status.ERROR];
+            if (result.errors.some(({ code }) => code === ErrorCode.ERR9997)) {
+              return [Status.ERROR, timeStamp];
             } else {
-              return [timeStamp, Status.NONE];
+              return [Status.NONE, timeStamp];
             }
           }
           return prevState;
         });
       }
-      if (result.errorCode !== ErrorCode.ERR9997) {
+      if (result.errors.some(({ code }) => code === ErrorCode.ERR9997)) {
         addNotification({ type: NotificationType.ERROR, message: result.message });
       }
       if (setError) {
         // if (result.errorCode === 'ERR9901') { // Unauthorized user
         //   dispatch(clearRedux());
         // }
-        onFailure?.(result);
+        onError?.(result);
       }
     }
   } else {

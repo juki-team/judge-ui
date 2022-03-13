@@ -1,17 +1,17 @@
+import { OpenDialog, QueryParam } from 'config/constants';
+import { addSubQuery, removeSubQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useUserDispatch } from 'store';
+import { LoginInput, SetLoaderStatusOnClickType } from 'types';
 import { LoginModal } from '../';
-import { OpenDialog, QueryParam } from '../../config/constants';
-import { addSubQuery, removeSubQuery } from '../../helpers';
-import { useUserDispatch } from '../../store';
-import { LoaderAction, LoginInput } from '../../types';
 
 export const Login = () => {
   
   const { query, push } = useRouter();
   const { signIn } = useUserDispatch();
   
-  const onSubmit = (data: LoginInput, setLoading: LoaderAction) => {
+  const onSubmit = (data: LoginInput, setLoading: SetLoaderStatusOnClickType) => {
     signIn(data.nickname, data.password, setLoading);
   };
   

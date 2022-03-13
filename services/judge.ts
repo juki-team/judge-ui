@@ -38,7 +38,7 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/user/updateImage`;
     },
     CHANGE_PASSWORD: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user/password/change`;
+      return `${JUDGE_BACKEND_BASE_URL}/api/user/password/update`;
     },
   },
   PROBLEM: {
@@ -64,7 +64,7 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/submit/${key}`;
     },
     PROBLEM_STATUS: (id: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit/status`;
+      return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit/status?page=0&size=100`;
     },
   },
   CONTEST: {

@@ -16,7 +16,7 @@ import {
 import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
 import { isOrHas, removeSubQuery } from '../../helpers';
 import { useUserDispatch, useUserState } from '../../store';
-import { AdminTab, ButtonLoaderStateType, Language, ProfileSettingOptions, Status, Theme } from '../../types';
+import { AdminTab, Language, ProfileSettingOptions, Status, Theme } from '../../types';
 import { Login } from './Login';
 import { LoginUser } from './LoginUser';
 import { SettingsPopover } from './SettingsPopover';
@@ -26,7 +26,7 @@ import { Welcome } from './Welcome';
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
-  const [loader, setLoader] = useState<ButtonLoaderStateType>([0, Status.NONE]);
+  const [loader, setLoader] = useState<Status>(Status.NONE);
   
   const menu = [
     { label: 'contests', selected: ('/' + pathname).includes('//contest'), onClick: () => push(ROUTES.CONTESTS.LIST()) },
@@ -51,10 +51,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const toggleSetting = (key: ProfileSettingOptions, value: string) => {
     if (user.isLogged) {
-      updateUserSettings({
-        ...user,
-        [key]: value,
-      }, setLoader);
+      updateUserSettings({ ...user, [key]: value }, (status: Status) => setLoader(status));
     } else {
       localStorage.setItem(key, value);
       setUser({
@@ -84,11 +81,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           </div>
         )}
         rightSection={
-          <div className="jk-row gap settings-apps-login-user-content">
+          <div className="jk-row gap settings-apps-login-user-content nowrap">
             <Popover
               content={
                 <SettingsPopover
-                  loader={loader[1] === Status.LOADING}
+                  loader={loader[0] === Status.LOADING}
                   languageChecked={user[ProfileSettingOptions.LANGUAGE] === Language.ES}
                   toggleLanguage={toggleLanguage}
                   themeChecked={user[ProfileSettingOptions.THEME] === Theme.DARK}

@@ -1,5 +1,11 @@
+@import "@bit/juki-team.juki.base-ui/components/styles/abstracts/index";
+
 .navbar {
   width: 240px;
+  @include md {
+    width: auto;
+    margin: 0 var(--pad-m);
+  }
 }
 
 .settings-popover {

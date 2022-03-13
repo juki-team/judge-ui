@@ -30,3 +30,4 @@ export const contestStatusCalculation = (startDate: Date, duration: number) => {
 
 export * from './permissions';
 export * from './routes';
+export * from './services';

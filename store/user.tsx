@@ -1,13 +1,20 @@
+import { T } from 'components';
+import { DEFAULT_PERMISSIONS, OpenDialog, POST, PUT, QueryParam, USER_GUEST } from 'config/constants';
+import { actionLoaderWrapper, addSubQuery, authorizedRequest, clean, isStringJson } from 'helpers';
+import { useFetcher, useNotification } from 'hooks';
 import { useRouter } from 'next/router';
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { T } from '../components';
-import { DEFAULT_PERMISSIONS, OpenDialog, QueryParam, USER_GUEST } from '../config/constants';
-import { addSubQuery, isStringJson } from '../helpers';
-import { actionLoaderWrapper, authorizedRequest, clean, POST, PUT } from '../helpers/services';
-import { useFetcher, useNotification } from '../hooks';
-import { JUDGE_API_V1 } from '../services/judge';
-import { ContentResponseType, Language, LoaderAction, ProfileSettingOptions, ScopeData, Status, UserInterface } from '../types';
+import { JUDGE_API_V1 } from 'services/judge';
+import {
+  ContentResponseType,
+  Language,
+  ProfileSettingOptions,
+  ScopeData,
+  SetLoaderStatusOnClickType,
+  Status,
+  UserInterface,
+} from 'types';
 
 export interface UserState extends UserInterface {
   isLogged: boolean;
@@ -96,54 +103,50 @@ export const useUserDispatch = () => {
   
   return {
     setUser,
-    signIn: (nickname: string, password: string, setLoader: LoaderAction) => {
-      actionLoaderWrapper(
-        async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), POST, JSON.stringify({
+    signIn: (nickname: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
+      request: async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), POST, JSON.stringify({
+        nickname,
+        password,
+      }))),
+      addNotification,
+      onSuccess: (result) => {
+        setUser(getUserState(result.content));
+        addSuccessNotification(<T className="sentence-case">welcome back</T>);
+      },
+      setLoader,
+    }),
+    signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
+      request: async () => {
+        return clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), POST, JSON.stringify({
+          givenName,
+          familyName,
           nickname,
+          email,
           password,
-        }))),
-        addNotification,
-        (result) => {
-          setUser(getUserState(result.content));
-          addSuccessNotification(<T className="sentence-case">welcome back</T>);
-        },
-        setLoader,
-      );
-    },
-    signUp: async (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: LoaderAction) => {
-      await actionLoaderWrapper(
-        async () => {
-          return clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), POST, JSON.stringify({
-            givenName,
-            familyName,
-            nickname,
-            email,
-            password,
-          })));
-        },
-        addNotification,
-        async (result) => {
-          addSuccessNotification(<T className="sentence-case">welcome</T>);
-          await push({ query: addSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
-          setUser(getUserState(result.content));
-        },
-        setLoader,
-      );
-    },
-    logout: async (setLoader: LoaderAction) => {
-      setLoader([1, Status.LOADING]);
+        })));
+      },
+      addNotification,
+      onSuccess: async (result) => {
+        addSuccessNotification(<T className="sentence-case">welcome</T>);
+        await push({ query: addSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
+        setUser(getUserState(result.content));
+      },
+      setLoader,
+    }),
+    logout: async (setLoader: SetLoaderStatusOnClickType) => {
+      setLoader(Status.LOADING);
       const response = await authorizedRequest(JUDGE_API_V1.ACCOUNT.LOGOUT(), POST);
       if (isStringJson(response)) {
         const result = JSON.parse(response); // special endpoint that only return success
         if (result.success === true) {
-          setLoader([1, Status.SUCCESS]);
+          setLoader(Status.SUCCESS);
           addInfoNotification(<T className="sentence-case">see you</T>);
         } else {
-          setLoader([1, Status.ERROR]);
+          setLoader(Status.ERROR);
           addErrorNotification(<div><T className="sentence-case">force Logout</T>{result.message}</div>);
         }
       } else {
-        setLoader([1, Status.ERROR]);
+        setLoader(Status.ERROR);
         addErrorNotification(<T className="sentence-case">force Logout</T>);
       }
       setUser(USER_GUEST);
@@ -152,26 +155,25 @@ export const useUserDispatch = () => {
     recoverAccount: () => {
     
     },
-    updateUserSettings: async (account: UserState, setLoader: LoaderAction) => {
-      
+    updateUserSettings: async (account: UserState, setLoader: SetLoaderStatusOnClickType) => {
       const accountBody: UserState & { settings: Array<{ key: ProfileSettingOptions, value: string }> } = JSON.parse(JSON.stringify(account));
       
       accountBody.settings = [
         { key: ProfileSettingOptions.LANGUAGE, value: account.preferredLanguage },
         { key: ProfileSettingOptions.THEME, value: account.preferredTheme },
       ];
-      return await actionLoaderWrapper(
-        async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), PUT, JSON.stringify(accountBody))),
+      return actionLoaderWrapper({
+        request: async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), PUT, JSON.stringify(accountBody))),
         addNotification,
-        (result) => {
+        onSuccess: (result) => {
           addSuccessNotification(<T className="sentence-case">your personal information has been updated</T>);
           setUser(getUserState(result.content));
         },
         setLoader,
-        (result) => {
+        onError: (result) => {
           addErrorNotification(result.message);
         },
-      );
+      });
     },
   };
 };

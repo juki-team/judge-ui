@@ -8,7 +8,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
     return (
       <>
         {Object.keys(problem?.settings?.groupsPoint || {}).map(key => (
-          <div>
+          <div key={key}>
             <span className="label text-capitalize text-semi-bold"><T>subtask</T> {key}</span>:
             {problem?.settings?.groupsPoint[key]}
           </div>
@@ -23,7 +23,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
   };
   
   return (
-    <div className={classNames('problem-info  jk-pad', {
+    <div className={classNames(' center problem-info  jk-pad', {
       gap: horizontal,
       'jk-row': horizontal,
       'jk-col': !horizontal,
@@ -31,19 +31,19 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
       horizontal,
     })}>
       <div>
-        <span className="label text-bold text-capitalize"><T>time limit</T><span>:</span></span>
+        <span className="label text-bold text-capitalize text-s"><T>time limit</T><span>:</span></span>
         {(problem?.settings?.timeLimit / 1000).toFixed(1)} s
       </div>
       <div>
-        <span className="label text-bold text-capitalize"><T>memory limit</T><span>:</span></span>
+        <span className="label text-bold text-capitalize text-s"><T>memory limit</T><span>:</span></span>
         {(problem?.settings?.memoryLimit / 1000).toFixed(1)} MB
       </div>
       <div>
-        <span className="label text-bold text-capitalize"><T>type</T><span>:</span></span>
+        <span className="label text-bold text-capitalize text-s"><T>type</T><span>:</span></span>
         <T className="text-capitalize">{PROBLEM_TYPE[problem?.settings?.typeInput].print}</T>
       </div>
       <div>
-        <span className="label text-bold text-capitalize"><T>mode</T><span>:</span></span>
+        <span className="label text-bold text-capitalize text-s"><T>mode</T><span>:</span></span>
         {horizontal ? (
           <Popover
             content={<div className="groups-popover">{subTasks()}</div>}
@@ -56,19 +56,21 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
       </div>
       {problem?.tags && (
         <div>
-          <span className="label text-bold text-capitalize"><T>tags</T><span>:</span></span>
+          <span className="label text-bold text-capitalize text-s"><T>tags</T><span>:</span></span>
           {horizontal ? (
             <Popover
               content={
                 <div className="jk-row gap">
-                  {problem.tags.map(tag => <span className="jk-tag gray-6">{tag}</span>)}
+                  {problem.tags.map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}
                 </div>
               }
               placement="bottom"
             >
               <div><span className="count-tags">{problem.tags.length}</span></div>
             </Popover>
-          ) : <span className="jk-row start gap">{problem.tags.map(tag => <span className="jk-tag gray-6">{tag}</span>)}</span>}
+          ) : (
+            <span className="jk-row start gap">{problem.tags.map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}</span>
+          )}
         </div>
       )}
       {problem?.author && (
@@ -79,7 +81,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
       )}
       {problem?.status && (
         <div>
-          <span className="label text-bold text-capitalize"><T>visibility</T><span>:</span></span>
+          <span className="label text-bold text-capitalize text-s"><T>visibility</T><span>:</span></span>
           <T className="text-capitalize">{PROBLEM_STATUS[problem.status].print}</T>
         </div>
       )}

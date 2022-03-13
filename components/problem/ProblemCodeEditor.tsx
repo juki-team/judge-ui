@@ -1,14 +1,31 @@
-import { useEffect, useState } from 'react';
-import { CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor } from '../../components';
-import { PROGRAMMING_LANGUAGES } from '../../config/constants';
-import { useUserState } from '../../store';
-import { ProgrammingLanguage, SubmissionRunStatus } from '../../types';
+import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, POST, PROBLEM_VERDICT, PROGRAMMING_LANGUAGES } from 'config/constants';
+import { authorizedRequest, clean, isStringJson } from 'helpers';
+import { useNotification } from 'hooks';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { JUDGE_API_V1 } from 'services/judge';
+import { useUserState } from 'store';
+import { ContentResponseType, ProblemVerdict, ProgrammingLanguage, Status, SubmissionRunStatus } from 'types';
 
-export type EditorStorageType = {
-  theme: CodeEditorTheme,
-  keyMap: CodeEditorKeyMap,
-  lastLanguageUsed: ProgrammingLanguage,
-}
+const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {
+  
+  let storeRecovered = {};
+  if (isStringJson(localStorage.getItem(storeKey))) {
+    storeRecovered = JSON.parse(localStorage.getItem(storeKey));
+  }
+  const [value, setValue] = useState<T>({ ...defaultValue, ...storeRecovered });
+  
+  useEffect(() => {
+    if (storeKey) {
+      const stringValue = JSON.stringify(value);
+      if (localStorage.getItem(storeKey) !== stringValue) {
+        localStorage.setItem(storeKey, stringValue);
+      }
+    }
+  }, [storeKey, value]);
+  
+  return [value, setValue];
+};
 
 export const ProblemCodeEditor = ({ problem }) => {
   
@@ -28,47 +45,100 @@ export const ProblemCodeEditor = ({ problem }) => {
   });
   const { nickname } = useUserState();
   const editorStorageKey = 'jk-editor-settings-store/' + nickname;
-  const initial = JSON.parse(localStorage.getItem(editorStorageKey) || '{}');
-  const [editorStorage, setEditorStorage] = useState<EditorStorageType>({
-    theme: initial.theme ?? CodeEditorTheme.IDEA,
-    keyMap: initial.keyMap ?? CodeEditorKeyMap.SUBLIME,
-    lastLanguageUsed: initial.lastLanguageUsed ?? ProgrammingLanguage.CPP,
+  
+  const storeKey = 'jk-problem-storage/' + nickname;
+  const [editorSettings, setEditorSettings] = useSaveStorage(editorStorageKey, {
+    theme: CodeEditorTheme.IDEA,
+    keyMap: CodeEditorKeyMap.SUBLIME,
+    lastLanguageUsed: ProgrammingLanguage.CPP,
+    tabSize: 2,
   });
-  const [sourceCodeStorage, setSourceCodeStorage] = useState<{ [key: string]: string }>(JSON.parse(localStorage.getItem(storeKey || '') || '{}'));
+  
+  const [language, setLanguage] = useState(editorSettings.lastLanguageUsed);
   const [testCases, setTestCases] = useState(initialTestCases);
+  const defaultValue = { [problem.id]: {} };
+  ACCEPTED_PROGRAMMING_LANGUAGES.forEach(key => {
+    defaultValue[problem.id][PROGRAMMING_LANGUAGES[key].mime] = PROGRAMMING_LANGUAGES[key].templateSourceCode;
+  });
+  const [source, setSource] = useSaveStorage(storeKey, defaultValue);
+  const { addSuccessNotification, addErrorNotification } = useNotification();
   
-  const storeKey = '';
-  const language = ProgrammingLanguage.CPP;
-  const sourceCode = '';
-  
-  useEffect(() => localStorage.setItem(editorStorageKey, JSON.stringify(editorStorage)), [editorStorage, editorStorageKey]);
-  useEffect(() => storeKey ? localStorage.setItem(storeKey, JSON.stringify(sourceCodeStorage)) : undefined, [
-    storeKey,
-    sourceCodeStorage,
-  ]);
-  useEffect(() => {
-    console.log({ language, sourceCode });
-    setSourceCodeStorage(prevState => {
-      // if (prevState[language]) {
-      return {
-        ...prevState,
-        [PROGRAMMING_LANGUAGES[language].mime]: sourceCode,
-      };
-      // }
-      // return prevState;
-    });
-  }, [language, sourceCode]);
+  console.log({ language });
   
   return (
     <CodeRunnerEditor
-      sourceCode={''}
-      language={ProgrammingLanguage.C}
-      languages={[ProgrammingLanguage.C, ProgrammingLanguage.CPP]}
-      onChange={(...props) => {
-        console.log(props);
+      theme={editorSettings.theme}
+      key={editorSettings.keyMap}
+      tabSize={editorSettings.tabSize}
+      sourceCode={source[PROGRAMMING_LANGUAGES[language].mime] || ''}
+      language={language}
+      languages={ACCEPTED_PROGRAMMING_LANGUAGES}
+      onChange={({ sourceCode, language: newLanguage, testCases, theme, keyMap, tabSize }) => {
+        if (typeof sourceCode === 'string') {
+          setSource(prevState => ({ ...prevState, [PROGRAMMING_LANGUAGES[language].mime]: sourceCode }));
+        }
+        if (newLanguage) {
+          setLanguage(newLanguage);
+          setEditorSettings(prevState => ({ ...prevState, lastLanguageUsed: newLanguage }));
+        }
+        if (testCases) {
+          setTestCases(testCases);
+        }
+        if (theme) {
+          setEditorSettings(prevState => ({ ...prevState, theme }));
+        }
+        if (keyMap) {
+          setEditorSettings(prevState => ({ ...prevState, keyMap }));
+        }
+        if (tabSize) {
+          setEditorSettings(prevState => ({ ...prevState, tabSize }));
+        }
       }}
       middleButtons={() => {
-        return <div>Holiw</div>;
+        return (
+          <ButtonLoader
+            onClick={async setLoaderStatus => {
+              setLoaderStatus(Status.LOADING);
+              const result = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT('1000'), POST, JSON.stringify({
+                language,
+                source: source[PROGRAMMING_LANGUAGES[language].mime] || '',
+              })));
+              if (result.success) {
+                if (result.content?.answer === ProblemVerdict.AC) {
+                  addSuccessNotification(
+                    <div className="jk-pad">
+                      <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].print}</T>
+                    </div>,
+                  );
+                } else if (result.content?.answer === ProblemVerdict.PA) {
+                  addSuccessNotification(
+                    <div className="jk-pad">
+                      <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].print}</T>
+                      &bnsp;
+                      ({result.content?.submitPoints} <T>pnts</T>)
+                    </div>,
+                  );
+                } else {
+                  if (Object.keys(PROBLEM_VERDICT).includes(result.content?.answer)) {
+                    addErrorNotification(
+                      <div className="jk-pad">
+                        <T className="text-capitalize">{PROBLEM_VERDICT[result.content?.answer].print}</T>
+                      </div>,
+                    );
+                  } else {
+                    addErrorNotification(<div className="jk-pad">{result.content?.answer}</div>);
+                  }
+                }
+                setLoaderStatus(Status.SUCCESS);
+              } else {
+                addErrorNotification(<div className="jk-pad"><T>something went wrong, please try again later</T></div>);
+                setLoaderStatus(Status.ERROR);
+              }
+            }}
+          >
+            <T>submit</T>
+          </ButtonLoader>
+        );
       }}
       testCases={testCases}
     />

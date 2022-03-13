@@ -3,4 +3,13 @@ module.exports = {
     locales: ['en', 'es'],
     defaultLocale: 'en',
   },
+  async redirects() {
+    return [
+      {
+        source: '/admin',
+        destination: '/admin/users',
+        permanent: true,
+      },
+    ]
+  },
 };

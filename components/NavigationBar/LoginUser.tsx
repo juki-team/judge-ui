@@ -35,7 +35,7 @@ export const LoginUser = () => {
         triggerOn="click"
         placement="bottom"
       >
-        <div className="user-logged-head jk-row gap color-white">
+        <div className="user-logged-head jk-row gap nowrap color-white">
           <img src={user.imageUrl} alt={user.nickname} className="jk-user-profile-img large" />
           <div className="jk-row nickname">{user.nickname}</div>
           <UpIcon rotate={180} />

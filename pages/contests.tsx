@@ -1,9 +1,10 @@
+import { ContentLayout, DataViewer, DataViewerHeadersType, DateField, Field, T, TextField, TextHeadCell } from 'components';
+import { contestStatusCalculation, searchParamsObjectTypeToQuery } from 'helpers';
+import { useRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { ContentLayout, DataViewer, DataViewerHeadersType, DateField, Field, T, TextField, TextHeadCell } from '../components';
-import { contestStatusCalculation, searchParamsObjectTypeToQuery } from '../helpers';
-import { useFetcher, useRequestLoader, useRouter } from '../hooks';
-import { JUDGE_API_V1 } from '../services/judge';
-import { ContentsResponseType } from '../types';
+import { JUDGE_API_V1 } from 'services/judge';
+import { ContentsResponseType, ContestTab } from 'types';
+import { ROUTES } from '../config/constants';
 
 type SettingsOptions = {
   start: Date,
@@ -12,7 +13,7 @@ type SettingsOptions = {
 }
 
 type ContestTable = {
-  id: string,
+  key: string,
   name: string,
   settings: SettingsOptions,
   totalRegistered: number,
@@ -21,11 +22,11 @@ type ContestTable = {
 
 function Contests() {
   
-  const { data: response } = useFetcher<ContentsResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST());
+  const { data: response, refresh } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST());
   
   const columns: DataViewerHeadersType<ContestTable>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="text-uppercase">state contest</T>} />,
+      head: <TextHeadCell text={<T className="text-uppercase">state</T>} />,
       index: 'stateContest',
       field: ({ record: { stateContest } }) => (
         <Field className="jk-row pad">
@@ -36,20 +37,10 @@ function Contests() {
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
       filter: {
-        type: 'select-auto', options: [
-          {
-            value: 'upcoming',
-            label: <T className="text-capitalize">upcoming</T>,
-          },
-          {
-            value: 'live',
-            label: <T className="text-capitalize">live</T>,
-          },
-          {
-            value: 'past',
-            label: <T className="text-capitalize">past</T>,
-          },
-        ],
+        type: 'select-auto', options: ['upcoming', 'live', 'past'].map(option => ({
+          value: option,
+          label: <T className="text-capitalize">{option}</T>,
+        })),
       },
       cardPosition: 'center',
       minWidth: 140,
@@ -58,7 +49,7 @@ function Contests() {
       head: <TextHeadCell text={<T className="text-uppercase">start</T>} />,
       index: 'date',
       field: ({ record: { settings } }) => (
-        <DateField date={new Date(settings.start)} label="Date" />
+        <DateField date={new Date(settings.start)} label="Date" twoLines />
       ),
       sort: { compareFn: () => (rowA, rowB) => +rowA.settings.start - +rowB.settings.start },
       filter: { type: 'date-auto' },
@@ -68,8 +59,10 @@ function Contests() {
     {
       head: <TextHeadCell text={<T className="text-uppercase">contest name</T>} />,
       index: 'name',
-      field: ({ record: { name } }) => (
-        <TextField text={name} label={<T>Contest Name</T>} />
+      field: ({ record: { name, key } }) => (
+        <TextField
+          text={<div className="jk-link" onClick={() => push(ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW))}>{name}</div>}
+          label={<T>contest name</T>} />
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
       filter: { type: 'text-auto' },
@@ -77,7 +70,7 @@ function Contests() {
       minWidth: 300,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">registered</T>} />,
+      head: <TextHeadCell text={<T className="text-uppercase">contestants</T>} />,
       index: 'registered',
       field: ({ record: { totalRegistered } }) => (
         <TextField text={totalRegistered} label={<T>registered</T>} />
@@ -85,21 +78,19 @@ function Contests() {
       sort: { compareFn: () => (rowA, rowB) => +rowA.totalRegistered - +rowB.totalRegistered },
       filter: { type: 'text-auto', getValue: ({ record: { totalRegistered } }) => '' + totalRegistered },
       cardPosition: 'center',
-      minWidth: 100,
+      minWidth: 180,
     },
   ], []);
   
   const { queryObject, push } = useRouter();
   
-  const data: ContestTable[] = (response.success ? response?.contents : []).map(contest => ({
-    id: contest.key,
+  const data: ContestTable[] = (response?.success ? response?.contents : []).map(contest => ({
+    key: contest.key,
     name: contest.name,
     settings: contest.settings,
     totalRegistered: contest.totalRegistered,
     stateContest: contestStatusCalculation(new Date(contest.settings.start), contest.timing.duration),
   }));
-  
-  const request = useRequestLoader(JUDGE_API_V1.CONTEST.CONTEST());
   
   return (
     <div>
@@ -111,8 +102,8 @@ function Contests() {
           <DataViewer<ContestTable>
             headers={columns}
             data={data}
-            rows={{ height: 52 }}
-            request={request}
+            rows={{ height: 68 }}
+            request={refresh}
             name="users"
             // extraButtons={() => (
             //   <div className="extra-buttons">

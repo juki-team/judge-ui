@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   ButtonLoader,
   ContentLayout,
@@ -10,13 +9,15 @@ import {
   T,
   TextField,
   TextHeadCell,
-} from '../components';
-import { PROBLEM_STATUS, ROUTES } from '../config/constants';
-import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from '../helpers';
-import { useFetcher, useRequestLoader, useRouter } from '../hooks';
-import { JUDGE_API_V1 } from '../services/judge';
-import { useUserState } from '../store';
-import { ContentsResponseType, ProblemStatus, ProblemTab } from '../types';
+} from 'components';
+import { PROBLEM_STATUS, ROUTES } from 'config/constants';
+import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from 'helpers';
+import { useRequester, useRouter } from 'hooks';
+import { useMemo } from 'react';
+import { JUDGE_API_V1 } from 'services/judge';
+import { useUserState } from 'store';
+import { ProblemStatus, ProblemTab } from 'types';
+import { ContentsResponseType } from '../types';
 
 type ProblemsTable = {
   id: number,
@@ -27,11 +28,11 @@ type ProblemsTable = {
 
 function Problems() {
   
-  const { data: response } = useFetcher<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM());
   const user = useUserState();
+  const { data: response, refresh } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM());
   
   const tags = new Set<string>();
-  (response.success ? response.contents : []).forEach(problem => {
+  (response?.success ? response.contents : []).forEach(problem => {
     problem.tags.forEach(tag => tags.add(tag));
   });
   
@@ -51,7 +52,7 @@ function Problems() {
         type: 'text-auto',
         getValue: ({ record: { id } }) => '' + id,
       },
-      cardPosition: 'topLeft',
+      cardPosition: 'top',
       minWidth: 100,
     },
     {
@@ -64,7 +65,7 @@ function Problems() {
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
       filter: { type: 'text-auto' },
-      cardPosition: 'center',
+      cardPosition: 'top',
       minWidth: 300,
     },
     {
@@ -81,7 +82,7 @@ function Problems() {
         options: allTags.map(tag => ({ value: tag, label: tag })),
         callbackFn: ({ selectedOptions }) => ({ tags }) => tags.some(tag => selectedOptions.some(({ value }) => value === tag)),
       } as FilterSelectOfflineType<ProblemsTable>,
-      cardPosition: 'bottom',
+      cardPosition: 'center',
       minWidth: 400,
     },
     ...(can.viewStatusProblem(user) ? [
@@ -107,7 +108,7 @@ function Problems() {
             label: <T className="text-capitalize">{PROBLEM_STATUS[status].print}</T>,
           })),
         },
-        cardPosition: 'topRight',
+        cardPosition: 'bottom',
         minWidth: 200,
       } as DataViewerHeadersType<ProblemsTable>,
     ] : []),
@@ -115,9 +116,7 @@ function Problems() {
   
   const { queryObject, push } = useRouter();
   
-  const request = useRequestLoader(JUDGE_API_V1.PROBLEM.PROBLEM());
-  
-  const data: ProblemsTable[] = (response.success ? response.contents : []).map(user => (
+  const data: ProblemsTable[] = (response?.success ? response.contents : []).map(user => (
     {
       id: user.id,
       name: user.name,
@@ -137,7 +136,7 @@ function Problems() {
             headers={columns}
             data={data}
             rows={{ height: 64 }}
-            request={request}
+            request={refresh}
             name="users"
             extraButtons={() => (
               <div className="extra-buttons">

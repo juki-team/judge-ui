@@ -1,5 +1,10 @@
 import { AdminTab, ContestTab, ProblemTab, ProfileTab } from '../../types';
 
+export const GET = 'GET';
+export const POST = 'POST';
+export const PUT = 'PUT';
+export const DELETE = 'DELETE';
+
 export enum QueryParam {
   OPEN_DIALOG = 'openDialog',
 }

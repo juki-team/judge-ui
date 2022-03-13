@@ -1,17 +1,17 @@
+import { OpenDialog, QueryParam } from 'config/constants';
+import { removeSubQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useUserDispatch } from 'store';
+import { SetLoaderStatusOnClickType, SignUpInput } from 'types';
 import { SignUpModal } from '../';
-import { OpenDialog, QueryParam } from '../../config/constants';
-import { removeSubQuery } from '../../helpers';
-import { useUserDispatch } from '../../store';
-import { LoaderAction, SignUpInput } from '../../types';
 
 export const SignUp = () => {
   
   const { signUp } = useUserDispatch();
   const { push, query } = useRouter();
   
-  const onSubmit = async (data: SignUpInput, setLoading: LoaderAction) => {
+  const onSubmit = async (data: SignUpInput, setLoading: SetLoaderStatusOnClickType) => {
     await signUp(data.givenName, data.familyName, data.nickname, data.email, data.password, setLoading);
   };
   

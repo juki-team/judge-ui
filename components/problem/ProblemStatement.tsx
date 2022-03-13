@@ -1,4 +1,4 @@
-import { MdMathViewer, T } from '../../components';
+import { MdMathViewer, T } from 'components';
 import { ProblemInfo } from './ProblemInfo';
 import { SampleTest } from './SampleTest';
 
