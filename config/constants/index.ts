@@ -12,4 +12,5 @@ export {
 } from '@bit/juki-team.juki.commons';
 
 export * from './defaultObjects';
+export * from './judge';
 export * from './routes';

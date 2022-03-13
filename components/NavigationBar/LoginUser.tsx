@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { Button, ButtonLoader, Popover, T, UpIcon } from '..';
 import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
-import { addSubQuery } from '../../helpers';
+import { addParamQuery } from '../../helpers';
 import { useUserDispatch, useUserState } from '../../store';
 import { ProfileTab } from '../../types';
 
@@ -47,7 +47,7 @@ export const LoginUser = () => {
   return (
     <Button
       type="secondary"
-      onClick={() => push({ query: addSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
+      onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
     >
       <T>sign in</T>
     </Button>

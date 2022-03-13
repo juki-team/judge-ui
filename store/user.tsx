@@ -1,11 +1,11 @@
 import { T } from 'components';
 import { DEFAULT_PERMISSIONS, OpenDialog, POST, PUT, QueryParam, USER_GUEST } from 'config/constants';
-import { actionLoaderWrapper, addSubQuery, authorizedRequest, clean, isStringJson } from 'helpers';
+import { actionLoaderWrapper, addParamQuery, authorizedRequest, clean, isStringJson } from 'helpers';
 import { useFetcher, useNotification } from 'hooks';
 import { useRouter } from 'next/router';
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { JUDGE_API_V1 } from 'services/judge';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import {
   ContentResponseType,
   Language,
@@ -128,7 +128,7 @@ export const useUserDispatch = () => {
       addNotification,
       onSuccess: async (result) => {
         addSuccessNotification(<T className="sentence-case">welcome</T>);
-        await push({ query: addSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
+        await push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
         setUser(getUserState(result.content));
       },
       setLoader,

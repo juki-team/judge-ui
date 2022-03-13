@@ -2,7 +2,7 @@ import { Button, ButtonLoader, CopyIcon, CopyToClipboard, InputPassword, Modal, 
 import { useState } from 'react';
 import { PUT } from '../../config/constants';
 import { authorizedRequest, clean } from '../../helpers';
-import { JUDGE_API_V1 } from '../../services/judge';
+import { JUDGE_API_V1 } from '../../config/constants/judge';
 import { ContentResponseType, Status } from '../../types';
 import { useNotification } from '../index';
 

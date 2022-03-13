@@ -41,7 +41,11 @@ export { NotificationType, Period } from '@bit/juki-team.juki.base-ui';
 export type {
   FilterTextOfflineType,
   LoaderStatusOnClickType,
-  SetLoaderStatusOnClickType, LoginInputType, NewNotificationType, SignUpInputType,
+  SetLoaderStatusOnClickType,
+  LoginInputType,
+  NewNotificationType,
+  SignUpInputType,
   SetLoaderStatusType,
   ButtonLoaderOnClickType,
+  ReactNodeOrFunctionType,
 } from '@bit/juki-team.juki.base-ui';

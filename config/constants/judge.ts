@@ -1,4 +1,4 @@
-import { ContestStatus, UserStatus } from '../types';
+import { ContestStatus, UserStatus } from '../../types';
 
 export const JUDGE_BACKEND_BASE_URL = process.env.NEXT_PUBLIC_JUKI_JUDGE_BACKEND_BASE_URL;
 

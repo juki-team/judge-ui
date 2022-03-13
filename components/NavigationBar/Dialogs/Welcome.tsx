@@ -1,18 +1,18 @@
+import { Button, JukiCompleteLaptopImage, Modal, T } from 'components';
+import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
-import { Button, JukiCompleteLaptopImage, Modal, T } from '..';
-import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
-import { removeSubQuery } from '../../helpers';
-import { useUserState } from '../../store';
-import { ProfileTab } from '../../types';
+import { useUserState } from 'store';
+import { ProfileTab } from 'types';
 
 export const Welcome = () => {
   
   const { givenName, nickname } = useUserState();
   const { push, query } = useRouter();
   
-  const handleClose = () => {
-    push({ query: removeSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
-  };
+  const handleClose = () => (
+    push({ query: removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) })
+  );
   
   return (
     <Modal

@@ -14,14 +14,13 @@ import {
   T,
 } from '..';
 import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
-import { isOrHas, removeSubQuery } from '../../helpers';
+import { isOrHas, removeParamQuery } from '../../helpers';
 import { useUserDispatch, useUserState } from '../../store';
 import { AdminTab, Language, ProfileSettingOptions, Status, Theme } from '../../types';
-import { Login } from './Login';
+import { Login, SignUp, Welcome } from './Dialogs';
+import { UserPreview } from './Dialogs/UserPreview';
 import { LoginUser } from './LoginUser';
 import { SettingsPopover } from './SettingsPopover';
-import { SignUp } from './SignUp';
-import { Welcome } from './Welcome';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
@@ -40,8 +39,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
     if (user.isLogged && (isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_UP) || isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_IN))) {
       push({
-        query: removeSubQuery(
-          removeSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_UP),
+        query: removeParamQuery(
+          removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_UP),
           QueryParam.OPEN_DIALOG,
           OpenDialog.SIGN_IN,
         ),
@@ -73,6 +72,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_UP) && <SignUp />}
       {isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_IN) && <Login />}
       {isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.WELCOME) && <Welcome />}
+      {query[QueryParam.OPEN_USER_PREVIEW] && <UserPreview nickname={query[QueryParam.OPEN_USER_PREVIEW]} />}
       <HorizontalMenu
         menu={menu}
         leftSection={() => (

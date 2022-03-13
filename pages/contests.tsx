@@ -2,7 +2,7 @@ import { ContentLayout, DataViewer, DataViewerHeadersType, DateField, Field, T, 
 import { contestStatusCalculation, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { JUDGE_API_V1 } from 'services/judge';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { ContentsResponseType, ContestTab } from 'types';
 import { ROUTES } from '../config/constants';
 

@@ -1,9 +1,9 @@
 import { DataViewer, DataViewerHeadersType, DateField, Field, Popover, T, TextHeadCell } from 'components';
-import { PROBLEM_VERDICT, PROGRAMMING_LANGUAGES } from 'config/constants';
-import { searchParamsObjectTypeToQuery } from 'helpers';
+import { PROBLEM_VERDICT, PROGRAMMING_LANGUAGES, QueryParam } from 'config/constants';
+import { replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { JUDGE_API_V1 } from 'services/judge';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { ContentsResponseType, ProblemVerdict, ProgrammingLanguage } from 'types';
 
 type ProblemSubmissionsTable = {
@@ -21,6 +21,8 @@ type ProblemSubmissionsTable = {
 
 export const ProblemSubmissions = ({ problem }) => {
   
+  const { queryObject, query, push } = useRouter();
+  
   const columns: DataViewerHeadersType<ProblemSubmissionsTable>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="text-uppercase">nickname</T>} />,
@@ -28,7 +30,9 @@ export const ProblemSubmissions = ({ problem }) => {
       field: ({ record: { nickname, imageUrl }, isCard }) => (
         <Field className="jk-row center gap">
           <img src={imageUrl} className="jk-user-profile-img" alt={nickname} />
-          <div className="jk-link">{nickname}</div>
+          <div className="jk-link" onClick={() => (
+            push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname) })
+          )}>{nickname}</div>
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
@@ -113,11 +117,9 @@ export const ProblemSubmissions = ({ problem }) => {
       cardPosition: 'bottom',
       minWidth: 120,
     },
-  ], []);
+  ], [query]);
   
   const { data: response, refresh } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM_STATUS(problem?.id));
-  console.log({ response });
-  const { queryObject, push } = useRouter();
   
   const data: ProblemSubmissionsTable[] = (response?.success ? response.contents : []).map(submission => (
     {

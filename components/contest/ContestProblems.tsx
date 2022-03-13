@@ -6,7 +6,7 @@ import { useNotification } from '../index';
 
 export const ContestProblems = ({ contest }: { contest: any }) => {
   
-  const { problems, settings, registered, timing, canRejudge, canUpdate, canRegister, key } = contest;
+  const { problems = {}, settings, registered, timing, canRejudge, canUpdate, canRegister, key } = contest;
   const now = new Date().getTime();
   
   const { query, push } = useRouter();

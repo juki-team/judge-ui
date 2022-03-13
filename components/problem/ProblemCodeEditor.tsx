@@ -1,9 +1,9 @@
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, POST, PROBLEM_VERDICT, PROGRAMMING_LANGUAGES } from 'config/constants';
-import { authorizedRequest, clean, isStringJson } from 'helpers';
-import { useNotification } from 'hooks';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROBLEM_VERDICT, PROGRAMMING_LANGUAGES, QueryParam } from 'config/constants';
+import { addParamQuery, authorizedRequest, clean, isStringJson } from 'helpers';
+import { useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { JUDGE_API_V1 } from 'services/judge';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { useUserState } from 'store';
 import { ContentResponseType, ProblemVerdict, ProgrammingLanguage, Status, SubmissionRunStatus } from 'types';
 
@@ -43,7 +43,8 @@ export const ProblemCodeEditor = ({ problem }) => {
       stdin: sample.input,
     };
   });
-  const { nickname } = useUserState();
+  const { nickname, isLogged } = useUserState();
+  const { query, push } = useRouter();
   const editorStorageKey = 'jk-editor-settings-store/' + nickname;
   
   const storeKey = 'jk-problem-storage/' + nickname;
@@ -95,6 +96,16 @@ export const ProblemCodeEditor = ({ problem }) => {
         }
       }}
       middleButtons={() => {
+        if (!isLogged) {
+          return (
+            <ButtonLoader
+              type="secondary"
+              onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
+            >
+              <T>to submit, first login</T>
+            </ButtonLoader>
+          );
+        }
         return (
           <ButtonLoader
             onClick={async setLoaderStatus => {

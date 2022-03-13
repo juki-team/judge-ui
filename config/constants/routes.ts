@@ -7,6 +7,7 @@ export const DELETE = 'DELETE';
 
 export enum QueryParam {
   OPEN_DIALOG = 'openDialog',
+  OPEN_USER_PREVIEW = 'openUserPreview',
 }
 
 export enum OpenDialog {

@@ -3,7 +3,7 @@ import { searchParamsObjectTypeToQuery } from 'helpers';
 import { authorizedRequest, clean } from 'helpers/services';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo, useRef, useState } from 'react';
-import { JUDGE_API_V1 } from 'services/judge';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { ContentResponseType, ContentsResponseType, FilterTextOfflineType, SetLoaderStatusType, Status, UserStatus } from 'types';
 import {
   Button,

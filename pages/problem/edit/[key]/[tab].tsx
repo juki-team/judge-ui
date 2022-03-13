@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router';
-import { useFetcher } from '../../../../hooks';
-import { JUDGE_API_V1 } from '../../../../services/judge';
-import { ContentResponseType } from '../../../../types';
+import { useRouter } from 'hooks';
+import { useFetcher } from 'hooks';
+import { JUDGE_API_V1 } from 'config/constants/judge';
+import { ContentResponseType } from 'types';
 
-function ProblemView() {
+function ProblemEdit() {
   
   const { query } = useRouter();
   const { data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(query.key as string));
@@ -22,4 +22,4 @@ function ProblemView() {
   );
 }
 
-export default ProblemView;
+export default ProblemEdit;

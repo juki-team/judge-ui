@@ -14,7 +14,7 @@ import { PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { JUDGE_API_V1 } from 'services/judge';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { useUserState } from 'store';
 import { ProblemStatus, ProblemTab } from 'types';
 import { ContentsResponseType } from '../types';

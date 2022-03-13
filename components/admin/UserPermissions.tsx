@@ -1,7 +1,7 @@
 import { PUT } from 'config/constants';
 import { authorizedRequest, can, clean } from 'helpers';
 import { useState } from 'react';
-import { JUDGE_API_V1 } from 'services/judge';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { useUserState } from 'store';
 import { ContentResponseType, Status } from 'types';
 import { Button, ButtonLoader, EditIcon, Input, SaveIcon, T, useNotification } from '../index';

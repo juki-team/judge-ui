@@ -1,10 +1,10 @@
+import { SignUpModal } from 'components';
 import { OpenDialog, QueryParam } from 'config/constants';
-import { removeSubQuery } from 'helpers';
+import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useUserDispatch } from 'store';
 import { SetLoaderStatusOnClickType, SignUpInputType } from 'types';
-import { SignUpModal } from '../';
 
 export const SignUp = () => {
   
@@ -17,7 +17,7 @@ export const SignUp = () => {
   
   return (
     <SignUpModal
-      onCancel={() => push({ query: removeSubQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_UP) })}
+      onCancel={() => push({ query: removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_UP) })}
       onSubmit={onSubmit}
     />
   );
