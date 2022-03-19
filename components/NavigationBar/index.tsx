@@ -17,7 +17,7 @@ import {
   T,
 } from '..';
 import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
-import { isOrHas, removeParamQuery } from '../../helpers';
+import { can, isOrHas, removeParamQuery } from '../../helpers';
 import { useUserDispatch, useUserState } from '../../store';
 import { AdminTab, Language, ProfileSettingOptions, Status, Theme } from '../../types';
 import { Login, SignUp, Welcome } from './Dialogs';
@@ -29,6 +29,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
   const [loader, setLoader] = useState<Status>(Status.NONE);
+  const user = useUserState();
   
   const menu = [
     {
@@ -43,15 +44,16 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       selected: ('/' + pathname).includes('//problem'),
       onClick: () => push(ROUTES.PROBLEMS.LIST()),
     },
-    {
+  
+  ];
+  if (can.viewUsersTab(user)) {
+    menu.push({
       label: 'admin',
       icon: <SettingIcon />,
       selected: ('/' + pathname).includes('//admin'),
       onClick: () => push(ROUTES.ADMIN.PAGE(AdminTab.USERS)),
-    },
-  ];
-  
-  const user = useUserState();
+    });
+  }
   const { updateUserSettings, setUser } = useUserDispatch();
   
   useEffect(() => {

@@ -1,17 +1,31 @@
 import { ContentLayout, T, Tabs, Users } from 'components';
 import { ROUTES } from 'config/constants';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { AdminTab } from 'types';
+import { can } from '../../helpers';
+import { useUserState } from '../../store';
+import Custom404 from '../404';
 
 function Admin() {
   
   const { query, push } = useRouter();
+  const user = useUserState();
   
   const index = {
     [AdminTab.USERS]: 0,
   };
   
   const tabs = [AdminTab.USERS];
+  useEffect(() => {
+    if (!can.viewUsersTab(user)) {
+      push('/');
+    }
+  }, [user]);
+  
+  if (!can.viewUsersTab(user)) {
+    return <Custom404 />;
+  }
   
   return (
     <div className="main-content">

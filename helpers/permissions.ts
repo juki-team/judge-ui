@@ -3,6 +3,9 @@ import { ScopeData } from '../types';
 
 export const can = {
   // USERS
+  viewUsersTab(account: UserState): boolean {
+    return this.createUser(account) || this.viewAllUsers(account) || this.updateStatusUser(account) || this.updatePermissionsUser(account);
+  },
   createUser(account: UserState): boolean {
     return account.myPermissions[ScopeData.USER]?.charAt(0) === '0';
   },
