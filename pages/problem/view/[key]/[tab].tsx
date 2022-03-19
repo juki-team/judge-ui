@@ -20,8 +20,8 @@ import { ContentResponseType, ProblemTab, Status } from 'types';
 
 function ProblemView() {
   
-  const { query, push } = useRouter();
-  const { isLoading, data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(query.key as string));
+  const { query: { key, ...query }, push } = useRouter();
+  const { isLoading, data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(key as string));
   
   const index = {
     [ProblemTab.STATEMENT]: 0,
@@ -41,9 +41,7 @@ function ProblemView() {
         <TwoContentLayout>
           <div className="jk-col filled">
             <div className="jk-row center gap nowrap">
-              <h5>
-                {data.content.name}
-              </h5>
+              <h5>{data.content.name}</h5>
               <Popover content={<ProblemInfo problem={data.content} />} triggerOn="click" placement="bottom">
                 <div className="jk-row"><ExclamationIcon filledCircle className="screen sm md color-primary" rotate={180} /></div>
               </Popover>
@@ -57,12 +55,12 @@ function ProblemView() {
               { children: <T className="text-capitalize">code editor</T> },
               { children: <T className="text-capitalize">submissions</T> },
             ]}
-            onChange={index => push(ROUTES.PROBLEMS.VIEW('' + query.key, tabs[index]))}
+            onChange={index => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabs[index]), query })}
             actionsSection={
               <ButtonLoader
                 onClick={async setLoaderStatus => {
                   setLoaderStatus(Status.LOADING);
-                  await push(ROUTES.PROBLEMS.EDIT('' + query.key, ProblemTab.STATEMENT));
+                  await push(ROUTES.PROBLEMS.EDIT('' + key, ProblemTab.STATEMENT));
                   setLoaderStatus(Status.SUCCESS);
                 }}
               >
