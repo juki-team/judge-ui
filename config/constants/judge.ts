@@ -63,8 +63,8 @@ export const JUDGE_API_V1 = {
     SUBMISSION_CODE: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/submit/${key}`;
     },
-    PROBLEM_STATUS: (id: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit/status?page=0&size=100`;
+    PROBLEM_STATUS: (id: string, page: number, size: number) => {
+      return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit/status?page=${page}&size=${size}`;
     },
   },
   CONTEST: {

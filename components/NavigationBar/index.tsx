@@ -2,13 +2,16 @@ import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 import {
   AppsIcon,
+  ArrowIcon,
+  AssignmentIcon,
   Button,
-  ConstructionIcon,
+  CupIcon,
   HorizontalMenu,
   JukiCouchLogoHorImage,
   JukiJudgeLogoHorImage,
   JukiUtilsLogoHorImage,
   LoadingIcon,
+  MenuIcon,
   Popover,
   SettingIcon,
   T,
@@ -28,9 +31,24 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const [loader, setLoader] = useState<Status>(Status.NONE);
   
   const menu = [
-    { label: 'contests', selected: ('/' + pathname).includes('//contest'), onClick: () => push(ROUTES.CONTESTS.LIST()) },
-    { label: 'problems', selected: ('/' + pathname).includes('//problem'), onClick: () => push(ROUTES.PROBLEMS.LIST()) },
-    { label: 'admin', selected: ('/' + pathname).includes('//admin'), onClick: () => push(ROUTES.ADMIN.PAGE(AdminTab.USERS)) },
+    {
+      label: 'contests',
+      icon: <CupIcon />,
+      selected: ('/' + pathname).includes('//contest'),
+      onClick: () => push(ROUTES.CONTESTS.LIST()),
+    },
+    {
+      label: 'problems',
+      icon: <AssignmentIcon />,
+      selected: ('/' + pathname).includes('//problem'),
+      onClick: () => push(ROUTES.PROBLEMS.LIST()),
+    },
+    {
+      label: 'admin',
+      icon: <SettingIcon />,
+      selected: ('/' + pathname).includes('//admin'),
+      onClick: () => push(ROUTES.ADMIN.PAGE(AdminTab.USERS)),
+    },
   ];
   
   const user = useUserState();
@@ -67,6 +85,49 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     toggleSetting(ProfileSettingOptions.THEME, user[ProfileSettingOptions.THEME] === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
   };
   
+  const settings = (placement: 'bottom' | 'right') => (
+    <>
+      <Popover
+        content={
+          <SettingsPopover
+            loader={loader[0] === Status.LOADING}
+            languageChecked={user[ProfileSettingOptions.LANGUAGE] === Language.ES}
+            toggleLanguage={toggleLanguage}
+            themeChecked={user[ProfileSettingOptions.THEME] === Theme.DARK}
+            toggleTheme={toggleTheme}
+          />
+        }
+        triggerOn="click"
+        placement={placement}
+      >
+        <div className="color-white">
+          <Button icon={<SettingIcon />} type="text" />
+        </div>
+      </Popover>
+      <Popover
+        content={
+          <div className="jk-col gap more-apps-popover">
+            <div className="semi-bold sentence-case"><T>more apps coming soon</T></div>
+            <div className="jk-col gap color-primary">
+              <div className="jk-row">
+                <JukiCouchLogoHorImage /> <LoadingIcon size="small" /> <T className="sentence-case">developing</T>...
+              </div>
+              <div className="jk-row">
+                <JukiUtilsLogoHorImage /> <LoadingIcon size="small" /> <T className="sentence-case">developing</T>...
+              </div>
+            </div>
+          </div>
+        }
+        triggerOn="click"
+        placement={placement}
+      >
+        <div className="color-white">
+          <Button icon={<AppsIcon />} type="text" />
+        </div>
+      </Popover>
+    </>
+  );
+  
   return (
     <>
       {isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_UP) && <SignUp />}
@@ -75,67 +136,38 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {query[QueryParam.OPEN_USER_PREVIEW] && <UserPreview nickname={query[QueryParam.OPEN_USER_PREVIEW]} />}
       <HorizontalMenu
         menu={menu}
-        leftSection={() => (
+        left={() => (
           <div className="color-white navbar" onClick={() => push('/')}>
             <JukiJudgeLogoHorImage />
           </div>
         )}
-        rightSection={
+        right={
           <div className="jk-row gap settings-apps-login-user-content nowrap">
-            <Popover
-              content={
-                <SettingsPopover
-                  loader={loader[0] === Status.LOADING}
-                  languageChecked={user[ProfileSettingOptions.LANGUAGE] === Language.ES}
-                  toggleLanguage={toggleLanguage}
-                  themeChecked={user[ProfileSettingOptions.THEME] === Theme.DARK}
-                  toggleTheme={toggleTheme}
-                />
-              }
-              triggerOn="click"
-              placement="bottom"
-            >
-              <div className="color-white">
-                <Button icon={<SettingIcon />} type="text" />
-              </div>
-            </Popover>
-            <Popover
-              content={
-                <div className="jk-col gap more-apps-popover">
-                  <div className="semi-bold sentence-case"><T>more apps coming soon</T></div>
-                  <div className="jk-col gap color-primary">
-                    <div className="jk-row">
-                      <JukiCouchLogoHorImage /> <LoadingIcon size="small" /> <T className="sentence-case">developing</T>...
-                    </div>
-                    <div className="jk-row">
-                      <JukiUtilsLogoHorImage /> <LoadingIcon size="small" /> <T className="sentence-case">developing</T>...
-                    </div>
-                  </div>
-                </div>
-              }
-              triggerOn="click"
-              placement="bottom"
-            >
-              <div className="color-white">
-                <Button icon={<AppsIcon />} type="text" />
-              </div>
-            </Popover>
+            {settings('bottom')}
             <LoginUser />
           </div>
         }
-        rightMobileMenu={{
-          icon: <div>a</div>,
-          content: <div className="jk-col gap more-apps-popover">
-            <div className="semi-bold sentence-case"><T>more apps coming soon</T></div>
-            <div className="jk-col gap color-primary">
-              <div className="jk-row">
-                <JukiCouchLogoHorImage /> <ConstructionIcon /> <T className="sentence-case">developing</T>...
-              </div>
-              <div className="jk-row">
-                <JukiUtilsLogoHorImage /> <ConstructionIcon /> <T className="sentence-case">developing</T>...
+        leftMobile={{
+          children: <MenuIcon className="color-white" />,
+          content: (open, onClose) => (
+            <div className="bg-color-primary jk-row filled">
+              <div className="jk-col space-between">
+                <div className="jk-row nowrap gap mobile-left-side-header">
+                  <ArrowIcon rotate={-90} onClick={onClose} className="color-white" />
+                  <JukiJudgeLogoHorImage className="color-white" />,
+                </div>
+                <div className="jk-col">
+                  {settings('right')}
+                </div>
               </div>
             </div>
-          </div>,
+          ),
+        }}
+        centerMobile={{
+          children: <JukiJudgeLogoHorImage className="color-white" />,
+        }}
+        rightMobile={{
+          children: <LoginUser />,
         }}
       >
         {children}

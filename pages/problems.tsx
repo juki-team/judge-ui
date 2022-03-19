@@ -11,10 +11,10 @@ import {
   TextHeadCell,
 } from 'components';
 import { PROBLEM_STATUS, ROUTES } from 'config/constants';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { JUDGE_API_V1 } from 'config/constants/judge';
 import { useUserState } from 'store';
 import { ProblemStatus, ProblemTab } from 'types';
 import { ContentsResponseType } from '../types';
@@ -126,37 +126,33 @@ function Problems() {
   ));
   
   return (
-    <div>
+    <ContentLayout>
       {/* <TitleLayout>
        <h3>Problems</h3>
        </TitleLayout> */}
-      <ContentLayout>
-        <div className="main-content">
-          <DataViewer<ProblemsTable>
-            headers={columns}
-            data={data}
-            rows={{ height: 64 }}
-            request={refresh}
-            name="users"
-            extraButtons={() => (
-              <div className="extra-buttons">
-                {can.createProblem(user) && (
-                  <ButtonLoader
-                    size="small"
-                    icon={<PlusIcon />}
-                    onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
-                  >
-                    <T>create</T>
-                  </ButtonLoader>
-                )}
-              </div>
+      <DataViewer<ProblemsTable>
+        headers={columns}
+        data={data}
+        rows={{ height: 64 }}
+        request={refresh}
+        name="users"
+        extraButtons={() => (
+          <div className="extra-buttons">
+            {can.createProblem(user) && (
+              <ButtonLoader
+                size="small"
+                icon={<PlusIcon />}
+                onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
+              >
+                <T>create</T>
+              </ButtonLoader>
             )}
-            searchParamsObject={queryObject}
-            setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
-          />
-        </div>
-      </ContentLayout>
-    </div>
+          </div>
+        )}
+        searchParamsObject={queryObject}
+        setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
+      />
+    </ContentLayout>
   );
 }
 

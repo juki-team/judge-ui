@@ -9,12 +9,49 @@
   }
 }
 
+.content-layout, .two-content-layout {
+  .extra-buttons {
+    margin-left: var(--pad-t);
+  }
+}
+
 .content-layout {
-  height: 100%;
+  padding: var(--pad-m) 0 var(--pad-m) 0;
+  height: calc(100vh - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
   box-sizing: border-box;
   
   > div {
     height: 100%;
     width: var(--screen-content-width);
+  }
+}
+
+.two-content-layout {
+  padding: var(--pad-m) 0 var(--pad-m) 0;
+  height: calc(100vh - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+  box-sizing: border-box;
+  
+  > div {
+    width: var(--screen-content-width);
+    
+    > .jk-tabs-layout {
+      height: 100%;
+      
+      > div:first-child {
+        margin-bottom: var(--pad-t);
+      }
+      
+      &:before {
+        display: none;
+      }
+      
+      > .jk-tabs-content {
+        box-sizing: border-box;
+        background-color: var(--t-color-white);
+        @extend .jk-border-radius;
+        @extend .jk-shadow;
+        overflow-x: auto;
+      }
+    }
   }
 }

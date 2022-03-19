@@ -14,29 +14,9 @@ body {
   }
 }
 
-.main-content {
-  padding: var(--pad-m) 0 var(--pad-m) 0;
-  height: calc(100vh - var(--heigh-horizontal-menu));
-  box-sizing: border-box;
-  
-  .extra-buttons {
-    margin-left: var(--pad-t);
-  }
-  
-  > .content-layout > div > .jk-tabs-layout {
-    height: calc(100% - 96px);
-    
-    &:before {
-      display: none;
-    }
-    
-    > .jk-tabs-content {
-      margin-top: var(--pad-t);
-      background-color: var(--t-color-white);
-      height: calc(100% - 60px);
-      @extend .jk-border-radius;
-      @extend .jk-shadow;
-      overflow-x: auto;
-    }
-  }
+.image-404 {
+  max-height: calc(100vh - 300px);
+  width: calc(100vw - 400px);
+  max-width: 512px;
+  min-width: 200px;
 }

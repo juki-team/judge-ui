@@ -33,7 +33,7 @@ export const LoginUser = () => {
           </div>
         }
         triggerOn="click"
-        placement="bottom"
+        placement="bottomRight"
       >
         <div className="user-logged-head jk-row gap nowrap color-white">
           <img src={user.imageUrl} alt={user.nickname} className="jk-user-profile-img large" />

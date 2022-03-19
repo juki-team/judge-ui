@@ -25,7 +25,7 @@ const fetcher = (url: string, method?: typeof POST | typeof PUT | typeof DELETE 
   }).then((res) => res.text());
 };
 
-export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url: string, options?: {
+export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url?: string, options?: {
   revalidateIfStale?: boolean,
   revalidateOnFocus?: boolean,
   revalidateOnReconnect?: boolean,
@@ -67,14 +67,16 @@ export const useRouter = () => {
 export const useRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string) => {
   
   const { mutate } = useSWRConfig();
+  console.log('useRequester', url);
   const { data, error, isLoading } = useFetcher<T>(url);
   
   const refresh = useCallback(async (props?) => {
     const { setLoaderStatus } = props || {};
+    console.log({ props, url });
     setLoaderStatus?.(Status.LOADING);
     await mutate(url);
     setLoaderStatus?.(Status.SUCCESS);
-  }, [data]);
+  }, [data, url]);
   
   return {
     data,

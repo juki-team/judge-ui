@@ -1,4 +1,6 @@
-module.exports = {
+const withPWA = require('next-pwa')
+
+module.exports = withPWA({
   i18n: {
     locales: ['en', 'es'],
     defaultLocale: 'en',
@@ -12,4 +14,7 @@ module.exports = {
       },
     ]
   },
-};
+  pwa: {
+    dest: "public",
+  },
+});

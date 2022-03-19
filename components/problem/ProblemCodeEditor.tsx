@@ -1,5 +1,5 @@
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROBLEM_VERDICT, PROGRAMMING_LANGUAGES, QueryParam } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
 import { addParamQuery, authorizedRequest, clean, isStringJson } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -59,24 +59,22 @@ export const ProblemCodeEditor = ({ problem }) => {
   const [testCases, setTestCases] = useState(initialTestCases);
   const defaultValue = { [problem.id]: {} };
   ACCEPTED_PROGRAMMING_LANGUAGES.forEach(key => {
-    defaultValue[problem.id][PROGRAMMING_LANGUAGES[key].mime] = PROGRAMMING_LANGUAGES[key].templateSourceCode;
+    defaultValue[problem.id][PROGRAMMING_LANGUAGE[key].mime] = PROGRAMMING_LANGUAGE[key].templateSourceCode;
   });
   const [source, setSource] = useSaveStorage(storeKey, defaultValue);
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  
-  console.log({ language });
   
   return (
     <CodeRunnerEditor
       theme={editorSettings.theme}
       key={editorSettings.keyMap}
       tabSize={editorSettings.tabSize}
-      sourceCode={source[PROGRAMMING_LANGUAGES[language].mime] || ''}
+      sourceCode={source[PROGRAMMING_LANGUAGE[language].mime] || ''}
       language={language}
       languages={ACCEPTED_PROGRAMMING_LANGUAGES}
       onChange={({ sourceCode, language: newLanguage, testCases, theme, keyMap, tabSize }) => {
         if (typeof sourceCode === 'string') {
-          setSource(prevState => ({ ...prevState, [PROGRAMMING_LANGUAGES[language].mime]: sourceCode }));
+          setSource(prevState => ({ ...prevState, [PROGRAMMING_LANGUAGE[language].mime]: sourceCode }));
         }
         if (newLanguage) {
           setLanguage(newLanguage);
@@ -112,7 +110,7 @@ export const ProblemCodeEditor = ({ problem }) => {
               setLoaderStatus(Status.LOADING);
               const result = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT('1000'), POST, JSON.stringify({
                 language,
-                source: source[PROGRAMMING_LANGUAGES[language].mime] || '',
+                source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
               })));
               if (result.success) {
                 if (result.content?.answer === ProblemVerdict.AC) {

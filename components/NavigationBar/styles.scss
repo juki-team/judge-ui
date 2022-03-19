@@ -9,7 +9,17 @@
 }
 
 .settings-popover {
-  width: 200px;
+  width: 200px !important;
+}
+
+.mobile-left-side-header {
+  height: 64px;
+  width: 216px;
+  border-bottom: 1px solid var(--t-color-white);
+  
+  .jk-image {
+    width: 64px;
+  }
 }
 
 .more-apps-popover {
