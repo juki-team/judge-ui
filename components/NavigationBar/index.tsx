@@ -148,23 +148,25 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           </div>
         }
         leftMobile={{
-          children: <MenuIcon className="color-white" />,
+          children: (
+            <div className="jk-row gap nowrap start mobile-left-side-header">
+              <div className="jk-row"><MenuIcon className="color-white" /></div>
+              <JukiJudgeLogoHorImage className="color-white" />
+            </div>
+          ),
           content: (open, onClose) => (
-            <div className="bg-color-primary jk-row filled">
+            <div className="bg-color-primary jk-row filled left-mobile-content">
               <div className="jk-col space-between">
-                <div className="jk-row nowrap gap mobile-left-side-header">
-                  <ArrowIcon rotate={-90} onClick={onClose} className="color-white" />
+                <div className="jk-row nowrap gap start mobile-left-side-header">
+                  <div className="jk-row"><ArrowIcon rotate={-90} onClick={onClose} className="color-white" /></div>
                   <JukiJudgeLogoHorImage className="color-white" />,
                 </div>
-                <div className="jk-col">
+                <div className="jk-col mobile-left-side-bottom">
                   {settings('right')}
                 </div>
               </div>
             </div>
           ),
-        }}
-        centerMobile={{
-          children: <JukiJudgeLogoHorImage className="color-white" />,
         }}
         rightMobile={{
           children: <LoginUser />,

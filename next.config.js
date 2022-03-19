@@ -1,4 +1,4 @@
-const withPWA = require('next-pwa')
+const withPWA = require('next-pwa');
 
 module.exports = withPWA({
   i18n: {
@@ -12,9 +12,10 @@ module.exports = withPWA({
         destination: '/admin/users',
         permanent: true,
       },
-    ]
+    ];
   },
   pwa: {
-    dest: "public",
+    dest: 'public',
+    disable: process.env.NODE_ENV === 'development',
   },
 });

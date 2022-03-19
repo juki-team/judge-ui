@@ -13,13 +13,25 @@
 }
 
 .mobile-left-side-header {
-  height: 64px;
+  height: var(--top-horizontal-menu-height);
   width: 216px;
   border-bottom: 1px solid var(--t-color-white);
+  
+  > div:first-child {
+    width: 64px;
+  }
   
   .jk-image {
     width: 64px;
   }
+}
+
+.left-mobile-content {
+  //height: calc(100vh - var(--mobile-bottom-horizontal-menu-height)) !important;
+}
+
+.jk-horizontal-menu-mobile-right {
+  padding-right: var(--pad-t);
 }
 
 .more-apps-popover {
