@@ -1,4 +1,4 @@
-import { Button, FetcherLayer, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
+import { Button, ExternalIcon, FetcherLayer, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
 import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useFetcher } from 'hooks';
@@ -69,15 +69,11 @@ export const UserPreview = ({ nickname }) => {
             </div>
             <div className="jk-row end gap">
               <Button size="small" type="text" onClick={handleClose}><T>close</T></Button>
-              <Button
-                size="small"
-                onClick={() => {
-                  handleClose();
-                  push(ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE));
-                }}
-              >
-                <T>see profile</T>
-              </Button>
+              <a href={ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE)} target="_blank">
+                <Button size="small">
+                  <T>see profile</T><ExternalIcon />
+                </Button>
+              </a>
             </div>
           </div>
         )}

@@ -61,6 +61,7 @@ export {
   TextHeadCell,
   MenuIcon,
   ArrowIcon,
+  ExternalIcon,
   TimerClock,
   HomeIcon,
   CupIcon,

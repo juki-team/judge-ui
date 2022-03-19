@@ -906,8 +906,8 @@
 
 "@bit/juki-team.juki.base-ui@^0.0.1":
   version "0.0.1"
-  resolved "https://node.bit.dev/juki-team.juki.base-ui/-/juki-team.juki.base-ui-0.0.1.tgz#d39228d5493a2dd9feeb82bf5bb81df36ba8b05e"
-  integrity sha1-05Io1Uk6Ldn+64K/W7gd82uosF4=
+  resolved "https://node.bit.dev/juki-team.juki.base-ui/-/juki-team.juki.base-ui-0.0.1.tgz#7d3031c10ceee1f55c137f8903db979cd9b534b4"
+  integrity sha1-fTAxwQzu4fVcE3+JA9uXnNm1NLQ=
   dependencies:
     "@bit/juki-team.juki.commons" "0.0.1"
     "@hookform/resolvers" "^1.3.7"
@@ -2457,9 +2457,9 @@ is-weakref@^1.0.1:
     call-bind "^1.0.2"
 
 jake@^10.6.1:
-  version "10.8.2"
-  resolved "https://registry.yarnpkg.com/jake/-/jake-10.8.2.tgz#ebc9de8558160a66d82d0eadc6a2e58fbc500a7b"
-  integrity sha512-eLpKyrfG3mzvGE2Du8VoPbeSkRry093+tyNjdYaBbJS9v17knImYGNXQCUV0gLxQtF82m3E8iRb/wdSQZLoq7A==
+  version "10.8.3"
+  resolved "https://registry.yarnpkg.com/jake/-/jake-10.8.3.tgz#c532d7fef8e014d277f93e1943ee19374d06cba3"
+  integrity sha512-qeoeVK7eSYbs1r9zPLweN0KJfUPqUQyM/WtJC8kmUJoYzfkK/MqcJNNkrOY3CtoWyg8LytAAwyNMk3NGsDs3OQ==
   dependencies:
     async "0.9.x"
     chalk "^2.4.2"

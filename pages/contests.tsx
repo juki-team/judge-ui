@@ -1,8 +1,8 @@
 import { ContentLayout, DataViewer, DataViewerHeadersType, DateField, Field, T, TextField, TextHeadCell } from 'components';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { contestStatusCalculation, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { JUDGE_API_V1 } from 'config/constants/judge';
 import { ContentsResponseType, ContestTab } from 'types';
 import { ROUTES } from '../config/constants';
 
@@ -26,7 +26,7 @@ function Contests() {
   
   const columns: DataViewerHeadersType<ContestTable>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="text-uppercase">state</T>} />,
+      head: <TextHeadCell text={<T>state</T>} />,
       index: 'stateContest',
       field: ({ record: { stateContest } }) => (
         <Field className="jk-row pad">
@@ -46,7 +46,7 @@ function Contests() {
       minWidth: 140,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">start</T>} />,
+      head: <TextHeadCell text={<T>start</T>} />,
       index: 'date',
       field: ({ record: { settings } }) => (
         <DateField date={new Date(settings.start)} label="Date" twoLines />
@@ -57,7 +57,7 @@ function Contests() {
       minWidth: 250,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">contest name</T>} />,
+      head: <TextHeadCell text={<T>contest name</T>} />,
       index: 'name',
       field: ({ record: { name, key } }) => (
         <TextField
@@ -70,7 +70,7 @@ function Contests() {
       minWidth: 300,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">contestants</T>} />,
+      head: <TextHeadCell text={<T>contestants</T>} />,
       index: 'registered',
       field: ({ record: { totalRegistered } }) => (
         <TextField text={totalRegistered} label={<T>registered</T>} />
@@ -93,37 +93,34 @@ function Contests() {
   }));
   
   return (
-    <div>
+    
+    <ContentLayout>
       {/* <TitleLayout>
        <h3>Contest</h3>
        </TitleLayout> */}
-      <ContentLayout>
-        <div className="main-content">
-          <DataViewer<ContestTable>
-            headers={columns}
-            data={data}
-            rows={{ height: 68 }}
-            request={refresh}
-            name="users"
-            // extraButtons={() => (
-            //   <div className="extra-buttons">
-            //     {can.createProblem(user) && (
-            //       <ButtonLoader
-            //         size="small"
-            //         icon={<PlusIcon />}
-            //         onClick={buttonLoaderLink(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT))}
-            //       >
-            //         <T>create</T>
-            //       </ButtonLoader>
-            //     )}
-            //   </div>
-            // )}
-            searchParamsObject={queryObject}
-            setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
-          />
-        </div>
-      </ContentLayout>
-    </div>
+      <DataViewer<ContestTable>
+        headers={columns}
+        data={data}
+        rows={{ height: 68 }}
+        request={refresh}
+        name="users"
+        // extraButtons={() => (
+        //   <div className="extra-buttons">
+        //     {can.createProblem(user) && (
+        //       <ButtonLoader
+        //         size="small"
+        //         icon={<PlusIcon />}
+        //         onClick={buttonLoaderLink(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT))}
+        //       >
+        //         <T>create</T>
+        //       </ButtonLoader>
+        //     )}
+        //   </div>
+        // )}
+        searchParamsObject={queryObject}
+        setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
+      />
+    </ContentLayout>
   );
 }
 
