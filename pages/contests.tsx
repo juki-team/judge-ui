@@ -61,7 +61,7 @@ function Contests() {
       index: 'name',
       field: ({ record: { name, key } }) => (
         <TextField
-          text={<div className="jk-link" onClick={() => push(ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW))}>{name}</div>}
+          text={<div className="link" onClick={() => push(ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW))}>{name}</div>}
           label={<T>contest name</T>} />
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },

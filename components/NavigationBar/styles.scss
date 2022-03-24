@@ -12,10 +12,16 @@
   width: 200px !important;
 }
 
+.jk-drawer-body {
+  .mobile-left-side-header {
+    border-bottom: 1px solid var(--t-color-white);
+  }
+}
+
 .mobile-left-side-header {
   height: var(--top-horizontal-menu-height);
   width: 216px;
-  border-bottom: 1px solid var(--t-color-white);
+  overflow: hidden;
   
   > div:first-child {
     width: 64px;
@@ -27,7 +33,7 @@
 }
 
 .left-mobile-content {
-  //height: calc(100vh - var(--mobile-bottom-horizontal-menu-height)) !important;
+  //height: calc(var(--100VH) - var(--mobile-bottom-horizontal-menu-height)) !important;
 }
 
 .jk-horizontal-menu-mobile-right {

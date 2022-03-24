@@ -1,4 +1,5 @@
 const withPWA = require('next-pwa');
+// const withTM = require('next-transpile-modules')(['react-markdown']);
 
 module.exports = withPWA({
   i18n: {

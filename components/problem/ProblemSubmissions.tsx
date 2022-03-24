@@ -19,17 +19,21 @@ type ProblemSubmissionsTable = {
   verdictByGroups: {},
 }
 
+const hasTimeHasMemory = (verdict: ProblemVerdict) => {
+  return !(verdict === ProblemVerdict.CE || verdict === ProblemVerdict.HIDDEN || verdict === ProblemVerdict.NONE || verdict === ProblemVerdict.PENDING);
+};
+
 export const ProblemSubmissions = ({ problem }) => {
   const { queryObject, query, push } = useRouter();
   
   const columns: DataViewerHeadersType<ProblemSubmissionsTable>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="text-uppercase">nickname</T>} />,
+      head: <TextHeadCell text={<T>nickname</T>} />,
       index: 'nickname',
       field: ({ record: { nickname, imageUrl }, isCard }) => (
         <Field className="jk-row center gap">
-          <img src={imageUrl} className="jk-user-profile-img" alt={nickname} />
-          <div className="jk-link" onClick={() => (
+          <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
+          <div className="link" onClick={() => (
             push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname) })
           )}>{nickname}</div>
         </Field>
@@ -40,7 +44,7 @@ export const ProblemSubmissions = ({ problem }) => {
       minWidth: 250,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">date</T>} />,
+      head: <TextHeadCell text={<T>date</T>} />,
       index: 'timestamp',
       field: ({ record: { timestamp }, isCard }) => (
         <DateField className="jk-row" date={new Date(timestamp)} label={<T>date</T>} />
@@ -51,17 +55,17 @@ export const ProblemSubmissions = ({ problem }) => {
       minWidth: 260,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">verdict</T>} />,
+      head: <TextHeadCell text={<T>verdict</T>} />,
       index: 'verdict',
       field: ({ record: { verdict, verdictByGroups }, isCard }) => (
         <Field className="jk-row">
           <Popover
-            content={<div>{PROBLEM_VERDICT[verdict].print}</div>}
+            content={<div className="text-sentence-case">{PROBLEM_VERDICT[verdict]?.print}</div>}
             triggerOn="hover"
             placement="top"
             showPopperArrow
           >
-            <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict].color }}>{verdict}</div>
+            <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>{verdict}</div>
           </Popover>
         </Field>
       ),
@@ -75,7 +79,7 @@ export const ProblemSubmissions = ({ problem }) => {
       minWidth: 120,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">lang</T>} />,
+      head: <TextHeadCell text={<T>lang</T>} />,
       index: 'language',
       field: ({ record: { language }, isCard }) => (
         <Field className="jk-row">
@@ -91,10 +95,12 @@ export const ProblemSubmissions = ({ problem }) => {
       minWidth: 120,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">time</T>} />,
+      head: <TextHeadCell text={<T>time</T>} />,
       index: 'timeUsed',
-      field: ({ record: { timeUsed }, isCard }) => (
-        <Field className="jk-row center">{timeUsed} <T>ms</T></Field>
+      field: ({ record: { timeUsed, verdict }, isCard }) => (
+        <Field className="jk-row center">
+          {hasTimeHasMemory(verdict) ? <>{(timeUsed / 1000).toFixed(3)} <T>s</T></> : '-'}
+        </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.timeUsed - rowB.timeUsed },
       filter: { type: 'text-auto' },
@@ -102,10 +108,12 @@ export const ProblemSubmissions = ({ problem }) => {
       minWidth: 120,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">memory</T>} />,
+      head: <TextHeadCell text={<T>memory</T>} />,
       index: 'memoryUsed',
-      field: ({ record: { memoryUsed }, isCard }) => (
-        <Field className="jk-row center">{memoryUsed} <T>kb</T></Field>
+      field: ({ record: { memoryUsed, verdict }, isCard }) => (
+        <Field className="jk-row center">
+          {hasTimeHasMemory(verdict) ? <>{memoryUsed} <T>kb</T></> : '-'}
+        </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.memoryUsed - rowB.memoryUsed },
       filter: { type: 'text-auto' },

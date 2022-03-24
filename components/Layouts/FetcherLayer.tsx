@@ -13,8 +13,10 @@ export const FetcherLayer = <T, >({ isLoading, data, error, children }: FetcherL
   
   if (isLoading) {
     return (
-      <div className="jk-row">
-        <LoadingIcon size="large" />
+      <div className="jk-row filled">
+        <div className="jk-col">
+          <LoadingIcon size="huge" />
+        </div>
       </div>
     );
   }

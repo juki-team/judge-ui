@@ -14,10 +14,10 @@ import { PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
-import { useMemo } from 'react';
+import Link from 'next/link';
+import { useEffect, useMemo } from 'react';
 import { useUserState } from 'store';
-import { ProblemStatus, ProblemTab } from 'types';
-import { ContentsResponseType } from '../types';
+import { ContentsResponseType, ProblemStatus, ProblemTab } from 'types';
 
 type ProblemsTable = {
   id: number,
@@ -43,8 +43,10 @@ function Problems() {
       head: <TextHeadCell text={<T className="text-uppercase">id</T>} />,
       index: 'id',
       field: ({ record: { id }, isCard }) => (
-        <Field className="jk-row jk-link text-semi-bold" onClick={() => push(ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT))}>
-          {id}
+        <Field className="jk-row link text-semi-bold">
+          <Link href={ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT)}>
+            <a>{id}</a>
+          </Link>
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => +rowA.id - +rowB.id },
@@ -56,11 +58,13 @@ function Problems() {
       minWidth: 100,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">problem name</T>} />,
+      head: <TextHeadCell text={<T>problem name</T>} />,
       index: 'name',
       field: ({ record: { id, name } }) => (
-        <Field className="jk-row jk-link text-semi-bold" onClick={() => push(ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT))}>
-          {name}
+        <Field className="jk-row link text-semi-bold">
+          <Link href={ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT)}>
+            <a>{name}</a>
+          </Link>
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
@@ -69,11 +73,11 @@ function Problems() {
       minWidth: 300,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">tags</T>} />,
+      head: <TextHeadCell text={<T>tags</T>} />,
       index: 'tags',
       field: ({ record: { tags } }) => (
         <Field className="jk-row pad">
-          {tags.map(tag => <div className="jk-tag">{tag}</div>)}
+          {tags.map(tag => !!tag && <div className="jk-tag gray-6 text-s">{tag}</div>)}
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.tags.length - rowB.tags.length },
@@ -87,7 +91,7 @@ function Problems() {
     },
     ...(can.viewStatusProblem(user) ? [
       {
-        head: <TextHeadCell text={<T className="text-uppercase">visibility</T>} />,
+        head: <TextHeadCell text={<T>visibility</T>} />,
         index: 'status',
         field: ({ record: { status } }) => (
           <TextField
@@ -127,9 +131,6 @@ function Problems() {
   
   return (
     <ContentLayout>
-      {/* <TitleLayout>
-       <h3>Problems</h3>
-       </TitleLayout> */}
       <DataViewer<ProblemsTable>
         headers={columns}
         data={data}

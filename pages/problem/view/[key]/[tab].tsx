@@ -15,8 +15,10 @@ import {
 import { ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { useFetcher } from 'hooks';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ContentResponseType, ProblemTab, Status } from 'types';
+import { ArrowIcon } from '../../../../components';
 
 function ProblemView() {
   
@@ -41,10 +43,20 @@ function ProblemView() {
         <TwoContentLayout>
           <div className="jk-col filled">
             <div className="jk-row center gap nowrap">
-              <h5>{data.content.name}</h5>
-              <Popover content={<ProblemInfo problem={data.content} />} triggerOn="click" placement="bottom">
-                <div className="jk-row"><ExclamationIcon filledCircle className="screen sm md color-primary" rotate={180} /></div>
-              </Popover>
+              <div className="jk-row color-primary">
+                <Link href={ROUTES.PROBLEMS.LIST()}>
+                  <a className="jk-row nowrap text-semi-bold link">
+                    <ArrowIcon rotate={-90} />
+                    <div className="screen md lg hg">Problems</div>
+                  </a>
+                </Link>
+              </div>
+              <div className="jk-row gap center nowrap flex-1">
+                <h5>{data.content.name}</h5>
+                <Popover content={<ProblemInfo problem={data.content} />} triggerOn="click" placement="bottom">
+                  <div className="jk-row"><ExclamationIcon filledCircle className="screen sm md color-primary" rotate={180} /></div>
+                </Popover>
+              </div>
             </div>
             <div className="screen lg hg"><ProblemInfo problem={data.content} horizontal /></div>
           </div>

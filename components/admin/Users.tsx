@@ -78,7 +78,7 @@ export function Users() {
           <img src={imageUrl} className="jk-user-profile-img huge" alt={nickname} />
           <div className="jk-col">
             <div>{givenName} {familyName}</div>
-            <div className="jk-link">{nickname}</div>
+            <div className="link">{nickname}</div>
             <div>{email}</div>
           </div>
         </Field>

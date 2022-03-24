@@ -1,6 +1,8 @@
 export {
   AlertModal,
   AppsIcon,
+  ArrowIcon,
+  AssignmentIcon,
   Button,
   ButtonLoader,
   CheckIcon,
@@ -13,18 +15,20 @@ export {
   ConstructionIcon,
   CopyIcon,
   CopyToClipboard,
+  CupIcon,
   DataViewer,
   DateField,
   DeleteIcon,
   DownloadIcon,
   EditIcon,
   ExclamationIcon,
-  ExternalLinkIcon,
+  ExternalIcon,
   EyeIcon,
   Field,
   FilterIcon,
   FloatToolbar,
   HeadlineIcon,
+  HomeIcon,
   HorizontalMenu,
   ImageUploaderModal,
   InfoCircleIcon,
@@ -43,6 +47,9 @@ export {
   LoadingIcon,
   LoginModal,
   MailIcon,
+  MdMathEditor,
+  MdMathViewer,
+  MenuIcon,
   Modal,
   NotFound,
   PlaceIcon,
@@ -59,25 +66,14 @@ export {
   TextArea,
   TextField,
   TextHeadCell,
-  MenuIcon,
-  ArrowIcon,
-  ExternalIcon,
   TimerClock,
-  HomeIcon,
-  CupIcon,
-  AssignmentIcon,
   Tooltip,
   UpIcon,
   useNotification,
 } from '@bit/juki-team.juki.base-ui';
+
 export type {
-  DataViewerHeadersType, FilterSelectOfflineType, CodeEditorTestCasesType,
+  CodeEditorTestCasesType,
+  DataViewerHeadersType,
+  FilterSelectOfflineType,
 } from '@bit/juki-team.juki.base-ui';
-
-// for MdMathEditor:
-export { classNames, downloadBlobAsFile, useOutsideAlerter } from '@bit/juki-team.juki.base-ui';
-
-import dynamic from 'next/dynamic';
-
-export const MdMathEditor = dynamic(() => import('./MdMathEditor'), { ssr: false });
-export const MdMathViewer = dynamic(() => import('./MdMathViewer'), { ssr: false });

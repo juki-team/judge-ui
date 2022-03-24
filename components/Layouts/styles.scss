@@ -17,7 +17,7 @@
 
 .content-layout {
   padding: var(--pad-m) 0 var(--pad-m) 0;
-  height: calc(100vh - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+  height: calc(var(--100VH) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
   box-sizing: border-box;
   
   > div {
@@ -28,7 +28,7 @@
 
 .two-content-layout {
   padding: var(--pad-m) 0 var(--pad-m) 0;
-  height: calc(100vh - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+  height: calc(var(--100VH) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
   box-sizing: border-box;
   
   > div {
@@ -51,6 +51,10 @@
         @extend .jk-border-radius;
         @extend .jk-shadow;
         overflow-x: auto;
+        
+        .jk-view-container {
+          box-shadow: none;
+        }
       }
     }
   }

@@ -57,12 +57,14 @@ export const UserPreview = ({ nickname }) => {
                   <div className="text-bold">{data?.content?.nickname}</div>
                   <div className="color-gray-3">{data?.content?.givenName} {data?.content?.familyName}</div>
                   <div className="jk-divider tiny" />
-                  {(data?.content?.city || data?.content?.country) && (
+                  {(data?.content?.city?.trim() || data?.content?.country?.trim()) && (
                     <div className="jk-row start gap">
                       <PlaceIcon />{data?.content?.city}{data?.content?.city && ','} {data?.content?.country}
                     </div>
                   )}
-                  {data?.content?.institution && <div className="jk-row start gap"><SchoolIcon />{data?.content?.institution}</div>}
+                  {data?.content?.institution?.trim() && (
+                    <div className="jk-row start gap"><SchoolIcon />{data?.content?.institution}</div>
+                  )}
                   <div className="jk-row start gap"><MailIcon />{data?.content?.email}</div>
                 </div>
               </div>

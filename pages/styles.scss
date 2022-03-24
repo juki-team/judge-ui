@@ -5,18 +5,30 @@
 
 body {
   margin: 0;
-  
   background-color: var(--t-color-white-2);
   
   .jk-app {
     width: 100vw;
-    height: 100vh;
+    height: var(--100VH);
   }
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 .image-404 {
-  max-height: calc(100vh - 300px);
+  max-height: calc(var(--100VH) - 300px);
   width: calc(100vw - 400px);
   max-width: 512px;
   min-width: 200px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:active {
+  color: var(--t-color-primary-light);
 }

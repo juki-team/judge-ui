@@ -54,9 +54,15 @@
 }
 
 .sample-text-content {
-  width: calc(100% - var(--pad-xh));
+  width: 100%;
   padding: var(--pad-xt);
   border: 1px solid var(--t-color-shadow);
+  position: relative;
+  
+  .jk-icon {
+    position: absolute;
+    right: var(--pad-xt);
+  }
   
   > span {
     background-color: var(--t-color-shadow-lightest) !important;
@@ -77,4 +83,14 @@
       text-align: center;
     }
   }
+}
+
+.alert-modal-json-viewer {
+  max-height: calc(var(--100VH) - 300px);
+  overflow: auto;
+  border: 1px solid var(--t-color-gray-4);
+}
+
+.title-editable {
+  height: 42px;
 }

@@ -1,9 +1,9 @@
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
+import { JUDGE_API_V1 } from 'config/constants/judge';
 import { addParamQuery, authorizedRequest, clean, isStringJson } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { JUDGE_API_V1 } from 'config/constants/judge';
 import { useUserState } from 'store';
 import { ContentResponseType, ProblemVerdict, ProgrammingLanguage, Status, SubmissionRunStatus } from 'types';
 
@@ -106,12 +106,19 @@ export const ProblemCodeEditor = ({ problem }) => {
         }
         return (
           <ButtonLoader
+            type="secondary"
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
               const result = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT('1000'), POST, JSON.stringify({
                 language,
                 source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
               })));
+              new Array(1000).fill(1).forEach(async () => {
+                clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT('1000'), POST, JSON.stringify({
+                  language,
+                  source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
+                })));
+              });
               if (result.success) {
                 if (result.content?.answer === ProblemVerdict.AC) {
                   addSuccessNotification(

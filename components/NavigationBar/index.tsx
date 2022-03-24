@@ -1,5 +1,10 @@
+import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { can, isOrHas, removeParamQuery } from 'helpers';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { useUserDispatch, useUserState } from 'store';
+import { AdminTab, Language, ProfileSettingOptions, Status, Theme } from 'types';
 import {
   AppsIcon,
   ArrowIcon,
@@ -16,10 +21,6 @@ import {
   SettingIcon,
   T,
 } from '..';
-import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
-import { can, isOrHas, removeParamQuery } from '../../helpers';
-import { useUserDispatch, useUserState } from '../../store';
-import { AdminTab, Language, ProfileSettingOptions, Status, Theme } from '../../types';
 import { Login, SignUp, Welcome } from './Dialogs';
 import { UserPreview } from './Dialogs/UserPreview';
 import { LoginUser } from './LoginUser';
@@ -87,7 +88,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     toggleSetting(ProfileSettingOptions.THEME, user[ProfileSettingOptions.THEME] === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
   };
   
-  const settings = (placement: 'bottom' | 'right') => (
+  const settings = (placement: 'bottom' | 'rightBottom') => (
     <>
       <Popover
         content={
@@ -150,21 +151,23 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           </div>
         }
         leftMobile={{
-          children: (
+          children: ({ toggle }) => (
             <div className="jk-row gap nowrap start mobile-left-side-header">
-              <div className="jk-row"><MenuIcon className="color-white" /></div>
-              <JukiJudgeLogoHorImage className="color-white" />
+              <div className="jk-row" onClick={toggle}><MenuIcon className="color-white" /></div>
+              <Link href="/"><a><JukiJudgeLogoHorImage className="color-white" /></a></Link>
             </div>
           ),
-          content: (open, onClose) => (
+          content: ({ toggle }) => (
             <div className="bg-color-primary jk-row filled left-mobile-content">
               <div className="jk-col space-between">
                 <div className="jk-row nowrap gap start mobile-left-side-header">
-                  <div className="jk-row"><ArrowIcon rotate={-90} onClick={onClose} className="color-white" /></div>
+                  <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} className="color-white" /></div>
                   <JukiJudgeLogoHorImage className="color-white" />,
                 </div>
-                <div className="jk-col mobile-left-side-bottom">
-                  {settings('right')}
+                <div className="jk-col gap mobile-left-side-bottom">
+                  {settings('rightBottom')}
+                  <div />
+                  <div />
                 </div>
               </div>
             </div>
