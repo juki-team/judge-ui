@@ -17,7 +17,8 @@ import {
 } from 'types';
 
 export interface UserState extends UserInterface {
-  isLogged: boolean;
+  isLogged: boolean,
+  session: string,
 }
 
 export const UserContext = createContext<{ user: UserState, setUser: Dispatch<SetStateAction<UserState>> }>({
@@ -53,6 +54,7 @@ const getUserState = (object: any): UserState => {
     courseRole: USER_GUEST.courseRole,
     myPermissions,
     isLogged: !!object?.nickname,
+    session: object?.session || '',
   };
 };
 

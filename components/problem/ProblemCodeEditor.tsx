@@ -1,11 +1,11 @@
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { addParamQuery, authorizedRequest, clean, isStringJson } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProblemVerdict, ProgrammingLanguage, Status, SubmissionRunStatus } from 'types';
+import { ContentResponseType, ProgrammingLanguage, Status, SubmissionRunStatus } from 'types';
 
 const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {
   
@@ -27,6 +27,33 @@ const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): 
   return [value, setValue];
 };
 
+/*
+ if (result.content?.answer === ProblemVerdict.AC) {
+ addSuccessNotification(
+ <div className="jk-pad">
+ <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].print}</T>
+ </div>,
+ );
+ } else if (result.content?.answer === ProblemVerdict.PA) {
+ addSuccessNotification(
+ <div className="jk-pad">
+ <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].print}</T>
+ &bnsp;
+ ({result.content?.submitPoints} <T>pnts</T>)
+ </div>,
+ );
+ } else {
+ if (Object.keys(PROBLEM_VERDICT).includes(result.content?.answer)) {
+ addErrorNotification(
+ <div className="jk-pad">
+ <T className="text-capitalize">{PROBLEM_VERDICT[result.content?.answer].print}</T>
+ </div>,
+ );
+ } else {
+ addErrorNotification(<div className="jk-pad">{result.content?.answer}</div>);
+ }
+ }
+ */
 export const ProblemCodeEditor = ({ problem }) => {
   
   const initialTestCases: CodeEditorTestCasesType = {};
@@ -43,7 +70,7 @@ export const ProblemCodeEditor = ({ problem }) => {
       stdin: sample.input,
     };
   });
-  const { nickname, isLogged } = useUserState();
+  const { nickname, isLogged, session } = useUserState();
   const { query, push } = useRouter();
   const editorStorageKey = 'jk-editor-settings-store/' + nickname;
   
@@ -64,6 +91,7 @@ export const ProblemCodeEditor = ({ problem }) => {
   const [source, setSource] = useSaveStorage(storeKey, defaultValue);
   const { addSuccessNotification, addErrorNotification } = useNotification();
   
+  console.log({ query });
   return (
     <CodeRunnerEditor
       theme={editorSettings.theme}
@@ -109,41 +137,22 @@ export const ProblemCodeEditor = ({ problem }) => {
             type="secondary"
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
-              const result = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT('1000'), POST, JSON.stringify({
+              const result = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), POST, JSON.stringify({
                 language,
                 source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
+                session,
               })));
-              new Array(1000).fill(1).forEach(async () => {
-                clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT('1000'), POST, JSON.stringify({
+              new Array(1000).fill(1).forEach(() => {
+                authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1('1000'), POST, JSON.stringify({
                   language,
                   source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
-                })));
+                  session,
+                }));
               });
+              console.log({ result });
               if (result.success) {
-                if (result.content?.answer === ProblemVerdict.AC) {
-                  addSuccessNotification(
-                    <div className="jk-pad">
-                      <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].print}</T>
-                    </div>,
-                  );
-                } else if (result.content?.answer === ProblemVerdict.PA) {
-                  addSuccessNotification(
-                    <div className="jk-pad">
-                      <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].print}</T>
-                      &bnsp;
-                      ({result.content?.submitPoints} <T>pnts</T>)
-                    </div>,
-                  );
-                } else {
-                  if (Object.keys(PROBLEM_VERDICT).includes(result.content?.answer)) {
-                    addErrorNotification(
-                      <div className="jk-pad">
-                        <T className="text-capitalize">{PROBLEM_VERDICT[result.content?.answer].print}</T>
-                      </div>,
-                    );
-                  } else {
-                    addErrorNotification(<div className="jk-pad">{result.content?.answer}</div>);
-                  }
+                if (result?.content.submitId) {
+                  addSuccessNotification(<T className="text-capitalize">submission received</T>);
                 }
                 setLoaderStatus(Status.SUCCESS);
               } else {
@@ -156,7 +165,7 @@ export const ProblemCodeEditor = ({ problem }) => {
           </ButtonLoader>
         );
       }}
-      testCases={testCases}
+      // testCases={testCases}
     />
   );
 };

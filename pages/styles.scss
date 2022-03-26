@@ -32,3 +32,19 @@ a {
 a:active {
   color: var(--t-color-primary-light);
 }
+
+.back-link {
+  position: absolute;
+  left: 0;
+}
+
+.notification-wrapper {
+  margin-top: var(--top-horizontal-menu-height);
+  
+  .message-content {
+    min-height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

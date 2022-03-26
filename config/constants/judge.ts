@@ -1,6 +1,7 @@
 import { ContestStatus, UserStatus } from '../../types';
 
 export const JUDGE_BACKEND_BASE_URL = process.env.NEXT_PUBLIC_JUKI_JUDGE_BACKEND_BASE_URL;
+export const JUDGER_BACKEND_BASE_URL = process.env.NEXT_PUBLIC_JUKI_JUDGER_BACKEND_BASE_URL;
 
 export const JUDGE_API_V1 = {
   ACCOUNT: {
@@ -59,6 +60,9 @@ export const JUDGE_API_V1 = {
     },
     SUBMIT: (id: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit`;
+    },
+    SUBMIT_V1: (id: string) => {
+      return `${JUDGER_BACKEND_BASE_URL}/api/v1/submit/problem/${id}`;
     },
     SUBMISSION_CODE: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/submit/${key}`;

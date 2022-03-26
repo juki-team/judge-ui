@@ -43,7 +43,7 @@ function ProblemView() {
         <TwoContentLayout>
           <div className="jk-col filled">
             <div className="jk-row center gap nowrap">
-              <div className="jk-row color-primary">
+              <div className="jk-row color-primary back-link">
                 <Link href={ROUTES.PROBLEMS.LIST()}>
                   <a className="jk-row nowrap text-semi-bold link">
                     <ArrowIcon rotate={-90} />
@@ -51,7 +51,7 @@ function ProblemView() {
                   </a>
                 </Link>
               </div>
-              <div className="jk-row gap center nowrap flex-1">
+              <div className="jk-row gap center nowrap">
                 <h5>{data.content.name}</h5>
                 <Popover content={<ProblemInfo problem={data.content} />} triggerOn="click" placement="bottom">
                   <div className="jk-row"><ExclamationIcon filledCircle className="screen sm md color-primary" rotate={180} /></div>

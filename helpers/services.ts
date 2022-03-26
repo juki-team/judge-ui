@@ -18,8 +18,15 @@ export const clean = <T extends ContentResponseType<any> | ContentsResponseType<
     return { success: false, message: ERROR[ErrorCode.ERR9999].message, errors: [{ code: ErrorCode.ERR9999, detail: '' }] };
   }
   const responseJson = JSON.parse(responseText);
+  console.log({ responseJson });
   if (responseJson.success) {
-    if (Object.keys(responseJson).length === 3 && typeof responseJson.total === 'number' && Array.isArray(responseJson.list)) {
+    if (Object.keys(responseJson).length === 3 && typeof responseJson.success === 'boolean' && typeof responseJson.message === 'string' && responseJson.content) {
+      return {
+        success: responseJson.success,
+        message: responseJson.message,
+        content: responseJson.content,
+      } as T;
+    } else if (Object.keys(responseJson).length === 3 && typeof responseJson.total === 'number' && Array.isArray(responseJson.list)) {
       return {
         success: true,
         message: '',
@@ -62,6 +69,7 @@ export const clean = <T extends ContentResponseType<any> | ContentsResponseType<
 };
 
 export const authorizedRequest = async (url: string, method?: typeof POST | typeof PUT | typeof DELETE | typeof GET, body?: string, signal?: AbortSignal) => {
+  console.log('authorizedRequest', { url, method });
   const requestHeaders: HeadersInit = new Headers();
   requestHeaders.set('Accept', 'application/json');
   requestHeaders.set('Content-Type', 'application/json');
