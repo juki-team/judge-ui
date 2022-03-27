@@ -165,7 +165,7 @@ export const ProblemCodeEditor = ({ problem }) => {
           </ButtonLoader>
         );
       }}
-      // testCases={testCases}
+      testCases={testCases}
     />
   );
 };

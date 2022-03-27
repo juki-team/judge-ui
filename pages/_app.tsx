@@ -13,7 +13,9 @@ export default function MyApp({ Component, pageProps }) {
   
   return (
     <JukiBaseUiProvider
-      utilsServiceUrl={'https://prod-v1-utils-back.juki.app'}
+      // utilsServiceUrl={'https://prod-v1-utils-back.juki.app'}
+      // utilsServiceUrl={'http://prodv1utilsbackjukiappapp-env.eba-v2iz3isa.us-east-1.elasticbeanstalk.com'}
+      utilsServiceUrl="https://utils-back-v1.juki.app"
       apiVersion={'api/v1'}
       utilsUiUrl={'http://localhost:3001'}
     >
