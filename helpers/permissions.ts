@@ -1,5 +1,5 @@
-import { UserState } from '../store';
-import { ScopeData } from '../types';
+import { UserState } from 'store';
+import { ProblemState, ProblemStatus, ScopeData } from 'types';
 
 export const can = {
   // USERS
@@ -47,10 +47,13 @@ export const can = {
   createProblem(account: UserState): boolean {
     return account.myPermissions[ScopeData.PROBLEM]?.charAt(0) === '0';
   },
-  // updateProblem(account: UserState, problem: ProblemState): boolean {
-  //   return (account.myPermissions[ScopeData.PROBLEM]?.charAt(2) === '0') ||
-  //     (account.myPermissions[ScopeData.PROBLEM]?.charAt(2) === '1' && problem.status !== ProblemStatus.ARCHIVED && problem.ownerNickname === account.nickname);
-  // },
+  viewProblemSubmissionSourceCode(account: UserState, submissionNickname: string): boolean {
+    return account.myPermissions[ScopeData.PROBLEM]?.charAt(0) === '0' || account.nickname === submissionNickname;
+  },
+  updateProblem(account: UserState, problem: ProblemState): boolean {
+    return (account.myPermissions[ScopeData.PROBLEM]?.charAt(2) === '0') ||
+      (account.myPermissions[ScopeData.PROBLEM]?.charAt(2) === '1' && problem.status !== ProblemStatus.ARCHIVED && problem.ownerNickname === account.nickname);
+  },
   viewStatusProblem(account: UserState): boolean {
     return account.myPermissions[ScopeData.PROBLEM]?.charAt(0) !== '9' ||
       account.myPermissions[ScopeData.PROBLEM]?.charAt(1) !== '9' ||

@@ -15,7 +15,7 @@ import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContentsResponseType, ProblemStatus, ProblemTab } from 'types';
 

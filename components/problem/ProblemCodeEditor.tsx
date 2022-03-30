@@ -1,7 +1,7 @@
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { addParamQuery, authorizedRequest, clean, isStringJson } from 'helpers';
+import { addParamQuery, authorizedRequest, cleanRequest, isStringJson } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useUserState } from 'store';
@@ -64,10 +64,10 @@ export const ProblemCodeEditor = ({ problem }) => {
       log: '',
       sample: true,
       status: SubmissionRunStatus.NONE,
-      stderr: '',
-      stdout: '',
+      err: '',
+      out: '',
       index,
-      stdin: sample.input,
+      in: sample.input,
     };
   });
   const { nickname, isLogged, session } = useUserState();
@@ -91,7 +91,6 @@ export const ProblemCodeEditor = ({ problem }) => {
   const [source, setSource] = useSaveStorage(storeKey, defaultValue);
   const { addSuccessNotification, addErrorNotification } = useNotification();
   
-  console.log({ query });
   return (
     <CodeRunnerEditor
       theme={editorSettings.theme}
@@ -137,26 +136,32 @@ export const ProblemCodeEditor = ({ problem }) => {
             type="secondary"
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
-              const result = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), POST, JSON.stringify({
-                language,
-                source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
-                session,
-              })));
-              new Array(1000).fill(1).forEach(() => {
-                authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1('1000'), POST, JSON.stringify({
+              const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
+                method: POST,
+                body: JSON.stringify({
                   language,
                   source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
                   session,
-                }));
-              });
+                }),
+              }));
+              /*new Array(100).fill(1).forEach(() => {
+                authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
+                  method: POST,
+                  body: JSON.stringify({
+                    language,
+                    source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
+                    session,
+                  }),
+                });
+              });*/
               console.log({ result });
               if (result.success) {
                 if (result?.content.submitId) {
-                  addSuccessNotification(<T className="text-capitalize">submission received</T>);
+                  addSuccessNotification(<T className="text-sentence-case">submission received</T>);
                 }
                 setLoaderStatus(Status.SUCCESS);
               } else {
-                addErrorNotification(<div className="jk-pad"><T>something went wrong, please try again later</T></div>);
+                addErrorNotification(<T className="text-sentence-case">something went wrong, please try again later</T>);
                 setLoaderStatus(Status.ERROR);
               }
             }}

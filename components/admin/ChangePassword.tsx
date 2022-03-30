@@ -1,8 +1,8 @@
 import { Button, ButtonLoader, CopyIcon, CopyToClipboard, InputPassword, Modal, T } from 'components';
 import { useState } from 'react';
 import { PUT } from '../../config/constants';
-import { authorizedRequest, clean } from '../../helpers';
 import { JUDGE_API_V1 } from '../../config/constants/judge';
+import { authorizedRequest, cleanRequest } from '../../helpers';
 import { ContentResponseType, Status } from '../../types';
 import { useNotification } from '../index';
 
@@ -44,12 +44,15 @@ export const ChangePassword = ({ onClose, nickname }: { onClose: () => void, nic
           <ButtonLoader
             onClick={async setLoaderStatus => {
               setLoaderStatus?.(Status.LOADING);
-              const response = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD(), PUT, JSON.stringify({
-                nickName: nickname,
-                newPassword,
-              })));
+              const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD(), {
+                method: PUT,
+                body: JSON.stringify({
+                  nickName: nickname,
+                  newPassword,
+                }),
+              }));
               if (response.success) {
-                addSuccessNotification(<T>password changed successfully</T>);
+                addSuccessNotification(<T className="text-sentence-case">password changed successfully</T>);
                 setLoaderStatus?.(Status.SUCCESS);
               } else {
                 addErrorNotification(<T>error</T>);

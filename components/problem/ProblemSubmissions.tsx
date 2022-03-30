@@ -1,10 +1,12 @@
-import { DataViewer, DataViewerHeadersType, DateField, Field, Popover, T, TextHeadCell } from 'components';
+import { DataViewer, DataViewerHeadersType, DateField, Field, T, TextHeadCell } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useCallback, useMemo, useRef } from 'react';
 import { ContentsResponseType, ProblemVerdict, ProgrammingLanguage } from 'types';
+import { SubmissionInfo } from './SubmissionInfo';
+import { Memory, Time, Verdict } from './utils';
 
 type ProblemSubmissionsTable = {
   submitId: string,
@@ -18,10 +20,6 @@ type ProblemSubmissionsTable = {
   memoryUsed: number,
   verdictByGroups: {},
 }
-
-const hasTimeHasMemory = (verdict: ProblemVerdict) => {
-  return !(verdict === ProblemVerdict.CE || verdict === ProblemVerdict.HIDDEN || verdict === ProblemVerdict.NONE || verdict === ProblemVerdict.PENDING);
-};
 
 export const ProblemSubmissions = ({ problem }) => {
   const { queryObject, query, push } = useRouter();
@@ -52,21 +50,14 @@ export const ProblemSubmissions = ({ problem }) => {
       sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },
       filter: { type: 'date-range-auto' },
       cardPosition: 'center',
-      minWidth: 260,
+      minWidth: 280,
     },
     {
       head: <TextHeadCell text={<T>verdict</T>} />,
       index: 'verdict',
-      field: ({ record: { verdict, verdictByGroups }, isCard }) => (
+      field: ({ record: { verdict, submitPoints }, isCard }) => (
         <Field className="jk-row">
-          <Popover
-            content={<div className="text-sentence-case">{PROBLEM_VERDICT[verdict]?.print}</div>}
-            triggerOn="hover"
-            placement="top"
-            showPopperArrow
-          >
-            <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>{verdict}</div>
-          </Popover>
+          <Verdict verdict={verdict} submitPoints={submitPoints} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
@@ -81,10 +72,23 @@ export const ProblemSubmissions = ({ problem }) => {
     {
       head: <TextHeadCell text={<T>lang</T>} />,
       index: 'language',
-      field: ({ record: { language }, isCard }) => (
-        <Field className="jk-row">
-          <div>{PROGRAMMING_LANGUAGE[language].name}</div>
-        </Field>
+      field: ({
+        record: { language, verdict, submitPoints, nickname, memoryUsed, submitId, timeUsed, verdictByGroups, timestamp },
+        isCard,
+      }) => (
+        <SubmissionInfo
+          nickname={nickname}
+          language={language}
+          submitId={submitId}
+          timeUsed={timeUsed}
+          verdictByGroups={verdictByGroups}
+          verdict={verdict}
+          memoryUsed={memoryUsed}
+          date={new Date(timestamp)}
+          submitPoints={submitPoints}
+        >
+          <div>{PROGRAMMING_LANGUAGE[language]?.name || language}</div>
+        </SubmissionInfo>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.language.localeCompare(rowB.language) },
       filter: {
@@ -97,9 +101,9 @@ export const ProblemSubmissions = ({ problem }) => {
     {
       head: <TextHeadCell text={<T>time</T>} />,
       index: 'timeUsed',
-      field: ({ record: { timeUsed, verdict }, isCard }) => (
+      field: ({ record: { timeUsed, verdict, memoryUsed }, isCard }) => (
         <Field className="jk-row center">
-          {hasTimeHasMemory(verdict) ? <>{(timeUsed / 1000).toFixed(3)} <T>s</T></> : '-'}
+          <Time timeUsed={timeUsed} verdict={verdict} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.timeUsed - rowB.timeUsed },
@@ -112,7 +116,7 @@ export const ProblemSubmissions = ({ problem }) => {
       index: 'memoryUsed',
       field: ({ record: { memoryUsed, verdict }, isCard }) => (
         <Field className="jk-row center">
-          {hasTimeHasMemory(verdict) ? <>{memoryUsed} <T>kb</T></> : '-'}
+          <Memory memoryUsed={memoryUsed} verdict={verdict} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.memoryUsed - rowB.memoryUsed },
@@ -126,6 +130,7 @@ export const ProblemSubmissions = ({ problem }) => {
   const {
     data: response,
     refresh,
+    error,
   } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM_STATUS(problem?.id, +queryObject[name + '.page']?.[0] - 1, +queryObject[name + '.pageSize']?.[0]));
   
   const lastTotalRef = useRef(0);
@@ -147,6 +152,7 @@ export const ProblemSubmissions = ({ problem }) => {
   ));
   
   const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
+  
   return (
     <DataViewer<ProblemSubmissionsTable>
       headers={columns}

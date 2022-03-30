@@ -1,7 +1,7 @@
 import { PUT } from 'config/constants';
-import { authorizedRequest, can, clean } from 'helpers';
-import { useState } from 'react';
 import { JUDGE_API_V1 } from 'config/constants/judge';
+import { authorizedRequest, can, cleanRequest } from 'helpers';
+import { useState } from 'react';
 import { useUserState } from 'store';
 import { ContentResponseType, Status } from 'types';
 import { Button, ButtonLoader, EditIcon, Input, SaveIcon, T, useNotification } from '../index';
@@ -54,7 +54,10 @@ export const UserPermissions = ({ permissions, nickname, refresh }: ProblemPermi
                 onClick={async setLoaderStatus => {
                   if (JSON.stringify(newPermissions) !== JSON.stringify(permissions)) {
                     setLoaderStatus?.(Status.LOADING);
-                    const response = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PERMISSIONS(nickname), PUT, JSON.stringify(newPermissions)));
+                    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PERMISSIONS(nickname), {
+                      method: PUT,
+                      body: JSON.stringify(newPermissions),
+                    }));
                     if (response.success) {
                       addSuccessNotification(<T>success</T>);
                       setLoaderStatus?.(Status.SUCCESS);

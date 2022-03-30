@@ -88,8 +88,8 @@ export const EditProblem = ({ problem }) => {
           </ButtonLoader>
         }
       >
-        <ProblemStatement problem={newProblem} setProblem={setNewProblem} />
-        <ProblemSettings problem={newProblem} setProblem={setNewProblem} />
+        <ProblemStatement problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />
+        <ProblemSettings problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />
         <div>sub</div>
       </Tabs>
     </TwoContentLayout>

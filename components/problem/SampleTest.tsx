@@ -32,7 +32,7 @@ export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
         <div className="jk-row nowrap start filled gap">
           {editable ? (
             <TextArea
-              value={sample.input}
+              value={sample.input || 'aaaa'}
               onChange={value => setSample(prevState => ({ ...prevState, input: value }))}
             />
           ) : (
@@ -45,7 +45,7 @@ export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
         <div className="jk-row nowrap start filled gap">
           {editable ? (
             <TextArea
-              value={sample.output}
+              value={sample.output || 'aaa'}
               onChange={value => setSample(prevState => ({ ...prevState, output: value }))}
             />
           ) : (

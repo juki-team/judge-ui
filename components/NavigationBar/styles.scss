@@ -9,7 +9,7 @@
 }
 
 .settings-popover {
-  width: 200px !important;
+  //min-width: 250px !important;
 }
 
 .jk-drawer-body {
@@ -42,6 +42,10 @@
 
 .more-apps-popover {
   width: 240px;
+  
+  > div {
+    text-align: center;
+  }
   
   .jk-row {
     flex-wrap: nowrap;

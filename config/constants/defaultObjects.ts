@@ -57,4 +57,5 @@ export const USER_GUEST: UserState = {
   myPermissions: { ...DEFAULT_PERMISSIONS },
   
   isLogged: false,
+  session: '',
 };

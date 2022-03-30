@@ -25,8 +25,6 @@ export const UserPreview = ({ nickname }) => {
   const { push, query } = useRouter();
   const { data, error, isLoading } = useFetcher<ContentResponseType<UserType>>(JUDGE_API_V1.ACCOUNT.USER(nickname));
   
-  console.log({ nickname, data, error, isLoading });
-  
   useEffect(() => {
     if (error) {
       push({ query: removeParamQuery(query, QueryParam.OPEN_USER_PREVIEW, null) });

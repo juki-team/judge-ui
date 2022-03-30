@@ -33,14 +33,14 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const user = useUserState();
   
   const menu = [
+    // {
+    //   label: <T>contests</T>,
+    //   icon: <CupIcon />,
+    //   selected: ('/' + pathname).includes('//contest'),
+    //   onClick: () => push(ROUTES.CONTESTS.LIST()),
+    // },
     {
-      label: 'contests',
-      icon: <CupIcon />,
-      selected: ('/' + pathname).includes('//contest'),
-      onClick: () => push(ROUTES.CONTESTS.LIST()),
-    },
-    {
-      label: 'problems',
+      label: <T>problems</T>,
       icon: <AssignmentIcon />,
       selected: ('/' + pathname).includes('//problem'),
       onClick: () => push(ROUTES.PROBLEMS.LIST()),
@@ -49,7 +49,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   ];
   if (can.viewUsersTab(user)) {
     menu.push({
-      label: 'admin',
+      label: <T>admin</T>,
       icon: <SettingIcon />,
       selected: ('/' + pathname).includes('//admin'),
       onClick: () => push(ROUTES.ADMIN.PAGE(AdminTab.USERS)),
@@ -110,13 +110,13 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       <Popover
         content={
           <div className="jk-col gap more-apps-popover">
-            <div className="semi-bold sentence-case"><T>more apps coming soon</T></div>
+            <div className="semi-bold text-sentence-case"><T>more apps coming soon</T></div>
             <div className="jk-col gap color-primary">
               <div className="jk-row">
-                <JukiCouchLogoHorImage /> <LoadingIcon size="small" /> <T className="sentence-case">developing</T>...
+                <JukiCouchLogoHorImage /> <LoadingIcon size="small" /> <T className="text-sentence-case">developing</T>...
               </div>
               <div className="jk-row">
-                <JukiUtilsLogoHorImage /> <LoadingIcon size="small" /> <T className="sentence-case">developing</T>...
+                <JukiUtilsLogoHorImage /> <LoadingIcon size="small" /> <T className="text-sentence-case">developing</T>...
               </div>
             </div>
           </div>

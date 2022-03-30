@@ -4,8 +4,6 @@ function ProblemCreate() {
   
   const router = useRouter();
   
-  console.log(router);
-  
   return (
     <div>
       ProblemCreate

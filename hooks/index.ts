@@ -1,14 +1,9 @@
 import { DELETE, GET, POST, PUT } from 'config/constants';
-import { clean } from 'helpers';
+import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ContentResponseType, ContentsResponseType, Status } from 'types';
-
-export {
-  useOutsideAlerter, useNotification,
-} from '@bit/juki-team.juki.base-ui';
-export * from './useOnline';
 
 const fetcher = (url: string, method?: typeof POST | typeof PUT | typeof DELETE | typeof GET, body?: string, signal?: AbortSignal) => {
   
@@ -40,7 +35,7 @@ export const useFetcher = <T extends (ContentResponseType<any> | ContentsRespons
   const { data, error } = useSWR(url, fetcher, { revalidateIfStale, revalidateOnFocus, revalidateOnReconnect });
   
   return useMemo(() => ({
-    data: data ? clean<T>(data) : undefined,
+    data: data ? cleanRequest<T>(data) : undefined,
     error,
     isLoading: error === undefined && data === undefined,
   }), [data, error]);
@@ -67,12 +62,10 @@ export const useRouter = () => {
 export const useRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string) => {
   
   const { mutate } = useSWRConfig();
-  console.log('useRequester', url);
   const { data, error, isLoading } = useFetcher<T>(url);
   
   const refresh = useCallback(async (props?) => {
     const { setLoaderStatus } = props || {};
-    console.log({ props, url });
     setLoaderStatus?.(Status.LOADING);
     await mutate(url);
     setLoaderStatus?.(Status.SUCCESS);
@@ -85,3 +78,10 @@ export const useRequester = <T extends ContentResponseType<any> | ContentsRespon
     refresh,
   };
 };
+
+export {
+  useOutsideAlerter,
+  useNotification,
+  useT,
+} from '@bit/juki-team.juki.base-ui';
+export * from './useOnline';

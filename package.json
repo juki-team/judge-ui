@@ -10,6 +10,7 @@
   "dependencies": {
     "@bit/juki-team.juki.base-ui": "^0.0.1",
     "deep-object-diff": "^1.1.7",
+    "i18next": "^21.6.14",
     "next": "latest",
     "next-pwa": "^5.4.6",
     "react": "17.0.2",

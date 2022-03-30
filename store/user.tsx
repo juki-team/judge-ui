@@ -1,20 +1,12 @@
 import { T } from 'components';
 import { DEFAULT_PERMISSIONS, OpenDialog, POST, PUT, QueryParam, USER_GUEST } from 'config/constants';
-import { actionLoaderWrapper, addParamQuery, authorizedRequest, clean, isStringJson } from 'helpers';
-import { useFetcher, useNotification } from 'hooks';
+import { JUDGE_API_V1 } from 'config/constants/judge';
+import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, isStringJson } from 'helpers';
+import { useFetcher, useNotification, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { JUDGE_API_V1 } from 'config/constants/judge';
-import {
-  ContentResponseType,
-  Language,
-  ProfileSettingOptions,
-  ScopeData,
-  SetLoaderStatusOnClickType,
-  Status,
-  UserInterface,
-} from 'types';
+import { ContentResponseType, ProfileSettingOptions, ScopeData, SetLoaderStatusOnClickType, Status, UserInterface } from 'types';
+import { Language } from '../types';
 
 export interface UserState extends UserInterface {
   isLogged: boolean,
@@ -59,8 +51,9 @@ const getUserState = (object: any): UserState => {
 };
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
-  const { i18n } = useTranslation();
-  const { push, locale, pathname, asPath, query } = useRouter();
+  
+  const { i18n } = useT();
+  const { push, locale, pathname, asPath, query, isReady } = useRouter();
   const { data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.ACCOUNT.PING());
   
   const [user, setUser] = useState<UserState>(USER_GUEST);
@@ -72,15 +65,14 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   }, [data]);
   
   useEffect(() => {
-    const newLocale = user.preferredLanguage === Language.EN ? 'en' : 'es';
-    if (user.isLogged && locale !== newLocale) {
-      push({ pathname, query }, asPath, { locale: newLocale });
+    if (isReady) {
+      const newLocale = user.preferredLanguage === Language.EN ? 'en' : 'es';
+      if (locale !== newLocale) {
+        i18n?.changeLanguage?.(locale);
+        push({ pathname, query }, asPath, { locale: newLocale });
+      }
     }
-  }, [user.preferredLanguage, user.nickname, locale, pathname, query, asPath]);
-  
-  useEffect(() => {
-    i18n?.changeLanguage?.(locale);
-  }, [locale]);
+  }, [user.preferredLanguage, user.nickname, locale, pathname, query, asPath, isReady]);
   
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -106,30 +98,33 @@ export const useUserDispatch = () => {
   return {
     setUser,
     signIn: (nickname: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
-      request: async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), POST, JSON.stringify({
-        nickname,
-        password,
-      }))),
+      request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), {
+        method: POST,
+        body: JSON.stringify({ nickname, password }),
+      })),
       addNotification,
       onSuccess: (result) => {
         setUser(getUserState(result.content));
-        addSuccessNotification(<T className="sentence-case">welcome back</T>);
+        addSuccessNotification(<T className="text-sentence-case">welcome back</T>);
       },
       setLoader,
     }),
     signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
       request: async () => {
-        return clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), POST, JSON.stringify({
-          givenName,
-          familyName,
-          nickname,
-          email,
-          password,
-        })));
+        return cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), {
+          method: POST,
+          body: JSON.stringify({
+            givenName,
+            familyName,
+            nickname,
+            email,
+            password,
+          }),
+        }));
       },
       addNotification,
       onSuccess: async (result) => {
-        addSuccessNotification(<T className="sentence-case">welcome</T>);
+        addSuccessNotification(<T className="text-sentence-case">welcome</T>);
         await push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
         setUser(getUserState(result.content));
       },
@@ -137,19 +132,19 @@ export const useUserDispatch = () => {
     }),
     logout: async (setLoader: SetLoaderStatusOnClickType) => {
       setLoader(Status.LOADING);
-      const response = await authorizedRequest(JUDGE_API_V1.ACCOUNT.LOGOUT(), POST);
+      const response = await authorizedRequest(JUDGE_API_V1.ACCOUNT.LOGOUT(), { method: POST });
       if (isStringJson(response)) {
         const result = JSON.parse(response); // special endpoint that only return success
         if (result.success === true) {
           setLoader(Status.SUCCESS);
-          addInfoNotification(<T className="sentence-case">see you</T>);
+          addInfoNotification(<T className="text-sentence-case">see you</T>);
         } else {
           setLoader(Status.ERROR);
-          addErrorNotification(<div><T className="sentence-case">force Logout</T>{result.message}</div>);
+          addErrorNotification(<div><T className="text-sentence-case">force Logout</T>{result.message}</div>);
         }
       } else {
         setLoader(Status.ERROR);
-        addErrorNotification(<T className="sentence-case">force Logout</T>);
+        addErrorNotification(<T className="text-sentence-case">force Logout</T>);
       }
       setUser(USER_GUEST);
       await push('/');
@@ -165,15 +160,18 @@ export const useUserDispatch = () => {
         { key: ProfileSettingOptions.THEME, value: account.preferredTheme },
       ];
       return actionLoaderWrapper({
-        request: async () => clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), PUT, JSON.stringify(accountBody))),
+        request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), {
+          method: PUT,
+          body: JSON.stringify(accountBody),
+        })),
         addNotification,
         onSuccess: (result) => {
-          addSuccessNotification(<T className="sentence-case">your personal information has been updated</T>);
+          addSuccessNotification(<T className="text-sentence-case">your personal information has been updated</T>);
           setUser(getUserState(result.content));
         },
         setLoader,
         onError: (result) => {
-          addErrorNotification(result.message);
+          addErrorNotification(<T>{result.message}</T>);
         },
       });
     },

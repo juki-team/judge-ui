@@ -2,7 +2,14 @@ import { Status } from '../types';
 
 export { isStringJson, isObjectJson } from '@bit/juki-team.juki.commons';
 export {
-  classNames, downloadBlobAsFile, getSearchParamsObject, renderReactNodeOrFunction, request, consoleWarn, settings,
+  classNames,
+  downloadBlobAsFile,
+  getSearchParamsObject,
+  renderReactNodeOrFunction,
+  authorizedRequest,
+  cleanRequest,
+  consoleWarn,
+  settings,
 } from '@bit/juki-team.juki.base-ui';
 
 export const isOrHas = (value: string | string[] | undefined, v: string) => {

@@ -12,7 +12,6 @@ export const ContestProblems = ({ contest }: { contest: any }) => {
   const { query, push } = useRouter();
   const { addSuccessNotification, addErrorNotification, addInfoNotification } = useNotification();
   
-  console.log({ problems });
   return (
     <div>
       {(Object.values(problems) as any[]).map(problem => {

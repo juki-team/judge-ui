@@ -16,11 +16,11 @@
   &.horizontal {
     position: sticky !important;
     top: 0;
-    padding: 0;
+    padding: var(--pad-t) 0;
     
     .label {
       font-weight: var(--weight-semi-bold);
-      line-height: 16px;
+      line-height: 14px;
     }
     
     > div {
@@ -28,7 +28,6 @@
       flex-direction: column-reverse;
       justify-content: center;
       align-items: center;
-      line-height: 14px;
       
       > span {
         > span:nth-child(2) {
@@ -93,4 +92,23 @@
 
 .title-editable {
   height: 42px;
+}
+
+.submission-info-code-source {
+  position: relative;
+  
+  .jk-code-viewer {
+    > pre {
+      max-height: 400px;
+      max-width: calc(var(--modal-width) - var(--pad) - var(--pad));
+      box-sizing: border-box;
+      overflow: auto;
+    }
+  }
+}
+
+.color-info {
+  .jk-tag {
+    color: var(--t-color-info);
+  }
 }

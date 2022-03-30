@@ -3,7 +3,12 @@ import React from 'react';
 import { ProblemInfo } from './ProblemInfo';
 import { SampleTest } from './SampleTest';
 
-export const ProblemStatement = ({ problem, setProblem }: { problem: any, setProblem?: (problem) => void }) => {
+export const ProblemStatement = ({
+  problem,
+  setProblem,
+  originalProblemRef,
+}: { problem: any, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
+  
   return (
     <div>
       <div className="problem-head-box text-xh bold child-center">

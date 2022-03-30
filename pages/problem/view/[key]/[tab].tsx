@@ -19,11 +19,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ContentResponseType, ProblemTab, Status } from 'types';
 import { ArrowIcon } from '../../../../components';
+import { can } from '../../../../helpers';
+import { useUserState } from '../../../../store';
 
 function ProblemView() {
   
   const { query: { key, ...query }, push } = useRouter();
   const { isLoading, data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(key as string));
+  const user = useUserState();
   
   const index = {
     [ProblemTab.STATEMENT]: 0,
@@ -47,7 +50,7 @@ function ProblemView() {
                 <Link href={ROUTES.PROBLEMS.LIST()}>
                   <a className="jk-row nowrap text-semi-bold link">
                     <ArrowIcon rotate={-90} />
-                    <div className="screen md lg hg">Problems</div>
+                    <div className="screen md lg hg"><T className="text-sentence-case">problems</T></div>
                   </a>
                 </Link>
               </div>
@@ -69,15 +72,17 @@ function ProblemView() {
             ]}
             onChange={index => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabs[index]), query })}
             actionsSection={
-              <ButtonLoader
-                onClick={async setLoaderStatus => {
-                  setLoaderStatus(Status.LOADING);
-                  await push(ROUTES.PROBLEMS.EDIT('' + key, ProblemTab.STATEMENT));
-                  setLoaderStatus(Status.SUCCESS);
-                }}
-              >
-                <T>edit</T>
-              </ButtonLoader>
+              can.updateProblem(user, data.content) ? (
+                <ButtonLoader
+                  onClick={async setLoaderStatus => {
+                    setLoaderStatus(Status.LOADING);
+                    await push(ROUTES.PROBLEMS.EDIT('' + key, ProblemTab.STATEMENT));
+                    setLoaderStatus(Status.SUCCESS);
+                  }}
+                >
+                  <T>edit</T>
+                </ButtonLoader>
+              ) : undefined
             }
           >
             <ProblemStatement problem={data.content} />

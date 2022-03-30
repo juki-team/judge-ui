@@ -1,9 +1,8 @@
 import { POST, USER_STATUS } from 'config/constants';
-import { searchParamsObjectTypeToQuery } from 'helpers';
-import { authorizedRequest, clean } from 'helpers/services';
+import { JUDGE_API_V1 } from 'config/constants/judge';
+import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo, useRef, useState } from 'react';
-import { JUDGE_API_V1 } from 'config/constants/judge';
 import { ContentResponseType, ContentsResponseType, FilterTextOfflineType, SetLoaderStatusType, Status, UserStatus } from 'types';
 import {
   Button,
@@ -58,7 +57,7 @@ export function Users() {
   
   const changeUserStatus = async (nickname, status, setLoader) => {
     setLoader?.(Status.LOADING);
-    const response = clean<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_STATUS(nickname, status), POST));
+    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_STATUS(nickname, status), { method: POST }));
     if (response.success) {
       addSuccessNotification(<T>success</T>);
       setLoader?.(Status.SUCCESS);
@@ -104,6 +103,7 @@ export function Users() {
             refresh={() => {
               refresh({ setLoaderStatus: setLoaderStatusRef.current });
             }}
+            key={nickname}
           />
         </Field>
       ),

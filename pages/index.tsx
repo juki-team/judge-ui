@@ -1,3 +1,4 @@
+import { ContentLayout, JukiCourtImage, T } from 'components';
 import Head from 'next/head';
 
 const PWA = () => (
@@ -55,12 +56,21 @@ const PWA = () => (
 
 export default function Home() {
   return (
-    <div className="container">
+    <ContentLayout>
       <Head>
         {/*<PWA />*/}
         <title>Juki Judge App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-    </div>
+      <div className="jk-col gap">
+        <div className="jk-row">
+          <div style={{ maxWidth: 'var(--modal-width)' }}><JukiCourtImage /></div>
+        </div>
+        <div className="jk-col gap">
+          <h3><T>competitive programmers home</T></h3>
+          <p>Juki Judge <T>is designed to make people improve their programming skills</T></p>
+        </div>
+      </div>
+    </ContentLayout>
   );
 }

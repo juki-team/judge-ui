@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { SWRConfig } from 'swr';
 import { JukiBaseUiProvider, NavigationBar } from '../components';
 import { OnlineStatusProvider } from '../hooks';
+import '../i18n';
 import { UserProvider } from '../store';
 import './styles.scss';
 
