@@ -8,7 +8,7 @@ import { ProblemTab, Status } from 'types';
 import { ProblemSettings } from './ProblemSettings';
 import { TitleEditable } from './TitleEditable';
 
-const ReactJson = dynamic(() => import('react-json-view'));
+const ReactJson = dynamic(import('react-json-view'), { ssr: false });
 
 export const EditProblem = ({ problem }) => {
   
