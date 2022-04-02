@@ -6,6 +6,8 @@ export const ContestProblem = ({ contest }: { contest: any }) => {
   const { query } = useRouter();
   
   const problem = contest?.problems?.[query.index as string];
+
+  console.log(contest)
   
   return (
     <SplitPane
@@ -15,7 +17,7 @@ export const ContestProblem = ({ contest }: { contest: any }) => {
       className="contest-problem-split-pane"
     >
       <ProblemStatement problem={problem} contestIndex={query?.index as string} />
-      <ProblemCodeEditor problem={problem} contestIndex={query?.index as string} />
+      <ProblemCodeEditor isRegistered={contest?.registered} problem={problem} contestIndex={query?.index as string} />
     </SplitPane>
   );
 };

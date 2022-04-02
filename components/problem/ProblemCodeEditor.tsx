@@ -54,7 +54,7 @@ const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): 
  }
  }
  */
-export const ProblemCodeEditor = ({ problem, contestIndex }: { problem: any, contestIndex?: string }) => {
+export const ProblemCodeEditor = ({ problem, contestIndex, isRegistered }: { problem: any, contestIndex?: string, isRegistered?: boolean}) => {
   
   const initialTestCases: CodeEditorTestCasesType = {};
   problem.samples?.forEach((sample, index) => {
@@ -129,6 +129,18 @@ export const ProblemCodeEditor = ({ problem, contestIndex }: { problem: any, con
               <T>to submit, first login</T>
             </ButtonLoader>
           );
+        }
+
+        if(!isRegistered) {
+            return (
+                <ButtonLoader
+                    type="secondary"
+                    onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
+                    disabled
+                >
+                    <T>to submit, first register</T>
+                </ButtonLoader>
+            )
         }
         return (
           <ButtonLoader
