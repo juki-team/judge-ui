@@ -105,7 +105,7 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
   
   const data: ContestProblemSubmissionsTable[] = (response?.success ? response.contents : []).map((result, index) => (
     {
-      index,
+      index: index + 1,
       familyName: result.familyName,
       givenName: result.givenName,
       imageUrl: result.imageUrl,
