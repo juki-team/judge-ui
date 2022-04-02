@@ -90,11 +90,10 @@ export const ProblemCodeEditor = ({ problem, contestIndex }: { problem: any, con
   });
   const [source, setSource] = useSaveStorage(storeKey, defaultValue);
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  
   return (
     <CodeRunnerEditor
       theme={editorSettings.theme}
-      key={editorSettings.keyMap}
+      keyMap={editorSettings.keyMap}
       tabSize={editorSettings.tabSize}
       sourceCode={source[PROGRAMMING_LANGUAGE[language].mime] || ''}
       language={language}

@@ -84,7 +84,7 @@ export const ProblemStatement = ({
             </div>
           </div>
         </div>
-        <div className="screen lg hg"><ProblemInfo problem={problem} /></div>
+        {!contestIndex && <div className="screen lg hg"><ProblemInfo problem={problem} /></div>}
       </div>
     </div>
   );
