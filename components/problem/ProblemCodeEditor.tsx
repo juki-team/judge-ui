@@ -54,7 +54,7 @@ const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): 
  }
  }
  */
-export const ProblemCodeEditor = ({ problem }) => {
+export const ProblemCodeEditor = ({ problem, contestIndex }: { problem: any, contestIndex?: string }) => {
   
   const initialTestCases: CodeEditorTestCasesType = {};
   problem.samples?.forEach((sample, index) => {
@@ -74,7 +74,7 @@ export const ProblemCodeEditor = ({ problem }) => {
   const { query, push } = useRouter();
   const editorStorageKey = 'jk-editor-settings-store/' + nickname;
   
-  const storeKey = 'jk-problem-storage/' + nickname;
+  const storeKey = 'jk-problem-storage/' + (contestIndex ? contestIndex : '') + nickname;
   const [editorSettings, setEditorSettings] = useSaveStorage(editorStorageKey, {
     theme: CodeEditorTheme.IDEA,
     keyMap: CodeEditorKeyMap.SUBLIME,
@@ -136,25 +136,28 @@ export const ProblemCodeEditor = ({ problem }) => {
             type="secondary"
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
-              const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
-                method: POST,
-                body: JSON.stringify({
-                  language,
-                  source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
-                  session,
-                }),
-              }));
-              /*new Array(100).fill(1).forEach(() => {
-                authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
+              console.log({ contestIndex });
+              const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
+                contestIndex
+                  ? JUDGE_API_V1.CONTEST.SUBMIT_V1(query.key + '', contestIndex)
+                  : JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
                   method: POST,
                   body: JSON.stringify({
                     language,
                     source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
                     session,
                   }),
-                });
-              });*/
-              console.log({ result });
+                }));
+              /*new Array(1000).fill(1).forEach(() => {
+               authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
+               method: POST,
+               body: JSON.stringify({
+               language,
+               source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
+               session,
+               }),
+               });
+               });*/
               if (result.success) {
                 if (result?.content.submitId) {
                   addSuccessNotification(<T className="text-sentence-case">submission received</T>);

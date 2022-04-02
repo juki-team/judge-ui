@@ -68,9 +68,10 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
     if (isReady) {
       const newLocale = user.preferredLanguage === Language.EN ? 'en' : 'es';
       if (locale !== newLocale) {
-        i18n?.changeLanguage?.(locale);
+        console.log({ locale });
         push({ pathname, query }, asPath, { locale: newLocale });
       }
+      i18n?.changeLanguage?.(locale);
     }
   }, [user.preferredLanguage, user.nickname, locale, pathname, query, asPath, isReady]);
   

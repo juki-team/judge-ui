@@ -1,0 +1,73 @@
+.content-side-right-bar-bottom {
+  padding: var(--pad) 0;
+  
+  > div.jk-col {
+    > p:last-child {
+      line-height: 14px;
+      margin-bottom: var(--pad-xt);
+    }
+  }
+}
+
+.content-side-right-bar-top {
+  .judge-admin, .registered {
+    height: var(--pad-xl);
+  }
+}
+
+.problem-card {
+  width: calc(var(--screen-col-width) * 3 + var(--screen-col-pad-width) * 2);
+  height: 254px;
+  padding: 0 var(--pad);
+  
+  .problem-status {
+    width: 100%;
+  }
+  
+  .problem-index {
+    border-radius: var(--border-radius);
+    position: relative;
+    padding: 3px 10px;
+  }
+  
+  .problem-id {
+  
+  }
+}
+
+.problem-head-box {
+  padding: var(--pad) 0 0 0;
+  
+  .index {
+    z-index: 1;
+    background-color: var(--t-color-white);
+    position: absolute;
+    left: 0;
+    margin: var(--pad);
+    height: 42px;
+    width: 42px;
+  }
+}
+
+.contest-problem-split-pane {
+  height: 100%;
+  
+  .problem-statement {
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+.contest-scoreboard {
+  .jk-table-view-tools {
+    > div:first-child {
+      display: none;
+    }
+  }
+  
+  .own {
+    > div {
+      padding: 0 var(--pad-t);
+    }
+  }
+}

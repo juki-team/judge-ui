@@ -1,4 +1,4 @@
-import { Judge, ProblemVerdict, ProgrammingLanguage } from '../types';
+import { ContestStatus, Judge, ProblemVerdict, ProgrammingLanguage } from '../types';
 
 export type MetaProblemSearcher = {
   name: string,
@@ -48,4 +48,22 @@ export interface Submission {
   memoryUsed: number,
   language: ProgrammingLanguage,
   submitPoints: number,
+}
+
+export interface ContestState {
+  canRegister: boolean,
+  canRejudge: boolean,
+  canUpdate: boolean,
+  canViewProblems: boolean,
+  canViewScoreBoard: boolean,
+  description: string,
+  key: string,
+  name: string,
+  problems: { [key: string]: { index: string, color: string, points: number } },
+  registered: boolean,
+  settings: {},
+  status: ContestStatus,
+  tags: [],
+  timing: {},
+  totalRegistered: number,
 }

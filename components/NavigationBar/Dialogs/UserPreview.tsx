@@ -69,11 +69,11 @@ export const UserPreview = ({ nickname }) => {
             </div>
             <div className="jk-row end gap">
               <Button size="small" type="text" onClick={handleClose}><T>close</T></Button>
-              <a href={ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE)} target="_blank">
-                <Button size="small">
-                  <div className="jk-row"><T>see profile</T><ExternalIcon /></div>
-                </Button>
-              </a>
+              {/*<a href={ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE)} target="_blank">*/}
+              {/*  <Button size="small">*/}
+              {/*    <div className="jk-row"><T>see profile</T><ExternalIcon /></div>*/}
+              {/*  </Button>*/}
+              {/*</a>*/}
             </div>
           </div>
         )}

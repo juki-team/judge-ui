@@ -271,5 +271,10 @@
   "October": "octubre",
   "November": "noviembre",
   "December": "diciembre",
-  "type": "tipo"
+  "type": "tipo",
+  "successfully registered": "registrado exitosamente",
+  "reload data": "recargar información",
+  "list view": "vista de lista",
+  "records": "registros",
+  "record": "registro"
 }

@@ -33,12 +33,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const user = useUserState();
   
   const menu = [
-    // {
-    //   label: <T>contests</T>,
-    //   icon: <CupIcon />,
-    //   selected: ('/' + pathname).includes('//contest'),
-    //   onClick: () => push(ROUTES.CONTESTS.LIST()),
-    // },
+    {
+      label: <T>contests</T>,
+      icon: <CupIcon />,
+      selected: ('/' + pathname).includes('//contest'),
+      onClick: () => push(ROUTES.CONTESTS.LIST()),
+    },
     {
       label: <T>problems</T>,
       icon: <AssignmentIcon />,

@@ -84,17 +84,21 @@ export const JUDGE_API_V1 = {
     UN_FROZEN: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard/unFrozen`;
     },
-    MY_STATUS: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/myStatus`;
+    MY_STATUS: (key: string, page: number, size: number) => {
+      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/myStatus?page=${page}&size=${size}`;
     },
-    STATUS: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/status`;
+    STATUS: (key: string, page: number, size: number) => {
+      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/status?page=${page}&size=${size}`;
     },
     PENDING_STATUS: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/judge/list`;
+      return `${JUDGE_BACKEND_BASE_URL} / api / contest /${key}/judge/list`
+        ;
     },
     SUBMIT: (key: string, problemIndex: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/problem/${problemIndex}/submit`;
+    },
+    SUBMIT_V1: (key: string, problemIndex: string) => {
+      return `${JUDGER_BACKEND_BASE_URL}/api/v1/submit/contest/${key}/problem/${problemIndex}`;
     },
     SCOREBOARD: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard`;

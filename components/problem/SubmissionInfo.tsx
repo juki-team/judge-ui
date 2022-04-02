@@ -1,10 +1,11 @@
+import { ProgrammingLanguage, ReactNodeOrFunctionType } from '@bit/juki-team.juki.base-ui';
 import { Button, CodeViewer, CopyIcon, CopyToClipboard, DateLiteral, Field, LoaderLayer, Modal, T } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { can, classNames } from 'helpers';
-import { useFetcher, useRouter } from 'hooks';
+import { useFetcher } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProblemMode, ProblemVerdict } from 'types';
+import { ContentResponseType, ContestState, ProblemVerdict } from 'types';
 import { hasTimeHasMemory, Memory, Time, Verdict } from './utils';
 
 export const SubmissionInfo = ({
@@ -18,18 +19,32 @@ export const SubmissionInfo = ({
   date,
   nickname,
   children,
+  contest,
+  isSubtaskProblem,
+}: {
+  submitId: string,
+  language: ProgrammingLanguage,
+  timeUsed: number,
+  memoryUsed: number,
+  verdict: ProblemVerdict,
+  submitPoints: number,
+  verdictByGroups: {},
+  date: Date,
+  nickname: string,
+  children: ReactNodeOrFunctionType,
+  contest?: ContestState,
+  isSubtaskProblem: boolean,
 }) => {
   
-  const { query: { key } } = useRouter();
   const [open, setOpen] = useState(false);
   const user = useUserState();
-  const canView = can.viewProblemSubmissionSourceCode(user, nickname);
+  const canView = contest ? can.viewContestProblemSubmissionSourceCode(user, contest, nickname) : can.viewProblemSubmissionSourceCode(user, nickname);
+  
   const {
     data,
     isLoading,
     error,
-  } = useFetcher<ContentResponseType<{ source: string }>>((open && canView) ? JUDGE_API_V1.PROBLEM.SUBMISSION_CODE(submitId) : undefined);
-  const { data: problemData } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(key as string));
+  } = useFetcher<ContentResponseType<{ source: string }>>((open && canView) ? (contest ? JUDGE_API_V1.CONTEST.VIEW_SOURCE_SUBMISSION(contest?.key, submitId) : JUDGE_API_V1.PROBLEM.SUBMISSION_CODE(submitId)) : undefined);
   
   useEffect(() => {
     if ((data?.success === false || error) && open) {
@@ -38,7 +53,6 @@ export const SubmissionInfo = ({
   }, [data, error, open]);
   
   const source = data?.success ? data?.content?.source : '';
-  const isSubtaskProblem = problemData?.success && problemData?.content?.settings?.mode === ProblemMode.SUBTASK;
   
   return (
     <Field

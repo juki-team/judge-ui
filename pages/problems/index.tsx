@@ -76,7 +76,7 @@ function Problems() {
       head: <TextHeadCell text={<T>tags</T>} />,
       index: 'tags',
       field: ({ record: { tags } }) => (
-        <Field className="jk-row pad">
+        <Field className="jk-row start pad">
           {tags.map(tag => !!tag && <div className="jk-tag gray-6 text-s">{tag}</div>)}
         </Field>
       ),

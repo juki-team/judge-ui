@@ -20,19 +20,23 @@ const fetcher = (url: string, method?: typeof POST | typeof PUT | typeof DELETE 
   }).then((res) => res.text());
 };
 
-export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url?: string, options?: {
+export type UseFetcherOptionsType = {
   revalidateIfStale?: boolean,
   revalidateOnFocus?: boolean,
   revalidateOnReconnect?: boolean,
-}) => {
+  refreshInterval?: number,
+}
+
+export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url?: string, options?: UseFetcherOptionsType) => {
   
   const {
     revalidateIfStale = true,
     revalidateOnFocus = true,
     revalidateOnReconnect = true,
+    refreshInterval,
   } = options || {};
   
-  const { data, error } = useSWR(url, fetcher, { revalidateIfStale, revalidateOnFocus, revalidateOnReconnect });
+  const { data, error } = useSWR(url, fetcher, { revalidateIfStale, revalidateOnFocus, revalidateOnReconnect, refreshInterval });
   
   return useMemo(() => ({
     data: data ? cleanRequest<T>(data) : undefined,
@@ -59,10 +63,10 @@ export const useRouter = () => {
   return { query, queryObject, ...rest };
 };
 
-export const useRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string) => {
+export const useRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: UseFetcherOptionsType) => {
   
   const { mutate } = useSWRConfig();
-  const { data, error, isLoading } = useFetcher<T>(url);
+  const { data, error, isLoading } = useFetcher<T>(url, options);
   
   const refresh = useCallback(async (props?) => {
     const { setLoaderStatus } = props || {};

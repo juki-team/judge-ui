@@ -17,7 +17,11 @@ export const Memory = ({ verdict, memoryUsed }: { verdict: ProblemVerdict, memor
 export const Verdict = ({ verdict, submitPoints }: { verdict: ProblemVerdict, submitPoints: number }) => {
   return (
     <Popover
-      content={<div className="text-sentence-case text-nowrap">{PROBLEM_VERDICT[verdict]?.print || verdict}</div>}
+      content={
+        <div className="text-sentence-case text-nowrap">
+          {PROBLEM_VERDICT[verdict]?.print ? <T>{PROBLEM_VERDICT[verdict]?.print}</T> : verdict}
+        </div>
+      }
       triggerOn="hover"
       placement="top"
       showPopperArrow

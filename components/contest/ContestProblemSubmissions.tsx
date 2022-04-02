@@ -1,14 +1,19 @@
 import { DataViewer, DataViewerHeadersType, DateField, Field, T, TextHeadCell } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
-import { useFetcher, useRequester, useRouter } from 'hooks';
+import { useRequester, useRouter } from 'hooks';
+import Link from 'next/link';
 import { useCallback, useMemo, useRef } from 'react';
-import { ContentResponseType, ContentsResponseType, ProblemMode, ProblemVerdict, ProgrammingLanguage } from 'types';
-import { SubmissionInfo } from './SubmissionInfo';
-import { Memory, Time, Verdict } from './utils';
+import { ContentsResponseType, ContestTab, ProblemMode, ProblemTab, ProblemVerdict, ProgrammingLanguage } from 'types';
+import { useUserState } from '../../store';
+import { SubmissionInfo } from '../problem/SubmissionInfo';
+import { Memory, Time, Verdict } from '../problem/utils';
 
-type ProblemSubmissionsTable = {
+type ContestProblemSubmissionsTable = {
+  indexProblem: string,
+  problemName: string,
+  settings: { mode: ProblemMode },
   submitId: string,
   nickname: string,
   imageUrl: string,
@@ -21,27 +26,44 @@ type ProblemSubmissionsTable = {
   verdictByGroups: {},
 }
 
-export const ProblemSubmissions = ({ problem }) => {
-  const { queryObject, query, push } = useRouter();
-  const { data: problemData } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(query.key as string));
-  const isSubtaskProblem = problemData?.success && problemData?.content?.settings?.mode === ProblemMode.SUBTASK;
+export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest: any, mySubmissions?: boolean }) => {
   
-  const columns: DataViewerHeadersType<ProblemSubmissionsTable>[] = useMemo(() => [
+  const user = useUserState();
+  const { queryObject, query, push } = useRouter();
+  
+  const columns: DataViewerHeadersType<ContestProblemSubmissionsTable>[] = useMemo(() => [
+    ...(!mySubmissions ? [
+      {
+        head: <TextHeadCell text={<T>nickname</T>} />,
+        index: 'nickname',
+        field: ({ record: { nickname, imageUrl }, isCard }) => (
+          <Field className="jk-row center gap">
+            <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
+            <div className="link" onClick={() => (
+              push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname) })
+            )}>{nickname}</div>
+          </Field>
+        ),
+        sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
+        filter: { type: 'text-auto' },
+        cardPosition: 'top',
+        minWidth: 250,
+      } as DataViewerHeadersType<ContestProblemSubmissionsTable>,
+    ] : []),
     {
-      head: <TextHeadCell text={<T>nickname</T>} />,
-      index: 'nickname',
-      field: ({ record: { nickname, imageUrl }, isCard }) => (
-        <Field className="jk-row center gap">
-          <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
-          <div className="link" onClick={() => (
-            push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname) })
-          )}>{nickname}</div>
+      head: <TextHeadCell text={<T>problem</T>} />,
+      index: 'problem',
+      field: ({ record: { problemName, indexProblem }, isCard }) => (
+        <Field className="jk-row link">
+          <Link href={ROUTES.CONTESTS.VIEW(query.key as string, ContestTab.PROBLEMS, indexProblem, ProblemTab.STATEMENT)}>
+            <a>{indexProblem} {problemName}</a>
+          </Link>
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
-      filter: { type: 'text-auto' },
-      cardPosition: 'top',
-      minWidth: 250,
+      sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },
+      filter: { type: 'date-range-auto' },
+      cardPosition: 'center',
+      minWidth: 280,
     },
     {
       head: <TextHeadCell text={<T>date</T>} />,
@@ -75,12 +97,13 @@ export const ProblemSubmissions = ({ problem }) => {
       head: <TextHeadCell text={<T>lang</T>} />,
       index: 'language',
       field: ({
-        record: { language, verdict, submitPoints, nickname, memoryUsed, submitId, timeUsed, verdictByGroups, timestamp },
+        record: { language, settings, verdict, submitPoints, nickname, memoryUsed, submitId, timeUsed, verdictByGroups, timestamp },
         isCard,
       }) => (
         <SubmissionInfo
-          isSubtaskProblem={isSubtaskProblem}
-          nickname={nickname}
+          isSubtaskProblem={settings?.mode === ProblemMode.SUBTASK}
+          contest={contest}
+          nickname={mySubmissions ? user.nickname : nickname}
           language={language}
           submitId={submitId}
           timeUsed={timeUsed}
@@ -127,20 +150,27 @@ export const ProblemSubmissions = ({ problem }) => {
       cardPosition: 'bottom',
       minWidth: 120,
     },
-  ], [query, isSubtaskProblem]);
-  const name = 'submissions';
+  ], [query, user.nickname]);
+  
+  const name = mySubmissions ? 'myStatus' : 'status';
   
   const {
     data: response,
     refresh,
     error,
-  } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM_STATUS(problem?.id, +queryObject[name + '.page']?.[0] - 1, +queryObject[name + '.pageSize']?.[0]));
+  } = useRequester<ContentsResponseType<any>>(mySubmissions
+      ? JUDGE_API_V1.CONTEST.MY_STATUS(contest?.key, (+queryObject[name + '.page']?.[0] - 1) || 0, +queryObject[name + '.pageSize']?.[0] || 32)
+      : JUDGE_API_V1.CONTEST.STATUS(contest?.key, (+queryObject[name + '.page']?.[0] - 1) || 0, +queryObject[name + '.pageSize']?.[0] || 32),
+    { refreshInterval: 60000 });
   
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   
-  const data: ProblemSubmissionsTable[] = (response?.success ? response.contents : []).map(submission => (
+  const data: ContestProblemSubmissionsTable[] = (response?.success ? response.contents : []).map(submission => (
     {
+      settings: contest?.problems[query.index as string]?.settings,
+      indexProblem: submission.indexProblem || '',
+      problemName: submission.problemName || '',
       submitId: submission.submitId,
       nickname: submission.nickname,
       imageUrl: submission.imageUrl || '',
@@ -151,18 +181,18 @@ export const ProblemSubmissions = ({ problem }) => {
       timeUsed: submission.timeUsed,
       memoryUsed: submission.memoryUsed,
       verdictByGroups: submission.verdictByGroups,
-    } as ProblemSubmissionsTable
+    } as ContestProblemSubmissionsTable
   ));
   
   const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
   
   return (
-    <DataViewer<ProblemSubmissionsTable>
+    <DataViewer<ContestProblemSubmissionsTable>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
       request={refresh}
-      name="submissions"
+      name={name}
       extraButtons={() => (
         <div className="extra-buttons">
         </div>

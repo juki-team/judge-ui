@@ -41,6 +41,7 @@ export {
   JukiJudgeLogoHorImage,
   JukiSurprisedImage,
   JukiUtilsLogoHorImage,
+  BalloonIcon,
   LayoutIcon,
   LinkIcon,
   LoaderLayer,

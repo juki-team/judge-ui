@@ -1,5 +1,5 @@
 import { UserState } from 'store';
-import { ProblemState, ProblemStatus, ScopeData } from 'types';
+import { ContestState, ProblemState, ProblemStatus, ScopeData } from 'types';
 
 export const can = {
   // USERS
@@ -48,7 +48,10 @@ export const can = {
     return account.myPermissions[ScopeData.PROBLEM]?.charAt(0) === '0';
   },
   viewProblemSubmissionSourceCode(account: UserState, submissionNickname: string): boolean {
-    return account.myPermissions[ScopeData.PROBLEM]?.charAt(0) === '0' || account.nickname === submissionNickname;
+    return account.myPermissions[ScopeData.PROBLEM]?.charAt(3) === '0' || account.nickname === submissionNickname;
+  },
+  viewContestProblemSubmissionSourceCode(account: UserState, contest: ContestState, submissionNickname: string): boolean {
+    return account.myPermissions[ScopeData.CONTEST]?.charAt(2) === '0' || contest.canRejudge || contest.canUpdate || account.nickname === submissionNickname;
   },
   updateProblem(account: UserState, problem: ProblemState): boolean {
     return (account.myPermissions[ScopeData.PROBLEM]?.charAt(2) === '0') ||

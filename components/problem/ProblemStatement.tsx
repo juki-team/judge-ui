@@ -1,19 +1,28 @@
 import { MdMathEditor, MdMathViewer, PlusIcon, T } from 'components';
 import React from 'react';
+import { ExclamationIcon, Popover } from '../index';
 import { ProblemInfo } from './ProblemInfo';
 import { SampleTest } from './SampleTest';
 
 export const ProblemStatement = ({
   problem,
+  contestIndex,
   setProblem,
   originalProblemRef,
-}: { problem: any, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
+}: { problem: any, contestIndex?: string, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
   
   return (
-    <div>
-      <div className="problem-head-box text-xh bold child-center">
-        {/*{subTab && <div className="index shadow">{subTab}</div>}*/}
-        {/*{subTab && <h6 className="title">{problem.name}</h6>}*/}
+    <div className="problem-statement">
+      <div className="problem-head-box text-xh text-bold jk-row">
+        {contestIndex && <div className="index jk-shadow jk-row jk-border-radius">{contestIndex}</div>}
+        {contestIndex && (
+          <div className="jk-row center gap nowrap">
+            <h6 className="title">{problem.name}</h6>
+            <Popover content={<ProblemInfo problem={problem} />} triggerOn="click" placement="bottom">
+              <div className="jk-row"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
+            </Popover>
+          </div>
+        )}
       </div>
       <div className="jk-row nowrap filled start problem-content">
         <div className="jk-pad">
