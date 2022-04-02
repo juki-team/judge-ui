@@ -75,7 +75,7 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
                 index: problem.index,
                 field: ({record: {totalPenalty, totalPoints, problems}, isCard}) => (
                     <Field className="jk-row center nowrap">
-                        {problems[problem.index]?.points === problem.points && (
+                        {problems[problem.index]?.success && (
                             <div style={{color: problem.color}}><BalloonIcon/></div>
                         )}
                         <div className="jk-row nowrap">
