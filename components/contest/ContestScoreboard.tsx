@@ -67,24 +67,28 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
         sticky: true,
       },
     ];
-    for (const problem of Object.values(contest?.problems)) {
-      base.push({
-        head: <TextHeadCell text={problem.index} />,
-        index: problem.index,
-        field: ({ record: { totalPenalty, totalPoints, problems }, isCard }) => (
-          <Field className="jk-row center nowrap">
-            {problems[problem.index]?.points === problem.points && (
-              <div style={{ color: problem.color }}><BalloonIcon /></div>
-            )}
-            <div className="jk-row nowrap">
-              <div className="text-xs">{problems[problem.index]?.attempts || '-'}</div>
-              <span className="color-gray-3">/</span>
-              <div className="text-xs">{problems[problem.index]?.time === -1 ? '-' : (problems[problem.index]?.time || '-')}</div>
-            </div>
-          </Field>
-        ),
-        minWidth: 120,
-      });
+
+    if(contest?.problems) {
+        for (const problem of Object.values(contest?.problems)) {
+            base.push({
+                head: <TextHeadCell text={problem.index}/>,
+                index: problem.index,
+                field: ({record: {totalPenalty, totalPoints, problems}, isCard}) => (
+                    <Field className="jk-row center nowrap">
+                        {problems[problem.index]?.points === problem.points && (
+                            <div style={{color: problem.color}}><BalloonIcon/></div>
+                        )}
+                        <div className="jk-row nowrap">
+                            <div className="text-xs">{problems[problem.index]?.attempts || '-'}</div>
+                            <span className="color-gray-3">/</span>
+                            <div
+                                className="text-xs">{problems[problem.index]?.time === -1 ? '-' : (problems[problem.index]?.time || '-')}</div>
+                        </div>
+                    </Field>
+                ),
+                minWidth: 120,
+            });
+        }
     }
     return base;
   }, [query, user.nickname, contest]);
