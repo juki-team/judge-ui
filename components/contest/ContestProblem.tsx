@@ -7,8 +7,7 @@ export const ContestProblem = ({ contest }: { contest: any }) => {
   
   const problem = contest?.problems?.[query.index as string];
 
-  console.log(contest)
-  
+
   return (
     <SplitPane
       minSize={80}

@@ -131,7 +131,7 @@ export const ProblemCodeEditor = ({ problem, contestIndex, isRegistered }: { pro
           );
         }
 
-        if(!isRegistered) {
+        if(!isRegistered && contestIndex) {
             return (
                 <ButtonLoader
                     type="secondary"
