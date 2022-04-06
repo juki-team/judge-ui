@@ -1,6 +1,6 @@
 import { Button, CheckIcon, CloseIcon, LinkIcon, T, TimerClock } from 'components';
 import { useRouter } from 'next/router';
-import { ContestSettingsParams, ContestTab, Judge, Period, ProblemTab } from 'types';
+import { ContestSettingsParams, ContestTab, Judge, Period } from 'types';
 import { ROUTES } from '../../config/constants';
 
 export const ContestProblems = ({ contest }: { contest: any }) => {
@@ -8,7 +8,7 @@ export const ContestProblems = ({ contest }: { contest: any }) => {
   const { problems = {}, settings, registered, timing, key } = contest;
   const now = new Date().getTime();
   
-  const { push } = useRouter();
+  const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
   
   return (
     <div className="jk-row gap jk-pad">
@@ -64,9 +64,10 @@ export const ContestProblems = ({ contest }: { contest: any }) => {
             </div>
             <div className="buttons-actions jk-row">
               {problem.judge === Judge.JUKI_JUDGE ? (
-                <Button onClick={() => {
-                  push(ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEMS, problem.index, ProblemTab.STATEMENT));
-                }}>
+                <Button onClick={() => push({
+                  pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEMS, problem.index),
+                  query,
+                }, undefined, { shallow: true })}>
                   <T>{((problem.myPoints !== -1 && problem.myPoints === problem.points) || (
                     !canSubmit
                   )) ? 'view problem' : 'solve problem'}</T>

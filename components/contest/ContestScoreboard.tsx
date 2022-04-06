@@ -1,11 +1,11 @@
-import { classNames } from '@bit/juki-team.juki.base-ui';
-import { BalloonIcon, DataViewer, DataViewerHeadersType, Field, T, TextHeadCell } from 'components';
-import { JUDGE_API_V1, QueryParam } from 'config/constants';
-import { replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
+import { BalloonIcon, DataViewer, DataViewerHeadersType, Field, Popover, T, TextHeadCell } from 'components';
+import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
+import { classNames, replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
+import Link from 'next/link';
 import { useCallback, useMemo, useRef } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ContestState } from 'types';
+import { ContentsResponseType, ContestState, ContestTab } from 'types';
 
 type ContestProblemSubmissionsTable = {
   index: number,
@@ -21,7 +21,7 @@ type ContestProblemSubmissionsTable = {
 export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
   
   const user = useUserState();
-  const { queryObject, query, push } = useRouter();
+  const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const mySubmissions = false;
   const columns: DataViewerHeadersType<ContestProblemSubmissionsTable>[] = useMemo(() => {
     const base: DataViewerHeadersType<ContestProblemSubmissionsTable>[] = [
@@ -67,28 +67,36 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
         sticky: true,
       },
     ];
-
-    if(contest?.problems) {
-        for (const problem of Object.values(contest?.problems)) {
-            base.push({
-                head: <TextHeadCell text={problem.index}/>,
-                index: problem.index,
-                field: ({record: {totalPenalty, totalPoints, problems}, isCard}) => (
-                    <Field className="jk-row center nowrap">
-                        {problems[problem.index]?.success && (
-                            <div style={{color: problem.color}}><BalloonIcon/></div>
-                        )}
-                        <div className="jk-row nowrap">
-                            <div className="text-xs">{problems[problem.index]?.attempts || '-'}</div>
-                            <span className="color-gray-3">/</span>
-                            <div
-                                className="text-xs">{problems[problem.index]?.time === -1 ? '-' : (problems[problem.index]?.time || '-')}</div>
-                        </div>
-                    </Field>
-                ),
-                minWidth: 120,
-            });
-        }
+    
+    if (contest?.problems) {
+      for (const problem of Object.values(contest?.problems)) {
+        base.push({
+          head: (
+            <Popover content={<div className="text-nowrap">{problem.name}</div>}>
+              <div className="jk-row">
+                <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEMS, problem.index), query }}>
+                  {problem.index}
+                </Link>
+              </div>
+            </Popover>
+          ),
+          index: problem.index,
+          field: ({ record: { totalPenalty, totalPoints, problems }, isCard }) => (
+            <Field className="jk-row center nowrap">
+              {problems[problem.index]?.success && (
+                <div style={{ color: problem.color }}><BalloonIcon /></div>
+              )}
+              <div className="jk-row nowrap">
+                <div className="text-xs">{problems[problem.index]?.attempts || '-'}</div>
+                <span className="color-gray-3">/</span>
+                <div
+                  className="text-xs">{problems[problem.index]?.time === -1 ? '-' : (problems[problem.index]?.time || '-')}</div>
+              </div>
+            </Field>
+          ),
+          minWidth: 120,
+        });
+      }
     }
     return base;
   }, [query, user.nickname, contest]);

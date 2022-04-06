@@ -1,6 +1,11 @@
+import { classNames } from '@bit/juki-team.juki.base-ui';
 import { MdMathEditor, MdMathViewer, PlusIcon, T } from 'components';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
-import { ExclamationIcon, Popover } from '../index';
+import { ROUTES } from '../../config/constants';
+import { ContestTab } from '../../types';
+import { ArrowIcon, ExclamationIcon, Popover } from '../index';
 import { ProblemInfo } from './ProblemInfo';
 import { SampleTest } from './SampleTest';
 
@@ -11,21 +16,30 @@ export const ProblemStatement = ({
   originalProblemRef,
 }: { problem: any, contestIndex?: string, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
   
+  const { query: { key, index, tab, ...query } } = useRouter();
+  
   return (
-    <div className="problem-statement">
-      <div className="problem-head-box text-xh text-bold jk-row">
-        {contestIndex && <div className="index jk-shadow jk-row jk-border-radius">{contestIndex}</div>}
-        {contestIndex && (
+    <div className="problem-statement-layout">
+      {contestIndex && (
+        <div className="problem-head-box text-xh text-bold jk-row">
+          <div className="jk-row color-primary back-link">
+            <Link href={{ pathname: ROUTES.CONTESTS.VIEW('' + key, ContestTab.PROBLEMS), query }}>
+              <a className="jk-row nowrap text-semi-bold link">
+                <ArrowIcon rotate={-90} />
+              </a>
+            </Link>
+          </div>
           <div className="jk-row center gap nowrap">
+            <div className="index">{contestIndex}</div>
             <h6 className="title">{problem.name}</h6>
             <Popover content={<ProblemInfo problem={problem} />} triggerOn="click" placement="bottom">
               <div className="jk-row"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
             </Popover>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <div className="jk-row nowrap filled start problem-content">
-        <div className="jk-pad">
+        <div className={classNames('problem-statement', { 'problem-contest-statement': !!contestIndex })}>
           <div>
             {setProblem ? (
               <MdMathEditor
@@ -60,7 +74,7 @@ export const ProblemStatement = ({
           </div>
           <div>
             <div className="jk-row filled gap">
-              <div className="jk-row filled gap flex-1">
+              <div className="jk-row filled gap nowrap flex-1">
                 <h6><T>input sample</T></h6>
                 <h6><T>output sample</T></h6>
               </div>

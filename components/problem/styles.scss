@@ -39,6 +39,14 @@
 }
 
 .problem-content {
+  .problem-statement:not(.problem-contest-statement) {
+    padding: var(--pad);
+  }
+  
+  .problem-contest-statement {
+    padding: 0 var(--pad);
+  }
+  
   .points {
     padding-left: var(--pad-m);
   }

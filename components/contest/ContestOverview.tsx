@@ -1,11 +1,11 @@
 import { ButtonLoader, MdMathViewer, T } from 'components';
+import { JUDGE_API_V1, OpenDialog, POST, QueryParam } from 'config/constants';
+import { addParamQuery, authorizedRequest, cleanRequest } from 'helpers';
+import { useNotification } from 'hooks';
 import { useRouter } from 'next/router';
+import { useUserState } from 'store';
 import { useSWRConfig } from 'swr';
-import { JUDGE_API_V1, OpenDialog, POST, QueryParam } from '../../config/constants';
-import { addParamQuery, authorizedRequest, cleanRequest } from '../../helpers';
-import { useNotification } from '../../hooks';
-import { useUserState } from '../../store';
-import { ContentResponseType, ContestSettingsParams, SetLoaderStatusOnClickType, Status } from '../../types';
+import { ContentResponseType, ContestSettingsParams, SetLoaderStatusOnClickType, Status } from 'types';
 
 export const ContestOverview = ({ contest }: { contest: any }) => {
   
@@ -50,7 +50,8 @@ export const ContestOverview = ({ contest }: { contest: any }) => {
                 <T className="text-sentence-case">you are judge</T>
               </div>
               : (canRegister && (registered ? (
-                <div className="registered jk-row bg-color-primary color-white jk-border-radius text-bold"><T className="text-sentence-case">registered</T></div>
+                <div className="registered jk-row bg-color-primary color-white jk-border-radius text-bold"><T
+                  className="text-sentence-case">registered</T></div>
               ) : new Date().getTime() <= contest?.settings?.start + contest?.timing?.duration && (
                 <ButtonLoader
                   onClick={(setLoader) => isLogged

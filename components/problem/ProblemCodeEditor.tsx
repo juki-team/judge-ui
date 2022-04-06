@@ -54,7 +54,11 @@ const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): 
  }
  }
  */
-export const ProblemCodeEditor = ({ problem, contestIndex, isRegistered }: { problem: any, contestIndex?: string, isRegistered?: boolean}) => {
+export const ProblemCodeEditor = ({
+  problem,
+  contestIndex,
+  isRegistered,
+}: { problem: any, contestIndex?: string, isRegistered?: boolean }) => {
   
   const initialTestCases: CodeEditorTestCasesType = {};
   problem.samples?.forEach((sample, index) => {
@@ -71,6 +75,7 @@ export const ProblemCodeEditor = ({ problem, contestIndex, isRegistered }: { pro
     };
   });
   const { nickname, isLogged, session } = useUserState();
+  console.log({ session });
   const { query, push } = useRouter();
   const editorStorageKey = 'jk-editor-settings-store/' + nickname;
   
@@ -130,24 +135,25 @@ export const ProblemCodeEditor = ({ problem, contestIndex, isRegistered }: { pro
             </ButtonLoader>
           );
         }
-
-        if(!isRegistered && contestIndex) {
-            return (
-                <ButtonLoader
-                    type="secondary"
-                    onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
-                    disabled
-                >
-                    <T>to submit, first register</T>
-                </ButtonLoader>
-            )
+        
+        if (!isRegistered && contestIndex) {
+          return (
+            <ButtonLoader
+              type="secondary"
+              onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
+              disabled
+            >
+              <T>to submit, first register</T>
+            </ButtonLoader>
+          );
         }
+        const sourceCode = source[PROGRAMMING_LANGUAGE[language].mime] || '';
         return (
           <ButtonLoader
             type="secondary"
+            disabled={sourceCode === ''}
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
-              console.log({ contestIndex });
               const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
                 contestIndex
                   ? JUDGE_API_V1.CONTEST.SUBMIT_V1(query.key + '', contestIndex)
@@ -155,7 +161,7 @@ export const ProblemCodeEditor = ({ problem, contestIndex, isRegistered }: { pro
                   method: POST,
                   body: JSON.stringify({
                     language,
-                    source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
+                    source: sourceCode,
                     session,
                   }),
                 }));

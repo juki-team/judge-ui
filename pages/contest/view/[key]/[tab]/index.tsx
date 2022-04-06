@@ -1,8 +1,3 @@
-import { ContestView } from 'components/contest/ContestView';
-
-function View() {
-  
-  return <ContestView />;
-}
+import View from './[index]';
 
 export default View;

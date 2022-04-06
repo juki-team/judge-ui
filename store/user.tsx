@@ -5,6 +5,7 @@ import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, is
 import { useFetcher, useNotification, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
+import { useSWRConfig } from 'swr';
 import { ContentResponseType, ProfileSettingOptions, ScopeData, SetLoaderStatusOnClickType, Status, UserInterface } from 'types';
 import { Language } from '../types';
 
@@ -55,7 +56,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   const { i18n } = useT();
   const { push, locale, pathname, asPath, query, isReady } = useRouter();
   const { data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.ACCOUNT.PING());
-  
+  const { mutate } = useSWRConfig();
   const [user, setUser] = useState<UserState>(USER_GUEST);
   
   useEffect(() => {
@@ -63,12 +64,14 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
       setUser(getUserState(data?.content));
     }
   }, [data]);
+  useEffect(() => {
+    mutate(JUDGE_API_V1.ACCOUNT.PING());
+  }, [user.nickname]);
   
   useEffect(() => {
     if (isReady) {
       const newLocale = user.preferredLanguage === Language.EN ? 'en' : 'es';
       if (locale !== newLocale) {
-        console.log({ locale });
         push({ pathname, query }, asPath, { locale: newLocale });
       }
       i18n?.changeLanguage?.(locale);

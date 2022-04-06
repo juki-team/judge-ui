@@ -37,22 +37,17 @@
 
 .problem-head-box {
   padding: var(--pad) 0 0 0;
+  position: relative;
   
-  .index {
-    z-index: 1;
-    background-color: var(--t-color-white);
-    position: absolute;
-    left: 0;
-    margin: var(--pad);
-    height: 42px;
-    width: 42px;
+  > .back-link {
+    left: var(--pad);
   }
 }
 
 .contest-problem-split-pane {
   height: 100%;
   
-  .problem-statement {
+  .problem-statement-layout {
     height: 100%;
     overflow: auto;
   }

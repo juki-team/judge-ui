@@ -5,7 +5,7 @@ import { replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef } from 'react';
-import { ContentsResponseType, ContestTab, ProblemMode, ProblemTab, ProblemVerdict, ProgrammingLanguage } from 'types';
+import { ContentsResponseType, ContestTab, ProblemMode, ProblemVerdict, ProgrammingLanguage } from 'types';
 import { useUserState } from '../../store';
 import { SubmissionInfo } from '../problem/SubmissionInfo';
 import { Memory, Time, Verdict } from '../problem/utils';
@@ -29,7 +29,7 @@ type ContestProblemSubmissionsTable = {
 export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest: any, mySubmissions?: boolean }) => {
   
   const user = useUserState();
-  const { queryObject, query, push } = useRouter();
+  const { queryObject, query: { key: contestKey, tab, index: problemIndex, ...query }, push, pathname } = useRouter();
   
   const columns: DataViewerHeadersType<ContestProblemSubmissionsTable>[] = useMemo(() => [
     ...(!mySubmissions ? [
@@ -39,12 +39,17 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
         field: ({ record: { nickname, imageUrl }, isCard }) => (
           <Field className="jk-row center gap">
             <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
-            <div className="link" onClick={() => (
-              push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname) })
-            )}>{nickname}</div>
+            <Link href={{
+              pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.STATUS),
+              query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname),
+            }}>
+              <div className="link">
+                {nickname}
+              </div>
+            </Link>
           </Field>
         ),
-        sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
+        sort: { compareFn: () => (rowA, rowB) => rowB.nickname.localeCompare(rowA.nickname) },
         filter: { type: 'text-auto' },
         cardPosition: 'top',
         minWidth: 250,
@@ -55,12 +60,12 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
       index: 'problem',
       field: ({ record: { problemName, indexProblem }, isCard }) => (
         <Field className="jk-row link">
-          <Link href={ROUTES.CONTESTS.VIEW(query.key as string, ContestTab.PROBLEMS, indexProblem, ProblemTab.STATEMENT)}>
+          <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEMS, indexProblem), query }}>
             <a>{indexProblem} {problemName}</a>
           </Link>
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },
+      sort: { compareFn: () => (rowA, rowB) => rowB.indexProblem.localeCompare(rowA.indexProblem) },
       filter: { type: 'date-range-auto' },
       cardPosition: 'center',
       minWidth: 280,
@@ -84,7 +89,7 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
           <Verdict verdict={verdict} submitPoints={submitPoints} />
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
+      sort: { compareFn: () => (rowA, rowB) => rowB.verdict.localeCompare(rowA.verdict) },
       filter: {
         type: 'select-auto',
         options: Object.values(PROBLEM_VERDICT)
@@ -116,7 +121,7 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
           <div>{PROGRAMMING_LANGUAGE[language]?.name || language}</div>
         </SubmissionInfo>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.language.localeCompare(rowB.language) },
+      sort: { compareFn: () => (rowA, rowB) => rowB.language.localeCompare(rowA.language) },
       filter: {
         type: 'select-auto',
         options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].name, value: language })),
@@ -132,7 +137,7 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
           <Time timeUsed={timeUsed} verdict={verdict} />
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.timeUsed - rowB.timeUsed },
+      sort: { compareFn: () => (rowA, rowB) => rowB.timeUsed - rowA.timeUsed },
       filter: { type: 'text-auto' },
       cardPosition: 'bottom',
       minWidth: 120,
@@ -145,12 +150,12 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
           <Memory memoryUsed={memoryUsed} verdict={verdict} />
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.memoryUsed - rowB.memoryUsed },
+      sort: { compareFn: () => (rowA, rowB) => rowB.memoryUsed - rowA.memoryUsed },
       filter: { type: 'text-auto' },
       cardPosition: 'bottom',
       minWidth: 120,
     },
-  ], [query, user.nickname]);
+  ], [contestKey, query, user.nickname, pathname]);
   
   const name = mySubmissions ? 'myStatus' : 'status';
   
@@ -168,7 +173,7 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
   
   const data: ContestProblemSubmissionsTable[] = (response?.success ? response.contents : []).map(submission => (
     {
-      settings: contest?.problems[query.index as string]?.settings,
+      settings: contest?.problems[problemIndex as string]?.settings,
       indexProblem: submission.indexProblem || '',
       problemName: submission.problemName || '',
       submitId: submission.submitId,

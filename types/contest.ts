@@ -59,7 +59,7 @@ export interface ContestState {
   description: string,
   key: string,
   name: string,
-  problems: { [key: string]: { index: string, color: string, points: number } },
+  problems: { [key: string]: { index: string, color: string, points: number, name: string } },
   registered: boolean,
   settings: {},
   status: ContestStatus,

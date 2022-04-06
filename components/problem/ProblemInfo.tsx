@@ -1,6 +1,7 @@
-import { PROBLEM_MODE, PROBLEM_STATUS, PROBLEM_TYPE } from '../../config/constants';
-import { classNames } from '../../helpers';
-import { Popover, T } from '../index';
+import { Popover, T } from 'components';
+import { PROBLEM_MODE, PROBLEM_STATUS, PROBLEM_TYPE } from 'config/constants';
+import { classNames } from 'helpers';
+import { ProblemMode } from 'types';
 
 export const ProblemInfo = ({ problem, horizontal = false }) => {
   
@@ -44,7 +45,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
       </div>
       <div>
         <span className="label text-bold text-capitalize"><T>mode</T><span>:</span></span>
-        {horizontal ? (
+        {(horizontal && problem?.settings?.mode === ProblemMode.SUBTASK) ? (
           <Popover
             content={<div className="groups-popover">{subTasks()}</div>}
             placement="bottom"
@@ -52,7 +53,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
             <div><T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode].print}</T></div>
           </Popover>
         ) : <T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode].print}</T>}
-        {!horizontal && <div className="points">{subTasks()}</div>}
+        {!horizontal && problem?.settings?.mode === ProblemMode.SUBTASK && <div className="points">{subTasks()}</div>}
       </div>
       {problem?.tags && (
         <div>

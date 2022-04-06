@@ -1,45 +1,81 @@
+import { ArrowIcon, ContestOverview, ContestProblems, FetcherLayer, NotFound, T, Tabs, TwoContentLayout } from 'components';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { useFetcher } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { JUDGE_API_V1, ROUTES } from '../../config/constants';
-import { useFetcher } from '../../hooks';
-import { ContentResponseType, ContestTab } from '../../types';
-import { ArrowIcon, ContestOverview, ContestProblems, FetcherLayer, NotFound, T, Tabs, TwoContentLayout } from '../index';
+import { useEffect, useState } from 'react';
+import { ContentResponseType, ContestTab } from 'types';
 import { ContestProblem } from './ContestProblem';
 import { ContestProblemSubmissions } from './ContestProblemSubmissions';
 import { ContestScoreboard } from './ContestScoreboard';
 
 export function ContestView() {
   
-  const { query, push } = useRouter();
-  const { isLoading, data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST(query.key as string));
+  const { isReady, query: { key: contestKey, index: problemIndex, tab: contestTab, ...query }, push, asPath } = useRouter();
+  const {
+    isLoading,
+    data,
+  } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST(contestKey as string), { refreshInterval: 60000 });
+  const [lastProblemVisited, setLastProblemVisited] = useState('');
+  
+  useEffect(() => {
+    if (isReady && problemIndex) {
+      setLastProblemVisited(problemIndex as string);
+    } else if (contestTab === ContestTab.PROBLEMS) {
+      setLastProblemVisited('');
+    }
+  }, [isReady, problemIndex, contestTab]);
   
   const index = {
     [ContestTab.OVERVIEW]: 0,
     [ContestTab.PROBLEMS]: 1,
     [ContestTab.SCOREBOARD]: 2,
-    [ContestTab.SUBMISSIONS]: 3,
-    [ContestTab.STATUS]: 4,
   };
   
   const tabs = [ContestTab.OVERVIEW, ContestTab.PROBLEMS, ContestTab.SCOREBOARD];
   
   const tabHeaders = [
     { children: <T className="text-capitalize">overview</T> },
-    { children: <T className="text-capitalize">problems</T> },
+    {
+      children: (
+        <div className="jk-row gap">
+          {lastProblemVisited
+            ? <T className="text-capitalize">problem</T>
+            : <T className="text-capitalize">problems</T>} {lastProblemVisited}
+        </div>
+      ),
+    },
     { children: <T className="text-capitalize">scoreboard</T> },
   ];
   
   if (data?.success && data?.content?.registered) {
     tabHeaders.push({ children: <T className="text-capitalize">my submissions</T> });
     tabs.push(ContestTab.SUBMISSIONS);
+    index[ContestTab.SUBMISSIONS] = tabHeaders.length - 1;
   }
   tabHeaders.push({ children: <T className="text-capitalize">submissions</T> });
   tabs.push(ContestTab.STATUS);
+  index[ContestTab.STATUS] = tabHeaders.length - 1;
   if (data?.success && data?.content?.settings.clarifications) {
     tabHeaders.push({ children: <T className="text-capitalize">clarifications</T> });
     index[ContestTab.CLARIFICATIONS] = tabHeaders.length - 1;
     tabs.push(ContestTab.CLARIFICATIONS);
   }
+  
+  const tabsChildren = (content: any) => {
+    const t = [<ContestOverview contest={content} />];
+    if (problemIndex) {
+      t.push(<ContestProblem contest={content} />);
+    } else {
+      t.push(<ContestProblems contest={content} />);
+    }
+    t.push(<ContestScoreboard contest={content} />);
+    if (data?.success && data?.content?.registered) {
+      t.push(<ContestProblemSubmissions contest={content} mySubmissions />);
+    }
+    t.push(<ContestProblemSubmissions contest={content} />);
+    return t;
+  };
   
   return (
     <FetcherLayer<any>
@@ -55,7 +91,7 @@ export function ContestView() {
                 <Link href={ROUTES.CONTESTS.LIST()}>
                   <a className="jk-row nowrap text-semi-bold link">
                     <ArrowIcon rotate={-90} />
-                    <div className="screen md lg hg"><T className="text-sentence-case">contest</T></div>
+                    <div className="screen md lg hg"><T className="text-sentence-case">contests</T></div>
                   </a>
                 </Link>
               </div>
@@ -65,11 +101,12 @@ export function ContestView() {
             </div>
           </div>
           <Tabs
-            selectedTabIndex={index[query.tab as ContestTab]}
+            selectedTabIndex={index[contestTab as ContestTab]}
             tabHeaders={tabHeaders}
-            onChange={index => {
-              push(ROUTES.CONTESTS.VIEW('' + query.key, tabs[index]));
-            }}
+            onChange={index => push({
+              pathname: ROUTES.CONTESTS.VIEW('' + contestKey, tabs[index], lastProblemVisited || undefined),
+              query,
+            }, undefined, { shallow: true })}
             // actionsSection={
             //  <ButtonLoader
             // onClick={async setLoaderStatus => {
@@ -81,13 +118,8 @@ export function ContestView() {
             //     <T>edit</T>
             //   </ButtonLoader>
             // }
-          >
-            <ContestOverview contest={data.content} />
-            {query.index && query.subTab ? <ContestProblem contest={data.content} /> : <ContestProblems contest={data.content} />}
-            <ContestScoreboard contest={data.content} />
-            {data?.success && data?.content?.registered && <ContestProblemSubmissions contest={data.content} mySubmissions />}
-            <ContestProblemSubmissions contest={data.content} />
-          </Tabs>
+            children={tabsChildren(data.content)}
+          />
         </TwoContentLayout>
       )}
     </FetcherLayer>
