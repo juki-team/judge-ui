@@ -40,7 +40,7 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
           <Field className="jk-row center gap">
             <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
             <Link href={{
-              pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.STATUS),
+              pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.SUBMISSIONS),
               query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname),
             }}>
               <div className="link">

@@ -75,7 +75,6 @@ export const ProblemCodeEditor = ({
     };
   });
   const { nickname, isLogged, session } = useUserState();
-  console.log({ session });
   const { query, push } = useRouter();
   const editorStorageKey = 'jk-editor-settings-store/' + nickname;
   

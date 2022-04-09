@@ -1,7 +1,7 @@
 import { ContestStatus, UserStatus } from '../../types';
 
 export const JUDGE_BACKEND_BASE_URL = process.env.NEXT_PUBLIC_JUKI_JUDGE_BACKEND_BASE_URL;
-export const JUDGER_BACKEND_BASE_URL = process.env.NEXT_PUBLIC_JUKI_JUDGER_BACKEND_BASE_URL;
+export const JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL = process.env.NEXT_PUBLIC_JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL;
 
 export const JUDGE_API_V1 = {
   ACCOUNT: {
@@ -62,13 +62,19 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit`;
     },
     SUBMIT_V1: (id: string) => {
-      return `${JUDGER_BACKEND_BASE_URL}/api/v1/submit/problem/${id}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/problem/${id}`;
     },
     SUBMISSION_CODE: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/submit/${key}`;
     },
     PROBLEM_STATUS: (id: string, page: number, size: number) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit/status?page=${page}&size=${size}`;
+    },
+    PROBLEM_STATUS_V1: (id: string, page: number, size: number, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/problem/${id}?session=${session}&page=${page}&size=${size}`;
+    },
+    PROBLEM_STATUS_NICKNAME: (id: string, page: number, size: number, session: string, nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/problem/${id}/nickname/${nickname}?session=${session}&page=${page}&size=${size}`;
     },
   },
   CONTEST: {
@@ -98,7 +104,7 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/problem/${problemIndex}/submit`;
     },
     SUBMIT_V1: (key: string, problemIndex: string) => {
-      return `${JUDGER_BACKEND_BASE_URL}/api/v1/submit/contest/${key}/problem/${problemIndex}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/contest/${key}/problem/${problemIndex}`;
     },
     SCOREBOARD: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard`;

@@ -1,6 +1,6 @@
-import { PROBLEM_VERDICT } from '../../config/constants';
-import { ProblemVerdict } from '../../types';
-import { Popover, T } from '../index';
+import { Popover, T } from 'components';
+import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
+import { ProblemVerdict, SubmissionRunStatus } from 'types';
 
 export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
   return !(verdict === ProblemVerdict.CE || verdict === ProblemVerdict.HIDDEN || verdict === ProblemVerdict.NONE || verdict === ProblemVerdict.PENDING);
@@ -14,12 +14,22 @@ export const Memory = ({ verdict, memoryUsed }: { verdict: ProblemVerdict, memor
   return hasTimeHasMemory(verdict) ? <>{memoryUsed} <T className="color-gray-3">kb</T></> : <>-</>;
 };
 
-export const Verdict = ({ verdict, submitPoints }: { verdict: ProblemVerdict, submitPoints: number }) => {
+export const Verdict = ({
+  verdict,
+  submitPoints,
+  status,
+}: { verdict: ProblemVerdict, submitPoints: number, status: SubmissionRunStatus }) => {
+  
+  const verdictLabel = PROBLEM_VERDICT[verdict]?.print ? <T className="text-nowrap">{PROBLEM_VERDICT[verdict]?.print}</T> : verdict;
+  
   return (
     <Popover
       content={
         <div className="text-sentence-case text-nowrap">
-          {PROBLEM_VERDICT[verdict]?.print ? <T>{PROBLEM_VERDICT[verdict]?.print}</T> : verdict}
+          {verdict === ProblemVerdict.PENDING ? (
+            SUBMISSION_RUN_STATUS[status]?.print ?
+              <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.print}</T> : status || verdictLabel
+          ) : verdictLabel}
         </div>
       }
       triggerOn="hover"

@@ -1,4 +1,5 @@
 import {
+  ArrowIcon,
   ButtonLoader,
   ExclamationIcon,
   FetcherLayer,
@@ -12,15 +13,13 @@ import {
   Tabs,
   TwoContentLayout,
 } from 'components';
-import { ROUTES } from 'config/constants';
-import { JUDGE_API_V1 } from 'config/constants/judge';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { can } from 'helpers';
 import { useFetcher } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useUserState } from 'store';
 import { ContentResponseType, ProblemTab, Status } from 'types';
-import { ArrowIcon } from '../../../../components';
-import { can } from '../../../../helpers';
-import { useUserState } from '../../../../store';
 
 function ProblemView() {
   
@@ -31,10 +30,31 @@ function ProblemView() {
   const index = {
     [ProblemTab.STATEMENT]: 0,
     [ProblemTab.EDITOR]: 1,
-    [ProblemTab.SUBMISSIONS]: 2,
   };
-  
-  const tabs = [ProblemTab.STATEMENT, ProblemTab.EDITOR, ProblemTab.SUBMISSIONS];
+  const tabs = [ProblemTab.STATEMENT, ProblemTab.EDITOR];
+  const tabHeaders = [
+    { children: <T className="text-capitalize">statement</T> },
+    { children: <T className="text-capitalize">code editor</T> },
+  ];
+  const tabChildren = (problem) => {
+    const tabs = [
+      <ProblemStatement problem={problem} />,
+      <ProblemCodeEditor problem={problem} />,
+    ];
+    if (user.isLogged) {
+      tabs.push(<ProblemSubmissions problem={problem} mySubmissions />);
+    }
+    tabs.push(<ProblemSubmissions problem={problem} />);
+    return tabs;
+  };
+  if (user.isLogged) {
+    index[ProblemTab.MY_SUBMISSIONS] = tabs.length;
+    tabs.push(ProblemTab.MY_SUBMISSIONS);
+    tabHeaders.push({ children: <T className="text-capitalize">my submissions</T> });
+  }
+  index[ProblemTab.SUBMISSIONS] = tabs.length;
+  tabs.push(ProblemTab.SUBMISSIONS);
+  tabHeaders.push({ children: <T className="text-capitalize">submissions</T> });
   
   return (
     <FetcherLayer<any>
@@ -57,19 +77,14 @@ function ProblemView() {
               <div className="jk-row gap center nowrap">
                 <h5>{data.content.name}</h5>
                 <Popover content={<ProblemInfo problem={data.content} />} triggerOn="click" placement="bottom">
-                  <div className="jk-row"><ExclamationIcon filledCircle className="screen sm md color-primary" rotate={180} /></div>
+                  <div className="jk-row"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
                 </Popover>
               </div>
             </div>
-            <div className="screen lg hg"><ProblemInfo problem={data.content} horizontal /></div>
           </div>
           <Tabs
             selectedTabIndex={index[query.tab as ProblemTab]}
-            tabHeaders={[
-              { children: <T className="text-capitalize">statement</T> },
-              { children: <T className="text-capitalize">code editor</T> },
-              { children: <T className="text-capitalize">submissions</T> },
-            ]}
+            tabHeaders={tabHeaders}
             onChange={index => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabs[index]), query })}
             actionsSection={
               can.updateProblem(user, data.content) ? (
@@ -85,9 +100,7 @@ function ProblemView() {
               ) : undefined
             }
           >
-            <ProblemStatement problem={data.content} />
-            <ProblemCodeEditor problem={data.content} />
-            <ProblemSubmissions problem={data.content} />
+            {tabChildren(data.content)}
           </Tabs>
         </TwoContentLayout>
       )}

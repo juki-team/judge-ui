@@ -50,12 +50,12 @@ export function ContestView() {
   
   if (data?.success && data?.content?.registered) {
     tabHeaders.push({ children: <T className="text-capitalize">my submissions</T> });
-    tabs.push(ContestTab.SUBMISSIONS);
-    index[ContestTab.SUBMISSIONS] = tabHeaders.length - 1;
+    tabs.push(ContestTab.MY_SUBMISSIONS);
+    index[ContestTab.MY_SUBMISSIONS] = tabHeaders.length - 1;
   }
   tabHeaders.push({ children: <T className="text-capitalize">submissions</T> });
-  tabs.push(ContestTab.STATUS);
-  index[ContestTab.STATUS] = tabHeaders.length - 1;
+  tabs.push(ContestTab.SUBMISSIONS);
+  index[ContestTab.SUBMISSIONS] = tabHeaders.length - 1;
   if (data?.success && data?.content?.settings.clarifications) {
     tabHeaders.push({ children: <T className="text-capitalize">clarifications</T> });
     index[ContestTab.CLARIFICATIONS] = tabHeaders.length - 1;

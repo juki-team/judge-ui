@@ -4,14 +4,22 @@ import { JUDGE_API_V1 } from 'config/constants/judge';
 import { replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
 import { useFetcher, useRequester, useRouter } from 'hooks';
 import { useCallback, useMemo, useRef } from 'react';
-import { ContentResponseType, ContentsResponseType, ProblemMode, ProblemVerdict, ProgrammingLanguage } from 'types';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  ProblemMode,
+  ProblemVerdict,
+  ProgrammingLanguage,
+  SubmissionRunStatus,
+} from 'types';
+import { useUserState } from '../../store';
 import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time, Verdict } from './utils';
 
 type ProblemSubmissionsTable = {
   submitId: string,
-  nickname: string,
-  imageUrl: string,
+  userNickname: string,
+  userImageUrl: string,
   timestamp: number,
   verdict: ProblemVerdict,
   submitPoints: number,
@@ -19,30 +27,34 @@ type ProblemSubmissionsTable = {
   timeUsed: number,
   memoryUsed: number,
   verdictByGroups: {},
+  canViewSourceCode: boolean,
+  status: SubmissionRunStatus,
 }
 
-export const ProblemSubmissions = ({ problem }) => {
+export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, mySubmissions?: boolean }) => {
   const { queryObject, query, push } = useRouter();
   const { data: problemData } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(query.key as string));
   const isSubtaskProblem = problemData?.success && problemData?.content?.settings?.mode === ProblemMode.SUBTASK;
-  
+  const { session, nickname } = useUserState();
   const columns: DataViewerHeadersType<ProblemSubmissionsTable>[] = useMemo(() => [
-    {
-      head: <TextHeadCell text={<T>nickname</T>} />,
-      index: 'nickname',
-      field: ({ record: { nickname, imageUrl }, isCard }) => (
-        <Field className="jk-row center gap">
-          <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
-          <div className="link" onClick={() => (
-            push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname) })
-          )}>{nickname}</div>
-        </Field>
-      ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
-      filter: { type: 'text-auto' },
-      cardPosition: 'top',
-      minWidth: 250,
-    },
+    ...(!mySubmissions ? [
+      {
+        head: <TextHeadCell text={<T>nickname</T>} />,
+        index: 'nickname',
+        field: ({ record: { userNickname, userImageUrl }, isCard }) => (
+          <Field className="jk-row center gap">
+            <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
+            <div className="link" onClick={() => (
+              push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname) })
+            )}>{userNickname}</div>
+          </Field>
+        ),
+        sort: { compareFn: () => (rowA, rowB) => rowA.userNickname.localeCompare(rowB.userNickname) },
+        filter: { type: 'text-auto' },
+        cardPosition: 'top',
+        minWidth: 250,
+      } as DataViewerHeadersType<ProblemSubmissionsTable>,
+    ] : []),
     {
       head: <TextHeadCell text={<T>date</T>} />,
       index: 'timestamp',
@@ -57,9 +69,9 @@ export const ProblemSubmissions = ({ problem }) => {
     {
       head: <TextHeadCell text={<T>verdict</T>} />,
       index: 'verdict',
-      field: ({ record: { verdict, submitPoints }, isCard }) => (
+      field: ({ record: { verdict, submitPoints, status }, isCard }) => (
         <Field className="jk-row">
-          <Verdict verdict={verdict} submitPoints={submitPoints} />
+          <Verdict verdict={verdict} submitPoints={submitPoints} status={status} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
@@ -75,12 +87,22 @@ export const ProblemSubmissions = ({ problem }) => {
       head: <TextHeadCell text={<T>lang</T>} />,
       index: 'language',
       field: ({
-        record: { language, verdict, submitPoints, nickname, memoryUsed, submitId, timeUsed, verdictByGroups, timestamp },
+        record: {
+          language,
+          verdict,
+          status,
+          submitPoints,
+          canViewSourceCode,
+          memoryUsed,
+          submitId,
+          timeUsed,
+          verdictByGroups,
+          timestamp,
+        },
         isCard,
       }) => (
         <SubmissionInfo
           isSubtaskProblem={isSubtaskProblem}
-          nickname={nickname}
           language={language}
           submitId={submitId}
           timeUsed={timeUsed}
@@ -89,6 +111,8 @@ export const ProblemSubmissions = ({ problem }) => {
           memoryUsed={memoryUsed}
           date={new Date(timestamp)}
           submitPoints={submitPoints}
+          canViewSourceCode={canViewSourceCode}
+          status={status}
         >
           <div>{PROGRAMMING_LANGUAGE[language]?.name || language}</div>
         </SubmissionInfo>
@@ -128,13 +152,15 @@ export const ProblemSubmissions = ({ problem }) => {
       minWidth: 120,
     },
   ], [query, isSubtaskProblem]);
-  const name = 'submissions';
-  
+  const name = mySubmissions ? 'myStatus' : 'status';
   const {
     data: response,
     refresh,
     error,
-  } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM_STATUS(problem?.id, +queryObject[name + '.page']?.[0] - 1, +queryObject[name + '.pageSize']?.[0]));
+  } = useRequester<ContentsResponseType<any>>(
+    mySubmissions
+      ? JUDGE_API_V1.PROBLEM.PROBLEM_STATUS_NICKNAME(problem?.id, +queryObject[name + '.page']?.[0], +queryObject[name + '.pageSize']?.[0], session, nickname)
+      : JUDGE_API_V1.PROBLEM.PROBLEM_STATUS_V1(problem?.id, +queryObject[name + '.page']?.[0], +queryObject[name + '.pageSize']?.[0], session), { refreshInterval: 60000 });
   
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
@@ -142,15 +168,17 @@ export const ProblemSubmissions = ({ problem }) => {
   const data: ProblemSubmissionsTable[] = (response?.success ? response.contents : []).map(submission => (
     {
       submitId: submission.submitId,
-      nickname: submission.nickname,
-      imageUrl: submission.imageUrl || '',
-      timestamp: submission.when,
-      verdict: submission.answer,
+      userNickname: submission.userNickname,
+      userImageUrl: submission.userImageUrl || '',
+      timestamp: submission.timestamp,
+      verdict: submission.verdict,
       submitPoints: submission.submitPoints,
       language: submission.language,
       timeUsed: submission.timeUsed,
       memoryUsed: submission.memoryUsed,
       verdictByGroups: submission.verdictByGroups,
+      canViewSourceCode: submission.canViewSourceCode,
+      status: submission.status,
     } as ProblemSubmissionsTable
   ));
   
@@ -162,7 +190,7 @@ export const ProblemSubmissions = ({ problem }) => {
       data={data}
       rows={{ height: 68 }}
       request={refresh}
-      name="submissions"
+      name={name}
       extraButtons={() => (
         <div className="extra-buttons">
         </div>

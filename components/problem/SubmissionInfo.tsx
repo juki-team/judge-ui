@@ -1,11 +1,16 @@
-import { ProgrammingLanguage, ReactNodeOrFunctionType } from '@bit/juki-team.juki.base-ui';
 import { Button, CodeViewer, CopyIcon, CopyToClipboard, DateLiteral, Field, LoaderLayer, Modal, T } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
-import { can, classNames } from 'helpers';
+import { classNames } from 'helpers';
 import { useFetcher } from 'hooks';
 import React, { useEffect, useState } from 'react';
-import { useUserState } from 'store';
-import { ContentResponseType, ContestState, ProblemVerdict } from 'types';
+import {
+  ContentResponseType,
+  ContestState,
+  ProblemVerdict,
+  ProgrammingLanguage,
+  ReactNodeOrFunctionType,
+  SubmissionRunStatus,
+} from 'types';
 import { hasTimeHasMemory, Memory, Time, Verdict } from './utils';
 
 export const SubmissionInfo = ({
@@ -17,10 +22,11 @@ export const SubmissionInfo = ({
   submitPoints,
   verdictByGroups,
   date,
-  nickname,
   children,
   contest,
   isSubtaskProblem,
+  canViewSourceCode,
+  status,
 }: {
   submitId: string,
   language: ProgrammingLanguage,
@@ -30,21 +36,20 @@ export const SubmissionInfo = ({
   submitPoints: number,
   verdictByGroups: {},
   date: Date,
-  nickname: string,
   children: ReactNodeOrFunctionType,
   contest?: ContestState,
   isSubtaskProblem: boolean,
+  canViewSourceCode: boolean,
+  status: SubmissionRunStatus,
 }) => {
   
   const [open, setOpen] = useState(false);
-  const user = useUserState();
-  const canView = contest ? can.viewContestProblemSubmissionSourceCode(user, contest, nickname) : can.viewProblemSubmissionSourceCode(user, nickname);
   
   const {
     data,
     isLoading,
     error,
-  } = useFetcher<ContentResponseType<{ source: string }>>((open && canView) ? (contest ? JUDGE_API_V1.CONTEST.VIEW_SOURCE_SUBMISSION(contest?.key, submitId) : JUDGE_API_V1.PROBLEM.SUBMISSION_CODE(submitId)) : undefined);
+  } = useFetcher<ContentResponseType<{ source: string }>>((open && canViewSourceCode) ? (contest ? JUDGE_API_V1.CONTEST.VIEW_SOURCE_SUBMISSION(contest?.key, submitId) : JUDGE_API_V1.PROBLEM.SUBMISSION_CODE(submitId)) : undefined);
   
   useEffect(() => {
     if ((data?.success === false || error) && open) {
@@ -56,10 +61,10 @@ export const SubmissionInfo = ({
   
   return (
     <Field
-      className={classNames('jk-row', { link: canView })}
-      onClick={() => !open && canView && setOpen(true)}
+      className={classNames('jk-row', { link: canViewSourceCode })}
+      onClick={() => !open && canViewSourceCode && setOpen(true)}
     >
-      <Modal isOpen={open} onClose={() => setOpen(false)}>
+      <Modal isOpen={open} onClose={() => setOpen(false)} closeIcon>
         <section className="jk-pad">
           {verdictByGroups && !!Object.keys(verdictByGroups).length && (
             <div>
@@ -88,7 +93,7 @@ export const SubmissionInfo = ({
                         {+groupKey ? (isSubtaskProblem ? <><T>subtask</T>{groupKey}</> : <T>test cases</T>) :
                           <T>sample test cases</T>}
                       </div>
-                      <div className="jk-row"><Verdict verdict={verdict} submitPoints={submitPoints} /></div>
+                      <div className="jk-row"><Verdict verdict={verdict} submitPoints={submitPoints} status={status} /></div>
                       {isSubtaskProblem && <div className="jk-row">{points}</div>}
                       <div className="jk-row center gap"><Time timeUsed={timeUsed} verdict={verdict} /></div>
                       <div className="jk-row center gap"><Memory verdict={verdict} memoryUsed={memoryUsed} /></div>
@@ -104,7 +109,7 @@ export const SubmissionInfo = ({
                 <h6><T>source code</T></h6>
                 <div className="jk-row">
                   <div>{PROGRAMMING_LANGUAGE[language]?.name || language}</div>
-                  <div><Verdict verdict={verdict} submitPoints={submitPoints} /></div>
+                  <div><Verdict verdict={verdict} submitPoints={submitPoints} status={status} /></div>
                   {hasTimeHasMemory(verdict) && <div><Time timeUsed={timeUsed} verdict={verdict} /></div>}
                   {hasTimeHasMemory(verdict) && <div><Memory memoryUsed={memoryUsed} verdict={verdict} /></div>}
                   <DateLiteral date={date} twoLines={false} />
