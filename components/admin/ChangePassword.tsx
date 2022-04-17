@@ -27,10 +27,10 @@ export const ChangePassword = ({ onClose, nickname }: { onClose: () => void, nic
     >
       <div className="jk-pad">
         <h6><T>change password</T></h6>
-        <div className="jk-row start"><T>nickname</T>: &nbsp;
+        <div className="jk-row left"><T>nickname</T>: &nbsp;
           <div className="link">{nickname}</div>
         </div>
-        <div className="jk-row start">
+        <div className="jk-row left">
           <InputPassword onChange={value => setNewPassword(value)} value={newPassword} />
           <CopyToClipboard text={newPassword}>
             <CopyIcon className="cursor-pointer" />

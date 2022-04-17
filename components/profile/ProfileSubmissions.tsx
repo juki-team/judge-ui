@@ -1,13 +1,25 @@
-import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
-import { JUDGE_API_V1 } from 'config/constants/judge';
-import { replaceParamQuery } from 'helpers';
-import { useFetcher, useRouter } from 'hooks';
-import { useMemo } from 'react';
-import { ContentResponseType, ProblemMode, ProblemVerdict, ProgrammingLanguage, SubmissionRunStatus, SubmissionResponseDTO } from 'types';
+import { useCallback, useMemo, useRef } from 'react';
+import {
+  ACCEPTED_PROGRAMMING_LANGUAGES,
+  JUDGE_API_V1,
+  PROBLEM_VERDICT,
+  PROGRAMMING_LANGUAGE,
+  QueryParam,
+} from '../../config/constants';
+import { replaceParamQuery, searchParamsObjectTypeToQuery } from '../../helpers';
+import { useFetcher, useRequester, useRouter } from '../../hooks';
 import { useUserState } from '../../store';
-import { SubmissionInfo } from './SubmissionInfo';
-import { Memory, Time, Verdict } from './utils';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  ProblemMode,
+  ProblemVerdict,
+  ProgrammingLanguage,
+  SubmissionRunStatus,
+} from '../../types';
+import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell } from '../index';
+import { SubmissionInfo } from '../problem/SubmissionInfo';
+import { Memory, Time, Verdict } from '../problem/utils';
 
 type ProblemSubmissionsTable = {
   submitId: string,
@@ -24,30 +36,12 @@ type ProblemSubmissionsTable = {
   status: SubmissionRunStatus,
 }
 
-export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, mySubmissions?: boolean }) => {
+export function ProfileSubmissions() {
   const { query, push } = useRouter();
   const { data: problemData } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(query.key as string));
   const isSubtaskProblem = problemData?.success && problemData?.content?.settings?.mode === ProblemMode.SUBTASK;
   const { session, nickname } = useUserState();
   const columns: DataViewerHeadersType<ProblemSubmissionsTable>[] = useMemo(() => [
-    ...(!mySubmissions ? [
-      {
-        head: <TextHeadCell text={<T>nickname</T>} />,
-        index: 'nickname',
-        field: ({ record: { userNickname, userImageUrl }, isCard }) => (
-          <Field className="jk-row center gap">
-            <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
-            <div className="link" onClick={() => (
-              push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname) })
-            )}>{userNickname}</div>
-          </Field>
-        ),
-        sort: { compareFn: () => (rowA, rowB) => rowA.userNickname.localeCompare(rowB.userNickname) },
-        filter: { type: 'text-auto' },
-        cardPosition: 'top',
-        minWidth: 250,
-      } as DataViewerHeadersType<ProblemSubmissionsTable>,
-    ] : []),
     {
       head: <TextHeadCell text={<T>date</T>} />,
       index: 'timestamp',
@@ -71,7 +65,7 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, m
       filter: {
         type: 'select-auto',
         options: Object.values(PROBLEM_VERDICT)
-          .map(({ value, label }) => ({ label: <T className="text-sentence-case">{label}</T>, value })),
+          .map(({ value, print }) => ({ label: <T className="text-sentence-case">{print}</T>, value })),
       },
       cardPosition: 'center',
       minWidth: 120,
@@ -107,13 +101,13 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, m
           canViewSourceCode={canViewSourceCode}
           status={status}
         >
-          <div>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+          <div>{PROGRAMMING_LANGUAGE[language]?.name || language}</div>
         </SubmissionInfo>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.language.localeCompare(rowB.language) },
       filter: {
         type: 'select-auto',
-        options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
+        options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].name, value: language })),
       },
       cardPosition: 'center',
       minWidth: 120,
@@ -145,15 +139,10 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, m
       minWidth: 120,
     },
   ], [query, isSubtaskProblem]);
-  const url = (page: number, size: number) => {
-    if (mySubmissions) {
-      return JUDGE_API_V1.PROBLEM.PROBLEM_STATUS_NICKNAME(problem?.id, page, size, session, nickname);
-    }
-    return JUDGE_API_V1.PROBLEM.PROBLEM_STATUS_V1(problem?.id, page, size, session);
-  };
-  
+  const url = (page: number, size: number) => JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname, page, size, session);
+  const mySubmissions= true;
   return (
-    <PagedDataViewer<ProblemSubmissionsTable, SubmissionResponseDTO>
+    <PagedDataViewer<ProblemSubmissionsTable>
       headers={columns}
       url={url}
       name={mySubmissions ? 'myStatus' : 'status'}
@@ -174,4 +163,4 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, m
       refreshInterval={60000}
     />
   );
-};
+}

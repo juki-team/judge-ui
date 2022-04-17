@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContentsResponseType, ProblemStatus, ProblemTab } from 'types';
+import { Button } from '@juki-team/base-ui';
 
 type ProblemsTable = {
   id: number,
@@ -76,7 +77,7 @@ function Problems() {
       head: <TextHeadCell text={<T>tags</T>} />,
       index: 'tags',
       field: ({ record: { tags } }) => (
-        <Field className="jk-row start pad">
+        <Field className="jk-row left pad">
           {tags.map(tag => !!tag && <div className="jk-tag gray-6 text-s">{tag}</div>)}
         </Field>
       ),
@@ -95,7 +96,7 @@ function Problems() {
         index: 'status',
         field: ({ record: { status } }) => (
           <TextField
-            text={<T className="text-capitalize">{PROBLEM_STATUS[status].print}</T>}
+            text={<T className="text-capitalize">{PROBLEM_STATUS[status].label}</T>}
             label={<T className="text-uppercase">visibility</T>}
           />
         ),
@@ -109,7 +110,7 @@ function Problems() {
             ProblemStatus.PUBLIC,
           ] as ProblemStatus[]).map(status => ({
             value: status,
-            label: <T className="text-capitalize">{PROBLEM_STATUS[status].print}</T>,
+            label: <T className="text-capitalize">{PROBLEM_STATUS[status].label}</T>,
           })),
         },
         cardPosition: 'bottom',

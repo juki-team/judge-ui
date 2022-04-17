@@ -1,4 +1,4 @@
-import { SearchParamsObjectType } from '@bit/juki-team.juki.base-ui';
+import { SearchParamsObjectType } from 'types';
 import { QueryParam } from '../config/constants';
 
 export const searchParamsObjectTypeToQuery = (params: SearchParamsObjectType) => {

@@ -1,9 +1,17 @@
-import { POST, USER_STATUS } from 'config/constants';
+import { USER_STATUS } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useRequester, useRouter } from 'hooks';
 import { useMemo, useRef, useState } from 'react';
-import { ContentResponseType, ContentsResponseType, FilterTextOfflineType, SetLoaderStatusType, Status, UserStatus } from 'types';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  FilterTextOfflineType,
+  HTTPMethod,
+  SetLoaderStatusType,
+  Status,
+  UserStatus,
+} from 'types';
 import {
   Button,
   ButtonLoader,
@@ -49,7 +57,7 @@ export function Users() {
   const [nickname, setNickname] = useState('');
   const optionsFilterStatus = options.map(option => ({
     value: option,
-    label: <T className="text-capitalize">{USER_STATUS[option].print}</T>,
+    label: <T className="text-capitalize">{USER_STATUS[option].label}</T>,
   }));
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { data: response, refresh } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
@@ -57,7 +65,7 @@ export function Users() {
   
   const changeUserStatus = async (nickname, status, setLoader) => {
     setLoader?.(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_STATUS(nickname, status), { method: POST }));
+    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_STATUS(nickname, status), { method: HTTPMethod.POST }));
     if (response.success) {
       addSuccessNotification(<T>success</T>);
       setLoader?.(Status.SUCCESS);
@@ -129,7 +137,7 @@ export function Users() {
             <Select
               className=""
               options={options.map(option => ({
-                label: <T className="text-sentence-case">{USER_STATUS[option].print}</T>,
+                label: <T className="text-sentence-case">{USER_STATUS[option].label}</T>,
                 value: option,
                 disabled: status === option,
               }))}

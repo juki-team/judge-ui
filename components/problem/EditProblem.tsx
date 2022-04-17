@@ -33,7 +33,7 @@ export const EditProblem = ({ problem }) => {
     <TwoContentLayout>
       <div className="jk-col filled">
         {modal}
-        <div className="jk-row start gap nowrap">
+        <div className="jk-row left gap nowrap">
           <div className="jk-row" onClick={() => {
             const accept = () => push(ROUTES.PROBLEMS.VIEW('' + newProblem.id, ProblemTab.STATEMENT));
             if (noChange) {

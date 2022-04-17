@@ -1,11 +1,11 @@
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, POST, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, OpenDialog, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { addParamQuery, authorizedRequest, cleanRequest, isStringJson } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProgrammingLanguage, Status, SubmissionRunStatus } from 'types';
+import { ContentResponseType, ProgrammingLanguage, Status, SubmissionRunStatus, HTTPMethod } from 'types';
 
 const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {
   
@@ -31,13 +31,13 @@ const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): 
  if (result.content?.answer === ProblemVerdict.AC) {
  addSuccessNotification(
  <div className="jk-pad">
- <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].print}</T>
+ <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].label}</T>
  </div>,
  );
  } else if (result.content?.answer === ProblemVerdict.PA) {
  addSuccessNotification(
  <div className="jk-pad">
- <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].print}</T>
+ <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].label}</T>
  &bnsp;
  ({result.content?.submitPoints} <T>pnts</T>)
  </div>,
@@ -46,7 +46,7 @@ const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): 
  if (Object.keys(PROBLEM_VERDICT).includes(result.content?.answer)) {
  addErrorNotification(
  <div className="jk-pad">
- <T className="text-capitalize">{PROBLEM_VERDICT[result.content?.answer].print}</T>
+ <T className="text-capitalize">{PROBLEM_VERDICT[result.content?.answer].label}</T>
  </div>,
  );
  } else {
@@ -157,7 +157,7 @@ export const ProblemCodeEditor = ({
                 contestIndex
                   ? JUDGE_API_V1.CONTEST.SUBMIT_V1(query.key + '', contestIndex)
                   : JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
-                  method: POST,
+                  method: HTTPMethod.POST,
                   body: JSON.stringify({
                     language,
                     source: sourceCode,

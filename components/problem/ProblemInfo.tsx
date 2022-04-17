@@ -41,7 +41,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
       </div>
       <div>
         <span className="label text-bold text-capitalize"><T>type</T><span>:</span></span>
-        <T className="text-capitalize">{PROBLEM_TYPE[problem?.settings?.typeInput].print}</T>
+        <T className="text-capitalize">{PROBLEM_TYPE[problem?.settings?.typeInput].label}</T>
       </div>
       <div>
         <span className="label text-bold text-capitalize"><T>mode</T><span>:</span></span>
@@ -50,9 +50,9 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
             content={<div className="groups-popover">{subTasks()}</div>}
             placement="bottom"
           >
-            <div><T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode].print}</T></div>
+            <div><T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode].label}</T></div>
           </Popover>
-        ) : <T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode].print}</T>}
+        ) : <T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode].label}</T>}
         {!horizontal && problem?.settings?.mode === ProblemMode.SUBTASK && <div className="points">{subTasks()}</div>}
       </div>
       {problem?.tags && (
@@ -70,7 +70,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
               <div><span className="count-tags">{problem.tags.length}</span></div>
             </Popover>
           ) : (
-            <span className="jk-row start gap">{problem.tags.map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}</span>
+            <span className="jk-row left gap">{problem.tags.map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}</span>
           )}
         </div>
       )}
@@ -83,7 +83,7 @@ export const ProblemInfo = ({ problem, horizontal = false }) => {
       {problem?.status && (
         <div>
           <span className="label text-bold text-capitalize"><T>visibility</T><span>:</span></span>
-          <T className="text-capitalize">{PROBLEM_STATUS[problem.status].print}</T>
+          <T className="text-capitalize">{PROBLEM_STATUS[problem.status].label}</T>
         </div>
       )}
     </div>

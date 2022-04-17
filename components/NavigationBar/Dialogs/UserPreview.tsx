@@ -31,9 +31,10 @@ export const UserPreview = ({ nickname }) => {
     }
   }, [error]);
   
-  const handleClose = () => (
-    push({ query: removeParamQuery(query, QueryParam.OPEN_USER_PREVIEW, null) })
-  );
+  const handleClose = () => {
+    push({ query: removeParamQuery(query, QueryParam.OPEN_USER_PREVIEW, null) });
+    return null;
+  };
   
   return (
     <Modal
@@ -41,39 +42,37 @@ export const UserPreview = ({ nickname }) => {
       onClose={handleClose}
       className="modal-user-preview"
     >
-      <FetcherLayer
+      <FetcherLayer<any>
         isLoading={isLoading}
         data={data}
         error={!data?.success ? handleClose : null}
       >
-        {data => data.success && (
-          <div className="jk-pad jk-col filled gap">
+        {data => (
+          <div className="jk-pad jk-col stretch gap">
             <div className="jk-row center gap">
-              <img src={data?.content?.imageUrl} className="jk-user-profile-img huge" alt={nickname} />
-              <div>
-                <div className="jk-col filled">
-                  <div className="text-bold">{data?.content?.nickname}</div>
-                  <div className="color-gray-3">{data?.content?.givenName} {data?.content?.familyName}</div>
-                  <div className="jk-divider tiny" />
-                  {(data?.content?.city?.trim() || data?.content?.country?.trim()) && (
-                    <div className="jk-row start gap">
-                      <PlaceIcon />{data?.content?.city}{data?.content?.city && ','} {data?.content?.country}
-                    </div>
-                  )}
-                  {data?.content?.institution?.trim() && (
-                    <div className="jk-row start gap"><SchoolIcon />{data?.content?.institution}</div>
-                  )}
-                  <div className="jk-row start gap"><MailIcon />{data?.content?.email}</div>
-                </div>
+              <img src={data?.content?.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={nickname} />
+              <div className="jk-col stretch">
+                <div className="text-bold">{data?.content?.nickname}</div>
+                <div className="color-gray-3">{data?.content?.givenName} {data?.content?.familyName}</div>
+                <div className="jk-divider tiny" />
+                {(data?.content?.city?.trim() || data?.content?.country?.trim()) && (
+                  <div className="jk-row left gap">
+                    <PlaceIcon />{data?.content?.city}{data?.content?.city && ','} {data?.content?.country}
+                  </div>
+                )}
+                {data?.content?.institution?.trim() && (
+                  <div className="jk-row left gap"><SchoolIcon />{data?.content?.institution}</div>
+                )}
+                <div className="jk-row left gap"><MailIcon />{data?.content?.email}</div>
               </div>
             </div>
-            <div className="jk-row end gap">
+            <div className="jk-row right gap">
               <Button size="small" type="text" onClick={handleClose}><T>close</T></Button>
-              {/*<a href={ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE)} target="_blank">*/}
-              {/*  <Button size="small">*/}
-              {/*    <div className="jk-row"><T>see profile</T><ExternalIcon /></div>*/}
-              {/*  </Button>*/}
-              {/*</a>*/}
+              <a href={ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE)} target="_blank">
+                <Button size="small">
+                  <div className="jk-row"><T>see profile</T><ExternalIcon /></div>
+                </Button>
+              </a>
             </div>
           </div>
         )}

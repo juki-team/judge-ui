@@ -1,3 +1,47 @@
+import { searchParamsObjectTypeToQuery } from 'helpers';
+import { useRequester, useRouter } from 'hooks';
+import { useCallback, useRef } from 'react';
+import { ContentsResponseType, ReactNodeOrFunctionType } from 'types';
+import { DataViewer, DataViewerHeadersType } from '../index';
+
+export const PagedDataViewer = <T, V>({
+  headers,
+  name,
+  toRow,
+  url,
+  refreshInterval,
+  extraButtons,
+}: { headers: DataViewerHeadersType<T>[], name: string, toRow: (row: V, index: number) => T, url: (page: number, size: number) => string, refreshInterval?: number, extraButtons?: ReactNodeOrFunctionType }) => {
+  const { queryObject, push } = useRouter();
+  const page = +queryObject[name + '.page']?.[0];
+  const size = +queryObject[name + '.pageSize']?.[0];
+  const {
+    data: response,
+    refresh,
+  } = useRequester<ContentsResponseType<V>>(page && size && url(page, size), { refreshInterval });
+  
+  const lastTotalRef = useRef(0);
+  lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
+  
+  const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
+  
+  const data: T[] = (response?.success ? response.contents : []).map(toRow);
+  
+  return (
+    <DataViewer<T>
+      headers={headers}
+      data={data}
+      rows={{ height: 68 }}
+      request={refresh}
+      name={name}
+      extraButtons={extraButtons}
+      searchParamsObject={queryObject}
+      setSearchParamsObject={setSearchParamsObject}
+      pagination={{ total: lastTotalRef.current, pageSizeOptions: [32, 64, 128, 256, 512] }}
+    />
+  );
+};
+
 export {
   AlertModal,
   AppsIcon,
@@ -71,13 +115,12 @@ export {
   TextField,
   TextHeadCell,
   TimerClock,
-  Tooltip,
   UpIcon,
   useNotification,
-} from '@bit/juki-team.juki.base-ui';
+} from '@juki-team/base-ui';
 
 export type {
   CodeEditorTestCasesType,
   DataViewerHeadersType,
   FilterSelectOfflineType,
-} from '@bit/juki-team.juki.base-ui';
+} from '@juki-team/base-ui';

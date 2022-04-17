@@ -32,14 +32,16 @@ export const JUDGE_API_V1 = {
     UPDATE: () => {
       return `${JUDGE_BACKEND_BASE_URL}/api/user/update`;
     },
-    MY_STATUS: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user/myStatus`;
-    },
     UPDATE_IMAGE: () => {
       return `${JUDGE_BACKEND_BASE_URL}/api/user/updateImage`;
     },
     CHANGE_PASSWORD: () => {
       return `${JUDGE_BACKEND_BASE_URL}/api/user/password/update`;
+    },
+  },
+  SUBMISSIONS: {
+    NICKNAME: (nickname: string, page: number, size: number, session?: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/nickname/${nickname}?page=${page}&size=${size}&session=${session}`;
     },
   },
   PROBLEM: {

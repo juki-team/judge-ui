@@ -152,7 +152,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         }
         leftMobile={{
           children: ({ toggle }) => (
-            <div className="jk-row gap nowrap start mobile-left-side-header">
+            <div className="jk-row gap nowrap left mobile-left-side-header">
               <div className="jk-row" onClick={toggle}><MenuIcon className="color-white" /></div>
               <Link href="/"><a><JukiJudgeLogoHorImage className="color-white" /></a></Link>
             </div>
@@ -160,7 +160,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           content: ({ toggle }) => (
             <div className="bg-color-primary jk-row filled left-mobile-content">
               <div className="jk-col space-between">
-                <div className="jk-row nowrap gap start mobile-left-side-header">
+                <div className="jk-row nowrap gap left mobile-left-side-header">
                   <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} className="color-white" /></div>
                   <JukiJudgeLogoHorImage className="color-white" />,
                 </div>

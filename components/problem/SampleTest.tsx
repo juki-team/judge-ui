@@ -27,29 +27,29 @@ export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
   } : () => null;
   
   return (
-    <div className="jk-row filled gap">
-      <div className="jk-row block filled gap flex-1">
-        <div className="jk-row nowrap start filled gap">
+    <div className="jk-row stretch gap">
+      <div className="jk-row block stretch gap flex-1">
+        <div className="jk-row nowrap left stretch gap">
           {editable ? (
             <TextArea
-              value={sample.input || 'aaaa'}
+              value={sample.input || ''}
               onChange={value => setSample(prevState => ({ ...prevState, input: value }))}
             />
           ) : (
-            <div className="sample-text-content jk-border-radius">
+            <div className="sample-text-content jk-border-radius-inline">
               <CopyToClipboard text={sample.input}><CopyIcon size="small" /></CopyToClipboard>
               <span>{sample.input}</span>
             </div>
           )}
         </div>
-        <div className="jk-row nowrap start filled gap">
+        <div className="jk-row nowrap left stretch gap">
           {editable ? (
             <TextArea
-              value={sample.output || 'aaa'}
+              value={sample.output || ''}
               onChange={value => setSample(prevState => ({ ...prevState, output: value }))}
             />
           ) : (
-            <div className="sample-text-content jk-border-radius">
+            <div className="sample-text-content jk-border-radius-inline">
               <CopyToClipboard text={sample.output}><CopyIcon size="small" /></CopyToClipboard>
               <span>{sample.output}</span>
             </div>

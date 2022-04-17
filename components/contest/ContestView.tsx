@@ -85,7 +85,7 @@ export function ContestView() {
     >
       {data => (
         <TwoContentLayout>
-          <div className="jk-col filled">
+          <div className="jk-col stretch">
             <div className="jk-row center gap nowrap">
               <div className="jk-row color-primary back-link">
                 <Link href={ROUTES.CONTESTS.LIST()}>

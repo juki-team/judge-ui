@@ -29,6 +29,7 @@ export const ADMIN_TAB: { [key in AdminTab]: { value: AdminTab, print: string } 
 export const PROBLEM_TAB: { [key in ProblemTab]: { value: ProblemTab, print: string } } = {
   [ProblemTab.STATEMENT]: { value: ProblemTab.STATEMENT, print: 'statement' },
   [ProblemTab.EDITOR]: { value: ProblemTab.EDITOR, print: 'code editor' },
+  [ProblemTab.MY_SUBMISSIONS]: { value: ProblemTab.MY_SUBMISSIONS, print: 'my submissions' },
   [ProblemTab.SUBMISSIONS]: { value: ProblemTab.SUBMISSIONS, print: 'submissions' },
   [ProblemTab.TESTS]: { value: ProblemTab.TESTS, print: 'test cases' },
   [ProblemTab.RANKING]: { value: ProblemTab.RANKING, print: '' },

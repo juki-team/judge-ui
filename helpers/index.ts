@@ -1,16 +1,17 @@
 import { Status } from '../types';
 
-export { isStringJson, isObjectJson } from '@bit/juki-team.juki.commons';
+export { isStringJson, isObjectJson } from '@juki-team/commons';
 export {
   classNames,
   downloadBlobAsFile,
   getSearchParamsObject,
   renderReactNodeOrFunction,
+  renderReactNodeOrFunctionP1,
   authorizedRequest,
   cleanRequest,
   consoleWarn,
   settings,
-} from '@bit/juki-team.juki.base-ui';
+} from '@juki-team/base-ui';
 
 export const isOrHas = (value: string | string[] | undefined, v: string) => {
   return value === v || (Array.isArray(value) && value.includes(v));

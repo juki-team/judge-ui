@@ -1,5 +1,4 @@
 import {
-  ArrowIcon,
   ButtonLoader,
   ExclamationIcon,
   FetcherLayer,
@@ -18,13 +17,15 @@ import { can } from 'helpers';
 import { useFetcher } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import React, { ReactNode } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProblemTab, Status } from 'types';
+import { ContentResponseType, ProblemState, ProblemTab, Status } from 'types';
+import { ArrowIcon } from '../../../../components';
 
-function ProblemView() {
+const ProblemView = (): ReactNode => {
   
   const { query: { key, ...query }, push } = useRouter();
-  const { isLoading, data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(key as string));
+  const { isLoading, data } = useFetcher<ContentResponseType<ProblemState>>(JUDGE_API_V1.PROBLEM.PROBLEM(key as string));
   const user = useUserState();
   
   const index = {
@@ -57,30 +58,26 @@ function ProblemView() {
   tabHeaders.push({ children: <T className="text-capitalize">submissions</T> });
   
   return (
-    <FetcherLayer<any>
+    <FetcherLayer<ContentResponseType<ProblemState>>
       isLoading={isLoading}
       data={data}
-      error={!data?.success ? <NotFound redirectAction={() => push(ROUTES.PROBLEMS.LIST())} /> : null}
+      error={<NotFound redirectAction={() => push(ROUTES.PROBLEMS.LIST())} />}
     >
       {data => (
         <TwoContentLayout>
-          <div className="jk-col filled">
-            <div className="jk-row center gap nowrap">
-              <div className="jk-row color-primary back-link">
-                <Link href={ROUTES.PROBLEMS.LIST()}>
-                  <a className="jk-row nowrap text-semi-bold link">
-                    <ArrowIcon rotate={-90} />
-                    <div className="screen md lg hg"><T className="text-sentence-case">problems</T></div>
-                  </a>
-                </Link>
-              </div>
-              <div className="jk-row gap center nowrap">
-                <h5>{data.content.name}</h5>
-                <Popover content={<ProblemInfo problem={data.content} />} triggerOn="click" placement="bottom">
-                  <div className="jk-row"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
-                </Popover>
-              </div>
+          <div className="jk-row center gap nowrap relative">
+            <div className="jk-row color-primary back-link">
+              <Link href={ROUTES.PROBLEMS.LIST()}>
+                <a className="jk-row nowrap text-semi-bold link">
+                  <ArrowIcon rotate={-90} />
+                  <div className="screen md lg hg"><T className="text-sentence-case">problems</T></div>
+                </a>
+              </Link>
             </div>
+            <h5>{data.content.name}</h5>
+            <Popover content={<ProblemInfo problem={data.content} />} triggerOn="click" placement="bottom">
+              <div className="jk-row link"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
+            </Popover>
           </div>
           <Tabs
             selectedTabIndex={index[query.tab as ProblemTab]}
@@ -106,6 +103,6 @@ function ProblemView() {
       )}
     </FetcherLayer>
   );
-}
+};
 
 export default ProblemView;

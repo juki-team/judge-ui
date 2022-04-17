@@ -20,21 +20,20 @@ export const Verdict = ({
   status,
 }: { verdict: ProblemVerdict, submitPoints: number, status: SubmissionRunStatus }) => {
   
-  const verdictLabel = PROBLEM_VERDICT[verdict]?.print ? <T className="text-nowrap">{PROBLEM_VERDICT[verdict]?.print}</T> : verdict;
+  const verdictLabel = PROBLEM_VERDICT[verdict]?.label ? <T className="text-nowrap">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
   
   return (
     <Popover
       content={
         <div className="text-sentence-case text-nowrap">
           {verdict === ProblemVerdict.PENDING ? (
-            SUBMISSION_RUN_STATUS[status]?.print ?
-              <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.print}</T> : status || verdictLabel
+            SUBMISSION_RUN_STATUS[status]?.label ?
+              <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
           ) : verdictLabel}
         </div>
       }
       triggerOn="hover"
       placement="top"
-      showPopperArrow
     >
       <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
         {verdict}

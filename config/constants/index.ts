@@ -13,14 +13,8 @@ export {
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
   SUBMISSION_RUN_STATUS,
-} from '@bit/juki-team.juki.commons';
+} from '@juki-team/commons';
 
-export {
-  GET,
-  POST,
-  PUT,
-  DELETE,
-} from '@bit/juki-team.juki.base-ui';
 export * from './defaultObjects';
 export * from './judge';
 export * from './routes';

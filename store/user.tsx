@@ -1,12 +1,20 @@
 import { T } from 'components';
-import { DEFAULT_PERMISSIONS, OpenDialog, POST, PUT, QueryParam, USER_GUEST } from 'config/constants';
+import { DEFAULT_PERMISSIONS, OpenDialog, QueryParam, USER_GUEST } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, isStringJson } from 'helpers';
 import { useFetcher, useNotification, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useSWRConfig } from 'swr';
-import { ContentResponseType, ProfileSettingOptions, ScopeData, SetLoaderStatusOnClickType, Status, UserInterface } from 'types';
+import {
+  ContentResponseType,
+  HTTPMethod,
+  ProfileSettingOptions,
+  ScopeData,
+  SetLoaderStatusOnClickType,
+  Status,
+  UserInterface,
+} from 'types';
 import { Language } from '../types';
 
 export interface UserState extends UserInterface {
@@ -103,7 +111,7 @@ export const useUserDispatch = () => {
     setUser,
     signIn: (nickname: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
       request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), {
-        method: POST,
+        method: HTTPMethod.POST,
         body: JSON.stringify({ nickname, password }),
       })),
       addNotification,
@@ -116,7 +124,7 @@ export const useUserDispatch = () => {
     signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
       request: async () => {
         return cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), {
-          method: POST,
+          method: HTTPMethod.POST,
           body: JSON.stringify({
             givenName,
             familyName,
@@ -136,7 +144,7 @@ export const useUserDispatch = () => {
     }),
     logout: async (setLoader: SetLoaderStatusOnClickType) => {
       setLoader(Status.LOADING);
-      const response = await authorizedRequest(JUDGE_API_V1.ACCOUNT.LOGOUT(), { method: POST });
+      const response = await authorizedRequest(JUDGE_API_V1.ACCOUNT.LOGOUT(), { method: HTTPMethod.POST });
       if (isStringJson(response)) {
         const result = JSON.parse(response); // special endpoint that only return success
         if (result.success === true) {
@@ -165,7 +173,7 @@ export const useUserDispatch = () => {
       ];
       return actionLoaderWrapper({
         request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), {
-          method: PUT,
+          method: HTTPMethod.PUT,
           body: JSON.stringify(accountBody),
         })),
         addNotification,

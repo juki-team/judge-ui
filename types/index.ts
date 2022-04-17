@@ -1,4 +1,4 @@
-import { ScopeData, UserInterface as _UserInterface } from '@bit/juki-team.juki.commons';
+import { ScopeData, UserInterface as _UserInterface } from '@juki-team/commons';
 
 export * from './commons';
 export * from './contest';
@@ -23,7 +23,8 @@ export {
   ContestStatus,
   CourseRole,
   SubmissionRunStatus,
-} from '@bit/juki-team.juki.commons';
+  HTTPMethod,
+} from '@juki-team/commons';
 
 export type {
   ErrorType,
@@ -31,15 +32,17 @@ export type {
   ContentResponseType,
   ContentsMetaType,
   ContentsResponseType,
-} from '@bit/juki-team.juki.commons';
+  SubmissionResponseDTO,
+} from '@juki-team/commons';
 
 export interface UserInterface extends _UserInterface {
   myPermissions: { [key in ScopeData]: string },
 }
 
-export { NotificationType, Period } from '@bit/juki-team.juki.base-ui';
+export { NotificationType, Period } from '@juki-team/base-ui';
 export type {
   FilterTextOfflineType,
+  SearchParamsObjectType,
   LoaderStatusOnClickType,
   SetLoaderStatusOnClickType,
   LoginInputType,
@@ -48,4 +51,5 @@ export type {
   SetLoaderStatusType,
   ButtonLoaderOnClickType,
   ReactNodeOrFunctionType,
-} from '@bit/juki-team.juki.base-ui';
+  ReactNodeOrFunctionP1Type,
+} from '@juki-team/base-ui';

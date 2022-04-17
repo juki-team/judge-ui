@@ -16,8 +16,8 @@ export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: s
   const [text, setText] = useState('');
   
   return (
-    <div className="jk-row start gap">
-      <div className="jk-row start gap">
+    <div className="jk-row left gap">
+      <div className="jk-row left gap">
         {tags?.map(tag => (
           <div className="jk-tag gray-6" key={tag}>
             <div className="jk-row gap">
@@ -49,13 +49,13 @@ export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: s
 export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => {
     
     return (
-      <div className="jk-pad jk-row start">
+      <div className="jk-pad jk-row left">
         <div className="jk-col filled gap">
           <div
-            className={classNames('jk-row start gap', { 'color-info': JSON.stringify(problem.settings?.languages) !== JSON.stringify(originalProblemRef.current.settings?.languages) })}>
+            className={classNames('jk-row left gap', { 'color-info': JSON.stringify(problem.settings?.languages) !== JSON.stringify(originalProblemRef.current.settings?.languages) })}>
             <div className="text-semi-bold text-sentence-case"><T>programming languages</T>:</div>
             <MultiSelect
-              options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].name }))}
+              options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}
               optionsSelected={problem.settings?.languages?.map?.(lang => ({
                 value: lang,
                 label: PROGRAMMING_LANGUAGE[lang]?.name || lang,
@@ -68,13 +68,13 @@ export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => 
           </div>
           <div
             className={classNames(
-              'jk-row start gap',
+              'jk-row left gap',
               { 'color-info': JSON.stringify(problem.settings?.mode) !== JSON.stringify(originalProblemRef.current.settings?.mode) },
             )}
           >
             <div className="text-semi-bold text-sentence-case"><T>problem mode</T>:</div>
             <Select
-              options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({ value: mode, label: PROBLEM_MODE[mode]?.print }))}
+              options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({ value: mode, label: PROBLEM_MODE[mode]?.label }))}
               optionSelected={{
                 value: problem.settings?.mode,
                 label: PROBLEM_MODE[problem.settings?.mode]?.name || problem.settings?.mode,
@@ -84,13 +84,13 @@ export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => 
           </div>
           <div
             className={classNames(
-              'jk-row start gap',
+              'jk-row left gap',
               { 'color-info': JSON.stringify(problem.settings?.typeInput) !== JSON.stringify(originalProblemRef.current.settings?.typeInput) },
             )}
           >
             <div className="text-semi-bold text-sentence-case"><T>problem type</T>:</div>
             <Select
-              options={RUNNER_ACCEPTED_PROBLEM_TYPES.map(type => ({ value: type, label: PROBLEM_TYPE[type]?.print }))}
+              options={RUNNER_ACCEPTED_PROBLEM_TYPES.map(type => ({ value: type, label: PROBLEM_TYPE[type]?.label }))}
               optionSelected={{
                 value: problem.settings?.typeInput,
                 label: PROBLEM_TYPE[problem.settings?.typeInput]?.name || problem.settings?.typeInput,
@@ -100,7 +100,7 @@ export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => 
           </div>
           <div
             className={classNames(
-              'jk-row start gap',
+              'jk-row left gap',
               { 'color-info': JSON.stringify(problem.settings?.timeLimit) !== JSON.stringify(originalProblemRef.current.settings?.timeLimit) },
             )}
           >
@@ -113,7 +113,7 @@ export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => 
           </div>
           <div
             className={classNames(
-              'jk-row start gap',
+              'jk-row left gap',
               { 'color-info': JSON.stringify(problem.settings?.memoryLimit) !== JSON.stringify(originalProblemRef.current.settings?.memoryLimit) },
             )}
           >
@@ -127,20 +127,20 @@ export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => 
           </div>
           <div
             className={classNames(
-              'jk-row start gap',
+              'jk-row left gap',
               { 'color-info': JSON.stringify(problem.status) !== JSON.stringify(originalProblemRef.current.status) },
             )}
           >
             <div className="text-semi-bold text-sentence-case"><T>visibility</T></div>
             <Select
-              options={Object.values(PROBLEM_STATUS).map(status => ({ value: status.value, label: status.print }))}
-              optionSelected={{ value: problem.status, label: PROBLEM_STATUS[problem.status]?.print || problem.status }}
+              options={Object.values(PROBLEM_STATUS).map(status => ({ value: status.value, label: status.label }))}
+              optionSelected={{ value: problem.status, label: PROBLEM_STATUS[problem.status]?.label || problem.status }}
               onChange={({ value }) => setProblem({ ...problem, status: value })}
             />
           </div>
           <div
             className={classNames(
-              'jk-row start gap',
+              'jk-row left gap',
               { 'color-info': JSON.stringify(problem.author) !== JSON.stringify(originalProblemRef.current.author) },
             )}
           >
@@ -152,7 +152,7 @@ export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => 
           </div>
           <div
             className={classNames(
-              'jk-row start gap',
+              'jk-row left gap',
               { 'color-info': JSON.stringify(problem.tags) !== JSON.stringify(originalProblemRef.current.tags) },
             )}
           >

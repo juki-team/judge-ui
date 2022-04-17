@@ -1,4 +1,4 @@
-@import "@bit/juki-team.juki.base-ui/components/styles/abstracts/index";
+@import "@juki-team/base-ui/dist/styles/abstracts/index";
 
 .title-layout {
   background-color: var(--t-color-white);
@@ -30,11 +30,13 @@
   padding: var(--pad-m) 0 var(--pad-m) 0;
   height: calc(var(--100VH) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
   box-sizing: border-box;
+  overflow: hidden;
   
   > div {
     width: var(--screen-content-width);
     
     > .jk-tabs-layout {
+      //overflow: hidden;
       height: 100%;
       
       > div:first-child {
@@ -51,6 +53,7 @@
         @extend .jk-border-radius;
         @extend .jk-shadow;
         overflow-x: auto;
+        height: calc(100% - var(--tabs-header-height) - var(--pad-t));
         
         .jk-view-container {
           box-shadow: none;

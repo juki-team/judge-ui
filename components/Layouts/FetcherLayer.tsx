@@ -1,15 +1,22 @@
+import { ErrorResponseType } from '@juki-team/commons';
 import { LoadingIcon } from 'components';
-import { renderReactNodeOrFunction } from 'helpers';
-import { ReactNodeOrFunctionType } from 'types';
+import { renderReactNodeOrFunction, renderReactNodeOrFunctionP1 } from 'helpers';
+import { ReactNodeOrFunctionP1Type, ReactNodeOrFunctionType } from 'types';
+import { ContentResponseType, ContentsResponseType } from '../../types';
 
-interface FetcherLayerProps<T> {
+interface FetcherLayerProps<T extends (ContentResponseType<any> | ContentsResponseType<any>)> {
   isLoading: boolean,
-  data: T,
+  data: T | ErrorResponseType,
   error: ReactNodeOrFunctionType,
-  children: ReactNodeOrFunctionType<T>,
+  children: ReactNodeOrFunctionP1Type<T>,
 }
 
-export const FetcherLayer = <T, >({ isLoading, data, error, children }: FetcherLayerProps<T>) => {
+export const FetcherLayer = <T extends (ContentResponseType<any> | ContentsResponseType<any>), >({
+  isLoading,
+  data,
+  error,
+  children,
+}: FetcherLayerProps<T>) => {
   
   if (isLoading) {
     return (
@@ -20,10 +27,8 @@ export const FetcherLayer = <T, >({ isLoading, data, error, children }: FetcherL
       </div>
     );
   }
-  
-  if (error) {
-    return renderReactNodeOrFunction(error);
+  if (data.success) {
+    return <>{renderReactNodeOrFunctionP1(children, data)}</>;
   }
-  
-  return renderReactNodeOrFunction(children, data);
+  return <>{renderReactNodeOrFunction(error)}</>;
 };

@@ -1,5 +1,5 @@
-import { classNames } from '@bit/juki-team.juki.base-ui';
 import { MdMathEditor, MdMathViewer, PlusIcon, T } from 'components';
+import { classNames } from 'helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -38,7 +38,7 @@ export const ProblemStatement = ({
           </div>
         </div>
       )}
-      <div className="jk-row nowrap filled start problem-content">
+      <div className="jk-row nowrap stretch left problem-content">
         <div className={classNames('problem-statement', { 'problem-contest-statement': !!contestIndex })}>
           <div>
             {setProblem ? (
@@ -73,8 +73,8 @@ export const ProblemStatement = ({
             ) : <MdMathViewer source={problem?.description?.output} />}
           </div>
           <div>
-            <div className="jk-row filled gap">
-              <div className="jk-row filled gap nowrap flex-1">
+            <div className="jk-row stretch gap">
+              <div className="jk-row stretch gap nowrap flex-1">
                 <h6><T>input sample</T></h6>
                 <h6><T>output sample</T></h6>
               </div>
@@ -91,7 +91,7 @@ export const ProblemStatement = ({
                 </div>
               )}
             </div>
-            <div className="jk-col filled gap">
+            <div className="jk-col stretch gap">
               {(problem.samples || [{ input: '', output: '' }]).map((sample, index) => (
                 <SampleTest index={index} problem={problem} key={index} setProblem={setProblem} />
               ))}

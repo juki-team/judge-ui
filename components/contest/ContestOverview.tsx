@@ -1,11 +1,11 @@
 import { ButtonLoader, MdMathViewer, T } from 'components';
-import { JUDGE_API_V1, OpenDialog, POST, QueryParam } from 'config/constants';
+import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { useSWRConfig } from 'swr';
-import { ContentResponseType, ContestSettingsParams, SetLoaderStatusOnClickType, Status } from 'types';
+import { ContentResponseType, ContestSettingsParams, HTTPMethod, SetLoaderStatusOnClickType, Status } from 'types';
 
 export const ContestOverview = ({ contest }: { contest: any }) => {
   
@@ -16,12 +16,10 @@ export const ContestOverview = ({ contest }: { contest: any }) => {
   const { mutate } = useSWRConfig();
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
-    //https://prod-v1-judge-back.juki.app/api/contest/prueba-2/register
     setLoader(Status.LOADING);
     const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(query.key + ''), {
-      method: POST,
+      method: HTTPMethod.POST,
     }));
-    console.log({ result });
     if (result.success) {
       if (result?.content?.registered) {
         addSuccessNotification(<T className="text-sentence-case">successfully registered</T>);
@@ -35,7 +33,7 @@ export const ContestOverview = ({ contest }: { contest: any }) => {
   };
   
   return (
-    <div className="jk-row gap nowrap start filled">
+    <div className="jk-row gap nowrap left filled">
       <div className="jk-pad flex-3">
         <MdMathViewer source={contest?.description} />
       </div>

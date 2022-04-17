@@ -1,18 +1,17 @@
-import { DELETE, GET, POST, PUT } from 'config/constants';
 import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { ContentResponseType, ContentsResponseType, Status } from 'types';
+import { ContentResponseType, ContentsResponseType, HTTPMethod, Status } from 'types';
 
-const fetcher = (url: string, method?: typeof POST | typeof PUT | typeof DELETE | typeof GET, body?: string, signal?: AbortSignal) => {
+const fetcher = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
   
   const requestHeaders: HeadersInit = new Headers();
   requestHeaders.set('Accept', 'application/json');
   requestHeaders.set('Content-Type', 'application/json');
   
   return fetch(url, {
-    method: method ? method : GET,
+    method: method ? method : HTTPMethod.GET,
     headers: requestHeaders,
     credentials: 'include',
     ...(body ? { body } : {}),
@@ -87,5 +86,5 @@ export {
   useOutsideAlerter,
   useNotification,
   useT,
-} from '@bit/juki-team.juki.base-ui';
+} from '@juki-team/base-ui';
 export * from './useOnline';
