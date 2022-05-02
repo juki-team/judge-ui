@@ -4,7 +4,7 @@ import { useFetcher } from 'hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProblemTab, ProfileTab } from 'types';
+import { ContentResponseType, ProfileTab } from 'types';
 import { ChangePasswordModal } from '../../../components/profile/ChangePasswordModal';
 import Custom404 from '../../404';
 
@@ -16,25 +16,6 @@ export default function ProfileView() {
   const user = useUserState();
   const [modalChangePassword, setModalChangePassword] = useState(false);
   
-  // console.log({ data, tab, nickname, query });
-  const index = {
-    [ProfileTab.PROFILE]: 0,
-    [ProfileTab.SUBMISSIONS]: 1,
-  };
-  const tabs = [ProfileTab.PROFILE, ProfileTab.SUBMISSIONS];
-  const tabHeaders = [
-    { children: <T className="text-capitalize">profile</T> },
-  ];
-  
-  if (user.nickname === nickname) {
-    tabHeaders.push({ children: <T className="text-capitalize">my submissions</T> });
-    // index[ProfileTab.SETTINGS] = tabs.length;
-    // tabHeaders.push({ children: <T className="text-capitalize">settings</T> });
-    // tabs.push(ProfileTab.SETTINGS);
-  } else {
-    tabHeaders.push({ children: <T className="text-capitalize">submissions</T> });
-  }
-  
   const onClose = () => setModalChangePassword(false);
   
   return (
@@ -43,30 +24,42 @@ export default function ProfileView() {
       data={data}
       error={<Custom404 />}
     >
-      {data => (
-        <TwoContentLayout>
-          <div className="jk-row left gap">
-            <h1>{data?.content?.nickname}</h1>
-            {modalChangePassword && <ChangePasswordModal onClose={onClose} />}
-          </div>
-          <Tabs
-            selectedTabIndex={index[query.tab as ProblemTab]}
-            tabHeaders={tabHeaders}
-            onChange={index => push({ pathname: ROUTES.PROFILE.PAGE(nickname as string, tabs[index]), query })}
-            actionsSection={
-              user.nickname === nickname ? <div className="jk-row gap">
-                <Button size="small" className="screen md lg hg">update my data</Button>
-                <Button size="small" className="screen md lg hg" onClick={() => setModalChangePassword(true)}>change password</Button>
-                <EditIcon className="screen sm" />
-                <LockIcon className="screen sm" />
-              </div> : null
-            }
-          >
-            <Profile user={data?.content} />
-            <ProfileSubmissions />
-          </Tabs>
-        </TwoContentLayout>
-      )}
+      {data => {
+        const tabHeaders = [
+          {
+            key: ProfileTab.PROFILE, header: <T className="text-capitalize">profile</T>, body: <Profile user={data?.content} />,
+          }, {
+            key: ProfileTab.SUBMISSIONS,
+            header: user.nickname === nickname ? <T className="text-capitalize">my submissions</T> :
+              <T className="text-capitalize">submissions</T>,
+            body: <ProfileSubmissions />,
+          },
+        ];
+        return (
+          <TwoContentLayout>
+            <div className="jk-row left gap">
+              <h1>{data?.content?.nickname}</h1>
+              {modalChangePassword && <ChangePasswordModal onClose={onClose} />}
+            </div>
+            <Tabs
+              selectedTabKey={query.tab as ProfileTab}
+              tabs={tabHeaders}
+              onChange={tabKey => push({ pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey), query })}
+              actionsSection={
+                user.nickname === nickname ? [
+                  <div className="jk-row gap">
+                    <Button size="small" className="screen md lg hg">update my data</Button>
+                    <Button size="small" className="screen md lg hg" onClick={() => setModalChangePassword(true)}>change
+                      password</Button>
+                    <EditIcon className="screen sm" />
+                    <LockIcon className="screen sm" />
+                  </div>,
+                ] : null
+              }
+            />
+          </TwoContentLayout>
+        );
+      }}
     </FetcherLayer>
   );
 }

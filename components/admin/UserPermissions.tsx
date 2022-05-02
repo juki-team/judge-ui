@@ -1,9 +1,8 @@
-import { PUT } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { authorizedRequest, can, cleanRequest } from 'helpers';
 import { useState } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, Status } from 'types';
+import { ContentResponseType, Status, HTTPMethod } from 'types';
 import { Button, ButtonLoader, EditIcon, Input, SaveIcon, T, useNotification } from '../index';
 
 export interface ProblemPermissionsProps {
@@ -55,7 +54,7 @@ export const UserPermissions = ({ permissions, nickname, refresh }: ProblemPermi
                   if (JSON.stringify(newPermissions) !== JSON.stringify(permissions)) {
                     setLoaderStatus?.(Status.LOADING);
                     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PERMISSIONS(nickname), {
-                      method: PUT,
+                      method: HTTPMethod.PUT,
                       body: JSON.stringify(newPermissions),
                     }));
                     if (response.success) {

@@ -19,6 +19,6 @@ module.exports = withPWA({
   pwa: {
     dest: 'public',
     // disable: process.env.NEXT_PUBLIC_NODE_ENV === 'development',
-    disable: true,
+    // disable: true,
   },
 });

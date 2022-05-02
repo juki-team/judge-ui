@@ -60,7 +60,7 @@ export function Users() {
     label: <T className="text-capitalize">{USER_STATUS[option].label}</T>,
   }));
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { data: response, refresh } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
+  const { data: response, request } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
   const setLoaderStatusRef = useRef<SetLoaderStatusType | null>(null);
   
   const changeUserStatus = async (nickname, status, setLoader) => {
@@ -73,7 +73,7 @@ export function Users() {
       addErrorNotification(<T>error</T>);
       setLoader?.(Status.ERROR);
     }
-    refresh({ setLoaderStatus: setLoaderStatusRef.current });
+    request({ setLoaderStatus: setLoaderStatusRef.current });
   };
   
   const columns: DataViewerHeadersType<UsersTable>[] = useMemo(() => [
@@ -109,7 +109,7 @@ export function Users() {
             permissions={permissions}
             nickname={nickname}
             refresh={() => {
-              refresh({ setLoaderStatus: setLoaderStatusRef.current });
+              request({ setLoaderStatus: setLoaderStatusRef.current });
             }}
             key={nickname}
           />
@@ -199,7 +199,7 @@ export function Users() {
         headers={columns}
         data={data}
         rows={{ height: 110 }}
-        request={refresh}
+        request={request}
         name="admin"
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
