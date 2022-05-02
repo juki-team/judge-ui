@@ -33,6 +33,13 @@ export type {
   ContentsMetaType,
   ContentsResponseType,
   SubmissionResponseDTO,
+  SubmitResponseDTO,
+  CaseResultGroupType,
+  CaseResultType,
+  TestCaseResultType,
+  ScoreboardResponseDTO,
+  ContestResponseDTO,
+  ProblemResponseDTO,
 } from '@juki-team/commons';
 
 export interface UserInterface extends _UserInterface {

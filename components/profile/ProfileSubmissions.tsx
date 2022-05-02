@@ -1,47 +1,41 @@
-import { useCallback, useMemo, useRef } from 'react';
-import {
-  ACCEPTED_PROGRAMMING_LANGUAGES,
-  JUDGE_API_V1,
-  PROBLEM_VERDICT,
-  PROGRAMMING_LANGUAGE,
-  QueryParam,
-} from '../../config/constants';
-import { replaceParamQuery, searchParamsObjectTypeToQuery } from '../../helpers';
-import { useFetcher, useRequester, useRouter } from '../../hooks';
-import { useUserState } from '../../store';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  ProblemMode,
-  ProblemVerdict,
-  ProgrammingLanguage,
-  SubmissionRunStatus,
-} from '../../types';
-import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell } from '../index';
+import { DataViewerHeadersType, DateField, ExternalIcon, Field, PagedDataViewer, T, TextHeadCell } from 'components';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, JUDGE_API_V1, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
+import { useRouter } from 'hooks';
+import { useMemo } from 'react';
+import { useUserState } from 'store';
+import { ContestTab, ProblemTab, SubmissionResponseDTO } from 'types';
 import { SubmissionInfo } from '../problem/SubmissionInfo';
 import { Memory, Time, Verdict } from '../problem/utils';
 
-type ProblemSubmissionsTable = {
-  submitId: string,
-  userNickname: string,
-  userImageUrl: string,
-  timestamp: number,
-  verdict: ProblemVerdict,
-  submitPoints: number,
-  language: ProgrammingLanguage,
-  timeUsed: number,
-  memoryUsed: number,
-  verdictByGroups: {},
-  canViewSourceCode: boolean,
-  status: SubmissionRunStatus,
-}
+type ProblemSubmissionsTable = SubmissionResponseDTO;
 
 export function ProfileSubmissions() {
-  const { query, push } = useRouter();
-  const { data: problemData } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM(query.key as string));
-  const isSubtaskProblem = problemData?.success && problemData?.content?.settings?.mode === ProblemMode.SUBTASK;
-  const { session, nickname } = useUserState();
+  
+  const { session } = useUserState();
+  const { query: { nickname } } = useRouter();
+  
   const columns: DataViewerHeadersType<ProblemSubmissionsTable>[] = useMemo(() => [
+    {
+      head: <TextHeadCell text={<><T>problem</T> / <T className="text-sentence-case">contest</T></>} />,
+      index: 'problem',
+      field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
+        <Field className="jk-row">
+          {contestKey ? (
+            <a href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)} target="_blank">
+              <div className="jk-row link">{contestName} ({contestProblemIndex}) <ExternalIcon size="small" /></div>
+            </a>
+          ) : (
+            <a href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)} target="_blank">
+              <div className="jk-row link">{problemKey} {problemName} <ExternalIcon size="small" /></div>
+            </a>
+          )}
+        </Field>
+      ),
+      sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },
+      filter: { type: 'date-range-auto' },
+      cardPosition: 'center',
+      minWidth: 280,
+    },
     {
       head: <TextHeadCell text={<T>date</T>} />,
       index: 'timestamp',
@@ -56,16 +50,16 @@ export function ProfileSubmissions() {
     {
       head: <TextHeadCell text={<T>verdict</T>} />,
       index: 'verdict',
-      field: ({ record: { verdict, submitPoints, status }, isCard }) => (
+      field: ({ record: { verdict, points, status }, isCard }) => (
         <Field className="jk-row">
-          <Verdict verdict={verdict} submitPoints={submitPoints} status={status} />
+          <Verdict verdict={verdict} points={points} status={status} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
       filter: {
         type: 'select-auto',
         options: Object.values(PROBLEM_VERDICT)
-          .map(({ value, print }) => ({ label: <T className="text-sentence-case">{print}</T>, value })),
+          .map(({ value, label }) => ({ label: <T className="text-sentence-case">{label}</T>, value })),
       },
       cardPosition: 'center',
       minWidth: 120,
@@ -78,36 +72,49 @@ export function ProfileSubmissions() {
           language,
           verdict,
           status,
-          submitPoints,
+          points,
           canViewSourceCode,
           memoryUsed,
           submitId,
           timeUsed,
-          verdictByGroups,
           timestamp,
+          problemMode,
+          problemTimeLimit,
+          problemMemoryLimit,
+          contestKey,
+          contestProblemIndex,
+          contestName,
         },
         isCard,
       }) => (
         <SubmissionInfo
-          isSubtaskProblem={isSubtaskProblem}
           language={language}
           submitId={submitId}
           timeUsed={timeUsed}
-          verdictByGroups={verdictByGroups}
           verdict={verdict}
+          problem={{
+            mode: problemMode,
+            timeLimit: problemTimeLimit,
+            memoryLimit: problemMemoryLimit,
+          }}
+          contest={contestKey ? {
+            key: contestKey,
+            problemIndex: contestProblemIndex,
+            name: contestName,
+          } : undefined}
           memoryUsed={memoryUsed}
           date={new Date(timestamp)}
-          submitPoints={submitPoints}
+          points={points}
           canViewSourceCode={canViewSourceCode}
           status={status}
         >
-          <div>{PROGRAMMING_LANGUAGE[language]?.name || language}</div>
+          <div>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
         </SubmissionInfo>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.language.localeCompare(rowB.language) },
       filter: {
         type: 'select-auto',
-        options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].name, value: language })),
+        options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
       },
       cardPosition: 'center',
       minWidth: 120,
@@ -138,28 +145,15 @@ export function ProfileSubmissions() {
       cardPosition: 'bottom',
       minWidth: 120,
     },
-  ], [query, isSubtaskProblem]);
-  const url = (page: number, size: number) => JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname, page, size, session);
-  const mySubmissions= true;
+  ], []);
+  const url = (page: number, size: number) => JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname as string, page, size, session);
+  
   return (
-    <PagedDataViewer<ProblemSubmissionsTable>
+    <PagedDataViewer<ProblemSubmissionsTable, SubmissionResponseDTO>
       headers={columns}
       url={url}
-      name={mySubmissions ? 'myStatus' : 'status'}
-      toRow={submission => ({
-        submitId: submission.submitId,
-        userNickname: submission.userNickname,
-        userImageUrl: submission.userImageUrl || '',
-        timestamp: submission.timestamp,
-        verdict: submission.verdict,
-        submitPoints: submission.submitPoints,
-        language: submission.language,
-        timeUsed: submission.timeUsed,
-        memoryUsed: submission.memoryUsed,
-        verdictByGroups: submission.verdictByGroups,
-        canViewSourceCode: submission.canViewSourceCode,
-        status: submission.status,
-      } as ProblemSubmissionsTable)}
+      name="submissions"
+      toRow={submission => submission}
       refreshInterval={60000}
     />
   );

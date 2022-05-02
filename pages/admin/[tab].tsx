@@ -11,12 +11,6 @@ function Admin() {
   const { query, push } = useRouter();
   const user = useUserState();
   
-  const index = {
-    [AdminTab.USERS]: 0,
-  };
-  
-  const tabs = [AdminTab.USERS];
-  
   if (!can.viewUsersTab(user)) {
     return <Custom404 />;
   }
@@ -28,15 +22,12 @@ function Admin() {
         <div>my roles are</div>
       </div>
       <Tabs
-        selectedTabIndex={index[query.tab as AdminTab]}
-        tabHeaders={[
-          { children: <T className="text-capitalize">users</T> },
+        selectedTabKey={query.tab as AdminTab}
+        tabs={[
+          { key: AdminTab.USERS, header: <T className="text-capitalize">users</T>, body: <Users /> },
         ]}
-        onChange={index => push(ROUTES.ADMIN.PAGE(tabs[index]))}
-      >
-        <Users />
-        <div />
-      </Tabs>
+        onChange={tabKey => push(ROUTES.ADMIN.PAGE(tabKey as AdminTab))}
+      />
     </TwoContentLayout>
   );
 }

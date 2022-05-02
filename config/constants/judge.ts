@@ -39,9 +39,26 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/user/password/update`;
     },
   },
+  SUBMIT: {
+    SUBMIT_ID: (submitId: string, session?: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/submitId/${submitId}?session=${session}`;
+    },
+  },
   SUBMISSIONS: {
     NICKNAME: (nickname: string, page: number, size: number, session?: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/nickname/${nickname}?page=${page}&size=${size}&session=${session}`;
+    },
+    CONTEST: (contestKey: string, page: number, size: number, session?: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/contest/${contestKey}?page=${page}&size=${size}&session=${session}`;
+    },
+    CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, session?: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/contest/${contestKey}/nickname/${nickname}?page=${page}&size=${size}&session=${session}`;
+    },
+    PROBLEM: (problemKey: string, page: number, size: number, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/problem/${problemKey}?session=${session}&page=${page}&size=${size}`;
+    },
+    PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/problem/${problemKey}/nickname/${nickname}?session=${session}&page=${page}&size=${size}`;
     },
   },
   PROBLEM: {
@@ -72,16 +89,13 @@ export const JUDGE_API_V1 = {
     PROBLEM_STATUS: (id: string, page: number, size: number) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/submit/status?page=${page}&size=${size}`;
     },
-    PROBLEM_STATUS_V1: (id: string, page: number, size: number, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/problem/${id}?session=${session}&page=${page}&size=${size}`;
-    },
-    PROBLEM_STATUS_NICKNAME: (id: string, page: number, size: number, session: string, nickname: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/problem/${id}/nickname/${nickname}?session=${session}&page=${page}&size=${size}`;
-    },
   },
   CONTEST: {
     CONTEST: (key?: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest${key ? '/' + key : ''}`;
+    },
+    CONTEST_V1: (key: string, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}?session=${session}`;
     },
     CHANGE_STATUS: (key: string, status: ContestStatus) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/changeStatus/${key}?status=${status}`;
@@ -106,10 +120,13 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/problem/${problemIndex}/submit`;
     },
     SUBMIT_V1: (key: string, problemIndex: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/contest/${key}/problem/${problemIndex}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/contest/${key}/problem-index/${problemIndex}`;
     },
     SCOREBOARD: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard`;
+    },
+    SCOREBOARD_V1: (key: string, unfrozen: boolean, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen&' : ''}session=${session}`;
     },
     REJUDGE_PROBLEM: (key: string, problemIndex: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/problem/${problemIndex}/rejudge`;

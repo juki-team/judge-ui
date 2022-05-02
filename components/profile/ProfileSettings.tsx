@@ -1,7 +1,7 @@
 import { JUDGE } from '@juki-team/commons';
 import { MailIcon, PlaceIcon, SchoolIcon } from '../index';
 
-export function Profile({ user }) {
+export function ProfileSettings({ user }) {
   
   return (
     <div className="user-profile jk-row stretch center gap jk-pad">

@@ -1,35 +1,24 @@
-import { BalloonIcon, DataViewer, DataViewerHeadersType, Field, Popover, T, TextHeadCell } from 'components';
+import { BalloonIcon, DataViewer, DataViewerHeadersType, Field, InputToggle, LoadingIcon, Popover, T, TextHeadCell } from 'components';
 import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { classNames, replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
-import { useRequester, useRouter } from 'hooks';
+import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ContestState, ContestTab } from 'types';
+import { ContentsResponseType, ContestResponseDTO, ContestTab, ScoreboardResponseDTO } from 'types';
 
-type ContestProblemSubmissionsTable = {
-  index: number,
-  familyName: string,
-  givenName: string
-  imageUrl: string,
-  nickname: string
-  problems: {},
-  totalPenalty: number,
-  totalPoints: number,
-}
-
-export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
+export const ContestScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const user = useUserState();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const mySubmissions = false;
-  const columns: DataViewerHeadersType<ContestProblemSubmissionsTable>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ContestProblemSubmissionsTable>[] = [
+  const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       {
         head: <TextHeadCell text={<T>#</T>} />,
         index: 'timestamp',
-        field: ({ record: { index }, isCard }) => (
-          <Field className="jk-row">{index}</Field>
+        field: ({ record: { position } }) => (
+          <Field className="jk-row">{position}</Field>
         ),
         minWidth: 42,
         sticky: true,
@@ -37,17 +26,17 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
       {
         head: <TextHeadCell text={<T>nickname</T>} />,
         index: 'nickname',
-        field: ({ record: { nickname, imageUrl }, isCard }) => (
-          <Field className={classNames('jk-row center gap', { 'own': nickname === user.nickname })}>
-            <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
+        field: ({ record: { userNickname, userImageUrl } }) => (
+          <Field className={classNames('jk-row center gap', { 'own': userNickname === user.nickname })}>
+            <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
             <div
               className={classNames('jk-border-radius ', {
-                'bg-color-primary color-white text-bold': nickname === user.nickname,
-                'link': nickname !== user.nickname,
+                'bg-color-primary color-white text-bold': userNickname === user.nickname,
+                'link': userNickname !== user.nickname,
               })}
-              onClick={() => push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname) })}
+              onClick={() => push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname) })}
             >
-              {nickname}
+              {userNickname}
             </div>
           </Field>
         ),
@@ -55,7 +44,7 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
         sticky: true,
       },
       {
-        head: <TextHeadCell text={<T>pts</T>} />,
+        head: <TextHeadCell text={<T>points</T>} />,
         index: 'points',
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
@@ -90,7 +79,7 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
                 <div className="text-xs">{problems[problem.index]?.attempts || '-'}</div>
                 <span className="color-gray-3">/</span>
                 <div
-                  className="text-xs">{problems[problem.index]?.time === -1 ? '-' : (problems[problem.index]?.time || '-')}</div>
+                  className="text-xs">{problems[problem.index]?.penalty || '-'}</div>
               </div>
             </Field>
           ),
@@ -102,39 +91,38 @@ export const ContestScoreboard = ({ contest }: { contest: ContestState }) => {
   }, [query, user.nickname, contest]);
   const name = mySubmissions ? 'myStatus' : 'status';
   
+  const [unfrozen, setUnfrozen] = useState(false);
   const {
     data: response,
-    refresh,
+    request,
     error,
-  } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key), { refreshInterval: 60000 });
+    isLoading,
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD_V1(contest?.key, unfrozen, user.session), { refreshInterval: 60000 });
   
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   
-  const data: ContestProblemSubmissionsTable[] = (response?.success ? response.contents : []).map((result, index) => (
-    {
-      index: index + 1,
-      familyName: result.familyName,
-      givenName: result.givenName,
-      imageUrl: result.imageUrl,
-      nickname: result.nickname,
-      problems: result.problems,
-      totalPenalty: result.totalPenalty,
-      totalPoints: result.totalPoints,
-    } as ContestProblemSubmissionsTable
-  ));
-  
+  const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []).map(result => result);
   const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
   
   return (
-    <DataViewer<ContestProblemSubmissionsTable>
+    <DataViewer<ScoreboardResponseDTO>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
-      request={refresh}
+      request={request}
       name={name}
       extraButtons={() => (
-        <div className="extra-buttons">
+        <div className="jk-row gap">
+          <div />
+          {contest?.isFrozenTime && <div className="jk-tag info">frozen time</div>}
+          {contest?.isQuietTime && <div className="jk-tag info">quiet time</div>}
+          {((contest?.isAdmin || contest?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
+            <div className="jk-row">
+              {isLoading ? <LoadingIcon /> : <InputToggle checked={unfrozen} onChange={setUnfrozen} />}
+              <T>{unfrozen ? 'scoreboard unfrozen' : 'scoreboard frozen'}</T>
+            </div>
+          )}
         </div>
       )}
       cardsView={false}

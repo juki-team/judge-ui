@@ -1,17 +1,4 @@
-import { Status } from '../types';
-
-export { isStringJson, isObjectJson } from '@juki-team/commons';
-export {
-  classNames,
-  downloadBlobAsFile,
-  getSearchParamsObject,
-  renderReactNodeOrFunction,
-  renderReactNodeOrFunctionP1,
-  authorizedRequest,
-  cleanRequest,
-  consoleWarn,
-  settings,
-} from '@juki-team/base-ui';
+import { Status } from 'types';
 
 export const isOrHas = (value: string | string[] | undefined, v: string) => {
   return value === v || (Array.isArray(value) && value.includes(v));
@@ -24,20 +11,18 @@ export const buttonLoaderLink = (fun) => async setLoader => {
   setLoader([now, Status.SUCCESS]);
 };
 
-export const contestStatusCalculation = (startDate: Date, duration: number) => {
-  const currentDateMilliseconds = new Date().getTime();
-  const startContestDateMilliseconds = startDate.getTime();
-  const endContestDateMilliseconds = startContestDateMilliseconds + duration;
-  let contestStatus = 'upcoming';
-  
-  if (currentDateMilliseconds > startContestDateMilliseconds && currentDateMilliseconds < endContestDateMilliseconds) {
-    contestStatus = 'live';
-  } else if (currentDateMilliseconds > startContestDateMilliseconds) {
-    contestStatus = 'past';
-  }
-  return contestStatus;
-};
-
+export { consoleWarn, isStringJson, isObjectJson, splitTime } from '@juki-team/commons';
+export {
+  classNames,
+  downloadBlobAsFile,
+  getSearchParamsObject,
+  renderReactNodeOrFunction,
+  renderReactNodeOrFunctionP1,
+  authorizedRequest,
+  cleanRequest,
+  settings,
+} from '@juki-team/base-ui';
+export * from './contest';
 export * from './permissions';
 export * from './routes';
 export * from './services';

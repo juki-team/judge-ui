@@ -27,7 +27,7 @@ export const EditProblem = ({ problem }) => {
     [ProblemTab.TESTS]: 2,
   };
   
-  const tabs = [ProblemTab.STATEMENT, ProblemTab.SETUP, ProblemTab.TESTS];
+  const tabs = [];
   console.log(updatedDiff(originalProblemRef.current, newProblem));
   return (
     <TwoContentLayout>
@@ -68,14 +68,22 @@ export const EditProblem = ({ problem }) => {
         </div>
       </div>
       <Tabs
-        selectedTabIndex={index[query.tab as ProblemTab]}
-        tabHeaders={[
-          { children: <T className="text-capitalize">statement</T> },
-          { children: <T className="text-capitalize">settings</T> },
-          { children: <T className="text-capitalize">test cases</T> },
+        selectedTabKey={query.tab as ProblemTab}
+        tabs={[
+          {
+            key: ProblemTab.STATEMENT,
+            header: <T className="text-capitalize">statement</T>,
+            body: <ProblemStatement problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />,
+          },
+          {
+            key: ProblemTab.SETUP,
+            header: <T className="text-capitalize">settings</T>,
+            body: <ProblemSettings problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />,
+          },
+          { key: ProblemTab.TESTS, header: <T className="text-capitalize">test cases</T>, body: <div>test cases</div> },
         ]}
-        onChange={index => push({ pathname: ROUTES.PROBLEMS.EDIT('' + key, tabs[index]), query })}
-        actionsSection={
+        onChange={tabKey => push({ pathname: ROUTES.PROBLEMS.EDIT('' + key, tabKey), query })}
+        actionsSection={[
           <ButtonLoader
             type="secondary"
             onClick={async setLoaderStatus => {
@@ -85,13 +93,9 @@ export const EditProblem = ({ problem }) => {
             }}
           >
             <T>save</T>
-          </ButtonLoader>
-        }
-      >
-        <ProblemStatement problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />
-        <ProblemSettings problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />
-        <div>sub</div>
-      </Tabs>
+          </ButtonLoader>,
+        ]}
+      />
     </TwoContentLayout>
   );
 };

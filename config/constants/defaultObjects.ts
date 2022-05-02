@@ -59,3 +59,6 @@ export const USER_GUEST: UserState = {
   isLogged: false,
   session: '',
 };
+
+export const MY_STATUS = 'my-status';
+export const STATUS = 'status';

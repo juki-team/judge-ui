@@ -1,7 +1,7 @@
 import { USER_STATUS } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
-import { useRequester, useRouter } from 'hooks';
+import { useDataViewerRequester, useRouter } from 'hooks';
 import { useMemo, useRef, useState } from 'react';
 import {
   ContentResponseType,
@@ -60,7 +60,7 @@ export function Users() {
     label: <T className="text-capitalize">{USER_STATUS[option].label}</T>,
   }));
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { data: response, refresh } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
+  const { data: response, refresh } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
   const setLoaderStatusRef = useRef<SetLoaderStatusType | null>(null);
   
   const changeUserStatus = async (nickname, status, setLoader) => {

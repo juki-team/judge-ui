@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { ROUTES } from '../../config/constants';
-import { ContestTab } from '../../types';
+import { ContestTab, ProblemResponseDTO } from 'types';
 import { ArrowIcon, ExclamationIcon, Popover } from '../index';
 import { ProblemInfo } from './ProblemInfo';
 import { SampleTest } from './SampleTest';
@@ -14,7 +14,7 @@ export const ProblemStatement = ({
   contestIndex,
   setProblem,
   originalProblemRef,
-}: { problem: any, contestIndex?: string, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
+}: { problem: ProblemResponseDTO, contestIndex?: string, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
   
   const { query: { key, index, tab, ...query } } = useRouter();
   
@@ -45,10 +45,10 @@ export const ProblemStatement = ({
               <MdMathEditor
                 informationButton
                 uploadImageButton
-                source={problem?.description?.general}
-                onChange={value => setProblem({ ...problem, description: { ...problem.description, general: value } })}
+                source={problem?.statement?.description}
+                onChange={value => setProblem({ ...problem, statement: { ...problem.statement, description: value } })}
               />
-            ) : <MdMathViewer source={problem?.description?.general} />}
+            ) : <MdMathViewer source={problem?.statement?.description} />}
           </div>
           <div>
             <h6><T>input</T></h6>
@@ -56,10 +56,10 @@ export const ProblemStatement = ({
               <MdMathEditor
                 informationButton
                 uploadImageButton
-                source={problem?.description?.input}
-                onChange={value => setProblem({ ...problem, description: { ...problem.description, input: value } })}
+                source={problem?.statement?.input}
+                onChange={value => setProblem({ ...problem, statement: { ...problem.statement, input: value } })}
               />
-            ) : <MdMathViewer source={problem?.description?.input} />}
+            ) : <MdMathViewer source={problem?.statement?.input} />}
           </div>
           <div>
             <h6><T>output</T></h6>
@@ -67,10 +67,10 @@ export const ProblemStatement = ({
               <MdMathEditor
                 informationButton
                 uploadImageButton
-                source={problem?.description?.output}
-                onChange={value => setProblem({ ...problem, description: { ...problem.description, output: value } })}
+                source={problem?.statement?.output}
+                onChange={value => setProblem({ ...problem, statement: { ...problem.statement, output: value } })}
               />
-            ) : <MdMathViewer source={problem?.description?.output} />}
+            ) : <MdMathViewer source={problem?.statement?.output} />}
           </div>
           <div>
             <div className="jk-row stretch gap">
@@ -85,14 +85,14 @@ export const ProblemStatement = ({
                     filledCircle
                     onClick={() => setProblem(prevState => ({
                       ...prevState,
-                      samples: [...prevState.samples, { input: ' ', output: ' ' }],
+                      sampleCases: [...prevState.sampleCases, { input: ' ', output: ' ' }],
                     }))}
                   />
                 </div>
               )}
             </div>
             <div className="jk-col stretch gap">
-              {(problem.samples || [{ input: '', output: '' }]).map((sample, index) => (
+              {(problem.sampleCases || [{ input: '', output: '' }]).map((sample, index) => (
                 <SampleTest index={index} problem={problem} key={index} setProblem={setProblem} />
               ))}
             </div>

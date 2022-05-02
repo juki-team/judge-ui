@@ -13,12 +13,11 @@ import {
 import { PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from 'helpers';
-import { useRequester, useRouter } from 'hooks';
+import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContentsResponseType, ProblemStatus, ProblemTab } from 'types';
-import { Button } from '@juki-team/base-ui';
 
 type ProblemsTable = {
   id: number,
@@ -30,7 +29,11 @@ type ProblemsTable = {
 function Problems() {
   
   const user = useUserState();
-  const { data: response, refresh } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM());
+  const {
+    data: response,
+    request,
+    setLoaderStatusRef,
+  } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM());
   
   const tags = new Set<string>();
   (response?.success ? response.contents : []).forEach(problem => {
@@ -136,7 +139,8 @@ function Problems() {
         headers={columns}
         data={data}
         rows={{ height: 64 }}
-        request={refresh}
+        request={request}
+        setLoaderStatusRef={setLoaderStatusRef}
         name="users"
         extraButtons={() => (
           <div className="extra-buttons">

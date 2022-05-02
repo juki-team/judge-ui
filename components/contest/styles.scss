@@ -1,11 +1,10 @@
+@import "@juki-team/base-ui/dist/styles/abstracts/index";
+
 .content-side-right-bar-bottom {
-  padding: var(--pad) 0;
+  padding: var(--pad-md) 0;
   
-  > div.jk-col {
-    > p:last-child {
-      line-height: 14px;
-      margin-bottom: var(--pad-xt);
-    }
+  p {
+    text-align: center;
   }
 }
 
@@ -18,16 +17,26 @@
 .problem-card {
   width: calc(var(--screen-col-width) * 3 + var(--screen-col-pad-width) * 2);
   height: 254px;
-  padding: 0 var(--pad);
+  padding: 0 var(--pad-md);
   
   .problem-status {
     width: 100%;
   }
   
   .problem-index {
-    border-radius: var(--border-radius);
     position: relative;
     padding: 3px 10px;
+    
+    &.wrong {
+      .jk-icon {
+        background-color: var(--t-color-error);
+        border-radius: 50%;
+        color: var(--t-color-white);
+        position: absolute;
+        top: -6px;
+        right: -6px;
+      }
+    }
   }
   
   .problem-id {
@@ -36,11 +45,11 @@
 }
 
 .problem-head-box {
-  padding: var(--pad) 0 0 0;
+  padding: var(--pad-md) 0 0 0;
   position: relative;
   
   > .back-link {
-    left: var(--pad);
+    left: var(--pad-md);
   }
 }
 
@@ -65,4 +74,10 @@
       padding: 0 var(--pad-t);
     }
   }
+}
+
+.contest-live-timer {
+  position: absolute;
+  top: -10px;
+  right: 0;
 }

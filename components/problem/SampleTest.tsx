@@ -1,27 +1,27 @@
 import { CopyIcon, CopyToClipboard, DeleteIcon, EditIcon, SaveIcon, TextArea } from 'components';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { ProblemNewState, ProblemOverview } from 'types';
+import { ProblemResponseDTO } from 'types';
 
 interface SampleTestProps {
   index: number,
-  problem: ProblemOverview,
-  setProblem?: Dispatch<SetStateAction<ProblemNewState>>,
+  problem: ProblemResponseDTO,
+  setProblem?: Dispatch<SetStateAction<ProblemResponseDTO>>,
 }
 
 export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
   
-  const [sample, setSample] = useState(problem.samples?.[index] || { input: '', output: '' });
+  const [sample, setSample] = useState(problem.sampleCases?.[index] || { input: '', output: '' });
   const [editable, setEditable] = useState(false);
   useEffect(() => {
-    setSample(problem.samples?.[index] || { input: '', output: '' });
+    setSample(problem.sampleCases?.[index] || { input: '', output: '' });
     setEditable(false);
-  }, [index, problem.samples]);
+  }, [index, problem.sampleCases]);
   
   const onSave = setProblem ? () => {
     setProblem(prevState => {
-      const newSamples = [...prevState.samples];
+      const newSamples = [...prevState.sampleCases];
       newSamples[index] = sample;
-      return { ...prevState, samples: newSamples };
+      return { ...prevState, sampleCases: newSamples };
     });
     setEditable(false);
   } : () => null;
@@ -61,8 +61,8 @@ export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
           {editable ? <SaveIcon onClick={onSave} /> : <EditIcon onClick={() => setEditable(true)} />}
           <DeleteIcon
             onClick={() => setProblem(prevState => {
-              const newSamples = [...prevState.samples].filter((sample, sIndex) => sIndex !== index);
-              return { ...prevState, samples: newSamples };
+              const newSamples = [...prevState.sampleCases].filter((sample, sIndex) => sIndex !== index);
+              return { ...prevState, sampleCases: newSamples };
             })}
           />
         </div>

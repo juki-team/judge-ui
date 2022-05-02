@@ -177,7 +177,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           children: <LoginUser />,
         }}
       >
-        {children}
+        {user.isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" /></div> : children}
       </HorizontalMenu>
     </>
   );

@@ -1,7 +1,7 @@
 import { ContentLayout, DataViewer, DataViewerHeadersType, DateField, Field, T, TextField, TextHeadCell } from 'components';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { contestStatusCalculation, searchParamsObjectTypeToQuery } from 'helpers';
-import { useRequester, useRouter } from 'hooks';
+import { getContestStatus, searchParamsObjectTypeToQuery } from 'helpers';
+import { useDataViewerRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
 import { ContentsResponseType, ContestTab } from 'types';
 import { ROUTES } from '../config/constants';
@@ -22,7 +22,11 @@ type ContestTable = {
 
 function Contests() {
   
-  const { data: response, refresh } = useRequester<ContentsResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST());
+  const {
+    data: response,
+    request,
+    setLoaderStatusRef,
+  } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST());
   
   const columns: DataViewerHeadersType<ContestTable>[] = useMemo(() => [
     {
@@ -35,7 +39,12 @@ function Contests() {
           </div>
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
+      sort: {
+        compareFn: () => (rowA, rowB) => {
+          const order = { past: 0, live: 1, upcoming: 2 };
+          return order[rowA.stateContest] - order[rowB.stateContest];
+        },
+      },
       filter: {
         type: 'select-auto', options: ['upcoming', 'live', 'past'].map(option => ({
           value: option,
@@ -89,7 +98,7 @@ function Contests() {
     name: contest.name,
     settings: contest.settings,
     totalRegistered: contest.totalRegistered,
-    stateContest: contestStatusCalculation(new Date(contest.settings.start), contest.timing.duration),
+    stateContest: getContestStatus(new Date(contest.settings.start), contest.timing.duration),
   }));
   
   return (
@@ -102,7 +111,8 @@ function Contests() {
         headers={columns}
         data={data}
         rows={{ height: 68 }}
-        request={refresh}
+        request={request}
+        setLoaderStatusRef={setLoaderStatusRef}
         name="users"
         // extraButtons={() => (
         //   <div className="extra-buttons">

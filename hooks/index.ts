@@ -1,8 +1,10 @@
 import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
-import { useCallback, useMemo } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
+import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import useSWR from 'swr';
 import { ContentResponseType, ContentsResponseType, HTTPMethod, Status } from 'types';
+import { useUserState } from '../store';
+import { SetLoaderStatusType } from '../types';
 
 const fetcher = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
   
@@ -26,7 +28,7 @@ export type UseFetcherOptionsType = {
   refreshInterval?: number,
 }
 
-export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url?: string, options?: UseFetcherOptionsType) => {
+export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url?: string, options?: UseFetcherOptionsType, debug?: boolean) => {
   
   const {
     revalidateIfStale = true,
@@ -35,13 +37,20 @@ export const useFetcher = <T extends (ContentResponseType<any> | ContentsRespons
     refreshInterval,
   } = options || {};
   
-  const { data, error } = useSWR(url, fetcher, { revalidateIfStale, revalidateOnFocus, revalidateOnReconnect, refreshInterval });
+  const { data, error, mutate, isValidating } = useSWR(url, fetcher, {
+    revalidateIfStale,
+    revalidateOnFocus,
+    revalidateOnReconnect,
+    refreshInterval,
+  });
   
   return useMemo(() => ({
     data: data ? cleanRequest<T>(data) : undefined,
     error,
     isLoading: error === undefined && data === undefined,
-  }), [data, error]);
+    mutate,
+    isValidating,
+  }), [data, error, mutate, isValidating]);
 };
 
 export const useRouter = () => {
@@ -62,23 +71,39 @@ export const useRouter = () => {
   return { query, queryObject, ...rest };
 };
 
-export const useRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: UseFetcherOptionsType) => {
+export const useDataViewerRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: UseFetcherOptionsType) => {
   
-  const { mutate } = useSWRConfig();
-  const { data, error, isLoading } = useFetcher<T>(url, options);
+  const setLoaderStatusRef = useRef<SetLoaderStatusType>();
+  const [firstRefresh, setFirstRefresh] = useState(false);
+  const { nickname, isLoading: userIsLoading } = useUserState();
+  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(firstRefresh ? url : null, options, true);
   
-  const refresh = useCallback(async (props?) => {
-    const { setLoaderStatus } = props || {};
-    setLoaderStatus?.(Status.LOADING);
-    await mutate(url);
-    setLoaderStatus?.(Status.SUCCESS);
-  }, [data, url]);
+  const request = useCallback(async (props?) => {
+    if (!firstRefresh) {
+      setFirstRefresh(true);
+    } else {
+      await mutate();
+    }
+  }, [mutate, firstRefresh]);
+  
+  useEffect(() => {
+    mutate();
+  }, [nickname]);
+  
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      setLoaderStatusRef.current?.(Status.LOADING);
+    } else {
+      setLoaderStatusRef.current?.(Status.NONE);
+    }
+  }, [isLoading, isValidating]);
   
   return {
     data,
     error,
-    isLoading,
-    refresh,
+    isLoading: isLoading || isValidating,
+    request,
+    setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
   };
 };
 
@@ -87,4 +112,5 @@ export {
   useNotification,
   useT,
 } from '@juki-team/base-ui';
+export * from './contest';
 export * from './useOnline';

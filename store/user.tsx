@@ -22,10 +22,11 @@ export interface UserState extends UserInterface {
   session: string,
 }
 
-export const UserContext = createContext<{ user: UserState, setUser: Dispatch<SetStateAction<UserState>> }>({
+export const UserContext = createContext<{ user: UserState, setUser: Dispatch<SetStateAction<UserState>>, isLoading: boolean }>({
   user: USER_GUEST,
   setUser: () => {
   },
+  isLoading: true,
 });
 
 const getUserState = (object: any): UserState => {
@@ -63,13 +64,20 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const { i18n } = useT();
   const { push, locale, pathname, asPath, query, isReady } = useRouter();
-  const { data } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.ACCOUNT.PING());
+  const { data, isLoading } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.ACCOUNT.PING());
   const { mutate } = useSWRConfig();
   const [user, setUser] = useState<UserState>(USER_GUEST);
-  
+  const [userIsLoading, setUserIsLoading] = useState(true);
+  useEffect(() => {
+    if (!isLoading) {
+      setUserIsLoading(false);
+    }
+  }, [isLoading]);
   useEffect(() => {
     if (data?.success) {
       setUser(getUserState(data?.content));
+    } else {
+      setUser(getUserState(USER_GUEST));
     }
   }, [data]);
   useEffect(() => {
@@ -87,17 +95,18 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   }, [user.preferredLanguage, user.nickname, locale, pathname, query, asPath, isReady]);
   
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, isLoading: userIsLoading }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export const useUserState = (): UserState => {
-  const { user } = useContext(UserContext);
+export const useUserState = (): (UserState & { isLoading: boolean }) => {
+  const { user, isLoading } = useContext(UserContext);
   
   return {
     ...user,
+    isLoading,
   };
 };
 
@@ -109,7 +118,7 @@ export const useUserDispatch = () => {
   
   return {
     setUser,
-    signIn: (nickname: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
+    signIn: (nickname: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper<ContentResponseType<any>>({
       request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), {
         method: HTTPMethod.POST,
         body: JSON.stringify({ nickname, password }),
@@ -121,7 +130,7 @@ export const useUserDispatch = () => {
       },
       setLoader,
     }),
-    signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper({
+    signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper<ContentResponseType<any>>({
       request: async () => {
         return cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), {
           method: HTTPMethod.POST,
@@ -159,7 +168,7 @@ export const useUserDispatch = () => {
         addErrorNotification(<T className="text-sentence-case">force Logout</T>);
       }
       setUser(USER_GUEST);
-      await push('/');
+      // await push('/');
     },
     recoverAccount: () => {
     
@@ -171,7 +180,7 @@ export const useUserDispatch = () => {
         { key: ProfileSettingOptions.LANGUAGE, value: account.preferredLanguage },
         { key: ProfileSettingOptions.THEME, value: account.preferredTheme },
       ];
-      return actionLoaderWrapper({
+      return actionLoaderWrapper<ContentResponseType<any>>({
         request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), {
           method: HTTPMethod.PUT,
           body: JSON.stringify(accountBody),

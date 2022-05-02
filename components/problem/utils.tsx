@@ -16,29 +16,37 @@ export const Memory = ({ verdict, memoryUsed }: { verdict: ProblemVerdict, memor
 
 export const Verdict = ({
   verdict,
-  submitPoints,
+  points,
   status,
-}: { verdict: ProblemVerdict, submitPoints: number, status: SubmissionRunStatus }) => {
+}: { verdict: ProblemVerdict, points?: number, status?: SubmissionRunStatus }) => {
   
   const verdictLabel = PROBLEM_VERDICT[verdict]?.label ? <T className="text-nowrap">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
-  
-  return (
-    <Popover
-      content={
-        <div className="text-sentence-case text-nowrap">
-          {verdict === ProblemVerdict.PENDING ? (
-            SUBMISSION_RUN_STATUS[status]?.label ?
-              <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
-          ) : verdictLabel}
-        </div>
-      }
-      triggerOn="hover"
-      placement="top"
-    >
-      <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
-        {verdict}
-        {verdict === ProblemVerdict.PA && <>({submitPoints})</>}
-      </div>
-    </Popover>
+  const content = (
+    <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      {verdict}
+      {verdict === ProblemVerdict.PA && points && <>({points})</>}
+    </div>
   );
+  
+  if ((verdict === ProblemVerdict.PENDING && status) || verdict != ProblemVerdict.PENDING) {
+    return (
+      <Popover
+        content={
+          <div className="text-sentence-case text-nowrap">
+            {verdict === ProblemVerdict.PENDING ? (
+              SUBMISSION_RUN_STATUS[status]?.label ?
+                <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
+            ) : verdictLabel}
+          </div>
+        }
+        triggerOn="hover"
+        placement="top"
+        showPopperArrow
+      >
+        {content}
+      </Popover>
+    );
+  }
+  
+  return content;
 };

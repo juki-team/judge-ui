@@ -1,28 +1,22 @@
 import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
-import { JUDGE_API_V1 } from 'config/constants/judge';
+import {
+  ACCEPTED_PROGRAMMING_LANGUAGES,
+  JUDGE_API_V1,
+  MY_STATUS,
+  PROBLEM_VERDICT,
+  PROGRAMMING_LANGUAGE,
+  QueryParam,
+  STATUS,
+} from 'config/constants';
 import { replaceParamQuery } from 'helpers';
 import { useFetcher, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { ContentResponseType, ProblemMode, ProblemVerdict, ProgrammingLanguage, SubmissionRunStatus, SubmissionResponseDTO } from 'types';
+import { ContentResponseType, ProblemMode, SubmissionResponseDTO } from 'types';
 import { useUserState } from '../../store';
 import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time, Verdict } from './utils';
 
-type ProblemSubmissionsTable = {
-  submitId: string,
-  userNickname: string,
-  userImageUrl: string,
-  timestamp: number,
-  verdict: ProblemVerdict,
-  submitPoints: number,
-  language: ProgrammingLanguage,
-  timeUsed: number,
-  memoryUsed: number,
-  verdictByGroups: {},
-  canViewSourceCode: boolean,
-  status: SubmissionRunStatus,
-}
+type  ProblemSubmissionsTable = SubmissionResponseDTO;
 
 export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, mySubmissions?: boolean }) => {
   const { query, push } = useRouter();
@@ -62,9 +56,9 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, m
     {
       head: <TextHeadCell text={<T>verdict</T>} />,
       index: 'verdict',
-      field: ({ record: { verdict, submitPoints, status }, isCard }) => (
+      field: ({ record: { verdict, points, status }, isCard }) => (
         <Field className="jk-row">
-          <Verdict verdict={verdict} submitPoints={submitPoints} status={status} />
+          <Verdict verdict={verdict} points={points} status={status} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
@@ -84,26 +78,31 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, m
           language,
           verdict,
           status,
-          submitPoints,
+          points,
           canViewSourceCode,
           memoryUsed,
           submitId,
           timeUsed,
-          verdictByGroups,
+          problemTimeLimit,
+          problemMemoryLimit,
+          problemMode,
           timestamp,
         },
         isCard,
       }) => (
         <SubmissionInfo
-          isSubtaskProblem={isSubtaskProblem}
+          problem={{
+            mode: problemMode,
+            timeLimit: problemTimeLimit,
+            memoryLimit: problemMemoryLimit,
+          }}
           language={language}
           submitId={submitId}
           timeUsed={timeUsed}
-          verdictByGroups={verdictByGroups}
           verdict={verdict}
           memoryUsed={memoryUsed}
           date={new Date(timestamp)}
-          submitPoints={submitPoints}
+          points={points}
           canViewSourceCode={canViewSourceCode}
           status={status}
         >
@@ -147,30 +146,17 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: any, m
   ], [query, isSubtaskProblem]);
   const url = (page: number, size: number) => {
     if (mySubmissions) {
-      return JUDGE_API_V1.PROBLEM.PROBLEM_STATUS_NICKNAME(problem?.id, page, size, session, nickname);
+      return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.id, nickname, page, size, session);
     }
-    return JUDGE_API_V1.PROBLEM.PROBLEM_STATUS_V1(problem?.id, page, size, session);
+    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.id, page, size, session);
   };
   
   return (
     <PagedDataViewer<ProblemSubmissionsTable, SubmissionResponseDTO>
       headers={columns}
       url={url}
-      name={mySubmissions ? 'myStatus' : 'status'}
-      toRow={submission => ({
-        submitId: submission.submitId,
-        userNickname: submission.userNickname,
-        userImageUrl: submission.userImageUrl || '',
-        timestamp: submission.timestamp,
-        verdict: submission.verdict,
-        submitPoints: submission.submitPoints,
-        language: submission.language,
-        timeUsed: submission.timeUsed,
-        memoryUsed: submission.memoryUsed,
-        verdictByGroups: submission.verdictByGroups,
-        canViewSourceCode: submission.canViewSourceCode,
-        status: submission.status,
-      } as ProblemSubmissionsTable)}
+      name={mySubmissions ? MY_STATUS : STATUS}
+      toRow={submission => submission}
       refreshInterval={60000}
     />
   );

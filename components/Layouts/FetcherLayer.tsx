@@ -20,10 +20,8 @@ export const FetcherLayer = <T extends (ContentResponseType<any> | ContentsRespo
   
   if (isLoading) {
     return (
-      <div className="jk-row filled">
-        <div className="jk-col">
-          <LoadingIcon size="huge" />
-        </div>
+      <div className="jk-col extend">
+        <LoadingIcon size="very-huge" />
       </div>
     );
   }

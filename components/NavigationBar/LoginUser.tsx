@@ -1,15 +1,19 @@
+import { Button, ButtonLoader, LoadingIcon, Popover, T, UpIcon } from 'components';
+import { addParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
-import { Button, ButtonLoader, Popover, T, UpIcon } from '..';
+import { useUserDispatch, useUserState } from 'store';
+import { ProfileTab } from 'types';
 import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
-import { addParamQuery } from '../../helpers';
-import { useUserDispatch, useUserState } from '../../store';
-import { ProfileTab } from '../../types';
 
 export const LoginUser = () => {
   
   const user = useUserState();
   const { push, query } = useRouter();
   const { logout } = useUserDispatch();
+  
+  if (user.isLoading) {
+    return <LoadingIcon className="color-white" />;
+  }
   
   if (user.isLogged) {
     return (

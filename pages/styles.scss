@@ -42,6 +42,14 @@ a:active {
 .back-link {
   position: absolute;
   left: 0;
+  @include sm { position: initial; }
+  @include md { position: initial; }
+}
+
+.content-title {
+  h3 {
+    text-align: center;
+  }
 }
 
 .notification-wrapper {
@@ -60,6 +68,7 @@ a:active {
 }
 
 .jk-table-inline-header {
+  box-sizing: border-box;
   border: 1px solid var(--t-color-gray-5);
   border-radius: var(--border-radius-inline) var(--border-radius-inline) 0 0;
   color: var(--t-color-primary);
@@ -68,17 +77,28 @@ a:active {
 }
 
 .jk-table-inline-row {
+  padding: var(--pad-xt) 0;
+  box-sizing: border-box;
   border-bottom: 1px solid var(--t-color-gray-5);
   border-left: 1px solid var(--t-color-gray-5);
   border-right: 1px solid var(--t-color-gray-5);
-  
-  &:last-child {
-    border-radius: 0 0 var(--border-radius-inline) var(--border-radius-inline);
-  }
 }
 
 .sticky-top {
   position: sticky;
   top: 0;
   z-index: 1;
+}
+
+.jk-collapse {
+  &.collapsed {
+    .jk-collapse-collapsible {
+    
+    }
+  }
+  
+  .jk-collapse-collapsible {
+    overflow: hidden;
+    @include transition(height);
+  }
 }

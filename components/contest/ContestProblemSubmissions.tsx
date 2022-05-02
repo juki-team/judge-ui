@@ -1,30 +1,32 @@
-import { DataViewer, DataViewerHeadersType, DateField, Field, T, TextHeadCell } from 'components';
+import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
-import { useRequester, useRouter } from 'hooks';
+import { replaceParamQuery } from 'helpers';
+import { useRouter } from 'hooks';
 import Link from 'next/link';
-import { useCallback, useMemo, useRef } from 'react';
-import { ContentsResponseType, ContestTab, ProblemMode, ProblemVerdict, ProgrammingLanguage } from 'types';
+import { useMemo } from 'react';
+import { ContestTab } from 'types';
 import { useUserState } from '../../store';
+import { SubmissionResponseDTO } from '../../types';
 import { SubmissionInfo } from '../problem/SubmissionInfo';
 import { Memory, Time, Verdict } from '../problem/utils';
 
-type ContestProblemSubmissionsTable = {
-  indexProblem: string,
-  problemName: string,
-  settings: { mode: ProblemMode },
-  submitId: string,
-  nickname: string,
-  imageUrl: string,
-  timestamp: number,
-  verdict: ProblemVerdict,
-  submitPoints: number,
-  language: ProgrammingLanguage,
-  timeUsed: number,
-  memoryUsed: number,
-  verdictByGroups: {},
-}
+type ContestProblemSubmissionsTable = SubmissionResponseDTO;
+// type ContestProblemSubmissionsTable = {
+//   indexProblem: string,
+//   problemName: string,
+//   settings: { mode: ProblemMode },
+//   submitId: string,
+//   nickname: string,
+//   imageUrl: string,
+//   timestamp: number,
+//   verdict: ProblemVerdict,
+//   submitPoints: number,
+//   language: ProgrammingLanguage,
+//   timeUsed: number,
+//   memoryUsed: number,
+//   verdictByGroups: {},
+// }
 
 export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest: any, mySubmissions?: boolean }) => {
   
@@ -36,20 +38,20 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
       {
         head: <TextHeadCell text={<T>nickname</T>} />,
         index: 'nickname',
-        field: ({ record: { nickname, imageUrl }, isCard }) => (
+        field: ({ record: { userNickname, userImageUrl }, isCard }) => (
           <Field className="jk-row center gap">
-            <img src={imageUrl} className="jk-user-profile-img large" alt={nickname} />
+            <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
             <Link href={{
               pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.SUBMISSIONS),
-              query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, nickname),
+              query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname),
             }}>
               <div className="link">
-                {nickname}
+                {userNickname}
               </div>
             </Link>
           </Field>
         ),
-        sort: { compareFn: () => (rowA, rowB) => rowB.nickname.localeCompare(rowA.nickname) },
+        sort: { compareFn: () => (rowA, rowB) => rowB.userNickname.localeCompare(rowA.userNickname) },
         filter: { type: 'text-auto' },
         cardPosition: 'top',
         minWidth: 250,
@@ -58,14 +60,14 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
     {
       head: <TextHeadCell text={<T>problem</T>} />,
       index: 'problem',
-      field: ({ record: { problemName, indexProblem }, isCard }) => (
+      field: ({ record: { problemName, contestProblemIndex }, isCard }) => (
         <Field className="jk-row link">
-          <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEMS, indexProblem), query }}>
-            <a>{indexProblem} {problemName}</a>
+          <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEMS, contestProblemIndex), query }}>
+            <a>{contestProblemIndex} {problemName}</a>
           </Link>
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowB.indexProblem.localeCompare(rowA.indexProblem) },
+      sort: { compareFn: () => (rowA, rowB) => rowB.contestProblemIndex.localeCompare(rowA.contestProblemIndex) },
       filter: { type: 'date-range-auto' },
       cardPosition: 'center',
       minWidth: 280,
@@ -84,16 +86,16 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
     {
       head: <TextHeadCell text={<T>verdict</T>} />,
       index: 'verdict',
-      field: ({ record: { verdict, submitPoints }, isCard }) => (
+      field: ({ record: { verdict, points }, isCard }) => (
         <Field className="jk-row">
-          <Verdict verdict={verdict} submitPoints={submitPoints} />
+          <Verdict verdict={verdict} points={points} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.verdict.localeCompare(rowA.verdict) },
       filter: {
         type: 'select-auto',
         options: Object.values(PROBLEM_VERDICT)
-          .map(({ value, print }) => ({ label: <T className="text-sentence-case">{print}</T>, value })),
+          .map(({ value, label }) => ({ label: <T className="text-sentence-case">{label}</T>, value })),
       },
       cardPosition: 'center',
       minWidth: 120,
@@ -102,29 +104,55 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
       head: <TextHeadCell text={<T>lang</T>} />,
       index: 'language',
       field: ({
-        record: { language, settings, verdict, submitPoints, nickname, memoryUsed, submitId, timeUsed, verdictByGroups, timestamp },
+        record: {
+          language,
+          canViewSourceCode,
+          status,
+          verdict,
+          contestKey,
+          problemMemoryLimit,
+          problemTimeLimit,
+          problemMode,
+          contestName,
+          problemKey,
+          points,
+          userNickname,
+          memoryUsed,
+          submitId,
+          timeUsed,
+          timestamp,
+          contestProblemIndex,
+        },
         isCard,
       }) => (
         <SubmissionInfo
-          isSubtaskProblem={settings?.mode === ProblemMode.SUBTASK}
-          contest={contest}
-          nickname={mySubmissions ? user.nickname : nickname}
+          problem={{
+            mode: problemMode,
+            timeLimit: problemTimeLimit,
+            memoryLimit: problemMemoryLimit,
+          }}
+          contest={contestKey ? {
+            key: contestKey,
+            problemIndex: contestProblemIndex,
+            name: contestName,
+          } : undefined}
           language={language}
           submitId={submitId}
           timeUsed={timeUsed}
-          verdictByGroups={verdictByGroups}
           verdict={verdict}
           memoryUsed={memoryUsed}
           date={new Date(timestamp)}
-          submitPoints={submitPoints}
+          points={points}
+          canViewSourceCode={canViewSourceCode}
+          status={status}
         >
-          <div>{PROGRAMMING_LANGUAGE[language]?.name || language}</div>
+          <div>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
         </SubmissionInfo>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.language.localeCompare(rowA.language) },
       filter: {
         type: 'select-auto',
-        options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].name, value: language })),
+        options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
       },
       cardPosition: 'center',
       minWidth: 120,
@@ -158,53 +186,21 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
   ], [contestKey, query, user.nickname, pathname]);
   
   const name = mySubmissions ? 'myStatus' : 'status';
+  console.log({ mySubmissions });
   
-  const {
-    data: response,
-    refresh,
-    error,
-  } = useRequester<ContentsResponseType<any>>(mySubmissions
-      ? JUDGE_API_V1.CONTEST.MY_STATUS(contest?.key, (+queryObject[name + '.page']?.[0] - 1) || 0, +queryObject[name + '.pageSize']?.[0] || 32)
-      : JUDGE_API_V1.CONTEST.STATUS(contest?.key, (+queryObject[name + '.page']?.[0] - 1) || 0, +queryObject[name + '.pageSize']?.[0] || 32),
-    { refreshInterval: 60000 });
-  
-  const lastTotalRef = useRef(0);
-  lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
-  
-  const data: ContestProblemSubmissionsTable[] = (response?.success ? response.contents : []).map(submission => (
-    {
-      settings: contest?.problems[problemIndex as string]?.settings,
-      indexProblem: submission.indexProblem || '',
-      problemName: submission.problemName || '',
-      submitId: submission.submitId,
-      nickname: submission.nickname,
-      imageUrl: submission.imageUrl || '',
-      timestamp: submission.when,
-      verdict: submission.answer,
-      submitPoints: submission.submitPoints,
-      language: submission.language,
-      timeUsed: submission.timeUsed,
-      memoryUsed: submission.memoryUsed,
-      verdictByGroups: submission.verdictByGroups,
-    } as ContestProblemSubmissionsTable
-  ));
-  
-  const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
+  const url = (page: number, size: number) => {
+    return mySubmissions
+      ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, user.nickname, page, size, user.session)
+      : JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, size, user.session);
+  };
   
   return (
-    <DataViewer<ContestProblemSubmissionsTable>
+    <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
       headers={columns}
-      data={data}
-      rows={{ height: 68 }}
-      request={refresh}
+      url={url}
       name={name}
-      extraButtons={() => (
-        <div className="extra-buttons">
-        </div>
-      )}
-      searchParamsObject={queryObject}
-      setSearchParamsObject={setSearchParamsObject}
-      pagination={{ total: lastTotalRef.current, pageSizeOptions: [32, 64, 128, 256, 512] }}
+      toRow={submission => submission}
+      refreshInterval={60000}
     />
   );
 };

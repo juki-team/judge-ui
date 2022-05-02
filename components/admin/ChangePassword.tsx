@@ -1,10 +1,9 @@
 import { Button, ButtonLoader, CopyIcon, CopyToClipboard, InputPassword, Modal, T } from 'components';
+import { JUDGE_API_V1 } from 'config/constants';
+import { authorizedRequest, cleanRequest } from 'helpers';
+import { useNotification } from 'hooks';
 import { useState } from 'react';
-import { PUT } from '../../config/constants';
-import { JUDGE_API_V1 } from '../../config/constants/judge';
-import { authorizedRequest, cleanRequest } from '../../helpers';
-import { ContentResponseType, Status } from '../../types';
-import { useNotification } from '../index';
+import { ContentResponseType, HTTPMethod, Status } from 'types';
 
 const getRandomString = (length: number) => {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -45,7 +44,7 @@ export const ChangePassword = ({ onClose, nickname }: { onClose: () => void, nic
             onClick={async setLoaderStatus => {
               setLoaderStatus?.(Status.LOADING);
               const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD(), {
-                method: PUT,
+                method: HTTPMethod.PUT,
                 body: JSON.stringify({
                   nickName: nickname,
                   newPassword,

@@ -15,9 +15,13 @@
   }
 }
 
+:root {
+  --content-height: calc(var(--100VH) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+}
+
 .content-layout {
-  padding: var(--pad-m) 0 var(--pad-m) 0;
-  height: calc(var(--100VH) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+  padding: var(--pad-md) 0 var(--pad-md) 0;
+  height: var(--content-height);
   box-sizing: border-box;
   
   > div {
@@ -27,8 +31,8 @@
 }
 
 .two-content-layout {
-  padding: var(--pad-m) 0 var(--pad-m) 0;
-  height: calc(var(--100VH) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+  padding: var(--pad-md) 0 var(--pad-md) 0;
+  height: var(--content-height);
   box-sizing: border-box;
   overflow: hidden;
   
@@ -36,7 +40,6 @@
     width: var(--screen-content-width);
     
     > .jk-tabs-layout {
-      //overflow: hidden;
       height: 100%;
       
       > div:first-child {
@@ -50,7 +53,7 @@
       > .jk-tabs-content {
         box-sizing: border-box;
         background-color: var(--t-color-white);
-        @extend .jk-border-radius;
+        border-radius: var(--border-radius-inline);
         @extend .jk-shadow;
         overflow-x: auto;
         height: calc(100% - var(--tabs-header-height) - var(--pad-t));
