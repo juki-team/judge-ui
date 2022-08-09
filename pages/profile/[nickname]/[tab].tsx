@@ -1,6 +1,5 @@
 import { FetcherLayer, Profile, ProfileSubmissions, T, Tabs, TwoContentLayout } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useFetcher } from 'hooks';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { ContentResponseType, ProfileTab } from 'types';
@@ -10,16 +9,14 @@ export default function ProfileView() {
   
   const { query, push } = useRouter();
   const { tab, nickname, ...restQuery } = query;
-  const { isLoading, data } = useFetcher<ContentResponseType<any>>(nickname && JUDGE_API_V1.ACCOUNT.USER(nickname as string));
   const user = useUserState();
   
   return (
     <FetcherLayer<ContentResponseType<any>>
-      isLoading={isLoading}
-      data={data}
-      error={<Custom404 />}
+      url={nickname && JUDGE_API_V1.ACCOUNT.USER(nickname as string)}
+      errorView={<Custom404 />}
     >
-      {data => {
+      {({ data }) => {
         const tabHeaders = [
           {
             key: ProfileTab.PROFILE,
