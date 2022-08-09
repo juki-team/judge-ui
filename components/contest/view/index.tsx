@@ -1,57 +1,58 @@
 import {
   ArrowIcon,
-  ContestOverview,
-  ContestProblems,
+  ButtonLoader,
   FetcherLayer,
-  NotFound,
   Popover,
   T,
   Tabs,
   Timer,
   TwoContentLayout,
-} from 'components';
+  ViewOverview,
+  ViewProblems,
+} from 'components/index';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useContestRouter, useFetcher } from 'hooks';
+import { useContestRouter } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
-import { ContentResponseType, ContestResponseDTO, ContestTab } from 'types';
-import { ContestProblem } from './ContestProblem';
-import { ContestProblemSubmissions } from './ContestProblemSubmissions';
-import { ContestScoreboard } from './ContestScoreboard';
+import { ContentResponseType, ContestResponseDTO, ContestTab, Status } from 'types';
+import Custom404 from '../../../pages/404';
+import { ViewClarifications } from './ViewClarifications';
+import { ViewMembers } from './ViewMembers';
+import { ViewProblem } from './ViewProblem';
+import { ViewProblemSubmissions } from './ViewProblemSubmissions';
+import { ViewScoreboard } from './ViewScoreboard';
 
 export function ContestView() {
   
-  const { push, locale } = useRouter();
+  const { push } = useRouter();
   const { lastProblemVisited, pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
   const { session } = useUserState();
-  const {
-    isLoading,
-    data,
-  } = useFetcher<ContentResponseType<ContestResponseDTO>>(JUDGE_API_V1.CONTEST.CONTEST_V1(contestKey as string, session), { refreshInterval: 60000 });
   
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
-      isLoading={isLoading}
-      data={data}
-      error={!data?.success ? <NotFound redirectAction={() => push(ROUTES.CONTESTS.LIST())} /> : null}
+      url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey, session)}
+      options={{ refreshInterval: 60000 }}
+      errorView={<Custom404 />}
     >
-      {({ content: contest }) => {
+      {({ data: { content: contest } }) => {
+        const { user: { isAdmin, isJudge, isContestant } = { isAdmin: false, isJudge: false, isContestant: false } } = contest || {};
+        
         let statusLabel = '';
         let tag = '';
         let timeInterval = 0;
         if (contest.isPast) {
           tag = 'success';
           statusLabel = 'past';
-          timeInterval = new Date().getTime() - contest.endTimestamp;
+          timeInterval = new Date().getTime() - contest.settings.endTimestamp;
         } else if (contest.isFuture) {
           tag = 'info';
           statusLabel = 'upcoming';
-          timeInterval = contest.startTimestamp - new Date().getTime();
+          timeInterval = contest.settings.startTimestamp - new Date().getTime();
         } else if (contest.isLive) {
           tag = 'error';
           statusLabel = 'live';
-          timeInterval = contest.endTimestamp - new Date().getTime();
+          timeInterval = contest.settings.endTimestamp - new Date().getTime();
         }
         const literal = (
           <>
@@ -70,10 +71,10 @@ export function ContestView() {
           {
             key: ContestTab.OVERVIEW,
             header: <T className="text-capitalize">overview</T>,
-            body: <ContestOverview contest={contest} />,
+            body: <ViewOverview contest={contest} />,
           },
         ];
-        if (contest.isAdmin || contest.isJudge || contest.isLive || contest.isPast) {
+        if (isAdmin || isJudge || contest.isLive || contest.isPast) {
           tabHeaders.push({
               key: lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
               header: (
@@ -84,36 +85,64 @@ export function ContestView() {
                 </div>
               ),
               body: problemIndex
-                ? <ContestProblem contest={contest} />
-                : <ContestProblems contest={contest} />,
+                ? <ViewProblem contest={contest} />
+                : <ViewProblems contest={contest} />,
             },
             {
               key: ContestTab.SCOREBOARD,
               header: <T className="text-capitalize">scoreboard</T>,
-              body: <ContestScoreboard contest={contest} />,
+              body: <ViewScoreboard contest={contest} />,
             },
           );
         }
-        if (contest.isAdmin || contest.isJudge || ((contest.isLive || contest.isPast) && contest.isContestant)) {
+        if (isAdmin || isJudge || ((contest.isLive || contest.isPast) && isContestant)) {
           tabHeaders.push({
             key: ContestTab.MY_SUBMISSIONS,
             header: <T className="text-capitalize">my submissions</T>,
-            body: <ContestProblemSubmissions contest={contest} mySubmissions />,
+            body: <ViewProblemSubmissions contest={contest} mySubmissions />,
           });
         }
-        if (contest.isAdmin || contest.isJudge || contest.isLive || contest.isPast) {
+        if (isAdmin || isJudge || contest.isLive || contest.isPast) {
           tabHeaders.push({
             key: ContestTab.SUBMISSIONS,
             header: <T className="text-capitalize">submissions</T>,
-            body: <ContestProblemSubmissions contest={contest} />,
+            body: <ViewProblemSubmissions contest={contest} />,
           });
         }
-        if (contest.clarifications) {
+        if (contest.settings.clarifications) {
           tabHeaders.push({
             key: ContestTab.CLARIFICATIONS,
             header: <T className="text-capitalize">clarifications</T>,
-            body: <div></div>,
+            body: <ViewClarifications contest={contest} />,
           });
+        }
+        
+        if (isAdmin || isJudge) {
+          tabHeaders.push({
+            key: ContestTab.MEMBERS,
+            header: <T className="text-capitalize">members</T>,
+            body: <ViewMembers contest={contest} />,
+          });
+        }
+        
+        const actionsSection = [
+          <div className={`jk-row screen lg hg jk-tag ${tag}`}>
+            <T>{statusLabel}</T>,&nbsp;{literal}
+          </div>,
+        ];
+        
+        if (isAdmin) {
+          actionsSection.push(
+            <ButtonLoader
+              onClick={async setLoaderStatus => {
+                setLoaderStatus(Status.LOADING);
+                await push(ROUTES.CONTESTS.EDIT(contestKey));
+                setLoaderStatus(Status.SUCCESS);
+              }}
+            >
+              <T>edit</T>
+            </ButtonLoader>,
+          );
         }
         
         return (
@@ -146,20 +175,7 @@ export function ContestView() {
               selectedTabKey={contestTab as ContestTab}
               tabs={tabHeaders}
               onChange={tabKey => pushTab(tabKey as ContestTab)}
-              actionsSection={[
-                <div className={`jk-row screen lg hg jk-tag ${tag}`}>
-                  <T>{statusLabel}</T>,&nbsp;{literal}
-                </div>,
-              ]}
-              //  <ButtonLoader
-              // onClick={async setLoaderStatus => {
-              //   setLoaderStatus(Status.LOADING);
-              //   await push(ROUTES.CONTESTS.EDIT('' + query.key, ContestTab.OVERVIEW));
-              //       setLoaderStatus(Status.SUCCESS);
-              //     }}
-              //   >
-              //     <T>edit</T>
-              //   </ButtonLoader>
+              actionsSection={actionsSection}
             />
           </TwoContentLayout>
         );

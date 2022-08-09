@@ -17,7 +17,7 @@ export const SignUp = () => {
   
   return (
     <SignUpModal
-      onCancel={() => push({ query: removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_UP) })}
+      onCancel={() => push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP) })}
       onSubmit={onSubmit}
     />
   );

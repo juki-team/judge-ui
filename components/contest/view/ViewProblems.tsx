@@ -1,0 +1,90 @@
+import { Button, CheckIcon, CloseIcon, LinkIcon, T, TimerLabeled } from 'components/index';
+import { useRouter } from 'next/router';
+import { ContestResponseDTO, ContestTab, Judge, Period } from 'types';
+import { ROUTES } from '../../../config/constants';
+import { getProblemUrl } from '../../../helpers/problem';
+
+export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
+  
+  const { problems = {}, user, isLive, key, settings } = contest;
+  const { isContestant } = user || {};
+  
+  const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
+  
+  return (
+    <div className="jk-row gap jk-pad">
+      {Object.values(problems).map(problem => {
+        const canSubmit = isContestant && isLive && problem.startTimestamp <= Date.now() && Date.now() <= problem.endTimestamp;
+        return (
+          <div
+            key={problem.index}
+            className="jk-shadow problem-card jk-col jk-border-radius"
+            style={{ borderTop: `8px solid ${problem.color}` }}
+          >
+            <div className="problem-status jk-row space-between">
+              <div
+                className={'tx-wd-bolder problem-index bg-color-gray-6 jk-border-radius-inline' + (problem.myAttempts ? (problem.mySuccess ? ' accepted' : ' wrong') : '')}
+              >
+                {!!problem.myAttempts && (problem.mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
+                {problem.index}
+              </div>
+              <div className="problem-id text-xs text-semi-bold color-gray-3">ID: {problem.key}</div>
+            </div>
+            <div className="text-m tx-wd-bolder jk-row"> {problem.name} </div>
+            <div className="jk-col gap">
+              {isContestant && isLive && (problem.startTimestamp !== contest.settings.startTimestamp || problem.endTimestamp !== contest.settings.endTimestamp) && (
+                <div className="problem-timing jk-row">
+                  <TimerLabeled
+                    startDate={new Date(problem.startTimestamp)}
+                    endDate={new Date(problem.endTimestamp)}
+                    labels={{
+                      [Period.LIVE_END]: 'close on',
+                      [Period.LIVE_START]: 'close on',
+                      [Period.PAST]: 'closed ago',
+                      [Period.CALC]: '...',
+                      [Period.FUTURE]: 'open on',
+                      [Period.TIME_OUT]: 'time out',
+                    }}
+                    laps={2}
+                    // onFinish={() => console.log('reload contest!!', key)}
+                  />
+                </div>
+              )}
+              <div className="jk-row gap">
+                <div className="jk-col">
+                  <div className="text-s tx-wd-bolder">{problem.points}</div>
+                  <div className="text-t text-semi-bold"><T>score</T></div>
+                </div>
+                <div className="jk-divider horizontal" />
+                <div className="jk-col">
+                  <div className="text-s tx-wd-bolder">
+                    {problem.totalAttempts ? (problem.totalSuccess / problem.totalAttempts * 100).toFixed(1) + ' %' : '-'}
+                  </div>
+                  <div className="text-t text-semi-bold"><T>success rate</T></div>
+                </div>
+              </div>
+            </div>
+            <div className="buttons-actions jk-row">
+              {problem.judge === Judge.JUKI_JUDGE ? (
+                <Button
+                  onClick={() => push({
+                    pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, problem.index),
+                    query,
+                  }, undefined, { shallow: true })}
+                >
+                  <T>{(problem.mySuccess || !canSubmit) ? 'view problem' : 'solve problem'}</T>
+                </Button>
+              ) : (
+                <a href={getProblemUrl(problem.judge, problem.key)} target="_blank" rel="noopener noreferrer">
+                  <Button icon={<LinkIcon />}>
+                    <T>{(problem.mySuccess || !canSubmit) ? 'view problem' : 'solve problem'}</T>
+                  </Button>
+                </a>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};

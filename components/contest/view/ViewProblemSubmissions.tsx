@@ -1,34 +1,18 @@
-import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, QueryParam, ROUTES } from 'config/constants';
+import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell, UserNicknameLink } from 'components/index';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { replaceParamQuery } from 'helpers';
 import { useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { ContestTab } from 'types';
-import { useUserState } from '../../store';
-import { SubmissionResponseDTO } from '../../types';
-import { SubmissionInfo } from '../problem/SubmissionInfo';
-import { Memory, Time, Verdict } from '../problem/utils';
+import { useUserState } from '../../../store';
+import { SubmissionResponseDTO } from '../../../types';
+import { SubmissionInfo } from '../../problem/SubmissionInfo';
+import { Memory, Time, Verdict } from '../../problem/utils';
 
 type ContestProblemSubmissionsTable = SubmissionResponseDTO;
-// type ContestProblemSubmissionsTable = {
-//   indexProblem: string,
-//   problemName: string,
-//   settings: { mode: ProblemMode },
-//   submitId: string,
-//   nickname: string,
-//   imageUrl: string,
-//   timestamp: number,
-//   verdict: ProblemVerdict,
-//   submitPoints: number,
-//   language: ProgrammingLanguage,
-//   timeUsed: number,
-//   memoryUsed: number,
-//   verdictByGroups: {},
-// }
 
-export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest: any, mySubmissions?: boolean }) => {
+export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: any, mySubmissions?: boolean }) => {
   
   const user = useUserState();
   const { queryObject, query: { key: contestKey, tab, index: problemIndex, ...query }, push, pathname } = useRouter();
@@ -41,14 +25,19 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
         field: ({ record: { userNickname, userImageUrl }, isCard }) => (
           <Field className="jk-row center gap">
             <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
-            <Link href={{
-              pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.SUBMISSIONS),
-              query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname),
-            }}>
+            <UserNicknameLink nickname={userNickname}>
               <div className="link">
                 {userNickname}
               </div>
-            </Link>
+            </UserNicknameLink>
+            {/*<Link href={{*/}
+            {/*  pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.SUBMISSIONS),*/}
+            {/*  query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname),*/}
+            {/*}}>*/}
+            {/*  <div className="link">*/}
+            {/*    {userNickname}*/}
+            {/*  </div>*/}
+            {/*</Link>*/}
           </Field>
         ),
         sort: { compareFn: () => (rowA, rowB) => rowB.userNickname.localeCompare(rowA.userNickname) },
@@ -186,7 +175,6 @@ export const ContestProblemSubmissions = ({ contest, mySubmissions }: { contest:
   ], [contestKey, query, user.nickname, pathname]);
   
   const name = mySubmissions ? 'myStatus' : 'status';
-  console.log({ mySubmissions });
   
   const url = (page: number, size: number) => {
     return mySubmissions

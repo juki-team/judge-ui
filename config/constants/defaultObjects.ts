@@ -1,3 +1,5 @@
+import React from 'react';
+import { T } from '../../components';
 import { UserState } from '../../store';
 import {
   CourseRole,

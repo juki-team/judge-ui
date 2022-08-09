@@ -32,7 +32,7 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
     return (
       <>
         <div>
-          <span className="label text-bold text-capitalize"><T>time limit</T><span>:</span></span>
+          <span className="label tx-wd-bolder text-capitalize"><T>time limit</T><span>:</span></span>
           {languages.reduce((totalValue, language) => totalValue && (language.timeLimit === timeLimit), true) ? (
             <>{(timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T></>
           ) : (
@@ -49,7 +49,7 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
           )}
         </div>
         <div>
-          <span className="label text-bold text-capitalize"><T>memory limit</T><span>:</span></span>
+          <span className="label tx-wd-bolder text-capitalize"><T>memory limit</T><span>:</span></span>
           {languages.reduce((totalValue, language) => totalValue && (language.memoryLimit === memoryLimit), true) ? (
             <>{(memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T></>
           ) : (
@@ -68,7 +68,6 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
       </>
     );
   };
-  console.log({ problem });
   
   return (
     <div className={classNames('center problem-info  jk-pad', {
@@ -80,11 +79,11 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
     })}>
       {limits()}
       <div>
-        <span className="label text-bold text-capitalize"><T>type</T><span>:</span></span>
+        <span className="label tx-wd-bolder text-capitalize"><T>type</T><span>:</span></span>
         <T className="text-capitalize">{PROBLEM_TYPE[problem?.type]?.label}</T>
       </div>
       <div>
-        <span className="label text-bold text-capitalize"><T>mode</T><span>:</span></span>
+        <span className="label tx-wd-bolder text-capitalize"><T>mode</T><span>:</span></span>
         {(horizontal && problem?.mode === ProblemMode.SUBTASK) ? (
           <Popover
             content={<div className="groups-popover">{subTasks}</div>}
@@ -92,12 +91,12 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
           >
             <div><T className="text-capitalize">{PROBLEM_MODE[problem?.mode]?.label}</T></div>
           </Popover>
-        ) : <T className="text-capitalize">{PROBLEM_MODE[problem?.mode].label}</T>}
+        ) : <T className="text-capitalize">{PROBLEM_MODE[problem?.mode]?.label}</T>}
         {!horizontal && problem?.mode === ProblemMode.SUBTASK && <div className="problem-sub-info">{subTasks}</div>}
       </div>
       {!!problem?.tags?.length && (
         <div>
-          <span className="label text-bold text-capitalize"><T>tags</T><span>:</span></span>
+          <span className="label tx-wd-bolder text-capitalize"><T>tags</T><span>:</span></span>
           {horizontal ? (
             <Popover
               content={
@@ -118,13 +117,13 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
       )}
       {problem?.author && (
         <div>
-          <span className="label text-bold text-capitalize"><T>author</T><span>:</span></span>
+          <span className="label tx-wd-bolder text-capitalize"><T>author</T><span>:</span></span>
           {problem.author}
         </div>
       )}
       {problem?.status && (
         <div>
-          <span className="label text-bold text-capitalize"><T>visibility</T><span>:</span></span>
+          <span className="label tx-wd-bolder text-capitalize"><T>visibility</T><span>:</span></span>
           <T className="text-capitalize">{PROBLEM_STATUS[problem.status]?.label}</T>
         </div>
       )}

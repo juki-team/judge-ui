@@ -3,8 +3,8 @@ import { classNames } from 'helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { ROUTES } from '../../config/constants';
 import { ContestTab, ProblemResponseDTO } from 'types';
+import { ROUTES } from '../../config/constants';
 import { ArrowIcon, ExclamationIcon, Popover } from '../index';
 import { ProblemInfo } from './ProblemInfo';
 import { SampleTest } from './SampleTest';
@@ -21,7 +21,7 @@ export const ProblemStatement = ({
   return (
     <div className="problem-statement-layout">
       {contestIndex && (
-        <div className="problem-head-box text-xh text-bold jk-row">
+        <div className="problem-head-box text-xh tx-wd-bolder jk-row">
           <div className="jk-row color-primary back-link">
             <Link href={{ pathname: ROUTES.CONTESTS.VIEW('' + key, ContestTab.PROBLEMS), query }}>
               <a className="jk-row nowrap text-semi-bold link">
@@ -32,7 +32,7 @@ export const ProblemStatement = ({
           <div className="jk-row center gap nowrap">
             <div className="index">{contestIndex}</div>
             <h6 className="title">{problem.name}</h6>
-            <Popover content={<ProblemInfo problem={problem} />} triggerOn="click" placement="bottom">
+            <Popover content={<ProblemInfo problem={problem} />} triggerOn={['hover', 'click']} placement="bottom">
               <div className="jk-row"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
             </Popover>
           </div>

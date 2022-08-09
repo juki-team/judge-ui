@@ -11,7 +11,7 @@ export const Welcome = () => {
   const { push, query } = useRouter();
   
   const handleClose = () => (
-    push({ query: removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) })
+    push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) })
   );
   
   return (

@@ -1,4 +1,4 @@
-import { SubmissionResponseDTO } from '@juki-team/commons';
+import { getProblemJudgeKey, SubmissionResponseDTO } from '@juki-team/commons';
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
@@ -9,7 +9,6 @@ import {
   PROGRAMMING_LANGUAGE,
   QueryParam,
   ROUTES,
-  STATUS,
 } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, isStringJson } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
@@ -28,7 +27,9 @@ import {
   Status,
   SubmissionRunStatus,
 } from 'types';
+import { getEditorSettingsStorageKey, getProblemsStoreKey } from '../../helpers/problem';
 import { useContestRouter } from '../../hooks';
+import { SpectatorInformation } from '../contest/Information';
 
 const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {
   
@@ -53,9 +54,10 @@ const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): 
 export const ProblemCodeEditor = ({
   problem,
   contest,
-}: { problem: ProblemResponseDTO, contest?: { isAdmin: boolean, isJudge: boolean, isContestant: boolean, problemIndex: string } }) => {
+}: { problem: ProblemResponseDTO, contest?: { isAdmin: boolean, isJudge: boolean, isContestant: boolean, isGuest: boolean, isSpectator: boolean, problemIndex: string } }) => {
   
   const [listenSubmissionId, setListenSubmissionId] = useState('');
+  const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWRConfig();
   useEffect(() => {
     let interval;
@@ -116,15 +118,13 @@ export const ProblemCodeEditor = ({
   const { nickname, isLogged, session } = useUserState();
   const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
-  const { [`${MY_STATUS}.pageSize`]: myStatusPageSize, [`${STATUS}.pageSize`]: statusPageSize } = query;
+  const { [`${MY_STATUS}.pageSize`]: myStatusPageSize } = query;
   
   const { key: problemKey, ...restQuery } = query;
+  const editorSettingsStorageKey = getEditorSettingsStorageKey(nickname);
+  const problemStoreKey = getProblemsStoreKey(nickname);
   
-  const editorStorageKey = 'jk-editor-settings-store/' + nickname;
-  
-  const storeKey = 'jk-problem-storage/' + (contest?.problemIndex ? contest?.problemIndex : '') + nickname;
-  
-  const [editorSettings, setEditorSettings] = useSaveStorage(editorStorageKey, {
+  const [editorSettings, setEditorSettings] = useSaveStorage(editorSettingsStorageKey, {
     theme: CodeEditorTheme.IDEA,
     keyMap: CodeEditorKeyMap.SUBLIME,
     lastLanguageUsed: ProgrammingLanguage.CPP,
@@ -138,24 +138,27 @@ export const ProblemCodeEditor = ({
       setLanguage(languages[0]);
     }
   }, [language, languages]);
-  
-  const defaultValue = { [problem.key]: {} };
+  const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
+  const defaultValue = { [problemJudgeKey]: {} };
   ACCEPTED_PROGRAMMING_LANGUAGES.forEach(key => {
-    defaultValue[problem.key][PROGRAMMING_LANGUAGE[key].mime] = PROGRAMMING_LANGUAGE[key].templateSourceCode;
+    defaultValue[problemJudgeKey][PROGRAMMING_LANGUAGE[key].mime] = PROGRAMMING_LANGUAGE[key].templateSourceCode;
   });
-  const [source, setSource] = useSaveStorage(storeKey, defaultValue);
-  const { addSuccessNotification, addErrorNotification } = useNotification();
+  const [source, setSource] = useSaveStorage(problemStoreKey, defaultValue);
+  
   return (
     <CodeRunnerEditor
       theme={editorSettings.theme}
       keyMap={editorSettings.keyMap}
       tabSize={editorSettings.tabSize}
-      sourceCode={source[problem.key]?.[PROGRAMMING_LANGUAGE[language].mime] || ''}
+      sourceCode={source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || ''}
       language={language}
       languages={languages}
       onChange={({ sourceCode, language: newLanguage, testCases, theme, keyMap, tabSize }) => {
         if (typeof sourceCode === 'string') {
-          setSource(prevState => ({ ...prevState, [PROGRAMMING_LANGUAGE[language].mime]: sourceCode }));
+          setSource(prevState => ({
+            ...prevState,
+            [problemJudgeKey]: { ...(prevState[problemJudgeKey] || {}), [PROGRAMMING_LANGUAGE[language].mime]: sourceCode },
+          }));
         }
         if (newLanguage) {
           setLanguage(newLanguage);
@@ -179,26 +182,17 @@ export const ProblemCodeEditor = ({
           return (
             <ButtonLoader
               type="secondary"
-              onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
+              onClick={async () => {
+                addSuccessNotification(<T className="text-sentence-case">to submit, first login</T>);
+                await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) });
+              }}
             >
-              <T>to submit, first login</T>
+              <T>submit</T>
             </ButtonLoader>
           );
         }
-        if (contest && !contest.isJudge && !contest.isAdmin && !contest.isContestant) {
-          return (
-            <ButtonLoader
-              type="secondary"
-              onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
-              disabled
-            >
-              <T>to submit, first register</T>
-            </ButtonLoader>
-          );
-        }
-        
-        const sourceCode = source[PROGRAMMING_LANGUAGE[language].mime] || '';
-        return (
+        const sourceCode = source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || '';
+        const validSubmit = (
           <ButtonLoader
             type="secondary"
             disabled={sourceCode === ''}
@@ -206,7 +200,7 @@ export const ProblemCodeEditor = ({
               setLoaderStatus(Status.LOADING);
               const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
                 contest?.problemIndex
-                  ? JUDGE_API_V1.CONTEST.SUBMIT_V1(query.key + '', contest?.problemIndex)
+                  ? JUDGE_API_V1.CONTEST.SUBMIT_V1(query.key + '', problemJudgeKey)
                   : JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
                   method: HTTPMethod.POST,
                   body: JSON.stringify({
@@ -215,16 +209,6 @@ export const ProblemCodeEditor = ({
                     session,
                   }),
                 }));
-              /*new Array(1000).fill(1).forEach(() => {
-               authorizedRequest(JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
-               method: POST,
-               body: JSON.stringify({
-               language,
-               source: source[PROGRAMMING_LANGUAGE[language].mime] || '',
-               session,
-               }),
-               });
-               });*/
               if (result.success) {
                 if (result?.content.submitId) {
                   setListenSubmissionId(result.content.submitId);
@@ -248,6 +232,26 @@ export const ProblemCodeEditor = ({
             {contest?.isAdmin || contest?.isJudge ? <T>submit as judge</T> : <T>submit</T>}
           </ButtonLoader>
         );
+        if (contest?.isJudge || contest?.isAdmin || contest?.isContestant) {
+          const sourceCode = source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || '';
+          return validSubmit;
+        }
+        if (contest?.isGuest) {
+          return (
+            <ButtonLoader
+              type="secondary"
+              onClick={async () => {
+                addSuccessNotification(<T className="text-sentence-case">to submit, first register</T>);
+                await pushTab(ContestTab.OVERVIEW);
+              }}
+            >
+              <T>submit</T>
+            </ButtonLoader>
+          );
+        }
+        if (contest?.isSpectator) {
+          return <SpectatorInformation />;
+        }
       }}
       testCases={testCases}
       expandPosition={{

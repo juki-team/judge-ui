@@ -1,9 +1,9 @@
 import { T, Tabs, TwoContentLayout, Users } from 'components';
 import { ROUTES } from 'config/constants';
+import { can } from 'helpers';
 import { useRouter } from 'next/router';
+import { useUserState } from 'store';
 import { AdminTab } from 'types';
-import { can } from '../../helpers';
-import { useUserState } from '../../store';
 import Custom404 from '../404';
 
 function Admin() {

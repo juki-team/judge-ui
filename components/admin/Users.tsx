@@ -1,5 +1,18 @@
-import { USER_STATUS } from 'config/constants';
-import { JUDGE_API_V1 } from 'config/constants/judge';
+import {
+  Button,
+  ButtonLoader,
+  DataViewer,
+  DataViewerHeadersType,
+  EditIcon,
+  Field,
+  Select,
+  T,
+  TextHeadCell,
+  useNotification,
+  UserChip,
+  UserPermissions,
+} from 'components';
+import { JUDGE_API_V1, USER_STATUS } from 'config/constants';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import { useMemo, useRef, useState } from 'react';
@@ -12,19 +25,6 @@ import {
   Status,
   UserStatus,
 } from 'types';
-import {
-  Button,
-  ButtonLoader,
-  DataViewer,
-  DataViewerHeadersType,
-  EditIcon,
-  Field,
-  Select,
-  T,
-  TextHeadCell,
-  useNotification,
-  UserPermissions,
-} from '../../components';
 import { ChangePassword } from './ChangePassword';
 
 type ValuePermission = {
@@ -82,12 +82,7 @@ export function Users() {
       index: 'name',
       field: ({ record: { givenName, familyName, nickname, imageUrl, email } }) => (
         <Field className="jk-row center gap">
-          <img src={imageUrl} className="jk-user-profile-img huge" alt={nickname} />
-          <div className="jk-col">
-            <div>{givenName} {familyName}</div>
-            <div className="link">{nickname}</div>
-            <div>{email}</div>
-          </div>
+          <UserChip imageUrl={imageUrl} nickname={nickname} givenName={givenName} familyName={familyName} email={email} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
@@ -141,7 +136,7 @@ export function Users() {
                 value: option,
                 disabled: status === option,
               }))}
-              optionSelected={{ value: status }}
+              selectedOption={{ value: status }}
               onChange={({ value }) => changeUserStatus(nickname, value, setLoaderRef)}
             />
             <ButtonLoader type="text" setLoaderStatusRef={(setLoader) => setLoaderRef = setLoader}>

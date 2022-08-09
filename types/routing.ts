@@ -35,7 +35,8 @@ export enum ContestTab {
   TIMING = 'timing',
   SETUP = 'setup',
   ARCHIVE = 'archive',
-  JUDGE = 'judge'
+  JUDGE = 'judge',
+  MEMBERS = 'members',
 }
 
 export type ContestParamsType = { key: string, tab: ContestTab, subTab?: string, subSubTab?: ProblemTab };

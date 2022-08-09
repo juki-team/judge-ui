@@ -80,7 +80,7 @@ function Problems() {
       head: <TextHeadCell text={<T>tags</T>} />,
       index: 'tags',
       field: ({ record: { tags } }) => (
-        <Field className="jk-row left pad">
+        <Field className="jk-row left gap">
           {tags.map(tag => !!tag && <div className="jk-tag gray-6 text-s">{tag}</div>)}
         </Field>
       ),
@@ -142,19 +142,19 @@ function Problems() {
         request={request}
         setLoaderStatusRef={setLoaderStatusRef}
         name="users"
-        extraButtons={() => (
-          <div className="extra-buttons">
-            {can.createProblem(user) && (
-              <ButtonLoader
-                size="small"
-                icon={<PlusIcon />}
-                onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
-              >
-                <T>create</T>
-              </ButtonLoader>
-            )}
-          </div>
-        )}
+        // extraButtons={() => (
+        //   <div className="extra-buttons">
+        //     {can.createProblem(user) && (
+        //       <ButtonLoader
+        //         size="small"
+        //         icon={<PlusIcon />}
+        //         onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
+        //       >
+        //         <T>create</T>
+        //       </ButtonLoader>
+        //     )}
+        //   </div>
+        // )}
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       />

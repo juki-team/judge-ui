@@ -13,6 +13,8 @@ export {
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
   SUBMISSION_RUN_STATUS,
+  JUDGE,
+  PALLETE,
 } from '@juki-team/commons';
 
 export * from './defaultObjects';

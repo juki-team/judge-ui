@@ -17,12 +17,12 @@ export const Login = () => {
   
   return (
     <LoginModal
-      onCancel={() => push({ query: removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
+      onCancel={() => push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
       onSubmit={onSubmit}
       onSignUpButton={() => push({
         query: addParamQuery(
-          removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN),
-          QueryParam.OPEN_DIALOG,
+          removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN),
+          QueryParam.DIALOG,
           OpenDialog.SIGN_UP,
         ),
       })}

@@ -1,2 +1,2 @@
-export * from './ContestOverview';
-export * from './ContestProblems';
+export * from './view/ViewOverview';
+export * from './view/ViewProblems';

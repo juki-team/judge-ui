@@ -1,10 +1,9 @@
-import { Button, CloseIcon, Input, MultiSelect, PlusIcon, Select, T } from 'components';
+import { ProblemResponseDTO } from '@juki-team/commons';
+import { Button, CloseIcon, Input, PlusIcon, Select, T } from 'components';
 import {
-  ACCEPTED_PROGRAMMING_LANGUAGES,
   PROBLEM_MODE,
   PROBLEM_STATUS,
   PROBLEM_TYPE,
-  PROGRAMMING_LANGUAGE,
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
 } from 'config/constants';
@@ -46,85 +45,89 @@ export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: s
   );
 };
 
-export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => {
+export const ProblemSettings = ({
+    problem,
+    setProblem,
+    originalProblemRef,
+  }: { problem: ProblemResponseDTO, setProblem: any, originalProblemRef: any }) => {
     
     return (
       <div className="jk-pad jk-row left">
         <div className="jk-col filled gap">
-          <div
-            className={classNames('jk-row left gap', { 'color-info': JSON.stringify(problem.settings?.languages) !== JSON.stringify(originalProblemRef.current.settings?.languages) })}>
-            <div className="text-semi-bold text-sentence-case"><T>programming languages</T>:</div>
-            <MultiSelect
-              options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}
-              optionsSelected={problem.settings?.languages?.map?.(lang => ({
-                value: lang,
-                label: PROGRAMMING_LANGUAGE[lang]?.name || lang,
-              }))}
-              onChange={(values) => setProblem({
-                ...problem,
-                settings: { ...problem.settings, languages: values.map(value => value.value) },
-              })}
-            />
-          </div>
+          {/*<div*/}
+          {/*  className={classNames('jk-row left gap', { 'color-info': JSON.stringify(problem.settings?.languages) !== JSON.stringify(originalProblemRef.current.settings?.languages) })}>*/}
+          {/*  <div className="text-semi-bold text-sentence-case"><T>programming languages</T>:</div>*/}
+          {/*<MultiSelect*/}
+          {/*  options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}*/}
+          {/*  optionsSelected={problem.settings?.languages?.map?.(lang => ({*/}
+          {/*    value: lang,*/}
+          {/*    label: PROGRAMMING_LANGUAGE[lang]?.name || lang,*/}
+          {/*  }))}*/}
+          {/*  onChange={(values) => setProblem({*/}
+          {/*    ...problem,*/}
+          {/*    settings: { ...problem.settings, languages: values.map(value => value.value) },*/}
+          {/*  })}*/}
+          {/*/>*/}
+          {/*</div>*/}
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.settings?.mode) !== JSON.stringify(originalProblemRef.current.settings?.mode) },
+              { 'color-info': JSON.stringify(problem.mode) !== JSON.stringify(originalProblemRef.current.mode) },
             )}
           >
             <div className="text-semi-bold text-sentence-case"><T>problem mode</T>:</div>
             <Select
               options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({ value: mode, label: PROBLEM_MODE[mode]?.label }))}
-              optionSelected={{
-                value: problem.settings?.mode,
-                label: PROBLEM_MODE[problem.settings?.mode]?.name || problem.settings?.mode,
+              selectedOption={{
+                value: problem.mode,
+                label: PROBLEM_MODE[problem.mode]?.label || problem.mode,
               }}
-              onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, mode: value } })}
+              onChange={({ value }) => setProblem({ ...problem, mode: value })}
             />
           </div>
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.settings?.typeInput) !== JSON.stringify(originalProblemRef.current.settings?.typeInput) },
+              { 'color-info': JSON.stringify(problem.type) !== JSON.stringify(originalProblemRef.current.type) },
             )}
           >
             <div className="text-semi-bold text-sentence-case"><T>problem type</T>:</div>
             <Select
               options={RUNNER_ACCEPTED_PROBLEM_TYPES.map(type => ({ value: type, label: PROBLEM_TYPE[type]?.label }))}
-              optionSelected={{
-                value: problem.settings?.typeInput,
-                label: PROBLEM_TYPE[problem.settings?.typeInput]?.name || problem.settings?.typeInput,
+              selectedOption={{
+                value: problem.type,
+                label: PROBLEM_TYPE[problem.type]?.label || problem.type,
               }}
-              onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, typeInput: value } })}
+              onChange={({ value }) => setProblem({ ...problem, type: value })}
             />
           </div>
-          <div
-            className={classNames(
-              'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.settings?.timeLimit) !== JSON.stringify(originalProblemRef.current.settings?.timeLimit) },
-            )}
-          >
-            <div className="text-semi-bold text-sentence-case"><T>time limit per test</T>:</div>
-            <Input
-              type="number"
-              value={problem.settings.timeLimit}
-              onChange={value => setProblem({ ...problem, settings: { ...problem.settings, timeLimit: value } })} />
-            {problem.settings.timeLimit > 1 ? <T>seconds</T> : <T>second</T>}
-          </div>
-          <div
-            className={classNames(
-              'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.settings?.memoryLimit) !== JSON.stringify(originalProblemRef.current.settings?.memoryLimit) },
-            )}
-          >
-            <div className="text-semi-bold text-sentence-case"><T>memory limit per test</T></div>
-            <Input
-              type="number"
-              value={problem.settings.memoryLimit}
-              onChange={value => setProblem({ ...problem, settings: { ...problem.settings, memoryLimit: value } })}
-            />
-            <T>kb</T>
-          </div>
+          {/*<div*/}
+          {/*  className={classNames(*/}
+          {/*    'jk-row left gap',*/}
+          {/*    { 'color-info': JSON.stringify(problem.settings?.timeLimit) !== JSON.stringify(originalProblemRef.current.settings?.timeLimit) },*/}
+          {/*  )}*/}
+          {/*>*/}
+          {/*  <div className="text-semi-bold text-sentence-case"><T>time limit per test</T>:</div>*/}
+            {/* <Input*/}
+            {/*  type="number"*/}
+            {/*  value={problem.settings.timeLimit}*/}
+            {/*  onChange={value => setProblem({ ...problem, settings: { ...problem.settings, timeLimit: value } })} />*/}
+            {/*{problem.settings.timeLimit > 1 ? <T>seconds</T> : <T>second</T>}*/}
+          {/*</div>*/}
+          {/*<div*/}
+          {/*  className={classNames(*/}
+          {/*    'jk-row left gap',*/}
+          {/*    { 'color-info': JSON.stringify(problem.settings?.memoryLimit) !== JSON.stringify(originalProblemRef.current.settings?.memoryLimit) },*/}
+          {/*  )}*/}
+          {/*>*/}
+          {/*  <div className="text-semi-bold text-sentence-case"><T>memory limit per test</T></div>*/}
+            {/*<Input*/}
+            {/*  type="number"*/}
+            {/*  value={problem.settings.memoryLimit}*/}
+            {/*  onChange={value => setProblem({ ...problem, settings: { ...problem.settings, memoryLimit: value } })}*/}
+            {/*/>*/}
+            {/*<T>kb</T>*/}
+          {/*</div>*/}
           <div
             className={classNames(
               'jk-row left gap',
@@ -134,7 +137,7 @@ export const ProblemSettings = ({ problem, setProblem, originalProblemRef }) => 
             <div className="text-semi-bold text-sentence-case"><T>visibility</T></div>
             <Select
               options={Object.values(PROBLEM_STATUS).map(status => ({ value: status.value, label: status.label }))}
-              optionSelected={{ value: problem.status, label: PROBLEM_STATUS[problem.status]?.label || problem.status }}
+              selectedOption={{ value: problem.status, label: PROBLEM_STATUS[problem.status]?.label || problem.status }}
               onChange={({ value }) => setProblem({ ...problem, status: value })}
             />
           </div>

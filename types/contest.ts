@@ -1,13 +1,5 @@
-import { ContestStatus, Judge, ProblemVerdict, ProgrammingLanguage } from '../types';
-
-export type MetaProblemSearcher = {
-  name: string,
-  url: string,
-  id: string,
-  rating: number,
-  tag: string,
-  judge: Judge
-};
+import { ContestStatus, ProblemVerdict, ProgrammingLanguage } from '../types';
+import { ContestProblemBasicType, CreateContestDTO } from './index';
 
 export type BaseClarification = {
   answer: string, // si es judge o admi
@@ -26,18 +18,6 @@ export interface AnswerClarification extends NewClarification {
   user: string,
   userAnswer: string
   id: string,
-}
-
-export enum ContestSettingsParams {
-  START = 'start',
-  CLARIFICATIONS = 'clarifications',
-  OPEN_REGISTRATION = 'openRegistration',
-  OPEN_SCOREBOARD = 'openScoreboard',
-  LIMIT_PROBLEM_TIME = 'limitProblemTime',
-  LANGUAGES = 'languages',
-  FROZEN = 'frozen',
-  MANUAL_JUDGE = 'manualJudge',
-  NUMBER_MANUAL_JUDGES = 'numberManualJudges'
 }
 
 export interface Submission {
@@ -66,4 +46,8 @@ export interface ContestState {
   tags: [],
   timing: {},
   totalRegistered: number,
+}
+
+export interface EditCreateContestDTO extends CreateContestDTO {
+  problems: { [key: string]: ContestProblemBasicType & { name: string } },
 }

@@ -62,4 +62,3 @@ export const actionLoaderWrapper = async <T extends ContentResponseType<any> | C
     consoleWarn({ result, message: 'actionLoaderWrapper error' });
   }
 };
-

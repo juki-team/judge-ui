@@ -1,9 +1,7 @@
 import { Button, ExternalIcon, FetcherLayer, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
 import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
-import { useFetcher } from 'hooks';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { ContentResponseType, ProfileTab, UserStatus } from 'types';
 
 type UserType = {
@@ -23,36 +21,25 @@ type UserType = {
 export const UserPreview = ({ nickname }) => {
   
   const { push, query } = useRouter();
-  const { data, error, isLoading } = useFetcher<ContentResponseType<UserType>>(JUDGE_API_V1.ACCOUNT.USER(nickname));
-  
-  useEffect(() => {
-    if (error) {
-      push({ query: removeParamQuery(query, QueryParam.OPEN_USER_PREVIEW, null) });
-    }
-  }, [error]);
-  
-  const handleClose = () => {
-    push({ query: removeParamQuery(query, QueryParam.OPEN_USER_PREVIEW, null) });
-    return null;
-  };
+  const handleClose = () => push({ query: removeParamQuery(query, QueryParam.USER_PREVIEW, null) });
   
   return (
     <Modal
       isOpen={true}
       onClose={handleClose}
       className="modal-user-preview"
+      shouldCloseOnOverlayClick
     >
-      <FetcherLayer<any>
-        isLoading={isLoading}
-        data={data}
-        error={!data?.success ? handleClose : null}
+      <FetcherLayer<ContentResponseType<UserType>>
+        url={JUDGE_API_V1.ACCOUNT.USER(nickname)}
+        onError={handleClose}
       >
-        {data => (
+        {({ data }) => (
           <div className="jk-pad jk-col stretch gap">
             <div className="jk-row center gap">
               <img src={data?.content?.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={nickname} />
               <div className="jk-col stretch">
-                <div className="text-bold">{data?.content?.nickname}</div>
+                <div className="tx-wd-bolder">{data?.content?.nickname}</div>
                 <div className="color-gray-3">{data?.content?.givenName} {data?.content?.familyName}</div>
                 <div className="jk-divider tiny" />
                 {(data?.content?.city?.trim() || data?.content?.country?.trim()) && (

@@ -1,10 +1,13 @@
 @import "@juki-team/base-ui/dist/styles/abstracts/index";
 
-.content-side-right-bar-bottom {
+.contest-content-side-right-bar-bottom {
   padding: var(--pad-md) 0;
   
   p {
     text-align: center;
+  }
+  > div {
+    border: 1px solid var(--t-color-gray-6);
   }
 }
 

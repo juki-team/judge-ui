@@ -43,7 +43,7 @@ export const ChangePassword = ({ onClose, nickname }: { onClose: () => void, nic
           <ButtonLoader
             onClick={async setLoaderStatus => {
               setLoaderStatus?.(Status.LOADING);
-              const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD(), {
+              const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE_PASSWORD(), {
                 method: HTTPMethod.PUT,
                 body: JSON.stringify({
                   nickName: nickname,

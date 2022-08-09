@@ -1,15 +1,28 @@
-import { ContentLayout, DataViewer, DataViewerHeadersType, DateField, Field, T, TextField, TextHeadCell } from 'components';
-import { JUDGE_API_V1 } from 'config/constants/judge';
-import { getContestStatus, searchParamsObjectTypeToQuery } from 'helpers';
+import { ProgrammingLanguage } from '@juki-team/commons';
+import {
+  ButtonLoader,
+  CheckIcon,
+  ContentLayout,
+  DataViewer,
+  DataViewerHeadersType,
+  DateField,
+  Field,
+  PlusIcon,
+  T,
+  TextField,
+  TextHeadCell,
+} from 'components';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { buttonLoaderLink, can, getContestStatus, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
+import Link from 'next/link';
 import { useMemo } from 'react';
-import { ContentsResponseType, ContestTab } from 'types';
-import { ROUTES } from '../config/constants';
+import { useUserState } from 'store';
+import { ContentsResponseType, ContestSummaryListResponseDTO, ContestTab } from 'types';
 
 type SettingsOptions = {
-  start: Date,
-  languages: [],
-  frozen: string,
+  startTimestamp: number;
+  endTimestamp: number;
 }
 
 type ContestTable = {
@@ -18,15 +31,17 @@ type ContestTable = {
   settings: SettingsOptions,
   totalRegistered: number,
   stateContest: string,
+  registered: boolean,
 }
 
 function Contests() {
   
+  const user = useUserState();
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.CONTEST.CONTEST());
+  } = useDataViewerRequester<ContentsResponseType<ContestSummaryListResponseDTO>>(JUDGE_API_V1.CONTEST.CONTEST_LIST(user.session));
   
   const columns: DataViewerHeadersType<ContestTable>[] = useMemo(() => [
     {
@@ -58,9 +73,9 @@ function Contests() {
       head: <TextHeadCell text={<T>start</T>} />,
       index: 'date',
       field: ({ record: { settings } }) => (
-        <DateField date={new Date(settings.start)} label="Date" twoLines />
+        <DateField date={new Date(settings.startTimestamp)} label="Date" twoLines />
       ),
-      sort: { compareFn: () => (rowA, rowB) => +rowA.settings.start - +rowB.settings.start },
+      sort: { compareFn: () => (rowA, rowB) => +rowA.settings.startTimestamp - +rowB.settings.startTimestamp },
       filter: { type: 'date-auto' },
       cardPosition: 'center',
       minWidth: 250,
@@ -68,10 +83,16 @@ function Contests() {
     {
       head: <TextHeadCell text={<T>contest name</T>} />,
       index: 'name',
-      field: ({ record: { name, key } }) => (
-        <TextField
-          text={<div className="link" onClick={() => push(ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW))}>{name}</div>}
-          label={<T>contest name</T>} />
+      field: ({ record: { name, key, registered } }) => (
+        <Field className="jk-row">
+          <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
+            <a>
+              <div className="jk-row gap link text-semi-bold">
+                {name}{registered && <CheckIcon filledCircle className="color-success" />}
+              </div>
+            </a>
+          </Link>
+        </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
       filter: { type: 'text-auto' },
@@ -97,16 +118,14 @@ function Contests() {
     key: contest.key,
     name: contest.name,
     settings: contest.settings,
-    totalRegistered: contest.totalRegistered,
-    stateContest: getContestStatus(new Date(contest.settings.start), contest.timing.duration),
+    totalRegistered: contest.totalContestants,
+    stateContest: getContestStatus(contest.settings.startTimestamp, contest.settings.endTimestamp),
+    registered: contest.user.isContestant || false,
   }));
   
   return (
     
     <ContentLayout>
-      {/* <TitleLayout>
-       <h3>Contest</h3>
-       </TitleLayout> */}
       <DataViewer<ContestTable>
         headers={columns}
         data={data}
@@ -114,19 +133,19 @@ function Contests() {
         request={request}
         setLoaderStatusRef={setLoaderStatusRef}
         name="users"
-        // extraButtons={() => (
-        //   <div className="extra-buttons">
-        //     {can.createProblem(user) && (
-        //       <ButtonLoader
-        //         size="small"
-        //         icon={<PlusIcon />}
-        //         onClick={buttonLoaderLink(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT))}
-        //       >
-        //         <T>create</T>
-        //       </ButtonLoader>
-        //     )}
-        //   </div>
-        // )}
+        extraButtons={() => (
+          <div className="extra-buttons">
+            {can.createProblem(user) && (
+              <ButtonLoader
+                size="small"
+                icon={<PlusIcon />}
+                onClick={buttonLoaderLink(() => push(ROUTES.CONTESTS.CREATE()))}
+              >
+                <T>create</T>
+              </ButtonLoader>
+            )}
+          </div>
+        )}
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       />

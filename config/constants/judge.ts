@@ -4,6 +4,11 @@ export const JUDGE_BACKEND_BASE_URL = process.env.NEXT_PUBLIC_JUKI_JUDGE_BACKEND
 export const JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL = process.env.NEXT_PUBLIC_JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL;
 
 export const JUDGE_API_V1 = {
+  USER: {
+    SUMMARY_LIST: (session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/user/summary-list?session=${session}`;
+    },
+  },
   ACCOUNT: {
     PING: () => {
       return `${JUDGE_BACKEND_BASE_URL}/api/auth/ping`;
@@ -35,8 +40,11 @@ export const JUDGE_API_V1 = {
     UPDATE_IMAGE: () => {
       return `${JUDGE_BACKEND_BASE_URL}/api/user/updateImage`;
     },
-    CHANGE_PASSWORD: () => {
+    UPDATE_PASSWORD: () => {
       return `${JUDGE_BACKEND_BASE_URL}/api/user/password/update`;
+    },
+    CHANGE_PASSWORD: () => {
+      return `${JUDGE_BACKEND_BASE_URL}/api/user/password/change`;
     },
   },
   SUBMIT: {
@@ -94,14 +102,23 @@ export const JUDGE_API_V1 = {
     CONTEST: (key?: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest${key ? '/' + key : ''}`;
     },
+    CONTEST_LIST: (session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/list?session=${session}`;
+    },
     CONTEST_V1: (key: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}?session=${session}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest${key ? '/' + key : ''}?session=${session}`;
+    },
+    CONTEST_DATA: (key: string, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/data?session=${session}`;
     },
     CHANGE_STATUS: (key: string, status: ContestStatus) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/changeStatus/${key}?status=${status}`;
     },
     REGISTER: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/register`;
+    },
+    REGISTER_V1: (key: string, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/register?session=${session}`;
     },
     UN_FROZEN: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard/unFrozen`;
@@ -113,14 +130,13 @@ export const JUDGE_API_V1 = {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/status?page=${page}&size=${size}`;
     },
     PENDING_STATUS: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL} / api / contest /${key}/judge/list`
-        ;
+      return `${JUDGE_BACKEND_BASE_URL} / api / contest /${key}/judge/list`;
     },
     SUBMIT: (key: string, problemIndex: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/problem/${problemIndex}/submit`;
     },
-    SUBMIT_V1: (key: string, problemIndex: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/contest/${key}/problem-index/${problemIndex}`;
+    SUBMIT_V1: (key: string, problemJudgeKey: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/contest/${key}/problem-judge-key/${problemJudgeKey}`;
     },
     SCOREBOARD: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard`;
@@ -142,6 +158,12 @@ export const JUDGE_API_V1 = {
     },
     CLARIFICATIONS: (key: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/clarification`;
+    },
+    CLARIFICATION_V1: (key: string, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/clarification?session=${session}`;
+    },
+    ANSWER_CLARIFICATION_V1: (key: string, clarificationId: string, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/clarification/${clarificationId}?session=${session}`;
     },
     ANSWER_CLARIFICATION: (key: string, idClarification: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/clarification/${idClarification}/answer`;

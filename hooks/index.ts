@@ -1,6 +1,6 @@
 import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
-import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { ContentResponseType, ContentsResponseType, HTTPMethod, Status } from 'types';
 import { useUserState } from '../store';
@@ -106,6 +106,9 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
     setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
   };
 };
+
+
+
 
 export {
   useOutsideAlerter,

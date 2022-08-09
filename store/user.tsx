@@ -146,7 +146,7 @@ export const useUserDispatch = () => {
       addNotification,
       onSuccess: async (result) => {
         addSuccessNotification(<T className="text-sentence-case">welcome</T>);
-        await push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.WELCOME) });
+        await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
         setUser(getUserState(result.content));
       },
       setLoader,

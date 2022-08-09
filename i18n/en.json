@@ -4,5 +4,6 @@
   "lives": "live",
   "pasts": "past",
   "registereds": "registered",
-  "upcomings": "upcoming"
+  "upcomings": "upcoming",
+  "to-answer": "answer"
 }

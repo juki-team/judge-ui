@@ -1,8 +1,8 @@
 import { AdminTab, ContestTab, ProblemTab, ProfileTab } from '../../types';
 
 export enum QueryParam {
-  OPEN_DIALOG = 'openDialog',
-  OPEN_USER_PREVIEW = 'openUserPreview',
+  DIALOG = 'dialog',
+  USER_PREVIEW = 'userPreview',
 }
 
 export enum OpenDialog {
@@ -37,18 +37,19 @@ export const PROBLEM_TAB: { [key in ProblemTab]: { value: ProblemTab, print: str
   [ProblemTab.SETUP]: { value: ProblemTab.SETUP, print: 'setup' },
 };
 
-export const CONTEST_TAB: { [key in ContestTab]: { value: ContestTab, print: string } } = {
-  [ContestTab.OVERVIEW]: { value: ContestTab.OVERVIEW, print: 'overview' },
-  [ContestTab.PROBLEMS]: { value: ContestTab.PROBLEMS, print: 'problems' },
-  [ContestTab.PROBLEM]: { value: ContestTab.PROBLEM, print: 'problem' },
-  [ContestTab.SCOREBOARD]: { value: ContestTab.SCOREBOARD, print: 'scoreboard' },
-  [ContestTab.MY_SUBMISSIONS]: { value: ContestTab.MY_SUBMISSIONS, print: 'my submissions' },
-  [ContestTab.CLARIFICATIONS]: { value: ContestTab.CLARIFICATIONS, print: 'clarifications' },
-  [ContestTab.SUBMISSIONS]: { value: ContestTab.SUBMISSIONS, print: 'status' },
-  [ContestTab.TIMING]: { value: ContestTab.TIMING, print: 'timing' },
-  [ContestTab.SETUP]: { value: ContestTab.SETUP, print: 'setup' },
-  [ContestTab.ARCHIVE]: { value: ContestTab.ARCHIVE, print: 'archive' },
-  [ContestTab.JUDGE]: { value: ContestTab.JUDGE, print: 'judge' },
+export const CONTEST_TAB: { [key in ContestTab]: { value: ContestTab, label: string } } = {
+  [ContestTab.OVERVIEW]: { value: ContestTab.OVERVIEW, label: 'overview' },
+  [ContestTab.PROBLEMS]: { value: ContestTab.PROBLEMS, label: 'problems' },
+  [ContestTab.PROBLEM]: { value: ContestTab.PROBLEM, label: 'problem' },
+  [ContestTab.SCOREBOARD]: { value: ContestTab.SCOREBOARD, label: 'scoreboard' },
+  [ContestTab.MY_SUBMISSIONS]: { value: ContestTab.MY_SUBMISSIONS, label: 'my submissions' },
+  [ContestTab.CLARIFICATIONS]: { value: ContestTab.CLARIFICATIONS, label: 'clarifications' },
+  [ContestTab.SUBMISSIONS]: { value: ContestTab.SUBMISSIONS, label: 'status' },
+  [ContestTab.TIMING]: { value: ContestTab.TIMING, label: 'timing' },
+  [ContestTab.SETUP]: { value: ContestTab.SETUP, label: 'setup' },
+  [ContestTab.ARCHIVE]: { value: ContestTab.ARCHIVE, label: 'archive' },
+  [ContestTab.JUDGE]: { value: ContestTab.JUDGE, label: 'judge' },
+  [ContestTab.MEMBERS]: { value: ContestTab.MEMBERS, label: 'members' },
 };
 
 export const ROUTES = {
@@ -98,11 +99,17 @@ export const ROUTES = {
     PRINT_SCORE(key: string) {
       return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.VIEW, key, ROUTES.PARAMS.PRINT_SCORE].join('/');
     },
-    CREATE(tab: ContestTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE, tab].join('/');
+    // CREATE(tab: ContestTab | typeof _TAB) {
+    //   return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE, tab].join('/');
+    // },
+    CREATE() {
+      return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE].join('/');
     },
-    EDIT(key: string, tab: ContestTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key, tab].join('/');
+    // EDIT(key: string, tab: ContestTab | typeof _TAB) {
+    //   return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key, tab].join('/');
+    // },
+    EDIT(key: string) {
+      return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key].join('/');
     },
   },
   PROBLEMS: {

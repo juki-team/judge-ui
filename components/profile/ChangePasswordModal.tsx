@@ -1,9 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ButtonLoader, Input, Modal, T } from 'components';
+import { useNotification } from '@juki-team/base-ui';
+import { ButtonLoader, InputPassword, Modal, T } from 'components';
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { SetLoaderStatusOnClickType } from 'types';
+import { SetLoaderStatusOnClickType, Status } from 'types';
 import * as yup from 'yup';
+import { JUDGE_API_V1 } from '../../config/constants';
+import { authorizedRequest, cleanRequest } from '../../helpers';
+import { ContentResponseType, HTTPMethod } from '../../types';
 
 export type ProfileChangePasswordInput = {
   oldPassword: string,
@@ -31,11 +35,28 @@ export const ChangePasswordModal = ({ onClose }) => {
     mode: 'onChange',
     reValidateMode: 'onBlur',
   });
+  const { addSuccessNotification, addErrorNotification } = useNotification();
   
   const setLoaderRef = useRef<SetLoaderStatusOnClickType>();
   
-  const onSubmit = (data: ProfileChangePasswordInput, setStatus: SetLoaderStatusOnClickType) => {
-    console.log('updateUserPasswordProfile', data);
+  const onSubmit = async (data: ProfileChangePasswordInput, setStatus: SetLoaderStatusOnClickType) => {
+    setStatus?.(Status.LOADING);
+    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD(), {
+      method: HTTPMethod.PUT,
+      body: JSON.stringify({
+        newPassword: data.newPassword,
+        oldPassword: data.oldPassword,
+      }),
+    }));
+    if (response.success) {
+      addSuccessNotification(<T className="text-sentence-case">password changed successfully</T>);
+      setStatus?.(Status.SUCCESS);
+      onClose();
+    } else {
+      addErrorNotification(response.message || <T>error</T>);
+      setStatus?.(Status.ERROR);
+    }
+    JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD();
   };
   
   return (
@@ -49,21 +70,21 @@ export const ChangePasswordModal = ({ onClose }) => {
           <div className="jk-form-item">
             <label>
               <T>new password</T>
-              <Input register={register('newPassword')} />
+              <InputPassword register={register('newPassword')} />
             </label>
             <p><T>{errors.newPassword?.message || ''}</T></p>
           </div>
           <div className="jk-form-item">
             <label>
               <T>confirm new password</T>
-              <Input register={register('newPasswordConfirmation')} />
+              <InputPassword register={register('newPasswordConfirmation')} />
             </label>
             <p><T>{errors.newPasswordConfirmation?.message || ''}</T></p>
           </div>
           <div className="jk-form-item">
             <label>
               <T>put your password to update</T>
-              <Input register={register('oldPassword')} />
+              <InputPassword register={register('oldPassword')} />
             </label>
             <p><T>{errors.oldPassword?.message || ''}</T></p>
           </div>

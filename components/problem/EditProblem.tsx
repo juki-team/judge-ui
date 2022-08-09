@@ -4,13 +4,13 @@ import { diff, updatedDiff } from 'deep-object-diff';
 import { useRouter } from 'hooks';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
-import { ProblemTab, Status } from 'types';
+import { ProblemResponseDTO, ProblemTab, Status } from 'types';
 import { ProblemSettings } from './ProblemSettings';
 import { TitleEditable } from './TitleEditable';
 
 const ReactJson = dynamic(import('react-json-view'), { ssr: false });
 
-export const EditProblem = ({ problem }) => {
+export const EditProblem = ({ problem }: { problem: ProblemResponseDTO }) => {
   
   const { query: { key, ...query }, push } = useRouter();
   const originalProblemRef = useRef(problem);
@@ -28,14 +28,13 @@ export const EditProblem = ({ problem }) => {
   };
   
   const tabs = [];
-  console.log(updatedDiff(originalProblemRef.current, newProblem));
   return (
     <TwoContentLayout>
       <div className="jk-col filled">
         {modal}
         <div className="jk-row left gap nowrap">
           <div className="jk-row" onClick={() => {
-            const accept = () => push(ROUTES.PROBLEMS.VIEW('' + newProblem.id, ProblemTab.STATEMENT));
+            const accept = () => push(ROUTES.PROBLEMS.VIEW('' + newProblem.key, ProblemTab.STATEMENT));
             if (noChange) {
               accept();
             } else {

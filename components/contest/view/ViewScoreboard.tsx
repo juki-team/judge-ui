@@ -1,13 +1,24 @@
-import { BalloonIcon, DataViewer, DataViewerHeadersType, Field, InputToggle, LoadingIcon, Popover, T, TextHeadCell } from 'components';
-import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
-import { classNames, replaceParamQuery, searchParamsObjectTypeToQuery } from 'helpers';
+import {
+  BalloonIcon,
+  DataViewer,
+  DataViewerHeadersType,
+  Field,
+  InputToggle,
+  LoadingIcon,
+  Popover,
+  T,
+  TextHeadCell,
+  UserNicknameLink,
+} from 'components';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { classNames, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
 import { ContentsResponseType, ContestResponseDTO, ContestTab, ScoreboardResponseDTO } from 'types';
 
-export const ContestScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
+export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const user = useUserState();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
@@ -29,15 +40,16 @@ export const ContestScoreboard = ({ contest }: { contest: ContestResponseDTO }) 
         field: ({ record: { userNickname, userImageUrl } }) => (
           <Field className={classNames('jk-row center gap', { 'own': userNickname === user.nickname })}>
             <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
-            <div
-              className={classNames('jk-border-radius ', {
-                'bg-color-primary color-white text-bold': userNickname === user.nickname,
-                'link': userNickname !== user.nickname,
-              })}
-              onClick={() => push({ query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname) })}
-            >
-              {userNickname}
-            </div>
+            <UserNicknameLink nickname={userNickname}>
+              <div
+                className={classNames('jk-border-radius ', {
+                  'bg-color-primary color-white tx-wd-bolder': userNickname === user.nickname,
+                  'link': userNickname !== user.nickname,
+                })}
+              >
+                {userNickname}
+              </div>
+            </UserNicknameLink>
           </Field>
         ),
         minWidth: 250,
@@ -48,7 +60,7 @@ export const ContestScoreboard = ({ contest }: { contest: ContestResponseDTO }) 
         index: 'points',
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
-            <div className="text-bold color-primary">{totalPoints}</div>
+            <div className="tx-wd-bolder color-primary">{totalPoints}</div>
             <div className="color-gray-4">{totalPenalty}</div>
           </Field>
         ),
@@ -117,7 +129,7 @@ export const ContestScoreboard = ({ contest }: { contest: ContestResponseDTO }) 
           <div />
           {contest?.isFrozenTime && <div className="jk-tag info">frozen time</div>}
           {contest?.isQuietTime && <div className="jk-tag info">quiet time</div>}
-          {((contest?.isAdmin || contest?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
+          {((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
             <div className="jk-row">
               {isLoading ? <LoadingIcon /> : <InputToggle checked={unfrozen} onChange={setUnfrozen} />}
               <T>{unfrozen ? 'scoreboard unfrozen' : 'scoreboard frozen'}</T>

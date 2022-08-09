@@ -39,13 +39,6 @@ a:active {
   color: var(--t-color-primary-light);
 }
 
-.back-link {
-  position: absolute;
-  left: 0;
-  @include sm { position: initial; }
-  @include md { position: initial; }
-}
-
 .content-title {
   h3 {
     text-align: center;
@@ -90,15 +83,26 @@ a:active {
   z-index: 1;
 }
 
-.jk-collapse {
-  &.collapsed {
-    .jk-collapse-collapsible {
-    
-    }
+.absolute {
+  position: absolute;
+  
+  &.top {
+    top: var(--pad-md);
   }
   
-  .jk-collapse-collapsible {
-    overflow: hidden;
-    @include transition(height);
+  &.right {
+    right: var(--pad-md);
   }
+  
+  &.bottom {
+    bottom: var(--pad-md);
+  }
+  
+  &.left {
+    left: var(--pad-md);
+  }
+}
+
+li > * {
+  vertical-align: text-top;
 }

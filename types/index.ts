@@ -40,6 +40,12 @@ export type {
   ScoreboardResponseDTO,
   ContestResponseDTO,
   ProblemResponseDTO,
+  ProblemLanguagesType,
+  PointsByGroupsType,
+  UserSummaryListResponseDTO,
+  ContestProblemBasicType,
+  ContestSummaryListResponseDTO,
+  CreateContestDTO,
 } from '@juki-team/commons';
 
 export interface UserInterface extends _UserInterface {
@@ -48,6 +54,9 @@ export interface UserInterface extends _UserInterface {
 
 export { NotificationType, Period } from '@juki-team/base-ui';
 export type {
+  RowSortableItemContentType,
+  RowSortableItem,
+  CropImageType,
   FilterTextOfflineType,
   SearchParamsObjectType,
   LoaderStatusOnClickType,
@@ -59,4 +68,5 @@ export type {
   ButtonLoaderOnClickType,
   ReactNodeOrFunctionType,
   ReactNodeOrFunctionP1Type,
+  PlacementType,
 } from '@juki-team/base-ui';

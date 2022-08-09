@@ -58,11 +58,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const { updateUserSettings, setUser } = useUserDispatch();
   
   useEffect(() => {
-    if (user.isLogged && (isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_UP) || isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_IN))) {
+    if (user.isLogged && (isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) || isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN))) {
       push({
         query: removeParamQuery(
-          removeParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_UP),
-          QueryParam.OPEN_DIALOG,
+          removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP),
+          QueryParam.DIALOG,
           OpenDialog.SIGN_IN,
         ),
       });
@@ -133,10 +133,10 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   return (
     <>
-      {isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_UP) && <SignUp />}
-      {isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.SIGN_IN) && <Login />}
-      {isOrHas(query[QueryParam.OPEN_DIALOG], OpenDialog.WELCOME) && <Welcome />}
-      {query[QueryParam.OPEN_USER_PREVIEW] && <UserPreview nickname={query[QueryParam.OPEN_USER_PREVIEW]} />}
+      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) && <SignUp />}
+      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN) && <Login />}
+      {isOrHas(query[QueryParam.DIALOG], OpenDialog.WELCOME) && <Welcome />}
+      {query[QueryParam.USER_PREVIEW] && <UserPreview nickname={query[QueryParam.USER_PREVIEW]} />}
       <HorizontalMenu
         menu={menu}
         left={() => (

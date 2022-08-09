@@ -51,7 +51,7 @@ export const LoginUser = () => {
   return (
     <Button
       type="secondary"
-      onClick={() => push({ query: addParamQuery(query, QueryParam.OPEN_DIALOG, OpenDialog.SIGN_IN) })}
+      onClick={() => push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
     >
       <T>sign in</T>
     </Button>
