@@ -7,6 +7,13 @@ import { AdminInformation, JudgeInformation } from '../Information';
 export const ViewMembers = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const printNicknames = (nicknames: string[]) => {
+    if (nicknames.length === 1 && nicknames[0] === '*') {
+      return (
+        <div className="jk-row left gap">
+          <T>all users</T>
+        </div>
+      );
+    }
     if (!nicknames.length) {
       return (
         <div className="jk-row left gap">
@@ -18,12 +25,7 @@ export const ViewMembers = ({ contest }: { contest: ContestResponseDTO }) => {
       <div className="jk-row left gap">
         {nicknames.map(nickname => (
           <UserNicknameLink nickname={nickname}>
-            <div
-              className={classNames('jk-border-radius jk-tag gray-6 link', {
-                // 'bg-color-primary color-white tx-wd-bolder': userNickname === user.nickname,
-                // 'link': userNickname !== user.nickname,
-              })}
-            >
+            <div className={classNames('jk-border-radius jk-tag gray-6 link')}>
               {nickname}
             </div>
           </UserNicknameLink>
@@ -39,28 +41,28 @@ export const ViewMembers = ({ contest }: { contest: ContestResponseDTO }) => {
           <h6><T>administrators</T></h6>
           <AdminInformation filledCircle />
         </div>
-        {printNicknames(contest.members.administrators)}
+        {printNicknames(Object.keys(contest.members.administrators))}
       </div>
       <div>
         <div className="jk-row left gap">
           <h6><T>judges</T></h6>
           <JudgeInformation filledCircle />
         </div>
-        {printNicknames(contest.members.judges)}
+        {printNicknames(Object.keys(contest.members.judges))}
       </div>
       <div>
         <div className="jk-row left gap">
           <h6><T>guests</T></h6>
         </div>
-        {printNicknames(contest.members.guests)}
+        {printNicknames(Object.keys(contest.members.guests))}
       </div>
       <div>
         <h6><T>contestants</T></h6>
-        {printNicknames(contest.members.contestants)}
+        {printNicknames(Object.keys(contest.members.contestants))}
       </div>
       <div>
         <h6><T>spectators</T></h6>
-        {printNicknames(contest.members.spectators)}
+        {printNicknames(Object.keys(contest.members.spectators))}
       </div>
     </div>
   );
