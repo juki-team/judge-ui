@@ -133,6 +133,7 @@ export const ProblemCodeEditor = ({
         }
       }}
       middleButtons={() => {
+        console.log({ isLogged, contest });
         if (!isLogged) {
           return (
             <ButtonLoader
@@ -190,7 +191,6 @@ export const ProblemCodeEditor = ({
           </ButtonLoader>
         );
         if (contest?.isJudge || contest?.isAdmin || contest?.isContestant) {
-          const sourceCode = source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || '';
           return validSubmit;
         }
         if (contest?.isGuest) {
@@ -208,6 +208,10 @@ export const ProblemCodeEditor = ({
         }
         if (contest?.isSpectator) {
           return <SpectatorInformation />;
+        }
+        
+        if (!contest) {
+          return validSubmit;
         }
       }}
       testCases={testCases}
