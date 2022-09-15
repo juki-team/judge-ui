@@ -1,3 +1,4 @@
+import { Status } from '@juki-team/commons';
 import { EditContest } from 'components/contest/EditContest';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { CONTEST_DEFAULT } from 'config/constants/contest';
@@ -5,7 +6,7 @@ import { authorizedRequest, can, cleanRequest, notifyResponse } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import React, { useState } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ContestTab, EditCreateContestDTO, HTTPMethod } from 'types';
+import { ButtonLoaderOnClickType, ContentResponseType, ContestTab, EditCreateContestDTO, HTTPMethod } from 'types';
 import Custom404 from '../../404';
 
 function ContestCreate() {
@@ -20,7 +21,8 @@ function ContestCreate() {
   if (!can.createContest(user)) {
     return <Custom404 />;
   }
-  const onSave = async () => {
+  const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
+    setLoaderStatus(Status.LOADING);
     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.CONTEST.CONTEST_V1(undefined, user.session), {
       method: HTTPMethod.POST,
       body: JSON.stringify(contest),
@@ -28,6 +30,9 @@ function ContestCreate() {
     notifyResponse(response, addNotification);
     if (response.success) {
       push(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
+      setLoaderStatus(Status.SUCCESS);
+    } else {
+      setLoaderStatus(Status.ERROR);
     }
   };
   

@@ -41,41 +41,36 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   
   return (
     <div className="jk-col jk-pad">
-      {isJudgeOrAdmin || isContestant && (
-        <div
-          className="jk-pad-md bg-color-white jk-shadow jk-border-radius-inline"
-          style={{ position: 'sticky', top: 'var(--pad-md)', zIndex: 1 }}
-        >
-          {isJudgeOrAdmin ? (
-            <Button
-              icon={<NotificationsActiveIcon />}
-              size="small"
-              onClick={() => setClarification({
-                clarificationId: '',
-                problemJudgeKey: '',
-                question: '',
-                answer: '',
-                public: true,
-              })}
-            >
-              <T className="tx-cs-sentence tx-wd-bold">send clarification</T>
-            </Button>
-          ) : isContestant && (
-            <Button
-              icon={<NotificationsActiveIcon />}
-              size="small"
-              onClick={() => setClarification({
-                clarificationId: '',
-                problemJudgeKey: '',
-                question: '',
-                answer: '',
-                public: false,
-              })}
-            >
-              <T className="tx-cs-sentence tx-wd-bold">ask question</T>
-            </Button>
-          )}
-        </div>
+      {(isJudgeOrAdmin || isContestant) && (
+        isJudgeOrAdmin ? (
+          <Button
+            icon={<NotificationsActiveIcon />}
+            size="small"
+            onClick={() => setClarification({
+              clarificationId: '',
+              problemJudgeKey: '',
+              question: '',
+              answer: '',
+              public: true,
+            })}
+          >
+            <T className="tx-cs-sentence tx-wd-bold">send clarification</T>
+          </Button>
+        ) : isContestant && (
+          <Button
+            icon={<NotificationsActiveIcon />}
+            size="small"
+            onClick={() => setClarification({
+              clarificationId: '',
+              problemJudgeKey: '',
+              question: '',
+              answer: '',
+              public: false,
+            })}
+          >
+            <T className="tx-cs-sentence tx-wd-bold">ask question</T>
+          </Button>
+        )
       )}
       <div className="jk-pad-md jk-col stretch gap">
         {contest?.clarifications
@@ -133,7 +128,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                         <UserNicknameLink nickname={clarification.questionUserNickname}>
                           <img
                             src={clarification.questionUserImageUrl}
-                            className="jk-user-profile-img small jk-shadow"
+                            className="jk-user-profile-img jk-shadow"
                             alt={clarification.questionUserNickname}
                           />
                         </UserNicknameLink>
@@ -149,7 +144,8 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                           className="tx-wd-bold">{contest?.problems?.[clarification.problemJudgeKey]?.index}</span>
                         </div>}
                     </div>
-                    <div className="jk-tag gray-6">{clarification.public ? <T>pubic</T> : <T>only for the user who asked</T>}</div>
+                    <div className="jk-tag gray-6">
+                      {clarification.public ? <T>pubic</T> : isJudgeOrAdmin ? <T>only for the user</T> : <T>only for you</T>}</div>
                     {!clarification.answerTimestamp && <div className="jk-tag error"><T>not answered yet</T></div>}
                   </div>
                 </div>
@@ -256,7 +252,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                       body: JSON.stringify(payload),
                     }));
                   if (notifyResponse(response, addNotification)) {
-                    await mutate(JUDGE_API_V1.CONTEST.CONTEST(query.key as string));
+                    await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string, session));
                     setLoaderStatus(Status.SUCCESS);
                     setClarification(null);
                   } else {

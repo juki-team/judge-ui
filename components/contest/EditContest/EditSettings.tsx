@@ -136,13 +136,19 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             />
           </div>
         )}
-        <div className="jk-col left">
-          <Timer
-            currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
-            interval={0}
-            laps={7}
-            literal
-          />
+        <div className="jk-row left">
+          <div className="jk-col left">
+            <Timer
+              currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
+              interval={0}
+              laps={6}
+              literal
+              ignoreLeadingZeros
+              ignoreTrailingZeros
+            />
+          </div>
+          &nbsp;
+          <T>of the start of the contest</T>
         </div>
       </div>
       <div className="jk-divider" />
@@ -197,6 +203,20 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             />
           </div>
         )}
+        <div className="jk-row left">
+          <div className="jk-col left">
+            <Timer
+              currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
+              interval={0}
+              laps={6}
+              literal
+              ignoreLeadingZeros
+              ignoreTrailingZeros
+            />
+          </div>
+          &nbsp;
+          <T>of the start of the contest</T>
+        </div>
       </div>
       <div className="jk-divider" />
       <div className="jk-col left stretch gap">
@@ -250,6 +270,20 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             />
           </div>
         )}
+        <div className="jk-row left">
+          <div className="jk-col left">
+            <Timer
+              currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
+              interval={0}
+              laps={6}
+              literal
+              ignoreLeadingZeros
+              ignoreTrailingZeros
+            />
+          </div>
+          &nbsp;
+          <T>of the start of the contest</T>
+        </div>
       </div>
       <div className="jk-divider" />
       <div className="jk-row left gap">

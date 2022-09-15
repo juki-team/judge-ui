@@ -8,12 +8,12 @@
     "pull": "yarn add @juki-team/commons @juki-team/base-ui"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.0.105",
-    "@juki-team/commons": "^0.0.109",
+    "@juki-team/base-ui": "^0.0.107",
+    "@juki-team/commons": "^0.0.114",
     "deep-object-diff": "^1.1.7",
     "i18next": "^21.6.14",
     "net": "^1.0.2",
-    "next": "latest",
+    "next": "^12.2.4",
     "next-pwa": "^5.4.6",
     "next-transpile-modules": "^9.0.0",
     "react": "^18.0.0",

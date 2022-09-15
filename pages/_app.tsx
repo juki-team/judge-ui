@@ -4,6 +4,7 @@ import { JukiBaseUiProvider, NavigationBar } from '../components';
 import { OnlineStatusProvider } from '../hooks';
 import '../i18n';
 import { UserProvider } from '../store';
+import { TaskProvider } from '../store/tasks';
 import './styles.scss';
 
 export default function MyApp({ Component, pageProps }) {
@@ -22,19 +23,21 @@ export default function MyApp({ Component, pageProps }) {
     >
       <div className="jk-app">
         <UserProvider>
-          <OnlineStatusProvider>
-            <SWRConfig
-              value={{
-                revalidateIfStale: false,
-                revalidateOnFocus: false,
-                revalidateOnReconnect: false,
-              }}
-            >
-              <NavigationBar>
-                <Component {...pageProps} />
-              </NavigationBar>
-            </SWRConfig>
-          </OnlineStatusProvider>
+          <TaskProvider>
+            <OnlineStatusProvider>
+              <SWRConfig
+                value={{
+                  revalidateIfStale: false,
+                  revalidateOnFocus: false,
+                  revalidateOnReconnect: false,
+                }}
+              >
+                <NavigationBar>
+                  <Component {...pageProps} />
+                </NavigationBar>
+              </SWRConfig>
+            </OnlineStatusProvider>
+          </TaskProvider>
         </UserProvider>
       
       </div>

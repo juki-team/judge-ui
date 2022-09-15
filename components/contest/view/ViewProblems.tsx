@@ -1,15 +1,21 @@
-import { Button, CheckIcon, CloseIcon, LinkIcon, T, TimerLabeled } from 'components/index';
+import { ContentResponseType, Status, SubmissionRunStatus } from '@juki-team/commons';
+import { Button, ButtonLoader, CheckIcon, CloseIcon, ExternalIcon, LinkIcon, T, TimerLabeled } from 'components';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { authorizedRequest, cleanRequest, getProblemJudgeKey, getProblemUrl } from 'helpers';
+import { useNotification } from 'hooks';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ContestResponseDTO, ContestTab, Judge, Period } from 'types';
-import { ROUTES } from '../../../config/constants';
-import { getProblemUrl } from '../../../helpers/problem';
+import { useUserState } from 'store';
+import { ContestResponseDTO, ContestTab, HTTPMethod, Judge, Period, ProblemTab } from 'types';
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { problems = {}, user, isLive, key, settings } = contest;
-  const { isContestant } = user || {};
-  
+  const { isContestant, isJudge, isAdmin } = user || {};
   const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
+  const { session } = useUserState();
+  const { addSuccessNotification, addErrorNotification } = useNotification();
+  const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
     <div className="jk-row gap jk-pad">
@@ -28,7 +34,20 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                 {!!problem.myAttempts && (problem.mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
                 {problem.index}
               </div>
-              <div className="problem-id text-xs text-semi-bold color-gray-3">ID: {problem.key}</div>
+              {problem.judge === Judge.JUKI_JUDGE ? (
+                (isJudgeOrAdmin ? (
+                  <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }}>
+                    <a target="_blank">
+                      <div className="problem-id text-xs text-semi-bold color-gray-3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon
+                        size="tiny" /></div>
+                    </a>
+                  </Link>
+                ) : (<div className="problem-id text-xs text-semi-bold color-gray-3">ID: {problem.key}</div>))
+              ) : (
+                <div className="problem-id text-xs text-semi-bold color-gray-3">
+                  {getProblemJudgeKey(problem.judge, problem.key)}
+                </div>
+              )}
             </div>
             <div className="text-m tx-wd-bolder jk-row"> {problem.name} </div>
             <div className="jk-col gap">
@@ -64,7 +83,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                 </div>
               </div>
             </div>
-            <div className="buttons-actions jk-row">
+            <div className="buttons-actions jk-row gap">
               {problem.judge === Judge.JUKI_JUDGE ? (
                 <Button
                   onClick={() => push({
@@ -80,6 +99,28 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                     <T>{(problem.mySuccess || !canSubmit) ? 'view problem' : 'solve problem'}</T>
                   </Button>
                 </a>
+              )}
+              {isJudgeOrAdmin && (
+                <ButtonLoader
+                  onClick={async (setLoaderStatus, loaderStatus, event) => {
+                    setLoaderStatus(Status.LOADING);
+                    const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(
+                      await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(key, getProblemJudgeKey(problem.judge, problem.key), session), {
+                        method: HTTPMethod.POST,
+                      }));
+                    if (result.success) {
+                      addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>);
+                      setLoaderStatus(Status.SUCCESS);
+                    } else {
+                      addErrorNotification(<T
+                        className="text-sentence-case">{result.message || 'something went wrong, please try again later'}</T>);
+                      setLoaderStatus(Status.ERROR);
+                    }
+                  }}
+                  size="tiny"
+                >
+                  <T>rejudge problem</T>
+                </ButtonLoader>
               )}
             </div>
           </div>

@@ -1,14 +1,14 @@
-import { ArrowIcon, Button, CheckUnsavedChanges, Input, MdMathEditor, T, Tabs, TwoContentLayout } from 'components/index';
+import { ArrowIcon, ButtonLoader, CheckUnsavedChanges, Input, MdMathEditor, T, Tabs, TwoContentLayout } from 'components/index';
 import { ROUTES } from 'config/constants';
 import { useRouter } from 'hooks';
 import React from 'react';
-import { ContestTab } from 'types';
+import { ButtonLoaderOnClickType, ContestTab } from 'types';
+import { EditContestProps } from '../types';
 import { EditMembers } from './EditMembers';
 import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';
-import { EditContestProps } from '../types';
 
-export const EditContest = ({ contest, setContest, editing, onSave }: EditContestProps & { onSave: () => void }) => {
+export const EditContest = ({ contest, setContest, editing, onSave }: EditContestProps & { onSave: ButtonLoaderOnClickType }) => {
   
   const { push } = useRouter();
   
@@ -41,7 +41,7 @@ export const EditContest = ({ contest, setContest, editing, onSave }: EditContes
       body: <EditProblems contest={contest} setContest={setContest} editing={editing} />,
     },
   ];
- 
+  
   return (
     <TwoContentLayout>
       <div className="content-title jk-col relative">
@@ -74,16 +74,16 @@ export const EditContest = ({ contest, setContest, editing, onSave }: EditContes
               onChange={value => {
                 setContest(prevState => ({
                   ...prevState,
-                  key: value.split(' ').join('-').replace(/[^0-9a-z_-]/gi, ''),
+                  key: value.trim().split(' ').join('-').replace(/[^0-9a-z_-]/gi, ''),
                 }));
               }}
             />}/overview
             </div>
           </div>
           <div>
-            <Button type="secondary" onClick={onSave}>
+            <ButtonLoader type="secondary" onClick={onSave}>
               {editing ? <T>update</T> : <T>create</T>}
-            </Button>
+            </ButtonLoader>
           </div>
         </div>
       </div>

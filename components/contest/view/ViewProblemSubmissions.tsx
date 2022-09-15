@@ -1,18 +1,16 @@
-import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell, UserNicknameLink } from 'components/index';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
-import { JUDGE_API_V1 } from 'config/constants/judge';
+import { DataViewerHeadersType, DateField, Field, PagedDataViewer, T, TextHeadCell, UserNicknameLink } from 'components';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, JUDGE_API_V1, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { ContestTab } from 'types';
-import { useUserState } from '../../../store';
-import { SubmissionResponseDTO } from '../../../types';
+import { useUserState } from 'store';
+import { ContestResponseDTO, ContestTab, SubmissionResponseDTO } from 'types';
 import { SubmissionInfo } from '../../problem/SubmissionInfo';
 import { Memory, Time, Verdict } from '../../problem/utils';
 
 type ContestProblemSubmissionsTable = SubmissionResponseDTO;
 
-export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: any, mySubmissions?: boolean }) => {
+export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: ContestResponseDTO, mySubmissions?: boolean }) => {
   
   const user = useUserState();
   const { queryObject, query: { key: contestKey, tab, index: problemIndex, ...query }, push, pathname } = useRouter();
@@ -30,14 +28,6 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: an
                 {userNickname}
               </div>
             </UserNicknameLink>
-            {/*<Link href={{*/}
-            {/*  pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.SUBMISSIONS),*/}
-            {/*  query: replaceParamQuery(query, QueryParam.OPEN_USER_PREVIEW, userNickname),*/}
-            {/*}}>*/}
-            {/*  <div className="link">*/}
-            {/*    {userNickname}*/}
-            {/*  </div>*/}
-            {/*</Link>*/}
           </Field>
         ),
         sort: { compareFn: () => (rowA, rowB) => rowB.userNickname.localeCompare(rowA.userNickname) },
@@ -48,16 +38,20 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: an
     ] : []),
     {
       head: <TextHeadCell text={<T>problem</T>} />,
-      index: 'problem',
+      index: 'contestProblemIndex',
       field: ({ record: { problemName, contestProblemIndex }, isCard }) => (
         <Field className="jk-row link">
-          <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEMS, contestProblemIndex), query }}>
+          <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, contestProblemIndex), query }}>
             <a>{contestProblemIndex} {problemName}</a>
           </Link>
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.contestProblemIndex.localeCompare(rowA.contestProblemIndex) },
-      filter: { type: 'date-range-auto' },
+      filter: {
+        type: 'select-auto',
+        options: Object.values(contest.problems)
+          .map(({ index, name }) => ({ label: <div>{index} {name}</div>, value: index })),
+      },
       cardPosition: 'center',
       minWidth: 280,
     },
@@ -172,7 +166,7 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: an
       cardPosition: 'bottom',
       minWidth: 120,
     },
-  ], [contestKey, query, user.nickname, pathname]);
+  ], [contestKey, query, user.nickname, pathname, contest.problems]);
   
   const name = mySubmissions ? 'myStatus' : 'status';
   

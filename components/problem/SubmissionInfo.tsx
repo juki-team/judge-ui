@@ -113,7 +113,7 @@ export const SubmissionInfo = ({
   const [open, setOpen] = useState(false);
   const { addErrorNotification } = useNotification();
   const { session } = useUserState();
-  const canOpen = !open && canViewSourceCode && verdict !== ProblemVerdict.HIDDEN && verdict !== ProblemVerdict.NONE && verdict !== ProblemVerdict.PENDING;
+  const canOpen = !open && canViewSourceCode;
   
   return (
     <Field

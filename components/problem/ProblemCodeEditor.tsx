@@ -1,11 +1,10 @@
-import { getProblemJudgeKey, SubmissionResponseDTO } from '@juki-team/commons';
+import { getProblemJudgeKey, Judge } from '@juki-team/commons';
 import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   JUDGE_API_V1,
   MY_STATUS,
   OpenDialog,
-  PROBLEM_VERDICT,
   PROGRAMMING_LANGUAGE,
   QueryParam,
   ROUTES,
@@ -13,16 +12,14 @@ import {
 import { addParamQuery, authorizedRequest, cleanRequest, isStringJson } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { useUserState } from 'store';
+import { useTaskDispatch, useUserState } from 'store';
 import { useSWRConfig } from 'swr';
 import {
   ContentResponseType,
-  ContentsResponseType,
   ContestTab,
   HTTPMethod,
   ProblemResponseDTO,
   ProblemTab,
-  ProblemVerdict,
   ProgrammingLanguage,
   Status,
   SubmissionRunStatus,
@@ -56,51 +53,9 @@ export const ProblemCodeEditor = ({
   contest,
 }: { problem: ProblemResponseDTO, contest?: { isAdmin: boolean, isJudge: boolean, isContestant: boolean, isGuest: boolean, isSpectator: boolean, problemIndex: string } }) => {
   
-  const [listenSubmissionId, setListenSubmissionId] = useState('');
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWRConfig();
-  useEffect(() => {
-    let interval;
-    if (listenSubmissionId) {
-      interval = setInterval(async () => {
-        const result = cleanRequest<ContentsResponseType<SubmissionResponseDTO>>(await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem.key, nickname, 1, 16, session)));
-        if (result.success) {
-          const submission = result.contents?.find(submission => submission?.submitId === listenSubmissionId);
-          const verdict = submission?.verdict || null;
-          const points = submission?.points || 0;
-          if (verdict !== null && verdict !== ProblemVerdict.PENDING) {
-            if (verdict === ProblemVerdict.AC) {
-              addSuccessNotification(
-                <div className="jk-pad">
-                  <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].label}</T>
-                </div>,
-              );
-            } else if (verdict === ProblemVerdict.PA) {
-              addSuccessNotification(
-                <div className="jk-pad">
-                  <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].label}</T>
-                  &bnsp;
-                  ({points} <T>pnts</T>)
-                </div>,
-              );
-            } else if (Object.keys(PROBLEM_VERDICT).includes(verdict)) {
-              addErrorNotification(
-                <div className="jk-pad">
-                  <T className="text-capitalize">{PROBLEM_VERDICT[verdict].label}</T>
-                </div>,
-              );
-            } else {
-              addErrorNotification(<div className="jk-pad">{verdict}</div>);
-            }
-            setListenSubmissionId('');
-          }
-        }
-      }, 10000);
-    }
-    return () => {
-      clearInterval(interval);
-    };
-  }, [listenSubmissionId]);
+  const { listenSubmission } = useTaskDispatch();
   const initialTestCases: CodeEditorTestCasesType = {};
   problem.sampleCases?.forEach((sample, index) => {
     const key = 'sample-' + index;
@@ -211,7 +166,9 @@ export const ProblemCodeEditor = ({
                 }));
               if (result.success) {
                 if (result?.content.submitId) {
-                  setListenSubmissionId(result.content.submitId);
+                  if (problem.judge === Judge.JUKI_JUDGE) {
+                    listenSubmission(result.content.submitId, contest?.problemIndex ? problem.key : query.key as string);
+                  }
                   addSuccessNotification(<T className="text-sentence-case">submission received</T>);
                 }
                 setLoaderStatus(Status.SUCCESS);

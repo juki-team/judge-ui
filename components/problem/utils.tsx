@@ -28,25 +28,21 @@ export const Verdict = ({
     </div>
   );
   
-  if ((verdict === ProblemVerdict.PENDING && status) || verdict != ProblemVerdict.PENDING) {
-    return (
-      <Popover
-        content={
-          <div className="text-sentence-case text-nowrap">
-            {verdict === ProblemVerdict.PENDING ? (
-              SUBMISSION_RUN_STATUS[status]?.label ?
-                <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
-            ) : verdictLabel}
-          </div>
-        }
-        triggerOn="hover"
-        placement="top"
-        showPopperArrow
-      >
-        {content}
-      </Popover>
-    );
-  }
-  
-  return content;
+  return (
+    <Popover
+      content={
+        <div className="text-sentence-case text-nowrap">
+          {verdict === ProblemVerdict.PENDING ? (
+            SUBMISSION_RUN_STATUS[status]?.label ?
+              <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
+          ) : verdictLabel}
+        </div>
+      }
+      triggerOn="hover"
+      placement="top"
+      showPopperArrow
+    >
+      {content}
+    </Popover>
+  );
 };

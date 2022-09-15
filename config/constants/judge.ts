@@ -111,53 +111,14 @@ export const JUDGE_API_V1 = {
     CONTEST_DATA: (key: string, session: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/data?session=${session}`;
     },
-    CHANGE_STATUS: (key: string, status: ContestStatus) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/changeStatus/${key}?status=${status}`;
-    },
-    REGISTER: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/register`;
-    },
     REGISTER_V1: (key: string, session: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/register?session=${session}`;
-    },
-    UN_FROZEN: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard/unFrozen`;
-    },
-    MY_STATUS: (key: string, page: number, size: number) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/myStatus?page=${page}&size=${size}`;
-    },
-    STATUS: (key: string, page: number, size: number) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/status?page=${page}&size=${size}`;
-    },
-    PENDING_STATUS: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL} / api / contest /${key}/judge/list`;
-    },
-    SUBMIT: (key: string, problemIndex: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/problem/${problemIndex}/submit`;
     },
     SUBMIT_V1: (key: string, problemJudgeKey: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submit/contest/${key}/problem-judge-key/${problemJudgeKey}`;
     },
-    SCOREBOARD: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/scoreboard`;
-    },
     SCOREBOARD_V1: (key: string, unfrozen: boolean, session: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen&' : ''}session=${session}`;
-    },
-    REJUDGE_PROBLEM: (key: string, problemIndex: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/problem/${problemIndex}/rejudge`;
-    },
-    REJUDGE_SUBMISSION: (key: string, submissionMongoId: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/rejudge/${submissionMongoId}`;
-    },
-    JUDGE_SUBMISSION: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/judge/submit`;
-    },
-    VIEW_SOURCE_SUBMISSION: (key: string, submissionMongoId: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/submit/${submissionMongoId}/source`;
-    },
-    CLARIFICATIONS: (key: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/clarification`;
     },
     CLARIFICATION_V1: (key: string, session: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/clarification?session=${session}`;
@@ -165,8 +126,10 @@ export const JUDGE_API_V1 = {
     ANSWER_CLARIFICATION_V1: (key: string, clarificationId: string, session: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/contest/${key}/clarification/${clarificationId}?session=${session}`;
     },
-    ANSWER_CLARIFICATION: (key: string, idClarification: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/contest/${key}/clarification/${idClarification}/answer`;
+  },
+  REJUDGE: {
+    CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string, session: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}?session=${session}`;
     },
   },
   ADMIN: {

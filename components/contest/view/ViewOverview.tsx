@@ -23,7 +23,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
       method: HTTPMethod.POST,
     }));
     if (notifyResponse(response, addNotification)) {
-      await mutate(JUDGE_API_V1.CONTEST.CONTEST(query.key as string));
+      await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string, session));
       setLoader(Status.SUCCESS);
     } else {
       setLoader(Status.ERROR);

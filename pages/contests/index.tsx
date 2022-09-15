@@ -1,4 +1,3 @@
-import { ProgrammingLanguage } from '@juki-team/commons';
 import {
   ButtonLoader,
   CheckIcon,
@@ -31,7 +30,13 @@ type ContestTable = {
   settings: SettingsOptions,
   totalRegistered: number,
   stateContest: string,
-  registered: boolean,
+  user: {
+    isAdmin: boolean,
+    isContestant: boolean,
+    isGuest: boolean,
+    isJudge: boolean,
+    isSpectator: boolean,
+  }
 }
 
 function Contests() {
@@ -83,15 +88,21 @@ function Contests() {
     {
       head: <TextHeadCell text={<T>contest name</T>} />,
       index: 'name',
-      field: ({ record: { name, key, registered } }) => (
+      field: ({ record: { name, key, user } }) => (
         <Field className="jk-row">
-          <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
-            <a>
-              <div className="jk-row gap link text-semi-bold">
-                {name}{registered && <CheckIcon filledCircle className="color-success" />}
-              </div>
-            </a>
-          </Link>
+          {user.isGuest || user.isAdmin || user.isContestant || user.isJudge || user.isSpectator ? (
+            <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
+              <a>
+                <div className="jk-row gap link text-semi-bold">
+                  {name}{user.isContestant && <CheckIcon filledCircle className="color-success" />}
+                </div>
+              </a>
+            </Link>
+          ) : (
+            <div className="jk-row gap text-semi-bold">
+              {name}
+            </div>
+          )}
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
@@ -120,7 +131,7 @@ function Contests() {
     settings: contest.settings,
     totalRegistered: contest.totalContestants,
     stateContest: getContestStatus(contest.settings.startTimestamp, contest.settings.endTimestamp),
-    registered: contest.user.isContestant || false,
+    user: contest.user,
   }));
   
   return (
