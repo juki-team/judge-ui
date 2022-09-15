@@ -133,7 +133,6 @@ export const ProblemCodeEditor = ({
         }
       }}
       middleButtons={() => {
-        console.log({ isLogged, contest });
         if (!isLogged) {
           return (
             <ButtonLoader
