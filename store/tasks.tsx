@@ -18,7 +18,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   const { addErrorNotification, addSuccessNotification } = useNotification();
   
   const listenSubmission = async (listenSubmissionId, problemKey) => {
-    const result = cleanRequest<ContentsResponseType<{ submitId: string, verdict: ProblemVerdict, points: number }>>(
+    const result = cleanRequest<ContentsResponseType<{ submitId: string, verdict: ProblemVerdict, points: number, contestName?: string, contestProblemIndex?: string, problemName: string }>>(
       await authorizedRequest(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problemKey, nickname, 1, 16, session), {
         method: HTTPMethod.GET,
       }));
@@ -30,12 +30,26 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
         if (verdict === ProblemVerdict.AC) {
           addSuccessNotification(
             <div className="jk-pad">
+              {(submission?.contestName && submission.contestProblemIndex) ?
+                <>
+                  <div><T className="tx-cs-sentence">contest</T>: {submission?.contestName}</div>
+                  <div>({submission.contestProblemIndex}) {submission.problemName}</div>
+                </>
+                : <div>{submission.problemName}</div>
+              }
               <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].label}</T>
             </div>,
           );
         } else if (verdict === ProblemVerdict.PA) {
           addSuccessNotification(
             <div className="jk-pad">
+              {(submission?.contestName && submission.contestProblemIndex) ?
+                <>
+                  <div><T className="tx-cs-sentence">contest</T>: {submission?.contestName}</div>
+                  <div>({submission.contestProblemIndex}) {submission.problemName}</div>
+                </>
+                : <div>{submission.problemName}</div>
+              }
               <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].label}</T>
               &bnsp;
               ({points} <T>pnts</T>)
@@ -44,6 +58,13 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
         } else if (Object.keys(PROBLEM_VERDICT).includes(verdict)) {
           addErrorNotification(
             <div className="jk-pad">
+              {(submission?.contestName && submission.contestProblemIndex) ?
+                <>
+                  <div><T className="tx-cs-sentence">contest</T>: {submission?.contestName}</div>
+                  <div>({submission.contestProblemIndex}) {submission.problemName}</div>
+                </>
+                : <div>{submission.problemName}</div>
+              }
               <T className="text-capitalize">{PROBLEM_VERDICT[verdict].label}</T>
             </div>,
           );
