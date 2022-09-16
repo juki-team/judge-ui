@@ -1,3 +1,4 @@
+import { getProblemJudgeKey } from '@juki-team/commons';
 import {
   BalloonIcon,
   DataViewer,
@@ -14,9 +15,9 @@ import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { classNames, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ContestResponseDTO, ContestTab, ScoreboardResponseDTO } from 'types';
+import { ContentsResponseType, ContestResponseDTO, ContestTab, ScoreboardResponseDTO, Status } from 'types';
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -27,7 +28,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       {
         head: <TextHeadCell text={<T>#</T>} />,
-        index: 'timestamp',
+        index: 'position',
         field: ({ record: { position } }) => (
           <Field className="jk-row">{position}</Field>
         ),
@@ -61,7 +62,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
             <div className="tx-wd-bolder color-primary">{totalPoints}</div>
-            <div className="color-gray-4">{totalPenalty}</div>
+            <div className="color-gray-4">{Math.round(totalPenalty)}</div>
           </Field>
         ),
         minWidth: 128,
@@ -75,26 +76,31 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
           head: (
             <Popover content={<div className="text-nowrap">{problem.name}</div>}>
               <div className="jk-row">
-                <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEMS, problem.index), query }}>
+                <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index), query }}>
                   {problem.index}
                 </Link>
               </div>
             </Popover>
           ),
           index: problem.index,
-          field: ({ record: { totalPenalty, totalPoints, problems }, isCard }) => (
-            <Field className="jk-row center nowrap">
-              {problems[problem.index]?.success && (
-                <div style={{ color: problem.color }}><BalloonIcon /></div>
-              )}
-              <div className="jk-row nowrap">
-                <div className="text-xs">{problems[problem.index]?.attempts || '-'}</div>
-                <span className="color-gray-3">/</span>
-                <div
-                  className="text-xs">{problems[problem.index]?.penalty || '-'}</div>
-              </div>
-            </Field>
-          ),
+          field: ({ record: { problems }, isCard }) => {
+            const problemData = problems[getProblemJudgeKey(problem.judge, problem.key)];
+            return (
+              <Field className="jk-row center nowrap">
+                {problemData?.success && (
+                  <div style={{ color: problem.color }}>
+                    <BalloonIcon percent={(problemData.points / problem.points) * 100} />
+                  </div>
+                )}
+                <div className="jk-row nowrap">
+                  <div className="text-xs">{problemData?.attempts || '-'}</div>
+                  <span className="color-gray-3">/</span>
+                  <div
+                    className="text-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
+                </div>
+              </Field>
+            );
+          },
           minWidth: 120,
         });
       }
@@ -109,6 +115,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
     request,
     error,
     isLoading,
+    setLoaderStatusRef
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD_V1(contest?.key, unfrozen, user.session), { refreshInterval: 60000 });
   
   const lastTotalRef = useRef(0);
@@ -139,6 +146,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       )}
       cardsView={false}
       searchParamsObject={queryObject}
+      setLoaderStatusRef={setLoaderStatusRef}
       setSearchParamsObject={setSearchParamsObject}
       className="contest-scoreboard"
     />

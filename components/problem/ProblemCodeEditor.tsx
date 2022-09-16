@@ -137,6 +137,7 @@ export const ProblemCodeEditor = ({
           return (
             <ButtonLoader
               type="secondary"
+              size="tiny"
               onClick={async () => {
                 addSuccessNotification(<T className="text-sentence-case">to submit, first login</T>);
                 await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) });
@@ -150,6 +151,7 @@ export const ProblemCodeEditor = ({
         const validSubmit = (
           <ButtonLoader
             type="secondary"
+            size="tiny"
             disabled={sourceCode === ''}
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
@@ -196,6 +198,7 @@ export const ProblemCodeEditor = ({
           return (
             <ButtonLoader
               type="secondary"
+              size="tiny"
               onClick={async () => {
                 addSuccessNotification(<T className="text-sentence-case">to submit, first register</T>);
                 await pushTab(ContestTab.OVERVIEW);

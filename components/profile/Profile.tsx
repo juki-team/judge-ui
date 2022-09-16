@@ -28,26 +28,28 @@ export function Profile({ user }: { user: any }) {
       {modalImageProfile && <ImageProfileModal onClose={() => setModalImageProfile(false)} />}
       <FloatToolbar
         actionButtons={[
-          {
-            icon: <EditIcon />,
-            buttons: [
-              {
-                icon: <EditIcon />,
-                onClick: () => setEditing(!editing),
-                label: <T className="text-nowrap">update my data</T>,
-              },
-            ],
-          },
-          {
-            icon: <LockIcon />,
-            buttons: [
-              {
-                icon: <LockIcon />,
-                onClick: () => setModalChangePassword(true),
-                label: <T className="text-nowrap">change password</T>,
-              },
-            ],
-          },
+          ...(!editing ? [
+            // {
+            //   icon: <EditIcon />,
+            //   buttons: [
+            //     {
+            //       icon: <EditIcon />,
+            //       onClick: () => setEditing(!editing),
+            //       label: <T className="text-nowrap">update my data</T>,
+            //     },
+            //   ],
+            // },
+            {
+              icon: <LockIcon />,
+              buttons: [
+                {
+                  icon: <LockIcon />,
+                  onClick: () => setModalChangePassword(true),
+                  label: <T className="text-nowrap">change password</T>,
+                },
+              ],
+            },
+          ] : []),
         ]}
       />
       <div className="jk-col top jk-pad">

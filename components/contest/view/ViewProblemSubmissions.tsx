@@ -42,7 +42,7 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
       field: ({ record: { problemName, contestProblemIndex }, isCard }) => (
         <Field className="jk-row link">
           <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, contestProblemIndex), query }}>
-            <a>{contestProblemIndex} {problemName}</a>
+            <a>{contestProblemIndex ? `(${contestProblemIndex})` : ''} {problemName}</a>
           </Link>
         </Field>
       ),
@@ -50,7 +50,7 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
       filter: {
         type: 'select-auto',
         options: Object.values(contest.problems)
-          .map(({ index, name }) => ({ label: <div>{index} {name}</div>, value: index })),
+          .map(({ index, name }) => ({ label: <div>{index ? `(${index})` : ''} {name}</div>, value: index })),
       },
       cardPosition: 'center',
       minWidth: 280,
