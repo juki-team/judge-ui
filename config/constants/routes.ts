@@ -19,39 +19,6 @@ export const _SUB_SUB_TAB = ':subSubTab?';
 export const PAGE = 'page';
 export const PAGE_SIZE = 'size';
 
-export const ADMIN_TAB: { [key in AdminTab]: { value: AdminTab, print: string } } = {
-  [AdminTab.USERS]: { value: AdminTab.USERS, print: 'Users' },
-  [AdminTab.ATTEMPTS]: { value: AdminTab.ATTEMPTS, print: 'Submissions' },
-  [AdminTab.REJUDGE]: { value: AdminTab.REJUDGE, print: 'Rejudging' },
-  [AdminTab.RESET_PASSWORD]: { value: AdminTab.REJUDGE, print: 'Reset Password' },
-};
-
-export const PROBLEM_TAB: { [key in ProblemTab]: { value: ProblemTab, print: string } } = {
-  [ProblemTab.STATEMENT]: { value: ProblemTab.STATEMENT, print: 'statement' },
-  [ProblemTab.EDITOR]: { value: ProblemTab.EDITOR, print: 'code editor' },
-  [ProblemTab.MY_SUBMISSIONS]: { value: ProblemTab.MY_SUBMISSIONS, print: 'my submissions' },
-  [ProblemTab.SUBMISSIONS]: { value: ProblemTab.SUBMISSIONS, print: 'submissions' },
-  [ProblemTab.TESTS]: { value: ProblemTab.TESTS, print: 'test cases' },
-  [ProblemTab.RANKING]: { value: ProblemTab.RANKING, print: '' },
-  [ProblemTab.STATISTICS]: { value: ProblemTab.STATISTICS, print: '' },
-  [ProblemTab.SETUP]: { value: ProblemTab.SETUP, print: 'setup' },
-};
-
-export const CONTEST_TAB: { [key in ContestTab]: { value: ContestTab, label: string } } = {
-  [ContestTab.OVERVIEW]: { value: ContestTab.OVERVIEW, label: 'overview' },
-  [ContestTab.PROBLEMS]: { value: ContestTab.PROBLEMS, label: 'problems' },
-  [ContestTab.PROBLEM]: { value: ContestTab.PROBLEM, label: 'problem' },
-  [ContestTab.SCOREBOARD]: { value: ContestTab.SCOREBOARD, label: 'scoreboard' },
-  [ContestTab.MY_SUBMISSIONS]: { value: ContestTab.MY_SUBMISSIONS, label: 'my submissions' },
-  [ContestTab.CLARIFICATIONS]: { value: ContestTab.CLARIFICATIONS, label: 'clarifications' },
-  [ContestTab.SUBMISSIONS]: { value: ContestTab.SUBMISSIONS, label: 'status' },
-  [ContestTab.TIMING]: { value: ContestTab.TIMING, label: 'timing' },
-  [ContestTab.SETUP]: { value: ContestTab.SETUP, label: 'setup' },
-  [ContestTab.ARCHIVE]: { value: ContestTab.ARCHIVE, label: 'archive' },
-  [ContestTab.JUDGE]: { value: ContestTab.JUDGE, label: 'judge' },
-  [ContestTab.MEMBERS]: { value: ContestTab.MEMBERS, label: 'members' },
-};
-
 export const ROUTES = {
   ROOT: '/',
   PARAMS: {
