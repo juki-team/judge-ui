@@ -78,7 +78,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   const { nickname, isLoading: userIsLoading } = useUserState();
   const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(firstRefresh ? url : null, options, true);
   
-  const request = useCallback(async (props?) => {
+  const request = useCallback(async () => {
     if (!firstRefresh) {
       setFirstRefresh(true);
     } else {

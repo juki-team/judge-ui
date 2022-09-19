@@ -57,7 +57,7 @@ export const EditContest = ({ contest, setContest, editing, onSave }: EditContes
               </div>
             </CheckUnsavedChanges>
           </div>
-          <div className="jk-col center gap flex-1">
+          <div className="jk-col center flex-1">
             <div className="jk-row gap text-h">
               <h6><T>name</T></h6>:
               <Input

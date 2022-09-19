@@ -103,7 +103,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
               <p className="text-xs semi-bold"><T>time for solve</T></p>
             </div>
           )}
-          {contest.settings.penalty && (
+          {!!contest.settings.penalty && (
             <div className="jk-col jk-border-radius-inline jk-pad-sm">
               <p className="text-xs color-gray-3 text-semi-bold"><T>penalty by incorrect answer</T></p>
               <p className="text-s text-semi-bold">{Math.ceil(contest.settings.penalty / 1000 / 60)} min</p>

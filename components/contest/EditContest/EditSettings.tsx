@@ -82,7 +82,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
         />
       </div>
       <div className="jk-divider" />
-      <div className="jk-col left stretch gap">
+      <div className="jk-col left stretch">
         <div className="jk-row space-between extend">
           <h6><T>duration</T></h6>
           <InputToggle
@@ -152,7 +152,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
         </div>
       </div>
       <div className="jk-divider" />
-      <div className="jk-col left stretch gap">
+      <div className="jk-col left stretch">
         <div className="jk-row space-between extend gap">
           <div className="jk-row gap"><h6><T>frozen</T></h6><FrozenInformation /></div>
           <InputToggle
@@ -219,7 +219,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
         </div>
       </div>
       <div className="jk-divider" />
-      <div className="jk-col left stretch gap">
+      <div className="jk-col left stretch">
         <div className="jk-row space-between extend gap">
           <div className="jk-row gap"><h6><T>quiet</T></h6><QuietInformation /></div>
           <InputToggle

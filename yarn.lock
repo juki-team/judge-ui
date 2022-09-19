@@ -969,10 +969,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@juki-team/base-ui@^0.0.107":
-  version "0.0.107"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.107/972488d55c638c8f725498f767490e19b5cf4f7d#972488d55c638c8f725498f767490e19b5cf4f7d"
-  integrity sha512-OpJm7XlR1AWqEg+UG3hUZ759RTBExk56TQow/ekM631/FspewbIXr2PaCIL3DEPcSYBmQ6oMSwo4Nr6MMx87Zw==
+"@juki-team/base-ui@^0.0.108":
+  version "0.0.108"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.108/f84302e4f19c65c0ca32ed5da51fde8bc04def6c#f84302e4f19c65c0ca32ed5da51fde8bc04def6c"
+  integrity sha512-9jP7Z2ePE2iAkW/J495nv18Zp+xo3E3WOn59feHaUFGqmXYcBweTflaj9MpTYfIEL7jYg5uwz6pRoXDYahajkg==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
     "@juki-team/commons" "^0.0.109"

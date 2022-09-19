@@ -42,8 +42,19 @@
     > .jk-tabs-layout {
       height: 100%;
       
-      > div:first-child {
-        margin-bottom: var(--pad-t);
+      > div.jk-tabs-header:first-child {
+        //margin-bottom: var(--pad-t);
+        &:before {
+          border: none;
+          content: none;
+        }
+        
+        .jk-tabs-tabs.left {
+          .jk-tab.selected:before {
+            height: var(--pad-xt);
+            border-radius: 4px 4px 0 0;
+          }
+        }
       }
       
       &:before {
@@ -53,7 +64,7 @@
       > .jk-tabs-content {
         box-sizing: border-box;
         background-color: var(--t-color-white);
-        border-radius: var(--border-radius-inline);
+        border-radius: 0 0 var(--border-radius-inline) var(--border-radius-inline);
         @extend .jk-shadow;
         overflow-x: auto;
         height: calc(100% - var(--tabs-header-height) - var(--pad-t));

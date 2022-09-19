@@ -15,16 +15,8 @@ import {
 import { JUDGE_API_V1, USER_STATUS } from 'config/constants';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
-import { useMemo, useRef, useState } from 'react';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  FilterTextOfflineType,
-  HTTPMethod,
-  SetLoaderStatusType,
-  Status,
-  UserStatus,
-} from 'types';
+import { useMemo, useState } from 'react';
+import { ContentResponseType, ContentsResponseType, FilterTextOfflineType, HTTPMethod, Status, UserStatus } from 'types';
 import { ChangePassword } from './ChangePassword';
 
 type ValuePermission = {
@@ -60,8 +52,11 @@ export function Users() {
     label: <T className="text-capitalize">{USER_STATUS[option].label}</T>,
   }));
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { data: response, request } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
-  const setLoaderStatusRef = useRef<SetLoaderStatusType | null>(null);
+  const {
+    data: response,
+    request,
+    setLoaderStatusRef,
+  } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
   
   const changeUserStatus = async (nickname, status, setLoader) => {
     setLoader?.(Status.LOADING);
@@ -73,7 +68,7 @@ export function Users() {
       addErrorNotification(<T>error</T>);
       setLoader?.(Status.ERROR);
     }
-    request({ setLoaderStatus: setLoaderStatusRef.current });
+    request();
   };
   
   const columns: DataViewerHeadersType<UsersTable>[] = useMemo(() => [
@@ -104,7 +99,7 @@ export function Users() {
             permissions={permissions}
             nickname={nickname}
             refresh={() => {
-              request({ setLoaderStatus: setLoaderStatusRef.current });
+              request();
             }}
             key={nickname}
           />
@@ -120,7 +115,7 @@ export function Users() {
         },
       },
       cardPosition: 'center',
-      minWidth: 220,
+      minWidth: 260,
     },
     {
       head: <TextHeadCell text={<T className="text-uppercase">status</T>} />,
@@ -198,9 +193,7 @@ export function Users() {
         name="admin"
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
-        setLoaderStatusRef={(setLoader) => {
-          setLoaderStatusRef.current = setLoader;
-        }}
+        setLoaderStatusRef={setLoaderStatusRef}
       />
     </>
   );

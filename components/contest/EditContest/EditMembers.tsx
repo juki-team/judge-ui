@@ -19,7 +19,7 @@ export const EditMembers = ({ setContest, contest }: EditContestProps) => {
     <div className="jk-col left stretch jk-pad">
       <div className="jk-col gap stretch">
         <div className="jk-row left gap">
-          <h6><T>contestants</T></h6>
+          <h6><T>guests</T></h6>
           <InputToggle
             checked={openRegistration}
             onChange={(value) => setContest(prevState => ({

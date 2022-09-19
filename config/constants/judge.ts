@@ -53,6 +53,9 @@ export const JUDGE_API_V1 = {
     },
   },
   SUBMISSIONS: {
+    LIST: (page: number, size: number, session?: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions?page=${page}&size=${size}&session=${session}`;
+    },
     NICKNAME: (nickname: string, page: number, size: number, session?: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api/v1/submissions/nickname/${nickname}?page=${page}&size=${size}&session=${session}`;
     },

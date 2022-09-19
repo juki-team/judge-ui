@@ -7,6 +7,7 @@ export enum ContestTimeStatus {
 export enum AdminTab {
   USERS = 'users',
   ATTEMPTS = 'attempts',
+  SUBMISSIONS = 'submissions',
   REJUDGE = 'rejudge',
   RESET_PASSWORD = 'reset-password'
 }
