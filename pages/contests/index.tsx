@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContentsResponseType, ContestSummaryListResponseDTO, ContestTab } from 'types';
+import { Popover } from '../../components';
 
 type SettingsOptions = {
   startTimestamp: number;
@@ -94,7 +95,48 @@ function Contests() {
             <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
               <a>
                 <div className="jk-row gap link text-semi-bold">
-                  {name}{user.isContestant && <CheckIcon filledCircle className="color-success" />}
+                  {name}
+                  {user.isAdmin ? (
+                    <Popover
+                      content={<T className="text-sentence-case text-nowrap">you are admin</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-t tx-wd-bold letter-tag">A</div>
+                    </Popover>
+                  ) : user.isJudge ? (
+                    <Popover
+                      content={<T className="text-sentence-case text-nowrap">you are judge</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-t tx-wd-bold letter-tag">J</div>
+                    </Popover>
+                  ) : user.isContestant ? (
+                    <Popover
+                      content={<T className="text-sentence-case text-nowrap">registered</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div><CheckIcon filledCircle className="color-success" /></div>
+                    </Popover>
+                  ) : user.isGuest ? (
+                    <Popover
+                      content={<T className="text-sentence-case text-nowrap">you are guest</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-t tx-wd-bold letter-tag">G</div>
+                    </Popover>
+                  ) : user.isSpectator && (
+                    <Popover
+                      content={<T className="text-sentence-case text-nowrap">you are spectator</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-t tx-wd-bold letter-tag">S</div>
+                    </Popover>
+                  )}
                 </div>
               </a>
             </Link>

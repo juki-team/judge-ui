@@ -106,3 +106,8 @@ a:active {
 li > * {
   vertical-align: text-top;
 }
+
+.letter-tag {
+  padding: 0 var(--pad-xt);
+  margin-right: 4px;
+}

@@ -37,22 +37,21 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T>contests</T>,
       icon: <CupIcon />,
       selected: ('/' + pathname).includes('//contest'),
-      onClick: () => push(ROUTES.CONTESTS.LIST()),
+      menuItemWrapper: (children) => <Link href={ROUTES.CONTESTS.LIST()}><a>{children}</a></Link>,
     },
     {
       label: <T>problems</T>,
       icon: <AssignmentIcon />,
       selected: ('/' + pathname).includes('//problem'),
-      onClick: () => push(ROUTES.PROBLEMS.LIST()),
+      menuItemWrapper: (children) => <Link href={ROUTES.PROBLEMS.LIST()}><a>{children}</a></Link>,
     },
-  
   ];
   if (can.viewUsersTab(user)) {
     menu.push({
       label: <T>admin</T>,
       icon: <SettingIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      onClick: () => push(ROUTES.ADMIN.PAGE(AdminTab.USERS)),
+      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS)}><a>{children}</a></Link>,
     });
   }
   const { updateUserSettings, setUser } = useUserDispatch();
@@ -139,12 +138,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {query[QueryParam.USER_PREVIEW] && <UserPreview nickname={query[QueryParam.USER_PREVIEW]} />}
       <HorizontalMenu
         menu={menu}
-        left={() => (
+        leftSection={() => (
           <div className="color-white navbar" onClick={() => push('/')}>
             <JukiJudgeLogoHorImage />
           </div>
         )}
-        right={
+        rightSection={
           <div className="jk-row gap settings-apps-login-user-content nowrap">
             {settings('bottom')}
             <LoginUser />

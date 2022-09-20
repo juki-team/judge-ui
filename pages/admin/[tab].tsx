@@ -1,4 +1,4 @@
-import { T, Tabs, TwoContentLayout, Users, Submissions } from 'components';
+import { T, Tabs, TwoContentLayout, Users, AllSubmissions } from 'components';
 import { ROUTES } from 'config/constants';
 import { can } from 'helpers';
 import { useRouter } from 'next/router';
@@ -25,7 +25,7 @@ function Admin() {
         selectedTabKey={query.tab as AdminTab}
         tabs={[
           { key: AdminTab.USERS, header: <T className="text-capitalize">users</T>, body: <Users /> },
-          { key: AdminTab.SUBMISSIONS, header: <T className="text-capitalize">submissions</T>, body: <Submissions /> },
+          { key: AdminTab.SUBMISSIONS, header: <T className="text-capitalize">submissions</T>, body: <AllSubmissions /> },
         ]}
         onChange={tabKey => push(ROUTES.ADMIN.PAGE(tabKey as AdminTab))}
       />

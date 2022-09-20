@@ -1,6 +1,5 @@
 import { DataViewerHeadersType, DateField, ExternalIcon, Field, PagedDataViewer, T, TextHeadCell } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, JUDGE_API_V1, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
-import { useRouter } from 'hooks';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContestTab, ProblemTab, SubmissionResponseDTO } from 'types';
@@ -9,7 +8,7 @@ import { Memory, Time, Verdict } from '../problem/utils';
 
 type ProblemSubmissionsTable = SubmissionResponseDTO;
 
-export function Submissions() {
+export function AllSubmissions() {
   
   const { session } = useUserState();
   

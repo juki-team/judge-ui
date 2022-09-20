@@ -22,10 +22,10 @@ module.exports = withTM(withPWA({
       },
     ];
   },
-  future: { webpack5: true },
+  // future: { webpack5: true },
   pwa: {
-    dest: 'public',
+    dest: 'public'
     // disable: process.env.NEXT_PUBLIC_NODE_ENV === 'development',
     // disable: true,
-  },
+  }
 }));
