@@ -134,7 +134,9 @@ export function Profile({ user }: { user: any }) {
               .filter(([judge, nickname]) => !!nickname && !!JUDGE[judge])
               .map(([judge, nickname]) => (
                 <div key={judge}>
-                  <div className="jk-row left gap"><img src={JUDGE[judge]?.logo} alt={judge} /> {nickname}</div>
+                  <div className="jk-row left gap">
+                    <><img src={JUDGE[judge]?.logo} alt={judge} /> {nickname}</>
+                  </div>
                 </div>
               ))}
           </div>

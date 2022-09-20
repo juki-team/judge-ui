@@ -129,7 +129,7 @@ export const SubmissionInfo = ({
               setOpen(false);
             }}
           >
-            {({ data }) => {
+            {({ data }: { data: ContentResponseType<SubmitResponseDTO> }) => {
               const source = data?.content.sourceCode;
               const testCasesByGroup: { [key: number]: TestCaseResultType[] } = {};
               (data?.content?.testCaseResults || []).forEach((testCase) => {
