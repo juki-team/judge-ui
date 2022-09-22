@@ -2,9 +2,9 @@ import {
   Button,
   ButtonLoader,
   DataViewer,
-  DataViewerHeadersType,
   EditIcon,
   Field,
+  ResetPassword,
   Select,
   T,
   TextHeadCell,
@@ -16,8 +16,15 @@ import { JUDGE_API_V1, USER_STATUS } from 'config/constants';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import { useMemo, useState } from 'react';
-import { ContentResponseType, ContentsResponseType, FilterTextOfflineType, HTTPMethod, Status, UserStatus } from 'types';
-import { ChangePassword } from './ChangePassword';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  DataViewerHeadersType,
+  FilterTextOfflineType,
+  HTTPMethod,
+  Status,
+  UserStatus,
+} from 'types';
 
 type ValuePermission = {
   key: string,
@@ -184,7 +191,7 @@ export function Users() {
   
   return (
     <>
-      <ChangePassword onClose={() => setNickname('')} nickname={nickname} />
+      <ResetPassword onClose={() => setNickname('')} nickname={nickname} />
       <DataViewer<UsersTable>
         headers={columns}
         data={data}

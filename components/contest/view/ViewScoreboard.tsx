@@ -1,12 +1,12 @@
 import { getProblemJudgeKey } from '@juki-team/commons';
 import {
   BalloonIcon,
+  ButtonLoader,
   DataViewer,
-  DataViewerHeadersType,
   Field,
-  InputToggle,
-  LoadingIcon,
+  GearsIcon,
   Popover,
+  SnowflakeIcon,
   T,
   TextHeadCell,
   UserNicknameLink,
@@ -15,9 +15,9 @@ import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { classNames, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ContestResponseDTO, ContestTab, ScoreboardResponseDTO, Status } from 'types';
+import { ContentsResponseType, ContestResponseDTO, ContestTab, DataViewerHeadersType, ScoreboardResponseDTO } from 'types';
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -113,9 +113,8 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   const {
     data: response,
     request,
-    error,
     isLoading,
-    setLoaderStatusRef
+    setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD_V1(contest?.key, unfrozen, user.session), { refreshInterval: 60000 });
   
   const lastTotalRef = useRef(0);
@@ -134,12 +133,24 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       extraButtons={() => (
         <div className="jk-row gap">
           <div />
-          {contest?.isFrozenTime && <div className="jk-tag info">frozen time</div>}
-          {contest?.isQuietTime && <div className="jk-tag info">quiet time</div>}
+          {!unfrozen && contest?.isFrozenTime && (
+            <Popover content={<T className="tx-ws-nowrap">scoreboard frozen</T>} showPopperArrow>
+              <div className="color-info"><SnowflakeIcon /></div>
+            </Popover>
+          )}
+          {!unfrozen && contest?.isQuietTime && (
+            <Popover content={<T className="tx-ws-nowrap">scoreboard on quiet time</T>} showPopperArrow>
+              <div className="color-error"><GearsIcon /></div>
+            </Popover>
+          )}
           {((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
             <div className="jk-row">
-              {isLoading ? <LoadingIcon /> : <InputToggle checked={unfrozen} onChange={setUnfrozen} />}
-              <T>{unfrozen ? 'scoreboard unfrozen' : 'scoreboard frozen'}</T>
+              <ButtonLoader
+                setLoaderStatusRef={setLoaderStatusRef} size="tiny" type={'secondary'} disabled={isLoading}
+                onClick={() => setUnfrozen(!unfrozen)}
+              >
+                <T>{unfrozen ? 'view frozen scoreboard' : 'view unfrozen scoreboard'}</T>
+              </ButtonLoader>
             </div>
           )}
         </div>

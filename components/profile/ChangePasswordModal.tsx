@@ -1,13 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNotification } from '@juki-team/base-ui';
 import { ButtonLoader, InputPassword, Modal, T } from 'components';
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { SetLoaderStatusOnClickType, Status } from 'types';
+import { SetLoaderStatusOnClickType } from 'types';
 import * as yup from 'yup';
-import { JUDGE_API_V1 } from '../../config/constants';
-import { authorizedRequest, cleanRequest } from '../../helpers';
-import { ContentResponseType, HTTPMethod } from '../../types';
+import { useUserDispatch } from '../../store';
 
 export type ProfileChangePasswordInput = {
   oldPassword: string,
@@ -28,36 +25,16 @@ const profileSettingsChangePasswordSchema = yup.object().shape({
     .oneOf([yup.ref('newPassword'), ''], 'both passwords must match'),
 });
 
-export const ChangePasswordModal = ({ onClose }) => {
-  
+export const ChangePasswordModal = ({ onClose, nickname: userNickname }: { onClose: () => void, nickname: string }) => {
   const { register, handleSubmit, formState: { errors, isValid } } = useForm<ProfileChangePasswordInput>({
     resolver: yupResolver(profileSettingsChangePasswordSchema),
     mode: 'onChange',
     reValidateMode: 'onBlur',
   });
-  const { addSuccessNotification, addErrorNotification } = useNotification();
+  
+  const { changeMyPassword } = useUserDispatch();
   
   const setLoaderRef = useRef<SetLoaderStatusOnClickType>();
-  
-  const onSubmit = async (data: ProfileChangePasswordInput, setStatus: SetLoaderStatusOnClickType) => {
-    setStatus?.(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD(), {
-      method: HTTPMethod.PUT,
-      body: JSON.stringify({
-        newPassword: data.newPassword,
-        oldPassword: data.oldPassword,
-      }),
-    }));
-    if (response.success) {
-      addSuccessNotification(<T className="text-sentence-case">password changed successfully</T>);
-      setStatus?.(Status.SUCCESS);
-      onClose();
-    } else {
-      addErrorNotification(response.message || <T>error</T>);
-      setStatus?.(Status.ERROR);
-    }
-    JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD();
-  };
   
   return (
     <Modal
@@ -66,7 +43,8 @@ export const ChangePasswordModal = ({ onClose }) => {
       onClose={onClose}
     >
       <div className="jk-pad">
-        <form onSubmit={handleSubmit((data: ProfileChangePasswordInput) => onSubmit(data, setLoaderRef.current!))}>
+        <form
+          onSubmit={handleSubmit((data: ProfileChangePasswordInput) => changeMyPassword(userNickname, data.newPassword, data.oldPassword, onClose)(setLoaderRef.current!, null, null))}>
           <div className="jk-form-item">
             <label>
               <T>new password</T>

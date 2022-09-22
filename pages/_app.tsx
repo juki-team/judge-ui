@@ -39,7 +39,6 @@ export default function MyApp({ Component, pageProps }) {
             </OnlineStatusProvider>
           </TaskProvider>
         </UserProvider>
-      
       </div>
     </JukiBaseUiProvider>
   );

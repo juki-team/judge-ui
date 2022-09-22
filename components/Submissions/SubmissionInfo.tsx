@@ -1,44 +1,12 @@
-import { CodeViewer, Collapse, DateLiteral, FetcherLayer, Field, Modal, T, UpIcon } from 'components';
+import { CodeViewer, Collapse, DateLiteral, FetcherLayer, Field, Modal, T, UpIcon } from 'components/index';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames } from 'helpers';
 import { useNotification } from 'hooks';
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { useUserState } from 'store';
-import {
-  ContentResponseType,
-  ProblemMode,
-  ProblemVerdict,
-  ProgrammingLanguage,
-  ReactNodeOrFunctionType,
-  SubmissionRunStatus,
-  SubmitResponseDTO,
-  TestCaseResultType,
-} from 'types';
-import { SOMETHING_WENT_WRONG_MESSAGE } from '../commons/Messages';
+import { ContentResponseType, ProblemMode, ProblemVerdict, SubmissionResponseDTO, SubmitResponseDTO, TestCaseResultType } from 'types';
+import { somethingWentWrongMessage } from '../commons/messages';
 import { hasTimeHasMemory, Memory, Time, Verdict } from './utils';
-
-export interface SubmissionInfoProps {
-  submitId: string,
-  language: ProgrammingLanguage,
-  timeUsed: number,
-  memoryUsed: number,
-  verdict: ProblemVerdict,
-  points: number,
-  date: Date,
-  children: ReactNodeOrFunctionType,
-  problem: {
-    mode: ProblemMode,
-    timeLimit: number,
-    memoryLimit: number,
-  },
-  contest?: {
-    key: string,
-    problemIndex: string,
-    name: string,
-  },
-  canViewSourceCode: boolean,
-  status: SubmissionRunStatus,
-}
 
 interface GroupInfoProps {
   groupKey: number,
@@ -96,20 +64,27 @@ const GroupInfo = ({ groupKey, isSubtaskProblem, timeUsed, memoryUsed, verdict, 
 };
 
 export const SubmissionInfo = ({
-  submitId,
-  language,
-  timeUsed,
-  memoryUsed,
-  verdict,
-  points,
-  date,
+  submission: {
+    submitId,
+    language,
+    timeUsed,
+    memoryUsed,
+    verdict,
+    points,
+    timestamp,
+    contestKey,
+    contestProblemIndex,
+    contestName,
+    problemMode,
+    problemTimeLimit,
+    problemMemoryLimit,
+    canViewSourceCode,
+    status,
+  },
   children,
-  contest,
-  problem,
-  canViewSourceCode,
-  status,
-}: SubmissionInfoProps) => {
-  const isSubtaskProblem = problem.mode === ProblemMode.SUBTASK;
+}: PropsWithChildren<{ submission: SubmissionResponseDTO }>) => {
+  const date = new Date(timestamp);
+  const isSubtaskProblem = problemMode === ProblemMode.SUBTASK;
   const [open, setOpen] = useState(false);
   const { addErrorNotification } = useNotification();
   const { session } = useUserState();
@@ -125,7 +100,7 @@ export const SubmissionInfo = ({
           <FetcherLayer<ContentResponseType<SubmitResponseDTO>>
             url={(open && canViewSourceCode) ? JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId, session) : undefined}
             onError={() => {
-              addErrorNotification(SOMETHING_WENT_WRONG_MESSAGE);
+              addErrorNotification(somethingWentWrongMessage());
               setOpen(false);
             }}
           >

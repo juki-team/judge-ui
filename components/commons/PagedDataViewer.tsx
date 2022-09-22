@@ -1,8 +1,8 @@
 import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import { useCallback, useRef } from 'react';
-import { ContentsResponseType, ReactNodeOrFunctionType } from 'types';
-import { DataViewer, DataViewerHeadersType } from './index';
+import { ContentsResponseType, ReactNodeOrFunctionType, DataViewerHeadersType } from 'types';
+import { DataViewer } from './index';
 
 export const PagedDataViewer = <T, V>({
   headers,

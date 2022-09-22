@@ -15,7 +15,8 @@ export {
   CloudUploadIcon,
   CodeEditorKeyMap,
   CodeEditorTheme,
-  CodeRunnerEditor, SettingIcon,
+  CodeRunnerEditor,
+  SettingIcon,
   CodeViewer,
   ConstructionIcon,
   CopyIcon,
@@ -87,19 +88,16 @@ export {
   Collapse,
   ColorPicker,
   SimpleSortableRows,
+  SnowflakeIcon,
+  GearsIcon,
   DragIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore
 // export const SimpleSortableRows = dynamic(() => import('@juki-team/base-ui').then(module => ({ default: module.SimpleSortableRows })), { ssr: false });
 
-export type {
-  CodeEditorTestCasesType,
-  DataViewerHeadersType,
-  FilterSelectOfflineType,
-} from '@juki-team/base-ui';
-
 export * from './CheckUnsavedChanges';
+// export * from './messages';
 export * from './PagedDataViewer';
 export * from './ProblemSelector';
 export * from './User';
