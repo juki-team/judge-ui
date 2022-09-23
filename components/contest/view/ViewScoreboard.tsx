@@ -87,10 +87,22 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
             const problemData = problems[getProblemJudgeKey(problem.judge, problem.key)];
             return (
               <Field className="jk-row center nowrap">
-                {problemData?.success && (
-                  <div style={{ color: problem.color }}>
-                    <BalloonIcon percent={(problemData.points / problem.points) * 100} />
-                  </div>
+                {(problemData?.success || !!problemData?.points) && (
+                  <Popover
+                    content={
+                      <div className="tx-ws-nowrap">
+                        {problemData?.success ? problemData.points : <>{problemData.points}/{problem.points}</>}
+                        &nbsp;
+                        <T>{problem?.points === 1 ? 'point' : 'points'}</T>
+                      </div>
+                    }
+                    popoverClassName="popover-padding-xt"
+                    showPopperArrow
+                  >
+                    <div style={{ color: problem.color }}>
+                      <BalloonIcon percent={(problemData.points / problem.points) * 100} />
+                    </div>
+                  </Popover>
                 )}
                 <div className="jk-row nowrap">
                   <div className="text-xs">{problemData?.attempts || '-'}</div>
