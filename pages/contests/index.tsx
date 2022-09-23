@@ -3,10 +3,10 @@ import {
   CheckIcon,
   ContentLayout,
   DataViewer,
-  DataViewerHeadersType,
   DateField,
   Field,
   PlusIcon,
+  Popover,
   T,
   TextField,
   TextHeadCell,
@@ -17,8 +17,7 @@ import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ContestSummaryListResponseDTO, ContestTab } from 'types';
-import { Popover } from '../../components';
+import { ContentsResponseType, ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType } from 'types';
 
 type SettingsOptions = {
   startTimestamp: number;
