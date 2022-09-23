@@ -1,5 +1,5 @@
 import { getProblemJudgeKey, Judge } from '@juki-team/commons';
-import { ButtonLoader, CodeEditorKeyMap, CodeEditorTestCasesType, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
+import { ButtonLoader, CodeEditorKeyMap, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   JUDGE_API_V1,
@@ -9,12 +9,20 @@ import {
   QueryParam,
   ROUTES,
 } from 'config/constants';
-import { addParamQuery, authorizedRequest, cleanRequest, isStringJson } from 'helpers';
-import { useNotification, useRouter } from 'hooks';
+import {
+  addParamQuery,
+  authorizedRequest,
+  cleanRequest,
+  getEditorSettingsStorageKey,
+  getProblemsStoreKey,
+  isStringJson,
+} from 'helpers';
+import { useContestRouter, useNotification, useRouter } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTaskDispatch, useUserState } from 'store';
 import { useSWRConfig } from 'swr';
 import {
+  CodeEditorTestCasesType,
   ContentResponseType,
   ContestTab,
   HTTPMethod,
@@ -24,8 +32,6 @@ import {
   Status,
   SubmissionRunStatus,
 } from 'types';
-import { getEditorSettingsStorageKey, getProblemsStoreKey } from '../../helpers/problem';
-import { useContestRouter } from '../../hooks';
 import { SpectatorInformation } from '../contest/Information';
 
 const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {

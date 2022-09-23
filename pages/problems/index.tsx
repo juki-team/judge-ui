@@ -1,23 +1,12 @@
-import {
-  ButtonLoader,
-  ContentLayout,
-  DataViewer,
-  DataViewerHeadersType,
-  Field,
-  FilterSelectOfflineType,
-  PlusIcon,
-  T,
-  TextField,
-  TextHeadCell,
-} from 'components';
+import { ContentLayout, DataViewer, Field, T, TextField, TextHeadCell } from 'components';
 import { PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { buttonLoaderLink, can, searchParamsObjectTypeToQuery } from 'helpers';
+import { can, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ProblemStatus, ProblemTab } from 'types';
+import { ContentsResponseType, DataViewerHeadersType, FilterSelectOfflineType, ProblemStatus, ProblemTab } from 'types';
 
 type ProblemsTable = {
   id: number,
