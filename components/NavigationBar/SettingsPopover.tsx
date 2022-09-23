@@ -6,7 +6,7 @@ export const SettingsPopover = ({ loader, languageChecked, toggleLanguage, theme
     <div className="jk-col gap filled settings-popover">
       <div className="jk-row text-semi-bold"><T className="text-sentence-case">settings</T></div>
       <div className="">
-        <div className="text-semi-bold text-sentence-case"><T>language</T></div>
+        <div className="tx-wd-bold text-sentence-case"><T>language</T></div>
         <div className="jk-row gap nowrap">
           English
           {loader ? <LoadingIcon /> : <InputToggle checked={languageChecked} onChange={toggleLanguage} />}

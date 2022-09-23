@@ -55,7 +55,7 @@ function Contests() {
       field: ({ record: { stateContest } }) => (
         <Field className="jk-row pad">
           <div className={`jk-tag ${stateContest === 'past' ? 'success' : (stateContest === 'upcoming' ? 'info' : 'error')}`}>
-            {stateContest}
+            <T>{stateContest}</T>
           </div>
         </Field>
       ),
