@@ -13,7 +13,7 @@ import {
 } from '../Submissions';
 
 export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: ProblemResponseDTO, mySubmissions?: boolean }) => {
-  const { session, nickname } = useUserState();
+  const { nickname } = useUserState();
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => {
     return [
       ...(!mySubmissions ? [submissionNickname()] : []),
@@ -27,9 +27,9 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
   
   const url = (page: number, size: number) => {
     if (mySubmissions) {
-      return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, page, size, session);
+      return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, page, size);
     }
-    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.key, page, size, session);
+    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.key, page, size);
   };
   
   return (

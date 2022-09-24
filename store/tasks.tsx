@@ -1,25 +1,22 @@
-import { ContentsResponseType } from '@juki-team/commons';
+import { T } from 'components';
+import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import { createContext, PropsWithChildren, useContext } from 'react';
-
-import { ProblemVerdict } from 'types';
-import { T } from '../components';
-import { JUDGE_API_V1, PROBLEM_VERDICT } from '../config/constants';
-import { authorizedRequest, cleanRequest } from '../helpers';
-import { HTTPMethod } from '../types';
-import { useUserState } from './user';
+import { useUserState } from 'store';
+import { ContentsResponseType, HTTPMethod, ProblemVerdict } from 'types';
 
 export const TaskContext = createContext<{ listenSubmission: (submissionId: string, problem: string) => void }>({
   listenSubmission: () => null,
 });
 
 export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
-  const { session, nickname } = useUserState();
+  const { nickname } = useUserState();
   const { addErrorNotification, addSuccessNotification } = useNotification();
   
   const listenSubmission = async (listenSubmissionId, problemKey) => {
     const result = cleanRequest<ContentsResponseType<{ submitId: string, verdict: ProblemVerdict, points: number, contestName?: string, contestProblemIndex?: string, problemName: string }>>(
-      await authorizedRequest(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problemKey, nickname, 1, 16, session), {
+      await authorizedRequest(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problemKey, nickname, 1, 16), {
         method: HTTPMethod.GET,
       }));
     if (result.success) {

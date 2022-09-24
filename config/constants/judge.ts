@@ -56,20 +56,20 @@ export const JUDGE_API_V1 = {
     },
   },
   SUBMISSIONS: {
-    LIST: (page: number, size: number, session?: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&session=${session}`;
+    LIST: (page: number, size: number) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}`;
     },
     NICKNAME: (nickname: string, page: number, size: number) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/nickname/${nickname}?page=${page}&size=${size}`;
     },
-    CONTEST: (contestKey: string, page: number, size: number, session?: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}?page=${page}&size=${size}&session=${session}`;
+    CONTEST: (contestKey: string, page: number, size: number) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}?page=${page}&size=${size}`;
     },
     CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}/nickname/${nickname}?page=${page}&size=${size}`;
     },
-    PROBLEM: (problemKey: string, page: number, size: number, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}?session=${session}&page=${page}&size=${size}`;
+    PROBLEM: (problemKey: string, page: number, size: number) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}?page=${page}&size=${size}`;
     },
     PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}/nickname/${nickname}?&page=${page}&size=${size}`;

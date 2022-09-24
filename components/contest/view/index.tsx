@@ -27,11 +27,10 @@ export function ContestView() {
   
   const { push } = useRouter();
   const { lastProblemVisited, pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
-  const { session } = useUserState();
   
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
-      url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey, session)}
+      url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
       options={{ refreshInterval: 60000 }}
       errorView={<Custom404 />}
     >
