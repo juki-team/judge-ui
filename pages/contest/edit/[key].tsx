@@ -39,7 +39,6 @@ const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreate
     problems: problems,
     settings: data.content.settings,
     tags: data.content.tags,
-    type: data.content.type,
   };
 };
 
