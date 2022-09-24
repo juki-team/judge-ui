@@ -51,8 +51,8 @@ export const JUDGE_API_V1 = {
     },
   },
   SUBMIT: {
-    SUBMIT_ID: (submitId: string, session?: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/submitId/${submitId}?session=${session}`;
+    SUBMIT_ID: (submitId: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/submitId/${submitId}`;
     },
   },
   SUBMISSIONS: {

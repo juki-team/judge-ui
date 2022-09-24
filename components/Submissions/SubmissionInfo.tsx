@@ -87,7 +87,6 @@ export const SubmissionInfo = ({
   const isSubtaskProblem = problemMode === ProblemMode.SUBTASK;
   const [open, setOpen] = useState(false);
   const { addErrorNotification } = useNotification();
-  const { session } = useUserState();
   const canOpen = !open && canViewSourceCode;
   
   return (
@@ -98,7 +97,7 @@ export const SubmissionInfo = ({
       <Modal isOpen={open} onClose={() => setOpen(false)} closeIcon>
         <section className="jk-pad">
           <FetcherLayer<ContentResponseType<SubmitResponseDTO>>
-            url={(open && canViewSourceCode) ? JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId, session) : undefined}
+            url={(open && canViewSourceCode) ? JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId) : undefined}
             onError={() => {
               addErrorNotification(somethingWentWrongMessage());
               setOpen(false);
