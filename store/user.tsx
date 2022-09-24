@@ -1,27 +1,23 @@
-import { ButtonLoaderOnClickType } from '@juki-team/base-ui/dist/esm/components/Button/types';
 import { T } from 'components';
-import { DEFAULT_PERMISSIONS, OpenDialog, QueryParam, USER_GUEST } from 'config/constants';
-import { JUDGE_API_V1 } from 'config/constants/judge';
-import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, isStringJson, notifyResponse } from 'helpers';
+import { JUDGE_API_V1, JUKI_TOKEN_NAME, OpenDialog, QueryParam, USER_GUEST } from 'config/constants';
+import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, isStringJson, notifyResponse, toBlob } from 'helpers';
 import { useFetcher, useNotification, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useSWRConfig } from 'swr';
 import {
+  ButtonLoaderOnClickType,
   ContentResponseType,
   HTTPMethod,
   Language,
-  ProfileSettingOptions,
-  ScopeData,
   SetLoaderStatusOnClickType,
   Status,
-  UserInterface,
+  Theme,
+  UserPingResponseDTO,
 } from 'types';
-import { toBlob } from '../helpers';
 
-export interface UserState extends UserInterface {
+export interface UserState extends UserPingResponseDTO {
   isLogged: boolean,
-  session: string,
 }
 
 export const UserContext = createContext<{ user: UserState, setUser: Dispatch<SetStateAction<UserState>>, isLoading: boolean }>({
@@ -31,42 +27,11 @@ export const UserContext = createContext<{ user: UserState, setUser: Dispatch<Se
   isLoading: true,
 });
 
-const getUserState = (object: any): UserState => {
-  const myPermissions = {
-    [ScopeData.USER]: object?.permissions?.find?.(s => s?.key === 'USER')?.value || DEFAULT_PERMISSIONS.USER,
-    [ScopeData.CONTEST]: object?.permissions?.find?.(s => s?.key === 'CONTEST')?.value || DEFAULT_PERMISSIONS.CONTEST,
-    [ScopeData.PROBLEM]: object?.permissions?.find?.(s => s?.key === 'PROBLEM')?.value || DEFAULT_PERMISSIONS.PROBLEM,
-    [ScopeData.ATTEMPT]: object?.permissions?.find?.(s => s?.key === 'ATTEMPT')?.value || DEFAULT_PERMISSIONS.ATTEMPT,
-  };
-  
-  return {
-    givenName: object?.givenName || USER_GUEST.givenName,
-    familyName: object?.familyName || USER_GUEST.familyName,
-    nickname: object?.nickname || USER_GUEST.nickname,
-    imageUrl: object?.imageUrl || USER_GUEST.imageUrl,
-    aboutMe: object?.aboutMe || USER_GUEST.aboutMe,
-    country: object?.country || USER_GUEST.country,
-    city: object?.city || USER_GUEST.city,
-    institution: object?.institution || USER_GUEST.institution,
-    email: object?.email || USER_GUEST.email,
-    telegramUsername: USER_GUEST.telegramUsername,
-    preferredLanguage: object?.settings?.find(({ key }) => key === 'preferredLanguage')?.value || USER_GUEST.preferredLanguage,
-    preferredTheme: object?.settings?.find(({ key }) => key === 'preferredTheme')?.value || USER_GUEST.preferredTheme,
-    status: object?.status || USER_GUEST.status,
-    userRole: USER_GUEST.userRole,
-    teamRole: USER_GUEST.teamRole,
-    courseRole: USER_GUEST.courseRole,
-    myPermissions,
-    isLogged: !!object?.nickname,
-    session: object?.session || '',
-  };
-};
-
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const { i18n } = useT();
   const { push, locale, pathname, asPath, query, isReady } = useRouter();
-  const { data, isLoading, mutate } = useFetcher<ContentResponseType<any>>(JUDGE_API_V1.ACCOUNT.PING());
+  const { data, isLoading, mutate } = useFetcher<ContentResponseType<UserPingResponseDTO>>(JUDGE_API_V1.AUTH.PING());
   const [user, setUser] = useState<UserState>(USER_GUEST);
   const [userIsLoading, setUserIsLoading] = useState(true);
   useEffect(() => {
@@ -76,9 +41,9 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   }, [isLoading]);
   useEffect(() => {
     if (data?.success) {
-      setUser(getUserState(data?.content));
+      setUser({ ...data?.content, isLogged: true });
     } else {
-      setUser(getUserState(USER_GUEST));
+      setUser(USER_GUEST);
     }
   }, [data]);
   useEffect(() => {
@@ -93,12 +58,12 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   useEffect(() => {
     if (isReady) {
-      const newLocale = user.preferredLanguage === Language.EN ? 'en' : 'es';
+      const newLocale = user.settings?.preferredLanguage === Language.EN ? 'en' : 'es';
       if (locale !== newLocale) {
         push({ pathname, query }, asPath, { locale: newLocale });
       }
     }
-  }, [user.preferredLanguage, user.nickname, locale, pathname, /*query,*/ asPath, isReady]);
+  }, [user.settings?.preferredLanguage, user.nickname, locale, pathname, /*query,*/ asPath, isReady]);
   
   return (
     <UserContext.Provider value={{ user, setUser, isLoading: userIsLoading }}>
@@ -121,19 +86,18 @@ export const useUserDispatch = () => {
   const { addNotification, addSuccessNotification, addErrorNotification, addInfoNotification } = useNotification();
   const { setUser } = useContext(UserContext);
   const { push, query } = useRouter();
-  const { session } = useUserState();
   const { mutate } = useSWRConfig();
   
   return {
     setUser,
     updateProfileData: (nickname: string, body, onSuccess): ButtonLoaderOnClickType => async (setLoaderStatus) => {
-      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.UPDATE_PROFILE_DATA(nickname as string, session), {
+      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.UPDATE_PROFILE_DATA(nickname as string), {
         method: HTTPMethod.PUT,
         body: JSON.stringify(body),
       }));
       if (notifyResponse(response, addNotification)) {
-        await mutate(JUDGE_API_V1.ACCOUNT.PING());
-        await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string, session));
+        await mutate(JUDGE_API_V1.AUTH.PING());
+        await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string));
         setLoaderStatus(Status.SUCCESS);
         onSuccess();
       } else {
@@ -147,13 +111,13 @@ export const useUserDispatch = () => {
           setLoader?.(Status.LOADING);
           const formData = new FormData();
           formData.append('image', blob);
-          const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.UPDATE_PROFILE_IMAGE(nickname, session), {
+          const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.UPDATE_PROFILE_IMAGE(nickname), {
             method: HTTPMethod.PUT,
             body: formData,
           }));
           if (notifyResponse(response, addNotification)) {
-            await mutate(JUDGE_API_V1.ACCOUNT.PING());
-            await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string, session));
+            await mutate(JUDGE_API_V1.AUTH.PING());
+            await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string));
             onSuccess();
             setLoader(Status.SUCCESS);
           } else {
@@ -162,11 +126,11 @@ export const useUserDispatch = () => {
         }
       }
     },
-    changeMyPassword: (nickname, newPassword, oldPassword, onSuccess): ButtonLoaderOnClickType => async (setLoaderStatus) => {
+    updatePassword: (nickname, newPassword, onSuccess): ButtonLoaderOnClickType => async (setLoaderStatus) => {
       setLoaderStatus?.(Status.LOADING);
-      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PASSWORD(), {
+      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.AUTH.UPDATE(nickname), {
         method: HTTPMethod.PUT,
-        body: JSON.stringify({ newPassword, oldPassword }),
+        body: JSON.stringify({ newPassword}),
       }));
       if (response.success) {
         addSuccessNotification(<T className="text-sentence-case">password changed successfully</T>);
@@ -177,14 +141,11 @@ export const useUserDispatch = () => {
         setLoaderStatus?.(Status.ERROR);
       }
     },
-    changePassword: (nickname, newPassword, onSuccess): ButtonLoaderOnClickType => async (setLoaderStatus) => {
+    resetPassword: (nickname, newPassword, onSuccess): ButtonLoaderOnClickType => async (setLoaderStatus) => {
       setLoaderStatus?.(Status.LOADING);
-      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE_PASSWORD(), {
+      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.AUTH.RESET(nickname), {
         method: HTTPMethod.PUT,
-        body: JSON.stringify({
-          nickName: nickname,
-          newPassword,
-        }),
+        body: JSON.stringify({ newPassword }),
       }));
       if (response.success) {
         addSuccessNotification(<T className="text-sentence-case">password changed successfully</T>);
@@ -195,21 +156,22 @@ export const useUserDispatch = () => {
         setLoaderStatus?.(Status.ERROR);
       }
     },
-    signIn: (nickname: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper<ContentResponseType<any>>({
-      request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNIN(), {
+    signIn: (nickname: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper<ContentResponseType<UserPingResponseDTO>>({
+      request: async () => cleanRequest<ContentResponseType<UserPingResponseDTO>>(await authorizedRequest(JUDGE_API_V1.AUTH.SIGN_IN(), {
         method: HTTPMethod.POST,
         body: JSON.stringify({ nickname, password }),
       })),
       addNotification,
       onSuccess: (result) => {
-        setUser(getUserState(result.content));
+        localStorage.setItem(JUKI_TOKEN_NAME, result.content.sessionId);
+        setUser({ ...result.content, isLogged: true });
         addSuccessNotification(<T className="text-sentence-case">welcome back</T>);
       },
       setLoader,
     }),
-    signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper<ContentResponseType<any>>({
+    signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper<ContentResponseType<UserPingResponseDTO>>({
       request: async () => {
-        return cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.SIGNUP(), {
+        return cleanRequest<ContentResponseType<UserPingResponseDTO>>(await authorizedRequest(JUDGE_API_V1.AUTH.SIGN_UP(), {
           method: HTTPMethod.POST,
           body: JSON.stringify({
             givenName,
@@ -222,15 +184,16 @@ export const useUserDispatch = () => {
       },
       addNotification,
       onSuccess: async (result) => {
+        localStorage.setItem(JUKI_TOKEN_NAME, result.content.sessionId);
         addSuccessNotification(<T className="text-sentence-case">welcome</T>);
         await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
-        setUser(getUserState(result.content));
+        setUser({ ...result.content, isLogged: true });
       },
       setLoader,
     }),
     logout: async (setLoader: SetLoaderStatusOnClickType) => {
       setLoader(Status.LOADING);
-      const response = await authorizedRequest(JUDGE_API_V1.ACCOUNT.LOGOUT(), { method: HTTPMethod.POST });
+      const response = await authorizedRequest(JUDGE_API_V1.AUTH.SIGN_OUT(), { method: HTTPMethod.POST });
       if (isStringJson(response)) {
         const result = JSON.parse(response); // special endpoint that only return success
         if (result.success === true) {
@@ -244,28 +207,20 @@ export const useUserDispatch = () => {
         setLoader(Status.ERROR);
         addErrorNotification(<T className="text-sentence-case">force Logout</T>);
       }
+      localStorage.removeItem(JUKI_TOKEN_NAME);
       setUser(USER_GUEST);
       // await push('/');
     },
-    recoverAccount: () => {
-    
-    },
-    updateUserSettings: async (account: UserState, setLoader: SetLoaderStatusOnClickType) => {
-      const accountBody: UserState & { settings: Array<{ key: ProfileSettingOptions, value: string }> } = JSON.parse(JSON.stringify(account));
-      
-      accountBody.settings = [
-        { key: ProfileSettingOptions.LANGUAGE, value: account.preferredLanguage },
-        { key: ProfileSettingOptions.THEME, value: account.preferredTheme },
-      ];
+    updateUserSettings: async (nickname: string, settings: { preferredTheme: Theme, preferredLanguage: Language }, setLoader: SetLoaderStatusOnClickType) => {
       return actionLoaderWrapper<ContentResponseType<any>>({
-        request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.UPDATE(), {
+        request: async () => cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.UPDATE_PREFERENCES(nickname), {
           method: HTTPMethod.PUT,
-          body: JSON.stringify(accountBody),
+          body: JSON.stringify(settings),
         })),
         addNotification,
-        onSuccess: (result) => {
+        onSuccess: async () => {
+          await mutate(JUDGE_API_V1.AUTH.PING());
           addSuccessNotification(<T className="text-sentence-case">your personal information has been updated</T>);
-          setUser(getUserState(result.content));
         },
         setLoader,
         onError: (result) => {

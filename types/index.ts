@@ -20,6 +20,8 @@ export {
   ProgrammingLanguage,
   UserRole,
   TeamRole,
+  ContestRole,
+  ProblemRole,
   ContestStatus,
   CourseRole,
   SubmissionRunStatus,
@@ -42,11 +44,14 @@ export type {
   ProblemResponseDTO,
   ProblemLanguagesType,
   PointsByGroupsType,
-  UserSummaryListResponseDTO,
+  UserSummaryResponseDTO,
+  UserManagementResponseDTO,
   ContestProblemBasicType,
   ContestSummaryListResponseDTO,
   CreateContestDTO,
-  UserResponseDTO,
+  UserProfileResponseDTO,
+  UserPingResponseDTO,
+  UserBasicResponseDTO,
 } from '@juki-team/commons';
 
 export interface UserInterface extends _UserInterface {

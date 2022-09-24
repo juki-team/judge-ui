@@ -78,20 +78,6 @@
   }
 }
 
-.permissions-box {
-  .permission {
-    .label-permission {
-      width: 80px;
-    }
-    
-    input {
-      padding: 0;
-      width: 20px;
-      text-align: center;
-    }
-  }
-}
-
 .alert-modal-json-viewer {
   max-height: calc(var(--100VH) - 300px);
   overflow: auto;

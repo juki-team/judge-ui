@@ -75,6 +75,5 @@ export const useDateFormat = () => {
 export * from './contest';
 export * from './notify';
 export * from './problem';
-export * from './permissions';
 export * from './routes';
 export * from './services';

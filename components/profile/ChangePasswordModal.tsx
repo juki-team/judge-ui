@@ -32,7 +32,7 @@ export const ChangePasswordModal = ({ onClose, nickname: userNickname }: { onClo
     reValidateMode: 'onBlur',
   });
   
-  const { changeMyPassword } = useUserDispatch();
+  const { updatePassword } = useUserDispatch();
   
   const setLoaderRef = useRef<SetLoaderStatusOnClickType>();
   
@@ -44,7 +44,7 @@ export const ChangePasswordModal = ({ onClose, nickname: userNickname }: { onClo
     >
       <div className="jk-pad">
         <form
-          onSubmit={handleSubmit((data: ProfileChangePasswordInput) => changeMyPassword(userNickname, data.newPassword, data.oldPassword, onClose)(setLoaderRef.current!, null, null))}>
+          onSubmit={handleSubmit((data: ProfileChangePasswordInput) => updatePassword(userNickname, data.newPassword, onClose)(setLoaderRef.current!, null, null))}>
           <div className="jk-form-item">
             <label>
               <T>new password</T>

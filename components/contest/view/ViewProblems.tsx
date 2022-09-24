@@ -1,19 +1,26 @@
-import { ContentResponseType, Status, SubmissionRunStatus } from '@juki-team/commons';
 import { Button, ButtonLoader, CheckIcon, CloseIcon, ExternalIcon, LinkIcon, T, TimerLabeled } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, getProblemUrl } from 'helpers';
 import { useNotification } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useUserState } from 'store';
-import { ContestResponseDTO, ContestTab, HTTPMethod, Judge, Period, ProblemTab } from 'types';
+import {
+  ContentResponseType,
+  ContestResponseDTO,
+  ContestTab,
+  HTTPMethod,
+  Judge,
+  Period,
+  ProblemTab,
+  Status,
+  SubmissionRunStatus,
+} from 'types';
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { problems = {}, user, isLive, key, settings } = contest;
   const { isContestant, isJudge, isAdmin } = user || {};
   const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
-  const { session } = useUserState();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const isJudgeOrAdmin = isJudge || isAdmin;
   
@@ -105,7 +112,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                   onClick={async (setLoaderStatus, loaderStatus, event) => {
                     setLoaderStatus(Status.LOADING);
                     const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(
-                      await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(key, getProblemJudgeKey(problem.judge, problem.key), session), {
+                      await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(key, getProblemJudgeKey(problem.judge, problem.key)), {
                         method: HTTPMethod.POST,
                       }));
                     if (result.success) {

@@ -1,10 +1,21 @@
-import { ColorPicker, DeleteIcon, ExternalIcon, Input, PlusIcon, ProblemSelector, Select, SimpleSortableRows, T } from 'components';
+import {
+  BalloonIcon,
+  ColorPicker,
+  DeleteIcon,
+  ExternalIcon,
+  Input,
+  InputDate,
+  InputToggle,
+  PlusIcon,
+  ProblemSelector,
+  Select,
+  SimpleSortableRows,
+  T,
+} from 'components';
 import { JUDGE, PALLETE } from 'config/constants';
-import { classNames, disableOutOfRange, indexToLetters, roundTimestamp, getProblemJudgeKey } from 'helpers';
+import { classNames, disableOutOfRange, getProblemJudgeKey, indexToLetters, roundTimestamp } from 'helpers';
 import React, { useEffect, useRef, useState } from 'react';
-import { Judge, RowSortableItem, RowSortableItemContentType } from 'types';
-import { ContestProblemBasicType } from '../../../types';
-import { BalloonIcon, InputDate, InputToggle } from '../../index';
+import { ContestProblemBasicType, Judge, RowSortableItem, RowSortableItemContentType } from 'types';
 import { EditContestProps } from '../types';
 
 type Problem = {

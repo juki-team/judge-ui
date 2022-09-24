@@ -1,5 +1,5 @@
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
-import { can, isOrHas, removeParamQuery } from 'helpers';
+import { isOrHas, removeParamQuery } from 'helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
@@ -46,7 +46,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: (children) => <Link href={ROUTES.PROBLEMS.LIST()}><a>{children}</a></Link>,
     },
   ];
-  if (can.viewUsersTab(user)) {
+  if (user.canViewUsersManagement || user.canViewSubmissionsManagement) {
     menu.push({
       label: <T>admin</T>,
       icon: <SettingIcon />,
@@ -70,7 +70,14 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const toggleSetting = (key: ProfileSettingOptions, value: string) => {
     if (user.isLogged) {
-      updateUserSettings({ ...user, [key]: value }, (status: Status) => setLoader(status));
+      const settings = { ...user.settings };
+      if (key === ProfileSettingOptions.LANGUAGE) {
+        settings.preferredLanguage = value as Language;
+      }
+      if (key === ProfileSettingOptions.THEME) {
+        settings.preferredTheme = value as Theme;
+      }
+      updateUserSettings(user.nickname, settings, (status: Status) => setLoader(status));
     } else {
       localStorage.setItem(key, value);
       setUser({
@@ -81,10 +88,10 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   };
   
   const toggleLanguage = () => {
-    toggleSetting(ProfileSettingOptions.LANGUAGE, user[ProfileSettingOptions.LANGUAGE] === Language.EN ? Language.ES : Language.EN);
+    toggleSetting(ProfileSettingOptions.LANGUAGE, user.settings?.[ProfileSettingOptions.LANGUAGE] === Language.EN ? Language.ES : Language.EN);
   };
   const toggleTheme = () => {
-    toggleSetting(ProfileSettingOptions.THEME, user[ProfileSettingOptions.THEME] === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
+    toggleSetting(ProfileSettingOptions.THEME, user.settings?.[ProfileSettingOptions.THEME] === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
   };
   
   const settings = (placement: 'bottom' | 'rightBottom') => (
@@ -93,9 +100,9 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         content={
           <SettingsPopover
             loader={loader[0] === Status.LOADING}
-            languageChecked={user[ProfileSettingOptions.LANGUAGE] === Language.ES}
+            languageChecked={user.settings?.[ProfileSettingOptions.LANGUAGE] === Language.ES}
             toggleLanguage={toggleLanguage}
-            themeChecked={user[ProfileSettingOptions.THEME] === Theme.DARK}
+            themeChecked={user.settings?.[ProfileSettingOptions.THEME] === Theme.DARK}
             toggleTheme={toggleTheme}
           />
         }

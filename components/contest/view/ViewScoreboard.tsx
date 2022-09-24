@@ -1,4 +1,4 @@
-import { getProblemJudgeKey } from '@juki-team/commons';
+import { useNotification } from '@juki-team/base-ui';
 import {
   BalloonIcon,
   ButtonLoader,
@@ -12,16 +12,19 @@ import {
   UserNicknameLink,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { classNames, searchParamsObjectTypeToQuery } from 'helpers';
+import { classNames, getProblemJudgeKey, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ContestResponseDTO, ContestTab, DataViewerHeadersType, ScoreboardResponseDTO } from 'types';
+import { ContentsResponseType, ContestResponseDTO, ContestTab, DataViewerHeadersType, ScoreboardResponseDTO, Status } from 'types';
+import { authorizedRequest, cleanRequest } from '../../../helpers';
+import { ContentResponseType, HTTPMethod } from '../../../types';
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const user = useUserState();
+  const { addNotification } = useNotification();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const mySubmissions = false;
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
@@ -127,7 +130,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
     request,
     isLoading,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD_V1(contest?.key, unfrozen, user.session), { refreshInterval: 60000 });
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen), { refreshInterval: 60000 });
   
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
@@ -158,10 +161,31 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
           {((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
             <div className="jk-row">
               <ButtonLoader
-                setLoaderStatusRef={setLoaderStatusRef} size="tiny" type={'secondary'} disabled={isLoading}
+                setLoaderStatusRef={setLoaderStatusRef} size="tiny" type="secondary" disabled={isLoading}
                 onClick={() => setUnfrozen(!unfrozen)}
               >
                 <T>{unfrozen ? 'view frozen scoreboard' : 'view unfrozen scoreboard'}</T>
+              </ButtonLoader>
+            </div>
+          )}
+          {(contest?.user?.isAdmin || contest?.user?.isJudge) && (
+            <div className="jk-row">
+              <ButtonLoader
+                size="tiny"
+                type="secondary"
+                onClick={async (setLoaderStatus) => {
+                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                    JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
+                    { method: HTTPMethod.POST }),
+                  );
+                  if (notifyResponse(response, addNotification)) {
+                    setLoaderStatus(Status.SUCCESS);
+                  } else {
+                    setLoaderStatus(Status.ERROR);
+                  }
+                }}
+              >
+                <T>recalculate scoreboard</T>
               </ButtonLoader>
             </div>
           )}

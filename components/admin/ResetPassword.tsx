@@ -14,7 +14,7 @@ const getRandomString = (length: number) => {
 export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nickname: string }) => {
   
   const [newPassword, setNewPassword] = useState(getRandomString(12));
-  const { changePassword } = useUserDispatch();
+  const { resetPassword } = useUserDispatch();
   
   return (
     <Modal
@@ -50,7 +50,7 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
         </div>
         <div className="jk-row end">
           <Button type="text" onClick={onClose}><T>cancel</T></Button>
-          <ButtonLoader onClick={changePassword(nickname, newPassword, onClose)}>
+          <ButtonLoader onClick={resetPassword(nickname, newPassword, onClose)}>
             <T>change</T>
           </ButtonLoader>
         </div>

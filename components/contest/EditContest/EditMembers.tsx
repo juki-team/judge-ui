@@ -1,7 +1,6 @@
-import { classNames } from '@juki-team/base-ui';
-import { T, UsersSelector } from 'components';
+import { InputToggle, T, UsersSelector } from 'components';
+import { classNames } from 'helpers';
 import React from 'react';
-import { InputToggle } from '../../index';
 import { AdminInformation, JudgeInformation } from '../Information';
 import { EditContestProps } from '../types';
 

@@ -1,12 +1,8 @@
-import { classNames } from '@juki-team/base-ui';
-import { ContestType } from '@juki-team/commons';
-import { ContestProblemBasicType } from '@juki-team/commons/dist/esm/dto/contest';
-import { Input, InputDate, InputToggle, MultiSelect, T, Timer } from 'components';
+import { FrozenInformation, Input, InputDate, InputToggle, MultiSelect, QuietInformation, T, Timer } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
+import { classNames, disableOutOfRange, roundTimestamp } from 'helpers';
 import React, { useState } from 'react';
-import { disableOutOfRange, roundTimestamp } from '../../../helpers';
-import { EditCreateContestDTO } from '../../../types';
-import { ContestTypeInformation, FrozenInformation, QuietInformation } from '../Information';
+import { ContestProblemBasicType, EditCreateContestDTO } from 'types';
 import { EditContestProps } from '../types';
 
 export const EditSettings = ({ contest, setContest }: EditContestProps) => {
@@ -25,7 +21,6 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       }, '[]'),
     };
   };
-  const isPrivate = contest.type === ContestType.PRIVATE;
   const adjustContest = (contest: EditCreateContestDTO): EditCreateContestDTO => {
     const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
     const endTimestamp = Math.max(roundTimestamp(contest.settings.endTimestamp), startTimestamp);
@@ -54,20 +49,6 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
   return (
     <div className="jk-col left stretch jk-pad">
-      <div className="jk-row left gap">
-        <h6><T>type</T></h6>
-        <ContestTypeInformation />
-        <InputToggle
-          checked={isPrivate}
-          onChange={(value) => setContest(prevState => ({
-            ...prevState,
-            type: value ? ContestType.PRIVATE : ContestType.PUBLIC,
-          }))}
-          leftLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': !isPrivate })}>public</T>}
-          rightLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': isPrivate })}>private</T>}
-        />
-      </div>
-      <div className="jk-divider" />
       <div className="jk-row left gap">
         <h6><T>start date</T></h6>
         <InputDate

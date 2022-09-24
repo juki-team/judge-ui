@@ -1,6 +1,6 @@
 import { AlertModal, ArrowIcon, ButtonLoader, ProblemStatement, T, Tabs, TwoContentLayout } from 'components';
 import { ROUTES } from 'config/constants';
-import { diff, updatedDiff } from 'deep-object-diff';
+import { diff } from 'deep-object-diff';
 import { useRouter } from 'hooks';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';

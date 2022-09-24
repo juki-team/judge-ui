@@ -1,25 +1,26 @@
+import { settings } from '@juki-team/base-ui';
+import { JukiBaseUiProvider, NavigationBar } from 'components';
+import { JUKI_TOKEN_NAME } from 'config/constants';
+import { OnlineStatusProvider } from 'hooks';
 import { useEffect } from 'react';
+import { TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
-import { JukiBaseUiProvider, NavigationBar } from '../components';
-import { OnlineStatusProvider } from '../hooks';
 import '../i18n';
-import { UserProvider } from '../store';
-import { TaskProvider } from '../store/tasks';
 import './styles.scss';
 
 export default function MyApp({ Component, pageProps }) {
-  
+  settings.setSetting("https://utils-back-v1.juki.app", "api/v1", "http://localhost:3001", JUKI_TOKEN_NAME);
+  console.log({ settings });
   useEffect(() => {
     document.querySelector('body')?.classList.add('jk-theme-light');
   }, []);
   
   return (
     <JukiBaseUiProvider
-      // utilsServiceUrl={'https://prod-v1-utils-back.juki.app'}
-      // utilsServiceUrl={'http://prodv1utilsbackjukiappapp-env.eba-v2iz3isa.us-east-1.elasticbeanstalk.com'}
       utilsServiceUrl="https://utils-back-v1.juki.app"
-      apiVersion={'api/v1'}
-      utilsUiUrl={'http://localhost:3001'}
+      apiVersion="api/v1"
+      utilsUiUrl="http://localhost:3001"
+      tokenName={JUKI_TOKEN_NAME}
     >
       <div className="jk-app">
         <UserProvider>

@@ -2,10 +2,9 @@ import { getProblemJudgeKey, Status } from '@juki-team/commons';
 import { FetcherLayer } from 'components';
 import { EditContest } from 'components/contest/EditContest';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { authorizedRequest, can, cleanRequest, notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
 import { useContestRouter, useNotification, useRouter } from 'hooks';
 import React, { useEffect, useRef, useState } from 'react';
-import { useUserState } from 'store';
 import { ContentResponseType, ContestResponseDTO, ContestTab, EditCreateContestDTO, HTTPMethod } from 'types';
 import { ButtonLoaderOnClickType } from '../../../types';
 import Custom404 from '../../404';
@@ -30,7 +29,7 @@ const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreate
     judges: Object.keys(data.content.members.judges),
     guests: Object.keys(data.content.members.guests),
     spectators: Object.keys(data.content.members.spectators),
-  }
+  };
   
   return {
     description: data.content.description,
@@ -48,7 +47,6 @@ const Edit = ({ data, isLoading, error }: { data: ContentResponseType<ContestRes
   const [contest, setContest] = useState<EditCreateContestDTO>(parseContest(data));
   const { addNotification } = useNotification();
   const { push } = useRouter();
-  const { session } = useUserState();
   const lastContest = useRef(data);
   useEffect(() => {
     if (JSON.stringify(data) !== JSON.stringify(lastContest.current)) {
@@ -57,7 +55,7 @@ const Edit = ({ data, isLoading, error }: { data: ContentResponseType<ContestRes
   }, [data, isLoading, error]);
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.CONTEST.CONTEST_V1(contest.key, session), {
+    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.CONTEST(contest.key), {
       method: HTTPMethod.PUT,
       body: JSON.stringify(contest),
     }));
@@ -73,24 +71,18 @@ const Edit = ({ data, isLoading, error }: { data: ContentResponseType<ContestRes
 };
 
 function ContestEdit() {
-  
-  const user = useUserState();
-  const now = new Date();
-  now.setSeconds(0, 0);
   const { contestKey } = useContestRouter();
-  const { session } = useUserState();
-  
-  if (!can.createContest(user)) {
-    return <Custom404 />;
-  }
   
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
-      url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey, session)}
+      url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
       errorView={<Custom404 />}
     >
       {({ data, isLoading, error }) => {
-        return <Edit data={data} isLoading={isLoading} error={error} />;
+        if (data.content.user.isAdmin) {
+          return <Edit data={data} isLoading={isLoading} error={error} />;
+        }
+        return <Custom404 />;
       }}
     </FetcherLayer>
   );

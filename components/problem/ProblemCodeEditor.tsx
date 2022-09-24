@@ -1,5 +1,4 @@
-import { getProblemJudgeKey, Judge } from '@juki-team/commons';
-import { ButtonLoader, CodeEditorKeyMap, CodeEditorTheme, CodeRunnerEditor, T } from 'components';
+import { ButtonLoader, CodeEditorKeyMap, CodeEditorTheme, CodeRunnerEditor, SpectatorInformation, T } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   JUDGE_API_V1,
@@ -14,6 +13,7 @@ import {
   authorizedRequest,
   cleanRequest,
   getEditorSettingsStorageKey,
+  getProblemJudgeKey,
   getProblemsStoreKey,
   isStringJson,
 } from 'helpers';
@@ -26,13 +26,13 @@ import {
   ContentResponseType,
   ContestTab,
   HTTPMethod,
+  Judge,
   ProblemResponseDTO,
   ProblemTab,
   ProgrammingLanguage,
   Status,
   SubmissionRunStatus,
 } from 'types';
-import { SpectatorInformation } from '../contest/Information';
 
 const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {
   
@@ -76,7 +76,7 @@ export const ProblemCodeEditor = ({
       in: sample.input,
     };
   });
-  const { nickname, isLogged, session } = useUserState();
+  const { nickname, isLogged } = useUserState();
   const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
   const { [`${MY_STATUS}.pageSize`]: myStatusPageSize } = query;
@@ -163,14 +163,10 @@ export const ProblemCodeEditor = ({
               setLoaderStatus(Status.LOADING);
               const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
                 contest?.problemIndex
-                  ? JUDGE_API_V1.CONTEST.SUBMIT_V1(query.key + '', problemJudgeKey)
-                  : JUDGE_API_V1.PROBLEM.SUBMIT_V1(query.key + ''), {
+                  ? JUDGE_API_V1.CONTEST.SUBMIT(query.key + '', problemJudgeKey)
+                  : JUDGE_API_V1.PROBLEM.SUBMIT(query.key + ''), {
                   method: HTTPMethod.POST,
-                  body: JSON.stringify({
-                    language,
-                    source: sourceCode,
-                    session,
-                  }),
+                  body: JSON.stringify({ language, source: sourceCode }),
                 }));
               if (result.success) {
                 if (result?.content.submitId) {
@@ -189,7 +185,7 @@ export const ProblemCodeEditor = ({
               if (contest?.problemIndex) {
                 await pushTab(ContestTab.MY_SUBMISSIONS);
               } else {
-                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize, session));
+                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize));
                 await push({ pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS), query: restQuery });
               }
             }}

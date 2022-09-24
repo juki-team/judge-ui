@@ -15,7 +15,7 @@ import {
 
 export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: ContestResponseDTO, mySubmissions?: boolean }) => {
   
-  const user = useUserState();
+  const { nickname } = useUserState();
   
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
     ...(!mySubmissions ? [submissionNickname()] : []),
@@ -40,8 +40,8 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
   
   const url = (page: number, size: number) => {
     return mySubmissions
-      ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, user.nickname, page, size, user.session)
-      : JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, size, user.session);
+      ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, nickname, page, size)
+      : JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, size);
   };
   
   return (

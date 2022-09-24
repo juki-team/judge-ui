@@ -1,57 +1,53 @@
-import { ContestStatus, UserStatus } from '../../types';
-
-export const JUDGE_BACKEND_BASE_URL = process.env.NEXT_PUBLIC_JUKI_JUDGE_BACKEND_BASE_URL;
-export const JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL = process.env.NEXT_PUBLIC_JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL;
-export const API_VERSION = 'api/v1';
+import { API_VERSION, JUDGE_BACKEND_BASE_URL, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL } from './settings';
 
 export const JUDGE_API_V1 = {
-  USER: {
-    SUMMARY_LIST: (session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/summary-list?session=${session}`;
+  AUTH: {
+    SIGN_IN: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/auth/sign-in`;
     },
-    PROFILE: (nickname: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile?session=${session}`;
+    SIGN_UP: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/auth/sign-up`;
     },
-    UPDATE_PROFILE_IMAGE: (nickname: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile-image?session=${session}`;
+    SIGN_OUT: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/auth/sign-out`;
     },
-    UPDATE_PROFILE_DATA: (nickname: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile-data?session=${session}`;
+    PING: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/auth/ping`;
+    },
+    RESET: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/auth/nickname/${nickname}/reset`;
+    },
+    UPDATE: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/auth/nickname/${nickname}/update`;
     },
   },
-  ACCOUNT: {
-    PING: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/auth/ping`;
+  USER: {
+    SUMMARY_LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/summary-list`;
     },
-    LOGOUT: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/auth/logout`;
+    MANAGEMENT_LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/management-list`;
     },
-    USER: (nickname?: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user${nickname ? '/' + nickname : ''}`;
+    NICKNAME: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}`;
     },
-    SIGNIN: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/auth/signin`;
+    PROFILE: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile`;
     },
-    GOOGLE_SIGNIN: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/auth/signin/google`;
+    UPDATE_PROFILE_IMAGE: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile-image`;
     },
-    SIGNUP: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/auth/signup`;
+    UPDATE_PROFILE_DATA: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile-data`;
     },
-    CHANGE_STATUS: (nickname: string, status: UserStatus) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user/changeStatus/${nickname}?status=${status}`;
+    UPDATE_PREFERENCES: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/preferences`;
     },
-    CHANGE_PERMISSIONS: (nickname: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user/permissions/${nickname}`;
+    ROLES: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/roles`;
     },
-    UPDATE: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user/update`;
-    },
-    UPDATE_PASSWORD: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user/password/update`;
-    },
-    CHANGE_PASSWORD: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user/password/change`;
+    STATUS: (nickname: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/status`;
     },
   },
   SUBMIT: {
@@ -63,20 +59,20 @@ export const JUDGE_API_V1 = {
     LIST: (page: number, size: number, session?: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&session=${session}`;
     },
-    NICKNAME: (nickname: string, page: number, size: number, session?: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/nickname/${nickname}?page=${page}&size=${size}&session=${session}`;
+    NICKNAME: (nickname: string, page: number, size: number) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/nickname/${nickname}?page=${page}&size=${size}`;
     },
     CONTEST: (contestKey: string, page: number, size: number, session?: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}?page=${page}&size=${size}&session=${session}`;
     },
-    CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, session?: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}/nickname/${nickname}?page=${page}&size=${size}&session=${session}`;
+    CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}/nickname/${nickname}?page=${page}&size=${size}`;
     },
     PROBLEM: (problemKey: string, page: number, size: number, session: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}?session=${session}&page=${page}&size=${size}`;
     },
-    PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}/nickname/${nickname}?session=${session}&page=${page}&size=${size}`;
+    PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}/nickname/${nickname}?&page=${page}&size=${size}`;
     },
   },
   PROBLEM: {
@@ -95,47 +91,45 @@ export const JUDGE_API_V1 = {
     BASIC_LIST: () => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/basicList`;
     },
-    SUBMIT_V1: (id: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/problem/${id}`;
+    SUBMIT: (key: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/problem/${key}`;
     },
   },
   CONTEST: {
-    CONTEST_LIST: (session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/list?session=${session}`;
+    CONTEST_LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/list`;
     },
-    CONTEST_V1: (key: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest${key ? '/' + key : ''}?session=${session}`;
+    CREATE: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest`;
     },
-    CONTEST_DATA: (key: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/data?session=${session}`;
+    CONTEST: (key: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}`;
     },
-    REGISTER_V1: (key: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/register?session=${session}`;
+    CONTEST_DATA: (key: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/data`;
     },
-    SUBMIT_V1: (key: string, problemJudgeKey: string) => {
+    REGISTER: (key: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/register`;
+    },
+    SUBMIT: (key: string, problemJudgeKey: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/contest/${key}/problem-judge-key/${problemJudgeKey}`;
     },
-    SCOREBOARD_V1: (key: string, unfrozen: boolean, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen&' : ''}session=${session}`;
+    SCOREBOARD: (key: string, unfrozen: boolean) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen' : ''}`;
     },
-    CLARIFICATION_V1: (key: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification?session=${session}`;
+    RECALCULATE_SCOREBOARD: (key: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/recalculate-scoreboard`;
     },
-    ANSWER_CLARIFICATION_V1: (key: string, clarificationId: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification/${clarificationId}?session=${session}`;
+    CLARIFICATION: (key: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification`;
+    },
+    ANSWER_CLARIFICATION: (key: string, clarificationId: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification/${clarificationId}`;
     },
   },
   REJUDGE: {
-    CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string, session: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}?session=${session}`;
+    CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}`;
     },
-  },
-  ADMIN: {
-    ADMIN: (page?: string, size?: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/user?page=${page}&size=${size}`;
-    },
-  },
-  UPLOAD: () => {
-    return `${JUDGE_BACKEND_BASE_URL}/api/problem/file/update`;
   },
 };

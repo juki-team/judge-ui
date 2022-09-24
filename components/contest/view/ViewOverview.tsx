@@ -11,7 +11,7 @@ import { AdminInformation, FrozenInformation, JudgeInformation, QuietInformation
 export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { isJudge, isAdmin, isContestant, isGuest, isSpectator } = contest.user;
-  const { isLogged, session } = useUserState();
+  const { isLogged } = useUserState();
   const { push, query } = useRouter();
   const { dtf, rlt } = useDateFormat();
   const { addNotification } = useNotification();
@@ -19,11 +19,11 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
     setLoader(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER_V1(query.key + '', session), {
+    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(query.key as string), {
       method: HTTPMethod.POST,
     }));
     if (notifyResponse(response, addNotification)) {
-      await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string, session));
+      await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
       setLoader(Status.SUCCESS);
     } else {
       setLoader(Status.ERROR);
@@ -106,7 +106,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
           {!!contest.settings.penalty && (
             <div className="jk-col jk-border-radius-inline jk-pad-sm">
               <p className="text-xs color-gray-3 text-semi-bold"><T>penalty by incorrect answer</T></p>
-              <p className="text-s text-semi-bold">{Math.ceil(contest.settings.penalty / 1000 / 60)} min</p>
+              <p className="text-s text-semi-bold">{contest.settings.penalty} min</p>
             </div>
           )}
           <div className="jk-col jk-border-radius-inline jk-pad-sm">
@@ -115,31 +115,6 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
               <T>{contest.settings.clarifications ? 'clarifications available' : 'clarifications not available'}</T>
             </p>
           </div>
-          {/*<div>*/}
-          {/*{contest?.settings[ContestSettingsParams.FROZEN] && canUpdate && (*/}
-          {/*  <div className="content-clarifications">*/}
-          {/*<Button onClick={() => setShowModal(true)} block>*/}
-          {/*  {t('open scoreboard')}*/}
-          {/*</Button>*/}
-          {/*</div>*/}
-          {/*)}*/}
-          {/*{new Date().getTime() > contest?.settings.start && (*/}
-          {/*  <div className="content-side-right-bar-bottom-bottom">*/}
-          {/* <a*/}
-          {/*   href={[*/}
-          {/*     BASE_URL,*/}
-          {/*     ROUTES.PARAMS.CONTEST,*/}
-          {/*    ROUTES.PARAMS.VIEW,*/}
-          {/*    key,*/}
-          {/*    ROUTES.PARAMS.PRINT_SCORE,*/}
-          {/*  ].join('/')}*/}
-          {/*  target="_blank" rel="noopener noreferrer"*/}
-          {/*>*/}
-          {/*  <Button block><T>print scoreboard</T></Button>*/}
-          {/*</a>*/}
-          {/*</div>*/}
-          {/*)}*/}
-          {/*</div>*/}
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import { MailIcon, PlaceIcon, SchoolIcon } from 'components';
 import { JUDGE } from 'config/constants';
 import { classNames } from 'helpers';
-import { UserResponseDTO } from 'types';
+import { UserProfileResponseDTO } from 'types';
 
-export function Profile({ user }: { user: UserResponseDTO }) {
+export function Profile({ user }: { user: UserProfileResponseDTO }) {
   
   return (
     <div className="user-profile jk-row stretch center gap jk-pad relative">

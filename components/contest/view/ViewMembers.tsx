@@ -1,8 +1,7 @@
-import { T, UserNicknameLink } from 'components/index';
+import { AdminInformation, JudgeInformation, T, UserNicknameLink } from 'components';
 import { classNames } from 'helpers';
 import React from 'react';
 import { ContestResponseDTO } from 'types';
-import { AdminInformation, JudgeInformation } from '../Information';
 
 export const ViewMembers = ({ contest }: { contest: ContestResponseDTO }) => {
   

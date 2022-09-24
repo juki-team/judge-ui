@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonLoader,
   DataViewer,
   EditIcon,
   Field,
@@ -12,7 +11,7 @@ import {
   UserChip,
   UserPermissions,
 } from 'components';
-import { JUDGE_API_V1, USER_STATUS } from 'config/constants';
+import { CONTEST_ROLE, COURSE_ROLE, JUDGE_API_V1, PROBLEM_ROLE, TEAM_ROLE, USER_ROLE, USER_STATUS } from 'config/constants';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import { useMemo, useState } from 'react';
@@ -23,51 +22,29 @@ import {
   FilterTextOfflineType,
   HTTPMethod,
   Status,
-  UserStatus,
+  UserManagementResponseDTO,
 } from 'types';
-
-type ValuePermission = {
-  key: string,
-  value: string,
-}
-type UsersTable = {
-  aboutMe: string,
-  city: string,
-  country: string,
-  email: string,
-  familyName: string,
-  givenName: string,
-  imageUrl: string,
-  institution: string,
-  nickname: string,
-  status: string,
-  permissions: ValuePermission []
-}
-const sumEachDigitOfNumber = (number: string) => {
-  const arrayOfNumbers = number.split('');
-  const initialValue = 0;
-  return arrayOfNumbers.reduce((prevNumber, currentNumber) => +prevNumber + +currentNumber, initialValue);
-};
-
-const options = [UserStatus.ACTIVE, UserStatus.REPORTED, UserStatus.ARCHIVED];
 
 export function Users() {
   
   const [nickname, setNickname] = useState('');
-  const optionsFilterStatus = options.map(option => ({
-    value: option,
-    label: <T className="text-capitalize">{USER_STATUS[option].label}</T>,
+  const optionsFilterStatus = Object.values(USER_STATUS).map(status => ({
+    value: status.value,
+    label: <T className="text-capitalize">{status.label}</T>,
   }));
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.ADMIN.ADMIN('1', '32'));
+  } = useDataViewerRequester<ContentsResponseType<UserManagementResponseDTO>>(JUDGE_API_V1.USER.MANAGEMENT_LIST());
   
   const changeUserStatus = async (nickname, status, setLoader) => {
     setLoader?.(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_STATUS(nickname, status), { method: HTTPMethod.POST }));
+    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.STATUS(nickname), {
+      method: HTTPMethod.PUT,
+      body: JSON.stringify({ status }),
+    }));
     if (response.success) {
       addSuccessNotification(<T>success</T>);
       setLoader?.(Status.SUCCESS);
@@ -78,7 +55,7 @@ export function Users() {
     request();
   };
   
-  const columns: DataViewerHeadersType<UsersTable>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<UserManagementResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="text-uppercase">Name</T>} />,
       index: 'name',
@@ -93,56 +70,68 @@ export function Users() {
           const regExp = new RegExp(text, 'gi');
           return !!(nickname?.match?.(regExp)) || !!(givenName?.match?.(regExp)) || !!(familyName?.match?.(regExp)) || !!(email?.match?.(regExp));
         },
-      } as FilterTextOfflineType<UsersTable>,
+      } as FilterTextOfflineType<UserManagementResponseDTO>,
       cardPosition: 'top',
       minWidth: 400,
     },
     {
+      head: <TextHeadCell text={<T className="text-uppercase">country/city</T>} />,
+      index: 'country-city',
+      field: ({ record: { country, city } }) => (
+        <Field className="jk-col center">
+          {city}
+          <div className="tx-wd-bold">{country}</div>
+        </Field>
+      ),
+      cardPosition: 'bottom',
+      minWidth: 250,
+    },
+    {
       head: <TextHeadCell text={<T className="text-uppercase">permissions</T>} />,
       index: 'permissions',
-      field: ({ record: { permissions, nickname } }) => (
+      field: ({ record }) => (
         <Field className="jk-col">
           <UserPermissions
-            permissions={permissions}
-            nickname={nickname}
-            refresh={() => {
-              request();
-            }}
-            key={nickname}
+            user={record}
+            refresh={request}
+            key={record.nickname}
           />
         </Field>
       ),
       sort: {
         compareFn: () => (rowA, rowB) => {
-          // Each digit has a representation = add, archieve, updated, view
-          const rowAAllPermissions = sumEachDigitOfNumber(rowA.permissions[0].value) + sumEachDigitOfNumber(rowA.permissions[1].value) + sumEachDigitOfNumber(rowA.permissions[2].value);
-          const rowBAllPermissions = sumEachDigitOfNumber(rowB.permissions[0].value) + sumEachDigitOfNumber(rowB.permissions[1].value) + sumEachDigitOfNumber(rowB.permissions[2].value);
-          
+          const rowAAllPermissions = (USER_ROLE[rowA.userRole]?.level || 100) + (PROBLEM_ROLE[rowA.problemRole]?.level || 100) + (CONTEST_ROLE[rowA.contestRole]?.level || 100) + (TEAM_ROLE[rowA.teamRole]?.level || 100) + (COURSE_ROLE[rowA.courseRole]?.level || 100);
+          const rowBAllPermissions = (USER_ROLE[rowB.userRole]?.level || 100) + (PROBLEM_ROLE[rowB.problemRole]?.level || 100) + (CONTEST_ROLE[rowB.contestRole]?.level || 100) + (TEAM_ROLE[rowB.teamRole]?.level || 100) + (COURSE_ROLE[rowB.courseRole]?.level || 100);
           return rowAAllPermissions - rowBAllPermissions;
         },
       },
       cardPosition: 'center',
-      minWidth: 260,
+      minWidth: 360,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">status</T>} />,
-      index: 'status',
-      field: ({ record: { status, nickname } }) => {
+      head: <TextHeadCell text={<T className="text-uppercase">operations</T>} />,
+      index: 'operations',
+      field: ({ record: { status: userStatus, nickname } }) => {
         let setLoaderRef = null;
         return (
-          <Field className="jk-row center">
+          <Field className="jk-col center gap">
             <Select
               className=""
-              options={options.map(option => ({
-                label: <T className="text-sentence-case">{USER_STATUS[option].label}</T>,
-                value: option,
-                disabled: status === option,
+              options={Object.values(USER_STATUS).map(status => ({
+                label: <T className="text-sentence-case">{status.label}</T>,
+                value: status.value,
+                disabled: status.value === userStatus,
               }))}
-              selectedOption={{ value: status }}
+              selectedOption={{ value: userStatus }}
               onChange={({ value }) => changeUserStatus(nickname, value, setLoaderRef)}
             />
-            <ButtonLoader type="text" setLoaderStatusRef={(setLoader) => setLoaderRef = setLoader}>
-            </ButtonLoader>
+            <Button
+              icon={<EditIcon />}
+              onClick={() => setNickname(nickname)}
+              size="tiny"
+            >
+              <T>change password</T>
+            </Button>
           </Field>
         );
       },
@@ -153,49 +142,19 @@ export function Users() {
       cardPosition: 'center',
       minWidth: 190,
     },
-    {
-      head: <TextHeadCell text={<T className="text-uppercase">operations</T>} />,
-      index: 'operations',
-      field: ({ record: { nickname } }) => (
-        <Field className="jk-row">
-          <Button
-            className=""
-            icon={<EditIcon />}
-            onClick={() => setNickname(nickname)}
-            size="small"
-          >
-            <T>change password</T>
-          </Button>
-        </Field>
-      ),
-      cardPosition: 'bottom',
-      minWidth: 250,
-    },
   ], []);
   
   const { queryObject, push } = useRouter();
   
-  const data: UsersTable[] = (response?.success ? response?.contents : []).map(admin => ({
-    aboutMe: admin.aboutMe,
-    city: admin.city,
-    country: admin.country,
-    email: admin.email,
-    familyName: admin.familyName,
-    givenName: admin.givenName,
-    imageUrl: admin.imageUrl,
-    institution: admin.institution,
-    nickname: admin.nickname,
-    status: admin.status,
-    permissions: admin.permissions,
-  }));
+  const data: UserManagementResponseDTO[] = (response?.success ? response?.contents : []);
   
   return (
     <>
       <ResetPassword onClose={() => setNickname('')} nickname={nickname} />
-      <DataViewer<UsersTable>
+      <DataViewer<UserManagementResponseDTO>
         headers={columns}
         data={data}
-        rows={{ height: 110 }}
+        rows={{ height: 150 }}
         request={request}
         name="admin"
         searchParamsObject={queryObject}

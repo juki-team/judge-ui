@@ -1,94 +1,85 @@
-import { JUDGE_API_V1 } from 'config/constants/judge';
-import { authorizedRequest, can, cleanRequest } from 'helpers';
+import { CONTEST_ROLE, COURSE_ROLE, JUDGE_API_V1, PROBLEM_ROLE, TEAM_ROLE, USER_ROLE } from 'config/constants';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import React, { useState } from 'react';
-import { useUserState } from 'store';
-import { ContentResponseType, HTTPMethod, Status } from 'types';
-import { Button, ButtonLoader, EditIcon, Input, SaveIcon, Select, T, useNotification } from '../index';
+import {
+  ContentResponseType,
+  ContestRole,
+  CourseRole,
+  HTTPMethod,
+  ProblemRole,
+  Status,
+  TeamRole,
+  UserManagementResponseDTO,
+  UserRole,
+} from 'types';
+
+import { Button, ButtonLoader, EditIcon, SaveIcon, Select, T, useNotification } from '../index';
 
 export interface ProblemPermissionsProps {
-  permissions: Array<{ key: string, value: string }>,
-  nickname: string,
+  user: UserManagementResponseDTO,
   refresh: () => void,
 }
 
-export const UserPermissions = ({ permissions, nickname, refresh }: ProblemPermissionsProps) => {
+type Roles = {
+  userRole: UserRole;
+  contestRole: ContestRole;
+  problemRole: ProblemRole;
+  teamRole: TeamRole;
+  courseRole: CourseRole;
+}
+
+export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissionsProps) => {
   
-  const user = useUserState();
   const [editing, setEditing] = useState(false);
-  const [newPermissions, setNewPermissions] = useState<Array<{ key: string, value: string }>>(permissions);
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const contestPermission = newPermissions.filter(permission => permission.key === 'CONTEST')[0] || { key: 'CONTEST', value: '9993' };
-  
-  const roleContest = {
-    '0000': 'super admin',
-    '0111': 'admin',
-    '0222': 'manager',
-    '9993': 'regular',
-    '0333': 'guest',
+  const roles = {
+    userRole: userToUpdate.userRole,
+    contestRole: userToUpdate.contestRole,
+    problemRole: userToUpdate.problemRole,
+    teamRole: userToUpdate.teamRole,
+    courseRole: userToUpdate.courseRole,
   };
-  const codeRoleContest = ['0000', '0111', '0222', '9993', '0333'];
-  const CONTEST = 'CONTEST';
+  const [newRoles, setNewRoles] = useState<Roles>(roles);
+  
+  const ROLES = {
+    user: USER_ROLE,
+    problem: PROBLEM_ROLE,
+    contest: CONTEST_ROLE,
+    team: TEAM_ROLE,
+    course: COURSE_ROLE,
+  };
   
   return (
     <div>
       <div className="permissions-cell jk-row nowrap">
         <div className="permissions-box">
-          {newPermissions.filter(permission => permission.key !== CONTEST).map((permission, index) => (
-            <div className="permission jk-row" key={permission.key}>
-              <div className="label-permission text-s semi-bold">{permission.key}</div>
-              {editing ?
-                permission.value.split('').map((value, indexV) => (
-                  <Input<number>
-                    value={+value}
-                    onChange={value => {
-                      setNewPermissions(prevState => {
-                        const newState = [...prevState];
-                        const newValue = permission.value.split('');
-                        newValue[indexV] = !Number.isNaN(value) && value > 0 && value < 10 ? value + '' : '0';
-                        newState[index] = { key: permission.key, value: newValue.join('') };
-                        return newState;
-                      });
-                    }}
-                  />
-                ))
-                : <div className="value-permission">{permission.value}</div>}
-            </div>
-          ))}
-          <div className="jk-form-item" style={{ width: 200 }}>
-            <label>
-              <T>contest</T>
+          {Object.entries(ROLES).map(([key, roles]) => (
+            <div className="jk-row nowrap space-between" style={{ width: 300 }}>
+              <div style={{ width: 150 }}><T>{key}</T></div>
               <Select
                 disabled={!editing}
-                options={codeRoleContest.map(code => ({ label: <T>{roleContest[code]}</T>, value: code }))}
-                selectedOption={{
-                  value: contestPermission.value,
-                  label: codeRoleContest.find(code => contestPermission.value === code) ?
-                    <T>{roleContest[contestPermission.value]}</T> : contestPermission.value,
-                }}
+                options={Object.values(roles).map(role => ({ label: <T>{role.label}</T>, value: role.value }))}
+                selectedOption={{ value: newRoles[key + 'Role'] }}
                 onChange={({ value }) => {
-                  setNewPermissions(prevState => {
-                    const newState = prevState.filter(p => p.key !== CONTEST);
-                    newState.push({ key: CONTEST, value });
-                    return newState;
-                  });
+                  setNewRoles(prevState => ({ ...prevState, [key + 'Role']: value }));
                 }}
                 extend
               />
-            </label>
-          </div>
+            </div>
+          ))}
         </div>
-        {can.updatePermissionsUser(user) && (
+        {true && (
           <div className="editing-actions-box">
             {editing ? (
               <ButtonLoader
                 type="text"
                 icon={<SaveIcon filledCircle className="color-primary" />}
                 onClick={async setLoaderStatus => {
-                  if (JSON.stringify(newPermissions) !== JSON.stringify(permissions)) {
+                  if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
                     setLoaderStatus?.(Status.LOADING);
-                    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.ACCOUNT.CHANGE_PERMISSIONS(nickname), {
+                    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.ROLES(userToUpdate.nickname), {
                       method: HTTPMethod.PUT,
-                      body: JSON.stringify(newPermissions),
+                      body: JSON.stringify(newRoles),
                     }));
                     if (response.success) {
                       addSuccessNotification(<T>success</T>);

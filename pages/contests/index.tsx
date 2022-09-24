@@ -12,7 +12,7 @@ import {
   TextHeadCell,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { buttonLoaderLink, can, getContestStatus, searchParamsObjectTypeToQuery } from 'helpers';
+import { buttonLoaderLink, getContestStatus, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -41,12 +41,12 @@ type ContestTable = {
 
 function Contests() {
   
-  const user = useUserState();
+  const { canCreateContest } = useUserState();
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<ContestSummaryListResponseDTO>>(JUDGE_API_V1.CONTEST.CONTEST_LIST(user.session));
+  } = useDataViewerRequester<ContentsResponseType<ContestSummaryListResponseDTO>>(JUDGE_API_V1.CONTEST.CONTEST_LIST());
   
   const columns: DataViewerHeadersType<ContestTable>[] = useMemo(() => [
     {
@@ -187,7 +187,7 @@ function Contests() {
         name="users"
         extraButtons={() => (
           <div className="extra-buttons">
-            {can.createProblem(user) && (
+            {canCreateContest && (
               <ButtonLoader
                 size="small"
                 icon={<PlusIcon />}

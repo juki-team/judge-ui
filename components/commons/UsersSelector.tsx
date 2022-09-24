@@ -2,20 +2,18 @@ import { Button, LoadingIcon, Modal, MultiSelectSearchable, PeopleIcon, Popover,
 import { JUDGE_API_V1 } from 'config/constants';
 import { useFetcher } from 'hooks';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useUserState } from 'store';
-import { ContentsResponseType, UserSummaryListResponseDTO } from 'types';
+import { ContentsResponseType, UserSummaryResponseDTO } from 'types';
 
 export const UsersSelector = ({
   selectedUsers,
   onChangeSelectedUsers,
 }: { selectedUsers: string[], onChangeSelectedUsers: (selectedUsers: string[]) => void }) => {
-  const { session } = useUserState();
-  const { isLoading, data } = useFetcher<ContentsResponseType<UserSummaryListResponseDTO>>(JUDGE_API_V1.USER.SUMMARY_LIST(session));
+  const { isLoading, data } = useFetcher<ContentsResponseType<UserSummaryResponseDTO>>(JUDGE_API_V1.USER.SUMMARY_LIST());
   const [show, setShow] = useState(false);
   const [text, setText] = useState('');
   const [textNicknames, setTextNicknames] = useState([]);
   const [error, setError] = useState('');
-  const users: { [key: string]: UserSummaryListResponseDTO } = useMemo(() => {
+  const users: { [key: string]: UserSummaryResponseDTO } = useMemo(() => {
     const users = {};
     const dataUsers = (data?.success ? data?.contents : []);
     dataUsers.forEach(user => {

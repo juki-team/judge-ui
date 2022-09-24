@@ -1,3 +1,4 @@
+export * from './EditProblem';
 export * from './ProblemCodeEditor';
 export * from './ProblemInfo';
 export * from './ProblemStatement';

@@ -1,7 +1,6 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { useRouter } from 'hooks';
-import { useUserState } from 'store';
 import { DataViewerHeadersType, SubmissionResponseDTO } from 'types';
 import {
   submissionDate,
@@ -23,9 +22,8 @@ const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = [
 
 export function ProfileSubmissions() {
   
-  const { session } = useUserState();
   const { query: { nickname } } = useRouter();
-  const url = (page: number, size: number) => JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname as string, page, size, session);
+  const url = (page: number, size: number) => JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname as string, page, size);
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>

@@ -2,21 +2,7 @@ import { Button, ExternalIcon, FetcherLayer, MailIcon, Modal, PlaceIcon, SchoolI
 import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
-import { ContentResponseType, ProfileTab, UserStatus } from 'types';
-
-type UserType = {
-  aboutMe: string,
-  email: string,
-  familyName: string,
-  givenName: string,
-  handles: {},
-  imageUrl: string,
-  nickname: string,
-  status: UserStatus,
-  city: string,
-  country: string,
-  institution: string,
-}
+import { ContentResponseType, ProfileTab, UserBasicResponseDTO } from 'types';
 
 export const UserPreview = ({ nickname }) => {
   
@@ -30,8 +16,8 @@ export const UserPreview = ({ nickname }) => {
       className="modal-user-preview"
       shouldCloseOnOverlayClick
     >
-      <FetcherLayer<ContentResponseType<UserType>>
-        url={JUDGE_API_V1.ACCOUNT.USER(nickname)}
+      <FetcherLayer<ContentResponseType<UserBasicResponseDTO>>
+        url={JUDGE_API_V1.USER.NICKNAME(nickname)}
         onError={handleClose}
       >
         {({ data }) => (

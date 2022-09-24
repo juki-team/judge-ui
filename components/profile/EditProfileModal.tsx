@@ -3,10 +3,10 @@ import { JUDGE } from 'config/constants';
 import { classNames } from 'helpers';
 import { useEffect, useState } from 'react';
 import { useUserDispatch } from 'store';
-import { UserResponseDTO } from 'types';
+import { UserProfileResponseDTO } from 'types';
 import { ImageProfileModal } from './ImageProfileModal';
 
-export function EditProfileModal({ user, onClose }: { user: UserResponseDTO, onClose: () => void }) {
+export function EditProfileModal({ user, onClose }: { user: UserProfileResponseDTO, onClose: () => void }) {
   
   const [userState, setUserState] = useState(user);
   const { updateProfileData } = useUserDispatch();

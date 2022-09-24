@@ -5,6 +5,7 @@ export enum ContestTimeStatus {
 }
 
 export enum AdminTab {
+  LOGGED_USERS = 'logged-users',
   USERS = 'users',
   ATTEMPTS = 'attempts',
   SUBMISSIONS = 'submissions',

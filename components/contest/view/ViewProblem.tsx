@@ -1,7 +1,7 @@
-import { NotFound, ProblemCodeEditor, ProblemStatement, SplitPane } from 'components/index';
+import { NotFound, ProblemCodeEditor, ProblemStatement, SplitPane } from 'components';
+import { ROUTES } from 'config/constants';
 import { useRouter } from 'hooks';
 import { ContestResponseDTO, ContestTab } from 'types';
-import { ROUTES } from '../../../config/constants';
 
 export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   

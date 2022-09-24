@@ -1,6 +1,5 @@
-import { T, Tabs, TwoContentLayout, Users, AllSubmissions } from 'components';
+import { AllSubmissions, T, Tabs, TwoContentLayout, Users } from 'components';
 import { ROUTES } from 'config/constants';
-import { can } from 'helpers';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { AdminTab } from 'types';
@@ -9,10 +8,18 @@ import Custom404 from '../404';
 function Admin() {
   
   const { query, push } = useRouter();
-  const user = useUserState();
+  const { canViewUsersManagement, canViewSubmissionsManagement } = useUserState();
   
-  if (!can.viewUsersTab(user)) {
+  if (!canViewUsersManagement && !canViewSubmissionsManagement) {
     return <Custom404 />;
+  }
+  const tabs = [];
+  if (canViewUsersManagement) {
+    tabs.push({ key: AdminTab.USERS, header: <T className="text-capitalize">users</T>, body: <Users /> });
+    tabs.push({ key: AdminTab.LOGGED_USERS, header: <T className="text-capitalize">logged users</T>, body: <Users /> });
+  }
+  if (canViewSubmissionsManagement) {
+    tabs.push({ key: AdminTab.SUBMISSIONS, header: <T className="text-capitalize">submissions</T>, body: <AllSubmissions /> });
   }
   
   return (
@@ -23,10 +30,7 @@ function Admin() {
       </div>
       <Tabs
         selectedTabKey={query.tab as AdminTab}
-        tabs={[
-          { key: AdminTab.USERS, header: <T className="text-capitalize">users</T>, body: <Users /> },
-          { key: AdminTab.SUBMISSIONS, header: <T className="text-capitalize">submissions</T>, body: <AllSubmissions /> },
-        ]}
+        tabs={tabs}
         onChange={tabKey => push(ROUTES.ADMIN.PAGE(tabKey as AdminTab))}
       />
     </TwoContentLayout>

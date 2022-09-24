@@ -1,7 +1,7 @@
 import { ContentLayout, DataViewer, Field, T, TextField, TextHeadCell } from 'components';
 import { PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { can, searchParamsObjectTypeToQuery } from 'helpers';
+import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -82,7 +82,7 @@ function Problems() {
       cardPosition: 'center',
       minWidth: 400,
     },
-    ...(can.viewStatusProblem(user) ? [
+    ...(user.canCreateProblem ? [ /* TODO: create a special permissions for this */
       {
         head: <TextHeadCell text={<T>visibility</T>} />,
         index: 'status',

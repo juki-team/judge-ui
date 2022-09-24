@@ -1,4 +1,3 @@
-import { ContestType } from '@juki-team/commons';
 import { EditCreateContestDTO, ProgrammingLanguage } from 'types';
 
 export const CONTEST_DEFAULT = (): EditCreateContestDTO => {
@@ -6,7 +5,6 @@ export const CONTEST_DEFAULT = (): EditCreateContestDTO => {
   now.setSeconds(0, 0);
   
   return {
-    type: ContestType.PUBLIC,
     key: '',
     name: '',
     description: `# \\textAlign=center Bienvenido

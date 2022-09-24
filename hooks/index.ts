@@ -1,12 +1,14 @@
+import { authorizedRequest, settings } from '@juki-team/base-ui';
 import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { ContentResponseType, ContentsResponseType, HTTPMethod, Status } from 'types';
+import { JUKI_TOKEN_NAME } from '../config/constants';
 import { useUserState } from '../store';
 import { SetLoaderStatusType } from '../types';
 
-const fetcher = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
+const fetcher1 = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
   
   const requestHeaders: HeadersInit = new Headers();
   requestHeaders.set('Accept', 'application/json');
@@ -27,6 +29,9 @@ export type UseFetcherOptionsType = {
   revalidateOnReconnect?: boolean,
   refreshInterval?: number,
 }
+const fetcher = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
+  return authorizedRequest(url, { method, body, signal });
+};
 
 export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url?: string, options?: UseFetcherOptionsType, debug?: boolean) => {
   
@@ -106,9 +111,6 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
     setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
   };
 };
-
-
-
 
 export {
   useOutsideAlerter,

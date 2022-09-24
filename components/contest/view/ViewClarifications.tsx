@@ -3,6 +3,8 @@ import {
   ButtonLoader,
   ClockIcon,
   EditIcon,
+  Input,
+  InputToggle,
   MdMathEditor,
   MdMathViewer,
   Modal,
@@ -17,16 +19,13 @@ import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey, notifyResponse, useDateFormat } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import React, { useState } from 'react';
-import { useUserState } from 'store';
 import { useSWRConfig } from 'swr';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
-import { Input, InputToggle } from '../../index';
 
 export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { query } = useRouter();
   const { dtf } = useDateFormat();
-  const { session } = useUserState();
   const { isAdmin, isContestant, isJudge } = contest.user;
   const [clarification, setClarification] = useState<null | {
     clarificationId: string,
@@ -246,13 +245,13 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                     };
                   }
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    clarification.clarificationId ? JUDGE_API_V1.CONTEST.ANSWER_CLARIFICATION_V1(query.key + '', clarification.clarificationId, session) : JUDGE_API_V1.CONTEST.CLARIFICATION_V1(query.key + '', session),
+                    clarification.clarificationId ? JUDGE_API_V1.CONTEST.ANSWER_CLARIFICATION(query.key + '', clarification.clarificationId) : JUDGE_API_V1.CONTEST.CLARIFICATION(query.key as string),
                     {
                       method: clarification.clarificationId ? HTTPMethod.PUT : HTTPMethod.POST,
                       body: JSON.stringify(payload),
                     }));
                   if (notifyResponse(response, addNotification)) {
-                    await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string, session));
+                    await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
                     setLoaderStatus(Status.SUCCESS);
                     setClarification(null);
                   } else {
