@@ -42,7 +42,6 @@ export type {
   ScoreboardResponseDTO,
   ContestResponseDTO,
   ProblemResponseDTO,
-  ProblemLanguagesType,
   PointsByGroupsType,
   UserSummaryResponseDTO,
   UserManagementResponseDTO,
@@ -52,11 +51,8 @@ export type {
   UserProfileResponseDTO,
   UserPingResponseDTO,
   UserBasicResponseDTO,
+  ProblemSummaryListResponseDTO,
 } from '@juki-team/commons';
-
-export interface UserInterface extends _UserInterface {
-  myPermissions: { [key in ScopeData]: string },
-}
 
 export { Period, NotificationType } from '@juki-team/base-ui';
 export type {

@@ -52,7 +52,7 @@ export const JUDGE_API_V1 = {
   },
   SUBMIT: {
     SUBMIT_ID: (submitId: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/submitId/${submitId}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/${submitId}`;
     },
   },
   SUBMISSIONS: {
@@ -76,6 +76,12 @@ export const JUDGE_API_V1 = {
     },
   },
   PROBLEM: {
+    LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/list`;
+    },
+    DATA: (key: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}/data`;
+    },
     PROBLEM: (id?: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem${id ? '/' + id : ''}`;
     },
@@ -96,7 +102,7 @@ export const JUDGE_API_V1 = {
     },
   },
   CONTEST: {
-    CONTEST_LIST: () => {
+    LIST: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/list`;
     },
     CREATE: () => {

@@ -9,8 +9,8 @@ import '../i18n';
 import './styles.scss';
 
 export default function MyApp({ Component, pageProps }) {
-  settings.setSetting("https://utils-back-v1.juki.app", "api/v1", "http://localhost:3001", JUKI_TOKEN_NAME);
-  console.log({ settings });
+  settings.setSetting('https://utils-back-v1.juki.app', 'api/v1', 'http://localhost:3001', JUKI_TOKEN_NAME);
+  
   useEffect(() => {
     document.querySelector('body')?.classList.add('jk-theme-light');
   }, []);

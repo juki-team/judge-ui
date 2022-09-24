@@ -17,8 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProblemState, ProblemTab } from 'types';
-import { dataToProblemResponseDTO } from '../../../../helpers/problem';
+import { ContentResponseType, ProblemResponseDTO, ProblemTab } from 'types';
 
 const ProblemView = (): ReactNode => {
   
@@ -26,12 +25,12 @@ const ProblemView = (): ReactNode => {
   const user = useUserState();
   
   return (
-    <FetcherLayer<ContentResponseType<ProblemState>>
-      url={isReady && JUDGE_API_V1.PROBLEM.PROBLEM(key as string)}
+    <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
+      url={isReady && JUDGE_API_V1.PROBLEM.DATA(key as string)}
       errorView={<NotFound redirectAction={() => push(ROUTES.PROBLEMS.LIST())} />}
     >
       {({ data }) => {
-        const problem = dataToProblemResponseDTO(data);
+        const problem = data.content;
         const tabs = [
           {
             key: ProblemTab.STATEMENT,

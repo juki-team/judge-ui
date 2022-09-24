@@ -6,14 +6,14 @@ import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, DataViewerHeadersType, FilterSelectOfflineType, ProblemStatus, ProblemTab } from 'types';
-
-type ProblemsTable = {
-  id: number,
-  name: string,
-  tags: string[],
-  status: ProblemStatus,
-}
+import {
+  ContentsResponseType,
+  DataViewerHeadersType,
+  FilterSelectOfflineType,
+  ProblemStatus,
+  ProblemSummaryListResponseDTO,
+  ProblemTab,
+} from 'types';
 
 function Problems() {
   
@@ -22,7 +22,7 @@ function Problems() {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<any>>(JUDGE_API_V1.PROBLEM.PROBLEM());
+  } = useDataViewerRequester<ContentsResponseType<ProblemSummaryListResponseDTO>>(JUDGE_API_V1.PROBLEM.LIST());
   
   const tags = new Set<string>();
   (response?.success ? response.contents : []).forEach(problem => {
@@ -31,31 +31,28 @@ function Problems() {
   
   const allTags: string[] = Array.from(tags);
   
-  const columns: DataViewerHeadersType<ProblemsTable>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="text-uppercase">id</T>} />,
       index: 'id',
-      field: ({ record: { id }, isCard }) => (
+      field: ({ record: { key }, isCard }) => (
         <Field className="jk-row link text-semi-bold">
-          <Link href={ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT)}>
-            <a>{id}</a>
+          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
+            <a>{key}</a>
           </Link>
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => +rowA.id - +rowB.id },
-      filter: {
-        type: 'text-auto',
-        getValue: ({ record: { id } }) => '' + id,
-      },
+      sort: { compareFn: () => (rowA, rowB) => +rowA.key - +rowB.key },
+      filter: { type: 'text-auto' },
       cardPosition: 'top',
       minWidth: 100,
     },
     {
       head: <TextHeadCell text={<T>problem name</T>} />,
       index: 'name',
-      field: ({ record: { id, name } }) => (
+      field: ({ record: { key, name } }) => (
         <Field className="jk-row link text-semi-bold">
-          <Link href={ROUTES.PROBLEMS.VIEW('' + id, ProblemTab.STATEMENT)}>
+          <Link href={ROUTES.PROBLEMS.VIEW( key, ProblemTab.STATEMENT)}>
             <a>{name}</a>
           </Link>
         </Field>
@@ -78,7 +75,7 @@ function Problems() {
         type: 'select',
         options: allTags.map(tag => ({ value: tag, label: tag })),
         callbackFn: ({ selectedOptions }) => ({ tags }) => tags.some(tag => selectedOptions.some(({ value }) => value === tag)),
-      } as FilterSelectOfflineType<ProblemsTable>,
+      } as FilterSelectOfflineType<ProblemSummaryListResponseDTO>,
       cardPosition: 'center',
       minWidth: 400,
     },
@@ -107,24 +104,17 @@ function Problems() {
         },
         cardPosition: 'bottom',
         minWidth: 200,
-      } as DataViewerHeadersType<ProblemsTable>,
+      } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),
   ], [user, allTags]);
   
   const { queryObject, push } = useRouter();
   
-  const data: ProblemsTable[] = (response?.success ? response.contents : []).map(user => (
-    {
-      id: user.id,
-      name: user.name,
-      tags: user.tags,
-      status: user.status,
-    } as ProblemsTable
-  ));
+  const data: ProblemSummaryListResponseDTO[] = (response?.success ? response.contents : [])
   
   return (
     <ContentLayout>
-      <DataViewer<ProblemsTable>
+      <DataViewer<ProblemSummaryListResponseDTO>
         headers={columns}
         data={data}
         rows={{ height: 64 }}

@@ -72,15 +72,15 @@ export const ProblemSettings = ({
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.mode) !== JSON.stringify(originalProblemRef.current.mode) },
+              { 'color-info': JSON.stringify(problem.settings?.mode) !== JSON.stringify(originalProblemRef.current.mode) },
             )}
           >
             <div className="text-semi-bold text-sentence-case"><T>problem mode</T>:</div>
             <Select
               options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({ value: mode, label: PROBLEM_MODE[mode]?.label }))}
               selectedOption={{
-                value: problem.mode,
-                label: PROBLEM_MODE[problem.mode]?.label || problem.mode,
+                value: problem.settings?.mode,
+                label: PROBLEM_MODE[problem.settings?.mode]?.label || problem.settings?.mode,
               }}
               onChange={({ value }) => setProblem({ ...problem, mode: value })}
             />
@@ -88,15 +88,15 @@ export const ProblemSettings = ({
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.type) !== JSON.stringify(originalProblemRef.current.type) },
+              { 'color-info': JSON.stringify(problem.settings?.type) !== JSON.stringify(originalProblemRef.current.type) },
             )}
           >
             <div className="text-semi-bold text-sentence-case"><T>problem type</T>:</div>
             <Select
               options={RUNNER_ACCEPTED_PROBLEM_TYPES.map(type => ({ value: type, label: PROBLEM_TYPE[type]?.label }))}
               selectedOption={{
-                value: problem.type,
-                label: PROBLEM_TYPE[problem.type]?.label || problem.type,
+                value: problem.settings?.type,
+                label: PROBLEM_TYPE[problem.settings?.type]?.label || problem.settings?.type,
               }}
               onChange={({ value }) => setProblem({ ...problem, type: value })}
             />

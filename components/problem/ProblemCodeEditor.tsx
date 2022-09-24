@@ -91,7 +91,7 @@ export const ProblemCodeEditor = ({
     lastLanguageUsed: ProgrammingLanguage.CPP,
     tabSize: 2,
   });
-  const languages = useMemo(() => Object.values(problem?.languages || {}).map(language => language.language), [problem?.languages]);
+  const languages = useMemo(() => Object.values(problem?.settings.languages || {}), [JSON.stringify(problem?.settings.languages)]);
   const [language, setLanguage] = useState(editorSettings.lastLanguageUsed);
   const [testCases, setTestCases] = useState(initialTestCases);
   useEffect(() => {

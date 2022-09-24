@@ -8,24 +8,24 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
   
   const subTasks = (
     <>
-      {Object.keys(problem?.pointsByGroups || {}).map(key => (
+      {Object.keys(problem?.settings?.pointsByGroups || {}).map(key => (
         <div key={key}>
           {key === '0'
             ? <span className="label text-capitalize text-semi-bold"><T>sample cases</T>: </span>
             : <span className="label text-capitalize text-semi-bold"><T>subtask</T> {key}: </span>}
-          {problem?.pointsByGroups[key].points} <T>points</T>
+          {problem?.settings?.pointsByGroups[key].points} <T>points</T>
         </div>
       ))}
       <div>
         <span className="label text-capitalize text-semi-bold"><T>total</T><span>:</span></span>
-        {Object.values(problem?.pointsByGroups || {})
+        {Object.values(problem?.settings?.pointsByGroups || {})
           .reduce((sum, { points }) => +sum + +points, 0)} <T>points</T>
       </div>
     </>
   );
   
   const limits = () => {
-    const languages = Object.values(problem?.languages || {});
+    const languages = Object.values(problem?.settings?.byProgrammingLanguage || {});
     const timeLimit = languages[0]?.timeLimit || 0;
     const memoryLimit = languages[0]?.memoryLimit || 0;
     
@@ -80,19 +80,19 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: ProblemR
       {limits()}
       <div>
         <span className="label tx-wd-bolder text-capitalize"><T>type</T><span>:</span></span>
-        <T className="text-capitalize">{PROBLEM_TYPE[problem?.type]?.label}</T>
+        <T className="text-capitalize">{PROBLEM_TYPE[problem?.settings?.type]?.label}</T>
       </div>
       <div>
         <span className="label tx-wd-bolder text-capitalize"><T>mode</T><span>:</span></span>
-        {(horizontal && problem?.mode === ProblemMode.SUBTASK) ? (
+        {(horizontal && problem?.settings?.mode === ProblemMode.SUBTASK) ? (
           <Popover
             content={<div className="groups-popover">{subTasks}</div>}
             placement="bottom"
           >
-            <div><T className="text-capitalize">{PROBLEM_MODE[problem?.mode]?.label}</T></div>
+            <div><T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode]?.label}</T></div>
           </Popover>
-        ) : <T className="text-capitalize">{PROBLEM_MODE[problem?.mode]?.label}</T>}
-        {!horizontal && problem?.mode === ProblemMode.SUBTASK && <div className="problem-sub-info">{subTasks}</div>}
+        ) : <T className="text-capitalize">{PROBLEM_MODE[problem?.settings?.mode]?.label}</T>}
+        {!horizontal && problem?.settings?.mode === ProblemMode.SUBTASK && <div className="problem-sub-info">{subTasks}</div>}
       </div>
       {!!problem?.tags?.length && (
         <div>

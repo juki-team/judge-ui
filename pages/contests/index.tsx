@@ -46,7 +46,7 @@ function Contests() {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<ContestSummaryListResponseDTO>>(JUDGE_API_V1.CONTEST.CONTEST_LIST());
+  } = useDataViewerRequester<ContentsResponseType<ContestSummaryListResponseDTO>>(JUDGE_API_V1.CONTEST.LIST());
   
   const columns: DataViewerHeadersType<ContestTable>[] = useMemo(() => [
     {
