@@ -1,6 +1,11 @@
-import { EditCreateContestDTO, ProgrammingLanguage } from 'types';
+import { ContestStatus } from '@juki-team/commons';
+import { ContestTemplate, EditCreateContest, ProgrammingLanguage } from 'types';
 
-export const CONTEST_DEFAULT = (): EditCreateContestDTO => {
+export const FIVE_HOURS = 1000 * 60 * 60 * 5;
+export const ONE_HOUR = 1000 * 60 * 60;
+export const FIFTEEN_MINUTES = 1000 * 60 * 15;
+
+export const CONTEST_DEFAULT = (): EditCreateContest => {
   const now = (new Date(Date.now() + 1000 * 60 * 5));
   now.setSeconds(0, 0);
   
@@ -46,11 +51,21 @@ Oscar Arias | Problem Setter`,
       penalty: 20,
       timeToSolve: 0,
       startTimestamp: now.getTime(),
-      frozenTimestamp: now.getTime() + 1000 * 60 * 60 * 5 - 60 * 60 * 1000,
-      quietTimestamp: now.getTime() + 1000 * 60 * 60 * 5 - 15 * 60 * 1000,
-      endTimestamp: now.getTime() + 1000 * 60 * 60 * 5,
+      frozenTimestamp: now.getTime() + FIVE_HOURS - ONE_HOUR,
+      quietTimestamp: now.getTime() + FIVE_HOURS - FIFTEEN_MINUTES,
+      endTimestamp: now.getTime() + FIVE_HOURS,
     },
     members: { administrators: [], judges: [], guests: ['*'], spectators: ['*'] },
     tags: [],
+    status: ContestStatus.PUBLIC,
   };
+};
+
+export const MAX_DATE = new Date(8640000000000000);
+export const MIN_DATE = new Date(0);
+
+export const CONTEST_TEMPLATE: { [key in ContestTemplate]: { value: ContestTemplate, label: string, description: string } } = {
+  [ContestTemplate.CUSTOM]: { value: ContestTemplate.CUSTOM, label: 'custom', description: 'custom' },
+  [ContestTemplate.CLASSIC]: { value: ContestTemplate.CLASSIC, label: 'classic', description: 'classic' },
+  [ContestTemplate.ENDLESS]: { value: ContestTemplate.ENDLESS, label: 'endless', description: 'endless' },
 };

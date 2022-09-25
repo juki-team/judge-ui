@@ -34,12 +34,12 @@ const ProblemView = (): ReactNode => {
         const tabs = [
           {
             key: ProblemTab.STATEMENT,
-            header: <T className="text-capitalize">statement</T>,
+            header: <T className="tt-ce">statement</T>,
             body: <ProblemStatement problem={problem} />,
           },
           {
             key: ProblemTab.EDITOR,
-            header: <T className="text-capitalize">code editor</T>,
+            header: <T className="tt-ce">code editor</T>,
             body: <ProblemCodeEditor problem={problem} />,
           },
         ];
@@ -47,30 +47,30 @@ const ProblemView = (): ReactNode => {
         if (user.isLogged) {
           tabs.push({
             key: ProblemTab.MY_SUBMISSIONS,
-            header: <T className="text-capitalize">my submissions</T>,
+            header: <T className="tt-ce">my submissions</T>,
             body: <ProblemSubmissions problem={problem} mySubmissions />,
           });
         }
         tabs.push({
           key: ProblemTab.SUBMISSIONS,
-          header: <T className="text-capitalize">submissions</T>,
+          header: <T className="tt-ce">submissions</T>,
           body: <ProblemSubmissions problem={problem} />,
         });
         return (
           <TwoContentLayout>
             <div className="jk-row nowrap gap extend">
-              <div className="jk-row color-primary back-link">
+              <div className="jk-row cr-py back-link">
                 <Link href={ROUTES.PROBLEMS.LIST()}>
-                  <a className="jk-row nowrap text-semi-bold link">
+                  <a className="jk-row nowrap fw-bd link">
                     <ArrowIcon rotate={-90} />
-                    <div className="screen lg hg"><T className="text-sentence-case">problems</T></div>
+                    <div className="screen lg hg"><T className="tt-se">problems</T></div>
                   </a>
                 </Link>
               </div>
               <div className="jk-row gap center flex-1">
                 <h5>{problem.name}</h5>
                 <Popover content={<ProblemInfo problem={problem} />} triggerOn="click" placement="bottom">
-                  <div className="jk-row link"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
+                  <div className="jk-row link"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
                 </Popover>
               </div>
             </div>

@@ -17,7 +17,7 @@ function ProblemEdit() {
         if (data.success/* && !can.updateProblem(user, data.content)*/) {
           return <Custom404 />;
         }
-        return <EditProblem problem={data.content} />;
+        return <EditProblem problem={data.content} setProblem={() => null} onSave={() => null} editing />;
       }}
     </FetcherLayer>
   );

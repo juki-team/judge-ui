@@ -3,12 +3,12 @@ import Link from 'next/link';
 
 export default function Custom404() {
   return (
-    <div className="jk-row filled">
-      <div className="jk-col center">
+    <div className="jk-col extend">
+      <div className="jk-col gap center">
         <div className="image-404"><JukiSurprisedImage /></div>
-        <h1><T className="text-capitalize">page not found</T></h1>
+        <h1 style={{ textAlign: 'center' }}><T className="tt-ce">page not found</T></h1>
         <Link href="/">
-          <a className="link text-uppercase">
+          <a className="link tt-ue">
             <div className="jk-row gap"><HomeIcon /><T>return home</T></div>
           </a>
         </Link>

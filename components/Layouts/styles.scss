@@ -27,6 +27,10 @@
   > div {
     height: 100%;
     width: var(--screen-content-width);
+    
+    > div.jk-tabs-layout {
+      height: 100%;
+    }
   }
 }
 

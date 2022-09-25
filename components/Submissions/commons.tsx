@@ -27,7 +27,7 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
 
 export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, onlyProblem?: boolean, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: (
-    <TextHeadCell text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="text-sentence-case">contest</T></>} />
+    <TextHeadCell text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="tt-se">contest</T></>} />
   ),
   index: 'problem',
   field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
@@ -90,7 +90,7 @@ export const submissionVerdict = (): DataViewerHeadersType<SubmissionResponseDTO
   filter: {
     type: 'select-auto',
     options: Object.values(PROBLEM_VERDICT)
-      .map(({ value, label }) => ({ label: <T className="text-sentence-case">{label}</T>, value })),
+      .map(({ value, label }) => ({ label: <T className="tt-se">{label}</T>, value })),
   },
   cardPosition: 'center',
   minWidth: 140,

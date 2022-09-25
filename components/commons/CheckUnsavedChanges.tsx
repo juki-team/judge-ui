@@ -20,7 +20,7 @@ export const CheckUnsavedChanges = ({ children, onSafeClick, value }) => {
           accept={{ onClick: () => setModal(null), label: <T>close</T> }}
           content={
             <div>
-              <T className="text-sentence-case">there are unsaved changes</T>:
+              <T className="tt-se">there are unsaved changes</T>:
               <div className="alert-modal-json-viewer jk-border-radius-inline">
                 <ReactJson
                   src={diff(originalProblemRef.current, value)}

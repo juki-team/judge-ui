@@ -34,11 +34,14 @@ export enum ContestTab {
   MY_SUBMISSIONS = 'my-submissions',
   CLARIFICATIONS = 'clarifications',
   SUBMISSIONS = 'submissions',
-  TIMING = 'timing',
   SETUP = 'setup',
-  ARCHIVE = 'archive',
   JUDGE = 'judge',
   MEMBERS = 'members',
+}
+
+export enum ContestsTab {
+  CONTESTS = 'contests',
+  COMPETITIONS = 'competitions',
 }
 
 export type ContestParamsType = { key: string, tab: ContestTab, subTab?: string, subSubTab?: ProblemTab };

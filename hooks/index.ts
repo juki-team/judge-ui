@@ -1,10 +1,9 @@
-import { authorizedRequest, settings } from '@juki-team/base-ui';
+import { authorizedRequest } from '@juki-team/base-ui';
 import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { ContentResponseType, ContentsResponseType, HTTPMethod, Status } from 'types';
-import { JUKI_TOKEN_NAME } from '../config/constants';
 import { useUserState } from '../store';
 import { SetLoaderStatusType } from '../types';
 
@@ -116,6 +115,7 @@ export {
   useOutsideAlerter,
   useNotification,
   useT,
+  useJukiBase,
 } from '@juki-team/base-ui';
 export * from './contest';
 export * from './useOnline';

@@ -1,20 +1,18 @@
-import { EditContest } from 'components/contest/EditContest';
+import { EditContest } from 'components';
 import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import React, { useState } from 'react';
 import { useUserState } from 'store';
-import { ButtonLoaderOnClickType, ContentResponseType, ContestTab, EditCreateContestDTO, HTTPMethod, Status } from 'types';
+import { ButtonLoaderOnClickType, ContentResponseType, ContestTab, EditCreateContest, HTTPMethod, Status } from 'types';
 import Custom404 from '../../404';
 
 function ContestCreate() {
   
   const { canCreateContest } = useUserState();
   const { push } = useRouter();
-  const now = new Date();
   const { addNotification } = useNotification();
-  now.setSeconds(0, 0);
-  const [contest, setContest] = useState<EditCreateContestDTO>(CONTEST_DEFAULT());
+  const [contest, setContest] = useState<EditCreateContest>(CONTEST_DEFAULT());
   
   if (!canCreateContest) {
     return <Custom404 />;

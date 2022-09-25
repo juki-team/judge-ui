@@ -13,10 +13,10 @@ export function Profile({ user }: { user: UserProfileResponseDTO }) {
       <div className={classNames('jk-col top stretch left jk-pad')}>
         <div className="jk-col gap stretch">
           <div>
-            <div className="tx-wd-bolder">{user?.nickname}</div>
-            <div className="color-gray-3">{user?.givenName} {user?.familyName}</div>
+            <div className="fw-br">{user?.nickname}</div>
+            <div className="cr-g3">{user?.givenName} {user?.familyName}</div>
           </div>
-          <div className="color-gray-1">{user?.aboutMe}</div>
+          <div className="cr-g1">{user?.aboutMe}</div>
         </div>
         <div className="jk-divider tiny" />
         <div className="jk-col gap left stretch">

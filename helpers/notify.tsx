@@ -7,10 +7,10 @@ import { ContentResponseType } from '../types';
 export const notifyError = (response: ErrorResponseType, addErrorNotification) => {
   addErrorNotification(
     <div className="jk-col stretch" style={{ width: '100%' }}>
-      <span className="text-sentence-case"><T>{response.message}</T></span>
+      <span className="tt-se"><T>{response.message}</T></span>
       {(response.errors[0]?.message !== response.message || response.errors.length > 1) && (
         <ul>
-          {response.errors.map(error => <li><T className="text-sentence-case">{error.message}</T></li>)}
+          {response.errors.map(error => <li><T className="tt-se">{error.message}</T></li>)}
         </ul>
       )}
     </div>,
@@ -20,7 +20,7 @@ export const notifyError = (response: ErrorResponseType, addErrorNotification) =
 export const notifySuccess = (response: ContentResponseType<any> | ContentsResponseType<any>, addSuccessNotification) => {
   addSuccessNotification(
     <div className="jk-col stretch" style={{ width: '100%' }}>
-      <span className="text-sentence-case"><T>{response.message}</T></span>
+      <span className="tt-se"><T>{response.message}</T></span>
     </div>,
   );
 };

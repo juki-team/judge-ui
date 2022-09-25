@@ -57,7 +57,7 @@ export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
         </div>
       </div>
       {setProblem && (
-        <div className="jk-row gap color-primary">
+        <div className="jk-row gap cr-py">
           {editable ? <SaveIcon onClick={onSave} /> : <EditIcon onClick={() => setEditable(true)} />}
           <DeleteIcon
             onClick={() => setProblem(prevState => {

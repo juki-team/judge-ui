@@ -1,7 +1,7 @@
-import { ContentLayout, DataViewer, Field, T, TextField, TextHeadCell } from 'components';
+import { ButtonLoader, ContentLayout, DataViewer, Field, PlusIcon, T, TextField, TextHeadCell } from 'components';
 import { PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { searchParamsObjectTypeToQuery } from 'helpers';
+import { buttonLoaderLink, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -17,7 +17,7 @@ import {
 
 function Problems() {
   
-  const user = useUserState();
+  const { canCreateProblem } = useUserState();
   const {
     data: response,
     request,
@@ -33,10 +33,10 @@ function Problems() {
   
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="text-uppercase">id</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue">id</T>} />,
       index: 'id',
       field: ({ record: { key }, isCard }) => (
-        <Field className="jk-row link text-semi-bold">
+        <Field className="jk-row link fw-bd">
           <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
             <a>{key}</a>
           </Link>
@@ -51,8 +51,8 @@ function Problems() {
       head: <TextHeadCell text={<T>problem name</T>} />,
       index: 'name',
       field: ({ record: { key, name } }) => (
-        <Field className="jk-row link text-semi-bold">
-          <Link href={ROUTES.PROBLEMS.VIEW( key, ProblemTab.STATEMENT)}>
+        <Field className="jk-row link fw-bd">
+          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
             <a>{name}</a>
           </Link>
         </Field>
@@ -67,7 +67,7 @@ function Problems() {
       index: 'tags',
       field: ({ record: { tags } }) => (
         <Field className="jk-row left gap">
-          {tags.map(tag => !!tag && <div className="jk-tag gray-6 text-s">{tag}</div>)}
+          {tags.map(tag => !!tag && <div className="jk-tag gray-6 tx-s">{tag}</div>)}
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.tags.length - rowB.tags.length },
@@ -79,14 +79,14 @@ function Problems() {
       cardPosition: 'center',
       minWidth: 400,
     },
-    ...(user.canCreateProblem ? [ /* TODO: create a special permissions for this */
+    ...(canCreateProblem ? [ /* TODO: create a special permissions for this */
       {
         head: <TextHeadCell text={<T>visibility</T>} />,
         index: 'status',
         field: ({ record: { status } }) => (
           <TextField
-            text={<T className="text-capitalize">{PROBLEM_STATUS[status].label}</T>}
-            label={<T className="text-uppercase">visibility</T>}
+            text={<T className="tt-ce">{PROBLEM_STATUS[status].label}</T>}
+            label={<T className="tt-ue">visibility</T>}
           />
         ),
         sort: { compareFn: () => (rowA, rowB) => rowB.status.localeCompare(rowA.status) },
@@ -99,18 +99,18 @@ function Problems() {
             ProblemStatus.PUBLIC,
           ] as ProblemStatus[]).map(status => ({
             value: status,
-            label: <T className="text-capitalize">{PROBLEM_STATUS[status].label}</T>,
+            label: <T className="tt-ce">{PROBLEM_STATUS[status].label}</T>,
           })),
         },
         cardPosition: 'bottom',
         minWidth: 200,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),
-  ], [user, allTags]);
+  ], [canCreateProblem, allTags]);
   
   const { queryObject, push } = useRouter();
   
-  const data: ProblemSummaryListResponseDTO[] = (response?.success ? response.contents : [])
+  const data: ProblemSummaryListResponseDTO[] = (response?.success ? response.contents : []);
   
   return (
     <ContentLayout>
@@ -121,19 +121,17 @@ function Problems() {
         request={request}
         setLoaderStatusRef={setLoaderStatusRef}
         name="users"
-        // extraButtons={() => (
-        //   <div className="extra-buttons">
-        //     {can.createProblem(user) && (
-        //       <ButtonLoader
-        //         size="small"
-        //         icon={<PlusIcon />}
-        //         onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
-        //       >
-        //         <T>create</T>
-        //       </ButtonLoader>
-        //     )}
-        //   </div>
-        // )}
+        // extraButtons={[
+        //   ...(canCreateProblem ? [
+        //     <ButtonLoader
+        //       size="small"
+        //       icon={<PlusIcon />}
+        //       onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
+        //     >
+        //       <T>create</T>
+        //     </ButtonLoader>,
+        //   ] : []),
+        // ]}
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       />

@@ -23,7 +23,7 @@ export const ViewMembers = ({ contest }: { contest: ContestResponseDTO }) => {
     return (
       <div className="jk-row left gap">
         {nicknames.map(nickname => (
-          <UserNicknameLink nickname={nickname}>
+          <UserNicknameLink nickname={nickname} key={nickname}>
             <div className={classNames('jk-border-radius jk-tag gray-6 link')}>
               {nickname}
             </div>

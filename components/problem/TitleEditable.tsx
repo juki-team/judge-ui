@@ -6,7 +6,7 @@ export const TitleEditable = ({ value, onChange }) => {
   const [editable, setEditable] = useState(false);
   
   return (
-    <div className="title-editable jk-row gap color-primary">
+    <div className="title-editable jk-row gap cr-py">
       {editable ? <Input value={value} onChange={onChange} /> : <h5>{value}</h5>}
       {editable ? <SaveIcon onClick={() => setEditable(false)} /> : <EditIcon onClick={() => setEditable(true)} />}
     </div>

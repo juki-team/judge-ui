@@ -35,7 +35,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         field: ({ record: { position } }) => (
           <Field className="jk-row">{position}</Field>
         ),
-        minWidth: 42,
+        minWidth: 64,
         sticky: true,
       },
       {
@@ -47,7 +47,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
             <UserNicknameLink nickname={userNickname}>
               <div
                 className={classNames('jk-border-radius ', {
-                  'bg-color-primary color-white tx-wd-bolder': userNickname === user.nickname,
+                  'bc-py cr-we fw-br': userNickname === user.nickname,
                   'link': userNickname !== user.nickname,
                 })}
               >
@@ -64,8 +64,8 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         index: 'points',
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
-            <div className="tx-wd-bolder color-primary">{totalPoints}</div>
-            <div className="color-gray-4">{Math.round(totalPenalty)}</div>
+            <div className="fw-br cr-py">{totalPoints}</div>
+            <div className="cr-g4">{Math.round(totalPenalty)}</div>
           </Field>
         ),
         minWidth: 128,
@@ -77,7 +77,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       for (const problem of Object.values(contest?.problems)) {
         base.push({
           head: (
-            <Popover content={<div className="text-nowrap">{problem.name}</div>}>
+            <Popover content={<div className="ws-np">{problem.name}</div>}>
               <div className="jk-row">
                 <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index), query }}>
                   {problem.index}
@@ -93,7 +93,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                 {(problemData?.success || !!problemData?.points) && (
                   <Popover
                     content={
-                      <div className="tx-ws-nowrap">
+                      <div className="ws-np">
                         {problemData?.success ? problemData.points : <>{problemData.points}/{problem.points}</>}
                         &nbsp;
                         <T>{problem?.points === 1 ? 'point' : 'points'}</T>
@@ -108,10 +108,10 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                   </Popover>
                 )}
                 <div className="jk-row nowrap">
-                  <div className="text-xs">{problemData?.attempts || '-'}</div>
-                  <span className="color-gray-3">/</span>
+                  <div className="tx-xs">{problemData?.attempts || '-'}</div>
+                  <span className="cr-g3">/</span>
                   <div
-                    className="text-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
+                    className="tx-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
                 </div>
               </Field>
             );
@@ -149,13 +149,13 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         <div className="jk-row gap">
           <div />
           {!unfrozen && contest?.isFrozenTime && (
-            <Popover content={<T className="tx-ws-nowrap">scoreboard frozen</T>} showPopperArrow>
-              <div className="color-info"><SnowflakeIcon /></div>
+            <Popover content={<T className="ws-np">scoreboard frozen</T>} showPopperArrow>
+              <div className="cr-io"><SnowflakeIcon /></div>
             </Popover>
           )}
           {!unfrozen && contest?.isQuietTime && (
-            <Popover content={<T className="tx-ws-nowrap">scoreboard on quiet time</T>} showPopperArrow>
-              <div className="color-error"><GearsIcon /></div>
+            <Popover content={<T className="ws-np">scoreboard on quiet time</T>} showPopperArrow>
+              <div className="cr-er"><GearsIcon /></div>
             </Popover>
           )}
           {((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
@@ -174,6 +174,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                 size="tiny"
                 type="secondary"
                 onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
                     JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
                     { method: HTTPMethod.POST }),

@@ -53,7 +53,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
               public: true,
             })}
           >
-            <T className="tx-cs-sentence tx-wd-bold">send clarification</T>
+            <T className="tt-se fw-bd">send clarification</T>
           </Button>
         ) : isContestant && (
           <Button
@@ -67,7 +67,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
               public: false,
             })}
           >
-            <T className="tx-cs-sentence tx-wd-bold">ask question</T>
+            <T className="tt-se fw-bd">ask question</T>
           </Button>
         )
       )}
@@ -112,14 +112,14 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                   <h6>{clarification.question}</h6>
                   <div className="jk-row gap">
                     <Popover
-                      content={<div className="tx-ws-nowrap">{dtf(clarification.questionTimestamp)}</div>}
+                      content={<div className="ws-np">{dtf(clarification.questionTimestamp)}</div>}
                       triggerOn="hover"
                     >
-                      <div className="jk-row"><ClockIcon className="color-primary" size="small" /></div>
+                      <div className="jk-row"><ClockIcon className="cr-py" size="small" /></div>
                     </Popover>
                     <Popover
                       content={<UserNicknameLink nickname={clarification.questionUserNickname}>
-                        <div className="link tx-s tx-ws-nowrap">{clarification.questionUserNickname}</div>
+                        <div className="link tx-s ws-np">{clarification.questionUserNickname}</div>
                       </UserNicknameLink>}
                       triggerOn="hover"
                     >
@@ -137,10 +137,10 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                   <div className="jk-row nowrap gap">
                     <div className="jk-tag primary-light">
                       {!clarification.problemJudgeKey
-                        ? <T className="tx-cs-sentence">general</T>
+                        ? <T className="tt-se">general</T>
                         : <div>
-                          <T className="tx-cs-sentence">problem</T> <span
-                          className="tx-wd-bold">{contest?.problems?.[clarification.problemJudgeKey]?.index}</span>
+                          <T className="tt-se">problem</T> <span
+                          className="fw-bd">{contest?.problems?.[clarification.problemJudgeKey]?.index}</span>
                         </div>}
                     </div>
                     <div className="jk-tag gray-6">
@@ -151,7 +151,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                 {!!clarification.answerTimestamp && (
                   <div className="jk-row gap left top stretch nowrap">
                     <Popover
-                      content={<div className="tx-ws-nowrap">{dtf(clarification.answerTimestamp)}</div>}
+                      content={<div className="ws-np">{dtf(clarification.answerTimestamp)}</div>}
                       triggerOn="hover"
                     >
                       <div style={{ marginTop: 16 }} className="tx-m"><ClockIcon size="small" /></div>
@@ -169,19 +169,19 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
         <Modal isOpen={true} onClose={() => setClarification(null)} closeIcon>
           <div className="jk-pad jk-col gap stretch">
             <div>
-              <T className="tx-wd-bold tx-cs-sentence">clarification</T>
+              <T className="fw-bd tt-se">clarification</T>
             </div>
             <div className="jk-form-item">
               <label>
                 <T>problem</T>
                 <Select
                   options={[
-                    { value: '', label: <T className="tx-cs-sentence">general</T> },
+                    { value: '', label: <T className="tt-se">general</T> },
                     ...(Object.values(contest.problems)
                       .map(problem => ({
                         value: getProblemJudgeKey(problem.judge, problem.key),
                         label: <><span
-                          className="tx-wd-bold">{problem.index}</span> - {problem.name} ({JUDGE[problem.judge]?.label} {problem.key})</>,
+                          className="fw-bd">{problem.index}</span> - {problem.name} ({JUDGE[problem.judge]?.label} {problem.key})</>,
                       }))),
                   ]}
                   selectedOption={{ value: clarification.problemJudgeKey }}
@@ -213,13 +213,13 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
             {isJudgeOrAdmin && (
               <div className="jk-form-item">
                 <label>
-                  <T className="tx-cs-sentence tx-wd-bold tx-s">visible for</T>
+                  <T className="tt-se fw-bd tx-s">visible for</T>
                   <InputToggle
                     checked={clarification.public}
                     onChange={(value) => setClarification({ ...clarification, public: value })}
-                    leftLabel={<T className={classNames('tx-cs-sentence', { 'tx-wd-bold': clarification.public })}>contestant who
+                    leftLabel={<T className={classNames('tt-se', { 'fw-bd': clarification.public })}>contestant who
                       asked</T>}
-                    rightLabel={<T className={classNames('tx-cs-sentence', { 'tx-wd-bold': !clarification.public })}>all
+                    rightLabel={<T className={classNames('tt-se', { 'fw-bd': !clarification.public })}>all
                       contestants</T>}
                   />
                 </label>

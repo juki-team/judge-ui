@@ -15,17 +15,11 @@ import {
 import { JUDGE, PALLETE } from 'config/constants';
 import { classNames, disableOutOfRange, getProblemJudgeKey, indexToLetters, roundTimestamp } from 'helpers';
 import React, { useEffect, useRef, useState } from 'react';
-import { ContestProblemBasicType, Judge, RowSortableItem, RowSortableItemContentType } from 'types';
+import { ContestProblemBasicType, RowSortableItem, RowSortableItemContentType } from 'types';
 import { EditContestProps } from '../types';
 
-type Problem = {
+type Problem = Omit<ContestProblemBasicType, 'index'> & {
   name: string,
-  key: string,
-  color: string,
-  points: number,
-  judge: Judge,
-  startTimestamp: number,
-  endTimestamp: number,
 }
 
 export const EditProblems = ({ contest, setContest }: EditContestProps) => {
@@ -45,7 +39,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           {indexToLetters(index + 1)}
         </div>
         <div className="jk-row center gap" style={{ flex: 1 }}>
-          <span className="tx-wd-bold">{problem.key}</span>
+          <span className="fw-bd">{problem.key}</span>
           {problem.name}
           <a href={`/problem/view/${problem.key}`} target="_blank">
             <div className="jk-row"><ExternalIcon size="small" /></div>
@@ -260,8 +254,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         <InputToggle
           checked={!!withTime}
           onChange={value => setWithTime(value ? 1 : 0)}
-          leftLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': !withTime })}>no</T>}
-          rightLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': !!withTime })}>yes</T>}
+          leftLabel={<T className={classNames('tt-se', { 'fw-bd': !withTime })}>no</T>}
+          rightLabel={<T className={classNames('tt-se', { 'fw-bd': !!withTime })}>yes</T>}
         />
         {!!withTime && (
           <div>
@@ -269,8 +263,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <InputToggle
               checked={withTime === 1}
               onChange={(value) => setWithTime(value ? 1 : 2)}
-              leftLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': withTime === 2 })}>date</T>}
-              rightLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': withTime === 1 })}>minutes</T>}
+              leftLabel={<T className={classNames('tt-se', { 'fw-bd': withTime === 2 })}>date</T>}
+              rightLabel={<T className={classNames('tt-se', { 'fw-bd': withTime === 1 })}>minutes</T>}
             />
           </div>
         )}
@@ -279,25 +273,25 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       <div className="jk-col gap stretch">
         <div className="jk-row left">
           <div className="jk-row" style={{ width: 30 }} />
-          <div className="jk-row tx-wd-bold" style={{ width: 40 }}>
-            <T className="text-sentence-case">index</T>
+          <div className="jk-row fw-bd" style={{ width: 40 }}>
+            <T className="tt-se">index</T>
           </div>
-          <div className="jk-row tx-wd-bold" style={{ flex: 1 }}>
-            <div><T className="text-sentence-case">id</T> <T className="text-sentence-case">name</T></div>
+          <div className="jk-row fw-bd" style={{ flex: 1 }}>
+            <div><T className="tt-se">id</T> <T className="tt-se">name</T></div>
           </div>
           <div className="jk-row" style={{ width: 40, color: '#164066' }}><BalloonIcon /></div>
-          <div className="jk-row tx-wd-bold text-sentence-case" style={{ width: 100 }}><T>points</T></div>
+          <div className="jk-row fw-bd tt-se" style={{ width: 100 }}><T>points</T></div>
           {!!withTime && (
             <>
-              <div className="jk-row tx-wd-bold text-sentence-case" style={{ width: withTime === 1 ? 100 : 200 }}>
+              <div className="jk-row fw-bd tt-se" style={{ width: withTime === 1 ? 100 : 200 }}>
                 <T>{withTime === 1 ? 'start minutes' : 'start date'}</T>
               </div>
-              <div className="jk-row tx-wd-bold text-sentence-case" style={{ width: withTime === 1 ? 100 : 200 }}>
+              <div className="jk-row fw-bd tt-se" style={{ width: withTime === 1 ? 100 : 200 }}>
                 <T>{withTime === 1 ? 'duration minutes' : 'end date'}</T>
               </div>
             </>
           )}
-          <div className="jk-row tx-wd-bold text-sentence-case" style={{ width: 150 }}><T>judge</T></div>
+          <div className="jk-row fw-bd tt-se" style={{ width: 150 }}><T>judge</T></div>
           <div style={{ width: 30 }} />
         </div>
         <div>
@@ -308,6 +302,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <div className="jk-row" style={{ flex: 1 }}>
               <ProblemSelector
                 onSelect={(problem) => {
+                  console.log({ problem });
                   if (!problems.some(p => p.key === problem.key)) {
                     let colors = PALLETE.VIVOS.filter(color => !problems.some(p => p.value.color === color.color));
                     if (!colors.length) {

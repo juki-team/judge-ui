@@ -111,3 +111,13 @@ li > * {
   padding: 0 var(--pad-xt);
   margin-right: 4px;
 }
+
+.max-select-size {
+  width: 300px !important;
+}
+
+.max-popover-select-size {
+  .jk-select-options {
+    width: 300px !important;
+  }
+}

@@ -7,11 +7,11 @@ export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
 };
 
 export const Time = ({ verdict, timeUsed }: { verdict: ProblemVerdict, timeUsed: number }) => {
-  return hasTimeHasMemory(verdict) ? <>{(timeUsed / 1000).toFixed(3)} <T className="color-gray-3">s</T></> : <>-</>;
+  return hasTimeHasMemory(verdict) ? <>{(timeUsed / 1000).toFixed(3)} <T className="cr-g3">s</T></> : <>-</>;
 };
 
 export const Memory = ({ verdict, memoryUsed }: { verdict: ProblemVerdict, memoryUsed: number }) => {
-  return hasTimeHasMemory(verdict) ? <>{memoryUsed} <T className="color-gray-3">kb</T></> : <>-</>;
+  return hasTimeHasMemory(verdict) ? <>{memoryUsed} <T className="cr-g3">kb</T></> : <>-</>;
 };
 
 export const Verdict = ({
@@ -20,7 +20,7 @@ export const Verdict = ({
   status,
 }: { verdict: ProblemVerdict, points?: number, status?: SubmissionRunStatus }) => {
   
-  const verdictLabel = PROBLEM_VERDICT[verdict]?.label ? <T className="text-nowrap">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
+  const verdictLabel = PROBLEM_VERDICT[verdict]?.label ? <T className="ws-np">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
   const content = (
     <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
       {verdict}
@@ -31,10 +31,10 @@ export const Verdict = ({
   return (
     <Popover
       content={
-        <div className="text-sentence-case text-nowrap">
+        <div className="tt-se ws-np">
           {verdict === ProblemVerdict.PENDING ? (
             SUBMISSION_RUN_STATUS[status]?.label ?
-              <T className="text-nowrap">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
+              <T className="ws-np">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
           ) : verdictLabel}
         </div>
       }

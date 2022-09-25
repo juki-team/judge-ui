@@ -3,7 +3,7 @@ import { classNames } from 'helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { ContestTab, ProblemResponseDTO } from 'types';
+import { ContestTab, EditCreateProblem } from 'types';
 import { ROUTES } from '../../config/constants';
 import { ArrowIcon, ExclamationIcon, Popover } from '../index';
 import { ProblemInfo } from './ProblemInfo';
@@ -14,17 +14,17 @@ export const ProblemStatement = ({
   contestIndex,
   setProblem,
   originalProblemRef,
-}: { problem: ProblemResponseDTO, contestIndex?: string, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
+}: { problem: EditCreateProblem, contestIndex?: string, setProblem?: (problem) => void, originalProblemRef?: { current: any } }) => {
   
   const { query: { key, index, tab, ...query } } = useRouter();
   
   return (
     <div className="problem-statement-layout">
       {contestIndex && (
-        <div className="problem-head-box text-xh tx-wd-bolder jk-row">
-          <div className="jk-row color-primary back-link">
+        <div className="problem-head-box tx-xh fw-br jk-row">
+          <div className="jk-row cr-py back-link">
             <Link href={{ pathname: ROUTES.CONTESTS.VIEW('' + key, ContestTab.PROBLEMS), query }}>
-              <a className="jk-row nowrap text-semi-bold link">
+              <a className="jk-row nowrap fw-bd link">
                 <ArrowIcon rotate={-90} />
               </a>
             </Link>
@@ -33,7 +33,7 @@ export const ProblemStatement = ({
             <div className="index">{contestIndex}</div>
             <h6 className="title">{problem.name}</h6>
             <Popover content={<ProblemInfo problem={problem} />} triggerOn={['hover', 'click']} placement="bottom">
-              <div className="jk-row"><ExclamationIcon filledCircle className="color-primary" rotate={180} /></div>
+              <div className="jk-row"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
             </Popover>
           </div>
         </div>
@@ -81,7 +81,7 @@ export const ProblemStatement = ({
               {setProblem && (
                 <div className="jk-row">
                   <PlusIcon
-                    className="color-primary"
+                    className="cr-py"
                     filledCircle
                     onClick={() => setProblem(prevState => ({
                       ...prevState,

@@ -133,7 +133,7 @@ export const useUserDispatch = () => {
         body: JSON.stringify({ newPassword}),
       }));
       if (response.success) {
-        addSuccessNotification(<T className="text-sentence-case">password changed successfully</T>);
+        addSuccessNotification(<T className="tt-se">password changed successfully</T>);
         setLoaderStatus?.(Status.SUCCESS);
         onSuccess();
       } else {
@@ -148,7 +148,7 @@ export const useUserDispatch = () => {
         body: JSON.stringify({ newPassword }),
       }));
       if (response.success) {
-        addSuccessNotification(<T className="text-sentence-case">password changed successfully</T>);
+        addSuccessNotification(<T className="tt-se">password changed successfully</T>);
         setLoaderStatus?.(Status.SUCCESS);
         onSuccess();
       } else {
@@ -165,7 +165,7 @@ export const useUserDispatch = () => {
       onSuccess: (result) => {
         localStorage.setItem(JUKI_TOKEN_NAME, result.content.sessionId);
         setUser({ ...result.content, isLogged: true });
-        addSuccessNotification(<T className="text-sentence-case">welcome back</T>);
+        addSuccessNotification(<T className="tt-se">welcome back</T>);
       },
       setLoader,
     }),
@@ -185,7 +185,7 @@ export const useUserDispatch = () => {
       addNotification,
       onSuccess: async (result) => {
         localStorage.setItem(JUKI_TOKEN_NAME, result.content.sessionId);
-        addSuccessNotification(<T className="text-sentence-case">welcome</T>);
+        addSuccessNotification(<T className="tt-se">welcome</T>);
         await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
         setUser({ ...result.content, isLogged: true });
       },
@@ -198,14 +198,14 @@ export const useUserDispatch = () => {
         const result = JSON.parse(response); // special endpoint that only return success
         if (result.success === true) {
           setLoader(Status.SUCCESS);
-          addInfoNotification(<T className="text-sentence-case">see you</T>);
+          addInfoNotification(<T className="tt-se">see you</T>);
         } else {
           setLoader(Status.ERROR);
-          addErrorNotification(<div><T className="text-sentence-case">force Logout</T>{result.message}</div>);
+          addErrorNotification(<div><T className="tt-se">force Logout</T>{result.message}</div>);
         }
       } else {
         setLoader(Status.ERROR);
-        addErrorNotification(<T className="text-sentence-case">force Logout</T>);
+        addErrorNotification(<T className="tt-se">force Logout</T>);
       }
       localStorage.removeItem(JUKI_TOKEN_NAME);
       setUser(USER_GUEST);
@@ -220,7 +220,7 @@ export const useUserDispatch = () => {
         addNotification,
         onSuccess: async () => {
           await mutate(JUDGE_API_V1.AUTH.PING());
-          addSuccessNotification(<T className="text-sentence-case">your personal information has been updated</T>);
+          addSuccessNotification(<T className="tt-se">your personal information has been updated</T>);
         },
         setLoader,
         onError: (result) => {

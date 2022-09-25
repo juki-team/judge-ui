@@ -29,12 +29,12 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
             <div className="jk-pad">
               {(submission?.contestName && submission.contestProblemIndex) ?
                 <>
-                  <div><T className="tx-cs-sentence">contest</T>: {submission?.contestName}</div>
+                  <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
                   <div>({submission.contestProblemIndex}) {submission.problemName}</div>
                 </>
                 : <div>{submission.problemName}</div>
               }
-              <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.AC].label}</T>
+              <T className="tt-ce">{PROBLEM_VERDICT[ProblemVerdict.AC].label}</T>
             </div>,
           );
         } else if (verdict === ProblemVerdict.PA) {
@@ -42,12 +42,12 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
             <div className="jk-pad">
               {(submission?.contestName && submission.contestProblemIndex) ?
                 <>
-                  <div><T className="tx-cs-sentence">contest</T>: {submission?.contestName}</div>
+                  <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
                   <div>({submission.contestProblemIndex}) {submission.problemName}</div>
                 </>
                 : <div>{submission.problemName}</div>
               }
-              <T className="text-capitalize">{PROBLEM_VERDICT[ProblemVerdict.PA].label}</T>
+              <T className="tt-ce">{PROBLEM_VERDICT[ProblemVerdict.PA].label}</T>
               &bnsp;
               ({points} <T>pnts</T>)
             </div>,
@@ -57,12 +57,12 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
             <div className="jk-pad">
               {(submission?.contestName && submission.contestProblemIndex) ?
                 <>
-                  <div><T className="tx-cs-sentence">contest</T>: {submission?.contestName}</div>
+                  <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
                   <div>({submission.contestProblemIndex}) {submission.problemName}</div>
                 </>
                 : <div>{submission.problemName}</div>
               }
-              <T className="text-capitalize">{PROBLEM_VERDICT[verdict].label}</T>
+              <T className="tt-ce">{PROBLEM_VERDICT[verdict].label}</T>
             </div>,
           );
         } else {

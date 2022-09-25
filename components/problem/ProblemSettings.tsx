@@ -24,7 +24,7 @@ export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: s
               <CloseIcon
                 filledCircle
                 size="small"
-                className="color-gray-3"
+                className="cr-g3"
                 onClick={() => onChange(tags.filter(t => t !== tag))}
               />
             </div>
@@ -55,8 +55,8 @@ export const ProblemSettings = ({
       <div className="jk-pad jk-row left">
         <div className="jk-col filled gap">
           {/*<div*/}
-          {/*  className={classNames('jk-row left gap', { 'color-info': JSON.stringify(problem.settings?.languages) !== JSON.stringify(originalProblemRef.current.settings?.languages) })}>*/}
-          {/*  <div className="text-semi-bold text-sentence-case"><T>programming languages</T>:</div>*/}
+          {/*  className={classNames('jk-row left gap', { 'cr-io': JSON.stringify(problem.settings?.languages) !== JSON.stringify(originalProblemRef.current.settings?.languages) })}>*/}
+          {/*  <div className="fw-bd tt-se"><T>programming languages</T>:</div>*/}
           {/*<MultiSelect*/}
           {/*  options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}*/}
           {/*  optionsSelected={problem.settings?.languages?.map?.(lang => ({*/}
@@ -72,10 +72,10 @@ export const ProblemSettings = ({
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.settings?.mode) !== JSON.stringify(originalProblemRef.current.mode) },
+              { 'cr-io': JSON.stringify(problem.settings?.mode) !== JSON.stringify(originalProblemRef.current.mode) },
             )}
           >
-            <div className="text-semi-bold text-sentence-case"><T>problem mode</T>:</div>
+            <div className="fw-bd tt-se"><T>problem mode</T>:</div>
             <Select
               options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({ value: mode, label: PROBLEM_MODE[mode]?.label }))}
               selectedOption={{
@@ -88,10 +88,10 @@ export const ProblemSettings = ({
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.settings?.type) !== JSON.stringify(originalProblemRef.current.type) },
+              { 'cr-io': JSON.stringify(problem.settings?.type) !== JSON.stringify(originalProblemRef.current.type) },
             )}
           >
-            <div className="text-semi-bold text-sentence-case"><T>problem type</T>:</div>
+            <div className="fw-bd tt-se"><T>problem type</T>:</div>
             <Select
               options={RUNNER_ACCEPTED_PROBLEM_TYPES.map(type => ({ value: type, label: PROBLEM_TYPE[type]?.label }))}
               selectedOption={{
@@ -104,10 +104,10 @@ export const ProblemSettings = ({
           {/*<div*/}
           {/*  className={classNames(*/}
           {/*    'jk-row left gap',*/}
-          {/*    { 'color-info': JSON.stringify(problem.settings?.timeLimit) !== JSON.stringify(originalProblemRef.current.settings?.timeLimit) },*/}
+          {/*    { 'cr-io': JSON.stringify(problem.settings?.timeLimit) !== JSON.stringify(originalProblemRef.current.settings?.timeLimit) },*/}
           {/*  )}*/}
           {/*>*/}
-          {/*  <div className="text-semi-bold text-sentence-case"><T>time limit per test</T>:</div>*/}
+          {/*  <div className="fw-bd tt-se"><T>time limit per test</T>:</div>*/}
             {/* <Input*/}
             {/*  type="number"*/}
             {/*  value={problem.settings.timeLimit}*/}
@@ -117,10 +117,10 @@ export const ProblemSettings = ({
           {/*<div*/}
           {/*  className={classNames(*/}
           {/*    'jk-row left gap',*/}
-          {/*    { 'color-info': JSON.stringify(problem.settings?.memoryLimit) !== JSON.stringify(originalProblemRef.current.settings?.memoryLimit) },*/}
+          {/*    { 'cr-io': JSON.stringify(problem.settings?.memoryLimit) !== JSON.stringify(originalProblemRef.current.settings?.memoryLimit) },*/}
           {/*  )}*/}
           {/*>*/}
-          {/*  <div className="text-semi-bold text-sentence-case"><T>memory limit per test</T></div>*/}
+          {/*  <div className="fw-bd tt-se"><T>memory limit per test</T></div>*/}
             {/*<Input*/}
             {/*  type="number"*/}
             {/*  value={problem.settings.memoryLimit}*/}
@@ -131,10 +131,10 @@ export const ProblemSettings = ({
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.status) !== JSON.stringify(originalProblemRef.current.status) },
+              { 'cr-io': JSON.stringify(problem.status) !== JSON.stringify(originalProblemRef.current.status) },
             )}
           >
-            <div className="text-semi-bold text-sentence-case"><T>visibility</T></div>
+            <div className="fw-bd tt-se"><T>visibility</T></div>
             <Select
               options={Object.values(PROBLEM_STATUS).map(status => ({ value: status.value, label: status.label }))}
               selectedOption={{ value: problem.status, label: PROBLEM_STATUS[problem.status]?.label || problem.status }}
@@ -144,10 +144,10 @@ export const ProblemSettings = ({
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.author) !== JSON.stringify(originalProblemRef.current.author) },
+              { 'cr-io': JSON.stringify(problem.author) !== JSON.stringify(originalProblemRef.current.author) },
             )}
           >
-            <div className="text-semi-bold text-sentence-case"><T>autor</T></div>
+            <div className="fw-bd tt-se"><T>autor</T></div>
             <Input
               onChange={value => setProblem({ ...problem, author: value })}
               value={problem.author}
@@ -156,10 +156,10 @@ export const ProblemSettings = ({
           <div
             className={classNames(
               'jk-row left gap',
-              { 'color-info': JSON.stringify(problem.tags) !== JSON.stringify(originalProblemRef.current.tags) },
+              { 'cr-io': JSON.stringify(problem.tags) !== JSON.stringify(originalProblemRef.current.tags) },
             )}
           >
-            <div className="text-semi-bold text-sentence-case"><T>tags</T>:</div>
+            <div className="fw-bd tt-se"><T>tags</T>:</div>
             <Tags tags={problem.tags} onChange={tags => setProblem({ ...problem, tags })} />
           </div>
         </div>

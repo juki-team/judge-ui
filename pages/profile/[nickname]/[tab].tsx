@@ -35,12 +35,12 @@ export default function ProfileView() {
         const tabHeaders = [
           {
             key: ProfileTab.PROFILE,
-            header: <T className="text-capitalize">profile</T>,
+            header: <T className="tt-ce">profile</T>,
             body: <Profile user={data?.content} />,
           }, {
             key: ProfileTab.SUBMISSIONS,
-            header: userNickname === nickname ? <T className="text-capitalize">my submissions</T> :
-              <T className="text-capitalize">submissions</T>,
+            header: userNickname === nickname ? <T className="tt-ce">my submissions</T> :
+              <T className="tt-ce">submissions</T>,
             body: <ProfileSubmissions />,
           },
         ];
@@ -59,17 +59,17 @@ export default function ProfileView() {
               actionsSection={[
                 ...(data.content?.canUpdatePassword ? [
                   <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('UPDATE_PASSWORD')}>
-                    <T className="tx-ws-nowrap">update password</T>
+                    <T className="ws-np">update password</T>
                   </Button>,
                 ] : []),
                 ...(data.content?.canResetPassword ? [
                   <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('RESET_PASSWORD')}>
-                    <T className="tx-ws-nowrap">reset password</T>
+                    <T className="ws-np">reset password</T>
                   </Button>,
                 ] : []),
                 ...(data.content?.canEditProfileData ? [
                   <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('DATA')}>
-                    <T className="tx-ws-nowrap">update profile</T>
+                    <T className="ws-np">update profile</T>
                   </Button>,
                 ] : []),
               ]}

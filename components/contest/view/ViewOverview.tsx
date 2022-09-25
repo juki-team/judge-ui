@@ -38,16 +38,16 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
       <div className="jk-pad flex-1 contest-overview-information">
         <div className="content-side-right-bar-top">
           {isAdmin
-            ? <div className="judge-admin jk-row bg-color-primary color-white jk-border-radius">
-              <T className="text-sentence-case">you are admin</T> <AdminInformation placement="bottom" />
+            ? <div className="judge-admin jk-row bc-py cr-we jk-border-radius">
+              <T className="tt-se">you are admin</T> <AdminInformation placement="bottom" />
             </div>
             : isJudge
-              ? <div className="judge-admin jk-row bg-color-primary color-white jk-border-radius">
-                <T className="text-sentence-case">you are judge</T> <JudgeInformation placement="bottom" />
+              ? <div className="judge-admin jk-row bc-py cr-we jk-border-radius">
+                <T className="tt-se">you are judge</T> <JudgeInformation placement="bottom" />
               </div>
               : (isContestant
-                ? <div className="registered jk-row bg-color-success color-white jk-border-radius tx-wd-bolder"><T
-                  className="text-sentence-case">registered</T>
+                ? <div className="registered jk-row bc-ss cr-we jk-border-radius fw-br"><T
+                  className="tt-se">registered</T>
                 </div>
                 : (isGuest && new Date().getTime() <= contest.settings.endTimestamp)
                   ? (
@@ -61,24 +61,24 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                       <T>{isLogged ? 'register' : 'to register, first login'}</T>
                     </ButtonLoader>
                   ) : isSpectator && (
-                  <div className="judge-admin jk-row bg-color-primary color-white jk-border-radius">
-                    <T className="text-sentence-case">you are spectator</T> <SpectatorInformation placement="bottom" />
+                  <div className="judge-admin jk-row bc-py cr-we jk-border-radius">
+                    <T className="tt-se">you are spectator</T> <SpectatorInformation placement="bottom" />
                   </div>
                 ))}
         </div>
         <div className="contest-content-side-right-bar-bottom jk-col stretch gap">
           <div className="jk-col jk-border-radius-inline jk-pad-sm">
-            <p className="text-xs color-gray-3 text-semi-bold"><T>start date</T></p>
-            <p className="text-s text-semi-bold">{dtf(contest.settings.startTimestamp)}</p>
+            <p className="tx-xs cr-g3 text-semi-bold"><T>start date</T></p>
+            <p className="tx-s fw-bd">{dtf(contest.settings.startTimestamp)}</p>
           </div>
           {contest.settings.endTimestamp !== contest.settings.frozenTimestamp && (
             <div className="jk-col jk-border-radius-inline jk-pad-sm">
-              <div className="jk-row gap nowrap text-xs color-gray-3 text-semi-bold">
+              <div className="jk-row gap nowrap tx-xs cr-g3 fw-bd">
                 <T>frozen date</T>
                 <FrozenInformation />
               </div>
-              <p className="text-s text-semi-bold">{dtf(contest.settings.frozenTimestamp)}</p>
-              <p className="text-xs text-semi-bold">
+              <p className="tx-s fw-bd">{dtf(contest.settings.frozenTimestamp)}</p>
+              <p className="tx-xs fw-bd">
                 {rlt(Math.floor((contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;
                 <T>from the start of the contest</T>
               </p>
@@ -86,12 +86,12 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
           )}
           {contest.settings.endTimestamp !== contest.settings.quietTimestamp && (
             <div className="jk-col jk-border-radius-inline jk-pad-sm">
-              <div className="jk-row gap text-xs color-gray-3 text-semi-bold">
+              <div className="jk-row gap tx-xs cr-g3 fw-bd">
                 <T>quiet date</T>
                 <QuietInformation />
               </div>
-              <p className="text-s text-semi-bold">{dtf(contest.settings.quietTimestamp)}</p>
-              <p className="text-xs text-semi-bold">
+              <p className="tx-s fw-bd">{dtf(contest.settings.quietTimestamp)}</p>
+              <p className="tx-xs fw-bd">
                 {rlt(Math.floor((contest.settings.quietTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;
                 <T>from the start of the contest</T>
               </p>
@@ -99,19 +99,19 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
           )}
           {(contest.settings.endTimestamp - contest.settings.startTimestamp) !== contest.settings.timeToSolve && (
             <div className="jk-col jk-border-radius-inline jk-pad-sm">
-              <p className="text-s semi-bold">{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</p>
-              <p className="text-xs semi-bold"><T>time for solve</T></p>
+              <p className="tx-s semi-bold">{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</p>
+              <p className="tx-xs semi-bold"><T>time for solve</T></p>
             </div>
           )}
           {!!contest.settings.penalty && (
             <div className="jk-col jk-border-radius-inline jk-pad-sm">
-              <p className="text-xs color-gray-3 text-semi-bold"><T>penalty by incorrect answer</T></p>
-              <p className="text-s text-semi-bold">{contest.settings.penalty} min</p>
+              <p className="tx-xs cr-g3 fw-bd"><T>penalty by incorrect answer</T></p>
+              <p className="tx-s fw-bd">{contest.settings.penalty} min</p>
             </div>
           )}
           <div className="jk-col jk-border-radius-inline jk-pad-sm">
-            <p className="text-xs color-gray-3 text-semi-bold"><T>clarifications</T></p>
-            <p className="text-s text-semi-bold">
+            <p className="tx-xs cr-g3 fw-bd"><T>clarifications</T></p>
+            <p className="tx-s fw-bd">
               <T>{contest.settings.clarifications ? 'clarifications available' : 'clarifications not available'}</T>
             </p>
           </div>

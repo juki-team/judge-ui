@@ -1,16 +1,22 @@
-import { getProblemJudgeKey, Status } from '@juki-team/commons';
-import { FetcherLayer } from 'components';
-import { EditContest } from 'components/contest/EditContest';
+import { EditContest, FetcherLayer } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest, getProblemJudgeKey, notifyResponse } from 'helpers';
 import { useContestRouter, useNotification, useRouter } from 'hooks';
 import React, { useEffect, useRef, useState } from 'react';
-import { ContentResponseType, ContestResponseDTO, ContestTab, EditCreateContestDTO, HTTPMethod } from 'types';
-import { ButtonLoaderOnClickType } from '../../../types';
+import {
+  ButtonLoaderOnClickType,
+  ContentResponseType,
+  ContestResponseDTO,
+  ContestTab,
+  EditContestProblemBasicType,
+  EditCreateContest,
+  HTTPMethod,
+  Status,
+} from 'types';
 import Custom404 from '../../404';
 
-const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContestDTO => {
-  const problems = {};
+const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContest => {
+  const problems: { [key: string]: EditContestProblemBasicType } = {};
   Object.values(data.content.problems).forEach(problem => {
     problems[getProblemJudgeKey(problem.judge, problem.key)] = {
       key: problem.key,
@@ -36,14 +42,15 @@ const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreate
     key: data.content.key,
     members,
     name: data.content.name,
-    problems: problems,
+    problems,
     settings: data.content.settings,
     tags: data.content.tags,
+    status: data.content.status,
   };
 };
 
 const Edit = ({ data, isLoading, error }: { data: ContentResponseType<ContestResponseDTO>, isLoading: boolean, error: any }) => {
-  const [contest, setContest] = useState<EditCreateContestDTO>(parseContest(data));
+  const [contest, setContest] = useState<EditCreateContest>(parseContest(data));
   const { addNotification } = useNotification();
   const { push } = useRouter();
   const lastContest = useRef(data);

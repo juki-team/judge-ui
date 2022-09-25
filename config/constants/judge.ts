@@ -94,9 +94,6 @@ export const JUDGE_API_V1 = {
     TEST: (id: string, testId?: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/testCase${testId ? '/' + testId : ''}`;
     },
-    BASIC_LIST: () => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/problem/basicList`;
-    },
     SUBMIT: (key: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/problem/${key}`;
     },

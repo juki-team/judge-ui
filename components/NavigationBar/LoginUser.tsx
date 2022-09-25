@@ -12,7 +12,7 @@ export const LoginUser = () => {
   const { logout } = useUserDispatch();
   
   if (user.isLoading) {
-    return <LoadingIcon className="color-white" />;
+    return <LoadingIcon className="cr-we" />;
   }
   
   if (user.isLogged) {
@@ -31,15 +31,15 @@ export const LoginUser = () => {
             <ButtonLoader onClick={logout} type="outline" size="small"><T>sign out</T></ButtonLoader>
             {/*<div className="jk-divider tiny" />*/}
             {/*<div className="jk-row space-between nowrap">*/}
-            {/*  <div className="text-s capitalized-case"><T>privacity policy</T></div>*/}
-            {/*  <div className="text-s capitalized-case"><T>terms of service</T></div>*/}
+            {/*  <div className="tx-s capitalized-case"><T>privacity policy</T></div>*/}
+            {/*  <div className="tx-s capitalized-case"><T>terms of service</T></div>*/}
             {/*</div>*/}
           </div>
         }
         triggerOn="click"
         placement="bottomRight"
       >
-        <div className="user-logged-head jk-row gap nowrap color-white">
+        <div className="user-logged-head jk-row gap nowrap cr-we">
           <img src={user.imageUrl} alt={user.nickname} className="jk-user-profile-img large" />
           <div className="jk-row nickname">{user.nickname}</div>
           <UpIcon rotate={180} />

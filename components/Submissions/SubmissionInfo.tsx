@@ -22,11 +22,11 @@ const GroupInfo = ({ groupKey, isSubtaskProblem, timeUsed, memoryUsed, verdict, 
   return (
     <Collapse
       header={({ isOpen, toggle }) => (
-        <div className={classNames('jk-row extend block gap jk-table-inline-row jk-pad group-info', { 'tx-wd-bolder': isOpen })}>
+        <div className={classNames('jk-row extend block gap jk-table-inline-row jk-pad group-info', { 'fw-br': isOpen })}>
           <div className="jk-row">
-            {+groupKey ? (isSubtaskProblem ? <><T className="text-sentence-case">subtask</T>{groupKey}</> :
-                <T className="text-sentence-case">test cases</T>) :
-              <T className="text-sentence-case">sample test cases</T>}
+            {+groupKey ? (isSubtaskProblem ? <><T className="tt-se">subtask</T>{groupKey}</> :
+                <T className="tt-se">test cases</T>) :
+              <T className="tt-se">sample test cases</T>}
           </div>
           <div className="jk-row center gap">
             <Verdict verdict={verdict} points={points} />
@@ -40,12 +40,12 @@ const GroupInfo = ({ groupKey, isSubtaskProblem, timeUsed, memoryUsed, verdict, 
       className="jk-row extend"
     >
       <div className={classNames('jk-row extend group-info-details')}>
-        <div className={classNames('jk-row extend block gap jk-table-inline-row text-semi-bold')}>
+        <div className={classNames('jk-row extend block gap jk-table-inline-row fw-bd')}>
           <div className="jk-row"><T>#</T></div>
-          <div className="jk-row center gap"><T className="text-sentence-case">verdict</T></div>
-          <div className="jk-row center gap"><T className="text-sentence-case">time</T></div>
-          <div className="jk-row center gap"><T className="text-sentence-case">memory</T></div>
-          <div className="jk-row center gap"><T className="text-sentence-case">return code</T></div>
+          <div className="jk-row center gap"><T className="tt-se">verdict</T></div>
+          <div className="jk-row center gap"><T className="tt-se">time</T></div>
+          <div className="jk-row center gap"><T className="tt-se">memory</T></div>
+          <div className="jk-row center gap"><T className="tt-se">return code</T></div>
         </div>
         {testCases.map((testCase, index) => (
           <div className="jk-row extend block gap jk-table-inline-row" key={index}>
@@ -53,7 +53,7 @@ const GroupInfo = ({ groupKey, isSubtaskProblem, timeUsed, memoryUsed, verdict, 
             <div className="jk-row"><Verdict verdict={testCase.verdict} /></div>
             <div className="jk-row center gap"><Time verdict={testCase.verdict} timeUsed={testCase.timeUsed} /></div>
             <div className="jk-row center gap"><Memory verdict={testCase.verdict} memoryUsed={testCase.memoryUsed} /></div>
-            <div className={classNames('jk-row center gap', { 'color-error text-semi-bold': testCase?.exitCode !== 0 })}>
+            <div className={classNames('jk-row center gap', { 'cr-er fw-bd': testCase?.exitCode !== 0 })}>
               {testCase.exitCode}
             </div>
           </div>

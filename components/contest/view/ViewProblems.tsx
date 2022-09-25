@@ -36,7 +36,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
           >
             <div className="problem-status jk-row space-between">
               <div
-                className={'tx-wd-bolder problem-index bg-color-gray-6 jk-border-radius-inline' + (problem.myAttempts ? (problem.mySuccess ? ' accepted' : ' wrong') : '')}
+                className={'fw-br problem-index bc-g6 jk-border-radius-inline' + (problem.myAttempts ? (problem.mySuccess ? ' accepted' : ' wrong') : '')}
               >
                 {!!problem.myAttempts && (problem.mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
                 {problem.index}
@@ -45,18 +45,18 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                 (isJudgeOrAdmin ? (
                   <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }}>
                     <a target="_blank">
-                      <div className="problem-id text-xs text-semi-bold color-gray-3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon
+                      <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon
                         size="tiny" /></div>
                     </a>
                   </Link>
-                ) : (<div className="problem-id text-xs text-semi-bold color-gray-3">ID: {problem.key}</div>))
+                ) : (<div className="problem-id tx-xs fw-bd cr-g3">ID: {problem.key}</div>))
               ) : (
-                <div className="problem-id text-xs text-semi-bold color-gray-3">
+                <div className="problem-id tx-xs fw-bd cr-g3">
                   {getProblemJudgeKey(problem.judge, problem.key)}
                 </div>
               )}
             </div>
-            <div className="text-m tx-wd-bolder jk-row"> {problem.name} </div>
+            <div className="tx-m fw-br jk-row"> {problem.name} </div>
             <div className="jk-col gap">
               {isContestant && isLive && (problem.startTimestamp !== contest.settings.startTimestamp || problem.endTimestamp !== contest.settings.endTimestamp) && (
                 <div className="problem-timing jk-row">
@@ -78,15 +78,15 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
               )}
               <div className="jk-row gap">
                 <div className="jk-col">
-                  <div className="text-s tx-wd-bolder">{problem.points}</div>
-                  <div className="text-t text-semi-bold"><T>score</T></div>
+                  <div className="tx-s fw-br">{problem.points}</div>
+                  <div className="tx-t fw-bd"><T>score</T></div>
                 </div>
                 <div className="jk-divider horizontal" />
                 <div className="jk-col">
-                  <div className="text-s tx-wd-bolder">
+                  <div className="tx-s fw-br">
                     {problem.totalAttempts ? (problem.totalSuccess / problem.totalAttempts * 100).toFixed(1) + ' %' : '-'}
                   </div>
-                  <div className="text-t text-semi-bold"><T>success rate</T></div>
+                  <div className="tx-t fw-bd"><T>success rate</T></div>
                 </div>
               </div>
             </div>
@@ -120,7 +120,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                       setLoaderStatus(Status.SUCCESS);
                     } else {
                       addErrorNotification(<T
-                        className="text-sentence-case">{result.message || 'something went wrong, please try again later'}</T>);
+                        className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
                       setLoaderStatus(Status.ERROR);
                     }
                   }}

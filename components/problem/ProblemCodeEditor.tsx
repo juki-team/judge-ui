@@ -145,7 +145,7 @@ export const ProblemCodeEditor = ({
               type="secondary"
               size="tiny"
               onClick={async () => {
-                addSuccessNotification(<T className="text-sentence-case">to submit, first login</T>);
+                addSuccessNotification(<T className="tt-se">to submit, first login</T>);
                 await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) });
               }}
             >
@@ -173,12 +173,12 @@ export const ProblemCodeEditor = ({
                   if (problem.judge === Judge.JUKI_JUDGE) {
                     listenSubmission(result.content.submitId, contest?.problemIndex ? problem.key : query.key as string);
                   }
-                  addSuccessNotification(<T className="text-sentence-case">submission received</T>);
+                  addSuccessNotification(<T className="tt-se">submission received</T>);
                 }
                 setLoaderStatus(Status.SUCCESS);
               } else {
                 addErrorNotification(<T
-                  className="text-sentence-case">{result.message || 'something went wrong, please try again later'}</T>);
+                  className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
                 setLoaderStatus(Status.ERROR);
               }
               
@@ -202,7 +202,7 @@ export const ProblemCodeEditor = ({
               type="secondary"
               size="tiny"
               onClick={async () => {
-                addSuccessNotification(<T className="text-sentence-case">to submit, first register</T>);
+                addSuccessNotification(<T className="tt-se">to submit, first register</T>);
                 await pushTab(ContestTab.OVERVIEW);
               }}
             >

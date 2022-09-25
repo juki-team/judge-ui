@@ -4,13 +4,15 @@ import { diff } from 'deep-object-diff';
 import { useRouter } from 'hooks';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
-import { ProblemResponseDTO, ProblemTab, Status } from 'types';
+import { ProblemTab, Status } from 'types';
+import { ButtonLoaderOnClickType } from '../../types';
 import { ProblemSettings } from './ProblemSettings';
 import { TitleEditable } from './TitleEditable';
+import { EditPropsProps } from './types';
 
 const ReactJson = dynamic(import('react-json-view'), { ssr: false });
 
-export const EditProblem = ({ problem }: { problem: ProblemResponseDTO }) => {
+export const EditProblem = ({ problem, setProblem, editing, onSave }: EditPropsProps & { onSave: ButtonLoaderOnClickType }) => {
   
   const { query: { key, ...query }, push } = useRouter();
   const originalProblemRef = useRef(problem);
@@ -44,7 +46,7 @@ export const EditProblem = ({ problem }: { problem: ProblemResponseDTO }) => {
                   accept={{ onClick: () => setModal(null), label: <T>close</T> }}
                   content={
                     <div>
-                      <T className="text-sentence-case">there are unsaved changes</T>:
+                      <T className="tt-se">there are unsaved changes</T>:
                       <div className="alert-modal-json-viewer jk-border-radius-inline">
                         <ReactJson
                           src={diff(originalProblemRef.current, newProblem)}
@@ -61,7 +63,7 @@ export const EditProblem = ({ problem }: { problem: ProblemResponseDTO }) => {
               );
             }
           }}>
-            <ArrowIcon rotate={-90} filledCircle className="color-primary" size="large" />
+            <ArrowIcon rotate={-90} filledCircle className="cr-py" size="large" />
           </div>
           <TitleEditable value={newProblem.name} onChange={value => setNewProblem({ ...problem, name: value })} />
         </div>
@@ -71,15 +73,15 @@ export const EditProblem = ({ problem }: { problem: ProblemResponseDTO }) => {
         tabs={[
           {
             key: ProblemTab.STATEMENT,
-            header: <T className="text-capitalize">statement</T>,
+            header: <T className="tt-ce">statement</T>,
             body: <ProblemStatement problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />,
           },
           {
             key: ProblemTab.SETUP,
-            header: <T className="text-capitalize">settings</T>,
+            header: <T className="tt-ce">settings</T>,
             body: <ProblemSettings problem={newProblem} setProblem={setNewProblem} originalProblemRef={originalProblemRef} />,
           },
-          { key: ProblemTab.TESTS, header: <T className="text-capitalize">test cases</T>, body: <div>test cases</div> },
+          { key: ProblemTab.TESTS, header: <T className="tt-ce">test cases</T>, body: <div>test cases</div> },
         ]}
         onChange={tabKey => push({ pathname: ROUTES.PROBLEMS.EDIT('' + key, tabKey), query })}
         actionsSection={[

@@ -73,7 +73,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
             {editing ? (
               <ButtonLoader
                 type="text"
-                icon={<SaveIcon filledCircle className="color-primary" />}
+                icon={<SaveIcon filledCircle className="cr-py" />}
                 onClick={async setLoaderStatus => {
                   if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
                     setLoaderStatus?.(Status.LOADING);
@@ -93,7 +93,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
                   setEditing(false);
                 }}
               />
-            ) : <Button type="text" icon={<EditIcon filledCircle className="color-primary" />} onClick={() => setEditing(true)} />}
+            ) : <Button type="text" icon={<EditIcon filledCircle className="cr-py" />} onClick={() => setEditing(true)} />}
           </div>
         )}
       </div>

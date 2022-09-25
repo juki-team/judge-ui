@@ -970,13 +970,13 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@juki-team/base-ui@^0.0.122":
-  version "0.0.122"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.122/a9cc16f2713268eac0984a170432ee2e0fa3e255#a9cc16f2713268eac0984a170432ee2e0fa3e255"
-  integrity sha512-QYnJI98E3rgSDZrOQQWanhmzEu5RTVgBPbG6cNSTHt1db9OcYNL+5ZMQl0UtN2XmR7LsE9Fr8Xk77M7qJKjspA==
+"@juki-team/base-ui@^0.0.129":
+  version "0.0.129"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.129/88d1331c70e46c7b31574f3b8e39476296277375#88d1331c70e46c7b31574f3b8e39476296277375"
+  integrity sha512-LVeMOV1Gxg8MbKScjl3YXvTQWvLd38AmAhfiBnwvsIJAGsKftxI/9JVuZ01nTWpxt25cE+FJd/C5yuhuJCCrcw==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
-    "@juki-team/commons" "^0.0.123"
+    "@juki-team/commons" "^0.0.132"
     "@monaco-editor/react" "^4.4.2"
     codemirror "^5.65.2"
     immutability-helper "^3.1.1"
@@ -1002,15 +1002,15 @@
     uuid "^9.0.0"
     yup "^0.32.11"
 
-"@juki-team/commons@^0.0.123":
-  version "0.0.123"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.123/d3411e687610e81994adf3bd9555934b1e9e3244#d3411e687610e81994adf3bd9555934b1e9e3244"
-  integrity sha512-04fkexTvD9FCWjyGVP/U9SCXPurF4zJ+ILPo68QvGTCjoRfI0PJZ4WJDCVlZtHoiDENKqx8NOgbGAczQyk/Xng==
-
 "@juki-team/commons@^0.0.132":
   version "0.0.132"
   resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.132/79abf4fa8fd9fb00b9fefb0fd86bc0af7a5a48fa#79abf4fa8fd9fb00b9fefb0fd86bc0af7a5a48fa"
   integrity sha512-O4tDdJTIoNOx3WBRkUJVKKKPMGh3FBIOWvJcSQegG9tkQV7fmrWmHILLW/NCQ9Ab8irTMhEm1Sly/GsHd8E4wg==
+
+"@juki-team/commons@^0.0.138":
+  version "0.0.138"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.138/d89f10b6d6300a8d600f970132ad43214b9530b4#d89f10b6d6300a8d600f970132ad43214b9530b4"
+  integrity sha512-qn9gzApeeMpX/zWZQmdueC8rUjxfWYpZot7AOSQ7YYaJUoAjH/hY/3rU+OC6tbnN60ZRgqPEDMhwZlRR9q752Q==
 
 "@monaco-editor/loader@^1.3.2":
   version "1.3.2"

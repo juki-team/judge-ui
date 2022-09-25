@@ -25,5 +25,6 @@ export {
 export * from './contest';
 export * from './defaultObjects';
 export * from './judge';
+export * from './problem';
 export * from './routes';
 export * from './settings';

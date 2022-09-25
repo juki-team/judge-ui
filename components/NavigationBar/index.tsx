@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { useUserDispatch, useUserState } from 'store';
-import { AdminTab, Language, ProfileSettingOptions, Status, Theme } from 'types';
+import { AdminTab, ContestsTab, Language, ProfileSettingOptions, Status, Theme } from 'types';
 import {
   AppsIcon,
   ArrowIcon,
@@ -37,7 +37,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T>contests</T>,
       icon: <CupIcon />,
       selected: ('/' + pathname).includes('//contest'),
-      menuItemWrapper: (children) => <Link href={ROUTES.CONTESTS.LIST()}><a>{children}</a></Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}><a>{children}</a></Link>,
     },
     {
       label: <T>problems</T>,
@@ -109,20 +109,20 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         triggerOn="click"
         placement={placement}
       >
-        <div className="color-white">
+        <div className="cr-we">
           <Button icon={<SettingIcon />} type="text" />
         </div>
       </Popover>
       <Popover
         content={
           <div className="jk-col gap more-apps-popover">
-            <div className="semi-bold text-sentence-case"><T>more apps coming soon</T></div>
-            <div className="jk-col gap color-primary">
+            <div className="semi-bold tt-se"><T>more apps coming soon</T></div>
+            <div className="jk-col gap cr-py">
               <div className="jk-row">
-                <JukiCouchLogoHorImage /> <LoadingIcon size="small" /> <T className="text-sentence-case">developing</T>...
+                <JukiCouchLogoHorImage /> <LoadingIcon size="small" /> <T className="tt-se">developing</T>...
               </div>
               <div className="jk-row">
-                <JukiUtilsLogoHorImage /> <LoadingIcon size="small" /> <T className="text-sentence-case">developing</T>...
+                <JukiUtilsLogoHorImage /> <LoadingIcon size="small" /> <T className="tt-se">developing</T>...
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         triggerOn="click"
         placement={placement}
       >
-        <div className="color-white">
+        <div className="cr-we">
           <Button icon={<AppsIcon />} type="text" />
         </div>
       </Popover>
@@ -146,7 +146,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       <HorizontalMenu
         menu={menu}
         leftSection={() => (
-          <div className="color-white navbar" onClick={() => push('/')}>
+          <div className="cr-we navbar" onClick={() => push('/')}>
             <JukiJudgeLogoHorImage />
           </div>
         )}
@@ -159,16 +159,16 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         leftMobile={{
           children: ({ toggle }) => (
             <div className="jk-row gap nowrap left mobile-left-side-header">
-              <div className="jk-row" onClick={toggle}><MenuIcon className="color-white" /></div>
-              <Link href="/"><a><JukiJudgeLogoHorImage className="color-white" /></a></Link>
+              <div className="jk-row" onClick={toggle}><MenuIcon className="cr-we" /></div>
+              <Link href="/"><a><JukiJudgeLogoHorImage className="cr-we" /></a></Link>
             </div>
           ),
           content: ({ toggle }) => (
-            <div className="bg-color-primary jk-row filled left-mobile-content">
+            <div className="bc-py jk-row filled left-mobile-content">
               <div className="jk-col space-between">
                 <div className="jk-row nowrap gap left mobile-left-side-header">
-                  <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} className="color-white" /></div>
-                  <JukiJudgeLogoHorImage className="color-white" />,
+                  <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} className="cr-we" /></div>
+                  <JukiJudgeLogoHorImage className="cr-we" />,
                 </div>
                 <div className="jk-col gap mobile-left-side-bottom">
                   {settings('rightBottom')}

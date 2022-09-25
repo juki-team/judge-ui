@@ -1,31 +1,12 @@
 import { PlacementType } from 'types';
 import { ExclamationIcon, Popover, T } from '../index';
 
-export const ContestTypeInformation = () => {
-  return (
-    <Popover
-      content={
-        <div style={{ width: '200px' }}>
-          <T className="text-sentence-case">
-            if the contest is public, it will appear in the list of contests in view of all users, if the contest is private, it will
-            only appear for the contest members
-          </T>
-        </div>
-      }
-      triggerOn={['hover', 'click']}
-      placement="top"
-    >
-      <div className="jk-row color-primary"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
-    </Popover>
-  );
-};
-
 export const FrozenInformation = () => {
   return (
     <Popover
       content={
         <div style={{ width: '200px' }}>
-          <T className="text-sentence-case">
+          <T className="tt-se">
             in this period the scoreboard is not updated but the contestant will still be able to know the verdict of his submissions
           </T>
         </div>
@@ -33,7 +14,7 @@ export const FrozenInformation = () => {
       triggerOn={['hover', 'click']}
       placement="top"
     >
-      <div className="jk-row color-primary"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
+      <div className="jk-row cr-py"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
     </Popover>
   );
 };
@@ -43,7 +24,7 @@ export const QuietInformation = () => {
     <Popover
       content={
         <div style={{ width: '200px' }}>
-          <T className="text-sentence-case">
+          <T className="tt-se">
             in this period the scoreboard is not updated and the contestant will not be able to know the verdict of his submissions
           </T>
         </div>
@@ -51,7 +32,7 @@ export const QuietInformation = () => {
       triggerOn={['hover', 'click']}
       placement="top"
     >
-      <div className="jk-row color-primary"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
+      <div className="jk-row cr-py"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
     </Popover>
   );
 };
@@ -61,7 +42,7 @@ export const SpectatorInformation = ({ filledCircle, placement = 'bottom' }: { f
     <Popover
       content={
         <div style={{ width: '200px' }}>
-          <T className="text-sentence-case">
+          <T className="tt-se">
             the spectator can only see the problems, the scoreboard, the submissions and the clarifications
           </T>
         </div>
@@ -83,11 +64,11 @@ export const JudgeInformation = ({ filledCircle, placement = 'bottom' }: { fille
     <Popover
       content={
         <div style={{ width: '200px' }}>
-          <T className="text-sentence-case">
+          <T className="tt-se">
             the judge can judge the submissions if necessary and can see the problems, submissions and source codes at any stage of the
             contest
           </T>
-          <T className="text-sentence-case">
+          <T className="tt-se">
             the person who creates the contest is judge by default
           </T>
         </div>
@@ -109,10 +90,10 @@ export const AdminInformation = ({ filledCircle, placement = 'bottom' }: { fille
     <Popover
       content={
         <div style={{ width: '200px' }}>
-          <T className="text-sentence-case">
+          <T className="tt-se">
             the administrator can change the parameters of the contest and see everything related to the contest
           </T>
-          <T className="text-sentence-case">
+          <T className="tt-se">
             the person who creates the contest is administrator by default
           </T>
         </div>

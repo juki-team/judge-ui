@@ -25,8 +25,8 @@ export const UserPreview = ({ nickname }) => {
             <div className="jk-row center gap">
               <img src={data?.content?.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={nickname} />
               <div className="jk-col stretch">
-                <div className="tx-wd-bolder">{data?.content?.nickname}</div>
-                <div className="color-gray-3">{data?.content?.givenName} {data?.content?.familyName}</div>
+                <div className="fw-br">{data?.content?.nickname}</div>
+                <div className="cr-g3">{data?.content?.givenName} {data?.content?.familyName}</div>
                 <div className="jk-divider tiny" />
                 {(data?.content?.city?.trim() || data?.content?.country?.trim()) && (
                   <div className="jk-row left gap">

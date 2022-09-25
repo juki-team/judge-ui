@@ -46,14 +46,14 @@ export const UsersSelector = ({
         <Modal isOpen={true} onClose={() => setShow(false)}>
           <div className="jk-col stretch left gap jk-pad">
             <div className="jk-row left">
-              <T className="tx-cs-sentence">write the nicknames separated by commas</T>&nbsp;
+              <T className="tt-se">write the nicknames separated by commas</T>&nbsp;
               (<T>the nicknames are case sensitive</T>)
             </div>
             <TextArea
               value={text}
               onChange={setText}
             />
-            <p className="color-error">{error}</p>
+            <p className="cr-er">{error}</p>
             <div className="jk-row right gap">
               <Button
                 type="text"

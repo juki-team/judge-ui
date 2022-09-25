@@ -4,6 +4,7 @@ export function ContentLayout({ children }) {
   return (
     <section className="content-layout jk-row">
       <div>
+        {/*<div style={{ height: 'calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--top-horizontal-menu-height))' }}>*/}
         {children}
       </div>
     </section>
@@ -19,7 +20,7 @@ export function TwoContentLayout({ children }) {
       <div ref={ref}>
         {children[0]}
       </div>
-      <div style={{ height: 'calc(100% - ' + (height/* + 12*/) + 'px - 0px)' }}>
+      <div style={{ height: 'calc(100% - ' + (height/* + 12*/) + 'px)' }}>
         {children[1]}
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { InputToggle, T, UsersSelector } from 'components';
-import { classNames } from 'helpers';
+import { classNames, isEndlessContest } from 'helpers';
 import React from 'react';
 import { AdminInformation, JudgeInformation } from '../Information';
 import { EditContestProps } from '../types';
@@ -14,6 +14,8 @@ export const EditMembers = ({ setContest, contest }: EditContestProps) => {
   const openRegistration = contest.members.guests.length === 1 && contest.members.guests[0] === '*';
   const openScore = contest.members.spectators.length === 1 && contest.members.spectators[0] === '*';
   
+  const competition = isEndlessContest(contest);
+  
   return (
     <div className="jk-col left stretch jk-pad">
       <div className="jk-col gap stretch">
@@ -25,12 +27,13 @@ export const EditMembers = ({ setContest, contest }: EditContestProps) => {
               ...prevState,
               members: { ...prevState.members, guests: value ? ['*'] : [] },
             }))}
-            leftLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': !openRegistration })}>only guests</T>}
-            rightLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': openRegistration })}>open</T>}
+            leftLabel={<T className={classNames('tt-se', { 'fw-bd': !openRegistration })}>only guests</T>}
+            rightLabel={<T className={classNames('tt-se', { 'fw-bd': openRegistration })}>open</T>}
+            disabled={competition}
           />
         </div>
         <div style={{ minHeight: 34 }}>
-          {openRegistration ? <T className="text-sentence-case">the contest is open to all users of the judge</T> : (
+          {openRegistration ? <T className="tt-se">the contest is open to all users of the judge</T> : (
             <UsersSelector
               selectedUsers={guests}
               onChangeSelectedUsers={guests => {
@@ -53,12 +56,13 @@ export const EditMembers = ({ setContest, contest }: EditContestProps) => {
               ...prevState,
               members: { ...prevState.members, spectators: value ? ['*'] : [] },
             }))}
-            leftLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': !openScore })}>only guests</T>}
-            rightLabel={<T className={classNames('text-sentence-case', { 'tx-wd-bold': openScore })}>open</T>}
+            leftLabel={<T className={classNames('tt-se', { 'fw-bd': !openScore })}>only guests</T>}
+            rightLabel={<T className={classNames('tt-se', { 'fw-bd': openScore })}>open</T>}
+            disabled={competition}
           />
         </div>
         <div style={{ minHeight: 34 }}>
-          {openScore ? <T className="text-sentence-case">the scoreboard of the contest is open to all users of the judge</T> : (
+          {openScore ? <T className="tt-se">the scoreboard of the contest is open to all users of the judge</T> : (
             <UsersSelector
               selectedUsers={spectators}
               onChangeSelectedUsers={spectators => {

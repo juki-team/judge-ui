@@ -30,7 +30,7 @@ export function Users() {
   const [nickname, setNickname] = useState('');
   const optionsFilterStatus = Object.values(USER_STATUS).map(status => ({
     value: status.value,
-    label: <T className="text-capitalize">{status.label}</T>,
+    label: <T className="tt-ce">{status.label}</T>,
   }));
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const {
@@ -57,7 +57,7 @@ export function Users() {
   
   const columns: DataViewerHeadersType<UserManagementResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="text-uppercase">Name</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue">Name</T>} />,
       index: 'name',
       field: ({ record: { givenName, familyName, nickname, imageUrl, email } }) => (
         <Field className="jk-row center gap">
@@ -75,19 +75,19 @@ export function Users() {
       minWidth: 400,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">country/city</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue">country/city</T>} />,
       index: 'country-city',
       field: ({ record: { country, city } }) => (
         <Field className="jk-col center">
           {city}
-          <div className="tx-wd-bold">{country}</div>
+          <div className="fw-bd">{country}</div>
         </Field>
       ),
       cardPosition: 'bottom',
       minWidth: 250,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">permissions</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue">permissions</T>} />,
       index: 'permissions',
       field: ({ record }) => (
         <Field className="jk-col">
@@ -109,7 +109,7 @@ export function Users() {
       minWidth: 360,
     },
     {
-      head: <TextHeadCell text={<T className="text-uppercase">operations</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue">operations</T>} />,
       index: 'operations',
       field: ({ record: { status: userStatus, nickname } }) => {
         let setLoaderRef = null;
@@ -118,7 +118,7 @@ export function Users() {
             <Select
               className=""
               options={Object.values(USER_STATUS).map(status => ({
-                label: <T className="text-sentence-case">{status.label}</T>,
+                label: <T className="tt-se">{status.label}</T>,
                 value: status.value,
                 disabled: status.value === userStatus,
               }))}
