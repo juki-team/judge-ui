@@ -1,17 +1,23 @@
+import {
+  ButtonLoader,
+  CheckIcon,
+  DataViewer,
+  DateField,
+  DateLiteral,
+  Field,
+  PlusIcon,
+  Popover,
+  T,
+  TextField,
+  TextHeadCell,
+} from 'components';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { buttonLoaderLink, getContestStatus, getContestTemplate, searchParamsObjectTypeToQuery } from 'helpers';
+import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { JUDGE_API_V1, ROUTES } from '../../../config/constants';
-import { buttonLoaderLink, getContestStatus, getContestTemplate, searchParamsObjectTypeToQuery } from '../../../helpers';
-import { useDataViewerRequester, useRouter } from '../../../hooks';
-import { useUserState } from '../../../store';
-import {
-  ContentsResponseType,
-  ContestSummaryListResponseDTO,
-  ContestTab,
-  ContestTemplate,
-  DataViewerHeadersType,
-} from '../../../types';
-import { ButtonLoader, CheckIcon, DataViewer, DateField, Field, PlusIcon, Popover, T, TextField, TextHeadCell } from '../../index';
+import { useUserState } from 'store';
+import { ContentsResponseType, ContestSummaryListResponseDTO, ContestTab, ContestTemplate, DataViewerHeadersType } from 'types';
 
 type SettingsOptions = {
   startTimestamp: number;
@@ -66,7 +72,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
           })),
         },
         cardPosition: 'center',
-        minWidth: 140,
+        minWidth: 130,
       },
     ] as DataViewerHeadersType<ContestTable>[]),
     {
@@ -133,19 +139,22 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
       sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
       filter: { type: 'text-auto' },
       cardPosition: 'center',
-      minWidth: 300,
+      minWidth: 320,
     },
     ...(endless ? [] : [
       {
-        head: <TextHeadCell text={<T>start</T>} />,
+        head: <TextHeadCell text={<div className="jk-col"><T>start</T><T>end</T></div>} />,
         index: 'date',
         field: ({ record: { settings } }) => (
-          <DateField date={new Date(settings.startTimestamp)} label="Date" twoLines />
+          <Field className="jk-col">
+            <DateLiteral date={new Date(settings.startTimestamp)} show="year-month-day-hours-minutes" />
+            <DateLiteral date={new Date(settings.endTimestamp)} show="year-month-day-hours-minutes" />
+          </Field>
         ),
         sort: { compareFn: () => (rowA, rowB) => +rowA.settings.startTimestamp - +rowB.settings.startTimestamp },
         filter: { type: 'date-auto' },
         cardPosition: 'center',
-        minWidth: 300,
+        minWidth: 340,
       },
     ] as DataViewerHeadersType<ContestTable>[]),
     {
@@ -157,7 +166,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
       sort: { compareFn: () => (rowA, rowB) => +rowA.totalRegistered - +rowB.totalRegistered },
       filter: { type: 'text-auto', getValue: ({ record: { totalRegistered } }) => '' + totalRegistered },
       cardPosition: 'center',
-      minWidth: 180,
+      minWidth: 160,
     },
   ], []);
   
@@ -177,7 +186,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
     <DataViewer<ContestTable>
       headers={columns}
       data={data}
-      rows={{ height: 68 }}
+      rows={{ height: 72 }}
       request={request}
       setLoaderStatusRef={setLoaderStatusRef}
       name="users"
