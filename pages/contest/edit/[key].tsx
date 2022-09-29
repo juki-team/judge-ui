@@ -1,21 +1,12 @@
-import { EditContest, FetcherLayer } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, getProblemJudgeKey, notifyResponse } from 'helpers';
-import { useContestRouter, useNotification, useRouter } from 'hooks';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  ButtonLoaderOnClickType,
-  ContentResponseType,
-  ContestResponseDTO,
-  ContestTab,
-  EditContestProblemBasicType,
-  EditCreateContest,
-  HTTPMethod,
-  Status,
-} from 'types';
+import { EditCreateContest, FetcherLayer } from 'components';
+import { JUDGE_API_V1 } from 'config/constants';
+import { getProblemJudgeKey } from 'helpers';
+import { useContestRouter } from 'hooks';
+import React from 'react';
+import { ContentResponseType, ContestResponseDTO, EditContestProblemBasicType, EditCreateContestType } from 'types';
 import Custom404 from '../../404';
 
-const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContest => {
+const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContestType => {
   const problems: { [key: string]: EditContestProblemBasicType } = {};
   Object.values(data.content.problems).forEach(problem => {
     problems[getProblemJudgeKey(problem.judge, problem.key)] = {
@@ -33,6 +24,7 @@ const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreate
   const members = {
     administrators: Object.keys(data.content.members.administrators),
     judges: Object.keys(data.content.members.judges),
+    contestants: Object.keys(data.content.members.contestants),
     guests: Object.keys(data.content.members.guests),
     spectators: Object.keys(data.content.members.spectators),
   };
@@ -49,34 +41,8 @@ const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreate
   };
 };
 
-const Edit = ({ data, isLoading, error }: { data: ContentResponseType<ContestResponseDTO>, isLoading: boolean, error: any }) => {
-  const [contest, setContest] = useState<EditCreateContest>(parseContest(data));
-  const { addNotification } = useNotification();
-  const { push } = useRouter();
-  const lastContest = useRef(data);
-  useEffect(() => {
-    if (JSON.stringify(data) !== JSON.stringify(lastContest.current)) {
-      console.log('HAY CAMBIOSSS!!, cuidado que se pisen datos');
-    }
-  }, [data, isLoading, error]);
-  const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
-    setLoaderStatus(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.CONTEST(contest.key), {
-      method: HTTPMethod.PUT,
-      body: JSON.stringify(contest),
-    }));
-    notifyResponse(response, addNotification);
-    if (response.success) {
-      push(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
-      setLoaderStatus(Status.SUCCESS);
-    } else {
-      setLoaderStatus(Status.ERROR);
-    }
-  };
-  return <EditContest contest={contest} setContest={setContest} onSave={onSave} editing />;
-};
-
 function ContestEdit() {
+  
   const { contestKey } = useContestRouter();
   
   return (
@@ -86,7 +52,8 @@ function ContestEdit() {
     >
       {({ data, isLoading, error }) => {
         if (data.content.user.isAdmin) {
-          return <Edit data={data} isLoading={isLoading} error={error} />;
+          const contest = parseContest(data);
+          return <EditCreateContest contest={contest} />;
         }
         return <Custom404 />;
       }}

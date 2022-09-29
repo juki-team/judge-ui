@@ -21,7 +21,7 @@ export const UserPreview = ({ nickname }) => {
         onError={handleClose}
       >
         {({ data }) => (
-          <div className="jk-pad jk-col stretch gap">
+          <div className="jk-pad-md jk-col stretch gap">
             <div className="jk-row center gap">
               <img src={data?.content?.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={nickname} />
               <div className="jk-col stretch">

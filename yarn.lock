@@ -970,13 +970,13 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@juki-team/base-ui@^0.0.130":
-  version "0.0.130"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.130/57c4dfd5802011b62b215878e4c45312d7046d9a#57c4dfd5802011b62b215878e4c45312d7046d9a"
-  integrity sha512-VsLuzSxoKtPHAXNXdbSj2V3WXF42P4+Mt2cC4h4iX9MtfMfVs99oJgRtvHIYXiQ9YGHTg9Or5ZQVpYcoAaQ6fg==
+"@juki-team/base-ui@^0.0.148":
+  version "0.0.148"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.148/37f127cb04ad7665ca45d79c4d9843d22f4ab1d4#37f127cb04ad7665ca45d79c4d9843d22f4ab1d4"
+  integrity sha512-zCsqnyWBCgQ3zsPYenYFkoZNApdxJJ1eRSm4UjfzLEnWtcY73DjWn/FtIRLUzN9eVE5UOb066ljrAEbQVgysnA==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
-    "@juki-team/commons" "^0.0.132"
+    "@juki-team/commons" "^0.0.143"
     "@monaco-editor/react" "^4.4.2"
     codemirror "^5.65.2"
     immutability-helper "^3.1.1"
@@ -1002,15 +1002,15 @@
     uuid "^9.0.0"
     yup "^0.32.11"
 
-"@juki-team/commons@^0.0.132":
-  version "0.0.132"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.132/79abf4fa8fd9fb00b9fefb0fd86bc0af7a5a48fa#79abf4fa8fd9fb00b9fefb0fd86bc0af7a5a48fa"
-  integrity sha512-O4tDdJTIoNOx3WBRkUJVKKKPMGh3FBIOWvJcSQegG9tkQV7fmrWmHILLW/NCQ9Ab8irTMhEm1Sly/GsHd8E4wg==
+"@juki-team/commons@^0.0.143":
+  version "0.0.143"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.143/cf7e244a26cd1ab5da224671b2320ccab2cddad8#cf7e244a26cd1ab5da224671b2320ccab2cddad8"
+  integrity sha512-zfm/DYehbbWs7qQoV1FCk3uxKvCHuDe3TLIBMuesMyWSfMv5mT8BEsp1cIC99MwHORwr9Rjwl4+5KkwvDmWdSA==
 
-"@juki-team/commons@^0.0.138":
-  version "0.0.138"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.138/d89f10b6d6300a8d600f970132ad43214b9530b4#d89f10b6d6300a8d600f970132ad43214b9530b4"
-  integrity sha512-qn9gzApeeMpX/zWZQmdueC8rUjxfWYpZot7AOSQ7YYaJUoAjH/hY/3rU+OC6tbnN60ZRgqPEDMhwZlRR9q752Q==
+"@juki-team/commons@^0.0.147":
+  version "0.0.147"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.147/55220103770f2598bb9f11307d588ef2985d5e2b#55220103770f2598bb9f11307d588ef2985d5e2b"
+  integrity sha512-XmgSgU0RbMxf6h4yQ+EegiJ4zY076Qvy2zi2O87HbepRsGOkqk3OEe2tEg8sLZWP1qvDiV0KuTpvaww6WMG6ng==
 
 "@monaco-editor/loader@^1.3.2":
   version "1.3.2"

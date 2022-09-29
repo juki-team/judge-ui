@@ -21,7 +21,8 @@ export enum ProblemTab {
   TESTS = 'tests',
   RANKING = 'ranking',
   STATISTICS = 'statistics',
-  SETUP = 'setup'
+  SETUP = 'setup',
+  EDITORIAL = 'editorial',
 }
 
 export type ProblemParamsType = { key: string, tab: ProblemTab };

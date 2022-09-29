@@ -77,9 +77,9 @@ function Problems() {
         callbackFn: ({ selectedOptions }) => ({ tags }) => tags.some(tag => selectedOptions.some(({ value }) => value === tag)),
       } as FilterSelectOfflineType<ProblemSummaryListResponseDTO>,
       cardPosition: 'center',
-      minWidth: 400,
+      minWidth: 250,
     },
-    ...(canCreateProblem ? [ /* TODO: create a special permissions for this */
+    ...(canCreateProblem ? [
       {
         head: <TextHeadCell text={<T>visibility</T>} />,
         index: 'status',
@@ -121,17 +121,17 @@ function Problems() {
         request={request}
         setLoaderStatusRef={setLoaderStatusRef}
         name="users"
-        // extraButtons={[
-        //   ...(canCreateProblem ? [
-        //     <ButtonLoader
-        //       size="small"
-        //       icon={<PlusIcon />}
-        //       onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE(ProblemTab.STATEMENT)))}
-        //     >
-        //       <T>create</T>
-        //     </ButtonLoader>,
-        //   ] : []),
-        // ]}
+        extraButtons={[
+          ...(canCreateProblem ? [
+            <ButtonLoader
+              size="small"
+              icon={<PlusIcon />}
+              onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE()))}
+            >
+              <T>create</T>
+            </ButtonLoader>,
+          ] : []),
+        ]}
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       />

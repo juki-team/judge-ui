@@ -25,7 +25,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
-    <div className="jk-row gap jk-pad">
+    <div className="jk-row gap jk-pad-md">
       {Object.values(problems).map(problem => {
         const canSubmit = isContestant && isLive && problem.startTimestamp <= Date.now() && Date.now() <= problem.endTimestamp;
         return (

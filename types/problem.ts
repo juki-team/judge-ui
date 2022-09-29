@@ -1,5 +1,5 @@
-import { ProblemResponseDTO } from 'types';
+import { CreateProblemDTO } from 'types';
 
-export interface EditCreateProblem extends ProblemResponseDTO {
-
+export interface EditCreateProblemType extends CreateProblemDTO {
+  key: string,
 }

@@ -15,13 +15,13 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
   
   return (
     <Modal isOpen={true} onClose={onClose}>
-      <div className="user-profile jk-row stretch center gap jk-pad relative">
+      <div className="user-profile jk-row stretch center gap jk-pad-md relative">
         {modalImageProfile && <ImageProfileModal onClose={() => setModalImageProfile(false)} nickname={user.nickname} />}
-        <div className="jk-col top jk-pad">
+        <div className="jk-col top jk-pad-md">
           <img src={user?.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={user?.nickname as string} />
           <EditIcon onClick={() => setModalImageProfile(true)} />
         </div>
-        <div className={classNames('jk-col top stretch left jk-pad gap')}>
+        <div className={classNames('jk-col top stretch left jk-pad-md gap')}>
           <div className="jk-form-item">
             <label>
               <div className="jk-row left gap"><PersonIcon size="small" /><T>nickname</T></div>

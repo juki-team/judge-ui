@@ -39,7 +39,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
-    <div className="jk-col jk-pad">
+    <div className="jk-col jk-pad-md">
       {(isJudgeOrAdmin || isContestant) && (
         isJudgeOrAdmin ? (
           <Button
@@ -167,7 +167,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
       </div>
       {clarification && (
         <Modal isOpen={true} onClose={() => setClarification(null)} closeIcon>
-          <div className="jk-pad jk-col gap stretch">
+          <div className="jk-pad-md jk-col gap stretch">
             <div>
               <T className="fw-bd tt-se">clarification</T>
             </div>

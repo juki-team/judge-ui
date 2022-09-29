@@ -6,11 +6,11 @@ import { UserProfileResponseDTO } from 'types';
 export function Profile({ user }: { user: UserProfileResponseDTO }) {
   
   return (
-    <div className="user-profile jk-row stretch center gap jk-pad relative">
-      <div className="jk-col top jk-pad">
+    <div className="user-profile jk-row stretch center gap jk-pad-md relative">
+      <div className="jk-col top jk-pad-md">
         <img src={user?.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={user?.nickname as string} />
       </div>
-      <div className={classNames('jk-col top stretch left jk-pad')}>
+      <div className={classNames('jk-col top stretch left jk-pad-md')}>
         <div className="jk-col gap stretch">
           <div>
             <div className="fw-br">{user?.nickname}</div>

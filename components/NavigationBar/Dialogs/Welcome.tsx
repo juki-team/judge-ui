@@ -20,7 +20,7 @@ export const Welcome = () => {
       onClose={handleClose}
       className="modal-welcome"
     >
-      <div className="jk-pad jk-row nowrap">
+      <div className="jk-pad-md jk-row nowrap">
         <div>
           <h5><T>hi</T><span className="given-name">{givenName}</span>!</h5>
           <h3><T>welcome to the Online Juki Judge</T></h3>

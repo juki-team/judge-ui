@@ -1,14 +1,12 @@
-import { Judge, ProblemMode, ProblemStatus, ProblemType } from '@juki-team/commons';
-import { EditCreateProblem } from 'types';
+import { Judge, Language, ProblemMode, ProblemStatus, ProblemType } from '@juki-team/commons';
+import { EditCreateProblemType } from 'types';
 
-export const PROBLEM_DEFAULT = (): EditCreateProblem => {
+export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
   return {
     author: '',
-    editorial: '',
-    judge: Judge.JUKI_JUDGE,
+    editorial: { [Language.ES]: '', [Language.EN]: '' },
     key: '',
     name: '',
-    ownerNickname: '',
     sampleCases: [],
     settings: {
       timeLimit: 2,
@@ -19,8 +17,16 @@ export const PROBLEM_DEFAULT = (): EditCreateProblem => {
       withPE: true,
       pointsByGroups: {},
       byProgrammingLanguage: {},
+      evaluatorSource: '',
     },
-    statement: { description: '', input: '', output: '' },
+    statement: {
+      description: {
+        [Language.EN]: '',
+        [Language.ES]: '',
+      },
+      input: '',
+      output: '',
+    },
     status: ProblemStatus.RESERVED,
     tags: [],
   };

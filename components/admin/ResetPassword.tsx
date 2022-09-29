@@ -21,7 +21,7 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
       isOpen={!!nickname}
       onClose={onClose}
     >
-      <div className="jk-pad jk-col gap left stretch">
+      <div className="jk-pad-md jk-col gap left stretch">
         <h6><T>reset password</T></h6>
         <UserNicknameLink nickname={nickname}>
           <div className="link">{nickname}</div>

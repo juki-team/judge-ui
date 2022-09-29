@@ -248,7 +248,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [problems]);
   
   return (
-    <div className="jk-pad">
+    <div className="jk-pad-md">
       <div className="jk-row left gap">
         <h6><T>Problems with period time restriction</T></h6>
         <InputToggle

@@ -1,31 +1,38 @@
-import { PROGRAMMING_LANGUAGE } from '@juki-team/commons';
 import { Popover, T } from 'components';
-import { PROBLEM_MODE, PROBLEM_STATUS, PROBLEM_TYPE } from 'config/constants';
+import { PROBLEM_MODE, PROBLEM_STATUS, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames } from 'helpers';
-import { EditCreateProblem, ProblemMode, ProblemResponseDTO } from 'types';
+import { ProblemMode, ProblemSettingsType, ProblemStatus } from 'types';
 
-export const ProblemInfo = ({ problem, horizontal = false }: { problem: EditCreateProblem, horizontal?: boolean }) => {
+export interface ProblemInfoProps {
+  settings: ProblemSettingsType,
+  tags: string[],
+  author: string,
+  status: ProblemStatus,
+  horizontal?: boolean,
+}
+
+export const ProblemInfo = ({ settings, tags, author, status, horizontal = false }: ProblemInfoProps) => {
   
   const subTasks = (
     <>
-      {Object.keys(problem?.settings?.pointsByGroups || {}).map(key => (
+      {Object.keys(settings?.pointsByGroups || {}).map(key => (
         <div key={key}>
           {key === '0'
             ? <span className="label tt-ce fw-bd"><T>sample cases</T>: </span>
             : <span className="label tt-ce fw-bd"><T>subtask</T> {key}: </span>}
-          {problem?.settings?.pointsByGroups[key].points} <T>points</T>
+          {settings?.pointsByGroups[key].points} <T>points</T>
         </div>
       ))}
       <div>
         <span className="label tt-ce fw-bd"><T>total</T><span>:</span></span>
-        {Object.values(problem?.settings?.pointsByGroups || {})
+        {Object.values(settings?.pointsByGroups || {})
           .reduce((sum, { points }) => +sum + +points, 0)} <T>points</T>
       </div>
     </>
   );
   
   const limits = () => {
-    const languages = Object.values(problem?.settings?.byProgrammingLanguage || {});
+    const languages = Object.values(settings?.byProgrammingLanguage || {});
     
     return (
       <>
@@ -34,7 +41,7 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: EditCrea
           <div className="problem-sub-info">
             <div>
               <span className="label fw-bd tt-se"><T>general</T>:</span>
-              {(problem.settings?.timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T>
+              {(settings?.timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T>
             </div>
           </div>
           <div className="problem-sub-info">
@@ -51,7 +58,7 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: EditCrea
           <div className="problem-sub-info">
             <div>
               <span className="label fw-bd tt-se"><T>general</T>:</span>
-              {(problem.settings?.memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T>
+              {(settings?.memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T>
             </div>
           </div>
           <div className="problem-sub-info">
@@ -68,7 +75,7 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: EditCrea
   };
   
   return (
-    <div className={classNames('center problem-info  jk-pad', {
+    <div className={classNames('center problem-info  jk-pad-md', {
       gap: horizontal,
       'jk-row': horizontal,
       'jk-col': !horizontal,
@@ -78,51 +85,51 @@ export const ProblemInfo = ({ problem, horizontal = false }: { problem: EditCrea
       {limits()}
       <div>
         <span className="label fw-br tt-ce"><T>type</T><span>:</span></span>
-        <T className="tt-ce">{PROBLEM_TYPE[problem?.settings?.type]?.label}</T>
+        <T className="tt-ce">{PROBLEM_TYPE[settings?.type]?.label}</T>
       </div>
       <div>
         <span className="label fw-br tt-ce"><T>mode</T><span>:</span></span>
-        {(horizontal && problem?.settings?.mode === ProblemMode.SUBTASK) ? (
+        {(horizontal && settings?.mode === ProblemMode.SUBTASK) ? (
           <Popover
             content={<div className="groups-popover">{subTasks}</div>}
             placement="bottom"
           >
-            <div><T className="tt-ce">{PROBLEM_MODE[problem?.settings?.mode]?.label}</T></div>
+            <div><T className="tt-ce">{PROBLEM_MODE[settings?.mode]?.label}</T></div>
           </Popover>
-        ) : <T className="tt-ce">{PROBLEM_MODE[problem?.settings?.mode]?.label}</T>}
-        {!horizontal && problem?.settings?.mode === ProblemMode.SUBTASK && <div className="problem-sub-info">{subTasks}</div>}
+        ) : <T className="tt-ce">{PROBLEM_MODE[settings?.mode]?.label}</T>}
+        {!horizontal && settings?.mode === ProblemMode.SUBTASK && <div className="problem-sub-info">{subTasks}</div>}
       </div>
-      {!!problem?.tags?.length && (
+      {!!tags?.length && (
         <div>
           <span className="label fw-br tt-ce"><T>tags</T><span>:</span></span>
           {horizontal ? (
             <Popover
               content={
                 <div className="jk-row gap">
-                  {problem.tags.map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}
+                  {tags.map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}
                 </div>
               }
               placement="bottom"
             >
-              <div><span className="count-tags">{problem.tags.length}</span></div>
+              <div><span className="count-tags">{tags.length}</span></div>
             </Popover>
           ) : (
             <span className="jk-row left gap">
-              {problem.tags.filter(tag => !!tag.trim()).map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}
+              {tags.filter(tag => !!tag.trim()).map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}
             </span>
           )}
         </div>
       )}
-      {problem?.author && (
+      {author && (
         <div>
           <span className="label fw-br tt-ce"><T>author</T><span>:</span></span>
-          {problem.author}
+          {author}
         </div>
       )}
-      {problem?.status && (
+      {status && (
         <div>
           <span className="label fw-br tt-ce"><T>visibility</T><span>:</span></span>
-          <T className="tt-ce">{PROBLEM_STATUS[problem.status]?.label}</T>
+          <T className="tt-ce">{PROBLEM_STATUS[status]?.label}</T>
         </div>
       )}
     </div>

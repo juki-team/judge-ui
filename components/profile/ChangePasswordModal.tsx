@@ -42,7 +42,7 @@ export const ChangePasswordModal = ({ onClose, nickname: userNickname }: { onClo
       className="modal-change-password"
       onClose={onClose}
     >
-      <div className="jk-pad">
+      <div className="jk-pad-md">
         <form
           onSubmit={handleSubmit((data: ProfileChangePasswordInput) => updatePassword(userNickname, data.newPassword, onClose)(setLoaderRef.current!, null, null))}>
           <div className="jk-form-item">

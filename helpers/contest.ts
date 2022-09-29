@@ -1,5 +1,5 @@
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from '../config/constants';
-import { ContestProblemBasicType, ContestTemplate, EditCreateContest } from '../types';
+import { ContestProblemBasicType, ContestTemplate, EditCreateContestType } from '../types';
 import { roundTimestamp } from './index';
 
 export const getContestStatus = (startTimestamp: number, endTimestamp: number) => {
@@ -14,7 +14,7 @@ export const getContestStatus = (startTimestamp: number, endTimestamp: number) =
   return contestStatus;
 };
 
-export const adjustContest = (contest: EditCreateContest): EditCreateContest => {
+export const adjustContest = (contest: EditCreateContestType): EditCreateContestType => {
   const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
   const endTimestamp = Math.max(roundTimestamp(contest.settings.endTimestamp), startTimestamp);
   const frozenTimestamp = Math.min(Math.max(roundTimestamp(contest.settings.frozenTimestamp), startTimestamp), endTimestamp);

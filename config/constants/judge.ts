@@ -80,10 +80,15 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/list`;
     },
     DATA: (key: string) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}/data`;
     },
-    PROBLEM: (id?: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/problem${id ? '/' + id : ''}`;
+    PROBLEM: (key: string) => {
+      if (!key) return null;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}`;
+    },
+    CREATE: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem`;
     },
     TESTS: (id: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/testCases`;
@@ -106,32 +111,41 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest`;
     },
     CONTEST: (key: string) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}`;
     },
     CONTEST_DATA: (key: string) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/data`;
     },
     REGISTER: (key: string) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/register`;
     },
     SUBMIT: (key: string, problemJudgeKey: string) => {
+      if (!key || !problemJudgeKey) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/contest/${key}/problem-judge-key/${problemJudgeKey}`;
     },
     SCOREBOARD: (key: string, unfrozen: boolean) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen' : ''}`;
     },
     RECALCULATE_SCOREBOARD: (key: string) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/recalculate-scoreboard`;
     },
     CLARIFICATION: (key: string) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification`;
     },
     ANSWER_CLARIFICATION: (key: string, clarificationId: string) => {
+      if (!key) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification/${clarificationId}`;
     },
   },
   REJUDGE: {
     CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string) => {
+      if (!contestKey) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}`;
     },
   },

@@ -1,6 +1,5 @@
-import { CONTEST_STATUS } from '@juki-team/commons';
 import { FrozenInformation, Input, InputDate, InputToggle, MultiSelect, QuietInformation, Select, T, Timer } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, CONTEST_STATUS, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { adjustContest, classNames, disableOutOfRange, isEndlessContest } from 'helpers';
 import React, { useState } from 'react';
 import { EditContestProps } from '../types';
@@ -25,7 +24,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const competition = isEndlessContest(contest);
   
   return (
-    <div className="jk-col left stretch jk-pad gap">
+    <div className="jk-col left stretch jk-pad-md gap">
       <div className="jk-row left gap">
         <div className="jk-row gap">
           <h6 className="cr-er"><T>contest status</T></h6>
@@ -323,6 +322,19 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
           leftLabel={<T className={classNames('tt-se', { 'fw-bd': !contest.settings.clarifications })}>no
             available</T>}
           rightLabel={<T className={classNames('tt-se', { 'fw-bd': contest.settings.clarifications })}>available</T>}
+        />
+      </div>
+      <div className="jk-row left gap">
+        <h6><T>editorial of problems</T></h6>
+        <InputToggle
+          checked={contest.settings.problemEditorials}
+          onChange={(value) => setContest(prevState => ({
+            ...prevState,
+            settings: { ...prevState.settings, problemEditorials: value },
+          }))}
+          leftLabel={<T className={classNames('tt-se', { 'fw-bd': !contest.settings.problemEditorials })}>no
+            available</T>}
+          rightLabel={<T className={classNames('tt-se', { 'fw-bd': contest.settings.problemEditorials })}>available</T>}
         />
       </div>
       {/*<div className="jk-divider" />*/}

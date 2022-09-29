@@ -32,10 +32,10 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   return (
     <div className="jk-row gap nowrap left stretch">
-      <div className="jk-pad flex-3">
+      <div className="jk-pad-md flex-3">
         <MdMathViewer source={contest?.description} />
       </div>
-      <div className="jk-pad flex-1 contest-overview-information">
+      <div className="jk-pad-md flex-1 contest-overview-information">
         <div className="content-side-right-bar-top">
           {isAdmin
             ? <div className="judge-admin jk-row bc-py cr-we jk-border-radius">

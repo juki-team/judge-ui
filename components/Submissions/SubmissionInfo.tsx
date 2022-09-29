@@ -3,7 +3,6 @@ import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { PropsWithChildren, useState } from 'react';
-import { useUserState } from 'store';
 import { ContentResponseType, ProblemMode, ProblemVerdict, SubmissionResponseDTO, SubmitResponseDTO, TestCaseResultType } from 'types';
 import { somethingWentWrongMessage } from '../commons/messages';
 import { hasTimeHasMemory, Memory, Time, Verdict } from './utils';
@@ -22,7 +21,7 @@ const GroupInfo = ({ groupKey, isSubtaskProblem, timeUsed, memoryUsed, verdict, 
   return (
     <Collapse
       header={({ isOpen, toggle }) => (
-        <div className={classNames('jk-row extend block gap jk-table-inline-row jk-pad group-info', { 'fw-br': isOpen })}>
+        <div className={classNames('jk-row extend block gap jk-table-inline-row jk-pad-md group-info', { 'fw-br': isOpen })}>
           <div className="jk-row">
             {+groupKey ? (isSubtaskProblem ? <><T className="tt-se">subtask</T>{groupKey}</> :
                 <T className="tt-se">test cases</T>) :
@@ -45,7 +44,7 @@ const GroupInfo = ({ groupKey, isSubtaskProblem, timeUsed, memoryUsed, verdict, 
           <div className="jk-row center gap"><T className="tt-se">verdict</T></div>
           <div className="jk-row center gap"><T className="tt-se">time</T></div>
           <div className="jk-row center gap"><T className="tt-se">memory</T></div>
-          <div className="jk-row center gap"><T className="tt-se">return code</T></div>
+          <div className="jk-row center gap"><T className="tt-se">exit code</T></div>
         </div>
         {testCases.map((testCase, index) => (
           <div className="jk-row extend block gap jk-table-inline-row" key={index}>
@@ -94,8 +93,8 @@ export const SubmissionInfo = ({
       className={classNames('jk-row', { link: canOpen })}
       onClick={() => canOpen && setOpen(true)}
     >
-      <Modal isOpen={open} onClose={() => setOpen(false)} closeIcon>
-        <section className="jk-pad">
+      <Modal isOpen={open} onClose={() => setOpen(false)} closeIcon shouldCloseOnOverlayClick>
+        <section className="jk-pad-md">
           <FetcherLayer<ContentResponseType<SubmitResponseDTO>>
             url={(open && canViewSourceCode) ? JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId) : undefined}
             onError={() => {

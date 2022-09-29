@@ -1,5 +1,3 @@
-import { ScopeData, UserInterface as _UserInterface } from '@juki-team/commons';
-
 export * from './commons';
 export * from './contest';
 export * from './problem';
@@ -42,7 +40,7 @@ export type {
   ScoreboardResponseDTO,
   ContestResponseDTO,
   ProblemResponseDTO,
-  PointsByGroupsType,
+  ProblemSettingsPointsByGroupsType,
   UserSummaryResponseDTO,
   UserManagementResponseDTO,
   ContestProblemBasicType,
@@ -52,11 +50,16 @@ export type {
   UserPingResponseDTO,
   UserBasicResponseDTO,
   ProblemSummaryListResponseDTO,
+  CreateProblemDTO,
+  TextLanguageType,
+  ProblemSettingsType,
+  ProblemSampleCasesType,
+  ProblemStatementType,
+  ProblemSettingsByProgrammingLanguageType,
 } from '@juki-team/commons';
 
 export { Period, NotificationType } from '@juki-team/base-ui';
 export type {
-  CodeEditorTestCasesType,
   DataViewerHeadersType,
   FilterSelectOfflineType,
   RowSortableItemContentType,
@@ -75,4 +78,7 @@ export type {
   ReactNodeOrFunctionP1Type,
   PlacementType,
   AuthorizedRequestType,
+  CodeEditorMiddleButtonsType,
+  CodeEditorTestCasesType,
+  CodeEditorExpandPositionType,
 } from '@juki-team/base-ui';

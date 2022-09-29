@@ -34,7 +34,7 @@ export const ViewMembers = ({ contest }: { contest: ContestResponseDTO }) => {
   };
   
   return (
-    <div className="jk-col left stretch jk-pad gap">
+    <div className="jk-col left stretch jk-pad-md gap">
       <div>
         <div className="jk-row left gap">
           <h6><T>administrators</T></h6>

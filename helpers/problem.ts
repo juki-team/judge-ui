@@ -10,3 +10,5 @@ export const getProblemUrl = (judge: Judge, key: string) => {
 export const getEditorSettingsStorageKey = (useNickname) => `jk-editor-settings-store/${useNickname}`;
 
 export const getProblemsStoreKey = (useNickname) => `jk-problem-storage/${useNickname}`;
+
+export const getSourcesStoreKey = (useNickname) => `jk-sources-storage/${useNickname}`;

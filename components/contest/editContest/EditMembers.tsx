@@ -4,10 +4,11 @@ import React from 'react';
 import { AdminInformation, JudgeInformation } from '../Information';
 import { EditContestProps } from '../types';
 
-export const EditMembers = ({ setContest, contest }: EditContestProps) => {
+export const EditMembers = ({ setContest, contest, editing }: EditContestProps) => {
   
   const guests = contest.members.guests;
   const spectators = contest.members.spectators;
+  const contestants = contest.members.contestants;
   const judges = contest.members.judges;
   const administrators = contest.members.administrators;
   
@@ -17,7 +18,7 @@ export const EditMembers = ({ setContest, contest }: EditContestProps) => {
   const competition = isEndlessContest(contest);
   
   return (
-    <div className="jk-col left stretch jk-pad">
+    <div className="jk-col left stretch jk-pad-md">
       <div className="jk-col gap stretch">
         <div className="jk-row left gap">
           <h6><T>guests</T></h6>
@@ -46,6 +47,27 @@ export const EditMembers = ({ setContest, contest }: EditContestProps) => {
           )}
         </div>
       </div>
+      {editing && (
+        <>
+          <div className="jk-divider small" />
+          <div className="jk-col gap stretch">
+            <div className="jk-row left gap">
+              <h6><T>contestants</T></h6>
+            </div>
+            <div style={{ minHeight: 34 }}>
+              <UsersSelector
+                selectedUsers={contestants}
+                onChangeSelectedUsers={contestants => {
+                  setContest(prevState => ({
+                    ...prevState,
+                    members: { ...prevState.members, contestants },
+                  }));
+                }}
+              />
+            </div>
+          </div>
+        </>
+      )}
       <div className="jk-divider small" />
       <div className="jk-col gap stretch">
         <div className="jk-row left gap">

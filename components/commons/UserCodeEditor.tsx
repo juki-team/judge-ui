@@ -1,0 +1,128 @@
+import { CodeEditorKeyMap, CodeEditorTheme, CodeRunnerEditor } from 'components/index';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
+import { getEditorSettingsStorageKey, getSourcesStoreKey, isStringJson } from 'helpers';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useUserState } from 'store';
+import { CodeEditorMiddleButtonsType, CodeEditorTestCasesType, ProgrammingLanguage } from 'types';
+
+const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T, initialValue?: T): [T, Dispatch<SetStateAction<T>>] => {
+  
+  let storeRecovered = {};
+  if (isStringJson(localStorage.getItem(storeKey))) {
+    storeRecovered = JSON.parse(localStorage.getItem(storeKey));
+  }
+  const [value, setValue] = useState<T>({ ...defaultValue, ...storeRecovered, ...(initialValue || {}) });
+  
+  useEffect(() => {
+    if (storeKey) {
+      const stringValue = JSON.stringify(value);
+      if (localStorage.getItem(storeKey) !== stringValue) {
+        localStorage.setItem(storeKey, stringValue);
+      }
+    }
+  }, [storeKey, value]);
+  
+  return [value, setValue];
+};
+
+interface UserCodeEditorProps {
+  initialTestCases?: CodeEditorTestCasesType,
+  sourceStoreKey?: string,
+  languages: ProgrammingLanguage[],
+  middleButtons?: CodeEditorMiddleButtonsType,
+  onSourceChange: (source: string) => void,
+  onLanguageChange?: (language: ProgrammingLanguage) => void,
+  initialSource?: { [key: string]: string },
+}
+
+export const UserCodeEditor = ({
+  initialTestCases = {},
+  sourceStoreKey,
+  languages,
+  middleButtons,
+  onSourceChange,
+  onLanguageChange,
+  initialSource,
+}: UserCodeEditorProps) => {
+  const { nickname } = useUserState();
+  
+  const editorSettingsStorageKey = getEditorSettingsStorageKey(nickname);
+  
+  const [editorSettings, setEditorSettings] = useSaveStorage(editorSettingsStorageKey, {
+    theme: CodeEditorTheme.IDEA,
+    keyMap: CodeEditorKeyMap.SUBLIME,
+    lastLanguageUsed: ProgrammingLanguage.CPP,
+    tabSize: 2,
+    fontSize: 14,
+  });
+  
+  const [language, setLanguage] = useState(editorSettings.lastLanguageUsed);
+  const [testCases, setTestCases] = useState(initialTestCases);
+  useEffect(() => {
+    if (languages.length && !languages.some(lang => lang === language)) {
+      setLanguage(languages[0]);
+    }
+  }, [language, languages]);
+  const problemJudgeKey = sourceStoreKey || '-';
+  const defaultValue = { [problemJudgeKey]: {} };
+  ACCEPTED_PROGRAMMING_LANGUAGES.forEach(key => {
+    defaultValue[problemJudgeKey][PROGRAMMING_LANGUAGE[key].mime] = PROGRAMMING_LANGUAGE[key].templateSourceCode;
+  });
+  console.log({ defaultValue, initialSource });
+  const [source, setSource] = useSaveStorage(sourceStoreKey ? getSourcesStoreKey(nickname) : '', defaultValue, initialSource ? { [problemJudgeKey]: initialSource } : undefined);
+  
+  useEffect(() => {
+    onSourceChange(source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || '');
+  }, [source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || '']);
+  
+  useEffect(() => {
+    onLanguageChange?.(language);
+  }, [language]);
+  
+  return (
+    <CodeRunnerEditor
+      theme={editorSettings.theme}
+      keyMap={editorSettings.keyMap}
+      tabSize={editorSettings.tabSize}
+      fontSize={editorSettings.fontSize}
+      sourceCode={source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || ''}
+      language={language}
+      languages={languages}
+      onChange={({ sourceCode, language: newLanguage, testCases, theme, keyMap, tabSize, fontSize }) => {
+        if (typeof sourceCode === 'string') {
+          setSource(prevState => ({
+            ...prevState,
+            [problemJudgeKey]: { ...(prevState[problemJudgeKey] || {}), [PROGRAMMING_LANGUAGE[language].mime]: sourceCode },
+          }));
+        }
+        if (newLanguage) {
+          setLanguage(newLanguage);
+          setEditorSettings(prevState => ({ ...prevState, lastLanguageUsed: newLanguage }));
+        }
+        if (testCases) {
+          setTestCases(testCases);
+        }
+        if (theme) {
+          setEditorSettings(prevState => ({ ...prevState, theme }));
+        }
+        if (keyMap) {
+          setEditorSettings(prevState => ({ ...prevState, keyMap }));
+        }
+        if (tabSize) {
+          setEditorSettings(prevState => ({ ...prevState, tabSize }));
+        }
+        if (fontSize) {
+          setEditorSettings(prevState => ({ ...prevState, fontSize }));
+        }
+      }}
+      middleButtons={middleButtons}
+      testCases={testCases}
+      expandPosition={{
+        width: 'var(--screen-content-width)',
+        height: 'calc(var(--content-height) - var(--pad-md) - var(--pad-md))',
+        top: 'calc(var(--top-horizontal-menu-height) + var(--pad-md))',
+        left: 'calc((100vw - var(--screen-content-width)) / 2)',
+      }}
+    />
+  );
+};

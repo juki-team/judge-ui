@@ -66,15 +66,9 @@ export const ROUTES = {
     PRINT_SCORE(key: string) {
       return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.VIEW, key, ROUTES.PARAMS.PRINT_SCORE].join('/');
     },
-    // CREATE(tab: ContestTab | typeof _TAB) {
-    //   return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE, tab].join('/');
-    // },
     CREATE() {
       return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE].join('/');
     },
-    // EDIT(key: string, tab: ContestTab | typeof _TAB) {
-    //   return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key, tab].join('/');
-    // },
     EDIT(key: string) {
       return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key].join('/');
     },
@@ -83,14 +77,14 @@ export const ROUTES = {
     LIST() {
       return '/' + ROUTES.PARAMS.PROBLEMS;
     },
-    CREATE(tab: ProblemTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.CREATE, tab].join('/');
+    CREATE() {
+      return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.CREATE].join('/');
     },
     VIEW(key: string, tab: ProblemTab | typeof _TAB) {
       return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.VIEW, key, tab].join('/');
     },
-    EDIT(key: string, tab: ProblemTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.EDIT, key, tab].join('/');
+    EDIT(key: string) {
+      return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.EDIT, key].join('/');
     },
   },
   RANKING: {

@@ -31,15 +31,22 @@
     position: relative;
     padding: 3px 10px;
     
-    &.wrong {
+    &.wrong, &.accepted {
       .jk-icon {
-        background-color: var(--t-color-error);
         border-radius: 50%;
         color: var(--t-color-white);
         position: absolute;
         top: -6px;
         right: -6px;
       }
+    }
+    
+    &.wrong .jk-icon {
+      background-color: var(--t-color-error);
+    }
+    
+    &.accepted .jk-icon {
+      background-color: var(--t-color-success);
     }
   }
   

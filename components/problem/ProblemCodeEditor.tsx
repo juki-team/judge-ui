@@ -1,24 +1,8 @@
-import { ButtonLoader, CodeEditorKeyMap, CodeEditorTheme, CodeRunnerEditor, SpectatorInformation, T } from 'components';
-import {
-  ACCEPTED_PROGRAMMING_LANGUAGES,
-  JUDGE_API_V1,
-  MY_STATUS,
-  OpenDialog,
-  PROGRAMMING_LANGUAGE,
-  QueryParam,
-  ROUTES,
-} from 'config/constants';
-import {
-  addParamQuery,
-  authorizedRequest,
-  cleanRequest,
-  getEditorSettingsStorageKey,
-  getProblemJudgeKey,
-  getProblemsStoreKey,
-  isStringJson,
-} from 'helpers';
+import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
+import { JUDGE_API_V1, MY_STATUS, OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
 import { useContestRouter, useNotification, useRouter } from 'hooks';
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTaskDispatch, useUserState } from 'store';
 import { useSWRConfig } from 'swr';
 import {
@@ -33,26 +17,6 @@ import {
   Status,
   SubmissionRunStatus,
 } from 'types';
-
-const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] => {
-  
-  let storeRecovered = {};
-  if (isStringJson(localStorage.getItem(storeKey))) {
-    storeRecovered = JSON.parse(localStorage.getItem(storeKey));
-  }
-  const [value, setValue] = useState<T>({ ...defaultValue, ...storeRecovered });
-  
-  useEffect(() => {
-    if (storeKey) {
-      const stringValue = JSON.stringify(value);
-      if (localStorage.getItem(storeKey) !== stringValue) {
-        localStorage.setItem(storeKey, stringValue);
-      }
-    }
-  }, [storeKey, value]);
-  
-  return [value, setValue];
-};
 
 export const ProblemCodeEditor = ({
   problem,
@@ -80,64 +44,18 @@ export const ProblemCodeEditor = ({
   const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
   const { [`${MY_STATUS}.pageSize`]: myStatusPageSize } = query;
-  
   const { key: problemKey, ...restQuery } = query;
-  const editorSettingsStorageKey = getEditorSettingsStorageKey(nickname);
-  const problemStoreKey = getProblemsStoreKey(nickname);
-  
-  const [editorSettings, setEditorSettings] = useSaveStorage(editorSettingsStorageKey, {
-    theme: CodeEditorTheme.IDEA,
-    keyMap: CodeEditorKeyMap.SUBLIME,
-    lastLanguageUsed: ProgrammingLanguage.CPP,
-    tabSize: 2,
-  });
   const languages = useMemo(() => Object.values(problem?.settings.languages || {}), [JSON.stringify(problem?.settings.languages)]);
-  const [language, setLanguage] = useState(editorSettings.lastLanguageUsed);
-  const [testCases, setTestCases] = useState(initialTestCases);
-  useEffect(() => {
-    if (languages.length && !languages.some(lang => lang === language)) {
-      setLanguage(languages[0]);
-    }
-  }, [language, languages]);
+  const [language, setLanguage] = useState(ProgrammingLanguage.TEXT);
   const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
-  const defaultValue = { [problemJudgeKey]: {} };
-  ACCEPTED_PROGRAMMING_LANGUAGES.forEach(key => {
-    defaultValue[problemJudgeKey][PROGRAMMING_LANGUAGE[key].mime] = PROGRAMMING_LANGUAGE[key].templateSourceCode;
-  });
-  const [source, setSource] = useSaveStorage(problemStoreKey, defaultValue);
+  const [sourceCode, setSourceCode] = useState('');
   
   return (
-    <CodeRunnerEditor
-      theme={editorSettings.theme}
-      keyMap={editorSettings.keyMap}
-      tabSize={editorSettings.tabSize}
-      sourceCode={source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || ''}
-      language={language}
+    <UserCodeEditor
+      sourceStoreKey={problemJudgeKey}
       languages={languages}
-      onChange={({ sourceCode, language: newLanguage, testCases, theme, keyMap, tabSize }) => {
-        if (typeof sourceCode === 'string') {
-          setSource(prevState => ({
-            ...prevState,
-            [problemJudgeKey]: { ...(prevState[problemJudgeKey] || {}), [PROGRAMMING_LANGUAGE[language].mime]: sourceCode },
-          }));
-        }
-        if (newLanguage) {
-          setLanguage(newLanguage);
-          setEditorSettings(prevState => ({ ...prevState, lastLanguageUsed: newLanguage }));
-        }
-        if (testCases) {
-          setTestCases(testCases);
-        }
-        if (theme) {
-          setEditorSettings(prevState => ({ ...prevState, theme }));
-        }
-        if (keyMap) {
-          setEditorSettings(prevState => ({ ...prevState, keyMap }));
-        }
-        if (tabSize) {
-          setEditorSettings(prevState => ({ ...prevState, tabSize }));
-        }
-      }}
+      onSourceChange={setSourceCode}
+      onLanguageChange={setLanguage}
       middleButtons={() => {
         if (!isLogged) {
           return (
@@ -153,7 +71,6 @@ export const ProblemCodeEditor = ({
             </ButtonLoader>
           );
         }
-        const sourceCode = source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || '';
         const validSubmit = (
           <ButtonLoader
             type="secondary"
@@ -184,6 +101,7 @@ export const ProblemCodeEditor = ({
               
               if (contest?.problemIndex) {
                 await pushTab(ContestTab.MY_SUBMISSIONS);
+                await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize));
               } else {
                 await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize));
                 await push({ pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS), query: restQuery });
@@ -218,13 +136,7 @@ export const ProblemCodeEditor = ({
           return validSubmit;
         }
       }}
-      testCases={testCases}
-      expandPosition={{
-        width: 'var(--screen-content-width)',
-        height: 'calc(var(--content-height) - var(--pad-md) - var(--pad-md))',
-        top: 'calc(var(--top-horizontal-menu-height) + var(--pad-md))',
-        left: 'calc((100vw - var(--screen-content-width)) / 2)',
-      }}
+      initialTestCases={initialTestCases}
     />
   );
 };

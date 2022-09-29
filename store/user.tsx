@@ -52,13 +52,14 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   useEffect(() => {
     if (isReady) {
-      i18n?.changeLanguage?.(locale);
+      const newLocale = user.settings?.preferredLanguage === Language.ES ? 'es' : 'en';
+      i18n?.changeLanguage?.(newLocale);
     }
-  }, [locale, isReady]);
+  }, [user.settings?.preferredLanguage, isReady]);
   
   useEffect(() => {
     if (isReady) {
-      const newLocale = user.settings?.preferredLanguage === Language.EN ? 'en' : 'es';
+      const newLocale = user.settings?.preferredLanguage === Language.ES ? 'es' : 'en';
       if (locale !== newLocale) {
         push({ pathname, query }, asPath, { locale: newLocale });
       }
@@ -130,7 +131,7 @@ export const useUserDispatch = () => {
       setLoaderStatus?.(Status.LOADING);
       const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.AUTH.UPDATE(nickname), {
         method: HTTPMethod.PUT,
-        body: JSON.stringify({ newPassword}),
+        body: JSON.stringify({ newPassword }),
       }));
       if (response.success) {
         addSuccessNotification(<T className="tt-se">password changed successfully</T>);

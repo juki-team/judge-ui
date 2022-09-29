@@ -65,14 +65,15 @@
   padding: var(--pad-xt);
   border: 1px solid var(--t-color-gray-6);
   position: relative;
+  min-height: 26px;
   
   .jk-icon {
     position: absolute;
     right: var(--pad-xt);
   }
   
-  > span {
-    background-color: var(--t-color-shadow-lightest) !important;
+  > span:not(.jk-icon) {
+    background-color: var(--t-color-shadow-light) !important;
     white-space: pre;
     font-family: monospace;
   }

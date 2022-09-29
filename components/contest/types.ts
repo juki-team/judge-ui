@@ -1,8 +1,12 @@
 import { Dispatch, SetStateAction } from 'react';
-import { EditCreateContest } from 'types';
+import { EditCreateContestType } from 'types';
 
 export interface EditContestProps {
-  contest: EditCreateContest,
-  setContest: Dispatch<SetStateAction<EditCreateContest>>,
+  contest?: EditCreateContestType,
+  setContest: Dispatch<SetStateAction<EditCreateContestType>>,
   editing?: boolean
+}
+
+export interface EditCreateContestProps {
+  contest?: EditCreateContestType;
 }

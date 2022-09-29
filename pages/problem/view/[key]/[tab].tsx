@@ -1,8 +1,8 @@
 import {
   ArrowIcon,
+  ButtonLoader,
   ExclamationIcon,
   FetcherLayer,
-  NotFound,
   Popover,
   ProblemCodeEditor,
   ProblemInfo,
@@ -17,7 +17,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProblemResponseDTO, ProblemTab } from 'types';
+import { ContentResponseType, ProblemResponseDTO, ProblemTab, Status } from 'types';
+import Custom404 from '../../../404';
 
 const ProblemView = (): ReactNode => {
   
@@ -27,7 +28,7 @@ const ProblemView = (): ReactNode => {
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
       url={isReady && JUDGE_API_V1.PROBLEM.DATA(key as string)}
-      errorView={<NotFound redirectAction={() => push(ROUTES.PROBLEMS.LIST())} />}
+      errorView={<Custom404 />}
     >
       {({ data }) => {
         const problem = data.content;
@@ -35,7 +36,17 @@ const ProblemView = (): ReactNode => {
           {
             key: ProblemTab.STATEMENT,
             header: <T className="tt-ce">statement</T>,
-            body: <ProblemStatement problem={problem} />,
+            body: (
+              <ProblemStatement
+                author={problem.author}
+                name={problem.name}
+                sampleCases={problem.sampleCases}
+                status={problem.status}
+                statement={problem.statement}
+                settings={problem.settings}
+                tags={problem.tags}
+              />
+            ),
           },
           {
             key: ProblemTab.EDITOR,
@@ -69,7 +80,13 @@ const ProblemView = (): ReactNode => {
               </div>
               <div className="jk-row gap center flex-1">
                 <h5>{problem.name}</h5>
-                <Popover content={<ProblemInfo problem={problem} />} triggerOn="click" placement="bottom">
+                <Popover
+                  content={
+                    <ProblemInfo author={problem.author} status={problem.status} tags={problem.tags} settings={problem.settings} />
+                  }
+                  triggerOn="click"
+                  placement="bottom"
+                >
                   <div className="jk-row link"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
                 </Popover>
               </div>
@@ -78,21 +95,20 @@ const ProblemView = (): ReactNode => {
               selectedTabKey={query.tab as string}
               tabs={tabs}
               onChange={tabKey => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabKey as ProblemTab), query })}
-              // actionsSection={
-              //   can.updateProblem(user, data.content) ? [
-              //     (
-              //       <ButtonLoader
-              //         onClick={async setLoaderStatus => {
-              //           setLoaderStatus(Status.LOADING);
-              //           await push(ROUTES.PROBLEMS.EDIT('' + key, ProblemTab.STATEMENT));
-              //           setLoaderStatus(Status.SUCCESS);
-              //         }}
-              //       >
-              //         <T>edit</T>
-              //       </ButtonLoader>
-              //     ),
-              //   ] : []
-              // }
+              actionsSection={
+                data?.content?.user?.isEditor ? [
+                  <ButtonLoader
+                    size="small"
+                    onClick={async setLoaderStatus => {
+                      setLoaderStatus(Status.LOADING);
+                      await push(ROUTES.PROBLEMS.EDIT('' + key));
+                      setLoaderStatus(Status.SUCCESS);
+                    }}
+                  >
+                    <T>edit</T>
+                  </ButtonLoader>,
+                ] : []
+              }
             />
           </TwoContentLayout>
         );

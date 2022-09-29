@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
-import { EditCreateProblem } from '../../types';
+import { EditCreateProblemType } from '../../types';
 
 export interface EditPropsProps {
-  problem: EditCreateProblem,
-  setProblem: Dispatch<SetStateAction<EditCreateProblem>>,
+  problem: EditCreateProblemType,
+  setProblem: Dispatch<SetStateAction<EditCreateProblemType>>,
   editing?: boolean
 }

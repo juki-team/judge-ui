@@ -3,7 +3,7 @@ import { ContestProblemBasicType, CreateContestDTO } from './index';
 
 export type EditContestProblemBasicType = ContestProblemBasicType & { name: string };
 
-export interface EditCreateContest extends CreateContestDTO {
+export type EditCreateContestType = CreateContestDTO & {
   status: ContestStatus,
   problems: { [key: string]: EditContestProblemBasicType },
 }

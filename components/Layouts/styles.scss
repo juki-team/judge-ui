@@ -10,6 +10,10 @@
 }
 
 .content-layout, .two-content-layout {
+  padding: var(--pad-md) 0 var(--pad-md) 0;
+  height: var(--content-height);
+  box-sizing: border-box;
+  
   .extra-buttons {
     margin-left: var(--pad-t);
   }
@@ -20,30 +24,15 @@
 }
 
 .content-layout {
-  padding: var(--pad-md) 0 var(--pad-md) 0;
-  height: var(--content-height);
-  box-sizing: border-box;
-  
   > div {
     height: 100%;
     width: var(--screen-content-width);
-    
-    > div.jk-tabs-layout {
-      height: 100%;
-    }
   }
 }
 
-.two-content-layout {
-  padding: var(--pad-md) 0 var(--pad-md) 0;
-  height: var(--content-height);
-  box-sizing: border-box;
-  overflow: hidden;
-  
+.content-layout, .two-content-layout {
   > div {
-    width: var(--screen-content-width);
-    
-    > .jk-tabs-layout {
+    > div.jk-tabs-layout {
       height: 100%;
       
       > div.jk-tabs-header:first-child {
@@ -51,13 +40,6 @@
         &:before {
           border: none;
           content: none;
-        }
-        
-        .jk-tabs-tabs.left {
-          .jk-tab.selected:before {
-            height: var(--pad-xt);
-            border-radius: 4px 4px 0 0;
-          }
         }
       }
       
@@ -68,15 +50,30 @@
       > .jk-tabs-content {
         box-sizing: border-box;
         background-color: var(--t-color-white);
-        border-radius: 0 0 var(--border-radius-inline) var(--border-radius-inline);
+        border-radius: 0 var(--border-radius-inline) var(--border-radius-inline) var(--border-radius-inline);
         @extend .jk-shadow;
         overflow-x: auto;
-        height: calc(100% - var(--tabs-header-height) - var(--pad-t));
+        height: calc(100% - var(--tabs-header-height));
         
         .jk-view-container {
+          border-top: 1px solid var(--t-color-gray-6);
+          border-radius: 0;
           box-shadow: none;
+          box-sizing: border-box;
         }
       }
+    }
+  }
+}
+
+.two-content-layout {
+  overflow: hidden;
+  
+  > div {
+    width: var(--screen-content-width);
+    
+    > .jk-tabs-layout {
+    
     }
   }
 }

@@ -136,6 +136,7 @@ export function ContestView() {
         if (isAdmin) {
           actionsSection.push(
             <ButtonLoader
+              size="small"
               onClick={async setLoaderStatus => {
                 setLoaderStatus(Status.LOADING);
                 await push(ROUTES.CONTESTS.EDIT(contestKey));

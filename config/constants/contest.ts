@@ -1,11 +1,11 @@
 import { ContestStatus } from '@juki-team/commons';
-import { ContestTemplate, EditCreateContest, ProgrammingLanguage } from 'types';
+import { ContestTemplate, EditCreateContestType, ProgrammingLanguage } from 'types';
 
 export const FIVE_HOURS = 1000 * 60 * 60 * 5;
 export const ONE_HOUR = 1000 * 60 * 60;
 export const FIFTEEN_MINUTES = 1000 * 60 * 15;
 
-export const CONTEST_DEFAULT = (): EditCreateContest => {
+export const CONTEST_DEFAULT = (): EditCreateContestType => {
   const now = (new Date(Date.now() + 1000 * 60 * 5));
   now.setSeconds(0, 0);
   
@@ -54,8 +54,9 @@ Oscar Arias | Problem Setter`,
       frozenTimestamp: now.getTime() + FIVE_HOURS - ONE_HOUR,
       quietTimestamp: now.getTime() + FIVE_HOURS - FIFTEEN_MINUTES,
       endTimestamp: now.getTime() + FIVE_HOURS,
+      problemEditorials: false,
     },
-    members: { administrators: [], judges: [], guests: ['*'], spectators: ['*'] },
+    members: { administrators: [], judges: [], contestants: [], guests: ['*'], spectators: ['*'] },
     tags: [],
     status: ContestStatus.PUBLIC,
   };

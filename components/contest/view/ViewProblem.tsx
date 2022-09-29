@@ -18,7 +18,16 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
       minSize={80}
       className="contest-problem-split-pane"
     >
-      <ProblemStatement problem={problem} contestIndex={query?.index as string} />
+      <ProblemStatement
+        author={problem.author}
+        contestIndex={query?.index as string}
+        name={problem.name}
+        sampleCases={problem.sampleCases}
+        status={problem.status}
+        statement={problem.statement}
+        settings={problem.settings}
+        tags={problem.tags}
+      />
       <ProblemCodeEditor
         contest={{
           isAdmin: user.isAdmin,

@@ -1,28 +1,31 @@
 import { CopyIcon, CopyToClipboard, DeleteIcon, EditIcon, SaveIcon, TextArea } from 'components';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { ProblemResponseDTO } from 'types';
+import React, { useEffect, useState } from 'react';
+import { ProblemSampleCasesType } from 'types';
 
 interface SampleTestProps {
   index: number,
-  problem: ProblemResponseDTO,
-  setProblem?: Dispatch<SetStateAction<ProblemResponseDTO>>,
+  sampleCases: ProblemSampleCasesType,
+  setSampleCases?: (sampleCases: ProblemSampleCasesType) => void,
 }
 
-export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
+export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestProps) => {
   
-  const [sample, setSample] = useState(problem.sampleCases?.[index] || { input: '', output: '' });
+  const [sample, setSample] = useState(sampleCases?.[index] || { input: '', output: '' });
   const [editable, setEditable] = useState(false);
   useEffect(() => {
-    setSample(problem.sampleCases?.[index] || { input: '', output: '' });
-    setEditable(false);
-  }, [index, problem.sampleCases]);
-  
-  const onSave = setProblem ? () => {
-    setProblem(prevState => {
-      const newSamples = [...prevState.sampleCases];
-      newSamples[index] = sample;
-      return { ...prevState, sampleCases: newSamples };
+    setSample(prevState => {
+      const newSampleCase = sampleCases?.[index] || { input: '', output: '' };
+      if (JSON.stringify(prevState) !== JSON.stringify(newSampleCase)) {
+        setEditable(false);
+      }
+      return newSampleCase;
     });
+  }, [index, sampleCases]);
+  
+  const onSave = setSampleCases ? () => {
+    const newSamples = [...sampleCases];
+    newSamples[index] = sample;
+    setSampleCases(newSamples);
     setEditable(false);
   } : () => null;
   
@@ -37,7 +40,7 @@ export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
             />
           ) : (
             <div className="sample-text-content jk-border-radius-inline">
-              <CopyToClipboard text={sample.input}><CopyIcon size="small" /></CopyToClipboard>
+              <CopyToClipboard text={sample.input}><CopyIcon size="small" className="cursor-pointer" /></CopyToClipboard>
               <span>{sample.input}</span>
             </div>
           )}
@@ -50,20 +53,21 @@ export const SampleTest = ({ index, problem, setProblem }: SampleTestProps) => {
             />
           ) : (
             <div className="sample-text-content jk-border-radius-inline">
-              <CopyToClipboard text={sample.output}><CopyIcon size="small" /></CopyToClipboard>
+              <CopyToClipboard text={sample.output}><CopyIcon size="small" className="cursor-pointer" /></CopyToClipboard>
               <span>{sample.output}</span>
             </div>
           )}
         </div>
       </div>
-      {setProblem && (
+      {setSampleCases && (
         <div className="jk-row gap cr-py">
-          {editable ? <SaveIcon onClick={onSave} /> : <EditIcon onClick={() => setEditable(true)} />}
+          {editable
+            ? <SaveIcon size="small" className="cursor-pointer" onClick={onSave} />
+            : <EditIcon size="small" className="cursor-pointer" onClick={() => setEditable(true)} />}
           <DeleteIcon
-            onClick={() => setProblem(prevState => {
-              const newSamples = [...prevState.sampleCases].filter((sample, sIndex) => sIndex !== index);
-              return { ...prevState, sampleCases: newSamples };
-            })}
+            size="small"
+            className="cursor-pointer"
+            onClick={() => setSampleCases([...sampleCases].filter((sample, sIndex) => sIndex !== index))}
           />
         </div>
       )}

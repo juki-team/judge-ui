@@ -65,7 +65,7 @@ a:active {
   border: 1px solid var(--t-color-gray-5);
   border-radius: var(--border-radius-inline) var(--border-radius-inline) 0 0;
   color: var(--t-color-primary);
-  font-weight: var(--weight-semi-bold);
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
 }
 
@@ -119,5 +119,25 @@ li > * {
 .max-popover-select-size {
   .jk-select-options {
     width: 300px !important;
+  }
+}
+
+.jk-md-math-editor-style {
+  .content-preview {
+    min-height: 141px;
+  }
+}
+
+.text-lang-edit {
+  min-height: 215px;
+  
+  .jk-md-math-editor-layout {
+    @extend .jk-md-math-editor-style;
+  }
+}
+
+.problem-statement.editing {
+  .jk-md-math-editor-layout {
+    @extend .jk-md-math-editor-style;
   }
 }
