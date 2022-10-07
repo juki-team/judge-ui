@@ -4,7 +4,6 @@ import React from 'react';
 import { Language, TextLanguageType } from 'types';
 
 export const TextLangEdit = ({ text, setText }: { text: TextLanguageType, setText: (text: TextLanguageType) => void }) => {
-  console.log({ text });
   return (
     <div className="text-lang-edit">
       <Tabs
@@ -16,10 +15,7 @@ export const TextLangEdit = ({ text, setText }: { text: TextLanguageType, setTex
                 informationButton
                 uploadImageButton
                 source={text?.[Language.EN]}
-                onChange={value => {
-                  console.log('onChange', { value });
-                  setText({ ...text, [Language.EN]: value })
-                }}
+                onChange={value => setText({ ...text, [Language.EN]: value })}
               />
             ),
             header: <span className="tt-se">{LANGUAGE[Language.EN].label}</span>,

@@ -55,7 +55,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
         field: ({ record: { stateContest } }) => (
           <Field className="jk-row pad">
             <div className={`jk-tag ${stateContest === 'past' ? 'success' : (stateContest === 'upcoming' ? 'info' : 'error')}`}>
-              <T>{stateContest}</T>
+              <T className="tt-ue tx-s">{stateContest}</T>
             </div>
           </Field>
         ),
@@ -91,7 +91,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
                       placement="top"
                       showPopperArrow
                     >
-                      <div className="jk-tag tx-t fw-bd letter-tag">A</div>
+                      <div className="jk-tag tx-s fw-bd letter-tag">A</div>
                     </Popover>
                   ) : user.isJudge ? (
                     <Popover
@@ -99,7 +99,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
                       placement="top"
                       showPopperArrow
                     >
-                      <div className="jk-tag tx-t fw-bd letter-tag">J</div>
+                      <div className="jk-tag tx-s fw-bd letter-tag">J</div>
                     </Popover>
                   ) : user.isContestant ? (
                     <Popover
@@ -115,7 +115,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
                       placement="top"
                       showPopperArrow
                     >
-                      <div className="jk-tag tx-t fw-bd letter-tag">G</div>
+                      <div className="jk-tag tx-s fw-bd letter-tag">G</div>
                     </Popover>
                   ) : user.isSpectator && (
                     <Popover
@@ -123,7 +123,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
                       placement="top"
                       showPopperArrow
                     >
-                      <div className="jk-tag tx-t fw-bd letter-tag">S</div>
+                      <div className="jk-tag tx-s fw-bd letter-tag">S</div>
                     </Popover>
                   )}
                 </div>

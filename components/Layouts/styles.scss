@@ -32,11 +32,12 @@
 
 .content-layout, .two-content-layout {
   > div {
+    width: var(--screen-content-width);
+    
     > div.jk-tabs-layout {
       height: 100%;
       
       > div.jk-tabs-header:first-child {
-        //margin-bottom: var(--pad-t);
         &:before {
           border: none;
           content: none;
@@ -68,12 +69,4 @@
 
 .two-content-layout {
   overflow: hidden;
-  
-  > div {
-    width: var(--screen-content-width);
-    
-    > .jk-tabs-layout {
-    
-    }
-  }
 }

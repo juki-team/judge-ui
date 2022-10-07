@@ -46,7 +46,7 @@ export const disableOutOfRange = (date, start, end) => ({
   }, '[]'),
 });
 
-export { consoleWarn, isStringJson, isObjectJson, splitTime, indexToLetters, getProblemJudgeKey } from '@juki-team/commons';
+export { consoleWarn, isStringJson, isObjectJson, splitTime, indexToLetters, getProblemJudgeKey, lettersToIndex } from '@juki-team/commons';
 export {
   classNames,
   downloadBlobAsFile,

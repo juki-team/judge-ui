@@ -68,7 +68,7 @@ export const UserCodeEditor = ({
   ACCEPTED_PROGRAMMING_LANGUAGES.forEach(key => {
     defaultValue[problemJudgeKey][PROGRAMMING_LANGUAGE[key].mime] = PROGRAMMING_LANGUAGE[key].templateSourceCode;
   });
-  console.log({ defaultValue, initialSource });
+  
   const [source, setSource] = useSaveStorage(sourceStoreKey ? getSourcesStoreKey(nickname) : '', defaultValue, initialSource ? { [problemJudgeKey]: initialSource } : undefined);
   
   useEffect(() => {

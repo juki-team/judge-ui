@@ -1,4 +1,4 @@
-import { ArrowIcon, ExclamationIcon, MdMathEditor, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
+import { ArrowIcon, ExclamationIcon, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
 import { ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
 import Link from 'next/link';
@@ -70,25 +70,25 @@ export const ProblemStatement = ({
             />
           ) : <MdMathViewer source={statement?.description[preferredLanguage]} />}
           <h6><T>input</T></h6>
-          {!setStatement && !statement?.input.trim() && <em><T className="tt-se fw-bd">no input description</T></em>}
+          {!setStatement && !statement?.input[preferredLanguage]?.trim() && (
+            <em><T className="tt-se fw-bd">no input description</T></em>
+          )}
           {setStatement ? (
-            <MdMathEditor
-              informationButton
-              uploadImageButton
-              source={statement?.input}
-              onChange={input => setStatement({ ...statement, input })}
+            <TextLangEdit
+              text={statement.input}
+              setText={(input) => setStatement({ ...statement, input })}
             />
-          ) : <MdMathViewer source={statement?.input} />}
+          ) : <MdMathViewer source={statement?.input[preferredLanguage]} />}
           <h6><T>output</T></h6>
-          {!setStatement && !statement?.output.trim() && <em><T className="tt-se fw-bd">no output description</T></em>}
+          {!setStatement && !statement?.output[preferredLanguage]?.trim() && (
+            <em><T className="tt-se fw-bd">no output description</T></em>
+          )}
           {setStatement ? (
-            <MdMathEditor
-              informationButton
-              uploadImageButton
-              source={statement?.output}
-              onChange={output => setStatement({ ...statement, output })}
+            <TextLangEdit
+              text={statement.output}
+              setText={(output) => setStatement({ ...statement, output })}
             />
-          ) : <MdMathViewer source={statement?.output} />}
+          ) : <MdMathViewer source={statement?.output[preferredLanguage]} />}
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1">
               <h6><T>input sample</T></h6>

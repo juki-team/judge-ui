@@ -69,21 +69,18 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   }, [user.isLogged, query]);
   
   const toggleSetting = (key: ProfileSettingOptions, value: string) => {
+    const settings = { ...user.settings };
+    if (key === ProfileSettingOptions.LANGUAGE) {
+      settings.preferredLanguage = value as Language;
+    }
+    if (key === ProfileSettingOptions.THEME) {
+      settings.preferredTheme = value as Theme;
+    }
     if (user.isLogged) {
-      const settings = { ...user.settings };
-      if (key === ProfileSettingOptions.LANGUAGE) {
-        settings.preferredLanguage = value as Language;
-      }
-      if (key === ProfileSettingOptions.THEME) {
-        settings.preferredTheme = value as Theme;
-      }
       updateUserSettings(user.nickname, settings, (status: Status) => setLoader(status));
     } else {
       localStorage.setItem(key, value);
-      setUser({
-        ...user,
-        [key]: value,
-      });
+      setUser({ ...user, settings });
     }
   };
   
@@ -99,7 +96,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       <Popover
         content={
           <SettingsPopover
-            loader={loader[0] === Status.LOADING}
+            loader={loader === Status.LOADING}
             languageChecked={user.settings?.[ProfileSettingOptions.LANGUAGE] === Language.ES}
             toggleLanguage={toggleLanguage}
             themeChecked={user.settings?.[ProfileSettingOptions.THEME] === Theme.DARK}
@@ -164,8 +161,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
             </div>
           ),
           content: ({ toggle }) => (
-            <div className="bc-py jk-row filled left-mobile-content">
-              <div className="jk-col space-between">
+            <div className="bc-py jk-row filled ">
+              <div className="jk-col space-between left-mobile-content">
                 <div className="jk-row nowrap gap left mobile-left-side-header">
                   <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} className="cr-we" /></div>
                   <JukiJudgeLogoHorImage className="cr-we" />,

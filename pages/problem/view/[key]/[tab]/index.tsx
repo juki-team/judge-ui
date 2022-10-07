@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUserState } from 'store';
 import { ContentResponseType, ProblemResponseDTO, ProblemTab, Status } from 'types';
-import Custom404 from '../../../404';
+import Custom404 from '../../../../404';
 
 const ProblemView = (): ReactNode => {
   
@@ -70,14 +70,6 @@ const ProblemView = (): ReactNode => {
         return (
           <TwoContentLayout>
             <div className="jk-row nowrap gap extend">
-              <div className="jk-row cr-py back-link">
-                <Link href={ROUTES.PROBLEMS.LIST()}>
-                  <a className="jk-row nowrap fw-bd link">
-                    <ArrowIcon rotate={-90} />
-                    <div className="screen lg hg"><T className="tt-se">problems</T></div>
-                  </a>
-                </Link>
-              </div>
               <div className="jk-row gap center flex-1">
                 <h5>{problem.name}</h5>
                 <Popover

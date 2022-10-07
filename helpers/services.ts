@@ -27,27 +27,28 @@ export const actionLoaderWrapper = async <T extends ContentResponseType<any> | C
   const timeStamp = new Date().getTime();
   setLoader?.(Status.LOADING, timeStamp);
   const result = await request();
-  
   if (result) {
     if (result.success === true) {
-      setLoader?.(prevState => prevState[1] === timeStamp ? [Status.SUCCESS, timeStamp] : prevState);
+      // setLoader?.(prevState => prevState[1] === timeStamp ? [Status.SUCCESS, timeStamp] : prevState);
+      setLoader?.(Status.SUCCESS);
       await onSuccess(result);
     } else {
       let setError = true;
-      if (setLoader) {
-        setError = false;
-        setLoader((prevState) => {
-          if (!setError && prevState[1] === timeStamp) {
-            setError = true;
-            if (!result.errors.some(({ code }) => code === ErrorCode.ERR9997)) {
-              return [Status.ERROR, timeStamp];
-            } else {
-              return [Status.NONE, timeStamp];
-            }
-          }
-          return prevState;
-        });
-      }
+      setLoader?.(Status.ERROR);
+      // if (setLoader) {
+      //   setError = false;
+      //   setLoader((prevState) => {
+      //     if (!setError && prevState[1] === timeStamp) {
+      //       setError = true;
+      //       if (!result.errors.some(({ code }) => code === ErrorCode.ERR9997)) {
+      //         return [Status.ERROR, timeStamp];
+      //       } else {
+      //         return [Status.NONE, timeStamp];
+      //       }
+      //     }
+      //     return prevState;
+      //   });
+      // }
       if (!result.errors.some(({ code }) => code === ErrorCode.ERR9997)) {
         addNotification({ type: NotificationType.ERROR, message: result.message });
       }

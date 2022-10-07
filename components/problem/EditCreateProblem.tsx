@@ -1,4 +1,4 @@
-import { ArrowIcon, ButtonLoader, CheckUnsavedChanges, ProblemStatement, T, Tabs, TwoContentLayout } from 'components';
+import { ButtonLoader, CheckUnsavedChanges, ProblemStatement, T, Tabs, TwoContentLayout } from 'components';
 import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
@@ -13,14 +13,14 @@ import {
   ProblemTab,
   Status,
 } from 'types';
+import { Input } from '../index';
 import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemSettings } from './ProblemSettings';
-import { TitleEditable } from './TitleEditable';
 
 export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditCreateProblemType }) => {
   
   const editing = !!initialProblem;
-  const { query: { key }, push } = useRouter();
+  const { push } = useRouter();
   const [problem, setProblem] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { addNotification } = useNotification();
   
@@ -44,25 +44,14 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
     }
   };
   
-  console.log({ problem });
-  
   return (
     <TwoContentLayout>
-      <div className="jk-col filled">
-        <div className="jk-row left gap nowrap">
-          <div className="jk-row cr-py back-link">
-            <CheckUnsavedChanges
-              onSafeClick={() => push(editing ? ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT) : ROUTES.PROBLEMS.LIST())}
-              value={problem}
-            >
-              <div className="jk-row nowrap fw-bd link">
-                <ArrowIcon rotate={-90} />
-                <div className="screen lg hg"><T className="tt-se">cancel</T></div>
-              </div>
-            </CheckUnsavedChanges>
-          </div>
-          <TitleEditable value={problem.name} onChange={value => setProblem({ ...problem, name: value })} />
-        </div>
+      <div className="jk-row extend center tx-h">
+        <h6><T>name</T></h6>:&nbsp;
+        <Input
+          value={problem.name}
+          onChange={value => setProblem({ ...problem, name: value })}
+        />
       </div>
       <Tabs
         tabs={[
@@ -88,7 +77,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
             header: <T className="tt-ce">settings</T>,
             body: <ProblemSettings problem={problem} setProblem={setProblem} />,
           },
-          // { key: ProblemTab.TESTS, header: <T className="tt-se">test cases</T>, body: <div>test cases</div> },
+          { key: ProblemTab.TESTS, header: <T className="tt-se">test cases</T>, body: <div>test cases</div> },
           {
             key: ProblemTab.EDITORIAL,
             header: <T className="tt-se">editorial</T>,
@@ -101,11 +90,14 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
           },
         ]}
         actionsSection={[
-          <ButtonLoader
-            type="secondary"
-            onClick={onSave}
+          <CheckUnsavedChanges
+            onSafeClick={() => push(editing ? ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT) : ROUTES.PROBLEMS.LIST())}
+            value={problem}
           >
-            <T>save</T>
+            <div><ButtonLoader size="small"><T>cancel</T></ButtonLoader></div>
+          </CheckUnsavedChanges>,
+          <ButtonLoader type="secondary" size="small" onClick={onSave}>
+            {editing ? <T>update</T> : <T>create</T>}
           </ButtonLoader>,
         ]}
       />

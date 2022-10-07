@@ -4,7 +4,7 @@ import { getProblemJudgeKey } from 'helpers';
 import { useContestRouter } from 'hooks';
 import React from 'react';
 import { ContentResponseType, ContestResponseDTO, EditContestProblemBasicType, EditCreateContestType } from 'types';
-import Custom404 from '../../404';
+import Custom404 from '../../../404';
 
 const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContestType => {
   const problems: { [key: string]: EditContestProblemBasicType } = {};

@@ -13,7 +13,7 @@ import {
   T,
 } from 'components';
 import { JUDGE, PALLETE } from 'config/constants';
-import { classNames, disableOutOfRange, getProblemJudgeKey, indexToLetters, roundTimestamp } from 'helpers';
+import { classNames, disableOutOfRange, getProblemJudgeKey, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
 import React, { useEffect, useRef, useState } from 'react';
 import { ContestProblemBasicType, RowSortableItem, RowSortableItemContentType } from 'types';
 import { EditContestProps } from '../types';
@@ -33,7 +33,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     index,
   }) => {
     return (
-      <div className="jk-row left" ref={previewRef} style={{ opacity: isDragging ? 0.4 : 1 }}>
+      <div className="jk-row left jk-table-inline-row" ref={previewRef} style={{ opacity: isDragging ? 0.4 : 1 }}>
         <div className="jk-row" style={{ width: 30 }}>{dragComponent}</div>
         <div className="jk-row" style={{ width: 40 }}>
           {indexToLetters(index + 1)}
@@ -190,7 +190,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     );
   };
   const parseProblems = (problems: { [key: string]: ContestProblemBasicType & { name: string } }) => {
-    return Object.values(problems).sort((a, b) => a.index.localeCompare(b.index)).map((problem, index) => {
+    return Object.values(problems).sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index)).map((problem, index) => {
       const value: Problem = {
         key: problem.key,
         judge: problem.judge,
@@ -248,17 +248,20 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [problems]);
   
   return (
-    <div className="jk-pad-md">
-      <div className="jk-row left gap">
-        <h6><T>Problems with period time restriction</T></h6>
-        <InputToggle
-          checked={!!withTime}
-          onChange={value => setWithTime(value ? 1 : 0)}
-          leftLabel={<T className={classNames('tt-se', { 'fw-bd': !withTime })}>no</T>}
-          rightLabel={<T className={classNames('tt-se', { 'fw-bd': !!withTime })}>yes</T>}
-        />
+    <div className="jk-col gap stretch jk-pad-md">
+      <div className="jk-col extend left gap stretch">
+        <div className="jk-row left gap">
+          <div className="fw-bd tt-se tx-xl cr-py"><T>Problems with period time restriction</T></div>
+          <InputToggle
+            size="small"
+            checked={!!withTime}
+            onChange={value => setWithTime(value ? 1 : 0)}
+            leftLabel={<T className={classNames('tt-se', { 'fw-bd': !withTime })}>no</T>}
+            rightLabel={<T className={classNames('tt-se', { 'fw-bd': !!withTime })}>yes</T>}
+          />
+        </div>
         {!!withTime && (
-          <div>
+          <div className="jk-col  gap left stretch">
             <div><T>Set a the time start relative to start of contest and the duration to resolve for each problem</T>:</div>
             <InputToggle
               checked={withTime === 1}
@@ -269,9 +272,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           </div>
         )}
       </div>
-      <div className="jk-divider" />
-      <div className="jk-col gap stretch">
-        <div className="jk-row left">
+      <div className="jk-col stretch">
+        <div className="jk-row left jk-table-inline-header">
           <div className="jk-row" style={{ width: 30 }} />
           <div className="jk-row fw-bd" style={{ width: 40 }}>
             <T className="tt-se">index</T>
@@ -302,7 +304,6 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <div className="jk-row" style={{ flex: 1 }}>
               <ProblemSelector
                 onSelect={(problem) => {
-                  console.log({ problem });
                   if (!problems.some(p => p.key === problem.key)) {
                     let colors = PALLETE.VIVOS.filter(color => !problems.some(p => p.value.color === color.color));
                     if (!colors.length) {

@@ -1,4 +1,4 @@
-import { ProgrammingLanguage, SubmissionRunStatus } from '@juki-team/commons';
+import { ProblemType, ProgrammingLanguage, SubmissionRunStatus } from '@juki-team/commons';
 import { Button, CloseIcon, Input, InputToggle, Modal, MultiSelect, PlusIcon, Select, T, UserCodeEditor } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
@@ -60,28 +60,24 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
   const onCloseModal = () => setOpen(false);
   
   return (
-    <div className="jk-col left stretch jk-pad-md gap">
-      <div className="jk-row left gap">
-        <div className="jk-row gap">
-          <h6 className="cr-er"><T>problem status</T></h6>
-        </div>
-        <div style={{ width: 500 }}>
-          <Select
-            options={Object.values(PROBLEM_STATUS).map(status => ({
-              value: status.value,
-              label: (
-                <div className="jk-col left">
-                  <T className="fw-bd tt-se">{status.label}</T>
-                  <T className="tt-se">{status.description}</T>
-                </div>
-              ),
-            }))}
-            selectedOption={{ value: problem.status }}
-            onChange={({ value }) => setProblem(prevState => ({ ...prevState, status: value }))}
-            className="max-select-size"
-            popoverClassName="max-popover-select-size"
-          />
-        </div>
+    <div className="jk-col left stretch jk-pad-md gap nowrap">
+      <div className="jk-row left nowrap gap">
+        <div className="jk-row nowrap fw-bd tx-xl cr-er"><T className="tt-se ws-np">problem status</T>:</div>
+        <Select
+          options={Object.values(PROBLEM_STATUS).map(status => ({
+            value: status.value,
+            label: (
+              <div className="jk-col left">
+                <T className="fw-bd tt-se">{status.label}</T>
+                <T className="tt-se">{status.description}</T>
+              </div>
+            ),
+          }))}
+          selectedOption={{ value: problem.status }}
+          onChange={({ value }) => setProblem(prevState => ({ ...prevState, status: value }))}
+          popoverClassName="max-popover-select-size"
+          extend
+        />
       </div>
       <div className="jk-divider" style={{ margin: 0, height: 4 }} />
       <div className="jk-row left gap">
@@ -100,46 +96,48 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, type: value } })}
         />
       </div>
-      <div className="jk-row left gap">
-        <div className="fw-bd tt-se"><T>evaluator source</T>:</div>
-        <Button size="small" onClick={() => setOpen(true)}><T>save / view evaluator source</T></Button>
-        <Modal isOpen={open} onClose={onCloseModal}>
-          <div className="jk-pad-md jk-col gap nowrap">
-            <div
-              className="jk-border-radius-inline"
-              style={{ height: 'calc(var(--vh) * 100 - 200px)', width: '100%', border: '1px solid var(--t-color-gray-6)' }}
-            >
-              <UserCodeEditor
-                languages={[ProgrammingLanguage.CPP17]}
-                onSourceChange={setSource}
-                initialTestCases={{
-                  'custom-0': {
-                    in: '',
-                    out: '',
-                    key: 'custom-0',
-                    index: 0,
-                    status: SubmissionRunStatus.NONE,
-                    err: '',
-                    sample: false,
-                    log: '',
-                  },
-                }}
-                initialSource={{ [PROGRAMMING_LANGUAGE[ProgrammingLanguage.CPP17].mime]: problem.settings.evaluatorSource }}
-              />
+      {problem.settings.type === ProblemType.DYNAMIC && (
+        <div className="jk-row left gap">
+          <div className="fw-bd tt-se"><T>evaluator source</T>:</div>
+          <Button size="small" onClick={() => setOpen(true)}><T>save / view evaluator source</T></Button>
+          <Modal isOpen={open} onClose={onCloseModal}>
+            <div className="jk-pad-md jk-col gap nowrap">
+              <div
+                className="jk-border-radius-inline"
+                style={{ height: 'calc(var(--vh) * 100 - 200px)', width: '100%', border: '1px solid var(--t-color-gray-6)' }}
+              >
+                <UserCodeEditor
+                  languages={[ProgrammingLanguage.CPP17]}
+                  onSourceChange={setSource}
+                  initialTestCases={{
+                    'custom-0': {
+                      in: '',
+                      out: '',
+                      key: 'custom-0',
+                      index: 0,
+                      status: SubmissionRunStatus.NONE,
+                      err: '',
+                      sample: false,
+                      log: '',
+                    },
+                  }}
+                  initialSource={{ [PROGRAMMING_LANGUAGE[ProgrammingLanguage.CPP17].mime]: problem.settings.evaluatorSource }}
+                />
+              </div>
+              <div className="jk-row extend gap right">
+                <Button type="text" onClick={onCloseModal}><T>close</T></Button>
+                <Button onClick={() => {
+                  setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource: source } });
+                  onCloseModal();
+                }}>
+                  <T>save</T>
+                </Button>
+              </div>
             </div>
-            <div className="jk-row extend gap right">
-              <Button type="text" onClick={onCloseModal}><T>close</T></Button>
-              <Button onClick={() => {
-                setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource: source } });
-                onCloseModal();
-              }}>
-                <T>save</T>
-              </Button>
-            </div>
-          </div>
-        </Modal>
-      </div>
-      <div className="jk-row left gap">
+          </Modal>
+        </div>
+      )}
+      <div className="jk-row left nowrap gap">
         <div className="fw-bd tt-se"><T>time limit per test</T>:</div>
         <Input
           type="number"
@@ -148,7 +146,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
         />
         {problem.settings.timeLimit > 1 ? <T>milliseconds</T> : <T>millisecond</T>}
       </div>
-      <div className="jk-row left gap">
+      <div className="jk-row left nowrap gap">
         <div className="fw-bd tt-se"><T>memory limit per test</T>:</div>
         <Input
           type="number"
@@ -167,8 +165,8 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           rightLabel={<T className={classNames('tt-se', { 'fw-bd': problem.settings.withPE })}>with presentation error</T>}
         />
       </div>
-      <div className="jk-row left gap">
-        <div className="fw-bd tt-se"><T>programming languages</T>:</div>
+      <div className="jk-row left nowrap gap">
+        <div className="fw-bd tt-se nowrap"><T className="ws-np">programming languages</T>:</div>
         <MultiSelect
           options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}
           selectedOptions={problem.settings?.languages?.map?.(lang => ({
@@ -193,6 +191,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
               },
             });
           }}
+          block
         />
       </div>
       <div className="jk-row left">
@@ -203,7 +202,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
         </div>
         {problem.settings?.languages.map((lang) => {
           return (
-            <div className="jk-row block gap extend jk-table-inline-row">
+            <div className="jk-row block gap extend jk-table-inline-row" key={lang}>
               <div style={{ maxWidth: 200 }} className="jk-row">{PROGRAMMING_LANGUAGE[lang].label}</div>
               <div className="jk-row center gap nowrap">
                 <Input

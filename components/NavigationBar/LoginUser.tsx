@@ -1,5 +1,6 @@
 import { Button, ButtonLoader, LoadingIcon, Popover, T, UpIcon } from 'components';
-import { addParamQuery } from 'helpers';
+import { addParamQuery, classNames } from 'helpers';
+import { useJukiBase } from 'hooks';
 import { useRouter } from 'next/router';
 import { useUserDispatch, useUserState } from 'store';
 import { ProfileTab } from 'types';
@@ -10,6 +11,7 @@ export const LoginUser = () => {
   const user = useUserState();
   const { push, query } = useRouter();
   const { logout } = useUserDispatch();
+  const { viewPortSize } = useJukiBase();
   
   if (user.isLoading) {
     return <LoadingIcon className="cr-we" />;
@@ -40,7 +42,11 @@ export const LoginUser = () => {
         placement="bottomRight"
       >
         <div className="user-logged-head jk-row gap nowrap cr-we">
-          <img src={user.imageUrl} alt={user.nickname} className="jk-user-profile-img large" />
+          <img
+            src={user.imageUrl}
+            alt={user.nickname}
+            className={classNames('jk-user-profile-img ', { large: viewPortSize !== 'sm' })}
+          />
           <div className="jk-row nickname">{user.nickname}</div>
           <UpIcon rotate={180} />
         </div>

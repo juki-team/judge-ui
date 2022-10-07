@@ -152,14 +152,14 @@ export function ContestView() {
           <TwoContentLayout>
             <div className="content-title jk-col relative">
               <div className="jk-row nowrap gap extend">
-                <div className="jk-row cr-py back-link">
-                  <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}>
-                    <a className="jk-row nowrap fw-bd link">
-                      <ArrowIcon rotate={-90} />
-                      <div className="screen lg hg"><T className="tt-se">contests</T></div>
-                    </a>
-                  </Link>
-                </div>
+                {/*<div className="jk-row cr-py back-link">*/}
+                {/*  <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}>*/}
+                {/*    <a className="jk-row nowrap fw-bd link">*/}
+                {/*      <ArrowIcon rotate={-90} />*/}
+                {/*      <div className="screen lg hg"><T className="tt-se">contests</T></div>*/}
+                {/*    </a>*/}
+                {/*  </Link>*/}
+                {/*</div>*/}
                 <div className="jk-row center gap flex-1">
                   <h3>{contest.name}</h3>
                   <Popover
@@ -168,7 +168,7 @@ export function ContestView() {
                     placement="bottom"
                     popoverContentClassName={`color-white bg-color-${tag} jk-row nowrap`}
                   >
-                    <div className={`jk-tag ${tag} screen md`}><T>{statusLabel}</T></div>
+                    <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T>{statusLabel}</T></div>
                   </Popover>
                 </div>
               </div>
