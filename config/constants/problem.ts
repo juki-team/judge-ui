@@ -1,4 +1,4 @@
-import { Judge, Language, ProblemMode, ProblemStatus, ProblemType } from '@juki-team/commons';
+import { Language, ProblemMode, ProblemStatus, ProblemType } from '@juki-team/commons';
 import { EditCreateProblemType } from 'types';
 
 export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
@@ -24,8 +24,14 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
         [Language.EN]: '',
         [Language.ES]: '',
       },
-      input: '',
-      output: '',
+      input: {
+        [Language.EN]: '',
+        [Language.ES]: '',
+      },
+      output: {
+        [Language.EN]: '',
+        [Language.ES]: '',
+      },
     },
     status: ProblemStatus.RESERVED,
     tags: [],
