@@ -12,7 +12,7 @@ import {
   UserNicknameLink,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { classNames, getProblemJudgeKey, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
+import { classNames, getProblemJudgeKey, isEndlessContest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -27,6 +27,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   const { addNotification } = useNotification();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const mySubmissions = false;
+  const isEndless = isEndlessContest(contest);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       {
@@ -65,7 +66,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
             <div className="fw-br cr-py">{totalPoints}</div>
-            <div className="cr-g4">{Math.round(totalPenalty)}</div>
+            {!isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
           </Field>
         ),
         minWidth: 128,
@@ -109,9 +110,12 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                 )}
                 <div className="jk-row nowrap">
                   <div className="tx-xs">{problemData?.attempts || '-'}</div>
-                  <span className="cr-g3">/</span>
-                  <div
-                    className="tx-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
+                  {!isEndless && (
+                    <>
+                      <span className="cr-g3">/</span>
+                      <div className="tx-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
+                    </>
+                  )}
                 </div>
               </Field>
             );
@@ -121,7 +125,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       }
     }
     return base;
-  }, [query, user.nickname, contest]);
+  }, [query, user.nickname, contest, isEndless]);
   const name = mySubmissions ? 'myStatus' : 'status';
   
   const [unfrozen, setUnfrozen] = useState(false);
@@ -134,7 +138,6 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
-  
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []).map(result => result);
   const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
   

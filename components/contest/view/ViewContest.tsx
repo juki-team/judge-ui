@@ -15,6 +15,7 @@ import { useContestRouter, useJukiBase } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ContentResponseType, ContestResponseDTO, ContestsTab, ContestTab, Status } from 'types';
+import { isEndlessContest } from '../../../helpers';
 import Custom404 from '../../../pages/404';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewMembers } from './ViewMembers';
@@ -36,7 +37,7 @@ export function ContestView() {
     >
       {({ data: { content: contest } }) => {
         const { user: { isAdmin, isJudge, isContestant } = { isAdmin: false, isJudge: false, isContestant: false } } = contest || {};
-        
+        const isEndless = isEndlessContest(contest);
         let statusLabel = '';
         let tag = '';
         let timeInterval = 0;
@@ -53,7 +54,7 @@ export function ContestView() {
           statusLabel = 'live';
           timeInterval = contest.settings.endTimestamp - new Date().getTime();
         }
-        const literal = (
+        const literal = isEndless ? <T className="ws-np">endless</T> :(
           <>
             {contest.isLive
               ? <T className="ws-np">ends in</T>
