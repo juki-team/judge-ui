@@ -1,5 +1,3 @@
-import exp from 'constants';
-
 export {
   Timer,
   TimerLabeled,
@@ -33,6 +31,7 @@ export {
   EditIcon,
   CityIcon,
   ImageLoaderCropper,
+  CurvedArrowIcon,
   InputDate,
   PersonIcon,
   ExclamationIcon,

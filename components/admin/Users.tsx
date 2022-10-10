@@ -57,7 +57,7 @@ export function Users() {
   
   const columns: DataViewerHeadersType<UserManagementResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">Name</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue">name</T>} />,
       index: 'name',
       field: ({ record: { givenName, familyName, nickname, imageUrl, email } }) => (
         <Field className="jk-row center gap">
@@ -100,8 +100,8 @@ export function Users() {
       ),
       sort: {
         compareFn: () => (rowA, rowB) => {
-          const rowAAllPermissions = (USER_ROLE[rowA.userRole]?.level || 100) + (PROBLEM_ROLE[rowA.problemRole]?.level || 100) + (CONTEST_ROLE[rowA.contestRole]?.level || 100) + (TEAM_ROLE[rowA.teamRole]?.level || 100) + (COURSE_ROLE[rowA.courseRole]?.level || 100);
-          const rowBAllPermissions = (USER_ROLE[rowB.userRole]?.level || 100) + (PROBLEM_ROLE[rowB.problemRole]?.level || 100) + (CONTEST_ROLE[rowB.contestRole]?.level || 100) + (TEAM_ROLE[rowB.teamRole]?.level || 100) + (COURSE_ROLE[rowB.courseRole]?.level || 100);
+          const rowAAllPermissions = (USER_ROLE[rowA.userRole]?.level ?? 100) + (PROBLEM_ROLE[rowA.problemRole]?.level ?? 100) + (CONTEST_ROLE[rowA.contestRole]?.level ?? 100) + (TEAM_ROLE[rowA.teamRole]?.level ?? 100) + (COURSE_ROLE[rowA.courseRole]?.level ?? 100);
+          const rowBAllPermissions = (USER_ROLE[rowB.userRole]?.level ?? 100) + (PROBLEM_ROLE[rowB.problemRole]?.level ?? 100) + (CONTEST_ROLE[rowB.contestRole]?.level ?? 100) + (TEAM_ROLE[rowB.teamRole]?.level ?? 100) + (COURSE_ROLE[rowB.courseRole]?.level ?? 100);
           return rowAAllPermissions - rowBAllPermissions;
         },
       },

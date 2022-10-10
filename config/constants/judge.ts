@@ -1,6 +1,14 @@
 import { API_VERSION, JUDGE_BACKEND_BASE_URL, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL } from './settings';
 
 export const JUDGE_API_V1 = {
+  SYS: {
+    LS: (folderPath) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/ls/${encodeURIComponent(folderPath)}`;
+    },
+    CAT: (filePath) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/cat/${encodeURIComponent(filePath)}`;
+    },
+  },
   AUTH: {
     SIGN_IN: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/auth/sign-in`;
@@ -27,6 +35,12 @@ export const JUDGE_API_V1 = {
     },
     MANAGEMENT_LIST: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/management-list`;
+    },
+    ONLINE_USERS: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/online-users`;
+    },
+    SESSION_SESSION_ID: (sessionId: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/session/${sessionId}`;
     },
     NICKNAME: (nickname: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}`;

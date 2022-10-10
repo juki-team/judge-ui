@@ -46,7 +46,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: (children) => <Link href={ROUTES.PROBLEMS.LIST()}><a>{children}</a></Link>,
     },
   ];
-  if (user.canViewUsersManagement || user.canViewSubmissionsManagement) {
+  if (user.canViewUsersManagement || user.canViewSubmissionsManagement || user.canViewFilesManagement) {
     menu.push({
       label: <T>admin</T>,
       icon: <SettingIcon />,

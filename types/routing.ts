@@ -10,7 +10,8 @@ export enum AdminTab {
   ATTEMPTS = 'attempts',
   SUBMISSIONS = 'submissions',
   REJUDGE = 'rejudge',
-  RESET_PASSWORD = 'reset-password'
+  RESET_PASSWORD = 'reset-password',
+  FILES_MANAGEMENT = 'files-management',
 }
 
 export enum ProblemTab {

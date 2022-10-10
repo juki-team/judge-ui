@@ -210,7 +210,18 @@ export const useUserDispatch = () => {
       }
       localStorage.removeItem(JUKI_TOKEN_NAME);
       setUser(USER_GUEST);
-      // await push('/');
+    },
+    deleteSession: (sessionId: string): ButtonLoaderOnClickType => async (setLoaderStatus) => {
+      setLoaderStatus?.(Status.LOADING);
+      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.SESSION_SESSION_ID(sessionId), {
+        method: HTTPMethod.DELETE,
+      }));
+      if (notifyResponse(response, addNotification)) {
+        await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
+        setLoaderStatus(Status.SUCCESS);
+      } else {
+        setLoaderStatus(Status.ERROR);
+      }
     },
     updateUserSettings: async (nickname: string, settings: { preferredTheme: Theme, preferredLanguage: Language }, setLoader: SetLoaderStatusOnClickType) => {
       return actionLoaderWrapper<ContentResponseType<any>>({
