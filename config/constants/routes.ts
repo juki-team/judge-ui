@@ -1,23 +1,35 @@
 import { AdminTab, ContestsTab, ContestTab, ProblemTab, ProfileTab } from '../../types';
 
 export enum QueryParam {
-  DIALOG = 'dialog',
-  USER_PREVIEW = 'userPreview',
+  DIALOG = 'dg',
+  USER_PREVIEW = 'up',
+  SUBMISSION_VIEW = 'sv',
+  // tables
+  MY_STATUS_TABLE = 'mst',
+  STATUS_TABLE = 'sst',
+  ALL_SUBMISSIONS_TABLE = 'ast',
+  PROFILE_SUBMISSIONS_TABLE = 'pst',
+  ALL_USERS_TABLE = 'aut',
+  LOGGED_USERS_TABLE = 'lut',
+  CONTEST_TABLE = 'ctt',
+  ENDLESS_CONTEST_TABLE = 'ect',
+  SCOREBOARD_TABLE = 'sdt',
+  // table queries
+  PAGE_TABLE = 'p',
+  PAGE_SIZE_TABLE = 'z',
+  SORT_TABLE = 's',
+  FILTER_TABLE = 'f',
+  VIEW_MODE_TABLE = 'v',
 }
 
 export enum OpenDialog {
-  WELCOME = 'welcome',
-  SIGN_IN = 'signIn',
-  SIGN_UP = 'signUp'
+  WELCOME = 'w',
+  SIGN_IN = 'si',
+  SIGN_UP = 'sup'
 }
 
-export const _TYPE = ':type';
-export const _KEY = ':key';
 export const _TAB = ':tab';
-export const _SUB_TAB = ':subTab?';
 export const _SUB_SUB_TAB = ':subSubTab?';
-export const PAGE = 'page';
-export const PAGE_SIZE = 'size';
 
 export const ROUTES = {
   ROOT: '/',

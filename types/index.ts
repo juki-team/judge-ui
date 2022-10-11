@@ -82,4 +82,5 @@ export type {
   CodeEditorMiddleButtonsType,
   CodeEditorTestCasesType,
   CodeEditorExpandPositionType,
+  GetRowKeyType,
 } from '@juki-team/base-ui';

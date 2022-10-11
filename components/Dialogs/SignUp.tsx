@@ -1,4 +1,4 @@
-import { SignUpModal } from 'components';
+import { SignUpModalComponent } from 'components';
 import { OpenDialog, QueryParam } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
@@ -6,7 +6,7 @@ import React from 'react';
 import { useUserDispatch } from 'store';
 import { SetLoaderStatusOnClickType, SignUpInputType } from 'types';
 
-export const SignUp = () => {
+export const SignUpModal = () => {
   
   const { signUp } = useUserDispatch();
   const { push, query } = useRouter();
@@ -16,7 +16,7 @@ export const SignUp = () => {
   };
   
   return (
-    <SignUpModal
+    <SignUpModalComponent
       onCancel={() => push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP) })}
       onSubmit={onSubmit}
     />

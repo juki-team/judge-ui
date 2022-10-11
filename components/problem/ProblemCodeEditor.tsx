@@ -1,5 +1,5 @@
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
-import { JUDGE_API_V1, MY_STATUS, OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { JUDGE_API_V1, OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
 import { useContestRouter, useNotification, useRouter } from 'hooks';
 import { useMemo, useState } from 'react';
@@ -43,7 +43,7 @@ export const ProblemCodeEditor = ({
   const { nickname, isLogged } = useUserState();
   const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
-  const { [`${MY_STATUS}.pageSize`]: myStatusPageSize } = query;
+  const { [`${QueryParam.MY_STATUS_TABLE}.pageSize`]: myStatusPageSize } = query;
   const { key: problemKey, ...restQuery } = query;
   const languages = useMemo(() => Object.values(problem?.settings.languages || {}), [JSON.stringify(problem?.settings.languages)]);
   const [language, setLanguage] = useState(ProgrammingLanguage.TEXT);

@@ -1,9 +1,9 @@
-import { DateField, Field, T, TextHeadCell, UserNicknameLink } from 'components';
+import { ButtonLoader, DateField, ExternalIcon, Field, ReloadIcon, T, TextHeadCell, UserNicknameLink } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import Link from 'next/link';
 import React from 'react';
 import { ContestTab, DataViewerHeadersType, ProblemTab, SubmissionResponseDTO } from 'types';
-import { ExternalIcon } from '../index';
+import { useRejudgeServices } from '../../hooks/rejudge';
 import { SubmissionInfo } from './SubmissionInfo';
 
 import { Memory, Time, Verdict } from './utils';
@@ -29,7 +29,7 @@ export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<
   head: (
     <TextHeadCell text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="tt-se">contest</T></>} />
   ),
-  index: 'problem',
+  index: 'contestProblemIndex',
   field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
     <Field className="jk-row">
       {contestKey ? (
@@ -64,10 +64,12 @@ export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<
 export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>lang</T>} />,
   index: 'language',
-  field: ({ record, isCard }) => (
-    <SubmissionInfo submission={record}>
-      <div>{PROGRAMMING_LANGUAGE[record.language]?.label || record.language}</div>
-    </SubmissionInfo>
+  field: ({ record: { submitId, canViewSourceCode, language }, isCard }) => (
+    <Field>
+      <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
+        <div className="jk-col extend">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+      </SubmissionInfo>
+    </Field>
   ),
   sort: { compareFn: () => (rowA, rowB) => rowB.language.localeCompare(rowA.language) },
   filter: {
@@ -78,13 +80,31 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
   minWidth: 120,
 });
 
+export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
+  const { rejudgeSubmission } = useRejudgeServices();
+  return (
+    <ButtonLoader
+      onClick={rejudgeSubmission(submissionId)}
+      size="tiny"
+      icon={<ReloadIcon />}
+    >
+      <T>rejudge</T>
+    </ButtonLoader>
+  );
+};
+
 export const submissionVerdict = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>verdict</T>} />,
   index: 'verdict',
-  field: ({ record, isCard }) => (
-    <SubmissionInfo submission={record}>
-      <Verdict verdict={record.verdict} points={record.points} status={record.status} />
-    </SubmissionInfo>
+  field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
+    <Field>
+      <div className="jk-col extend">
+        <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
+          <Verdict verdict={verdict} points={points} status={status} />
+        </SubmissionInfo>
+        <RejudgeButton submissionId={submitId} />
+      </div>
+    </Field>
   ),
   sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
   filter: {

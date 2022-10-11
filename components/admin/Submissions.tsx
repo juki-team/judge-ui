@@ -1,5 +1,5 @@
 import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { DataViewerHeadersType, SubmissionResponseDTO } from 'types';
@@ -31,7 +31,7 @@ export function AllSubmissions() {
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
       headers={columns}
       url={url}
-      name="submissions"
+      name={QueryParam.ALL_SUBMISSIONS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
     />

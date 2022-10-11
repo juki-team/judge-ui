@@ -11,7 +11,17 @@ import {
   UserChip,
   UserPermissions,
 } from 'components';
-import { CONTEST_ROLE, COURSE_ROLE, JUDGE_API_V1, PROBLEM_ROLE, TEAM_ROLE, USER_ROLE, USER_STATUS } from 'config/constants';
+import {
+  CONTEST_ROLE,
+  COURSE_ROLE,
+  DEFAULT_DATA_VIEWER_PROPS,
+  JUDGE_API_V1,
+  PROBLEM_ROLE,
+  QueryParam,
+  TEAM_ROLE,
+  USER_ROLE,
+  USER_STATUS,
+} from 'config/constants';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import { useMemo, useState } from 'react';
@@ -156,10 +166,11 @@ export function Users() {
         data={data}
         rows={{ height: 150 }}
         request={request}
-        name="admin"
+        name={QueryParam.ALL_USERS_TABLE}
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
         setLoaderStatusRef={setLoaderStatusRef}
+        {...DEFAULT_DATA_VIEWER_PROPS}
       />
     </>
   );

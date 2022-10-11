@@ -1,13 +1,6 @@
 import { UserState } from 'store';
-import { Language, PagedArray, Theme, UserStatus } from 'types';
-
-export const PAGED_ARRAY_EMPTY: PagedArray<any> = {
-  list: [],
-  pageNumber: 0,
-  pageSize: 0,
-  totalPages: 0,
-  totalElements: 0,
-};
+import { Language, Theme, UserStatus } from 'types';
+import { QueryParam } from './routes';
 
 export const USER_GUEST: UserState = {
   givenName: 'Guest',
@@ -41,5 +34,10 @@ export const USER_GUEST: UserState = {
   sessionId: '',
 };
 
-export const MY_STATUS = 'my-status';
-export const STATUS = 'status';
+export const DEFAULT_DATA_VIEWER_PROPS = {
+  getPageQueryParam: (name: string) => (name ? name + '.' : name) + QueryParam.PAGE_TABLE,
+  getPageSizeQueryParam: (name: string) => (name ? name + '.' : name) + QueryParam.PAGE_SIZE_TABLE,
+  getSortQueryParam: (name: string) => (name ? name + '.' : name) + QueryParam.SORT_TABLE,
+  getFilterQueryParam: (name: string) => (name ? name + '.' : name) + QueryParam.FILTER_TABLE,
+  getViewModeQueryParam: (name: string) => (name ? name + '.' : name) + QueryParam.VIEW_MODE_TABLE,
+};

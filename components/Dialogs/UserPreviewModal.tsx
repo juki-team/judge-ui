@@ -4,7 +4,7 @@ import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import { ContentResponseType, ProfileTab, UserBasicResponseDTO } from 'types';
 
-export const UserPreview = ({ nickname }) => {
+export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
   
   const { push, query } = useRouter();
   const handleClose = () => push({ query: removeParamQuery(query, QueryParam.USER_PREVIEW, null) });

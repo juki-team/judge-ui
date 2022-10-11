@@ -1,8 +1,19 @@
+import { DataViewer } from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, QueryParam } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import { useCallback, useRef } from 'react';
-import { ContentsResponseType, ReactNodeOrFunctionType, DataViewerHeadersType } from 'types';
-import { DataViewer } from './index';
+import { ContentsResponseType, DataViewerHeadersType, GetRowKeyType, ReactNodeOrFunctionType } from 'types';
+
+interface PagedDataViewerPros<T, V> {
+  headers: DataViewerHeadersType<T>[],
+  name: string,
+  toRow: (row: V, index: number) => T,
+  url: (page: number, size: number) => string,
+  refreshInterval?: number,
+  extraButtons?: ReactNodeOrFunctionType,
+  getRowKey?: GetRowKeyType<T>
+}
 
 export const PagedDataViewer = <T, V>({
   headers,
@@ -11,12 +22,13 @@ export const PagedDataViewer = <T, V>({
   url,
   refreshInterval,
   extraButtons,
-}: { headers: DataViewerHeadersType<T>[], name: string, toRow: (row: V, index: number) => T, url: (page: number, size: number) => string, refreshInterval?: number, extraButtons?: ReactNodeOrFunctionType }) => {
+  getRowKey,
+}: PagedDataViewerPros<T, V>) => {
   
   const { queryObject, replace } = useRouter();
   
-  const page = +queryObject[name + '.page']?.[0];
-  const size = +queryObject[name + '.pageSize']?.[0];
+  const page = +queryObject[name + '.' + QueryParam.PAGE_TABLE]?.[0];
+  const size = +queryObject[name + '.' + QueryParam.PAGE_SIZE_TABLE]?.[0];
   const {
     data: response,
     request,
@@ -43,6 +55,8 @@ export const PagedDataViewer = <T, V>({
       searchParamsObject={queryObject}
       setSearchParamsObject={setSearchParamsObject}
       pagination={{ total: lastTotalRef.current, pageSizeOptions: [16, 32, 64, 128, 256, 512] }}
+      getRowKey={getRowKey}
+      {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
 };

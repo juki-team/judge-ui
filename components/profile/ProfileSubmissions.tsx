@@ -1,5 +1,5 @@
 import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useRouter } from 'hooks';
 import { DataViewerHeadersType, SubmissionResponseDTO } from 'types';
 import {
@@ -29,7 +29,7 @@ export function ProfileSubmissions() {
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
       headers={columns}
       url={url}
-      name="submissions"
+      name={QueryParam.PROFILE_SUBMISSIONS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
     />

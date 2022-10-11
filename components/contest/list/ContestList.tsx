@@ -1,17 +1,5 @@
-import {
-  ButtonLoader,
-  CheckIcon,
-  DataViewer,
-  DateField,
-  DateLiteral,
-  Field,
-  PlusIcon,
-  Popover,
-  T,
-  TextField,
-  TextHeadCell,
-} from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { ButtonLoader, CheckIcon, DataViewer, DateLiteral, Field, PlusIcon, Popover, T, TextField, TextHeadCell } from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { buttonLoaderLink, getContestStatus, getContestTemplate, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import Link from 'next/link';
@@ -189,7 +177,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
       rows={{ height: 72 }}
       request={request}
       setLoaderStatusRef={setLoaderStatusRef}
-      name="users"
+      name={endless ? QueryParam.ENDLESS_CONTEST_TABLE : QueryParam.CONTEST_TABLE}
       extraButtons={() => (
         <div className="extra-buttons">
           {canCreateContest && (
@@ -205,6 +193,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
       )}
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
+      {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
 };

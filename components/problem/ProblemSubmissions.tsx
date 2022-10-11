@@ -1,5 +1,5 @@
 import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1, MY_STATUS, STATUS } from 'config/constants';
+import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import React, { useMemo } from 'react';
 import { useUserState } from 'store';
 import { DataViewerHeadersType, ProblemResponseDTO, SubmissionResponseDTO } from 'types';
@@ -23,7 +23,7 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
       submissionTimeUsed(),
       submissionMemoryUsed(),
     ];
-  }, []);
+  }, [mySubmissions]);
   
   const url = (page: number, size: number) => {
     if (mySubmissions) {
@@ -36,7 +36,7 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
       headers={columns}
       url={url}
-      name={mySubmissions ? MY_STATUS : STATUS}
+      name={mySubmissions ? QueryParam.MY_STATUS_TABLE : QueryParam.STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
     />

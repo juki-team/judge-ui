@@ -1,3 +1,4 @@
+import { LoginModal, SignUpModal, SubmissionModal, UserPreviewModal, WelcomeModal } from 'components';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { isOrHas, removeParamQuery } from 'helpers';
 import Link from 'next/link';
@@ -21,8 +22,6 @@ import {
   SettingIcon,
   T,
 } from '..';
-import { Login, SignUp, Welcome } from './Dialogs';
-import { UserPreview } from './Dialogs/UserPreview';
 import { LoginUser } from './LoginUser';
 import { SettingsPopover } from './SettingsPopover';
 
@@ -136,10 +135,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   return (
     <>
-      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) && <SignUp />}
-      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN) && <Login />}
-      {isOrHas(query[QueryParam.DIALOG], OpenDialog.WELCOME) && <Welcome />}
-      {query[QueryParam.USER_PREVIEW] && <UserPreview nickname={query[QueryParam.USER_PREVIEW]} />}
+      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) && <SignUpModal />}
+      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN) && <LoginModal />}
+      {isOrHas(query[QueryParam.DIALOG], OpenDialog.WELCOME) && <WelcomeModal />}
+      {query[QueryParam.USER_PREVIEW] && <UserPreviewModal nickname={query[QueryParam.USER_PREVIEW] as string} />}
+      {query[QueryParam.SUBMISSION_VIEW] && <SubmissionModal submitId={query[QueryParam.SUBMISSION_VIEW] as string} />}
       <HorizontalMenu
         menu={menu}
         leftSection={() => (

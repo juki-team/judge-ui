@@ -24,6 +24,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
   const [problem, setProblem] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { addNotification } = useNotification();
   
+  console.log({ problem, initialProblem });
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const bodyProblem = { ...problem };

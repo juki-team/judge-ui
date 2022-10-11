@@ -1,4 +1,4 @@
-import { LoginModal } from 'components';
+import { LoginModalComponent } from 'components';
 import { OpenDialog, QueryParam } from 'config/constants';
 import { addParamQuery, removeParamQuery } from 'helpers';
 import { useRouter } from 'hooks';
@@ -6,7 +6,7 @@ import React from 'react';
 import { useUserDispatch } from 'store';
 import { LoginInputType, SetLoaderStatusOnClickType } from 'types';
 
-export const Login = () => {
+export const LoginModal = () => {
   
   const { query, push } = useRouter();
   const { signIn } = useUserDispatch();
@@ -16,7 +16,7 @@ export const Login = () => {
   );
   
   return (
-    <LoginModal
+    <LoginModalComponent
       onCancel={() => push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
       onSubmit={onSubmit}
       onSignUpButton={() => push({

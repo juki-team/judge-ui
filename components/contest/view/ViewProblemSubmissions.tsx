@@ -1,5 +1,5 @@
 import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContestResponseDTO, DataViewerHeadersType, SubmissionResponseDTO } from 'types';
@@ -36,8 +36,6 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
     submissionMemoryUsed(),
   ], [contest.problems]);
   
-  const name = mySubmissions ? 'myStatus' : 'status';
-  
   const url = (page: number, size: number) => {
     return mySubmissions
       ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, nickname, page, size)
@@ -48,9 +46,10 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
       headers={columns}
       url={url}
-      name={name}
+      name={ mySubmissions ? QueryParam.MY_STATUS_TABLE : QueryParam.STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
+      getRowKey={(data, index) => data[index].submitId}
     />
   );
 };

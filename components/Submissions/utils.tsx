@@ -7,11 +7,11 @@ export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
 };
 
 export const Time = ({ verdict, timeUsed }: { verdict: ProblemVerdict, timeUsed: number }) => {
-  return hasTimeHasMemory(verdict) ? <>{(timeUsed / 1000).toFixed(3)} <T className="cr-g3">s</T></> : <>-</>;
+  return hasTimeHasMemory(verdict) ? <>{(timeUsed / 1000).toFixed(3)}&nbsp;<T className="cr-g3">s</T></> : <>-</>;
 };
 
 export const Memory = ({ verdict, memoryUsed }: { verdict: ProblemVerdict, memoryUsed: number }) => {
-  return hasTimeHasMemory(verdict) ? <>{memoryUsed} <T className="cr-g3">kb</T></> : <>-</>;
+  return hasTimeHasMemory(verdict) ? <>{memoryUsed}&nbsp;<T className="cr-g3">kb</T></> : <>-</>;
 };
 
 export const Verdict = ({

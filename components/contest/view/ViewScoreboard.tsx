@@ -1,4 +1,3 @@
-import { useNotification } from '@juki-team/base-ui';
 import {
   BalloonIcon,
   ButtonLoader,
@@ -11,15 +10,30 @@ import {
   TextHeadCell,
   UserNicknameLink,
 } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { classNames, getProblemJudgeKey, isEndlessContest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useRouter } from 'hooks';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
+import {
+  authorizedRequest,
+  classNames,
+  cleanRequest,
+  getProblemJudgeKey,
+  isEndlessContest,
+  notifyResponse,
+  searchParamsObjectTypeToQuery,
+} from 'helpers';
+import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, ContestResponseDTO, ContestTab, DataViewerHeadersType, ScoreboardResponseDTO, Status } from 'types';
-import { authorizedRequest, cleanRequest } from '../../../helpers';
-import { ContentResponseType, HTTPMethod } from '../../../types';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  ContestResponseDTO,
+  ContestTab,
+  DataViewerHeadersType,
+  HTTPMethod,
+  ScoreboardResponseDTO,
+  Status,
+} from 'types';
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -79,7 +93,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         base.push({
           head: (
             <Popover content={<div className="ws-np">{problem.name}</div>}>
-              <div className="jk-row">
+              <div className="jk-col extend fw-bd">
                 <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index), query }}>
                   {problem.index}
                 </Link>
@@ -126,7 +140,6 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
     }
     return base;
   }, [query, user.nickname, contest, isEndless]);
-  const name = mySubmissions ? 'myStatus' : 'status';
   
   const [unfrozen, setUnfrozen] = useState(false);
   const {
@@ -147,7 +160,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       data={data}
       rows={{ height: 68 }}
       request={request}
-      name={name}
+      name={QueryParam.SCOREBOARD_TABLE}
       extraButtons={() => (
         <div className="jk-row gap">
           <div />
@@ -200,6 +213,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       setLoaderStatusRef={setLoaderStatusRef}
       setSearchParamsObject={setSearchParamsObject}
       className="contest-scoreboard"
+      {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
 };

@@ -1,5 +1,5 @@
 import { ButtonLoader, DataViewer, DateField, DeleteIcon, Field, T, TextHeadCell, UserChip } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
 import { useMemo } from 'react';
@@ -92,10 +92,11 @@ export function UsersLogged() {
         data={data}
         rows={{ height: 150 }}
         request={request}
-        name="admin"
+        name={QueryParam.LOGGED_USERS_TABLE}
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
         setLoaderStatusRef={setLoaderStatusRef}
+        {...DEFAULT_DATA_VIEWER_PROPS}
       />
     </>
   );

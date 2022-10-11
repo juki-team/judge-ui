@@ -5,14 +5,12 @@ import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { ProfileTab } from 'types';
 
-export const Welcome = () => {
+export const WelcomeModal = () => {
   
   const { givenName, nickname } = useUserState();
   const { push, query } = useRouter();
   
-  const handleClose = () => (
-    push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) })
-  );
+  const handleClose = () => push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
   
   return (
     <Modal
