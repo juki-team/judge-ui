@@ -30,7 +30,7 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
       onlyProblem: true,
     }),
     submissionDate(),
-    submissionVerdict(),
+    submissionVerdict(contest.user.isJudge || contest.user.isAdmin),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
@@ -46,7 +46,7 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
       headers={columns}
       url={url}
-      name={ mySubmissions ? QueryParam.MY_STATUS_TABLE : QueryParam.STATUS_TABLE}
+      name={mySubmissions ? QueryParam.MY_STATUS_TABLE : QueryParam.STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
       getRowKey={(data, index) => data[index].submitId}

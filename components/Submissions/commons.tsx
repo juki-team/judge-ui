@@ -93,7 +93,7 @@ export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
   );
 };
 
-export const submissionVerdict = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>verdict</T>} />,
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
@@ -102,7 +102,7 @@ export const submissionVerdict = (): DataViewerHeadersType<SubmissionResponseDTO
         <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
           <Verdict verdict={verdict} points={points} status={status} />
         </SubmissionInfo>
-        <RejudgeButton submissionId={submitId} />
+        {canRejudge && <RejudgeButton submissionId={submitId} />}
       </div>
     </Field>
   ),

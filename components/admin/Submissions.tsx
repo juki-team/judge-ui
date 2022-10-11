@@ -21,7 +21,7 @@ export function AllSubmissions() {
     submissionNickname(),
     submissionProblem(),
     submissionDate(),
-    submissionVerdict(),
+    submissionVerdict(true),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),

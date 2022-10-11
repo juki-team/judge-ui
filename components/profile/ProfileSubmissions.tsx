@@ -14,7 +14,7 @@ import {
 const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = [
   submissionProblem({ blankTarget: true }),
   submissionDate(),
-  submissionVerdict(),
+  submissionVerdict(false),
   submissionLanguage(),
   submissionTimeUsed(),
   submissionMemoryUsed(),

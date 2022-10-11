@@ -18,7 +18,7 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
     return [
       ...(!mySubmissions ? [submissionNickname()] : []),
       submissionDate(),
-      submissionVerdict(),
+      submissionVerdict(false),
       submissionLanguage(),
       submissionTimeUsed(),
       submissionMemoryUsed(),
