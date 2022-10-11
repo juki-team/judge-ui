@@ -10,7 +10,7 @@ import { Memory, Time, Verdict } from './utils';
 
 export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>nickname</T>} />,
-  index: 'nickname',
+  index: 'userNickname',
   field: ({ record: { userNickname, userImageUrl }, isCard }) => (
     <Field className="jk-row center gap">
       <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
@@ -141,7 +141,7 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDT
     </Field>
   ),
   sort: { compareFn: () => (rowA, rowB) => rowA.timeUsed - rowB.timeUsed },
-  filter: { type: 'text-auto' },
+  // filter: { type: 'text-auto' }, // TODO filter by integer
   cardPosition: 'bottom',
   minWidth: 140,
 });
@@ -155,7 +155,7 @@ export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponse
     </Field>
   ),
   sort: { compareFn: () => (rowA, rowB) => rowA.memoryUsed - rowB.memoryUsed },
-  filter: { type: 'text-auto' },
+  // filter: { type: 'text-auto' }, // TODO filter by integer
   cardPosition: 'bottom',
   minWidth: 140,
 });
