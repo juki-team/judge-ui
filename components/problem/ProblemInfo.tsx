@@ -46,7 +46,7 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
           </div>
           <div className="problem-sub-info">
             {languages.map((language) => (
-              <div>
+              <div key={language.language}>
                 <span className="label fw-bd">{PROGRAMMING_LANGUAGE[language.language]?.label}:</span>
                 {(language?.timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T>
               </div>
@@ -63,7 +63,7 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
           </div>
           <div className="problem-sub-info">
             {languages.map((language) => (
-              <div>
+              <div key={language.language}>
                 <span className="label fw-bd">{PROGRAMMING_LANGUAGE[language.language]?.label}:</span>
                 {(language?.memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T>
               </div>

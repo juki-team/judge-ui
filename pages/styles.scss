@@ -67,6 +67,12 @@ a:active {
   position: relative;
 }
 
+.jk-table-inline-header, .jk-table-inline-row {
+  > div {
+    padding: 0 var(--pad-xt);
+  }
+}
+
 .jk-table-inline-header {
   box-sizing: border-box;
   border: 1px solid var(--t-color-gray-5);

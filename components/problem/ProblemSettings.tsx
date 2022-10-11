@@ -1,5 +1,4 @@
-import { ProblemType, ProgrammingLanguage, SubmissionRunStatus } from '@juki-team/commons';
-import { Button, CloseIcon, Input, InputToggle, Modal, MultiSelect, PlusIcon, Select, T, UserCodeEditor } from 'components';
+import { Button, CloseIcon, DeleteIcon, Input, InputToggle, Modal, MultiSelect, PlusIcon, Select, T, UserCodeEditor } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   PROBLEM_MODE,
@@ -11,7 +10,15 @@ import {
 } from 'config/constants';
 import { classNames } from 'helpers';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { EditCreateProblemType, ProblemSettingsByProgrammingLanguageType } from 'types';
+import {
+  EditCreateProblemType,
+  ProblemMode,
+  ProblemSettingsByProgrammingLanguageType,
+  ProblemSettingsPointsByGroupsType,
+  ProblemType,
+  ProgrammingLanguage,
+  SubmissionRunStatus,
+} from 'types';
 
 export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: string[]) => void }) => {
   
@@ -59,6 +66,25 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
   const [source, setSource] = useState('');
   const onCloseModal = () => setOpen(false);
   
+  const fixPointsByGroups = (_pointsByGroups: ProblemSettingsPointsByGroupsType, toFilter?: number): ProblemSettingsPointsByGroupsType => {
+    const pointsByGroups: ProblemSettingsPointsByGroupsType = {};
+    let index = 1;
+    Object.values(_pointsByGroups)
+      .filter(a => !(a.group === 0 || a.group === toFilter))
+      .sort((a, b) => a.group - b.group)
+      .forEach((group) => {
+        if (!Number.isNaN(+group.points) && !Number.isNaN(+group.partial)) {
+          pointsByGroups[index] = { group: index, points: +group.points, partial: +group.partial };
+          index++;
+        }
+      });
+    pointsByGroups[0] = { group: 0, partial: 0, points: 0 };
+    if (index === 1) {
+      return {};
+    }
+    return pointsByGroups;
+  };
+  
   return (
     <div className="jk-col left stretch jk-pad-md gap nowrap">
       <div className="jk-row left nowrap gap">
@@ -88,6 +114,101 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, mode: value } })}
         />
       </div>
+      {problem.settings.mode === ProblemMode.SUBTASK && (
+        <div>
+          <div className="fw-bd tt-se nowrap"><T className="ws-np">points by groups</T>:</div>
+          <div className="jk-row jk-table-inline-header block">
+            <div className="jk-row"><T className="tt-se">group</T></div>
+            <div className="jk-row"><T className="tt-se">points</T></div>
+            <div className="jk-row"><T className="tt-se">partial</T></div>
+          </div>
+          {Object.values(problem.settings.pointsByGroups).map(({ group, points, partial }) => (
+            <div key={group} className="jk-row jk-table-inline-row block">
+              <div className="jk-row center">
+                <T className="tt-se">group</T>&nbsp;{group}
+                {!!group && (
+                  <DeleteIcon
+                    size="small"
+                    className="cr-py"
+                    onClick={() => setProblem({
+                      ...problem,
+                      settings: {
+                        ...problem.settings,
+                        pointsByGroups: fixPointsByGroups(problem.settings.pointsByGroups, group),
+                      },
+                    })}
+                  />
+                )}
+              </div>
+              <div className="jk-row">
+                <Input
+                  disabled={group === 0}
+                  type="number"
+                  value={points}
+                  onChange={points => setProblem({
+                    ...problem,
+                    settings: {
+                      ...problem.settings,
+                      pointsByGroups: fixPointsByGroups({
+                        ...problem.settings.pointsByGroups,
+                        [group]: { ...problem.settings.pointsByGroups[group], points },
+                      }),
+                    },
+                  })}
+                  block
+                />
+              </div>
+              <div className="jk-row">
+                <Input
+                  disabled={group === 0}
+                  type="number"
+                  value={partial}
+                  onChange={partial => setProblem({
+                    ...problem,
+                    settings: {
+                      ...problem.settings,
+                      pointsByGroups: fixPointsByGroups({
+                        ...problem.settings.pointsByGroups,
+                        [group]: { ...problem.settings.pointsByGroups[group], partial },
+                      }),
+                    },
+                  })}
+                  block
+                />
+              </div>
+            </div>
+          ))}
+          <div className="jk-row jk-table-inline-row block">
+            <div className="jk-row"><T className="tt-se">total</T></div>
+            <div className="jk-row">
+              {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.points, 0)}
+            </div>
+            <div className="jk-row">
+              {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.partial, 0)}
+            </div>
+          </div>
+          <div className="jk-row center jk-table-inline-row block">
+            <div
+              className="jk-row center extend link"
+              onClick={() => {
+                const groupIndex = Object.keys(problem.settings.pointsByGroups).length || 1;
+                setProblem({
+                  ...problem,
+                  settings: {
+                    ...problem.settings,
+                    pointsByGroups: fixPointsByGroups({
+                      ...problem.settings.pointsByGroups,
+                      [groupIndex]: { group: groupIndex, points: 0, partial: 0 },
+                    }),
+                  },
+                });
+              }}
+            >
+              <PlusIcon />&nbsp;<T>add group</T>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="jk-row left gap">
         <div className="fw-bd tt-se"><T>problem type</T>:</div>
         <Select

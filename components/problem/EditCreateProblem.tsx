@@ -16,6 +16,7 @@ import {
 import { Input } from '../index';
 import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemSettings } from './ProblemSettings';
+import { ProblemTestCases } from './ProblemTestCases';
 
 export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditCreateProblemType }) => {
   
@@ -78,7 +79,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
             header: <T className="tt-ce">settings</T>,
             body: <ProblemSettings problem={problem} setProblem={setProblem} />,
           },
-          { key: ProblemTab.TESTS, header: <T className="tt-se">test cases</T>, body: <div>test cases</div> },
+          { key: ProblemTab.TESTS, header: <T className="tt-se">test cases</T>, body: <ProblemTestCases /> },
           {
             key: ProblemTab.EDITORIAL,
             header: <T className="tt-se">editorial</T>,
