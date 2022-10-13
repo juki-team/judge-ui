@@ -1,5 +1,4 @@
 import {
-  ArrowIcon,
   ButtonLoader,
   ExclamationIcon,
   FetcherLayer,
@@ -13,7 +12,6 @@ import {
   TwoContentLayout,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUserState } from 'store';

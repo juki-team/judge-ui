@@ -92,6 +92,8 @@ export {
   SnowflakeIcon,
   GearsIcon,
   DragIcon,
+  InputCheckbox,
+  CloudDownloadIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore

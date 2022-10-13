@@ -60,13 +60,13 @@ export default function Home() {
       <Head>
         {/*<PWA />*/}
         <title>Juki Judge App</title>
-        <link rel="icon" href="/favicon.ico" />
+        {/*<link rel="icon" href="/favicon.ico" />*/}
       </Head>
-      <div className="jk-col gap">
-        <div className="jk-row">
-          <div style={{ maxWidth: 'var(--modal-width)' }}><JukiCourtImage /></div>
+      <div className="jk-col extend center gap">
+        <div className="jk-row extend">
+          <div style={{ maxWidth: 'var(--modal-width)a', width: '50%', minWidth: '150px' }}><JukiCourtImage /></div>
         </div>
-        <div className="jk-col gap">
+        <div className="jk-col gap ta-cr">
           <h3><T>competitive programmers home</T></h3>
           <p>Juki Judge <T>is designed to make people improve their programming skills</T></p>
         </div>

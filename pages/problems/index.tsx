@@ -73,7 +73,7 @@ function Problems() {
       sort: { compareFn: () => (rowA, rowB) => rowA.tags.length - rowB.tags.length },
       filter: {
         type: 'select',
-        options: allTags.map(tag => ({ value: tag, label: tag })),
+        options: allTags.filter(tag => !!tag).sort((a, b) => a.localeCompare(b)).map(tag => ({ value: tag, label: tag })),
         callbackFn: ({ selectedOptions }) => ({ tags }) => tags.some(tag => selectedOptions.some(({ value }) => value === tag)),
       } as FilterSelectOfflineType<ProblemSummaryListResponseDTO>,
       cardPosition: 'center',

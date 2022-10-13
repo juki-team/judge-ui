@@ -57,6 +57,7 @@ export type {
   ProblemStatementType,
   ProblemSettingsByProgrammingLanguageType,
   UserManagementSessionResponseDTO,
+  ProblemTestCasesResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType } from '@juki-team/base-ui';

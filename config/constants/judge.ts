@@ -104,8 +104,11 @@ export const JUDGE_API_V1 = {
     CREATE: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem`;
     },
-    TESTS: (id: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/testCases`;
+    TEST_CASES: (problemKey: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${problemKey}/test-cases`;
+    },
+    TEST_CASE: (problemKey: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${problemKey}/test-case`;
     },
     EVALUATOR_SOURCE: (id: string) => {
       return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/evaluatorSource`;
