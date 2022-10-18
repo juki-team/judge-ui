@@ -3,6 +3,7 @@ import {
   DataViewer,
   EditIcon,
   Field,
+  LinkIcon,
   ResetPassword,
   Select,
   T,
@@ -170,6 +171,17 @@ export function Users() {
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
         setLoaderStatusRef={setLoaderStatusRef}
+        extraButtons={[
+          <a
+            href="https://oscargauss.notion.site/Permissions-V2-6487a360cea1482c963d281f6f6317d4"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button icon={<LinkIcon />} size="small" style={{ marginLeft: 'var(--pad-xt)' }}>
+              <T>open roles</T>
+            </Button>
+          </a>,
+        ]}
         {...DEFAULT_DATA_VIEWER_PROPS}
       />
     </>

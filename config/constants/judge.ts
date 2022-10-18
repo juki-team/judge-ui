@@ -108,6 +108,9 @@ export const JUDGE_API_V1 = {
     TEST_CASES: (problemKey: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${problemKey}/test-cases`;
     },
+    TEST_CASES_GROUPS: (problemKey: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${problemKey}/test-cases-groups`;
+    },
     ALL_TEST_CASES: (problemKey: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${problemKey}/all-test-cases`;
     },
