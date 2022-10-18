@@ -77,6 +77,7 @@ export {
   Select,
   SignUpModal as SignUpModalComponent,
   DateLiteral,
+  FileIcon,
   SplitPane,
   MultiSelect,
   T,

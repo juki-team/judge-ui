@@ -1,294 +1,405 @@
 import {
+  Button,
   ButtonLoader,
+  CheckIcon,
   CloudDownloadIcon,
   CloudUploadIcon,
   DeleteIcon,
-  EditIcon,
+  ExclamationIcon,
   FetcherLayer,
+  FileIcon,
   Input,
-  InputCheckbox,
-  Modal,
-  PlusIcon,
+  LoadingIcon,
+  MultiSelect,
+  Popover,
+  ReloadIcon,
   SaveIcon,
-  Select,
   T,
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, humanFileSize } from 'helpers';
-import { useState } from 'react';
+import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize, notifyResponse } from 'helpers';
+import { useNotification } from 'hooks';
+import { useEffect, useState } from 'react';
+import { useSWRConfig } from 'swr';
 import {
+  ButtonLoaderOnClickType,
   ContentResponseType,
   ContentsResponseType,
   EditCreateProblemType,
   HTTPMethod,
+  KeyFileType,
   ProblemMode,
-  ProblemSettingsPointsByGroupsType,
   ProblemTestCasesResponseDTO,
+  Status,
 } from 'types';
 import Custom404 from '../../pages/404';
 
-type newTestCaseType = { group: number, testCaseKey: string, inputFile: File, outputFile: File, state: 'no saved' };
+enum UploadState {
+  NO_FILE = 'NO_FILE',
+  NO_SAVED = 'NO_SAVED',
+  UPLOADING = 'UPLOADING',
+  ERROR_ON_UPLOAD = 'ERROR_ON_UPLOAD',
+  SAVED = 'SAVED',
+}
 
-const AddTestCasesModal = ({
-  problemKey,
-  problemMode,
-  onClose,
-  problemPointsByGroups,
-}: { problemKey: string, problemMode: ProblemMode, problemPointsByGroups: ProblemSettingsPointsByGroupsType, onClose: () => void }) => {
+type NewTestCaseType = {
+  groups: number[],
+  testCaseKey: string,
+  inputFileSize: number,
+  inputFileLastModified: Date,
+  outputFileSize: number,
+  outputFileLastModified: Date,
   
-  const [testCases, setTestCases] = useState<{ [key: string]: newTestCaseType }>({});
-  const [newGroup, setNewGroup] = useState(1);
+  inputNewFile: File,
+  inputNewFileState: UploadState,
+  outputNewFile: File,
+  outputNewFileState: UploadState,
+};
+
+const transform = (problemTestCases: ProblemTestCasesResponseDTO) => {
+  const initialTestCases: { [key: string]: NewTestCaseType } = {};
+  problemTestCases.forEach(testCase => {
+    initialTestCases[testCase.testCaseKey] = {
+      testCaseKey: testCase.testCaseKey,
+      groups: testCase.groups || [],
+      inputFileSize: testCase.inputFileSize,
+      inputFileLastModified: testCase.inputFileLastModified,
+      inputNewFile: null,
+      inputNewFileState: UploadState.NO_FILE,
+      outputFileSize: testCase.outputFileSize,
+      outputFileLastModified: testCase.outputFileLastModified,
+      outputNewFile: null,
+      outputNewFileState: UploadState.NO_FILE,
+    };
+  });
+  return initialTestCases;
+};
+
+const ProblemTestCasesPage = ({
+  problem,
+  testCases: problemTestCases,
+}: { problem: EditCreateProblemType, testCases: ProblemTestCasesResponseDTO }) => {
+  
+  const [testCases, setTestCases] = useState<{ [key: string]: NewTestCaseType }>(transform(problemTestCases));
+  const [newGroups, setNewGroups] = useState([1]);
+  const [lock, setLock] = useState(false);
+  useEffect(() => {
+    setTestCases(transform(problemTestCases));
+  }, [problemTestCases]);
+  const { addNotification } = useNotification();
+  const { mutate } = useSWRConfig();
+  
+  const handleServerDelete = (testCaseKey: string, keyFile: KeyFileType): ButtonLoaderOnClickType => async (setLoaderStatus) => {
+    setLock(true);
+    setLoaderStatus(Status.LOADING);
+    const response = cleanRequest<ContentsResponseType<{}>>(
+      await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, keyFile), {
+        method: HTTPMethod.DELETE,
+      }));
+    await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+    if (notifyResponse(response, addNotification)) {
+      setLoaderStatus(Status.SUCCESS);
+    } else {
+      setLoaderStatus(Status.ERROR);
+    }
+    setLock(false);
+  };
+  
+  const handleDelete = (testCase: NewTestCaseType, keyFile: KeyFileType) => () => {
+    const newTestCases = { ...testCases };
+    newTestCases[testCase.testCaseKey] = { ...newTestCases[testCase.testCaseKey], [keyFile + 'NewFile']: null };
+    if (!newTestCases[testCase.testCaseKey].inputNewFile && !newTestCases[testCase.testCaseKey].outputNewFile && newTestCases[testCase.testCaseKey].inputFileSize === -1 && newTestCases[testCase.testCaseKey].outputFileSize === -1) {
+      delete newTestCases[testCase.testCaseKey];
+    }
+    setTestCases(newTestCases);
+  };
+  
+  const handleInputFiles = (keyFile: KeyFileType) => (fileList: FileList) => {
+    const newTestCases: { [key: string]: NewTestCaseType } = { ...testCases };
+    for (const file of Array.from(fileList)) {
+      const testCaseKey = file.name.replace(/\.[^/.]+$/, '');
+      newTestCases[testCaseKey] = {
+        inputNewFileState: UploadState.NO_FILE,
+        outputNewFileState: UploadState.NO_FILE,
+        inputFileSize: -1,
+        outputFileSize: -1,
+        outputNewFile: null,
+        inputNewFile: null,
+        ...newTestCases[testCaseKey],
+        testCaseKey,
+        groups: problem.settings.mode === ProblemMode.SUBTASK ? newGroups : [1],
+        [keyFile + 'NewFile']: file,
+        [keyFile + 'NewFileState']: UploadState.NO_SAVED,
+      };
+    }
+    setTestCases(newTestCases);
+  };
+  
+  const groupsOptions = Object.values(problem.settings.pointsByGroups).map(group => ({ value: group.group, label: group.group + '' }));
+  
+  const handleUpload = async (testCase: NewTestCaseType, formData: FormData, keyFile: KeyFileType) => {
+    setTestCases(prevState => ({
+      ...prevState,
+      [testCase.testCaseKey]: { ...prevState[testCase.testCaseKey], [keyFile + 'NewFileState']: UploadState.UPLOADING },
+    }));
+    const result = cleanRequest<ContentsResponseType<{}>>(
+      await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE(problem.key), {
+        method: HTTPMethod.POST,
+        body: formData,
+      }));
+    if (result.success) {
+      setTestCases(prevState => ({
+        ...prevState,
+        [testCase.testCaseKey]: { ...prevState[testCase.testCaseKey], [keyFile + 'NewFileState']: UploadState.SAVED },
+      }));
+    } else {
+      setTestCases(prevState => ({
+        ...prevState,
+        [testCase.testCaseKey]: { ...prevState[testCase.testCaseKey], [keyFile + 'NewFIleState']: UploadState.ERROR_ON_UPLOAD },
+      }));
+    }
+  };
+  
   return (
-    <Modal isOpen onClose={onClose}>
-      <div className="jk-pad-md jk-col stretch gap">
-        <div className="jk-col stretch">
-          <div className="jk-table-inline-header jk-row block">
-            <div className="jk-row"><T>group</T></div>
-            <div className="jk-row"><T>test case key</T></div>
-            <div className="jk-row"><T>input</T></div>
-            <div className="jk-row"><T>output</T></div>
-            <div className="jk-row"><T>state</T></div>
+    <div className="jk-col gap extend stretch">
+      <div className="jk-row gap block">
+        <ButtonLoader
+          size="small"
+          disabled={lock}
+          icon={<ReloadIcon />}
+          onClick={async (setLoaderStatus) => {
+            setLock(true);
+            setLoaderStatus(Status.LOADING);
+            await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+            setLoaderStatus(Status.SUCCESS);
+            setLock(false);
+          }}
+        >
+          <T>reload test cases</T> (<T>the changes will be lost</T>)
+        </ButtonLoader>
+        <ButtonLoader
+          size="small"
+          disabled={lock}
+          icon={<SaveIcon />}
+          onClick={async (setLoaderStatus) => {
+            setLock(true);
+            setLoaderStatus(Status.LOADING);
+            for (const testCase of Object.values(testCases)) {
+              if (testCase.inputNewFile) {
+                const formData = new FormData();
+                formData.append('testCaseKey', testCase.testCaseKey);
+                testCase.groups.forEach((group) => formData.append('groups[]', group + ''));
+                formData.append('file', testCase.inputNewFile);
+                formData.append('type', 'input');
+                await handleUpload(testCase, formData, 'input');
+              }
+              if (testCase.outputNewFile) {
+                const formData = new FormData();
+                formData.append('testCaseKey', testCase.testCaseKey);
+                testCase.groups.forEach((group) => formData.append('groups[]', group + ''));
+                formData.append('file', testCase.outputNewFile);
+                formData.append('type', 'output');
+                await handleUpload(testCase, formData, 'output');
+              }
+            }
+            await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+            setLoaderStatus(Status.SUCCESS);
+            setLock(false);
+          }}
+        >
+          <T>upload / replace files</T>
+        </ButtonLoader>
+        <ButtonLoader
+          size="small"
+          disabled={lock}
+          icon={<CloudDownloadIcon />}
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            const result = await authorizedRequest(
+              JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problem.key),
+              { method: HTTPMethod.GET },
+              'blob',
+            );
+            await downloadBlobAsFile(result, problem.key + '.zip');
+            setLoaderStatus(Status.SUCCESS);
+          }}
+        >
+          <T>download all test cases</T>
+        </ButtonLoader>
+      </div>
+      <div className="jk-col stretch">
+        <div className="jk-table-inline-header jk-row block">
+          {(problem.settings.mode === ProblemMode.SUBTASK || problem.settings.mode === ProblemMode.PARTIAL) && (
+            <div className="jk-row">
+              <T>group</T>
+              <ButtonLoader
+                size="small"
+                disabled={lock}
+                icon={<SaveIcon />}
+                onClick={async (setLoaderStatus) => {
+                  setLock(true);
+                  setLoaderStatus(Status.LOADING);
+                  await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+                  setLoaderStatus(Status.SUCCESS);
+                  setLock(false);
+                }}
+              >
+                <T>save changes of groups</T>
+              </ButtonLoader>
+            </div>
+          )}
+          <div className="jk-row"><T>test case key</T></div>
+          <div className="jk-row">
+            <div className="jk-row" style={{ width: 270 }}><T>input</T></div>
           </div>
-          {Object.values(testCases).map((testCase) => {
-            return (
-              <div className="jk-table-inline-row jk-row block">
+          <div className="jk-row">
+            <div className="jk-row" style={{ width: 270 }}><T>output</T></div>
+          </div>
+        </div>
+        {Object.values(testCases).map((testCase) => {
+          return (
+            <div className="jk-table-inline-row jk-row block">
+              {(problem.settings.mode === ProblemMode.SUBTASK || problem.settings.mode === ProblemMode.PARTIAL) && (
                 <div className="jk-row">
-                  {problemMode === ProblemMode.SUBTASK ? (
-                    <Select
-                      options={Object.values(problemPointsByGroups)
-                        .map(group => ({ value: group.group, label: group.group }))}
-                      selectedOption={{ value: testCase.group }}
-                      onChange={({ value }) => {
-                        const newTestCases = { ...testCases };
-                        newTestCases[testCase.testCaseKey] = { ...newTestCases[testCase.testCaseKey], group: value };
-                        setTestCases(newTestCases);
-                      }}
-                    />
-                  ) : testCase.group}
-                </div>
-                <div className="jk-row">
-                  <Input
-                    value={testCase.testCaseKey}
-                    onChange={(testCaseKey) => {
+                  <MultiSelect
+                    disabled={lock}
+                    block
+                    options={groupsOptions}
+                    selectedOptions={testCase.groups.map(group => ({ value: group }))}
+                    onChange={(options) => {
                       const newTestCases = { ...testCases };
-                      newTestCases[testCase.testCaseKey] = { ...newTestCases[testCase.testCaseKey], testCaseKey };
+                      newTestCases[testCase.testCaseKey] = {
+                        ...newTestCases[testCase.testCaseKey],
+                        groups: options.map(({ value }) => value),
+                      };
                       setTestCases(newTestCases);
                     }}
                   />
                 </div>
-                <div className="jk-row center gap">
-                  {testCase.inputFile ? (
-                    <>
-                      {humanFileSize(testCase.inputFile?.size)}
-                      <DeleteIcon
-                        onClick={() => {
-                          const newTestCases = { ...testCases };
-                          newTestCases[testCase.testCaseKey] = { ...newTestCases[testCase.testCaseKey], inputFile: null };
-                          if (!newTestCases[testCase.testCaseKey].inputFile && !newTestCases[testCase.testCaseKey].outputFile) {
-                            delete newTestCases[testCase.testCaseKey];
-                          }
-                          setTestCases(newTestCases);
-                        }}
-                      />
-                    </>
-                  ) : <em><T className="tt-se">not uploaded</T></em>}
-                </div>
-                <div className="jk-row center gap">
-                  {testCase.outputFile ? (
-                    <>
-                      {humanFileSize(testCase.outputFile?.size)}
-                      <DeleteIcon
-                        onClick={() => {
-                          const newTestCases = { ...testCases };
-                          newTestCases[testCase.testCaseKey] = { ...newTestCases[testCase.testCaseKey], outputFile: null };
-                          if (!newTestCases[testCase.testCaseKey].inputFile && !newTestCases[testCase.testCaseKey].outputFile) {
-                            delete newTestCases[testCase.testCaseKey];
-                          }
-                          setTestCases(newTestCases);
-                        }}
-                      />
-                    </>
-                  ) : <em><T className="tt-se">not uploaded</T></em>}
-                </div>
-                <div className="jk-row">
-                  <T>{testCase.state}</T>
-                </div>
+              )}
+              <div className="jk-row">
+                {testCase.testCaseKey}
               </div>
-            );
-          })}
-          <div className="jk-table-inline-row jk-row block">
-            <div className="jk-row">
-              {problemMode === ProblemMode.SUBTASK ? (
-                <Select
-                  options={Object.values(problemPointsByGroups)
-                    .map(group => ({ value: group.group, label: group.group }))}
-                  selectedOption={{ value: newGroup }}
-                  onChange={({ value }) => setNewGroup(value)}
-                />
-              ) : 1}
+              {['input', 'output'].map((keyPut: KeyFileType) => (
+                <div className="jk-row center gap">
+                  <div className={classNames('jk-row gap nowrap', { 'cr-ss': testCase[keyPut + 'FileSize'] !== -1 })}>
+                    <div className="jk-row left" style={{ width: 100 }}>
+                      <CloudUploadIcon /><T>on server</T>:
+                    </div>
+                    <div className="jk-row" style={{ width: 100 }}>
+                      {testCase[keyPut + 'FileSize'] !== -1 ?
+                        <Popover
+                          content={<div className="jk-row center nowrap">
+                            <T className="ws-np fw-bd tt-se">last updated</T>
+                            <span className="ws-np">: {new Date(testCase[keyPut + 'FileLastModified']).toLocaleString()}</span>
+                          </div>}
+                          showPopperArrow
+                        >
+                          <div className="jk-row">{humanFileSize(testCase[keyPut + 'FileSize'])}</div>
+                        </Popover>
+                        : '-'}
+                    </div>
+                    <div className="jk-row left" style={{ width: 70 }}>
+                      {testCase[keyPut + 'FileSize'] !== -1 && (
+                        <>
+                          <Popover
+                            content={<T className="ws-np tt-se">the changes will be lost</T>}
+                            showPopperArrow
+                          >
+                            <div className="jk-row">
+                              <ButtonLoader
+                                type="text"
+                                size="small"
+                                icon={<DeleteIcon />}
+                                onClick={handleServerDelete(testCase.testCaseKey, keyPut)}
+                                disabled={lock}
+                              />
+                            </div>
+                          </Popover>
+                          <ButtonLoader
+                            type="text"
+                            size="small"
+                            icon={<CloudDownloadIcon />}
+                            onClick={async (setLoaderStatus) => {
+                              setLoaderStatus(Status.LOADING);
+                              const result = await authorizedRequest(
+                                JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCase.testCaseKey, keyPut),
+                                { method: HTTPMethod.GET },
+                                'blob',
+                              );
+                              await downloadBlobAsFile(result, problem.key + '.zip');
+                              setLoaderStatus(Status.SUCCESS);
+                            }}
+                            disabled={lock}
+                          />
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className={classNames('jk-row gap nowrap', { 'cr-er': !!testCase[keyPut + 'NewFile'] })}>
+                    <div className="jk-row left" style={{ width: 100 }}>
+                      <FileIcon /><T>on local</T>:
+                    </div>
+                    <div className="jk-row" style={{ width: 100 }}>
+                      {!!testCase[keyPut + 'NewFile'] ? humanFileSize(testCase[keyPut + 'NewFile']?.size) : '-'}
+                    </div>
+                    <div className="jk-row left gap" style={{ width: 70 }}>
+                      {testCase[keyPut + 'NewFile'] && (
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<DeleteIcon />}
+                          onClick={handleDelete(testCase, keyPut)}
+                          disabled={lock}
+                        />
+                      )}
+                      {testCase[keyPut + 'NewFileState'] === UploadState.ERROR_ON_UPLOAD && <ExclamationIcon />}
+                      {testCase[keyPut + 'NewFileState'] === UploadState.UPLOADING && <LoadingIcon />}
+                      {testCase[keyPut + 'NewFileState'] === UploadState.SAVED && <CheckIcon />}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
+          );
+        })}
+        <div className="jk-table-inline-row jk-row block">
+          {(problem.settings.mode === ProblemMode.SUBTASK || problem.settings.mode === ProblemMode.PARTIAL) && (
             <div className="jk-row">
-              <Input disabled />
-            </div>
-            <div className="jk-row">
-              <Input
-                type="files"
-                onChange={(fileList: FileList) => {
-                  const newTestCases: { [key: string]: newTestCaseType } = { ...testCases };
-                  for (const file of Array.from(fileList)) {
-                    const testCaseKey = file.name.replace(/\.[^/.]+$/, '');
-                    newTestCases[testCaseKey] = {
-                      outputFile: null,
-                      ...newTestCases[testCaseKey],
-                      testCaseKey,
-                      group: problemMode === ProblemMode.SUBTASK ? newGroup : 1,
-                      inputFile: file,
-                      state: 'no saved',
-                    };
-                  }
-                  setTestCases(newTestCases);
-                }}
-                className="width-120px"
+              <MultiSelect
+                options={groupsOptions}
+                selectedOptions={newGroups.map(newGroup => ({ value: newGroup }))}
+                onChange={(options) => setNewGroups(options.map(({ value }) => value))}
+                block
+                disabled={lock}
               />
             </div>
-            <div className="jk-row">
-              <Input
-                type="files"
-                onChange={(fileList: FileList) => {
-                  const newTestCases: { [key: string]: newTestCaseType } = { ...testCases };
-                  for (const file of Array.from(fileList)) {
-                    const testCaseKey = file.name.replace(/\.[^/.]+$/, '');
-                    newTestCases[testCaseKey] = {
-                      inputFile: null,
-                      ...newTestCases[testCaseKey],
-                      testCaseKey,
-                      group: problemMode === ProblemMode.SUBTASK ? newGroup : 1,
-                      outputFile: file,
-                      state: 'no saved',
-                    };
-                  }
-                  setTestCases(newTestCases);
-                }}
-                className="width-120px"
-              />
-            </div>
-            <div />
-          </div>
-        </div>
-        <ButtonLoader
-          icon={<SaveIcon />}
-          onClick={async () => {
-            for (const testCase of Object.values(testCases)) {
-              const formData = new FormData();
-              formData.append('testCaseKey', testCase.testCaseKey);
-              formData.append('group', testCase.group + '');
-              if (testCase.inputFile) {
-                formData.append('file', testCase.inputFile);
-              }
-              if (testCase.outputFile) {
-                formData.append('file', testCase.outputFile);
-              }
-              const result = cleanRequest<ContentsResponseType<{}>>(
-                await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE(problemKey), {
-                  method: HTTPMethod.POST,
-                  body: formData,
-                }));
-              console.log({ result });
-              break;
-            }
-          }}
-        >
-          <T>upload all files</T>
-        </ButtonLoader>
-      </div>
-    </Modal>
-  );
-};
-
-const ProblemTestCasesPage = ({ problem, testCases }: { problem: EditCreateProblemType, testCases: ProblemTestCasesResponseDTO }) => {
-  const groups = {};
-  const getKey = (testCase) => testCase.testCaseId + '/' + testCase.testCaseKey;
-  testCases.forEach(testCase => {
-    groups[getKey(testCase)] = testCase.group;
-  });
-  const [changeGroups, setChangeGroups] = useState(groups);
-  
-  const [addTestCasesModal, setAddTestCasesModal] = useState(false);
-  
-  return (
-    <div>
-      <div className="jk-table-inline-header jk-row block">
-        <div className="jk-row"><InputCheckbox checked={false} /></div>
-        {problem.settings.mode === ProblemMode.SUBTASK && (
+          )}
           <div className="jk-row">
-            <div className="jk-col">
-              <T>group</T>
-              <ButtonLoader
-                size="tiny"
-                disabled={!testCases.some((testCase) => changeGroups[getKey(testCase)] !== testCase.group)}
-                icon={<SaveIcon />}><T>save</T></ButtonLoader>
-            </div>
-          </div>
-        )}
-        <div className="jk-row"><T>test case id</T>/<T>test case key</T></div>
-        <div className="jk-row"><T>input</T></div>
-        <div className="jk-row"><T>output</T></div>
-        <div className="jk-row"><T>operations</T></div>
-      </div>
-      {testCases.map(testCase => {
-        return (
-          <div className="jk-table-inline-row jk-row block">
-            <div className="jk-row"><InputCheckbox checked={false} /></div>
-            <div className="jk-row" style={{ backgroundColor: changeGroups[getKey(testCase)] !== testCase.group ? 'red' : '' }}>
-              <Select
-                options={Object.values(problem.settings.pointsByGroups)
-                  .map(group => ({ value: group.group, label: group.group }))}
-                selectedOption={{ value: changeGroups[getKey(testCase)] }}
-                onChange={({ value }) => {
-                  console.log({ value });
-                  setChangeGroups({ ...changeGroups, [getKey(testCase)]: value });
-                }}
+            <label>
+              <div className="jk-button-primary jk-border-radius-inline">
+                <T className="fw-bd tt-ue ">load input files</T>
+              </div>
+              <Input
+                type="files"
+                onChange={handleInputFiles('input')}
+                className="width-120px"
               />
-            </div>
-            <div className="jk-row">{testCase.testCaseId}/{testCase.testCaseKey}</div>
-            <div className="jk-row">
-              {humanFileSize(testCase.inputFileSize)}
-              <EditIcon />
-              <CloudDownloadIcon />
-              <CloudUploadIcon />
-            </div>
-            <div className="jk-row">
-              {humanFileSize(testCase.outputFileSize)}
-              <EditIcon />
-              <CloudDownloadIcon />
-              <CloudUploadIcon />
-            </div>
-            <div className="jk-row">
-              <DeleteIcon />
-            </div>
+            </label>
           </div>
-        );
-      })}
-      <div className="jk-table-inline-row jk-row block">
-        <div className="jk-row"></div>
-        {problem.settings.mode === ProblemMode.SUBTASK && <div className="jk-row" />}
-        <div className="jk-row">new group</div>
-        <div className="jk-row gap center">
-          <PlusIcon onClick={() => setAddTestCasesModal(true)} />
+          <div className="jk-row">
+            <label>
+              <div className="jk-button-primary jk-border-radius-inline">
+                <T className="fw-bd tt-ue">load output files</T>
+              </div>
+              <Input
+                type="files"
+                onChange={handleInputFiles('output')}
+                className="width-120px"
+              />
+            </label>
+          </div>
         </div>
-        <div className="jk-row gap center">
-          <PlusIcon onClick={() => setAddTestCasesModal(true)} />
-        </div>
-        <div className="jk-row">
-        </div>
-        {addTestCasesModal && (
-          <AddTestCasesModal
-            problemKey={problem.key}
-            onClose={() => setAddTestCasesModal(false)}
-            problemMode={problem.settings.mode}
-            problemPointsByGroups={problem.settings.pointsByGroups}
-          />
-        )}
       </div>
     </div>
   );
@@ -304,7 +415,6 @@ export const ProblemTestCases = ({ problem }: { problem: EditCreateProblemType }
         options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}
       >
         {({ data }) => {
-          console.log({ data });
           return <ProblemTestCasesPage problem={problem} testCases={data.content} />;
         }}
       </FetcherLayer>

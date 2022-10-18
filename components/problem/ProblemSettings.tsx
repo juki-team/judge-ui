@@ -114,13 +114,13 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, mode: value } })}
         />
       </div>
-      {problem.settings.mode === ProblemMode.SUBTASK && (
+      {(problem.settings.mode === ProblemMode.SUBTASK || problem.settings.mode === ProblemMode.PARTIAL) && (
         <div>
           <div className="fw-bd tt-se nowrap"><T className="ws-np">points by groups</T>:</div>
           <div className="jk-row jk-table-inline-header block">
             <div className="jk-row"><T className="tt-se">group</T></div>
-            <div className="jk-row"><T className="tt-se">points</T></div>
-            <div className="jk-row"><T className="tt-se">partial</T></div>
+            {problem.settings.mode === ProblemMode.SUBTASK && <div className="jk-row"><T className="tt-se">subtask points</T></div>}
+            {problem.settings.mode === ProblemMode.PARTIAL && <div className="jk-row"><T className="tt-se">partial points</T></div>}
           </div>
           {Object.values(problem.settings.pointsByGroups).map(({ group, points, partial }) => (
             <div key={group} className="jk-row jk-table-inline-row block">
@@ -140,52 +140,60 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                   />
                 )}
               </div>
-              <div className="jk-row">
-                <Input
-                  disabled={group === 0}
-                  type="number"
-                  value={points}
-                  onChange={points => setProblem({
-                    ...problem,
-                    settings: {
-                      ...problem.settings,
-                      pointsByGroups: fixPointsByGroups({
-                        ...problem.settings.pointsByGroups,
-                        [group]: { ...problem.settings.pointsByGroups[group], points },
-                      }),
-                    },
-                  })}
-                  block
-                />
-              </div>
-              <div className="jk-row">
-                <Input
-                  disabled={group === 0}
-                  type="number"
-                  value={partial}
-                  onChange={partial => setProblem({
-                    ...problem,
-                    settings: {
-                      ...problem.settings,
-                      pointsByGroups: fixPointsByGroups({
-                        ...problem.settings.pointsByGroups,
-                        [group]: { ...problem.settings.pointsByGroups[group], partial },
-                      }),
-                    },
-                  })}
-                  block
-                />
-              </div>
+              {problem.settings.mode === ProblemMode.SUBTASK && (
+                <div className="jk-row">
+                  <Input
+                    disabled={group === 0}
+                    type="number"
+                    value={points}
+                    onChange={points => setProblem({
+                      ...problem,
+                      settings: {
+                        ...problem.settings,
+                        pointsByGroups: fixPointsByGroups({
+                          ...problem.settings.pointsByGroups,
+                          [group]: { ...problem.settings.pointsByGroups[group], points },
+                        }),
+                      },
+                    })}
+                    block
+                  />
+                </div>
+              )}
+              {problem.settings.mode === ProblemMode.PARTIAL && (
+                <div className="jk-row">
+                  <Input
+                    disabled={group === 0}
+                    type="number"
+                    value={partial}
+                    onChange={partial => setProblem({
+                      ...problem,
+                      settings: {
+                        ...problem.settings,
+                        pointsByGroups: fixPointsByGroups({
+                          ...problem.settings.pointsByGroups,
+                          [group]: { ...problem.settings.pointsByGroups[group], partial },
+                        }),
+                      },
+                    })}
+                    block
+                  />
+                </div>
+              )}
             </div>
           ))}
           <div className="jk-row jk-table-inline-row block">
             <div className="jk-row"><T className="tt-se">total</T></div>
-            <div className="jk-row">
-              {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.points, 0)}
-            </div>
-            <div className="jk-row">
-              {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.partial, 0)}
-            </div>
+            {problem.settings.mode === ProblemMode.SUBTASK && (
+              <div className="jk-row">
+                {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.points, 0)}
+              </div>
+            )}
+            {problem.settings.mode === ProblemMode.PARTIAL && (
+              <div className="jk-row">
+                {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.partial, 0)}
+              </div>
+            )}
           </div>
           <div className="jk-row center jk-table-inline-row block">
             <div

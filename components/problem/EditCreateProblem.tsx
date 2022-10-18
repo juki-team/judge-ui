@@ -25,7 +25,6 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
   const [problem, setProblem] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { addNotification } = useNotification();
   
-  console.log({ problem, initialProblem });
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const bodyProblem = { ...problem };
@@ -79,7 +78,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
             header: <T className="tt-ce">settings</T>,
             body: <ProblemSettings problem={problem} setProblem={setProblem} />,
           },
-          { key: ProblemTab.TESTS, header: <T className="tt-se">test cases</T>, body: <ProblemTestCases problem={problem}  /> },
+          { key: ProblemTab.TESTS, header: <T className="tt-se">test cases</T>, body: <ProblemTestCases problem={problem} /> },
           {
             key: ProblemTab.EDITORIAL,
             header: <T className="tt-se">editorial</T>,
