@@ -3,6 +3,7 @@ export const DEFAULT_JUKI_PROFILE_IMAGE = 'https://juki-judge.s3.us-east-2.amazo
 export {
   PROBLEM_STATUS,
   ERROR,
+  SYSTEM_ROLE,
   PROBLEM_TYPE,
   PROBLEM_VERDICT,
   PROBLEM_MODE,

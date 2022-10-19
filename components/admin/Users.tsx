@@ -1,9 +1,9 @@
 import {
   Button,
   DataViewer,
-  EditIcon,
   Field,
   LinkIcon,
+  ReloadIcon,
   ResetPassword,
   Select,
   T,
@@ -122,7 +122,7 @@ export function Users() {
     {
       head: <TextHeadCell text={<T className="tt-ue">operations</T>} />,
       index: 'operations',
-      field: ({ record: { status: userStatus, nickname } }) => {
+      field: ({ record: { status: userStatus, nickname, canResetPassword } }) => {
         let setLoaderRef = null;
         return (
           <Field className="jk-col center gap">
@@ -136,13 +136,15 @@ export function Users() {
               selectedOption={{ value: userStatus }}
               onChange={({ value }) => changeUserStatus(nickname, value, setLoaderRef)}
             />
-            <Button
-              icon={<EditIcon />}
-              onClick={() => setNickname(nickname)}
-              size="tiny"
-            >
-              <T>change password</T>
-            </Button>
+            {canResetPassword && (
+              <Button
+                icon={<ReloadIcon />}
+                onClick={() => setNickname(nickname)}
+                size="tiny"
+              >
+                <T>reset password</T>
+              </Button>
+            )}
           </Field>
         );
       },
@@ -165,7 +167,7 @@ export function Users() {
       <DataViewer<UserManagementResponseDTO>
         headers={columns}
         data={data}
-        rows={{ height: 150 }}
+        rows={{ height: 170 }}
         request={request}
         name={QueryParam.ALL_USERS_TABLE}
         searchParamsObject={queryObject}

@@ -3,11 +3,23 @@ import { API_VERSION, JUDGE_BACKEND_BASE_URL, JUKI_SUBMISSIONS_RESOLVE_SERVICE_B
 
 export const JUDGE_API_V1 = {
   SYS: {
-    LS: (folderPath) => {
+    LS: (folderPath: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/ls/${encodeURIComponent(folderPath)}`;
     },
-    CAT: (filePath) => {
+    CAT: (filePath: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/cat/${encodeURIComponent(filePath)}`;
+    },
+    AWS_ECS_TASK_LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-list`;
+    },
+    AWS_ECS_TASK_DEFINITION_LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-definition-list`;
+    },
+    AWS_ECS_STOP_TASK_TASK_ARN: (taskArn: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/stop-task/${encodeURIComponent(taskArn)}`;
+    },
+    AWS_ECS_RUN_TASK_TASK_DEFINITION: (taskDefinition: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
     },
   },
   AUTH: {

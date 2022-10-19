@@ -1,4 +1,4 @@
-import { CurvedArrowIcon, EyeIcon, Input, LoadingIcon, T, UpIcon } from 'components';
+import { Button, CurvedArrowIcon, EyeIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useEffect, useState } from 'react';
@@ -13,19 +13,20 @@ export function FilesManagement() {
   const [back, setBack] = useState(['/']);
   const [filePath, setFilePath] = useState('');
   const [contentFile, setContentFile] = useState('');
+  const loadPath = async () => {
+    setLoading(true);
+    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.SYS.LS(path)));
+    if (response.success) {
+      setList(response.content);
+      setError('');
+    } else {
+      setList([]);
+      setError(response.message);
+    }
+    setLoading(false);
+  };
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.SYS.LS(path)));
-      if (response.success) {
-        setList(response.content);
-        setError('');
-      } else {
-        setList([]);
-        setError(response.message);
-      }
-      setLoading(false);
-    })();
+    (() => loadPath())();
   }, [path]);
   useEffect(() => {
     (async () => {
@@ -70,6 +71,7 @@ export function FilesManagement() {
         <h3>files list</h3>
         <div className="jk-row gap nowrap">
           <Input value={path} onChange={setPath} block />
+          <Button icon={<ReloadIcon />} type="text" onClick={loadPath} />
           <CurvedArrowIcon
             onClick={() => {
               if (back.length > 1) {

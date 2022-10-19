@@ -970,10 +970,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@juki-team/base-ui@^0.0.163":
-  version "0.0.163"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.163/bef6c83a8101a8e108c9d1797b2bfb7af718d0b3#bef6c83a8101a8e108c9d1797b2bfb7af718d0b3"
-  integrity sha512-DGxP9pmcgih1HJZcQDTlx6/OStZU+RxJjAErXKvJnSQNlnILfuSqOouT7g729GKyNWxftctOdshEQkZkuNjH5w==
+"@juki-team/base-ui@^0.0.165":
+  version "0.0.165"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.165/20d5c457deb2bb1f7f07495fafd296ef6e68b028#20d5c457deb2bb1f7f07495fafd296ef6e68b028"
+  integrity sha512-+dKSy78keMV3frAFSGxKkgBEBJSA5JKqUMgmMog4GsFeL7IbFSHre0HhOb3pkCa8U+AO5UBZCodD4iil3MPBgw==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
     "@juki-team/commons" "^0.0.143"
@@ -1007,10 +1007,10 @@
   resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.143/cf7e244a26cd1ab5da224671b2320ccab2cddad8#cf7e244a26cd1ab5da224671b2320ccab2cddad8"
   integrity sha512-zfm/DYehbbWs7qQoV1FCk3uxKvCHuDe3TLIBMuesMyWSfMv5mT8BEsp1cIC99MwHORwr9Rjwl4+5KkwvDmWdSA==
 
-"@juki-team/commons@^0.0.162":
-  version "0.0.162"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.162/35a83d3edcc6a82f95624c7c03695bf472e84aca#35a83d3edcc6a82f95624c7c03695bf472e84aca"
-  integrity sha512-5hwA+oUrLOleTZf+57mhgXa3+OLnrvemBxBkt4sFBKaPWY+42wRZFETO9uWLcE6k2W+o2uQByhDJTZXD3DhLEA==
+"@juki-team/commons@^0.0.169":
+  version "0.0.169"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.169/e9d44389330ec0a5cd4a31c716d613a8679eaca9#e9d44389330ec0a5cd4a31c716d613a8679eaca9"
+  integrity sha512-CpkW1pi+EjIdyKMCrQjDX66sCIl0F/v7I+kOWuDh4Iex8ZWuBlJfoHZ4HPRrgCsfMDBXw7YR4jemPJf3X/14gg==
 
 "@monaco-editor/loader@^1.3.2":
   version "1.3.2"

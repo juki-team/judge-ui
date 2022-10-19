@@ -1,14 +1,21 @@
-import { AllSubmissions, FilesManagement, T, Tabs, TwoContentLayout, Users, UsersLogged } from 'components';
+import { AllSubmissions, FilesManagement, SQSManagement, T, Tabs, TwoContentLayout, Users, UsersLogged } from 'components';
 import { ROUTES } from 'config/constants';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { AdminTab } from 'types';
+import { ECSManagement } from '../../components/admin/ECSManagement';
 import Custom404 from '../404';
 
 function Admin() {
   
   const { query, push } = useRouter();
-  const { canViewUsersManagement, canViewSubmissionsManagement, canViewFilesManagement } = useUserState();
+  const {
+    canViewUsersManagement,
+    canViewSubmissionsManagement,
+    canViewFilesManagement,
+    canViewECSManagement,
+    canViewSQSManagement,
+  } = useUserState();
   
   if (!canViewUsersManagement && !canViewSubmissionsManagement && !canViewFilesManagement) {
     return <Custom404 />;
@@ -23,6 +30,12 @@ function Admin() {
   }
   if (canViewFilesManagement) {
     tabs.push({ key: AdminTab.FILES_MANAGEMENT, header: <T className="tt-ce">files management</T>, body: <FilesManagement /> });
+  }
+  if (canViewSQSManagement) {
+    tabs.push({ key: AdminTab.SQS_MANAGEMENT, header: <T className="tt-ce">sqs management</T>, body: <SQSManagement /> });
+  }
+  if (canViewECSManagement) {
+    tabs.push({ key: AdminTab.ECS_MANAGEMENT, header: <T className="tt-ce">ecs management</T>, body: <ECSManagement /> });
   }
   return (
     <TwoContentLayout>

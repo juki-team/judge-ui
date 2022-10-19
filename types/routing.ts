@@ -7,11 +7,11 @@ export enum ContestTimeStatus {
 export enum AdminTab {
   LOGGED_USERS = 'logged-users',
   USERS = 'users',
-  ATTEMPTS = 'attempts',
   SUBMISSIONS = 'submissions',
-  REJUDGE = 'rejudge',
   RESET_PASSWORD = 'reset-password',
   FILES_MANAGEMENT = 'files-management',
+  SQS_MANAGEMENT = 'sqs-management',
+  ECS_MANAGEMENT = 'ecs-management',
 }
 
 export enum ProblemTab {

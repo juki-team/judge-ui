@@ -20,6 +20,8 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
     <Modal
       isOpen={!!nickname}
       onClose={onClose}
+      shouldCloseOnOverlayClick
+      closeIcon
     >
       <div className="jk-pad-md jk-col gap left stretch">
         <h6><T>reset password</T></h6>
@@ -48,7 +50,7 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
             <InputPassword onChange={value => setNewPassword(value)} value={newPassword} />
           </label>
         </div>
-        <div className="jk-row end">
+        <div className="jk-row right gap">
           <Button type="text" onClick={onClose}><T>cancel</T></Button>
           <ButtonLoader onClick={resetPassword(nickname, newPassword, onClose)}>
             <T>change</T>

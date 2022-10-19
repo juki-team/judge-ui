@@ -1,4 +1,5 @@
-import { CONTEST_ROLE, COURSE_ROLE, JUDGE_API_V1, PROBLEM_ROLE, TEAM_ROLE, USER_ROLE } from 'config/constants';
+import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components';
+import { CONTEST_ROLE, COURSE_ROLE, JUDGE_API_V1, PROBLEM_ROLE, SYSTEM_ROLE, TEAM_ROLE, USER_ROLE } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import React, { useState } from 'react';
 import {
@@ -8,12 +9,11 @@ import {
   HTTPMethod,
   ProblemRole,
   Status,
+  SystemRole,
   TeamRole,
   UserManagementResponseDTO,
   UserRole,
 } from 'types';
-
-import { Button, ButtonLoader, EditIcon, SaveIcon, Select, T, useNotification } from '../index';
 
 export interface ProblemPermissionsProps {
   user: UserManagementResponseDTO,
@@ -21,6 +21,7 @@ export interface ProblemPermissionsProps {
 }
 
 type Roles = {
+  systemRole: SystemRole,
   userRole: UserRole;
   contestRole: ContestRole;
   problemRole: ProblemRole;
@@ -38,10 +39,12 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     problemRole: userToUpdate.problemRole,
     teamRole: userToUpdate.teamRole,
     courseRole: userToUpdate.courseRole,
+    systemRole: userToUpdate.systemRole,
   };
   const [newRoles, setNewRoles] = useState<Roles>(roles);
   
   const ROLES = {
+    system: SYSTEM_ROLE,
     user: USER_ROLE,
     problem: PROBLEM_ROLE,
     contest: CONTEST_ROLE,
@@ -55,7 +58,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
         <div className="permissions-box">
           {Object.entries(ROLES).map(([key, roles]) => (
             <div className="jk-row nowrap space-between" style={{ width: 300 }}>
-              <div style={{ width: 150 }}><T>{key}</T></div>
+              <div style={{ width: 150 }} className="jk-row left"><T>{key}</T></div>
               <Select
                 disabled={!editing}
                 options={Object.values(roles).map(role => ({ label: <T>{role.label}</T>, value: role.value }))}
@@ -68,31 +71,41 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
             </div>
           ))}
         </div>
-        {true && (
+        {userToUpdate.canEditPermissionsData && (
           <div className="editing-actions-box">
             {editing ? (
-              <ButtonLoader
-                type="text"
-                icon={<SaveIcon filledCircle className="cr-py" />}
-                onClick={async setLoaderStatus => {
-                  if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
-                    setLoaderStatus?.(Status.LOADING);
-                    const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.ROLES(userToUpdate.nickname), {
-                      method: HTTPMethod.PUT,
-                      body: JSON.stringify(newRoles),
-                    }));
-                    if (response.success) {
-                      addSuccessNotification(<T>success</T>);
-                      setLoaderStatus?.(Status.SUCCESS);
-                    } else {
-                      addErrorNotification(<T>error</T>);
-                      setLoaderStatus?.(Status.ERROR);
+              <>
+                <ButtonLoader
+                  type="text"
+                  icon={<SaveIcon filledCircle className="cr-py" />}
+                  onClick={async setLoaderStatus => {
+                    if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
+                      setLoaderStatus?.(Status.LOADING);
+                      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.ROLES(userToUpdate.nickname), {
+                        method: HTTPMethod.PUT,
+                        body: JSON.stringify(newRoles),
+                      }));
+                      if (response.success) {
+                        addSuccessNotification(<T>success</T>);
+                        setLoaderStatus?.(Status.SUCCESS);
+                      } else {
+                        addErrorNotification(<T>error</T>);
+                        setLoaderStatus?.(Status.ERROR);
+                      }
+                      refresh();
                     }
-                    refresh();
-                  }
-                  setEditing(false);
-                }}
-              />
+                    setEditing(false);
+                  }}
+                />
+                <Button
+                  icon={<CloseIcon filledCircle className="cr-py" />}
+                  type="text"
+                  onClick={() => {
+                    setNewRoles(roles);
+                    setEditing(false);
+                  }}
+                />
+              </>
             ) : <Button type="text" icon={<EditIcon filledCircle className="cr-py" />} onClick={() => setEditing(true)} />}
           </div>
         )}
