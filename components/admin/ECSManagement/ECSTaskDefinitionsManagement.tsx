@@ -1,5 +1,11 @@
 import { ButtonLoader, CloseIcon, DataViewer, Field, Select, T, TextHeadCell } from 'components/index';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
+import {
+  DEFAULT_DATA_VIEWER_PROPS,
+  JUDGE_API_V1,
+  JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME,
+  JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME,
+  QueryParam,
+} from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
 import { useMemo, useState } from 'react';
@@ -14,9 +20,14 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
   
   return (
     <div className="jk-col">
-      <div className="fw-br">{family}</div>
+      <div className="fw-br">
+        {family}
+        {JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME === family && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
+        {JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME === family && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
+      </div>
       <div className="tx-s">{revision.memory} (MiB) / {revision.cpu} (unit)</div>
       <div className="tx-s"><T className="tt-se fw-bd">registered at</T>:&nbsp;{revision.registeredAt.toLocaleString()}</div>
+      <div className="tx-xs fw-br" style={{ lineHeight: '12px' }}>{revision.taskDefinitionArn}</div>
       <div className="jk-row center gap">
         <Select
           options={revisions.map((definition) => ({ value: definition, label: definition.revision }))}

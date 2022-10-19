@@ -1,5 +1,11 @@
 import { ButtonLoader, CloseIcon, DataViewer, Field, T, TextHeadCell } from 'components/index';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
+import {
+  DEFAULT_DATA_VIEWER_PROPS,
+  JUDGE_API_V1,
+  JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME,
+  JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME,
+  QueryParam,
+} from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
 import { useMemo } from 'react';
@@ -16,10 +22,27 @@ export const ECSTasksManagement = () => {
     {
       head: <TextHeadCell text={<T className="tt-ue">task</T>} />,
       index: 'task ',
-      field: ({ record: { taskArn, group, createdAt, cpu, memory, lastStatus, desiredStatus, launchType, startedAt } }) => (
+      field: ({
+        record: {
+          taskArn,
+          group,
+          createdAt,
+          cpu,
+          memory,
+          lastStatus,
+          desiredStatus,
+          launchType,
+          startedAt,
+          taskDefinitionArn,
+        },
+      }) => (
         <Field className="jk-row center gap">
           <div className="jk-col">
-            <div className="fw-br">{group}</div>
+            <div className="fw-br">
+              {group}
+              {JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
+              {JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
+            </div>
             <div className="tx-s"><T className="fw-bd">started at</T>:&nbsp;{new Date(startedAt).toLocaleString()}</div>
             <div className="tx-s"><T className="fw-bd">created at</T>:&nbsp;{new Date(createdAt).toLocaleString()}</div>
             <div className="tx-s">{memory} (MiB) / {cpu} (unit)</div>
@@ -27,7 +50,8 @@ export const ECSTasksManagement = () => {
               <span className={lastStatus === 'RUNNING' ? 'cr-ss' : 'cr-wg'}>{lastStatus}</span> / {desiredStatus}
             </div>
             <div className="tx-s">{launchType}</div>
-            <div className="tx-xs">{taskArn}</div>
+            <div className="tx-xs fw-br" style={{ lineHeight: '12px' }}>{taskDefinitionArn}</div>
+            <div className="tx-xs" style={{ lineHeight: '12px' }}>{taskArn}</div>
             <ButtonLoader
               size="small"
               icon={<CloseIcon circle />}
@@ -56,7 +80,10 @@ export const ECSTasksManagement = () => {
     },
   ], []);
   
-  const data: TaskResponseDTO[] = (response?.success ? response?.contents : []);
+  const data: TaskResponseDTO[] = (response?.success ? response?.contents : []).map(task => ({
+    ...task,
+    group: task.group.replace('family:', ''),
+  }));
   
   const { queryObject, push } = useRouter();
   

@@ -1,5 +1,5 @@
 import { KeyFileType } from '../../types';
-import { API_VERSION, JUDGE_BACKEND_BASE_URL, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL } from './settings';
+import { API_VERSION, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL } from './settings';
 
 export const JUDGE_API_V1 = {
   SYS: {
@@ -131,12 +131,6 @@ export const JUDGE_API_V1 = {
     },
     TEST_CASE_KEY_FILE: (problemKey: string, testCaseKey: string, keyFile: KeyFileType) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/problem/${problemKey}/test-case/${testCaseKey}/key-file/${keyFile}`;
-    },
-    EVALUATOR_SOURCE: (id: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/evaluatorSource`;
-    },
-    TEST: (id: string, testId?: string) => {
-      return `${JUDGE_BACKEND_BASE_URL}/api/problem/${id}/testCase${testId ? '/' + testId : ''}`;
     },
     SUBMIT: (key: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submit/problem/${key}`;
