@@ -18,12 +18,12 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
     return [
       ...(!mySubmissions ? [submissionNickname()] : []),
       submissionDate(),
-      submissionVerdict(false),
+      submissionVerdict(problem.user.isEditor),
       submissionLanguage(),
       submissionTimeUsed(),
       submissionMemoryUsed(),
     ];
-  }, [mySubmissions]);
+  }, [mySubmissions, problem.user.isEditor]);
   
   const url = (page: number, size: number) => {
     if (mySubmissions) {

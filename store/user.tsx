@@ -30,7 +30,7 @@ export const UserContext = createContext<{ user: UserState, setUser: Dispatch<Se
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const { i18n } = useT();
-  const { push, locale, pathname, asPath, query, isReady } = useRouter();
+  const { locale, pathname, asPath, query, isReady, replace } = useRouter();
   const { data, isLoading, mutate } = useFetcher<ContentResponseType<UserPingResponseDTO>>(JUDGE_API_V1.AUTH.PING());
   const [user, setUser] = useState<UserState>(USER_GUEST);
   const [userIsLoading, setUserIsLoading] = useState(true);
@@ -61,7 +61,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
     if (isReady) {
       const newLocale = user.settings?.preferredLanguage === Language.ES ? 'es' : 'en';
       if (locale !== newLocale) {
-        push({ pathname, query }, asPath, { locale: newLocale });
+        replace({ pathname, query }, asPath, { locale: newLocale });
       }
     }
   }, [user.settings?.preferredLanguage, user.nickname, locale, pathname, /*query,*/ asPath, isReady]);

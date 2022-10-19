@@ -1,3 +1,4 @@
+import { Language } from '@juki-team/commons';
 import { ArrowIcon, ExclamationIcon, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
 import { ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
@@ -68,7 +69,11 @@ export const ProblemStatement = ({
               text={statement.description}
               setText={(description) => setStatement({ ...statement, description })}
             />
-          ) : <MdMathViewer source={statement?.description[preferredLanguage]} />}
+          ) : (
+            <MdMathViewer
+              source={statement?.description[preferredLanguage] || statement?.description[Language.EN] || statement?.description[Language.ES]}
+            />
+          )}
           <h6><T>input</T></h6>
           {!setStatement && !statement?.input[preferredLanguage]?.trim() && (
             <em><T className="tt-se fw-bd">no input description</T></em>
@@ -78,7 +83,11 @@ export const ProblemStatement = ({
               text={statement.input}
               setText={(input) => setStatement({ ...statement, input })}
             />
-          ) : <MdMathViewer source={statement?.input[preferredLanguage]} />}
+          ) : (
+            <MdMathViewer
+              source={statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES]}
+            />
+          )}
           <h6><T>output</T></h6>
           {!setStatement && !statement?.output[preferredLanguage]?.trim() && (
             <em><T className="tt-se fw-bd">no output description</T></em>
@@ -88,7 +97,11 @@ export const ProblemStatement = ({
               text={statement.output}
               setText={(output) => setStatement({ ...statement, output })}
             />
-          ) : <MdMathViewer source={statement?.output[preferredLanguage]} />}
+          ) : (
+            <MdMathViewer
+              source={statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]}
+            />
+          )}
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1">
               <h6><T>input sample</T></h6>
