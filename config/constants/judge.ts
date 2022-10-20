@@ -21,6 +21,9 @@ export const JUDGE_API_V1 = {
     AWS_ECS_RUN_TASK_TASK_DEFINITION: (taskDefinition: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
     },
+    AWS_SQS_LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/list`;
+    },
   },
   AUTH: {
     SIGN_IN: () => {

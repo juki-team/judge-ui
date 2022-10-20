@@ -34,8 +34,6 @@ export type {
   ContentsResponseType,
   SubmissionResponseDTO,
   SubmitResponseDTO,
-  CaseResultGroupType,
-  CaseResultType,
   TestCaseResultType,
   ScoreboardResponseDTO,
   ContestResponseDTO,
@@ -61,6 +59,7 @@ export type {
   SystemRole,
   TaskResponseDTO,
   TaskDefinitionResponseDTO,
+  SqsPropertiesResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType } from '@juki-team/base-ui';
