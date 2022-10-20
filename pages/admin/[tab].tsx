@@ -37,6 +37,7 @@ function Admin() {
   if (canViewECSManagement) {
     tabs.push({ key: AdminTab.ECS_MANAGEMENT, header: <T className="tt-ce">ecs management</T>, body: <ECSManagement /> });
   }
+  
   return (
     <TwoContentLayout>
       <div className="jk-col filled">

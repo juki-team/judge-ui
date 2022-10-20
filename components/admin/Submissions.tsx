@@ -11,7 +11,7 @@ import {
   submissionProblem,
   submissionTimeUsed,
   submissionVerdict,
-} from '../Submissions/';
+} from '../submissions/';
 
 export function AllSubmissions() {
   

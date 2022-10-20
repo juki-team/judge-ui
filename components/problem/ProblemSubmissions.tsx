@@ -10,7 +10,7 @@ import {
   submissionNickname,
   submissionTimeUsed,
   submissionVerdict,
-} from '../Submissions';
+} from '../submissions';
 
 export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: ProblemResponseDTO, mySubmissions?: boolean }) => {
   const { nickname } = useUserState();

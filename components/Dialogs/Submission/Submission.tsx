@@ -1,11 +1,11 @@
+import { CodeViewer, Collapse, DateLiteral, FetcherLayer, Memory, Modal, T, Time, UpIcon, Verdict } from 'components';
+import { JUDGE_API_V1, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
+import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { JUDGE_API_V1, PROGRAMMING_LANGUAGE, QueryParam } from '../../../config/constants';
-import { removeParamQuery } from '../../../helpers';
+import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
 import Custom404 from '../../../pages/404';
-import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from '../../../types';
-import { CodeViewer, Collapse, DateLiteral, FetcherLayer, Modal, T, UpIcon } from '../../index';
-import { hasTimeHasMemory, Memory, Time, Verdict } from '../../Submissions';
+import { hasTimeHasMemory } from '../../submissions';
 import { GroupInfo } from './GroupInfo';
 
 export const SubmissionModal = ({ submitId }: { submitId: string }) => {
@@ -47,42 +47,69 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
             const date = new Date(timestamp);
             const testCasesByGroup: { [key: number]: TestCaseResultType[] } = {};
             (testCaseResults || []).forEach((testCase) => {
-              if (testCasesByGroup[testCase.group]) {
-                testCasesByGroup[testCase.group].push(testCase);
+              const group = testCase.group ? (problemMode === ProblemMode.SUBTASK ? testCase.group : 1) : 0;
+              if (testCasesByGroup[group]) {
+                testCasesByGroup[group].push(testCase);
               } else {
-                testCasesByGroup[testCase.group] = [testCase];
+                testCasesByGroup[group] = [testCase];
               }
             });
-            const isSubtaskProblem = problemMode === ProblemMode.SUBTASK;
             
             return (
               <>
-                {verdictByGroups && !!Object.keys(verdictByGroups).length && (
+                {((verdictByGroups && !!Object.keys(verdictByGroups).length) || (testCasesByGroup && !!Object.keys(testCasesByGroup).length)) && (
                   <div>
-                    <h6><T>subtask info</T></h6>
+                    <h6>
+                      <T>
+                        {problemMode === ProblemMode.SUBTASK
+                          ? 'information by subtasks'
+                          : problemMode === ProblemMode.PARTIAL
+                            ? 'information by groups'
+                            : 'sample and test case information'}
+                      </T>
+                    </h6>
                     <div className="jk-col gap">
                       <div className="jk-row extend block gap jk-table-inline-header">
-                        <div className="jk-row"><T>{isSubtaskProblem ? 'groups' : ''}</T></div>
+                        <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
                         <div className="jk-row"><T>verdict</T></div>
-                        {isSubtaskProblem && <div className="jk-row"><T>points</T></div>}
+                        {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) &&
+													<div className="jk-row"><T>points</T></div>}
                         <div className="jk-row"><T>time</T></div>
                         <div className="jk-row"><T>memory</T></div>
                       </div>
                     </div>
-                    <div className="jk-col jk-border-radius-inline">
-                      {Object.entries(verdictByGroups).map(([groupKey, result]) => (
-                        <GroupInfo
-                          key={groupKey}
-                          groupKey={+groupKey}
-                          isSubtaskProblem={isSubtaskProblem}
-                          memoryUsed={result.memoryUsed}
-                          verdict={result.verdict}
-                          timeUsed={result.timeUsed}
-                          points={result.points}
-                          testCases={testCasesByGroup[result.group] || []}
-                        />
-                      ))}
-                    </div>
+                    {(verdictByGroups && !!Object.keys(verdictByGroups).length) ? (
+                      <div className="jk-col jk-border-radius-inline">
+                        {Object.entries(verdictByGroups).map(([groupKey, result]) => (
+                          <GroupInfo
+                            key={groupKey}
+                            groupKey={+groupKey}
+                            problemMode={problemMode}
+                            memoryUsed={result.memoryUsed}
+                            verdict={result.verdict}
+                            timeUsed={result.timeUsed}
+                            points={result.points}
+                            testCases={testCasesByGroup[result.group] || []}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="jk-col jk-border-radius-inline">
+                        {Object.entries(testCasesByGroup).map(([groupKey, result]) => (
+                          <GroupInfo
+                            key={groupKey}
+                            groupKey={+groupKey}
+                            problemMode={problemMode}
+                            memoryUsed={0}
+                            verdict={ProblemVerdict.PENDING}
+                            timeUsed={0}
+                            points={problemMode === ProblemMode.PARTIAL ? +result.reduce((sum, testCase) => sum + testCase.points, 0)
+                              .toFixed(3) : 0}
+                            testCases={result}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
                 {!!canViewSourceCode && (

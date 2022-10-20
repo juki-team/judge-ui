@@ -11,7 +11,7 @@ import {
   submissionProblem,
   submissionTimeUsed,
   submissionVerdict,
-} from '../../Submissions';
+} from '../../submissions';
 
 export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: ContestResponseDTO, mySubmissions?: boolean }) => {
   
