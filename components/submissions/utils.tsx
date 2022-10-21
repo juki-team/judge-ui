@@ -24,7 +24,7 @@ export const Verdict = ({
   const content = (
     <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
       {verdict}
-      {verdict === ProblemVerdict.PA && points && <>({points})</>}
+      {verdict === ProblemVerdict.PA && points && <>({+points.toFixed(3)})</>}
     </div>
   );
   

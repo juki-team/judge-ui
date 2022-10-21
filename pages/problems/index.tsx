@@ -14,6 +14,7 @@ import {
   ProblemSummaryListResponseDTO,
   ProblemTab,
 } from 'types';
+import { CheckIcon, CloseIcon, Popover } from '../../components';
 
 function Problems() {
   
@@ -50,10 +51,40 @@ function Problems() {
     {
       head: <TextHeadCell text={<T>problem name</T>} />,
       index: 'name',
-      field: ({ record: { key, name } }) => (
+      field: ({ record: { key, name, user } }) => (
         <Field className="jk-row link fw-bd">
           <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
-            <a>{name}</a>
+            <a>
+              <div className="jk-row gap">
+                {name}
+                {user.solved ? (
+                  <Popover
+                    content={<T className="tt-se ws-np">solved</T>}
+                    placement="top"
+                    showPopperArrow
+                  >
+                    <div className="jk-row"><CheckIcon size="small" filledCircle className="cr-ss" /></div>
+                  </Popover>
+                ) : user.tried && (
+                  <Popover
+                    content={<T className="tt-se ws-np">tried</T>}
+                    placement="top"
+                    showPopperArrow
+                  >
+                    <div className="jk-row"><CloseIcon size="small" filledCircle className="cr-wg" /></div>
+                  </Popover>
+                )}
+                {user.isEditor && (
+                  <Popover
+                    content={<T className="tt-se ws-np">you are editor</T>}
+                    placement="top"
+                    showPopperArrow
+                  >
+                    <div className="jk-tag tx-s fw-bd letter-tag">E</div>
+                  </Popover>
+                )}
+              </div>
+            </a>
           </Link>
         </Field>
       ),

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@juki-team/base-ui": "^0.0.166",
-    "@juki-team/commons": "^0.0.173",
+    "@juki-team/commons": "^0.0.174",
     "deep-object-diff": "^1.1.7",
     "i18next": "^21.6.14",
     "net": "^1.0.2",
