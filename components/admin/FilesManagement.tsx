@@ -68,7 +68,7 @@ export function FilesManagement() {
         </Modal>
       )}
       <div>
-        <h3>files list</h3>
+        <h3><T>file list</T></h3>
         <div className="jk-row gap nowrap">
           <Input value={path} onChange={setPath} block />
           <Button icon={<ReloadIcon />} type="text" onClick={loadPath} />
