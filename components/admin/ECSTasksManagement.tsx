@@ -9,6 +9,7 @@ import {
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
 import { useMemo } from 'react';
+import { useSWRConfig } from 'swr';
 import { ContentResponseType, ContentsResponseType, DataViewerHeadersType, HTTPMethod, Status, TaskResponseDTO } from 'types';
 
 export const ECSTasksManagement = () => {
@@ -17,6 +18,7 @@ export const ECSTasksManagement = () => {
     request,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(), { refreshInterval: 10 * 1000 });
+  const { mutate } = useSWRConfig();
   const { addNotification } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
@@ -61,8 +63,9 @@ export const ECSTasksManagement = () => {
                   JUDGE_API_V1.SYS.AWS_ECS_STOP_TASK_TASK_ARN(taskArn),
                   { method: HTTPMethod.POST }),
                 );
-                await request();
-                if (notifyResponse(response, addNotification)) {
+                const success = notifyResponse(response, addNotification);
+                await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+                if (success) {
                   setLoaderStatus(Status.SUCCESS);
                 } else {
                   setLoaderStatus(Status.ERROR);
@@ -97,7 +100,27 @@ export const ECSTasksManagement = () => {
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       setLoaderStatusRef={setLoaderStatusRef}
-      extraButtons={[]}
+      extraButtons={[
+        <ButtonLoader
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+              JUDGE_API_V1.SYS.AWS_ECS_ADJUST_TASKS(),
+              { method: HTTPMethod.POST }),
+            );
+            const success = notifyResponse(response, addNotification);
+            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+            if (success) {
+              setLoaderStatus(Status.SUCCESS);
+            } else {
+              setLoaderStatus(Status.ERROR);
+            }
+          }}
+          style={{ marginLeft: 'var(--pad-xt)' }}
+        >
+          <T>adjust tasks</T>
+        </ButtonLoader>,
+      ]}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

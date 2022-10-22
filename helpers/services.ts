@@ -5,9 +5,10 @@ import {
   ErrorResponseType,
   NewNotificationType,
   NotificationType,
+  RequestFilterType,
   SetLoaderStatusOnClickType,
   Status,
-} from '../types';
+} from 'types';
 import { consoleWarn } from './index';
 
 export const actionLoaderWrapper = async <T extends ContentResponseType<any> | ContentsResponseType<any>>({
@@ -62,4 +63,15 @@ export const actionLoaderWrapper = async <T extends ContentResponseType<any> | C
   } else {
     consoleWarn({ result, message: 'actionLoaderWrapper error' });
   }
+};
+
+export const toFilterUrl = (filter: RequestFilterType) => {
+  let filterUrl = '';
+  Object.entries(filter).forEach(([key, value]) => {
+    if (filterUrl) {
+      filterUrl += '&';
+    }
+    filterUrl += `${key}=${encodeURIComponent(value.toString())}`;
+  });
+  return filterUrl;
 };

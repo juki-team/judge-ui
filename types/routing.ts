@@ -11,7 +11,8 @@ export enum AdminTab {
   RESET_PASSWORD = 'reset-password',
   FILES_MANAGEMENT = 'files-management',
   SQS_MANAGEMENT = 'sqs-management',
-  ECS_MANAGEMENT = 'ecs-management',
+  ECS_TASKS_MANAGEMENT = 'ecs-task-management',
+  ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitios-management',
 }
 
 export enum ProblemTab {

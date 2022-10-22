@@ -24,6 +24,9 @@ export const JUDGE_API_V1 = {
     AWS_SQS_LIST: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/list`;
     },
+    AWS_ECS_ADJUST_TASKS: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/adjust-tasks`;
+    },
   },
   AUTH: {
     SIGN_IN: () => {
@@ -86,23 +89,23 @@ export const JUDGE_API_V1 = {
     },
   },
   SUBMISSIONS: {
-    LIST: (page: number, size: number) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}`;
+    LIST: (page: number, size: number, filterUrl: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
     },
-    NICKNAME: (nickname: string, page: number, size: number) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/nickname/${nickname}?page=${page}&size=${size}`;
+    NICKNAME: (nickname: string, page: number, size: number, filterUrl: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/nickname/${nickname}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
     },
-    CONTEST: (contestKey: string, page: number, size: number) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}?page=${page}&size=${size}`;
+    CONTEST: (contestKey: string, page: number, size: number, filterUrl: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
     },
-    CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}/nickname/${nickname}?page=${page}&size=${size}`;
+    CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, filterUrl: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}/nickname/${nickname}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
     },
-    PROBLEM: (problemKey: string, page: number, size: number) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}?page=${page}&size=${size}`;
+    PROBLEM: (problemKey: string, page: number, size: number, filterUrl: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
     },
-    PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}/nickname/${nickname}?&page=${page}&size=${size}`;
+    PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number, filterUrl: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}/nickname/${nickname}?&page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
     },
   },
   PROBLEM: {

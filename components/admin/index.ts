@@ -1,4 +1,5 @@
-export * from './ECSManagement';
+export * from './ECSTaskDefinitionsManagement';
+export * from './ECSTasksManagement';
 export * from './FilesManagement';
 export * from './ResetPassword';
 export * from './SQSManagement';

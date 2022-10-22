@@ -1,3 +1,5 @@
+import { RequestFilterType } from 'types';
+
 export type PagedArray<T> = {
   list: Array<T>,
   pageNumber: number,
@@ -19,3 +21,5 @@ export enum Status {
   LOADING = 'LOADING',
   NONE = 'NONE'
 }
+
+export type GetUrl = (props: { filter: RequestFilterType, pagination: { page: number, pageSize: number } }) => string

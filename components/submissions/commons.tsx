@@ -73,7 +73,7 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
   ),
   sort: { compareFn: () => (rowA, rowB) => rowB.language.localeCompare(rowA.language) },
   filter: {
-    type: 'select-auto',
+    type: 'select',
     options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
   },
   cardPosition: 'center',
@@ -93,7 +93,7 @@ export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
   );
 };
 
-export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionVerdict = (canRejudge: boolean, filterByRequest?: boolean): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>verdict</T>} />,
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
@@ -108,7 +108,7 @@ export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<Su
   ),
   sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
   filter: {
-    type: 'select-auto',
+    type: 'select',
     options: Object.values(PROBLEM_VERDICT)
       .map(({ value, label }) => ({ label: <T className="tt-se">{label}</T>, value })),
   },

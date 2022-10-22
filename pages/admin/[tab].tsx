@@ -1,9 +1,19 @@
-import { AllSubmissions, FilesManagement, SQSManagement, T, Tabs, TwoContentLayout, Users, UsersLogged } from 'components';
+import {
+  AllSubmissions,
+  ECSTaskDefinitionsManagement,
+  FilesManagement,
+  SQSManagement,
+  T,
+  Tabs,
+  TwoContentLayout,
+  Users,
+  UsersLogged,
+} from 'components';
 import { ROUTES } from 'config/constants';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { AdminTab } from 'types';
-import { ECSManagement } from '../../components/admin/ECSManagement';
+import { ECSTasksManagement } from '../../components/admin/ECSTasksManagement';
 import Custom404 from '../404';
 
 function Admin() {
@@ -29,13 +39,24 @@ function Admin() {
     tabs.push({ key: AdminTab.SUBMISSIONS, header: <T className="tt-ce">submissions</T>, body: <AllSubmissions /> });
   }
   if (canViewFilesManagement) {
-    tabs.push({ key: AdminTab.FILES_MANAGEMENT, header: <T className="tt-ce">files management</T>, body: <FilesManagement /> });
+    tabs.push({ key: AdminTab.FILES_MANAGEMENT, header: <T className="tt-ce">files</T>, body: <FilesManagement /> });
   }
   if (canViewSQSManagement) {
-    tabs.push({ key: AdminTab.SQS_MANAGEMENT, header: <T className="tt-ce">sqs management</T>, body: <SQSManagement /> });
+    tabs.push({ key: AdminTab.SQS_MANAGEMENT, header: <T className="tt-ce">sqs</T>, body: <SQSManagement /> });
   }
   if (canViewECSManagement) {
-    tabs.push({ key: AdminTab.ECS_MANAGEMENT, header: <T className="tt-ce">ecs management</T>, body: <ECSManagement /> });
+    tabs.push({
+      key: AdminTab.ECS_TASKS_MANAGEMENT,
+      header: <T className="tt-ce">ecs task</T>,
+      body: <ECSTasksManagement />,
+    });
+  }
+  if (canViewECSManagement) {
+    tabs.push({
+      key: AdminTab.ECS_DEFINITIONS_TASK_MANAGEMENT,
+      header: <T className="tt-ce">ecs definitions task</T>,
+      body: <ECSTaskDefinitionsManagement />,
+    });
   }
   
   return (

@@ -2,7 +2,8 @@ import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
-import { ContestResponseDTO, DataViewerHeadersType, SubmissionResponseDTO } from 'types';
+import { ContestResponseDTO, DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
+import { toFilterUrl } from '../../../helpers';
 import {
   submissionDate,
   submissionLanguage,
@@ -36,10 +37,11 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
     submissionMemoryUsed(),
   ], [contest.problems]);
   
-  const url = (page: number, size: number) => {
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter }) => {
+    const filterUrl = toFilterUrl(filter);
     return mySubmissions
-      ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, nickname, page, size)
-      : JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, size);
+      ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, nickname, page, pageSize, filterUrl)
+      : JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, filterUrl);
   };
   
   return (

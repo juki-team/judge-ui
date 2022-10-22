@@ -43,7 +43,11 @@ export const ProblemCodeEditor = ({
   const { nickname, isLogged } = useUserState();
   const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
-  const { [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.PAGE_SIZE_TABLE}`]: myStatusPageSize } = query;
+  const {
+    [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.PAGE_SIZE_TABLE}`]: myStatusPageSize,
+    [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`]: filter,
+  } = query;
+  console.log({ filter });
   const { key: problemKey, ...restQuery } = query;
   const languages = useMemo(() => Object.values(problem?.settings.languages || {}), [JSON.stringify(problem?.settings.languages)]);
   const [language, setLanguage] = useState(ProgrammingLanguage.TEXT);
@@ -101,9 +105,10 @@ export const ProblemCodeEditor = ({
               
               if (contest?.problemIndex) {
                 await pushTab(ContestTab.MY_SUBMISSIONS);
-                await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize));
+                // TODO fix the filter Url param 
+                await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize, ''));
               } else {
-                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize));
+                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize, ''));
                 await push({ pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS), query: restQuery });
               }
             }}

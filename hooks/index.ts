@@ -3,9 +3,9 @@ import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
-import { ContentResponseType, ContentsResponseType, HTTPMethod, Status } from 'types';
+import { ContentResponseType, ContentsResponseType, GetUrl, HTTPMethod, Status } from 'types';
 import { useUserState } from '../store';
-import { SetLoaderStatusType } from '../types';
+import { RequestFilterType, SetLoaderStatusType } from '../types';
 
 const fetcher1 = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
   
@@ -79,7 +79,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const [firstRefresh, setFirstRefresh] = useState(false);
-  const { nickname, isLoading: userIsLoading } = useUserState();
+  const { nickname } = useUserState();
   const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(firstRefresh ? url : null, options, true);
   
   const request = useCallback(async () => {
@@ -89,6 +89,46 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
       await mutate();
     }
   }, [mutate, firstRefresh]);
+  
+  useEffect(() => {
+    mutate();
+  }, [nickname]);
+  
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      setLoaderStatusRef.current?.(Status.LOADING);
+    } else {
+      setLoaderStatusRef.current?.(Status.NONE);
+    }
+  }, [isLoading, isValidating]);
+  
+  return {
+    data,
+    error,
+    isLoading: isLoading || isValidating,
+    request,
+    setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
+  };
+};
+
+export const useDataViewerRequester2 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(getUrl: GetUrl, options?: UseFetcherOptionsType) => {
+  
+  const setLoaderStatusRef = useRef<SetLoaderStatusType>();
+  const { nickname } = useUserState();
+  const [url, setUrl] = useState(null);
+  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(url, options, true);
+  
+  const request = useCallback(async ({
+    pagination,
+    filter,
+  }: { pagination?: { page: number, pageSize: number }, filter: RequestFilterType }) => {
+    const newUrl = getUrl({ pagination: pagination || { page: 0, pageSize: 16 }, filter });
+    if (url !== newUrl) {
+      setUrl(newUrl);
+    } else {
+      await mutate();
+    }
+  }, [mutate, url]);
   
   useEffect(() => {
     mutate();

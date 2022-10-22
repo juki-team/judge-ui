@@ -16,7 +16,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const listenSubmission = async (listenSubmissionId, problemKey) => {
     const result = cleanRequest<ContentsResponseType<{ submitId: string, verdict: ProblemVerdict, points: number, contestName?: string, contestProblemIndex?: string, problemName: string }>>(
-      await authorizedRequest(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problemKey, nickname, 1, 16), {
+      await authorizedRequest(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problemKey, nickname, 1, 16, ''), {
         method: HTTPMethod.GET,
       }));
     if (result.success) {

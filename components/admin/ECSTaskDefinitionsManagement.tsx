@@ -9,14 +9,17 @@ import {
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
 import { useMemo, useState } from 'react';
+import { useSWRConfig } from 'swr';
 import { ContentResponseType, ContentsResponseType, DataViewerHeadersType, HTTPMethod, Status, TaskDefinitionResponseDTO } from 'types';
 
 type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date };
 type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[] };
 
 const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) => {
+  
   const { addNotification } = useNotification();
   const [revision, setRevision] = useState<RevisionType>(revisions[0]);
+  const { mutate } = useSWRConfig();
   
   return (
     <div className="jk-col">
@@ -43,7 +46,9 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
               JUDGE_API_V1.SYS.AWS_ECS_RUN_TASK_TASK_DEFINITION(revision.taskDefinitionArn),
               { method: HTTPMethod.POST }),
             );
-            if (notifyResponse(response, addNotification)) {
+            const success = notifyResponse(response, addNotification);
+            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+            if (success) {
               setLoaderStatus(Status.SUCCESS);
             } else {
               setLoaderStatus(Status.ERROR);
@@ -56,6 +61,7 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
     </div>
   );
 };
+
 export const ECSTaskDefinitionsManagement = () => {
   const {
     data: response,

@@ -2,7 +2,8 @@ import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import React, { useMemo } from 'react';
 import { useUserState } from 'store';
-import { DataViewerHeadersType, ProblemResponseDTO, SubmissionResponseDTO } from 'types';
+import { DataViewerHeadersType, GetUrl, ProblemResponseDTO, SubmissionResponseDTO } from 'types';
+import { toFilterUrl } from '../../helpers';
 import {
   submissionDate,
   submissionLanguage,
@@ -25,11 +26,12 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
     ];
   }, [mySubmissions, problem.user.isEditor]);
   
-  const url = (page: number, size: number) => {
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter }) => {
+    const filterUrl = toFilterUrl(filter);
     if (mySubmissions) {
-      return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, page, size);
+      return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, page, pageSize, filterUrl);
     }
-    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.key, page, size);
+    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.key, page, pageSize, filterUrl);
   };
   
   return (
