@@ -19,7 +19,7 @@ export const ECSTasksManagement = () => {
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(), { refreshInterval: 10 * 1000 });
   const { mutate } = useSWRConfig();
-  const { addNotification } = useNotification();
+  const { addNotification, addSuccessNotification } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue">task</T>} />,
@@ -109,6 +109,9 @@ export const ECSTasksManagement = () => {
               { method: HTTPMethod.POST }),
             );
             const success = notifyResponse(response, addNotification);
+            if (response.success) {
+              addSuccessNotification(<pre>{JSON.stringify(response.content, null, 2)}</pre>);
+            }
             await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
             if (success) {
               setLoaderStatus(Status.SUCCESS);

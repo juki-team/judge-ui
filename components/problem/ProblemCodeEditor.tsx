@@ -105,7 +105,7 @@ export const ProblemCodeEditor = ({
               
               if (contest?.problemIndex) {
                 await pushTab(ContestTab.MY_SUBMISSIONS);
-                // TODO fix the filter Url param 
+                // TODO fix the filter Url param
                 await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize, ''));
               } else {
                 await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize, ''));
