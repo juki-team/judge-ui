@@ -1,3 +1,4 @@
+import { getProblemJudgeKey } from '@juki-team/commons';
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useMemo } from 'react';
@@ -23,9 +24,9 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
     submissionProblem({
       header: {
         filter: {
-          type: 'select-auto',
+          type: 'select',
           options: Object.values(contest.problems)
-            .map(({ index, name }) => ({ label: <div>{index ? `(${index})` : ''} {name}</div>, value: index })),
+            .map(({ index, name, key, judge }) => ({ label: <div>{index ? `(${index})` : ''} {name}</div>, value: getProblemJudgeKey(judge, key) })),
         },
       },
       onlyProblem: true,

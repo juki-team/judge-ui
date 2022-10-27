@@ -41,7 +41,7 @@ export const LoginUser = () => {
         triggerOn="click"
         placement="bottomRight"
       >
-        <div className="user-logged-head jk-row gap nowrap cr-we">
+        <div className="user-logged-head jk-row gap nowrap">
           <img
             src={user.imageUrl}
             alt={user.nickname}

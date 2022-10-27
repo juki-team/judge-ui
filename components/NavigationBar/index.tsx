@@ -105,7 +105,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         triggerOn="click"
         placement={placement}
       >
-        <div className="cr-we">
+        <div>
           <Button icon={<SettingIcon />} type="text" />
         </div>
       </Popover>
@@ -126,7 +126,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         triggerOn="click"
         placement={placement}
       >
-        <div className="cr-we">
+        <div>
           <Button icon={<AppsIcon />} type="text" />
         </div>
       </Popover>
@@ -143,7 +143,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       <HorizontalMenu
         menu={menu}
         leftSection={() => (
-          <div className="cr-we navbar" onClick={() => push('/')}>
+          <div className="navbar" onClick={() => push('/')}>
             <JukiJudgeLogoHorImage />
           </div>
         )}

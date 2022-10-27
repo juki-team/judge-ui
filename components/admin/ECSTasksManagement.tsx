@@ -22,8 +22,24 @@ export const ECSTasksManagement = () => {
   const { addNotification, addSuccessNotification } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
+      head: <TextHeadCell text={<T className="tt-ue">group</T>} />,
+      index: 'group',
+      field: ({ record: { group } }) => (
+        <Field className="jk-row center gap">
+          <div className="jk-col fw-br">
+            {group}
+            {JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <T className="tt-ue jk-tag info">low</T>}
+            {JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <T className="tt-ue jk-tag info">high</T>}
+          </div>
+        </Field>
+      ),
+      sort: { compareFn: () => (rowA, rowB) => rowB.group.localeCompare(rowA.group) },
+      cardPosition: 'center',
+      minWidth: 400,
+    },
+    {
       head: <TextHeadCell text={<T className="tt-ue">task</T>} />,
-      index: 'task ',
+      index: 'task',
       field: ({
         record: {
           taskArn,
@@ -40,11 +56,6 @@ export const ECSTasksManagement = () => {
       }) => (
         <Field className="jk-row center gap">
           <div className="jk-col">
-            <div className="fw-br">
-              {group}
-              {JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
-              {JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
-            </div>
             <div className="tx-s"><T className="fw-bd">started at</T>:&nbsp;{new Date(startedAt).toLocaleString()}</div>
             <div className="tx-s"><T className="fw-bd">created at</T>:&nbsp;{new Date(createdAt).toLocaleString()}</div>
             <div className="tx-s">{memory} (MiB) / {cpu} (unit)</div>

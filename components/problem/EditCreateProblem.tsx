@@ -78,7 +78,13 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
             header: <T className="tt-ce">settings</T>,
             body: <ProblemSettings problem={problem} setProblem={setProblem} />,
           },
-          { key: ProblemTab.TESTS, header: <T className="tt-se">test cases</T>, body: <ProblemTestCases problem={problem} /> },
+          ...(editing ? [
+            {
+              key: ProblemTab.TESTS,
+              header: <T className="tt-se">test cases</T>,
+              body: <ProblemTestCases problem={problem} />,
+            },
+          ] : []),
           {
             key: ProblemTab.EDITORIAL,
             header: <T className="tt-se">editorial</T>,

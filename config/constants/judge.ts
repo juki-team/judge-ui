@@ -1,3 +1,4 @@
+import { getProblemJudgeKey, Judge } from '@juki-team/commons';
 import { KeyFileType } from '../../types';
 import { API_VERSION, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL } from './settings';
 
@@ -93,19 +94,19 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
     },
     NICKNAME: (nickname: string, page: number, size: number, filterUrl: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/nickname/${nickname}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&nickname=${nickname}${filterUrl ? '&' + filterUrl : ''}`;
     },
     CONTEST: (contestKey: string, page: number, size: number, filterUrl: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${contestKey}${filterUrl ? '&' + filterUrl : ''}`;
     },
     CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, filterUrl: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/contest/${contestKey}/nickname/${nickname}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${contestKey}&nickname=${nickname}${filterUrl ? '&' + filterUrl : ''}`;
     },
     PROBLEM: (problemKey: string, page: number, size: number, filterUrl: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(Judge.JUKI_JUDGE, problemKey)}${filterUrl ? '&' + filterUrl : ''}`;
     },
     PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number, filterUrl: string) => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions/problem/${problemKey}/nickname/${nickname}?&page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}`;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(Judge.JUKI_JUDGE, problemKey)}&nickname=${nickname}${filterUrl ? '&' + filterUrl : ''}`;
     },
   },
   PROBLEM: {

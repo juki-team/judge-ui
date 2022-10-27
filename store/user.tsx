@@ -1,6 +1,6 @@
 import { T } from 'components';
 import { JUDGE_API_V1, JUKI_TOKEN_NAME, OpenDialog, QueryParam, USER_GUEST } from 'config/constants';
-import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, isStringJson, notifyResponse, toBlob } from 'helpers';
+import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, notifyResponse, toBlob } from 'helpers';
 import { useFetcher, useNotification, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
@@ -46,9 +46,6 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
       setUser(USER_GUEST);
     }
   }, [data]);
-  useEffect(() => {
-    mutate();
-  }, [user.nickname]);
   
   useEffect(() => {
     if (isReady) {
@@ -65,6 +62,16 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
       }
     }
   }, [user.settings?.preferredLanguage, user.nickname, locale, pathname, /*query,*/ asPath, isReady]);
+  
+  useEffect(() => {
+    document.querySelector('body')?.classList.remove('jk-theme-dark');
+    document.querySelector('body')?.classList.remove('jk-theme-light');
+    if (user.settings?.preferredTheme === Theme.DARK) {
+      document.querySelector('body')?.classList.add('jk-theme-dark');
+    } else {
+      document.querySelector('body')?.classList.add('jk-theme-light');
+    }
+  }, [user.settings?.preferredTheme]);
   
   return (
     <UserContext.Provider value={{ user, setUser, isLoading: userIsLoading }}>
@@ -194,19 +201,13 @@ export const useUserDispatch = () => {
     }),
     logout: async (setLoader: SetLoaderStatusOnClickType) => {
       setLoader(Status.LOADING);
-      const response = await authorizedRequest(JUDGE_API_V1.AUTH.SIGN_OUT(), { method: HTTPMethod.POST });
-      if (isStringJson(response)) {
-        const result = JSON.parse(response); // special endpoint that only return success
-        if (result.success === true) {
-          setLoader(Status.SUCCESS);
-          addInfoNotification(<T className="tt-se">see you</T>);
-        } else {
-          setLoader(Status.ERROR);
-          addErrorNotification(<div><T className="tt-se">force Logout</T>{result.message}</div>);
-        }
+      const result = cleanRequest(await authorizedRequest(JUDGE_API_V1.AUTH.SIGN_OUT(), { method: HTTPMethod.POST }));
+      if (result.success === true) {
+        setLoader(Status.SUCCESS);
+        addInfoNotification(<T className="tt-se">see you</T>);
       } else {
         setLoader(Status.ERROR);
-        addErrorNotification(<T className="tt-se">force Logout</T>);
+        addErrorNotification(<div><T className="tt-se">force Logout</T>{result.message}</div>);
       }
       localStorage.removeItem(JUKI_TOKEN_NAME);
       setUser(USER_GUEST);

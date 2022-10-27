@@ -47,7 +47,6 @@ export const ProblemCodeEditor = ({
     [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.PAGE_SIZE_TABLE}`]: myStatusPageSize,
     [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`]: filter,
   } = query;
-  console.log({ filter });
   const { key: problemKey, ...restQuery } = query;
   const languages = useMemo(() => Object.values(problem?.settings.languages || {}), [JSON.stringify(problem?.settings.languages)]);
   const [language, setLanguage] = useState(ProgrammingLanguage.TEXT);

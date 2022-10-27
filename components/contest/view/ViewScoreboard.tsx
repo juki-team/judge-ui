@@ -79,7 +79,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         index: 'points',
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
-            <div className="fw-br cr-py">{totalPoints}</div>
+            <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
             {!isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
           </Field>
         ),

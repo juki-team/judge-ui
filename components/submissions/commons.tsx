@@ -10,7 +10,7 @@ import { Memory, Time, Verdict } from './utils';
 
 export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>nickname</T>} />,
-  index: 'userNickname',
+  index: 'nickname',
   field: ({ record: { userNickname, userImageUrl }, isCard }) => (
     <Field className="jk-row center gap">
       <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
@@ -20,7 +20,7 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
     </Field>
   ),
   sort: { compareFn: () => (rowA, rowB) => rowA.userNickname.localeCompare(rowB.userNickname) },
-  filter: { type: 'text-auto' },
+  filter: { type: 'text' },
   cardPosition: 'top',
   minWidth: 250,
 });
@@ -29,7 +29,7 @@ export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<
   head: (
     <TextHeadCell text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="tt-se">contest</T></>} />
   ),
-  index: 'contestProblemIndex',
+  index: 'problemJudgeKeys',
   field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
     <Field className="jk-row">
       {contestKey ? (
@@ -124,7 +124,7 @@ export const submissionDate = (): DataViewerHeadersType<SubmissionResponseDTO> =
   ),
   sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },
   filter: {
-    type: 'date-range-auto',
+    type: 'date-range',
     getValue: ({ record: { timestamp } }) => new Date(timestamp),
     pickerType: 'year-month-day-hours-minutes',
   },

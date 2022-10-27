@@ -1,4 +1,7 @@
 {
+  "theme": "tema",
+  "light": "claro",
+  "dark": "oscuro",
   "% success rate": "% tasa de éxito",
   "April": "abril",
   "Are you sure?": "¿Estas seguro?",
