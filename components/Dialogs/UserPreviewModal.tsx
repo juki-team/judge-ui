@@ -1,4 +1,4 @@
-import { Button, ExternalIcon, FetcherLayer, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
+import { Button, ExternalIcon, FetcherLayer, Image, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
 import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
@@ -23,7 +23,14 @@ export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
         {({ data }) => (
           <div className="jk-pad-md jk-col stretch gap">
             <div className="jk-row center gap">
-              <img src={data?.content?.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={nickname} />
+              <Image
+                src={data?.content?.imageUrl}
+                className="jk-user-profile-img jk-shadow"
+                alt={nickname}
+                height={100}
+                width={100}
+                style={{ overflow: 'visible' }}
+              />
               <div className="jk-col stretch">
                 <div className="fw-br">{data?.content?.nickname}</div>
                 <div className="cr-g3">{data?.content?.givenName} {data?.content?.familyName}</div>

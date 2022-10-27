@@ -36,13 +36,13 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T>contests</T>,
       icon: <CupIcon />,
       selected: ('/' + pathname).includes('//contest'),
-      menuItemWrapper: (children) => <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}><a>{children}</a></Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}>{children}</Link>,
     },
     {
       label: <T>problems</T>,
       icon: <AssignmentIcon />,
       selected: ('/' + pathname).includes('//problem'),
-      menuItemWrapper: (children) => <Link href={ROUTES.PROBLEMS.LIST()}><a>{children}</a></Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.PROBLEMS.LIST()}>{children}</Link>,
     },
   ];
   if (user.canViewUsersManagement || user.canViewSubmissionsManagement || user.canViewFilesManagement) {
@@ -50,7 +50,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T>admin</T>,
       icon: <SettingIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS)}><a>{children}</a></Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS)}>{children}</Link>,
     });
   }
   const { updateUserSettings, setUser } = useUserDispatch();
@@ -157,7 +157,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           children: ({ toggle }) => (
             <div className="jk-row gap nowrap left mobile-left-side-header">
               <div className="jk-row" onClick={toggle}><MenuIcon className="cr-we" /></div>
-              <Link href="/"><a><JukiJudgeLogoHorImage className="cr-we" /></a></Link>
+              <Link href="/"><JukiJudgeLogoHorImage className="cr-we" /></Link>
             </div>
           ),
           content: ({ toggle }) => (

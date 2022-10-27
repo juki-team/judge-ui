@@ -1,3 +1,4 @@
+import { Image } from 'components';
 import { cloneElement } from 'react';
 import { QueryParam } from '../../config/constants';
 import { replaceParamQuery } from '../../helpers';
@@ -14,7 +15,7 @@ interface UserChipProps {
 export const UserChip = ({ imageUrl, email, familyName, nickname, givenName }: UserChipProps) => {
   return (
     <div className="jk-row nowrap center gap">
-      <img src={imageUrl} className="jk-user-profile-img huge" alt={nickname} />
+      <Image src={imageUrl} className="jk-user-profile-img huge" alt={nickname} height={50} width={50} />
       <div className="jk-col">
         <div>{givenName} {familyName}</div>
         <UserNicknameLink nickname={nickname}>

@@ -1,10 +1,10 @@
-import { Button, ButtonLoader, LoadingIcon, Popover, T, UpIcon } from 'components';
+import { Button, ButtonLoader, Image, LoadingIcon, Popover, T, UpIcon } from 'components';
+import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { addParamQuery, classNames } from 'helpers';
 import { useJukiBase } from 'hooks';
 import { useRouter } from 'next/router';
 import { useUserDispatch, useUserState } from 'store';
 import { ProfileTab } from 'types';
-import { OpenDialog, QueryParam, ROUTES } from '../../config/constants';
 
 export const LoginUser = () => {
   
@@ -22,7 +22,7 @@ export const LoginUser = () => {
       <Popover
         content={
           <div className="jk-col gap user-profile-popup">
-            <img src={user.imageUrl} className="jk-user-profile-img huge" alt={user.nickname} />
+            <Image src={user.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={user.nickname} height={50} width={50} />
             <Button
               className="jk-row nickname bold"
               onClick={() => push(ROUTES.PROFILE.PAGE(user.nickname, ProfileTab.PROFILE))}

@@ -43,11 +43,8 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
               </div>
               {problem.judge === Judge.JUKI_JUDGE ? (
                 (isJudgeOrAdmin ? (
-                  <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }}>
-                    <a target="_blank">
-                      <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon
-                        size="tiny" /></div>
-                    </a>
+                  <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} target="_blank">
+                    <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon size="tiny" /></div>
                   </Link>
                 ) : (<div className="problem-id tx-xs fw-bd cr-g3">ID: {problem.key}</div>))
               ) : (

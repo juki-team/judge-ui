@@ -43,10 +43,8 @@ export const ProblemStatement = ({
       {contestIndex && (
         <div className="problem-head-box tx-xh fw-br jk-row">
           <div className="jk-row cr-py back-link">
-            <Link href={{ pathname: ROUTES.CONTESTS.VIEW('' + key, ContestTab.PROBLEMS), query }}>
-              <a className="jk-row nowrap fw-bd link">
-                <ArrowIcon rotate={-90} />
-              </a>
+            <Link href={{ pathname: ROUTES.CONTESTS.VIEW('' + key, ContestTab.PROBLEMS), query }} className="jk-row nowrap fw-bd link">
+              <ArrowIcon rotate={-90} />
             </Link>
           </div>
           <div className="jk-row center gap nowrap">

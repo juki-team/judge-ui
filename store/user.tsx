@@ -1,7 +1,14 @@
 import { T } from 'components';
-import { JUDGE_API_V1, JUKI_TOKEN_NAME, OpenDialog, QueryParam, USER_GUEST } from 'config/constants';
+import {
+  JUDGE_API_V1,
+  JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL,
+  JUKI_TOKEN_NAME,
+  OpenDialog,
+  QueryParam,
+  USER_GUEST,
+} from 'config/constants';
 import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, notifyResponse, toBlob } from 'helpers';
-import { useFetcher, useNotification, useT } from 'hooks';
+import { useFetcher, useNotification, useT, useMatchMutate } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useSWRConfig } from 'swr';
@@ -31,7 +38,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const { i18n } = useT();
   const { locale, pathname, asPath, query, isReady, replace } = useRouter();
-  const { data, isLoading, mutate } = useFetcher<ContentResponseType<UserPingResponseDTO>>(JUDGE_API_V1.AUTH.PING());
+  const { data, isLoading } = useFetcher<ContentResponseType<UserPingResponseDTO>>(JUDGE_API_V1.AUTH.PING());
   const [user, setUser] = useState<UserState>(USER_GUEST);
   const [userIsLoading, setUserIsLoading] = useState(true);
   useEffect(() => {
@@ -43,10 +50,17 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
     if (data?.success) {
       setUser({ ...data?.content, isLogged: true });
     } else {
-      setUser(USER_GUEST);
+      let preferredLanguage: Language = localStorage.getItem('preferredLanguage') as Language;
+      if (preferredLanguage !== Language.EN && preferredLanguage !== Language.ES) {
+        preferredLanguage = Language.EN;
+      }
+      let preferredTheme: Theme = localStorage.getItem('preferredTheme') as Theme;
+      if (preferredTheme !== Theme.DARK && preferredTheme !== Theme.LIGHT) {
+        preferredTheme = Theme.LIGHT;
+      }
+      setUser({ ...USER_GUEST, settings: { preferredTheme, preferredLanguage } });
     }
   }, [data]);
-  
   useEffect(() => {
     if (isReady) {
       const newLocale = user.settings?.preferredLanguage === Language.ES ? 'es' : 'en';
@@ -95,6 +109,11 @@ export const useUserDispatch = () => {
   const { setUser } = useContext(UserContext);
   const { push, query } = useRouter();
   const { mutate } = useSWRConfig();
+  const matchMutate = useMatchMutate();
+  
+  const refreshAllRequest = async () => {
+    await matchMutate(new RegExp(`^${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api`, 'g'));
+  }
   
   return {
     setUser,
@@ -174,6 +193,7 @@ export const useUserDispatch = () => {
         localStorage.setItem(JUKI_TOKEN_NAME, result.content.sessionId);
         setUser({ ...result.content, isLogged: true });
         addSuccessNotification(<T className="tt-se">welcome back</T>);
+        refreshAllRequest();
       },
       setLoader,
     }),
@@ -196,6 +216,7 @@ export const useUserDispatch = () => {
         addSuccessNotification(<T className="tt-se">welcome</T>);
         await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
         setUser({ ...result.content, isLogged: true });
+        refreshAllRequest();
       },
       setLoader,
     }),
@@ -211,6 +232,7 @@ export const useUserDispatch = () => {
       }
       localStorage.removeItem(JUKI_TOKEN_NAME);
       setUser(USER_GUEST);
+      refreshAllRequest();
     },
     deleteSession: (sessionId: string): ButtonLoaderOnClickType => async (setLoaderStatus) => {
       setLoaderStatus?.(Status.LOADING);

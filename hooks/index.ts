@@ -2,7 +2,7 @@ import { authorizedRequest } from '@juki-team/base-ui';
 import { cleanRequest } from 'helpers';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { ContentResponseType, ContentsResponseType, GetUrl, HTTPMethod, Status } from 'types';
 import { useUserState } from '../store';
 import { RequestFilterType, SetLoaderStatusType } from '../types';
@@ -150,6 +150,28 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
     setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
   };
 };
+
+export function useMatchMutate() {
+  const { cache, mutate } = useSWRConfig()
+  return (matcher, ...args) => {
+    if (!(cache instanceof Map)) {
+      throw new Error('matchMutate requires the cache provider to be a Map instance')
+    }
+    
+    const keys = []
+    
+    // @ts-ignore
+    for (const key of cache.keys()) {
+      console.log({ key });
+      if (matcher.test(key)) {
+        keys.push(key)
+      }
+    }
+    console.log({ keys });
+    const mutations = keys.map((key) => mutate(key, ...args))
+    return Promise.all(mutations)
+  }
+}
 
 export {
   useOutsideAlerter,

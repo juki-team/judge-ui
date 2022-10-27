@@ -4,6 +4,7 @@ import {
   DataViewer,
   Field,
   GearsIcon,
+  Image,
   Popover,
   SnowflakeIcon,
   T,
@@ -58,7 +59,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         index: 'nickname',
         field: ({ record: { userNickname, userImageUrl } }) => (
           <Field className={classNames('jk-row center gap', { 'own': userNickname === user.nickname })}>
-            <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
+            <Image src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} height={38} width={38} />
             <UserNicknameLink nickname={userNickname}>
               <div
                 className={classNames('jk-border-radius ', {

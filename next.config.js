@@ -6,7 +6,7 @@ const withPWA = require('next-pwa')({
 	// scope: '/app',
 	// sw: 'service-worker.js',
 	//...
-})
+});
 
 // const withTM = require('next-transpile-modules')(['react-markdown']);
 // const withTM = require('next-transpile-modules')([
@@ -21,6 +21,25 @@ module.exports = withPWA({
 	i18n: {
 		locales: ['en', 'es'],
 		defaultLocale: 'en',
+	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'images.juki.pub',
+				pathname: '/u/**',
+			},
+			{
+				protocol: 'https',
+				hostname: 'images.juki.pub',
+				pathname: '/c/**',
+			},
+			{
+				protocol: 'https',
+				hostname: 'juki-judge.s3.us-east-2.amazonaws.com',
+				pathname: '/public/user/image/**',
+			},
+		],
 	},
 	async redirects() {
 		return [

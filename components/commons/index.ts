@@ -102,6 +102,7 @@ export {
 
 export * from './CheckUnsavedChanges';
 // export * from './messages';
+export * from './Image';
 export * from './PagedDataViewer';
 export * from './ProblemSelector';
 export * from './TextLangEdit';
