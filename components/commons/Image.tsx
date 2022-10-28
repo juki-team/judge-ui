@@ -12,13 +12,15 @@ interface ImageProps {
 
 export const Image = ({ src, className, alt, height, width, style }: ImageProps) => {
   return (
-    <ImageComp
-      src={src}
-      className={className}
-      alt={alt}
-      height={height}
-      width={width}
-      style={style}
-    />
+    <span className="next-js-image">
+      <ImageComp
+        src={src}
+        className={className}
+        alt={alt}
+        height={height}
+        width={width}
+        style={style}
+      />
+    </span>
   );
 };

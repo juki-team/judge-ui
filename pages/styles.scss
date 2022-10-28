@@ -154,3 +154,9 @@ li > * {
   width: 120px;
   display: none;
 }
+
+.next-js-image { // Remove fot NextJs 13
+  > span {
+    overflow: visible !important;
+  }
+}

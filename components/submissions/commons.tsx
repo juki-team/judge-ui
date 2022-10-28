@@ -37,19 +37,21 @@ export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<
           href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
           target={props?.blankTarget ? '_blank' : ''}
         >
-          {props?.onlyProblem ? (
-            <div className="jk-row link">
-              {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
-            </div>
-          ) : (
-            <div className="jk-row link">
-              {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
-            </div>
-          )}
+          <a>
+            {props?.onlyProblem ? (
+              <div className="jk-row link">
+                {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+              </div>
+            ) : (
+              <div className="jk-row link">
+                {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+              </div>
+            )}
+          </a>
         </Link>
       ) : (
         <Link href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)} target={props?.blankTarget ? '_blank' : ''}>
-          <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
+          <a><div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div></a>
         </Link>
       )}
     </Field>

@@ -9,7 +9,9 @@ export default function Custom404() {
         <h3><T className="tt-ue">page not found</T></h3>
         <p><T className="tt-se">the page does not exist or you do not have permissions to view it</T></p>
         <Link href="/" className="link tt-ue">
-          <div className="jk-row gap"><HomeIcon /><T>go to home page</T></div>
+          <a>
+            <div className="jk-row gap"><HomeIcon /><T>go to home page</T></div>
+          </a>
         </Link>
       </div>
     </div>

@@ -96,7 +96,9 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
             <Popover content={<div className="ws-np">{problem.name}</div>}>
               <div className="jk-col extend fw-bd">
                 <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index), query }}>
-                  {problem.index}
+                  <a>
+                    {problem.index}
+                  </a>
                 </Link>
               </div>
             </Popover>

@@ -70,50 +70,52 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
         <Field className="jk-row">
           {user.isGuest || user.isAdmin || user.isContestant || user.isJudge || user.isSpectator ? (
             <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
-              <div className="jk-row gap link text-semi-bold">
-                {name}
-                {user.isAdmin ? (
-                  <Popover
-                    content={<T className="tt-se ws-np">you are admin</T>}
-                    placement="top"
-                    showPopperArrow
-                  >
-                    <div className="jk-tag tx-s fw-bd letter-tag">A</div>
-                  </Popover>
-                ) : user.isJudge ? (
-                  <Popover
-                    content={<T className="tt-se ws-np">you are judge</T>}
-                    placement="top"
-                    showPopperArrow
-                  >
-                    <div className="jk-tag tx-s fw-bd letter-tag">J</div>
-                  </Popover>
-                ) : user.isContestant ? (
-                  <Popover
-                    content={<T className="tt-se ws-np">registered</T>}
-                    placement="top"
-                    showPopperArrow
-                  >
-                    <div><CheckIcon filledCircle className="cr-ss" /></div>
-                  </Popover>
-                ) : user.isGuest ? (
-                  <Popover
-                    content={<T className="tt-se ws-np">you are guest</T>}
-                    placement="top"
-                    showPopperArrow
-                  >
-                    <div className="jk-tag tx-s fw-bd letter-tag">G</div>
-                  </Popover>
-                ) : user.isSpectator && (
-                  <Popover
-                    content={<T className="tt-se ws-np">you are spectator</T>}
-                    placement="top"
-                    showPopperArrow
-                  >
-                    <div className="jk-tag tx-s fw-bd letter-tag">S</div>
-                  </Popover>
-                )}
-              </div>
+              <a>
+                <div className="jk-row gap link text-semi-bold">
+                  {name}
+                  {user.isAdmin ? (
+                    <Popover
+                      content={<T className="tt-se ws-np">you are admin</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-s fw-bd letter-tag">A</div>
+                    </Popover>
+                  ) : user.isJudge ? (
+                    <Popover
+                      content={<T className="tt-se ws-np">you are judge</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-s fw-bd letter-tag">J</div>
+                    </Popover>
+                  ) : user.isContestant ? (
+                    <Popover
+                      content={<T className="tt-se ws-np">registered</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div><CheckIcon filledCircle className="cr-ss" /></div>
+                    </Popover>
+                  ) : user.isGuest ? (
+                    <Popover
+                      content={<T className="tt-se ws-np">you are guest</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-s fw-bd letter-tag">G</div>
+                    </Popover>
+                  ) : user.isSpectator && (
+                    <Popover
+                      content={<T className="tt-se ws-np">you are spectator</T>}
+                      placement="top"
+                      showPopperArrow
+                    >
+                      <div className="jk-tag tx-s fw-bd letter-tag">S</div>
+                    </Popover>
+                  )}
+                </div>
+              </a>
             </Link>
           ) : (
             <div className="jk-row gap text-semi-bold">
