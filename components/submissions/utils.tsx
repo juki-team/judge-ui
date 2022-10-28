@@ -11,7 +11,7 @@ export const Time = ({ verdict, timeUsed }: { verdict: ProblemVerdict, timeUsed:
 };
 
 export const Memory = ({ verdict, memoryUsed }: { verdict: ProblemVerdict, memoryUsed: number }) => {
-  return hasTimeHasMemory(verdict) ? <>{memoryUsed}&nbsp;<T className="cr-g3">kb</T></> : <>-</>;
+  return hasTimeHasMemory(verdict) ? <>{memoryUsed}&nbsp;<T className="cr-g3">KB</T></> : <>-</>;
 };
 
 export const Verdict = ({

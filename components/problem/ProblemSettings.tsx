@@ -282,7 +282,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           value={problem.settings.memoryLimit}
           onChange={value => setProblem({ ...problem, settings: { ...problem.settings, memoryLimit: value } })}
         />
-        <T>kb</T>
+        <T>KB</T>
       </div>
       <div className="jk-row left gap">
         <div className="fw-bd tt-se"><T>presentation error</T>:</div>
@@ -367,7 +367,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                   })}
                   block
                 />
-                <T>kb</T>
+                <T>KB</T>
               </div>
             </div>
           );
