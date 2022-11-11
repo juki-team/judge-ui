@@ -8,9 +8,9 @@ import {
   USER_GUEST,
 } from 'config/constants';
 import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, notifyResponse, toBlob } from 'helpers';
-import { useFetcher, useNotification, useT, useMatchMutate } from 'hooks';
+import { useJukiBase, useMatchMutate, useNotification, useT } from 'hooks';
 import { useRouter } from 'next/router';
-import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
+import React, { createContext, PropsWithChildren, useEffect } from 'react';
 import { useSWRConfig } from 'swr';
 import {
   ButtonLoaderOnClickType,
@@ -21,46 +21,17 @@ import {
   Status,
   Theme,
   UserPingResponseDTO,
+  UserState,
 } from 'types';
 
-export interface UserState extends UserPingResponseDTO {
-  isLogged: boolean,
-}
-
-export const UserContext = createContext<{ user: UserState, setUser: Dispatch<SetStateAction<UserState>>, isLoading: boolean }>({
-  user: USER_GUEST,
-  setUser: () => {
-  },
-  isLoading: true,
-});
+export const UserContext = createContext<{}>({});
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const { i18n } = useT();
   const { locale, pathname, asPath, query, isReady, replace } = useRouter();
-  const { data, isLoading } = useFetcher<ContentResponseType<UserPingResponseDTO>>(JUDGE_API_V1.AUTH.PING());
-  const [user, setUser] = useState<UserState>(USER_GUEST);
-  const [userIsLoading, setUserIsLoading] = useState(true);
-  useEffect(() => {
-    if (!isLoading) {
-      setUserIsLoading(false);
-    }
-  }, [isLoading]);
-  useEffect(() => {
-    if (data?.success) {
-      setUser({ ...data?.content, isLogged: true });
-    } else {
-      let preferredLanguage: Language = localStorage.getItem('preferredLanguage') as Language;
-      if (preferredLanguage !== Language.EN && preferredLanguage !== Language.ES) {
-        preferredLanguage = Language.EN;
-      }
-      let preferredTheme: Theme = localStorage.getItem('preferredTheme') as Theme;
-      if (preferredTheme !== Theme.DARK && preferredTheme !== Theme.LIGHT) {
-        preferredTheme = Theme.LIGHT;
-      }
-      setUser({ ...USER_GUEST, settings: { preferredTheme, preferredLanguage } });
-    }
-  }, [data]);
+  const { user } = useJukiBase();
+  
   useEffect(() => {
     if (isReady) {
       const newLocale = user.settings?.preferredLanguage === Language.ES ? 'es' : 'en';
@@ -88,15 +59,14 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   }, [user.settings?.preferredTheme]);
   
   return (
-    <UserContext.Provider value={{ user, setUser, isLoading: userIsLoading }}>
+    <UserContext.Provider value={{}}>
       {children}
     </UserContext.Provider>
   );
 };
 
 export const useUserState = (): (UserState & { isLoading: boolean }) => {
-  const { user, isLoading } = useContext(UserContext);
-  
+  const { user, userIsLoading: isLoading } = useJukiBase();
   return {
     ...user,
     isLoading,
@@ -106,14 +76,14 @@ export const useUserState = (): (UserState & { isLoading: boolean }) => {
 export const useUserDispatch = () => {
   
   const { addNotification, addSuccessNotification, addErrorNotification, addInfoNotification } = useNotification();
-  const { setUser } = useContext(UserContext);
+  const { setUser } = useJukiBase();
   const { push, query } = useRouter();
   const { mutate } = useSWRConfig();
   const matchMutate = useMatchMutate();
   
   const refreshAllRequest = async () => {
     await matchMutate(new RegExp(`^${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/api`, 'g'));
-  }
+  };
   
   return {
     setUser,

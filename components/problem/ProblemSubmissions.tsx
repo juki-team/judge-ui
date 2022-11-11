@@ -1,4 +1,4 @@
-import { PagedDataViewer } from 'components';
+import { PagedDataViewer, submissionProblem } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import React, { useMemo } from 'react';
 import { useUserState } from 'store';
@@ -18,6 +18,7 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => {
     return [
       ...(!mySubmissions ? [submissionNickname()] : []),
+      submissionProblem({ onlyContest: true }),
       submissionDate(),
       submissionVerdict(problem.user.isEditor),
       submissionLanguage(),

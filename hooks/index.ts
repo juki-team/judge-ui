@@ -1,11 +1,18 @@
-import { authorizedRequest } from '@juki-team/base-ui';
-import { cleanRequest } from 'helpers';
+import { useFetcher } from '@juki-team/base-ui';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import useSWR, { useSWRConfig } from 'swr';
-import { ContentResponseType, ContentsResponseType, GetUrl, HTTPMethod, Status } from 'types';
-import { useUserState } from '../store';
-import { RequestFilterType, SetLoaderStatusType } from '../types';
+import { useUserState } from 'store';
+import { useSWRConfig } from 'swr';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  GetUrl,
+  HTTPMethod,
+  RequestFilterType,
+  SetLoaderStatusType,
+  Status,
+  UseFetcherOptionsType,
+} from 'types';
 
 const fetcher1 = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
   
@@ -20,41 +27,6 @@ const fetcher1 = (url: string, method?: HTTPMethod, body?: string, signal?: Abor
     ...(body ? { body } : {}),
     ...(signal ? { signal } : {}),
   }).then((res) => res.text());
-};
-
-export type UseFetcherOptionsType = {
-  revalidateIfStale?: boolean,
-  revalidateOnFocus?: boolean,
-  revalidateOnReconnect?: boolean,
-  refreshInterval?: number,
-}
-const fetcher = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
-  return authorizedRequest(url, { method, body, signal });
-};
-
-export const useFetcher = <T extends (ContentResponseType<any> | ContentsResponseType<any>)>(url?: string, options?: UseFetcherOptionsType, debug?: boolean) => {
-  
-  const {
-    revalidateIfStale = true,
-    revalidateOnFocus = true,
-    revalidateOnReconnect = true,
-    refreshInterval,
-  } = options || {};
-  
-  const { data, error, mutate, isValidating } = useSWR(url, fetcher, {
-    revalidateIfStale,
-    revalidateOnFocus,
-    revalidateOnReconnect,
-    refreshInterval,
-  });
-  
-  return useMemo(() => ({
-    data: data ? cleanRequest<T>(data) : undefined,
-    error,
-    isLoading: error === undefined && data === undefined,
-    mutate,
-    isValidating,
-  }), [data, error, mutate, isValidating]);
 };
 
 export const useRouter = () => {
@@ -80,7 +52,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const [firstRefresh, setFirstRefresh] = useState(false);
   const { nickname } = useUserState();
-  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(firstRefresh ? url : null, options, true);
+  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(firstRefresh ? url : null, options);
   
   const request = useCallback(async () => {
     if (!firstRefresh) {
@@ -116,7 +88,7 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const { nickname } = useUserState();
   const [url, setUrl] = useState(null);
-  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(url, options, true);
+  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(url, options);
   
   const request = useCallback(async ({
     pagination,
@@ -152,25 +124,23 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
 };
 
 export function useMatchMutate() {
-  const { cache, mutate } = useSWRConfig()
+  const { cache, mutate } = useSWRConfig();
   return (matcher, ...args) => {
     if (!(cache instanceof Map)) {
-      throw new Error('matchMutate requires the cache provider to be a Map instance')
+      throw new Error('matchMutate requires the cache provider to be a Map instance');
     }
     
-    const keys = []
+    const keys = [];
     
     // @ts-ignore
     for (const key of cache.keys()) {
-      console.log({ key });
       if (matcher.test(key)) {
-        keys.push(key)
+        keys.push(key);
       }
     }
-    console.log({ keys });
-    const mutations = keys.map((key) => mutate(key, ...args))
-    return Promise.all(mutations)
-  }
+    const mutations = keys.map((key) => mutate(key, ...args));
+    return Promise.all(mutations);
+  };
 }
 
 export {
@@ -178,6 +148,7 @@ export {
   useNotification,
   useT,
   useJukiBase,
+  useFetcher,
 } from '@juki-team/base-ui';
 export * from './contest';
 export * from './useOnline';

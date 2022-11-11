@@ -1,8 +1,14 @@
 import { LoadingIcon } from 'components';
 import { renderReactNodeOrFunction, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useFetcher, UseFetcherOptionsType } from 'hooks';
+import { useFetcher } from 'hooks';
 import { useEffect } from 'react';
-import { ContentResponseType, ContentsResponseType, ReactNodeOrFunctionP1Type, ReactNodeOrFunctionType } from 'types';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  ReactNodeOrFunctionP1Type,
+  ReactNodeOrFunctionType,
+  UseFetcherOptionsType,
+} from 'types';
 
 interface FetcherLayerProps<T extends (ContentResponseType<any> | ContentsResponseType<any>)> {
   url: string,

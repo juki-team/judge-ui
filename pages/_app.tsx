@@ -2,21 +2,21 @@ import { settings } from '@juki-team/base-ui';
 import { JukiBaseUiProvider, NavigationBar } from 'components';
 import { JUKI_TOKEN_NAME } from 'config/constants';
 import { OnlineStatusProvider } from 'hooks';
-import { useEffect } from 'react';
 import { TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import '../i18n';
 import './styles.scss';
 
 export default function MyApp({ Component, pageProps }) {
-  settings.setSetting('https://utils-back-v1.juki.app', 'api/v1', 'http://localhost:3001', JUKI_TOKEN_NAME);
+  settings.setSetting('http://localhost:3005', 'api/v1', 'http://localhost:3005', 'http://localhost:3001', JUKI_TOKEN_NAME);
   
   return (
     <JukiBaseUiProvider
-      utilsServiceUrl="https://utils-back-v1.juki.app"
-      apiVersion="api/v1"
-      utilsUiUrl="http://localhost:3001"
+      utilsServiceUrl="http://localhost:3005"
+      utilsServiceApiVersion="api/v1"
+      utilsUiUrl="http://localhost:3005"
       tokenName={JUKI_TOKEN_NAME}
+      utilsSocketServiceUrl="http://localhost:3005"
     >
       <div className="jk-app">
         <UserProvider>

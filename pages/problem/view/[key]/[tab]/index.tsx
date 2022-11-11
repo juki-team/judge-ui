@@ -12,16 +12,20 @@ import {
   TwoContentLayout,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
+import { useNotification } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ProblemResponseDTO, ProblemTab, Status } from 'types';
+import { ContentResponseType, HTTPMethod, ProblemResponseDTO, ProblemTab, Status } from 'types';
+import { SubmissionRunStatus } from '../../../../../types';
 import Custom404 from '../../../../404';
 
 const ProblemView = (): ReactNode => {
   
   const { query: { key, ...query }, push, isReady } = useRouter();
   const user = useUserState();
+  const { addSuccessNotification, addErrorNotification } = useNotification();
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
@@ -97,6 +101,36 @@ const ProblemView = (): ReactNode => {
                   >
                     <T>edit</T>
                   </ButtonLoader>,
+                  <Popover
+                    content={<T className="ws-np tt-se">only submissions that are not in a contest will be judged</T>}
+                    placement="left"
+                    showPopperArrow
+                  >
+                    <div>
+                      <ButtonLoader
+                        size="small"
+                        onClick={async setLoaderStatus => {
+                          setLoaderStatus(Status.LOADING);
+                          const bodyProblem = { ...problem };
+                          delete bodyProblem.key;
+                          const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(await authorizedRequest(
+                            JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
+                            { method: HTTPMethod.POST },
+                          ));
+                          if (result.success) {
+                            addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>);
+                            setLoaderStatus(Status.SUCCESS);
+                          } else {
+                            addErrorNotification(<T
+                              className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
+                            setLoaderStatus(Status.ERROR);
+                          }
+                        }}
+                      >
+                        <T>rejudge</T>
+                      </ButtonLoader>
+                    </div>
+                  </Popover>,
                 ] : []
               }
             />

@@ -25,9 +25,12 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
   minWidth: 250,
 });
 
-export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, onlyProblem?: boolean, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, onlyProblem?: boolean, onlyContest?: boolean, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: (
-    <TextHeadCell text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="tt-se">contest</T></>} />
+    <TextHeadCell
+      text={props?.onlyProblem ? <T>problem</T> : props?.onlyContest ? <T>contest</T> : <><T>problem</T> / <T
+        className="tt-se">contest</T></>}
+    />
   ),
   index: 'problemJudgeKeys',
   field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
@@ -42,18 +45,25 @@ export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<
               <div className="jk-row link">
                 {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
               </div>
+            ) : props?.onlyContest ? (
+              <div className="jk-row link">
+                {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+              </div>
             ) : (
               <div className="jk-row link">
                 {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+                <div>{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
               </div>
             )}
           </a>
         </Link>
-      ) : (
+      ) : !props?.onlyContest ? (
         <Link href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)} target={props?.blankTarget ? '_blank' : ''}>
-          <a><div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div></a>
+          <a>
+            <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
+          </a>
         </Link>
-      )}
+      ) : <div className="jk-row">-</div>}
     </Field>
   ),
   sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },

@@ -187,8 +187,7 @@ const ProblemTestCasesPage = ({
             setLoaderStatus(Status.LOADING);
             const result = await authorizedRequest(
               JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problem.key),
-              { method: HTTPMethod.GET },
-              'blob',
+              { method: HTTPMethod.GET, responseType: 'blob' },
             );
             await downloadBlobAsFile(result, problem.key + '.zip');
             setLoaderStatus(Status.SUCCESS);
@@ -337,8 +336,7 @@ const ProblemTestCasesPage = ({
                               setLoaderStatus(Status.LOADING);
                               const result = await authorizedRequest(
                                 JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCase.testCaseKey, keyPut),
-                                { method: HTTPMethod.GET },
-                                'blob',
+                                { method: HTTPMethod.GET, responseType: 'blob' },
                               );
                               await downloadBlobAsFile(result, problem.key + '.zip');
                               setLoaderStatus(Status.SUCCESS);

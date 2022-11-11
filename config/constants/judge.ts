@@ -184,6 +184,10 @@ export const JUDGE_API_V1 = {
     },
   },
   REJUDGE: {
+    PROBLEM: (problemJudgeKey: string) => {
+      if (!problemJudgeKey) return null;
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/rejudge/problem/${problemJudgeKey}`;
+    },
     CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string) => {
       if (!contestKey) return null;
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}`;
