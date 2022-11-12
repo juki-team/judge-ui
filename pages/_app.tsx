@@ -1,6 +1,6 @@
 import { settings } from '@juki-team/base-ui';
 import { JukiBaseUiProvider, NavigationBar } from 'components';
-import { JUKI_TOKEN_NAME } from 'config/constants';
+import { JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { OnlineStatusProvider } from 'hooks';
 import { TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
@@ -8,15 +8,16 @@ import '../i18n';
 import './styles.scss';
 
 export default function MyApp({ Component, pageProps }) {
-  settings.setSetting('http://localhost:3005', 'api/v1', 'http://localhost:3005', 'http://localhost:3001', JUKI_TOKEN_NAME);
+  
+  settings.setSetting(JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL, 'api/v1', JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL, 'https://utils.juki.app', JUKI_TOKEN_NAME);
   
   return (
     <JukiBaseUiProvider
-      utilsServiceUrl="http://localhost:3005"
+      utilsServiceUrl={JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}
       utilsServiceApiVersion="api/v1"
-      utilsUiUrl="http://localhost:3005"
+      utilsUiUrl="https://utils.juki.app"
       tokenName={JUKI_TOKEN_NAME}
-      utilsSocketServiceUrl="http://localhost:3005"
+      utilsSocketServiceUrl={JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}
     >
       <div className="jk-app">
         <UserProvider>
