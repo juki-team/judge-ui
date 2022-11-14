@@ -19,18 +19,43 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
       </UserNicknameLink>
     </Field>
   ),
-  sort: { compareFn: () => (rowA, rowB) => rowA.userNickname.localeCompare(rowB.userNickname) },
+  sort: true,
   filter: { type: 'text' },
   cardPosition: 'top',
   minWidth: 250,
 });
 
-export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, onlyProblem?: boolean, onlyContest?: boolean, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionContestColumn = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: (
     <TextHeadCell
-      text={props?.onlyProblem ? <T>problem</T> : props?.onlyContest ? <T>contest</T> : <><T>problem</T> / <T
-        className="tt-se">contest</T></>}
+      text={<T className="tt-se">contest</T>}
     />
+  ),
+  index: 'contest',
+  field: ({ record: { problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
+    <Field className="jk-row">
+      {contestKey ? (
+        <Link
+          href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
+          target={props?.blankTarget ? '_blank' : ''}
+        >
+          <a>
+            <div className="jk-row link">
+              {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+            </div>
+          </a>
+        </Link>
+      ) : <div className="jk-row">-</div>}
+    </Field>
+  ),
+  sort: true,
+  cardPosition: 'center',
+  minWidth: 280,
+});
+
+export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, onlyProblem?: boolean, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
+  head: (
+    <TextHeadCell text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="tt-se">contest</T></>} />
   ),
   index: 'problemJudgeKeys',
   field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
@@ -45,10 +70,6 @@ export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<
               <div className="jk-row link">
                 {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
               </div>
-            ) : props?.onlyContest ? (
-              <div className="jk-row link">
-                {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
-              </div>
             ) : (
               <div className="jk-row link">
                 {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
@@ -57,16 +78,16 @@ export const submissionProblem = (props?: { header?: Pick<DataViewerHeadersType<
             )}
           </a>
         </Link>
-      ) : !props?.onlyContest ? (
+      ) : (
         <Link href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)} target={props?.blankTarget ? '_blank' : ''}>
           <a>
             <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
           </a>
         </Link>
-      ) : <div className="jk-row">-</div>}
+      )}
     </Field>
   ),
-  sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },
+  sort: true,
   filter: props?.header?.filter,
   cardPosition: 'center',
   minWidth: 280,
@@ -82,7 +103,7 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
       </SubmissionInfo>
     </Field>
   ),
-  sort: { compareFn: () => (rowA, rowB) => rowB.language.localeCompare(rowA.language) },
+  sort: true,
   filter: {
     type: 'select',
     options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
@@ -104,7 +125,7 @@ export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
   );
 };
 
-export const submissionVerdict = (canRejudge: boolean, filterByRequest?: boolean): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>verdict</T>} />,
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
@@ -117,7 +138,7 @@ export const submissionVerdict = (canRejudge: boolean, filterByRequest?: boolean
       </div>
     </Field>
   ),
-  sort: { compareFn: () => (rowA, rowB) => rowA.verdict.localeCompare(rowB.verdict) },
+  sort: true,
   filter: {
     type: 'select',
     options: Object.values(PROBLEM_VERDICT)
@@ -127,13 +148,13 @@ export const submissionVerdict = (canRejudge: boolean, filterByRequest?: boolean
   minWidth: 140,
 });
 
-export const submissionDate = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>date</T>} />,
   index: 'timestamp',
   field: ({ record: { timestamp }, isCard }) => (
     <DateField className="jk-row" date={new Date(timestamp)} label={<T>date</T>} />
   ),
-  sort: { compareFn: () => (rowA, rowB) => +rowA.timestamp - +rowB.timestamp },
+  sort: true,
   filter: {
     type: 'date-range',
     getValue: ({ record: { timestamp } }) => new Date(timestamp),
@@ -151,7 +172,7 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDT
       <Time timeUsed={timeUsed} verdict={verdict} />
     </Field>
   ),
-  sort: { compareFn: () => (rowA, rowB) => rowA.timeUsed - rowB.timeUsed },
+  sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
   cardPosition: 'bottom',
   minWidth: 140,
@@ -165,7 +186,7 @@ export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponse
       <Memory memoryUsed={memoryUsed} verdict={verdict} />
     </Field>
   ),
-  sort: { compareFn: () => (rowA, rowB) => rowA.memoryUsed - rowB.memoryUsed },
+  sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
   cardPosition: 'bottom',
   minWidth: 140,

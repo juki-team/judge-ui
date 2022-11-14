@@ -1,4 +1,5 @@
-import { useFetcher } from '@juki-team/base-ui';
+import { settings } from '@juki-team/base-ui';
+import { useFetcher } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
@@ -9,6 +10,7 @@ import {
   GetUrl,
   HTTPMethod,
   RequestFilterType,
+  RequestSortType,
   SetLoaderStatusType,
   Status,
   UseFetcherOptionsType,
@@ -93,8 +95,9 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
   const request = useCallback(async ({
     pagination,
     filter,
-  }: { pagination?: { page: number, pageSize: number }, filter: RequestFilterType }) => {
-    const newUrl = getUrl({ pagination: pagination || { page: 0, pageSize: 16 }, filter });
+    sort,
+  }: { pagination?: { page: number, pageSize: number }, filter: RequestFilterType, sort: RequestSortType }) => {
+    const newUrl = getUrl({ pagination: pagination || { page: 0, pageSize: 16 }, filter, sort });
     if (url !== newUrl) {
       setUrl(newUrl);
     } else {
@@ -142,6 +145,17 @@ export function useMatchMutate() {
     return Promise.all(mutations);
   };
 }
+
+export const useSWR = () => {
+  const { mutate } = useSWRConfig();
+  let token = '';
+  if (typeof window !== 'undefined') {
+    token = localStorage.getItem(settings.TOKEN_NAME) || '';
+  }
+  return {
+    mutate: useCallback((url: string) => mutate([url, { token }]), []),
+  };
+};
 
 export {
   useOutsideAlerter,

@@ -18,9 +18,8 @@ import {
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize, notifyResponse } from 'helpers';
-import { useNotification } from 'hooks';
+import { useNotification, useSWR } from 'hooks';
 import { useEffect, useState } from 'react';
-import { useSWRConfig } from 'swr';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
@@ -87,7 +86,7 @@ const ProblemTestCasesPage = ({
     setTestCases(transform(problemTestCases));
   }, [problemTestCases]);
   const { addNotification } = useNotification();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   
   const handleServerDelete = (testCaseKey: string, keyFile: KeyFileType): ButtonLoaderOnClickType => async (setLoaderStatus) => {
     setLock(true);
@@ -204,25 +203,14 @@ const ProblemTestCasesPage = ({
             setLock(true);
             for (const { testCaseKey } of Object.values(testCases)) {
               setLoaderStatus(Status.LOADING);
-              const response1 = cleanRequest<ContentsResponseType<{}>>(
-                await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, 'input'), {
-                  method: HTTPMethod.DELETE,
-                }));
-              if (notifyResponse(response1, addNotification)) {
-                setLoaderStatus(Status.SUCCESS);
-              } else {
-                setLoaderStatus(Status.ERROR);
-              }
-              setLoaderStatus(Status.LOADING);
-              const response = cleanRequest<ContentsResponseType<{}>>(
-                await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, 'output'), {
-                  method: HTTPMethod.DELETE,
-                }));
-              if (notifyResponse(response, addNotification)) {
-                setLoaderStatus(Status.SUCCESS);
-              } else {
-                setLoaderStatus(Status.ERROR);
-              }
+              await Promise.all(['input', 'output'].map(async (keyFile: KeyFileType) => {
+                const response = cleanRequest<ContentsResponseType<{}>>(
+                  await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, keyFile), {
+                    method: HTTPMethod.DELETE,
+                  }));
+                notifyResponse(response, addNotification);
+              }));
+              setLoaderStatus(Status.SUCCESS);
             }
             await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
             setLock(false);
@@ -248,7 +236,7 @@ const ProblemTestCasesPage = ({
         </div>
         {Object.values(testCases).map((testCase) => {
           return (
-            <div className="jk-table-inline-row jk-row block">
+            <div className="jk-table-inline-row jk-row block" key={testCase.testCaseKey}>
               {(problem.settings.mode === ProblemMode.SUBTASK || problem.settings.mode === ProblemMode.PARTIAL) && (
                 <div className="jk-row nowrap">
                   <MultiSelect
@@ -293,7 +281,7 @@ const ProblemTestCasesPage = ({
                 {testCase.testCaseKey}
               </div>
               {['input', 'output'].map((keyPut: KeyFileType) => (
-                <div className="jk-row center gap">
+                <div className="jk-row center gap" key={keyPut}>
                   <div className={classNames('jk-row gap nowrap', { 'cr-ss': testCase[keyPut + 'FileSize'] !== -1 })}>
                     <div className="jk-row left" style={{ width: 110 }}>
                       <CloudUploadIcon /><T>on server</T>:
@@ -384,22 +372,16 @@ const ProblemTestCasesPage = ({
                 setLock(true);
                 setLoaderStatus(Status.LOADING);
                 for (const testCase of Object.values(testCases)) {
-                  if (testCase.inputNewFile) {
-                    const formData = new FormData();
-                    formData.append('testCaseKey', testCase.testCaseKey);
-                    testCase.groups.forEach((group) => formData.append('groups[]', group + ''));
-                    formData.append('file', testCase.inputNewFile);
-                    formData.append('type', 'input');
-                    await handleUpload(testCase, formData, 'input');
-                  }
-                  if (testCase.outputNewFile) {
-                    const formData = new FormData();
-                    formData.append('testCaseKey', testCase.testCaseKey);
-                    testCase.groups.forEach((group) => formData.append('groups[]', group + ''));
-                    formData.append('file', testCase.outputNewFile);
-                    formData.append('type', 'output');
-                    await handleUpload(testCase, formData, 'output');
-                  }
+                  await Promise.all((['input', 'output']).map(async (keyFile: KeyFileType) => {
+                    if (testCase[keyFile + 'NewFile']) {
+                      const formData = new FormData();
+                      formData.append('testCaseKey', testCase.testCaseKey);
+                      testCase.groups.forEach((group) => formData.append('groups[]', group + ''));
+                      formData.append('file', testCase[keyFile + 'NewFile']);
+                      formData.append('type', keyFile);
+                      await handleUpload(testCase, formData, keyFile);
+                    }
+                  }));
                 }
                 await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
                 setLoaderStatus(Status.SUCCESS);
@@ -430,7 +412,7 @@ const ProblemTestCasesPage = ({
               <Input
                 type="files"
                 onChange={handleInputFiles('input')}
-                className="width-120px"
+                className="screen"
               />
             </label>
           </div>
@@ -442,7 +424,7 @@ const ProblemTestCasesPage = ({
               <Input
                 type="files"
                 onChange={handleInputFiles('output')}
-                className="width-120px"
+                className="screen"
               />
             </label>
           </div>
@@ -453,7 +435,6 @@ const ProblemTestCasesPage = ({
 };
 
 export const ProblemTestCases = ({ problem }: { problem: EditCreateProblemType }) => {
-  
   return (
     <div className="jk-pad-md">
       <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>

@@ -1,11 +1,11 @@
-import { PagedDataViewer, submissionProblem } from 'components';
+import { PagedDataViewer, submissionContestColumn } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import React, { useMemo } from 'react';
 import { useUserState } from 'store';
 import { DataViewerHeadersType, GetUrl, ProblemResponseDTO, SubmissionResponseDTO } from 'types';
-import { toFilterUrl } from '../../helpers';
+import { toFilterUrl, toSortUrl } from '../../helpers';
 import {
-  submissionDate,
+  submissionDateColumn,
   submissionLanguage,
   submissionMemoryUsed,
   submissionNickname,
@@ -18,8 +18,8 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => {
     return [
       ...(!mySubmissions ? [submissionNickname()] : []),
-      submissionProblem({ onlyContest: true }),
-      submissionDate(),
+      submissionContestColumn(),
+      submissionDateColumn(),
       submissionVerdict(problem.user.isEditor),
       submissionLanguage(),
       submissionTimeUsed(),
@@ -27,12 +27,13 @@ export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: Proble
     ];
   }, [mySubmissions, problem.user.isEditor]);
   
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter }) => {
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => {
     const filterUrl = toFilterUrl(filter);
+    const sortUrl = toSortUrl(sort);
     if (mySubmissions) {
-      return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, page, pageSize, filterUrl);
+      return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, page, pageSize, filterUrl, sortUrl);
     }
-    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.key, page, pageSize, filterUrl);
+    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.key, page, pageSize, filterUrl, sortUrl);
   };
   
   return (

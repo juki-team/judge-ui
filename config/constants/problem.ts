@@ -9,8 +9,8 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
     name: '',
     sampleCases: [],
     settings: {
-      timeLimit: 2,
-      memoryLimit: 2,
+      timeLimit: 1000,
+      memoryLimit: 256000,
       languages: [],
       mode: ProblemMode.TOTAL,
       type: ProblemType.STANDARD,

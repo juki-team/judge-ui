@@ -1,12 +1,12 @@
 import { ButtonLoader, FetcherLayer, ReloadIcon, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { useSWRConfig } from 'swr';
+import { useSWR } from 'hooks';
 import { ContentResponseType, SqsPropertiesResponseDTO, Status } from 'types';
 import Custom404 from '../../pages/404';
 
 export const SQSManagement = () => {
   
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   
   return (
     <FetcherLayer<ContentResponseType<SqsPropertiesResponseDTO>>

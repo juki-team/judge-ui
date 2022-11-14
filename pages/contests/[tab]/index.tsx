@@ -1,4 +1,4 @@
-import { ContentLayout, ContestList, T, Tabs } from 'components';
+import { ContentLayout, ContestList, CompetitionsList, T, Tabs } from 'components';
 import { ROUTES } from 'config/constants';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -27,7 +27,7 @@ function Contests() {
         selectedTabKey={contestsTab as string}
         tabs={[
           { key: ContestsTab.CONTESTS, body: <ContestList />, header: <T className="tt-se">contests</T> },
-          { key: ContestsTab.COMPETITIONS, body: <ContestList endless />, header: <T className="tt-se">competitions</T> },
+          { key: ContestsTab.COMPETITIONS, body: <CompetitionsList />, header: <T className="tt-se">competitions</T> },
         ]}
         onChange={tabKey => pushTab(tabKey as ContestsTab)}
       />

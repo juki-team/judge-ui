@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 
 export function ContentLayout({ children }) {
@@ -20,7 +21,12 @@ export function TwoContentLayout({ children }) {
       <div ref={ref}>
         {children[0]}
       </div>
-      <div style={{ height: 'calc(100% - ' + (height/* + 12*/) + 'px)' }}>
+      <div
+        style={{
+          '--second-content-layout-min-height': 'calc(100VH - ' + (height/* + 12*/) + 'px - var(--top-horizontal-menu-height) - var(--pad-md) - var(--pad-md) - var(--mobile-bottom-horizontal-menu-height))',
+          minHeight: 'var(--second-content-layout-min-height)',
+        } as CSSProperties}
+      >
         {children[1]}
       </div>
     </section>

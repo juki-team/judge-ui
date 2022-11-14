@@ -2,27 +2,27 @@ import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useMemo } from 'react';
 import { DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
-import { toFilterUrl } from '../../helpers';
+import { toFilterUrl, toSortUrl } from '../../helpers';
 import {
-  submissionDate,
+  submissionDateColumn,
   submissionLanguage,
   submissionMemoryUsed,
   submissionNickname,
-  submissionProblem,
+  submissionProblemColumn,
   submissionTimeUsed,
   submissionVerdict,
 } from '../submissions/';
 
 export function AllSubmissions() {
   
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter }) => (
-    JUDGE_API_V1.SUBMISSIONS.LIST(page, pageSize, toFilterUrl(filter))
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
+    JUDGE_API_V1.SUBMISSIONS.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
   );
   
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
     submissionNickname(),
-    submissionProblem(),
-    submissionDate(),
+    submissionProblemColumn(),
+    submissionDateColumn(),
     submissionVerdict(true),
     submissionLanguage(),
     submissionTimeUsed(),

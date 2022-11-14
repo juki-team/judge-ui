@@ -1,3 +1,4 @@
+import { RequestSortType } from '@juki-team/base-ui';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -74,4 +75,20 @@ export const toFilterUrl = (filter: RequestFilterType) => {
     filterUrl += `${key}=${encodeURIComponent(value.toString())}`;
   });
   return filterUrl;
+};
+
+export const toSortUrl = (sort: RequestSortType) => {
+  let filterUrl = '';
+  Object.entries(sort).forEach(([key, value]) => {
+    if (filterUrl && (value === -1 || value === 1)) {
+      filterUrl += ',';
+    }
+    if (value === -1) {
+      filterUrl += encodeURIComponent(`-${key}`);
+    }
+    if (value === 1) {
+      filterUrl += encodeURIComponent(`+${key}`);
+    }
+  });
+  return filterUrl ? 'sort=' + filterUrl : '';
 };

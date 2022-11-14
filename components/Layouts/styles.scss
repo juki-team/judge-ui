@@ -11,12 +11,7 @@
 
 .content-layout, .two-content-layout {
   padding: var(--pad-md) 0 var(--pad-md) 0;
-  height: var(--content-height);
   box-sizing: border-box;
-  
-  .extra-buttons {
-    margin-left: var(--pad-t);
-  }
 }
 
 :root {
@@ -27,6 +22,19 @@
   > div {
     height: 100%;
     width: var(--screen-content-width);
+    
+    > .jk-data-viewer-layout.with-pagination {
+      height: calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+    }
+    
+    > .jk-tabs-layout {
+      > .jk-tabs-content {
+        > div > .jk-data-viewer-layout {
+          --tab-content-min-height: calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--tabs-header-height) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+          height: 100px;
+        }
+      }
+    }
   }
 }
 
@@ -35,7 +43,7 @@
     width: var(--screen-content-width);
     
     > div.jk-tabs-layout {
-      height: 100%;
+      min-height: var(--second-content-layout-min-height, 100%);
       
       > div.jk-tabs-header:first-child {
         &:before {
@@ -53,8 +61,29 @@
         background-color: var(--t-color-white);
         border-radius: 0 var(--border-radius-inline) var(--border-radius-inline) var(--border-radius-inline);
         @extend .jk-shadow;
-        overflow-x: auto;
-        height: calc(100% - var(--tabs-header-height));
+        //overflow-x: auto;
+        overflow-x: visible;
+        --tab-content-min-height: calc(var(--second-content-layout-min-height, 100%) - var(--tabs-header-height));
+        min-height: var(--tab-content-min-height);
+        margin-bottom: var(--mobile-bottom-horizontal-menu-height);
+        
+        > div {
+          min-height: var(--tab-content-min-height);
+          
+          > .jk-data-viewer-layout {
+            height: var(--tab-content-min-height);
+            
+            .jk-view-container {
+              .jk-table-rows-container {
+                //overflow: hidden !important;
+              }
+            }
+          }
+          
+          > .jk-code-mirror-editor-layout {
+            height: var(--tab-content-min-height);
+          }
+        }
         
         .jk-view-container {
           border-top: 1px solid var(--t-color-gray-6);
@@ -68,5 +97,5 @@
 }
 
 .two-content-layout {
-  overflow: hidden;
+  //overflow: hidden;
 }

@@ -1,15 +1,8 @@
 import { ButtonLoader, CloseIcon, DataViewer, Field, T, TextHeadCell } from 'components/index';
-import {
-  DEFAULT_DATA_VIEWER_PROPS,
-  JUDGE_API_V1,
-  JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME,
-  JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME,
-  QueryParam,
-} from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
+import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo } from 'react';
-import { useSWRConfig } from 'swr';
 import { ContentResponseType, ContentsResponseType, DataViewerHeadersType, HTTPMethod, Status, TaskResponseDTO } from 'types';
 
 export const ECSTasksManagement = () => {
@@ -18,18 +11,18 @@ export const ECSTasksManagement = () => {
     request,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(), { refreshInterval: 10 * 1000 });
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   const { addNotification, addSuccessNotification } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue">group</T>} />,
       index: 'group',
-      field: ({ record: { group } }) => (
+      field: ({ record: { group, isHighRunnerGroup, isLowRunnerGroup } }) => (
         <Field className="jk-row center gap">
           <div className="jk-col fw-br">
             {group}
-            {JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <T className="tt-ue jk-tag info">low</T>}
-            {JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME === group && <T className="tt-ue jk-tag info">high</T>}
+            {isLowRunnerGroup && <T className="tt-ue jk-tag info">low</T>}
+            {isHighRunnerGroup && <T className="tt-ue jk-tag info">high</T>}
           </div>
         </Field>
       ),
@@ -94,10 +87,7 @@ export const ECSTasksManagement = () => {
     },
   ], []);
   
-  const data: TaskResponseDTO[] = (response?.success ? response?.contents : []).map(task => ({
-    ...task,
-    group: task.group.replace('family:', ''),
-  }));
+  const data: TaskResponseDTO[] = (response?.success ? response?.contents : []);
   
   const { queryObject, push } = useRouter();
   

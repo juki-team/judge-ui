@@ -1,41 +1,35 @@
-import { ButtonLoader, ContentLayout, DataViewer, Field, PlusIcon, T, TextField, TextHeadCell } from 'components';
-import { PROBLEM_STATUS, ROUTES } from 'config/constants';
+import { useFetcher } from '@juki-team/base-ui';
+import { ContentsResponseType } from '@juki-team/commons';
+import {
+  ButtonLoader,
+  CheckIcon,
+  CloseIcon,
+  ContentLayout,
+  Field,
+  PagedDataViewer,
+  PlusIcon,
+  Popover,
+  T,
+  TextField,
+  TextHeadCell,
+} from 'components';
+import { PROBLEM_STATUS, QueryParam, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { buttonLoaderLink, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useRouter } from 'hooks';
+import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
+import { useRouter } from 'hooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
-import {
-  ContentsResponseType,
-  DataViewerHeadersType,
-  FilterSelectOfflineType,
-  ProblemStatus,
-  ProblemSummaryListResponseDTO,
-  ProblemTab,
-} from 'types';
-import { CheckIcon, CloseIcon, Popover } from '../../components';
+import { DataViewerHeadersType, FilterSelectOnlineType, GetUrl, ProblemStatus, ProblemSummaryListResponseDTO, ProblemTab } from 'types';
 
 function Problems() {
   
   const { canCreateProblem } = useUserState();
-  const {
-    data: response,
-    request,
-    setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<ProblemSummaryListResponseDTO>>(JUDGE_API_V1.PROBLEM.LIST());
-  
-  const tags = new Set<string>();
-  (response?.success ? response.contents : []).forEach(problem => {
-    problem.tags.forEach(tag => tags.add(tag));
-  });
-  
-  const allTags: string[] = Array.from(tags);
-  
+  const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue">id</T>} />,
-      index: 'id',
+      index: 'key',
       field: ({ record: { key }, isCard }) => (
         <Field className="jk-row link fw-bd">
           <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
@@ -43,8 +37,8 @@ function Problems() {
           </Link>
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => +rowA.key - +rowB.key },
-      filter: { type: 'text-auto' },
+      sort: true,
+      filter: { type: 'text' },
       cardPosition: 'top',
       minWidth: 100,
     },
@@ -88,8 +82,8 @@ function Problems() {
           </Link>
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.name.localeCompare(rowB.name) },
-      filter: { type: 'text-auto' },
+      sort: true,
+      filter: { type: 'text' },
       cardPosition: 'top',
       minWidth: 300,
     },
@@ -101,12 +95,10 @@ function Problems() {
           {tags.map(tag => !!tag && <div className="jk-tag gray-6 tx-s">{tag}</div>)}
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowA.tags.length - rowB.tags.length },
       filter: {
         type: 'select',
-        options: allTags.filter(tag => !!tag).sort((a, b) => a.localeCompare(b)).map(tag => ({ value: tag, label: tag })),
-        callbackFn: ({ selectedOptions }) => ({ tags }) => tags.some(tag => selectedOptions.some(({ value }) => value === tag)),
-      } as FilterSelectOfflineType<ProblemSummaryListResponseDTO>,
+        options: (tags?.success ? tags.contents : []).map(tag => ({ value: tag, label: tag })),
+      } as FilterSelectOnlineType,
       cardPosition: 'center',
       minWidth: 250,
     },
@@ -120,9 +112,9 @@ function Problems() {
             label={<T className="tt-ue">visibility</T>}
           />
         ),
-        sort: { compareFn: () => (rowA, rowB) => rowB.status.localeCompare(rowA.status) },
+        sort: true,
         filter: {
-          type: 'select-auto',
+          type: 'select',
           options: ([
             ProblemStatus.ARCHIVED,
             ProblemStatus.RESERVED,
@@ -137,21 +129,21 @@ function Problems() {
         minWidth: 200,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),
-  ], [canCreateProblem, allTags]);
+  ], [canCreateProblem, tags]);
   
-  const { queryObject, push } = useRouter();
+  const { push } = useRouter();
   
-  const data: ProblemSummaryListResponseDTO[] = (response?.success ? response.contents : []);
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
+    JUDGE_API_V1.PROBLEM.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
+  );
   
   return (
     <ContentLayout>
-      <DataViewer<ProblemSummaryListResponseDTO>
+      <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
         headers={columns}
-        data={data}
-        rows={{ height: 64 }}
-        request={request}
-        setLoaderStatusRef={setLoaderStatusRef}
-        name="users"
+        url={url}
+        name={QueryParam.PROBLEMS_TABLE}
+        refreshInterval={60000}
         extraButtons={[
           ...(canCreateProblem ? [
             <ButtonLoader
@@ -163,8 +155,6 @@ function Problems() {
             </ButtonLoader>,
           ] : []),
         ]}
-        searchParamsObject={queryObject}
-        setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       />
     </ContentLayout>
   );

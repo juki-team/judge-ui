@@ -11,9 +11,10 @@ export enum QueryParam {
   PROFILE_SUBMISSIONS_TABLE = 'pst',
   ALL_USERS_TABLE = 'aut',
   LOGGED_USERS_TABLE = 'lut',
-  CONTEST_TABLE = 'ctt',
-  ENDLESS_CONTEST_TABLE = 'ect',
+  CONTESTS_TABLE = 'ctt',
+  ENDLESS_CONTESTS_TABLE = 'ect',
   SCOREBOARD_TABLE = 'sdt',
+  PROBLEMS_TABLE = 'pmt',
   // table queries
   PAGE_TABLE = 'p',
   PAGE_SIZE_TABLE = 'z',

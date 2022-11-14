@@ -4,13 +4,13 @@ import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContestResponseDTO, DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
-import { toFilterUrl } from '../../../helpers';
+import { toFilterUrl, toSortUrl } from '../../../helpers';
 import {
-  submissionDate,
+  submissionDateColumn,
   submissionLanguage,
   submissionMemoryUsed,
   submissionNickname,
-  submissionProblem,
+  submissionProblemColumn,
   submissionTimeUsed,
   submissionVerdict,
 } from '../../submissions';
@@ -21,28 +21,32 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
   
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
     ...(!mySubmissions ? [submissionNickname()] : []),
-    submissionProblem({
+    submissionProblemColumn({
       header: {
         filter: {
           type: 'select',
           options: Object.values(contest.problems)
-            .map(({ index, name, key, judge }) => ({ label: <div>{index ? `(${index})` : ''} {name}</div>, value: getProblemJudgeKey(judge, key) })),
+            .map(({ index, name, key, judge }) => ({
+              label: <div>{index ? `(${index})` : ''} {name}</div>,
+              value: getProblemJudgeKey(judge, key),
+            })),
         },
       },
       onlyProblem: true,
     }),
-    submissionDate(),
+    submissionDateColumn(),
     submissionVerdict(contest.user.isJudge || contest.user.isAdmin),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
   ], [contest.problems]);
   
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter }) => {
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => {
     const filterUrl = toFilterUrl(filter);
+    const sortUrl = toSortUrl(sort);
     return mySubmissions
-      ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, nickname, page, pageSize, filterUrl)
-      : JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, filterUrl);
+      ? JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, nickname, page, pageSize, filterUrl, sortUrl)
+      : JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, filterUrl, sortUrl);
   };
   
   return (

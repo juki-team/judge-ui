@@ -2,19 +2,19 @@ import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { useRouter } from 'hooks';
 import { DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
-import { toFilterUrl } from '../../helpers';
+import { toFilterUrl, toSortUrl } from '../../helpers';
 import {
-  submissionDate,
+  submissionDateColumn,
   submissionLanguage,
   submissionMemoryUsed,
-  submissionProblem,
+  submissionProblemColumn,
   submissionTimeUsed,
   submissionVerdict,
 } from '../submissions';
 
 const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = [
-  submissionProblem({ blankTarget: true }),
-  submissionDate(),
+  submissionProblemColumn({ blankTarget: true }),
+  submissionDateColumn(),
   submissionVerdict(false),
   submissionLanguage(),
   submissionTimeUsed(),
@@ -24,8 +24,8 @@ const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = [
 export function ProfileSubmissions() {
   
   const { query: { nickname } } = useRouter();
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter }) => (
-    JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname as string, page, pageSize, toFilterUrl(filter))
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
+    JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname as string, page, pageSize, toFilterUrl(filter), toSortUrl(sort))
   );
   
   return (

@@ -1,10 +1,9 @@
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
 import { JUDGE_API_V1, OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useContestRouter, useNotification, useRouter } from 'hooks';
+import { useContestRouter, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
 import { useTaskDispatch, useUserState } from 'store';
-import { useSWRConfig } from 'swr';
 import {
   CodeEditorTestCasesType,
   ContentResponseType,
@@ -24,7 +23,7 @@ export const ProblemCodeEditor = ({
 }: { problem: ProblemResponseDTO, contest?: { isAdmin: boolean, isJudge: boolean, isContestant: boolean, isGuest: boolean, isSpectator: boolean, problemIndex: string } }) => {
   
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   const { listenSubmission } = useTaskDispatch();
   const initialTestCases: CodeEditorTestCasesType = {};
   problem.sampleCases?.forEach((sample, index) => {
@@ -105,9 +104,10 @@ export const ProblemCodeEditor = ({
               if (contest?.problemIndex) {
                 await pushTab(ContestTab.MY_SUBMISSIONS);
                 // TODO fix the filter Url param
-                await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize, ''));
+                await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize, '', ''));
               } else {
-                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize, ''));
+                // TODO fix the filter Url param
+                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize, '', ''));
                 await push({ pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS), query: restQuery });
               }
             }}

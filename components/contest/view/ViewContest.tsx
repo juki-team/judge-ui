@@ -62,10 +62,10 @@ export function ContestView() {
                 ? <T className="ws-np">ends ago</T>
                 : <T className="ws-np">stars in</T>}
             &nbsp;
-            <Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal />
+            <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
           </>
         );
-        const allLiteralLabel = <div className={`jk-row nowrap jk-tag ${tag}`}><T>{statusLabel}</T>,&nbsp;{literal}</div>;
+        const allLiteralLabel = <div className={`jk-row center extend nowrap jk-tag ${tag}`}><T>{statusLabel}</T>,&nbsp;{literal}</div>;
         
         const tabHeaders = [
           {
@@ -173,7 +173,7 @@ export function ContestView() {
                   </Popover>
                 </div>
               </div>
-              <div className="screen sm">{allLiteralLabel}</div>
+              <div className="screen sm jk-row extend">{allLiteralLabel}</div>
             </div>
             <Tabs
               selectedTabKey={contestTab as ContestTab}

@@ -1,3 +1,4 @@
+import { useFetcher } from '@juki-team/base-ui';
 import {
   Button,
   ButtonLoader,
@@ -19,7 +20,6 @@ import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey, notifyResponse, useDateFormat } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import React, { useState } from 'react';
-import { useSWRConfig } from 'swr';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
 
 export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO }) => {
@@ -35,7 +35,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
     public: boolean,
   }>(null);
   const { addNotification } = useNotification();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
@@ -251,7 +251,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                       body: JSON.stringify(payload),
                     }));
                   if (notifyResponse(response, addNotification)) {
-                    await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
+                    await mutate();
                     setLoaderStatus(Status.SUCCESS);
                     setClarification(null);
                   } else {

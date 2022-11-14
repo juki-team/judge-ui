@@ -1,0 +1,41 @@
+import { DataViewer } from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
+import { searchParamsObjectTypeToQuery } from 'helpers';
+import { useDataViewerRequester, useRouter } from 'hooks';
+import { useMemo } from 'react';
+import { useUserState } from 'store';
+import { ContentsResponseType, ContestSummaryListResponseDTO, DataViewerHeadersType } from 'types';
+import { contestantsColumn, contestNameColumn, CreateContestButton } from '../commons';
+
+export const CompetitionsList = () => {
+  const { canCreateContest } = useUserState();
+  const {
+    data: response,
+    request,
+    setLoaderStatusRef,
+  } = useDataViewerRequester<ContentsResponseType<ContestSummaryListResponseDTO>>(JUDGE_API_V1.CONTEST.LIST_ENDLESS());
+  
+  const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
+    contestNameColumn(true),
+    contestantsColumn(),
+  ], []);
+  
+  const { queryObject, push } = useRouter();
+  
+  const data: ContestSummaryListResponseDTO[] = (response?.success ? response?.contents : []);
+  
+  return (
+    <DataViewer<ContestSummaryListResponseDTO>
+      headers={columns}
+      data={data}
+      rows={{ height: 72 }}
+      request={request}
+      setLoaderStatusRef={setLoaderStatusRef}
+      name={QueryParam.ENDLESS_CONTESTS_TABLE}
+      extraButtons={canCreateContest ? <CreateContestButton /> : null}
+      searchParamsObject={queryObject}
+      setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
+      {...DEFAULT_DATA_VIEWER_PROPS}
+    />
+  );
+};

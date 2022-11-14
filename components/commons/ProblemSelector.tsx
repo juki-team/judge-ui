@@ -5,8 +5,11 @@ import React from 'react';
 import { ContentsResponseType, ProblemSummaryListResponseDTO } from 'types';
 
 export const ProblemSelector = ({ onSelect }: { onSelect: (selectedUsers: Omit<Omit<ProblemSummaryListResponseDTO, 'status'>, 'judge'>) => void }) => {
-  
-  const { isLoading, data } = useFetcher<ContentsResponseType<ProblemSummaryListResponseDTO>>(JUDGE_API_V1.PROBLEM.LIST());
+  // TODO: change limit of problems
+  const {
+    isLoading,
+    data,
+  } = useFetcher<ContentsResponseType<ProblemSummaryListResponseDTO>>(JUDGE_API_V1.PROBLEM.LIST(1, 100000, '', ''));
   if (isLoading) {
     return <div><LoadingIcon /></div>;
   }

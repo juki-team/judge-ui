@@ -38,6 +38,9 @@ export const ProblemStatement = ({
   const { query: { key, index, tab, ...query } } = useRouter();
   const { settings: { preferredLanguage } } = useUserState();
   
+  const statementInput = (statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES]).trim();
+  const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]).trim();
+  
   return (
     <div className="problem-statement-layout">
       {contestIndex && (
@@ -75,33 +78,24 @@ export const ProblemStatement = ({
             />
           )}
           <h6><T>input</T></h6>
-          {!setStatement && !statement?.input[preferredLanguage]?.trim() && (
-            <em><T className="tt-se fw-bd">no input description</T></em>
-          )}
+          {}
           {setStatement ? (
             <TextLangEdit
               text={statement.input}
               setText={(input) => setStatement({ ...statement, input })}
             />
-          ) : (
-            <MdMathViewer
-              source={statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES]}
-            />
-          )}
+          ) : statementInput
+            ? <MdMathViewer source={statementInput} />
+            : <em><T className="tt-se fw-bd">no input description</T></em>}
           <h6><T>output</T></h6>
-          {!setStatement && !statement?.output[preferredLanguage]?.trim() && (
-            <em><T className="tt-se fw-bd">no output description</T></em>
-          )}
           {setStatement ? (
             <TextLangEdit
               text={statement.output}
               setText={(output) => setStatement({ ...statement, output })}
             />
-          ) : (
-            <MdMathViewer
-              source={statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]}
-            />
-          )}
+          ) : statementOutput
+            ? <MdMathViewer source={statementOutput} />
+            : <em><T className="tt-se fw-bd">no output description</T></em>}
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1">
               <h6><T>input sample</T></h6>

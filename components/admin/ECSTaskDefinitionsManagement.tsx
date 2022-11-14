@@ -1,32 +1,25 @@
 import { ButtonLoader, CloseIcon, DataViewer, Field, Select, T, TextHeadCell } from 'components/index';
-import {
-  DEFAULT_DATA_VIEWER_PROPS,
-  JUDGE_API_V1,
-  JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME,
-  JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME,
-  QueryParam,
-} from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
+import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
-import { useSWRConfig } from 'swr';
 import { ContentResponseType, ContentsResponseType, DataViewerHeadersType, HTTPMethod, Status, TaskDefinitionResponseDTO } from 'types';
 
-type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date };
-type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[] };
+type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date, };
+type AwsEcsTaskDefinitionList = { family: string, isHighRunner: boolean, isLowRunner: boolean, revisions: RevisionType[] };
 
-const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) => {
+const FieldTaskDefinition = ({ family, revisions, isHighRunner, isLowRunner }: AwsEcsTaskDefinitionList) => {
   
   const { addNotification } = useNotification();
   const [revision, setRevision] = useState<RevisionType>(revisions[0]);
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   
   return (
     <div className="jk-col">
       <div className="fw-br">
         {family}
-        {JUKI_LOW_RUNNER_TASK_DEFINITION_FAMILY_NAME === family && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
-        {JUKI_HIGH_RUNNER_TASK_DEFINITION_FAMILY_NAME === family && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
+        {isLowRunner && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
+        {isHighRunner && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
       </div>
       <div className="tx-s">{revision.memory} (MiB) / {revision.cpu} (unit)</div>
       <div className="tx-s"><T className="tt-se fw-bd">registered at</T>:&nbsp;{revision.registeredAt.toLocaleString()}</div>
@@ -73,9 +66,9 @@ export const ECSTaskDefinitionsManagement = () => {
     {
       head: <TextHeadCell text={<T className="tt-ue">task definition</T>} />,
       index: 'taskDefinition',
-      field: ({ record: { family, revisions } }) => (
+      field: ({ record }) => (
         <Field className="jk-row center gap">
-          <FieldTaskDefinition family={family} revisions={revisions} />
+          <FieldTaskDefinition {...record} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.family.localeCompare(rowA.family) },
@@ -85,9 +78,11 @@ export const ECSTaskDefinitionsManagement = () => {
   const responseData: TaskDefinitionResponseDTO[] = (response?.success ? response?.contents : []);
   
   const definitions: { [key: string]: AwsEcsTaskDefinitionList } = {};
-  responseData.forEach(({ taskDefinitionArn, family, revision, memory, cpu, registeredAt }) => {
+  responseData.forEach(({ taskDefinitionArn, family, revision, memory, cpu, registeredAt, isHighRunner, isLowRunner }) => {
       definitions[family] = {
         family,
+        isHighRunner,
+        isLowRunner,
         revisions: [
           ...(definitions[family]?.revisions || []),
           { taskDefinitionArn, revision, memory, cpu, registeredAt: new Date(registeredAt) },
@@ -95,8 +90,8 @@ export const ECSTaskDefinitionsManagement = () => {
       };
     },
   );
-  const data: AwsEcsTaskDefinitionList[] = Object.values(definitions).map(({ family, revisions }) => ({
-    family,
+  const data: AwsEcsTaskDefinitionList[] = Object.values(definitions).map(({ revisions, ...rest }) => ({
+    ...rest,
     revisions: revisions.sort((a, b) => b.revision - a.revision),
   }));
   const { queryObject, push } = useRouter();

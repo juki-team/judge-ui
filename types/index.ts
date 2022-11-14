@@ -89,4 +89,7 @@ export type {
   GetRowKeyType,
   RequestFilterType,
   UseFetcherOptionsType,
+  JkTableHeaderFilterType,
+  RequestSortType,
+  FilterSelectOnlineType,
 } from '@juki-team/base-ui';

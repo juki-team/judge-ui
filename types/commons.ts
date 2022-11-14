@@ -1,4 +1,4 @@
-import { RequestFilterType } from 'types';
+import { RequestFilterType, RequestSortType } from 'types';
 
 export type PagedArray<T> = {
   list: Array<T>,
@@ -22,4 +22,4 @@ export enum Status {
   NONE = 'NONE'
 }
 
-export type GetUrl = (props: { filter: RequestFilterType, pagination: { page: number, pageSize: number } }) => string
+export type GetUrl = (props: { pagination: { page: number, pageSize: number }, filter: RequestFilterType, sort: RequestSortType }) => string

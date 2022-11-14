@@ -1,12 +1,19 @@
-import { ButtonLoader, MdMathViewer, T } from 'components/index';
+import {
+  AdminInformation,
+  ButtonLoader,
+  FrozenInformation,
+  JudgeInformation,
+  MdMathViewer,
+  QuietInformation,
+  SpectatorInformation,
+  T,
+} from 'components';
 import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, notifyResponse, useDateFormat } from 'helpers';
-import { useNotification } from 'hooks';
+import { useNotification, useSWR } from 'hooks';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
-import { useSWRConfig } from 'swr';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, SetLoaderStatusOnClickType, Status } from 'types';
-import { AdminInformation, FrozenInformation, JudgeInformation, QuietInformation, SpectatorInformation } from '../Information';
 
 export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -15,7 +22,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   const { push, query } = useRouter();
   const { dtf, rlt } = useDateFormat();
   const { addNotification } = useNotification();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
     setLoader(Status.LOADING);
@@ -32,21 +39,21 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   return (
     <div className="jk-row gap nowrap left stretch">
-      <div className="jk-pad-md flex-3">
+      <div className="jk-pad-md flex-5">
         <MdMathViewer source={contest?.description} />
       </div>
-      <div className="jk-pad-md flex-1 contest-overview-information">
+      <div className="jk-pad-md flex-3 contest-overview-information">
         <div className="content-side-right-bar-top">
           {isAdmin
-            ? <div className="judge-admin jk-row bc-py cr-we jk-border-radius">
+            ? <div className="judge-admin jk-row center gap bc-py cr-we jk-border-radius">
               <T className="tt-se">you are admin</T> <AdminInformation placement="bottom" />
             </div>
             : isJudge
-              ? <div className="judge-admin jk-row bc-py cr-we jk-border-radius">
+              ? <div className="judge-admin jk-row center gap bc-py cr-we jk-border-radius">
                 <T className="tt-se">you are judge</T> <JudgeInformation placement="bottom" />
               </div>
               : (isContestant
-                ? <div className="registered jk-row bc-ss cr-we jk-border-radius fw-br"><T
+                ? <div className="registered jk-row center gap bc-ss cr-we jk-border-radius fw-br"><T
                   className="tt-se">registered</T>
                 </div>
                 : (isGuest && new Date().getTime() <= contest.settings.endTimestamp)
@@ -61,7 +68,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                       <T>{isLogged ? 'register' : 'to register, first login'}</T>
                     </ButtonLoader>
                   ) : isSpectator && (
-                  <div className="judge-admin jk-row bc-py cr-we jk-border-radius">
+                  <div className="judge-admin jk-row center gap bc-py cr-we jk-border-radius">
                     <T className="tt-se">you are spectator</T> <SpectatorInformation placement="bottom" />
                   </div>
                 ))}

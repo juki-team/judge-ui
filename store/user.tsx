@@ -8,10 +8,9 @@ import {
   USER_GUEST,
 } from 'config/constants';
 import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, notifyResponse, toBlob } from 'helpers';
-import { useJukiBase, useMatchMutate, useNotification, useT } from 'hooks';
+import { useJukiBase, useMatchMutate, useNotification, useSWR, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { createContext, PropsWithChildren, useEffect } from 'react';
-import { useSWRConfig } from 'swr';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
@@ -67,6 +66,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
 
 export const useUserState = (): (UserState & { isLoading: boolean }) => {
   const { user, userIsLoading: isLoading } = useJukiBase();
+  
   return {
     ...user,
     isLoading,
@@ -78,7 +78,7 @@ export const useUserDispatch = () => {
   const { addNotification, addSuccessNotification, addErrorNotification, addInfoNotification } = useNotification();
   const { setUser } = useJukiBase();
   const { push, query } = useRouter();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   const matchMutate = useMatchMutate();
   
   const refreshAllRequest = async () => {
