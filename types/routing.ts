@@ -12,7 +12,8 @@ export enum AdminTab {
   FILES_MANAGEMENT = 'files-management',
   SQS_MANAGEMENT = 'sqs-management',
   ECS_TASKS_MANAGEMENT = 'ecs-task-management',
-  ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitios-management',
+  ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitions-management',
+  SETTINGS_MANAGEMENT = 'settings-management',
 }
 
 export enum ProblemTab {

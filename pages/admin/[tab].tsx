@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { AdminTab } from 'types';
 import { ECSTasksManagement } from '../../components/admin/ECSTasksManagement';
+import { SettingsManagement } from '../../components/admin/SettingsManagement';
 import Custom404 from '../404';
 
 function Admin() {
@@ -58,7 +59,9 @@ function Admin() {
       body: <ECSTaskDefinitionsManagement />,
     });
   }
-  
+  if (canViewSQSManagement && canViewECSManagement && canViewFilesManagement) {
+    tabs.push({ key: AdminTab.SETTINGS_MANAGEMENT, header: <T className="tt-ce">settings</T>, body: <SettingsManagement /> });
+  }
   return (
     <TwoContentLayout>
       <div className="jk-col filled">

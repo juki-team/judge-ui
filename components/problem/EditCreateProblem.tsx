@@ -61,6 +61,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
             header: <T className="tt-ce">statement</T>,
             body: (
               <ProblemStatement
+                problemKey={problem.key}
                 author={problem.author}
                 name={problem.name}
                 sampleCases={problem.sampleCases}

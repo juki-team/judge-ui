@@ -1,4 +1,5 @@
-import { ButtonLoader, CloseIcon, DataViewer, Field, Select, T, TextHeadCell } from 'components/index';
+import { RunnerType } from '@juki-team/commons';
+import { ButtonLoader, CloseIcon, DataViewer, ExclamationIcon, Field, Select, T, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
@@ -39,16 +40,55 @@ const FieldTaskDefinition = ({ family, revisions, isHighRunner, isLowRunner }: A
               JUDGE_API_V1.SYS.AWS_ECS_RUN_TASK_TASK_DEFINITION(revision.taskDefinitionArn),
               { method: HTTPMethod.POST }),
             );
-            const success = notifyResponse(response, addNotification);
-            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
-            if (success) {
+            if (notifyResponse(response, addNotification)) {
               setLoaderStatus(Status.SUCCESS);
             } else {
               setLoaderStatus(Status.ERROR);
             }
+            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
           }}
         >
           <T>run task</T>
+        </ButtonLoader>
+        <ButtonLoader
+          size="small"
+          className="bc-er"
+          icon={<ExclamationIcon circle />}
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+              JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.HIGH_PERFORMANCE, revision.taskDefinitionArn),
+              { method: HTTPMethod.POST }),
+            );
+            if (notifyResponse(response, addNotification)) {
+              setLoaderStatus(Status.SUCCESS);
+            } else {
+              setLoaderStatus(Status.ERROR);
+            }
+            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+          }}
+        >
+          <T>set high runner</T>
+        </ButtonLoader>
+        <ButtonLoader
+          size="small"
+          className="bc-er"
+          icon={<ExclamationIcon circle />}
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+              JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.LOW_PERFORMANCE, revision.taskDefinitionArn),
+              { method: HTTPMethod.POST }),
+            );
+            if (notifyResponse(response, addNotification)) {
+              setLoaderStatus(Status.SUCCESS);
+            } else {
+              setLoaderStatus(Status.ERROR);
+            }
+            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+          }}
+        >
+          <T>set low runner</T>
         </ButtonLoader>
       </div>
     </div>

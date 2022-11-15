@@ -1,15 +1,28 @@
-import { Language } from '@juki-team/commons';
-import { ArrowIcon, ExclamationIcon, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
-import { ROUTES } from 'config/constants';
-import { classNames } from 'helpers';
+import {
+  ArrowIcon,
+  DownloadIcon,
+  ExclamationIcon,
+  ExternalIcon,
+  FloatToolbar,
+  MdMathViewer,
+  PlusIcon,
+  Popover,
+  ProblemInfo,
+  T,
+  TextLangEdit,
+} from 'components';
+import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
+import { classNames, downloadBlobAsFile, handleShareMdPdf } from 'helpers';
+import { useT } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUserState } from 'store';
-import { ContestTab, ProblemSampleCasesType, ProblemSettingsType, ProblemStatementType, ProblemStatus } from 'types';
+import { ContestTab, Language, ProblemSampleCasesType, ProblemSettingsType, ProblemStatementType, ProblemStatus } from 'types';
 import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
+  problemKey: string,
   settings: ProblemSettingsType,
   name: string,
   tags: string[],
@@ -23,6 +36,7 @@ interface ProblemStatementProps {
 }
 
 export const ProblemStatement = ({
+  problemKey,
   name,
   settings,
   tags,
@@ -37,9 +51,50 @@ export const ProblemStatement = ({
   
   const { query: { key, index, tab, ...query } } = useRouter();
   const { settings: { preferredLanguage } } = useUserState();
+  const { t } = useT();
   
+  const statementDescription = statement?.description[preferredLanguage] || statement?.description[Language.EN] || statement?.description[Language.ES];
   const statementInput = (statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES]).trim();
   const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]).trim();
+  
+  const languages = Object.values(settings?.byProgrammingLanguage || {});
+  const source = `
+# \\textAlign=center (${t('problem')} ${contestIndex}) ${name}
+
+\\textAlign=center **${t('type')}:** ${PROBLEM_TYPE[settings?.type]?.label}, **${t('mode')}:** ${PROBLEM_MODE[settings?.mode]?.label}
+
+|${t('language')}|${t('time limit')}|${t('memory limit')}|
+|--|--|--|
+| ${t('general')} | ${(settings?.timeLimit / 1000).toFixed(1)} ${t('seconds')} | ${(settings?.memoryLimit / 1000).toFixed(1)} ${t('MB')} |
+${languages.map((language) => (
+    `| ${PROGRAMMING_LANGUAGE[language.language]?.label} | ${(language?.timeLimit / 1000).toFixed(1)} ${t('seconds')} | ${(language?.memoryLimit / 1000).toFixed(1)} ${t('MB')}|`
+  )).join('\n')}
+
+# ${t('description')}
+
+${statementDescription}
+
+# ${t('input')}
+
+${statementInput}
+
+# ${t('output')}
+
+${statementOutput}
+  
+${sampleCases.map((sample, index) => (
+    `### ${t('input sample')} ${index + 1}
+\`\`\`
+${sample.input}
+\`\`\`
+### ${t('output sample')} ${index + 1}
+\`\`\`
+${sample.output}
+\`\`\`
+`)).join('')}
+`;
+  const [sourceUrl, setSourceUrl] = useState('');
+  useEffect(() => setSourceUrl(''), [source]);
   
   return (
     <div className="problem-statement-layout">
@@ -67,15 +122,35 @@ export const ProblemStatement = ({
       )}
       <div className="jk-row nowrap stretch left problem-content">
         <div className={classNames('problem-statement', { 'problem-contest-statement': !!contestIndex, 'editing': !!setStatement })}>
+          {!setStatement && (
+            <FloatToolbar
+              actionButtons={[
+                {
+                  icon: <DownloadIcon />,
+                  buttons: [
+                    {
+                      icon: <DownloadIcon />,
+                      label: <T>pdf</T>,
+                      onClick: handleShareMdPdf('pdf', source, sourceUrl, setSourceUrl),
+                    },
+                    {
+                      icon: <ExternalIcon />,
+                      label: <T>md</T>,
+                      onClick: async () => await downloadBlobAsFile(new Blob([source], { type: 'text/plain' }), `JUKI-JUDGE-${problemKey}.md`),
+                    },
+                  ],
+                },
+              ]}
+            />
+          )}
+          <h6><T>description</T></h6>
           {setStatement ? (
             <TextLangEdit
               text={statement.description}
               setText={(description) => setStatement({ ...statement, description })}
             />
           ) : (
-            <MdMathViewer
-              source={statement?.description[preferredLanguage] || statement?.description[Language.EN] || statement?.description[Language.ES]}
-            />
+            <MdMathViewer source={statementDescription} />
           )}
           <h6><T>input</T></h6>
           {}

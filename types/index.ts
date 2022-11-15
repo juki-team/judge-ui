@@ -24,6 +24,7 @@ export {
   CourseRole,
   SubmissionRunStatus,
   HTTPMethod,
+  RunnerType,
 } from '@juki-team/commons';
 
 export type {

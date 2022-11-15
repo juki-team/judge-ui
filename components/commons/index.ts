@@ -34,6 +34,7 @@ export {
   CurvedArrowIcon,
   InputDate,
   PersonIcon,
+  Portal,
   ExclamationIcon,
   ExternalIcon,
   EyeIcon,

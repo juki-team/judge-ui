@@ -1,5 +1,5 @@
-import { getProblemJudgeKey, Judge } from '@juki-team/commons';
-import { KeyFileType } from '../../types';
+import { getProblemJudgeKey } from 'helpers';
+import { Judge, KeyFileType, RunnerType } from 'types';
 import { API_VERSION, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL } from './settings';
 
 const withSort = (path, sortUrl) => {
@@ -29,6 +29,15 @@ export const JUDGE_API_V1 = {
     },
     AWS_ECS_RUN_TASK_TASK_DEFINITION: (taskDefinition: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
+    },
+    AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION: (runnerType: RunnerType, taskDefinition: string) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/task-definition/${encodeURIComponent(taskDefinition)}`;
+    },
+    AWS_ECS_RUNNER_MIN_TASKS: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/min-tasks`;
+    },
+    AWS_ECS_RUNNER_MIN_TASK: (runnerType: RunnerType, minTasks: number) => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/min/${minTasks}`;
     },
     AWS_SQS_LIST: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/list`;

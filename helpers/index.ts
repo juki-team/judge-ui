@@ -57,6 +57,7 @@ export {
   cleanRequest,
   settings,
   toBlob,
+  handleShareMdPdf,
 } from '@juki-team/base-ui';
 
 export const useDateFormat = () => {
