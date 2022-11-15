@@ -128,11 +128,11 @@ ${sample.output}
                 {
                   icon: <DownloadIcon />,
                   buttons: [
-                    {
-                      icon: <DownloadIcon />,
-                      label: <T>pdf</T>,
-                      onClick: handleShareMdPdf('pdf', source, sourceUrl, setSourceUrl),
-                    },
+                    // {
+                    //   icon: <DownloadIcon />,
+                    //   label: <T>pdf</T>,
+                    //   onClick: handleShareMdPdf('pdf', source, sourceUrl, setSourceUrl),
+                    // },
                     {
                       icon: <ExternalIcon />,
                       label: <T>md</T>,
