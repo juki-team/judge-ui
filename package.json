@@ -8,8 +8,8 @@
     "pull": "yarn add @juki-team/commons @juki-team/base-ui"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.0.188",
-    "@juki-team/commons": "^0.0.185",
+    "@juki-team/base-ui": "^0.0.193",
+    "@juki-team/commons": "^0.0.198",
     "deep-object-diff": "^1.1.7",
     "i18next": "^21.6.14",
     "net": "^1.0.2",
@@ -19,7 +19,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-json-view": "^1.21.3",
-    "swr": "^1.2.1"
+    "swr": "^1.2.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.20",

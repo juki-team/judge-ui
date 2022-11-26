@@ -2,7 +2,7 @@ import { Button, ButtonLoader, CopyIcon, CopyToClipboard, InputPassword, Modal, 
 import React, { useState } from 'react';
 import { useUserDispatch } from '../../store';
 
-const getRandomString = (length: number) => {
+export const getRandomString = (length: number) => {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let retVal = '';
   for (let i = 0; i < length; ++i) {
@@ -38,7 +38,6 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
                 <CopyToClipboard text={newPassword}>
                   <Button
                     type="text"
-                    onClick={() => setNewPassword(getRandomString(12))}
                     icon={<CopyIcon className="cursor-pointer" />}
                     size="small"
                   >

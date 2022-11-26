@@ -100,7 +100,7 @@ export const ECSTaskDefinitionsManagement = () => {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<TaskDefinitionResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_DEFINITION_LIST(), { refreshInterval: 10 * 1000 });
+  } = useDataViewerRequester<ContentsResponseType<TaskDefinitionResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_DEFINITION_LIST());
   
   const columns: DataViewerHeadersType<AwsEcsTaskDefinitionList>[] = useMemo(() => [
     {
@@ -142,7 +142,7 @@ export const ECSTaskDefinitionsManagement = () => {
       data={data}
       rows={{ height: 180 }}
       request={request}
-      name={QueryParam.ALL_USERS_TABLE}
+      name={QueryParam.ECS_DEFINITIONS_TASK_TABLE}
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       setLoaderStatusRef={setLoaderStatusRef}

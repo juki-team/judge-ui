@@ -64,6 +64,7 @@ export const actionLoaderWrapper = async <T extends ContentResponseType<any> | C
   } else {
     consoleWarn({ result, message: 'actionLoaderWrapper error' });
   }
+  return result;
 };
 
 export const toFilterUrl = (filter: RequestFilterType) => {

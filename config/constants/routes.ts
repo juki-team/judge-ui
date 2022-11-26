@@ -10,6 +10,8 @@ export enum QueryParam {
   ALL_SUBMISSIONS_TABLE = 'ast',
   PROFILE_SUBMISSIONS_TABLE = 'pst',
   ALL_USERS_TABLE = 'aut',
+  ECS_DEFINITIONS_TASK_TABLE = 'edt',
+  ECS_TASKS_TABLE = 'ett',
   LOGGED_USERS_TABLE = 'lut',
   CONTESTS_TABLE = 'ctt',
   ENDLESS_CONTESTS_TABLE = 'ect',

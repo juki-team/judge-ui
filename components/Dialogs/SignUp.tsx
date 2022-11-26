@@ -12,7 +12,7 @@ export const SignUpModal = () => {
   const { push, query } = useRouter();
   
   const onSubmit = async (data: SignUpInputType, setLoading: SetLoaderStatusOnClickType) => {
-    await signUp(data.givenName, data.familyName, data.nickname, data.email, data.password, setLoading);
+    await signUp(data.givenName, data.familyName, data.nickname, data.email, data.password, setLoading, true);
   };
   
   return (

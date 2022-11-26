@@ -10,7 +10,7 @@ export const ECSTasksManagement = () => {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(), { refreshInterval: 10 * 1000 });
+  } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
   const { mutate } = useSWR();
   const { addNotification, addSuccessNotification } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
@@ -97,7 +97,7 @@ export const ECSTasksManagement = () => {
       data={data}
       rows={{ height: 240 }}
       request={request}
-      name={QueryParam.ALL_USERS_TABLE}
+      name={QueryParam.ECS_TASKS_TABLE}
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       setLoaderStatusRef={setLoaderStatusRef}

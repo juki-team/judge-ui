@@ -85,6 +85,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   };
 };
 
+// TODO: check when getUrl changes
 export const useDataViewerRequester2 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(getUrl: GetUrl, options?: UseFetcherOptionsType) => {
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();

@@ -57,7 +57,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
       <div className="permissions-cell jk-row nowrap">
         <div className="permissions-box">
           {Object.entries(ROLES).map(([key, roles]) => (
-            <div className="jk-row nowrap space-between" style={{ width: 300 }}>
+            <div className="jk-row nowrap space-between" style={{ width: 300 }} key={key}>
               <div style={{ width: 150 }} className="jk-row left"><T>{key}</T></div>
               <Select
                 disabled={!editing}

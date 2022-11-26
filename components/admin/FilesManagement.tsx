@@ -92,7 +92,7 @@ export function FilesManagement() {
             {error && <div className="text-stderr">{error}</div>}
             <ul>
               {list.map(item => (
-                <li>
+                <li key={item}>
                   <div className="jk-row left gap">
                     <div>{item}</div>
                     <div

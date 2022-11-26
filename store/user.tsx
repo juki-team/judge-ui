@@ -167,7 +167,7 @@ export const useUserDispatch = () => {
       },
       setLoader,
     }),
-    signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType) => actionLoaderWrapper<ContentResponseType<UserPingResponseDTO>>({
+    signUp: (givenName: string, familyName: string, nickname: string, email: string, password: string, setLoader: SetLoaderStatusOnClickType, withRedirectAndLogin: boolean) => actionLoaderWrapper<ContentResponseType<UserPingResponseDTO>>({
       request: async () => {
         return cleanRequest<ContentResponseType<UserPingResponseDTO>>(await authorizedRequest(JUDGE_API_V1.AUTH.SIGN_UP(), {
           method: HTTPMethod.POST,
@@ -182,11 +182,13 @@ export const useUserDispatch = () => {
       },
       addNotification,
       onSuccess: async (result) => {
-        localStorage.setItem(JUKI_TOKEN_NAME, result.content.sessionId);
-        addSuccessNotification(<T className="tt-se">welcome</T>);
-        await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
-        setUser({ ...result.content, isLogged: true });
-        refreshAllRequest();
+        if (withRedirectAndLogin) {
+          localStorage.setItem(JUKI_TOKEN_NAME, result.content.sessionId);
+          addSuccessNotification(<T className="tt-se">welcome</T>);
+          await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
+          setUser({ ...result.content, isLogged: true });
+          refreshAllRequest();
+        }
       },
       setLoader,
     }),

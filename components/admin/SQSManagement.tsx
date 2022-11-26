@@ -12,7 +12,6 @@ export const SQSManagement = () => {
     <FetcherLayer<ContentResponseType<SqsPropertiesResponseDTO>>
       url={JUDGE_API_V1.SYS.AWS_SQS_LIST()}
       errorView={<Custom404 />}
-      options={{ refreshInterval: 10 * 1000 }}
     >
       {({ data }) => {
         return (
@@ -27,16 +26,16 @@ export const SQSManagement = () => {
                 }}
               ><T>reload</T></ButtonLoader>
             </div>
-            {['sqsJukiHighRunnerFifo', 'sqsJukiLowRunnerFifo'].map(key => (
+            {['sqsJukiHighRunnerFifo', 'sqsJukiLowRunnerFifo', 'sqsJukiOutRunnerFifo'].map(key => (
               <div className="jk-col" key={key}>
                 <div className="fw-bd">{data.content[key].QueueArn}</div>
-                <div><T>ApproximateNumberOfMessages</T>: {data.content[key].ApproximateNumberOfMessages}</div>
-                <div><T>ApproximateNumberOfMessagesDelayed</T>: {data.content[key].ApproximateNumberOfMessagesDelayed}
+                <div><T>approximate number of messages</T>: {data.content[key].ApproximateNumberOfMessages}</div>
+                <div><T>approximate number of messages delayed</T>: {data.content[key].ApproximateNumberOfMessagesDelayed}
                 </div>
                 <div>
-                  <T>ApproximateNumberOfMessagesNotVisible</T>: {data.content[key].ApproximateNumberOfMessagesNotVisible}
+                  <T>approximate number of messages not visible</T>: {data.content[key].ApproximateNumberOfMessagesNotVisible}
                 </div>
-                <div><T>ReceiveMessageWaitTimeSeconds</T>: {data.content[key].ReceiveMessageWaitTimeSeconds}</div>
+                <div><T>receive message wait time seconds</T>: {data.content[key].ReceiveMessageWaitTimeSeconds}</div>
               </div>
             ))}
           </div>

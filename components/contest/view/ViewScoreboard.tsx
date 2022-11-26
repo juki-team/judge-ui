@@ -6,6 +6,7 @@ import {
   GearsIcon,
   Image,
   Popover,
+  Select,
   SnowflakeIcon,
   T,
   TextHeadCell,
@@ -16,12 +17,15 @@ import {
   authorizedRequest,
   classNames,
   cleanRequest,
+  downloadBlobAsFile,
+  downloadCsvAsFile,
   getProblemJudgeKey,
   isEndlessContest,
   notifyResponse,
   searchParamsObjectTypeToQuery,
+  stringToArrayBuffer,
 } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
+import { useDataViewerRequester, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
@@ -35,13 +39,90 @@ import {
   ScoreboardResponseDTO,
   Status,
 } from 'types';
+import { utils, write } from 'xlsx';
+
+const DownloadButton = ({
+  data,
+  contest,
+  disabled,
+}: { data: ScoreboardResponseDTO[], contest: ContestResponseDTO, disabled: boolean }) => {
+  const { t } = useT();
+  
+  const head = ['#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty')];
+  for (const problem of Object.values(contest?.problems)) {
+    head.push(problem.index);
+  }
+  
+  const body = data.map(user => {
+    const base = [
+      user.position,
+      user.userNickname,
+      user.userGivenName,
+      user.userFamilyName,
+      (user.totalPoints).toFixed(2),
+      Math.round(user.totalPenalty),
+    ];
+    
+    if (contest?.problems) {
+      for (const problem of Object.values(contest?.problems)) {
+        const problemData = user.problems[getProblemJudgeKey(problem.judge, problem.key)];
+        let text = '';
+        if (problemData?.success || !!problemData?.points) {
+          text = problemData?.points + ' ' + (problemData?.points === 1 ? t('point') : t('points'));
+        }
+        if (text) {
+          text += ' ';
+        }
+        text += `${problemData?.attempts || '-'}/${problemData?.penalty ? Math.round(problemData?.penalty) : '-'}`;
+        base.push(text);
+      }
+    }
+    return base;
+  });
+  const dataCsv = [head, ...body];
+  
+  return (
+    <Select
+      disabled={disabled}
+      options={[{ value: 'csv', label: 'as csv' }, { value: 'xlsx', label: 'as xlsx' }]}
+      selectedOption={{ value: 'x', label: 'download' }}
+      onChange={async ({ value }) => {
+        switch (value) {
+          case 'csv':
+            downloadCsvAsFile(dataCsv, `${contest?.name} (${t('scoreboard')}).csv`);
+            break;
+          case 'xlsx':
+            const workBook = utils.book_new();
+            const fileName = `${contest?.name} (${t('scoreboard')}).xlsx`;
+            workBook.Props = {
+              Title: fileName,
+              Subject: fileName,
+              Author: 'Juki Judge',
+              CreatedDate: new Date(),
+            };
+            const sheetName = t('scoreboard');
+            workBook.SheetNames.push(sheetName);
+            workBook.Sheets[sheetName] = utils.aoa_to_sheet(dataCsv);
+            const workBookOut = write(workBook, { bookType: 'xlsx', type: 'binary' });
+            const blob = new Blob([stringToArrayBuffer(workBookOut)], { type: 'application/octet-stream' });
+            await downloadBlobAsFile(blob, fileName);
+            
+            break;
+          case 'pdf':
+            break;
+          default:
+        }
+      }}
+      className="bc-sy jk-border-radius-inline jk-button-secondary tiny"
+    />
+  );
+};
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const user = useUserState();
   const { addNotification } = useNotification();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
-  const mySubmissions = false;
   const isEndless = isEndlessContest(contest);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
@@ -154,7 +235,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
-  const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []).map(result => result);
+  const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
   const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
   
   return (
@@ -180,10 +261,13 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
           {((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
             <div className="jk-row">
               <ButtonLoader
-                setLoaderStatusRef={setLoaderStatusRef} size="tiny" type="secondary" disabled={isLoading}
+                setLoaderStatusRef={setLoaderStatusRef}
+                size="tiny"
+                type="secondary"
+                disabled={isLoading}
                 onClick={() => setUnfrozen(!unfrozen)}
               >
-                <T>{unfrozen ? 'view frozen scoreboard' : 'view unfrozen scoreboard'}</T>
+                <T>{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
               </ButtonLoader>
             </div>
           )}
@@ -192,6 +276,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
               <ButtonLoader
                 size="tiny"
                 type="secondary"
+                disabled={isLoading}
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
@@ -205,10 +290,13 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                   }
                 }}
               >
-                <T>recalculate scoreboard</T>
+                <T>recalculate</T>
               </ButtonLoader>
             </div>
           )}
+          <div className="jk-row">
+            <DownloadButton data={data} contest={contest} disabled={isLoading} />
+          </div>
         </div>
       )}
       cardsView={false}

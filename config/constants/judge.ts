@@ -73,6 +73,9 @@ export const JUDGE_API_V1 = {
     MANAGEMENT_LIST: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/management-list`;
     },
+    ALL_ONLINE_USERS: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/all-online-users`;
+    },
     ONLINE_USERS: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/online-users`;
     },
@@ -99,6 +102,9 @@ export const JUDGE_API_V1 = {
     },
     STATUS: (nickname: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/status`;
+    },
+    DELETE_OLD_SESSIONS: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/user/delete-old-sessions`;
     },
   },
   SUBMIT: {

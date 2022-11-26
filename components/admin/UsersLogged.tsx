@@ -1,19 +1,29 @@
-import { ButtonLoader, DataViewer, DateField, DeleteIcon, Field, T, TextHeadCell, UserChip } from 'components';
+import { ButtonLoader, CloseIcon, DataViewer, DateField, DeleteIcon, Field, InputToggle, T, TextHeadCell, UserChip } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
-import { searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useRouter } from 'hooks';
-import { useMemo } from 'react';
+import { authorizedRequest, classNames, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
+import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
+import { useMemo, useState } from 'react';
 import { useUserDispatch } from 'store';
-import { ContentsResponseType, DataViewerHeadersType, UserManagementSessionResponseDTO } from 'types';
+import { useSWRConfig } from 'swr';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  DataViewerHeadersType,
+  FilterTextOfflineType,
+  HTTPMethod,
+  Status,
+  UserManagementSessionResponseDTO,
+} from 'types';
 
 export function UsersLogged() {
   
   const { deleteSession } = useUserDispatch();
+  const [withGuests, setWithGuests] = useState(false);
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<UserManagementSessionResponseDTO>>(JUDGE_API_V1.USER.ONLINE_USERS());
+  } = useDataViewerRequester<ContentsResponseType<UserManagementSessionResponseDTO>>(withGuests ? JUDGE_API_V1.USER.ALL_ONLINE_USERS() : JUDGE_API_V1.USER.ONLINE_USERS());
   
   const columns: DataViewerHeadersType<UserManagementSessionResponseDTO>[] = useMemo(() => [
     {
@@ -26,7 +36,12 @@ export function UsersLogged() {
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.id.localeCompare(rowB.id) },
-      filter: { type: 'text-auto' },
+      filter: {
+        type: 'text', callbackFn: ({ text }) => ({ user: { givenName, familyName, nickname, email } }) => {
+          const regExp = new RegExp(text, 'gi');
+          return !!(nickname?.match?.(regExp)) || !!(givenName?.match?.(regExp)) || !!(familyName?.match?.(regExp)) || !!(email?.match?.(regExp));
+        },
+      } as FilterTextOfflineType<UserManagementSessionResponseDTO>,
       cardPosition: 'top',
       minWidth: 400,
     },
@@ -82,7 +97,8 @@ export function UsersLogged() {
   ], []);
   
   const { queryObject, push } = useRouter();
-  
+  const { addNotification } = useNotification();
+  const { mutate } = useSWRConfig();
   const data: UserManagementSessionResponseDTO[] = (response?.success ? response?.contents : []);
   
   return (
@@ -93,6 +109,33 @@ export function UsersLogged() {
         rows={{ height: 150 }}
         request={request}
         name={QueryParam.LOGGED_USERS_TABLE}
+        extraButtons={
+          <div className="jk-row gap">
+            <ButtonLoader
+              size="small"
+              icon={<CloseIcon circle />}
+              onClick={async (setLoaderStatus) => {
+                setLoaderStatus(Status.LOADING);
+                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                  JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
+                  { method: HTTPMethod.POST }),
+                );
+                if (notifyResponse(response, addNotification)) {
+                  setLoaderStatus(Status.SUCCESS);
+                } else {
+                  setLoaderStatus(Status.ERROR);
+                }
+                await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
+              }}>
+              <T>delete old sessions</T>
+            </ButtonLoader>
+            <InputToggle
+              checked={withGuests}
+              onChange={(newValue) => setWithGuests(newValue)}
+              rightLabel={<T className={classNames({ 'fw-bd': withGuests })}>with guests</T>}
+            />
+          </div>
+        }
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
         setLoaderStatusRef={setLoaderStatusRef}
