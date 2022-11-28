@@ -14,6 +14,7 @@ export const SQSManagement = () => {
       errorView={<Custom404 />}
     >
       {({ data }) => {
+        const queues = Object.keys(data.content); // ['sqsJukiHighRunnerFifo', 'sqsJukiLowRunnerFifo', 'sqsJukiOutRunnerFifo']
         return (
           <div className="jk-col gap jk-pad-md">
             <div>
@@ -26,7 +27,7 @@ export const SQSManagement = () => {
                 }}
               ><T>reload</T></ButtonLoader>
             </div>
-            {['sqsJukiHighRunnerFifo', 'sqsJukiLowRunnerFifo', 'sqsJukiOutRunnerFifo'].map(key => (
+            {queues.map(key => (
               <div className="jk-col" key={key}>
                 <div className="fw-bd">{data.content[key].QueueArn}</div>
                 <div><T>approximate number of messages</T>: {data.content[key].ApproximateNumberOfMessages}</div>

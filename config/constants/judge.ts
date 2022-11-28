@@ -120,10 +120,10 @@ export const JUDGE_API_V1 = {
       return withSort(withFilter(`${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&nickname=${nickname}`, filterUrl), sortUrl);
     },
     CONTEST: (contestKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${contestKey}`, filterUrl), sortUrl);
+      return withSort(withFilter(`${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(contestKey)}`, filterUrl), sortUrl);
     },
     CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${contestKey}&nickname=${nickname}`, filterUrl), sortUrl);
+      return withSort(withFilter(`${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(contestKey)}&nickname=${nickname}`, filterUrl), sortUrl);
     },
     PROBLEM: (problemKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
       return withSort(withFilter(`${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(Judge.JUKI_JUDGE, problemKey)}`, filterUrl), sortUrl);
@@ -175,9 +175,6 @@ export const JUDGE_API_V1 = {
     },
     LIST_ENDLESS: (filterUrl?: string) => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/list-endless${filterUrl ? '?' + filterUrl : ''}`;
-    },
-    _LIST: () => {
-      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest/list`;
     },
     CREATE: () => {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/contest`;

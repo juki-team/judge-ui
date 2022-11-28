@@ -6,10 +6,10 @@ import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hook
 import { useMemo, useState } from 'react';
 import { ContentResponseType, ContentsResponseType, DataViewerHeadersType, HTTPMethod, Status, TaskDefinitionResponseDTO } from 'types';
 
-type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date, };
-type AwsEcsTaskDefinitionList = { family: string, isHighRunner: boolean, isLowRunner: boolean, revisions: RevisionType[] };
+type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date, isHighRunner: boolean, isLowRunner: boolean };
+type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[] };
 
-const FieldTaskDefinition = ({ family, revisions, isHighRunner, isLowRunner }: AwsEcsTaskDefinitionList) => {
+const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) => {
   
   const { addNotification } = useNotification();
   const [revision, setRevision] = useState<RevisionType>(revisions[0]);
@@ -19,8 +19,8 @@ const FieldTaskDefinition = ({ family, revisions, isHighRunner, isLowRunner }: A
     <div className="jk-col">
       <div className="fw-br">
         {family}
-        {isLowRunner && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
-        {isHighRunner && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
+        {revision.isLowRunner && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
+        {revision.isHighRunner && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
       </div>
       <div className="tx-s">{revision.memory} (MiB) / {revision.cpu} (unit)</div>
       <div className="tx-s"><T className="tt-se fw-bd">registered at</T>:&nbsp;{revision.registeredAt.toLocaleString()}</div>
@@ -118,14 +118,12 @@ export const ECSTaskDefinitionsManagement = () => {
   const responseData: TaskDefinitionResponseDTO[] = (response?.success ? response?.contents : []);
   
   const definitions: { [key: string]: AwsEcsTaskDefinitionList } = {};
-  responseData.forEach(({ taskDefinitionArn, family, revision, memory, cpu, registeredAt, isHighRunner, isLowRunner }) => {
+  responseData.forEach(({ taskDefinitionArn, family, revision, memory, cpu, registeredAt, isLowRunner, isHighRunner }) => {
       definitions[family] = {
         family,
-        isHighRunner,
-        isLowRunner,
         revisions: [
           ...(definitions[family]?.revisions || []),
-          { taskDefinitionArn, revision, memory, cpu, registeredAt: new Date(registeredAt) },
+          { taskDefinitionArn, revision, memory, cpu, registeredAt: new Date(registeredAt), isHighRunner, isLowRunner },
         ],
       };
     },
