@@ -144,7 +144,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                         </div>}
                     </div>
                     <div className="jk-tag gray-6">
-                      {clarification.public ? <T>pubic</T> : isJudgeOrAdmin ? <T>only for the user</T> : <T>only for you</T>}</div>
+                      {clarification.public ? <T>public</T> : isJudgeOrAdmin ? <T>only for the user</T> : <T>only for you</T>}</div>
                     {!clarification.answerTimestamp && <div className="jk-tag error"><T>not answered yet</T></div>}
                   </div>
                 </div>

@@ -1,20 +1,8 @@
-import {
-  ArrowIcon,
-  ButtonLoader,
-  FetcherLayer,
-  Popover,
-  T,
-  Tabs,
-  Timer,
-  TwoContentLayout,
-  ViewOverview,
-  ViewProblems,
-} from 'components/index';
+import { ButtonLoader, FetcherLayer, Popover, T, Tabs, Timer, TwoContentLayout, ViewOverview, ViewProblems } from 'components/index';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { useContestRouter, useJukiBase } from 'hooks';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ContentResponseType, ContestResponseDTO, ContestsTab, ContestTab, Status } from 'types';
+import { ContentResponseType, ContestResponseDTO, ContestTab, Status } from 'types';
 import { isEndlessContest } from '../../../helpers';
 import Custom404 from '../../../pages/404';
 import { ViewClarifications } from './ViewClarifications';
@@ -54,7 +42,7 @@ export function ContestView() {
           statusLabel = 'live';
           timeInterval = contest.settings.endTimestamp - new Date().getTime();
         }
-        const literal = isEndless ? <T className="ws-np">endless</T> :(
+        const literal = isEndless ? <T className="ws-np">endless</T> : (
           <>
             {contest.isLive
               ? <T className="ws-np">ends in</T>

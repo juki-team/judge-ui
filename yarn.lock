@@ -967,13 +967,13 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.193":
-  version "0.0.193"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.193/fe3d3e8afb2dc18aa2b32c404714c9e1cfe267a6#fe3d3e8afb2dc18aa2b32c404714c9e1cfe267a6"
-  integrity sha512-0k8I6KrRZkih/7J7ytvNWye8wVWXnQCVjmDKwT8p6gc/KZ4geZq3DPIRJMKNkxAoO6zoGVTnhX83HJBzCHchTw==
+"@juki-team/base-ui@^0.0.195":
+  version "0.0.195"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.195/43bb7e941a5a1c1cede77dcfadf29b2a74d0164c#43bb7e941a5a1c1cede77dcfadf29b2a74d0164c"
+  integrity sha512-owCBs0sjMTsAAyjuJHCoKAIK4jzor9MxpGv6YBLVeaA3PyBsxiB/kGpSExD1M+rZjyDemM93M079L0Ff9CJitw==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
-    "@juki-team/commons" "^0.0.181"
+    "@juki-team/commons" "^0.0.204"
     "@monaco-editor/react" "^4.4.2"
     codemirror "^5.65.2"
     immutability-helper "^3.1.1"
@@ -1000,15 +1000,10 @@
     uuid "^9.0.0"
     yup "^0.32.11"
 
-"@juki-team/commons@^0.0.181":
-  version "0.0.181"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.181/7e1040f4e2dace82c4610127a0a11bcda54062d2#7e1040f4e2dace82c4610127a0a11bcda54062d2"
-  integrity sha512-2VzW0Ov2PC2sEwS9yzZlc48cJlH0EtgO5ah0sUp7s7of1HLWTN32MZwGUp4jawZC4wsNkpvtuhVgVsJKQle0RQ==
-
-"@juki-team/commons@^0.0.198":
-  version "0.0.198"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.198/f98b8e0ef0da4b0f28f5d7b8842e748379f86527#f98b8e0ef0da4b0f28f5d7b8842e748379f86527"
-  integrity sha512-JznAiqhmkXjfHA/cvLiYBjk9WfkdoNyUdLuIxgDSuN4anW1tz6s4duMCIrIzwoDnsbETes2TfXeVhzgUi7SiRw==
+"@juki-team/commons@^0.0.204":
+  version "0.0.204"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.204/b6b89637bbb9014ec04bbac1582346eb056b315d#b6b89637bbb9014ec04bbac1582346eb056b315d"
+  integrity sha512-u9mmu/ispOQRwRO8qCQOOZhWd7fIjM/ED7hoQH6eMD7UY4NCSrYFa9/NzoVFnDt0QZiKYH0szUQG95OwpDqUAQ==
 
 "@monaco-editor/loader@^1.3.2":
   version "1.3.2"
