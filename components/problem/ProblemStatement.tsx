@@ -1,16 +1,4 @@
-import {
-  ArrowIcon,
-  DownloadIcon,
-  ExclamationIcon,
-  ExternalIcon,
-  FloatToolbar,
-  MdMathViewer,
-  PlusIcon,
-  Popover,
-  ProblemInfo,
-  T,
-  TextLangEdit,
-} from 'components';
+import { ArrowIcon, DownloadIcon, ExclamationIcon, ExternalIcon, FloatToolbar, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { classNames, downloadBlobAsFile, handleShareMdPdf } from 'helpers';
 import { useT } from 'hooks';
@@ -128,11 +116,11 @@ ${sample.output}
                 {
                   icon: <DownloadIcon />,
                   buttons: [
-                    // {
-                    //   icon: <DownloadIcon />,
-                    //   label: <T>pdf</T>,
-                    //   onClick: handleShareMdPdf('pdf', source, sourceUrl, setSourceUrl),
-                    // },
+                    {
+                      icon: <DownloadIcon />,
+                      label: <T>pdf</T>,
+                      onClick: handleShareMdPdf('pdf', source, sourceUrl, setSourceUrl),
+                    },
                     {
                       icon: <ExternalIcon />,
                       label: <T>md</T>,

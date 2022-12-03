@@ -1,4 +1,4 @@
-import { MdMathEditor, MdMathViewer, Portal } from 'components';
+import { MdMathEditor } from 'components';
 import { consoleWarn } from 'helpers';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -26,18 +26,6 @@ const MarkdownSharedView = () => {
         });
     }
   }, [sourceUrl]);
-  if (view === 'printable') {
-    return (
-      <Portal>
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: 'var(--100VH)', zIndex: 1000 }}>
-          <style>{'.jk-app { display: none;} body { background-color: var(--t-color-white); }'}</style>
-          <div className="jk-pad-md bc-we">
-            <MdMathViewer source={sourceContent} />
-          </div>
-        </div>
-      </Portal>
-    );
-  }
   if (view === 'fullscreen') {
     return (
       <div style={{ padding: '48px' }}>
