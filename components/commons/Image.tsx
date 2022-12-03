@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-
+import ImageComp from 'next/image';
 interface ImageProps {
   src: string,
   className?: string,
@@ -12,15 +12,15 @@ interface ImageProps {
 export const Image = ({ src, className, alt, height, width, style }: ImageProps) => {
   return (
     <span className="next-js-image">
-      <img src={src} className={className} alt={alt} width={width} height={height} style={style} />
-      {/*<ImageComp*/}
-      {/*  src={src}*/}
-      {/*  className={className}*/}
-      {/*  alt={alt}*/}
-      {/*  height={height}*/}
-      {/*  width={width}*/}
-      {/*  style={style}*/}
-      {/*/>*/}
+      {/*<img src={src} className={className} alt={alt} width={width} height={height} style={style} />*/}
+      <ImageComp
+        src={src}
+        className={className}
+        alt={alt}
+        height={height}
+        width={width}
+        style={style}
+      />
     </span>
   );
 };

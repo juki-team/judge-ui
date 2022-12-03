@@ -1,11 +1,3 @@
-import { LoginModal, SignUpModal, SubmissionModal, UserPreviewModal, WelcomeModal } from 'components';
-import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
-import { isOrHas, removeParamQuery } from 'helpers';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { useUserDispatch, useUserState } from 'store';
-import { AdminTab, ContestsTab, Language, ProfileSettingOptions, Status, Theme } from 'types';
 import {
   AppsIcon,
   ArrowIcon,
@@ -16,12 +8,25 @@ import {
   JukiCouchLogoHorImage,
   JukiJudgeLogoHorImage,
   JukiUtilsLogoHorImage,
+  LeaderboardIcon,
   LoadingIcon,
+  LoginModal,
   MenuIcon,
   Popover,
   SettingIcon,
+  SignUpModal,
+  SubmissionModal,
   T,
-} from '..';
+  UserPreviewModal,
+  WelcomeModal,
+} from 'components';
+import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { isOrHas, removeParamQuery } from 'helpers';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { useUserDispatch, useUserState } from 'store';
+import { AdminTab, ContestsTab, Language, ProfileSettingOptions, Status, Theme } from 'types';
 import { LoginUser } from './LoginUser';
 import { SettingsPopover } from './SettingsPopover';
 
@@ -36,13 +41,19 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T>contests</T>,
       icon: <CupIcon />,
       selected: ('/' + pathname).includes('//contest'),
-      menuItemWrapper: (children) => <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}><a>{children}</a></Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}>{children}</Link>,
     },
     {
       label: <T>problems</T>,
       icon: <AssignmentIcon />,
       selected: ('/' + pathname).includes('//problem'),
-      menuItemWrapper: (children) => <Link href={ROUTES.PROBLEMS.LIST()}><a>{children}</a></Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.PROBLEMS.LIST()}>{children}</Link>,
+    },
+    {
+      label: <T>ranking</T>,
+      icon: <LeaderboardIcon />,
+      selected: ('/' + pathname).includes('//ranking'),
+      menuItemWrapper: (children) => <Link href={ROUTES.RANKING.PAGE()}>{children}</Link>,
     },
   ];
   if (user.canViewUsersManagement || user.canViewSubmissionsManagement || user.canViewFilesManagement) {
@@ -50,7 +61,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T>admin</T>,
       icon: <SettingIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS)}><a>{children}</a></Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS)}>{children}</Link>,
     });
   }
   const { updateUserSettings, setUser } = useUserDispatch();
@@ -157,7 +168,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           children: ({ toggle }) => (
             <div className="jk-row gap nowrap left mobile-left-side-header">
               <div className="jk-row" onClick={toggle}><MenuIcon className="cr-we" /></div>
-              <Link href="/"><a><JukiJudgeLogoHorImage className="cr-we" /></a></Link>
+              <Link href="/"><JukiJudgeLogoHorImage className="cr-we" /></Link>
             </div>
           ),
           content: ({ toggle }) => (

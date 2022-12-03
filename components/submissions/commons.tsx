@@ -39,11 +39,9 @@ export const submissionContestColumn = (props?: { header?: Pick<DataViewerHeader
           href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
           target={props?.blankTarget ? '_blank' : ''}
         >
-          <a>
-            <div className="jk-row link">
-              {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
-            </div>
-          </a>
+          <div className="jk-row link">
+            {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+          </div>
         </Link>
       ) : <div className="jk-row">-</div>}
     </Field>
@@ -65,24 +63,20 @@ export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeader
           href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
           target={props?.blankTarget ? '_blank' : ''}
         >
-          <a>
-            {props?.onlyProblem ? (
-              <div className="jk-row link">
-                {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
-              </div>
-            ) : (
-              <div className="jk-row link">
-                {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
-                <div>{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
-              </div>
-            )}
-          </a>
+          {props?.onlyProblem ? (
+            <div className="jk-row link">
+              {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+            </div>
+          ) : (
+            <div className="jk-row link">
+              {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+              <div>{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
+            </div>
+          )}
         </Link>
       ) : (
         <Link href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)} target={props?.blankTarget ? '_blank' : ''}>
-          <a>
-            <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
-          </a>
+          <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
         </Link>
       )}
     </Field>

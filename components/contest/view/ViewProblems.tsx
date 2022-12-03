@@ -4,17 +4,7 @@ import { authorizedRequest, cleanRequest, getProblemJudgeKey, getProblemUrl } fr
 import { useNotification } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  ContentResponseType,
-  ContestResponseDTO,
-  ContestTab,
-  HTTPMethod,
-  Judge,
-  Period,
-  ProblemTab,
-  Status,
-  SubmissionRunStatus,
-} from 'types';
+import { ContentResponseType, ContestResponseDTO, ContestTab, HTTPMethod, Judge, Period, ProblemTab, Status, SubmissionRunStatus } from 'types';
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -44,9 +34,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
               {problem.judge === Judge.JUKI_JUDGE ? (
                 (isJudgeOrAdmin ? (
                   <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} target="_blank">
-                    <a>
-                      <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon size="tiny" /></div>
-                    </a>
+                    <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon size="tiny" /></div>
                   </Link>
                 ) : (<div className="problem-id tx-xs fw-bd cr-g3">ID: {problem.key}</div>))
               ) : (

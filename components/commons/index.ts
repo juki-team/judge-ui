@@ -1,4 +1,5 @@
 export {
+  LeaderboardIcon,
   Timer,
   TimerLabeled,
   AlertModal,

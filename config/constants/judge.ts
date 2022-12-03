@@ -226,4 +226,9 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/rejudge/submission/${submissionId}`;
     },
   },
+  RANKING: {
+    LIST: () => {
+      return `${JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL}/${API_VERSION}/rank/list`;
+    },
+  },
 };

@@ -1,44 +1,11 @@
-import {
-  BalloonIcon,
-  ButtonLoader,
-  DataViewer,
-  Field,
-  GearsIcon,
-  Image,
-  Popover,
-  Select,
-  SnowflakeIcon,
-  T,
-  TextHeadCell,
-  UserNicknameLink,
-} from 'components';
+import { BalloonIcon, ButtonLoader, DataViewer, Field, GearsIcon, Image, Popover, Select, SnowflakeIcon, T, TextHeadCell, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
-import {
-  authorizedRequest,
-  classNames,
-  cleanRequest,
-  downloadBlobAsFile,
-  downloadCsvAsFile,
-  getProblemJudgeKey,
-  isEndlessContest,
-  notifyResponse,
-  searchParamsObjectTypeToQuery,
-  stringToArrayBuffer,
-} from 'helpers';
+import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, downloadCsvAsFile, getProblemJudgeKey, isEndlessContest, notifyResponse, searchParamsObjectTypeToQuery, stringToArrayBuffer } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  ContestResponseDTO,
-  ContestTab,
-  DataViewerHeadersType,
-  HTTPMethod,
-  ScoreboardResponseDTO,
-  Status,
-} from 'types';
+import { ContentResponseType, ContentsResponseType, ContestResponseDTO, ContestTab, DataViewerHeadersType, HTTPMethod, ScoreboardResponseDTO, Status } from 'types';
 import { utils, write } from 'xlsx';
 
 const DownloadButton = ({
@@ -177,9 +144,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
             <Popover content={<div className="ws-np">{problem.name}</div>}>
               <div className="jk-col extend fw-bd">
                 <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index), query }}>
-                  <a>
-                    {problem.index}
-                  </a>
+                  {problem.index}
                 </Link>
               </div>
             </Popover>
