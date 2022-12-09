@@ -3,8 +3,8 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
 import { useNotification } from 'hooks';
 import { useEffect, useState } from 'react';
+import { useUserDispatch } from 'store';
 import { ContentResponseType, HTTPMethod, RunnerType, Status } from 'types';
-import { useUserDispatch } from '../../store';
 
 export const SettingsManagement = () => {
   

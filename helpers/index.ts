@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-import { useCallback } from 'react';
 import { Status } from 'types';
 
 export const isOrHas = (value: string | string[] | undefined, v: string) => {
@@ -54,26 +52,13 @@ export {
   renderReactNodeOrFunction,
   renderReactNodeOrFunctionP1,
   authorizedRequest,
-  cleanRequest,
   settings,
   toBlob,
   handleShareMdPdf,
   downloadCsvAsFile,
   downloadLink,
+  cleanRequest,
 } from '@juki-team/base-ui';
-
-export const useDateFormat = () => {
-  const { locale } = useRouter();
-  const dtf = useCallback((date: Date | number) => {
-    const dtf = new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'medium' });
-    return dtf.format(date);
-  }, [locale]);
-  const rlt = useCallback((date: number, unit: Intl.RelativeTimeFormatUnit) => {
-    const rtf = new Intl.RelativeTimeFormat(locale);
-    return rtf.format(date, unit);
-  }, [locale]);
-  return { dtf, rlt };
-};
 
 export * from './contest';
 export * from './notify';

@@ -1,13 +1,11 @@
 import { ButtonLoader, CheckUnsavedChanges, Input, MdMathEditor, T, Tabs, TwoContentLayout } from 'components';
 import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
-import { useRouter } from 'hooks';
+import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { useNotification, useRouter } from 'hooks';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
-import { ButtonLoaderOnClickType, ContestsTab, ContestTab, EditCreateContestType, Status } from 'types';
-import { authorizedRequest, cleanRequest, notifyResponse } from '../../../helpers';
-import { useNotification } from '../../../hooks';
-import { ContentResponseType, HTTPMethod } from '../../../types';
+import { ButtonLoaderOnClickType, ContentResponseType, ContestsTab, ContestTab, EditCreateContestType, HTTPMethod, Status } from 'types';
 import { EditCreateContestProps } from '../types';
 import { EditMembers } from './EditMembers';
 import { EditProblems } from './EditProblems';

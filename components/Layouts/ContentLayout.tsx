@@ -1,9 +1,9 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, PropsWithChildren } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 
-export function ContentLayout({ children }) {
+export function ContentLayout({ children, style }: PropsWithChildren<{ style?: CSSProperties }>) {
   return (
-    <section className="content-layout jk-row">
+    <section className="content-layout jk-row" style={style}>
       <div>
         {/*<div style={{ height: 'calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--top-horizontal-menu-height))' }}>*/}
         {children}
@@ -32,4 +32,3 @@ export function TwoContentLayout({ children }) {
     </section>
   );
 }
-

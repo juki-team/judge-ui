@@ -17,6 +17,7 @@ export enum QueryParam {
   ENDLESS_CONTESTS_TABLE = 'ect',
   SCOREBOARD_TABLE = 'sdt',
   PROBLEMS_TABLE = 'pmt',
+  RANKING_TABLE = 'rgt',
   // table queries
   PAGE_TABLE = 'p',
   PAGE_SIZE_TABLE = 'z',

@@ -99,3 +99,49 @@
 .two-content-layout {
   //overflow: hidden;
 }
+
+.need-help-container {
+  z-index: 1000;
+  padding: var(--pad-xt);
+  position: fixed;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  bottom: var(--mobile-bottom-horizontal-menu-height);
+  right: var(--pad-m);
+  background: var(--t-color-accent);
+  height: calc(24px);
+  width: calc(24px);
+  overflow: hidden;
+  @include transition(height);
+  
+  .close {
+    display: none;
+  }
+  
+  &.open {
+    @include transition(height);
+    @include transition(width);
+    height: calc(96px + 24px);
+    width: 260px;
+    
+    .close {
+      display: initial;
+    }
+  }
+  
+  &.focus {
+    animation: focus-shadow 1s forwards infinite;
+  }
+}
+
+@keyframes focus-shadow {
+  0% {
+  
+  }
+  50% {
+    box-shadow: 0 0 64px 0 var(--t-color-shadow);
+  }
+  100% {
+  
+  }
+}

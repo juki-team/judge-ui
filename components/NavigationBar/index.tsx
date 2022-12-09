@@ -3,7 +3,10 @@ import {
   ArrowIcon,
   AssignmentIcon,
   Button,
+  CloseIcon,
   CupIcon,
+  GmailIcon,
+  HeadsetMicIcon,
   HorizontalMenu,
   JukiCouchLogoHorImage,
   JukiJudgeLogoHorImage,
@@ -12,16 +15,18 @@ import {
   LoadingIcon,
   LoginModal,
   MenuIcon,
+  PhoneIcon,
   Popover,
   SettingIcon,
   SignUpModal,
   SubmissionModal,
   T,
+  TelegramIcon,
   UserPreviewModal,
   WelcomeModal,
 } from 'components';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
-import { isOrHas, removeParamQuery } from 'helpers';
+import { classNames, isOrHas, removeParamQuery } from 'helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
@@ -34,7 +39,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
   const [loader, setLoader] = useState<Status>(Status.NONE);
-  const user = useUserState();
+  const { canViewUsersManagement, canViewSubmissionsManagement, canViewFilesManagement, isLogged, settings, isLoading, nickname, flags, setFlags } = useUserState();
   
   const menu = [
     {
@@ -56,7 +61,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: (children) => <Link href={ROUTES.RANKING.PAGE()}>{children}</Link>,
     },
   ];
-  if (user.canViewUsersManagement || user.canViewSubmissionsManagement || user.canViewFilesManagement) {
+  if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement) {
     menu.push({
       label: <T>admin</T>,
       icon: <SettingIcon />,
@@ -67,7 +72,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const { updateUserSettings, setUser } = useUserDispatch();
   
   useEffect(() => {
-    if (user.isLogged && (isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) || isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN))) {
+    if (isLogged && (isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) || isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN))) {
       push({
         query: removeParamQuery(
           removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP),
@@ -76,40 +81,40 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         ),
       });
     }
-  }, [user.isLogged, query]);
+  }, [isLogged, query]);
   
   const toggleSetting = (key: ProfileSettingOptions, value: string) => {
-    const settings = { ...user.settings };
+    const newSettings = { ...settings };
     if (key === ProfileSettingOptions.LANGUAGE) {
-      settings.preferredLanguage = value as Language;
+      newSettings.preferredLanguage = value as Language;
     }
     if (key === ProfileSettingOptions.THEME) {
-      settings.preferredTheme = value as Theme;
+      newSettings.preferredTheme = value as Theme;
     }
-    if (user.isLogged) {
-      updateUserSettings(user.nickname, settings, (status: Status) => setLoader(status));
+    if (isLogged) {
+      updateUserSettings(nickname, newSettings, (status: Status) => setLoader(status));
     } else {
       localStorage.setItem(key, value);
-      setUser({ ...user, settings });
+      setUser(prevState => ({ ...prevState, settings: newSettings }));
     }
   };
   
   const toggleLanguage = () => {
-    toggleSetting(ProfileSettingOptions.LANGUAGE, user.settings?.[ProfileSettingOptions.LANGUAGE] === Language.EN ? Language.ES : Language.EN);
+    toggleSetting(ProfileSettingOptions.LANGUAGE, settings?.[ProfileSettingOptions.LANGUAGE] === Language.EN ? Language.ES : Language.EN);
   };
   const toggleTheme = () => {
-    toggleSetting(ProfileSettingOptions.THEME, user.settings?.[ProfileSettingOptions.THEME] === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
+    toggleSetting(ProfileSettingOptions.THEME, settings?.[ProfileSettingOptions.THEME] === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
   };
   
-  const settings = (placement: 'bottom' | 'rightBottom') => (
+  const Settings = (placement: 'bottom' | 'rightBottom') => (
     <>
       <Popover
         content={
           <SettingsPopover
             loader={loader === Status.LOADING}
-            languageChecked={user.settings?.[ProfileSettingOptions.LANGUAGE] === Language.ES}
+            languageChecked={settings?.[ProfileSettingOptions.LANGUAGE] === Language.ES}
             toggleLanguage={toggleLanguage}
-            themeChecked={user.settings?.[ProfileSettingOptions.THEME] === Theme.DARK}
+            themeChecked={settings?.[ProfileSettingOptions.THEME] === Theme.DARK}
             toggleTheme={toggleTheme}
           />
         }
@@ -160,7 +165,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         )}
         rightSection={
           <div className="jk-row gap settings-apps-login-user-content nowrap">
-            {settings('bottom')}
+            {Settings('bottom')}
             <LoginUser />
           </div>
         }
@@ -179,7 +184,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
                   <JukiJudgeLogoHorImage className="cr-we" />,
                 </div>
                 <div className="jk-col gap mobile-left-side-bottom">
-                  {settings('rightBottom')}
+                  {Settings('rightBottom')}
                   <div />
                   <div />
                 </div>
@@ -191,7 +196,38 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           children: <LoginUser />,
         }}
       >
-        {user.isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" /></div> : children}
+        {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" /></div> : children}
+        <div
+          className={classNames('need-help-container jk-border-radius-inline', { 'open jk-shadow': flags.isHelpOpen, 'cursor-pointer': !flags.isHelpOpen, focus: flags.isHelpFocused })}>
+          <div className="jk-row gap center" onClick={() => setFlags(prevState => ({ ...prevState, isHelpOpen: true }))}>
+            <HeadsetMicIcon /><T className="tt-ue tx-s fw-bd">need help?</T>
+            <div
+              className="jk-row close cursor-pointer"
+              style={{ position: 'absolute', right: 'var(--pad-sm)' }}
+              onClick={(event) => {
+                setFlags(prevState => ({ ...prevState, isHelpOpen: false }));
+                event.stopPropagation();
+              }}
+            >
+              <CloseIcon />
+            </div>
+          </div>
+          <div className="jk-col stretch">
+            <div className="jk-row center fw-bd"><T className="tt-se">contact the webmaster</T>:</div>
+            <div className="jk-row gap center">
+              <TelegramIcon />
+              <div className="jk-row link fw-bd" style={{ width: 210 }}><Link href="https://t.me/OscarGauss" target="_blank">t.me/OscarGauss</Link></div>
+            </div>
+            <div className="jk-row gap center">
+              <PhoneIcon />
+              <div className="jk-row fw-bd" style={{ width: 210 }}>+591 79153358</div>
+            </div>
+            <div className="jk-row gap center">
+              <GmailIcon />
+              <div className="jk-row fw-bd" style={{ width: 210 }}>oscargausscarvajal@gmail.com</div>
+            </div>
+          </div>
+        </div>
       </HorizontalMenu>
     </>
   );

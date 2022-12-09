@@ -1,35 +1,25 @@
 import { T } from 'components';
-import {
-  JUDGE_API_V1,
-  JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL,
-  JUKI_TOKEN_NAME,
-  OpenDialog,
-  QueryParam,
-  USER_GUEST,
-} from 'config/constants';
+import { JUDGE_API_V1, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL, JUKI_TOKEN_NAME, OpenDialog, QueryParam, USER_GUEST } from 'config/constants';
 import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, notifyResponse, toBlob } from 'helpers';
 import { useJukiBase, useMatchMutate, useNotification, useSWR, useT } from 'hooks';
 import { useRouter } from 'next/router';
-import React, { createContext, PropsWithChildren, useEffect } from 'react';
-import {
-  ButtonLoaderOnClickType,
-  ContentResponseType,
-  HTTPMethod,
-  Language,
-  SetLoaderStatusOnClickType,
-  Status,
-  Theme,
-  UserPingResponseDTO,
-  UserState,
-} from 'types';
+import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
+import { ButtonLoaderOnClickType, ContentResponseType, HTTPMethod, Language, SetLoaderStatusOnClickType, Status, Theme, UserPingResponseDTO, UserState } from 'types';
 
-export const UserContext = createContext<{}>({});
+type Flags = { isHelpOpen: boolean, isHelpFocused: boolean };
+type SetFlags = Dispatch<SetStateAction<Flags>>;
+
+export const UserContext = createContext<{ flags: Flags, setFlags: SetFlags }>({ flags: { isHelpOpen: false, isHelpFocused: false }, setFlags: () => null });
+
+export const _setFlags: { current: SetFlags } = { current: null };
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const { i18n } = useT();
   const { locale, pathname, asPath, query, isReady, replace } = useRouter();
   const { user } = useJukiBase();
+  const [flags, setFlags] = useState<Flags>({ isHelpOpen: false, isHelpFocused: false });
+  _setFlags.current = setFlags;
   
   useEffect(() => {
     if (isReady) {
@@ -58,18 +48,21 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   }, [user.settings?.preferredTheme]);
   
   return (
-    <UserContext.Provider value={{}}>
+    <UserContext.Provider value={{ flags, setFlags }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export const useUserState = (): (UserState & { isLoading: boolean }) => {
+export const useUserState = (): (UserState & { isLoading: boolean, flags: Flags, setFlags: SetFlags }) => {
   const { user, userIsLoading: isLoading } = useJukiBase();
+  const { flags, setFlags } = useContext(UserContext);
   
   return {
     ...user,
     isLoading,
+    flags,
+    setFlags,
   };
 };
 

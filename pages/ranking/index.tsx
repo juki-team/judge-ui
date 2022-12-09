@@ -1,69 +1,122 @@
-import { ContentLayout, Field, PagedDataViewer, T, TextHeadCell, UserNicknameLink } from 'components';
-import { JUDGE_API_V1, QueryParam } from 'config/constants';
-import React, { useMemo } from 'react';
-import { DataViewerHeadersType, GetUrl } from 'types';
-
-type ProblemSummaryListResponseDTO = {
-  nickname: string,
-  problemPoints: number,
-}
+import { ContentLayout, DataViewer, Field, T, TextHeadCell, UserNicknameLink, Image } from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
+import { searchParamsObjectTypeToQuery } from 'helpers';
+import { useDataViewerRequester2, useRouter } from 'hooks';
+import React, { useCallback, useMemo } from 'react';
+import { ContentsResponseType, DataViewerHeadersType, GetUrl, UserRankResponseDTO } from 'types';
 
 function Ranking() {
   
-  const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">position</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">position</T>} />,
       index: 'key',
       field: ({ record: {}, isCard, recordIndex }) => (
-        <Field className="jk-row fw-bd">
-          <div>{recordIndex}</div>
+        <Field className="jk-row fw-br">
+          <div>{recordIndex + 1}</div>
         </Field>
       ),
-      sort: true,
       cardPosition: 'top',
-      minWidth: 100,
+      minWidth: 80,
     },
     {
-      head: <TextHeadCell text={<T>nickname</T>} />,
-      index: 'name',
-      field: ({ record: { nickname } }) => (
+      head: <TextHeadCell text={<T className="tt-ue tx-s">nickname</T>} />,
+      index: 'nickname',
+      field: ({ record: { nickname, imageUrl } }) => (
         <Field className="jk-row link fw-bd">
           <UserNicknameLink nickname={nickname}>
-            <div>{nickname}</div>
+            <div className="jk-row gap">
+              <Image src={imageUrl} className="jk-user-profile-img large jk-shadow" alt={nickname} height={50} width={50} />
+              {nickname}
+            </div>
           </UserNicknameLink>
         </Field>
       ),
-      sort: true,
-      filter: { type: 'text' },
+      filter: { type: 'text-auto' },
       cardPosition: 'top',
-      minWidth: 300,
+      minWidth: 200,
     },
     {
-      head: <TextHeadCell text={<T>points by problems</T>} />,
+      head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by problems</T>} />,
       index: 'problem-points',
       field: ({ record: { problemPoints } }) => (
-        <Field className="jk-row link fw-bd">
-          <div>{problemPoints}</div>
+        <Field className="jk-row center">
+          <div className="fw-bd">{problemPoints.toFixed(2)}</div>
+          &nbsp;<T>pnts</T>.
         </Field>
       ),
-      sort: true,
-      filter: { type: 'text' },
-      cardPosition: 'top',
-      minWidth: 300,
+      sort: { compareFn: () => (rowA, rowB) => rowB.problemPoints - rowA.problemPoints },
+      cardPosition: 'center',
+      minWidth: 150,
+    },
+    {
+      head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by competitions</T>} />,
+      index: 'contest-points',
+      field: ({ record: { contestPoints } }) => (
+        <Field className="jk-row center">
+          <div className="fw-bd">{contestPoints.toFixed(2)}</div>
+          &nbsp;<T>pnts</T>.
+        </Field>
+      ),
+      sort: { compareFn: () => (rowA, rowB) => rowB.contestPoints - rowA.contestPoints },
+      cardPosition: 'center',
+      minWidth: 150,
+    },
+    {
+      head: <TextHeadCell text={<><T className="tt-ue tx-s">country</T>, <T className="tt-ue tx-s">city</T></>} />,
+      index: 'country-city',
+      field: ({ record: { country, city } }) => (
+        <Field className="jk-row center">
+          {city}{city ? <>,&nbsp;</> : ''}<span className="fw-bd">{country}</span>
+        </Field>
+      ),
+      filter: { type: 'text-auto' },
+      cardPosition: 'bottom',
+      minWidth: 200,
+    },
+    {
+      head: <TextHeadCell text={<T className="tt-ue tx-s">institution</T>} />,
+      index: 'institution',
+      field: ({ record: { institution } }) => (
+        <Field className="jk-row center">
+          {institution}
+        </Field>
+      ),
+      filter: { type: 'text-auto' },
+      cardPosition: 'bottom',
+      minWidth: 200,
     },
   ], []);
   
   const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
-    // JUDGE_API_V1.RANKING.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
     JUDGE_API_V1.RANKING.LIST()
   );
   
+  const { queryObject, replace } = useRouter();
+  
+  const {
+    data: response,
+    request,
+    setLoaderStatusRef,
+  } = useDataViewerRequester2<ContentsResponseType<UserRankResponseDTO>>(url, { refreshInterval: 5 * 60 * 1000 });
+  
+  const setSearchParamsObject = useCallback(params => replace({ query: searchParamsObjectTypeToQuery(params) }), []);
+  
+  const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
+  
   return (
-    <ContentLayout>
-      <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
+    <ContentLayout style={{ height: '100%' }}>
+      <DataViewer<UserRankResponseDTO>
         headers={columns}
-        url={url}
-        name={QueryParam.PROBLEMS_TABLE}
+        data={data}
+        rows={{ height: 68 }}
+        request={request}
+        name={QueryParam.RANKING_TABLE}
+        setLoaderStatusRef={setLoaderStatusRef}
+        searchParamsObject={queryObject}
+        setSearchParamsObject={setSearchParamsObject}
+        // getRowKey={getRowKey}
+        {...DEFAULT_DATA_VIEWER_PROPS}
       />
     </ContentLayout>
   );

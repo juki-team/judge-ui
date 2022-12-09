@@ -1,10 +1,10 @@
-import { ButtonLoader, CheckIcon, CloseIcon, ContentLayout, Field, PagedDataViewer, PlusIcon, Popover, T, TextField, TextHeadCell } from 'components';
+import { ButtonLoader, CheckIcon, CloseIcon, ContentLayout, Field, PagedDataViewer, PlusIcon, Popover, T, TextField, TextHeadCell, UserNicknameLink } from 'components';
 import { PROBLEM_STATUS, QueryParam, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
 import { useFetcher, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContentsResponseType, DataViewerHeadersType, FilterSelectOnlineType, GetUrl, ProblemStatus, ProblemSummaryListResponseDTO, ProblemTab } from 'types';
 
@@ -14,7 +14,7 @@ function Problems() {
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">id</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">id</T>} />,
       index: 'key',
       field: ({ record: { key }, isCard }) => (
         <Field className="jk-row link fw-bd">
@@ -29,7 +29,7 @@ function Problems() {
       minWidth: 100,
     },
     {
-      head: <TextHeadCell text={<T>problem name</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} />,
       index: 'name',
       field: ({ record: { key, name, user } }) => (
         <Field className="jk-row link fw-bd">
@@ -72,7 +72,7 @@ function Problems() {
       minWidth: 300,
     },
     {
-      head: <TextHeadCell text={<T>tags</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} />,
       index: 'tags',
       field: ({ record: { tags } }) => (
         <Field className="jk-row left gap">
@@ -88,7 +88,7 @@ function Problems() {
     },
     ...(canCreateProblem ? [
       {
-        head: <TextHeadCell text={<T>visibility</T>} />,
+        head: <TextHeadCell text={<T className="tt-ue tx-s">visibility</T>} />,
         index: 'status',
         field: ({ record: { status } }) => (
           <TextField
@@ -109,6 +109,21 @@ function Problems() {
             label: <T className="tt-ce">{PROBLEM_STATUS[status].label}</T>,
           })),
         },
+        cardPosition: 'bottom',
+        minWidth: 200,
+      } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
+      {
+        head: <TextHeadCell text={<T className="tt-ue tx-s">owner</T>} />,
+        index: 'ownerUserNickname',
+        field: ({ record: { ownerUserNickname } }) => (
+          <Field className="jk-row">
+            <UserNicknameLink nickname={ownerUserNickname}>
+              <div className="link">{ownerUserNickname}</div>
+            </UserNicknameLink>
+          </Field>
+        ),
+        sort: true,
+        filter: { type: 'text-auto' },
         cardPosition: 'bottom',
         minWidth: 200,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,

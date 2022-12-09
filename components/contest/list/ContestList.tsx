@@ -17,7 +17,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
   
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T>state</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">state</T>} />,
       index: 'state',
       field: ({ record: { isPast, isLive, isFuture } }) => (
         <Field className="jk-row pad">
@@ -34,11 +34,10 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
       },
       cardPosition: 'center',
       minWidth: 130,
-      
     },
     contestNameColumn(false),
     {
-      head: <TextHeadCell text={<div className="jk-col"><T>start</T><T>end</T></div>} />,
+      head: <TextHeadCell text={<div className="jk-col tt-ue tx-s"><T>start</T><T>end</T></div>} />,
       index: 'date',
       field: ({ record: { settings } }) => (
         <Field className="jk-col">

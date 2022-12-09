@@ -97,6 +97,10 @@ export {
   DragIcon,
   InputCheckbox,
   CloudDownloadIcon,
+  GmailIcon,
+  TelegramIcon,
+  HeadsetMicIcon,
+  PhoneIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore

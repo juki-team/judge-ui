@@ -19,7 +19,7 @@ export const CreateContestButton = () => {
 };
 
 export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
-  head: <TextHeadCell text={<T>contest name</T>} />,
+  head: <TextHeadCell text={<T className="tt-ue tx-s">contest name</T>} />,
   index: 'name',
   field: ({ record: { name, key, user } }) => (
     <Field className="jk-row">
@@ -84,7 +84,7 @@ export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestS
 });
 
 export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
-  head: <TextHeadCell text={<T>contestants</T>} />,
+  head: <TextHeadCell text={<T className="tt-ue tx-s">contestants</T>} />,
   index: 'totalContestants',
   field: ({ record: { totalContestants } }) => (
     <TextField text={totalContestants} label={<T>registered</T>} />

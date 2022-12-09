@@ -1,16 +1,7 @@
-import {
-  AdminInformation,
-  ButtonLoader,
-  FrozenInformation,
-  JudgeInformation,
-  MdMathViewer,
-  QuietInformation,
-  SpectatorInformation,
-  T,
-} from 'components';
+import { AdminInformation, ButtonLoader, FrozenInformation, JudgeInformation, MdMathViewer, QuietInformation, SpectatorInformation, T } from 'components';
 import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
-import { addParamQuery, authorizedRequest, cleanRequest, notifyResponse, useDateFormat } from 'helpers';
-import { useNotification, useSWR } from 'hooks';
+import { addParamQuery, authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { useDateFormat, useNotification, useSWR } from 'hooks';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, SetLoaderStatusOnClickType, Status } from 'types';

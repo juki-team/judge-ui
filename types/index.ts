@@ -62,6 +62,7 @@ export type {
   TaskDefinitionResponseDTO,
   SqsPropertiesResponseDTO,
   UserState,
+  UserRankResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType } from '@juki-team/base-ui';

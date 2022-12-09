@@ -1,35 +1,10 @@
 import { settings } from '@juki-team/base-ui';
-import { useFetcher } from 'hooks';
+import { useFetcher as useFetcherJk } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
 import { useSWRConfig } from 'swr';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  GetUrl,
-  HTTPMethod,
-  RequestFilterType,
-  RequestSortType,
-  SetLoaderStatusType,
-  Status,
-  UseFetcherOptionsType,
-} from 'types';
-
-const fetcher1 = (url: string, method?: HTTPMethod, body?: string, signal?: AbortSignal) => {
-  
-  const requestHeaders: HeadersInit = new Headers();
-  requestHeaders.set('Accept', 'application/json');
-  requestHeaders.set('Content-Type', 'application/json');
-  
-  return fetch(url, {
-    method: method ? method : HTTPMethod.GET,
-    headers: requestHeaders,
-    credentials: 'include',
-    ...(body ? { body } : {}),
-    ...(signal ? { signal } : {}),
-  }).then((res) => res.text());
-};
+import { ContentResponseType, ContentsResponseType, GetUrl, RequestFilterType, RequestSortType, SetLoaderStatusType, Status, UseFetcherOptionsType } from 'types';
 
 export const useRouter = () => {
   const { query, ...rest } = useNextRouter();
@@ -54,7 +29,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const [firstRefresh, setFirstRefresh] = useState(false);
   const { nickname } = useUserState();
-  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(firstRefresh ? url : null, options);
+  const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(firstRefresh ? url : null, options);
   
   const request = useCallback(async () => {
     if (!firstRefresh) {
@@ -91,7 +66,7 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const { nickname } = useUserState();
   const [url, setUrl] = useState(null);
-  const { data, error, isLoading, mutate, isValidating } = useFetcher<T>(url, options);
+  const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(url, options);
   
   const request = useCallback(async ({
     pagination,
@@ -166,4 +141,5 @@ export {
   useFetcher,
 } from '@juki-team/base-ui';
 export * from './contest';
+export * from './useDateFormat';
 export * from './useOnline';

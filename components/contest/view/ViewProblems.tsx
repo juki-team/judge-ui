@@ -8,7 +8,7 @@ import { ContentResponseType, ContestResponseDTO, ContestTab, HTTPMethod, Judge,
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { problems = {}, user, isLive, key, settings } = contest;
+  const { problems = {}, user, isLive, key } = contest;
   const { isContestant, isJudge, isAdmin } = user || {};
   const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
