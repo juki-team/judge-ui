@@ -198,8 +198,14 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       >
         {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" /></div> : children}
         <div
-          className={classNames('need-help-container jk-border-radius-inline', { 'open jk-shadow': flags.isHelpOpen, 'cursor-pointer': !flags.isHelpOpen, focus: flags.isHelpFocused })}>
-          <div className="jk-row gap center" onClick={() => setFlags(prevState => ({ ...prevState, isHelpOpen: true }))}>
+          className={classNames('need-help-container jk-border-radius-inline', {
+            'open jk-shadow': flags.isHelpOpen,
+            'cursor-pointer': !flags.isHelpOpen,
+            focus: flags.isHelpFocused,
+          })}
+          onClick={() => setFlags(prevState => ({ ...prevState, isHelpOpen: true }))}
+        >
+          <div className="jk-row gap center">
             <HeadsetMicIcon /><T className="tt-ue tx-s fw-bd">need help?</T>
             <div
               className="jk-row close cursor-pointer"
