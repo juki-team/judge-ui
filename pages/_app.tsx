@@ -1,6 +1,8 @@
-import { consoleWarn, settings } from '@juki-team/base-ui';
+import { settings } from '@juki-team/base-ui';
+import { Analytics } from '@vercel/analytics/react';
 import { JukiBaseUiProvider, NavigationBar } from 'components';
 import { JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL, JUKI_TOKEN_NAME } from 'config/constants';
+import { consoleWarn } from 'helpers';
 import { OnlineStatusProvider } from 'hooks';
 import dynamic from 'next/dynamic';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
@@ -43,6 +45,7 @@ export default function MyApp({ Component, pageProps, router }) {
                 }}
               >
                 <NavigationBar>
+                  <Analytics />
                   <Component {...pageProps} />
                 </NavigationBar>
               </SWRConfig>
