@@ -52,13 +52,13 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by competitions</T>} />,
       index: 'contest-points',
-      field: ({ record: { contestPoints } }) => (
+      field: ({ record: { competitionPoints } }) => (
         <Field className="jk-row center">
-          <div className="fw-bd">{contestPoints.toFixed(2)}</div>
+          <div className="fw-bd">{competitionPoints?.toFixed(2)}</div>
           &nbsp;<T>pnts</T>.
         </Field>
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowB.contestPoints - rowA.contestPoints },
+      sort: { compareFn: () => (rowA, rowB) => rowB.competitionPoints - rowA.competitionPoints },
       cardPosition: 'center',
       minWidth: 150,
     },
