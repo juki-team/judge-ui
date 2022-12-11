@@ -1,15 +1,37 @@
 import { T } from 'components';
-import { JUDGE_API_V1, JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL, JUKI_TOKEN_NAME, OpenDialog, QueryParam, USER_GUEST } from 'config/constants';
+import {
+  JUDGE_API_V1,
+  JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL,
+  JUKI_TOKEN_NAME,
+  OpenDialog,
+  QueryParam,
+  USER_GUEST,
+} from 'config/constants';
 import { actionLoaderWrapper, addParamQuery, authorizedRequest, cleanRequest, notifyResponse, toBlob } from 'helpers';
 import { useJukiBase, useMatchMutate, useNotification, useSWR, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
-import { ButtonLoaderOnClickType, ContentResponseType, HTTPMethod, Language, SetLoaderStatusOnClickType, Status, Theme, UserPingResponseDTO, UserState } from 'types';
+import {
+  ButtonLoaderOnClickType,
+  ContentResponseType,
+  HTTPMethod,
+  Language,
+  SetLoaderStatusOnClickType,
+  Status,
+  Theme,
+  UserPingResponseDTO,
+  UserState,
+} from 'types';
 
 type Flags = { isHelpOpen: boolean, isHelpFocused: boolean };
 type SetFlags = Dispatch<SetStateAction<Flags>>;
 
-export const UserContext = createContext<{ flags: Flags, setFlags: SetFlags }>({ flags: { isHelpOpen: false, isHelpFocused: false }, setFlags: () => null });
+export const UserContext = createContext<{ flags: Flags, setFlags: SetFlags }>({
+  flags: {
+    isHelpOpen: false,
+    isHelpFocused: false,
+  }, setFlags: () => null,
+});
 
 export const _setFlags: { current: SetFlags } = { current: null };
 
@@ -69,7 +91,7 @@ export const useUserState = (): (UserState & { isLoading: boolean, flags: Flags,
 export const useUserDispatch = () => {
   
   const { addNotification, addSuccessNotification, addErrorNotification, addInfoNotification } = useNotification();
-  const { setUser } = useJukiBase();
+  const { setUser, mutatePing } = useJukiBase();
   const { push, query } = useRouter();
   const { mutate } = useSWR();
   const matchMutate = useMatchMutate();
@@ -86,7 +108,7 @@ export const useUserDispatch = () => {
         body: JSON.stringify(body),
       }));
       if (notifyResponse(response, addNotification)) {
-        await mutate(JUDGE_API_V1.AUTH.PING());
+        await mutatePing();
         await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string));
         setLoaderStatus(Status.SUCCESS);
         onSuccess();
@@ -106,7 +128,7 @@ export const useUserDispatch = () => {
             body: formData,
           }));
           if (notifyResponse(response, addNotification)) {
-            await mutate(JUDGE_API_V1.AUTH.PING());
+            await mutatePing();
             await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string));
             onSuccess();
             setLoader(Status.SUCCESS);
@@ -219,7 +241,7 @@ export const useUserDispatch = () => {
         })),
         addNotification,
         onSuccess: async () => {
-          await mutate(JUDGE_API_V1.AUTH.PING());
+          await mutatePing();
           addSuccessNotification(<T className="tt-se">your personal information has been updated</T>);
         },
         setLoader,

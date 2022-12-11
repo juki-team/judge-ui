@@ -1,7 +1,8 @@
-import { NotFound, ProblemCodeEditor, ProblemStatement, SplitPane } from 'components';
-import { ROUTES } from 'config/constants';
+import { ProblemCodeEditor, ProblemStatement, SplitPane } from 'components';
 import { useRouter } from 'hooks';
-import { ContestResponseDTO, ContestTab } from 'types';
+import Custom404 from 'pages/404';
+import React from 'react';
+import { ContestResponseDTO } from 'types';
 
 export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -10,7 +11,7 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { user } = contest;
   if (!problem) {
-    return <NotFound redirectAction={() => push(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.PROBLEMS))} />;
+    return <Custom404 />;
   }
   
   return (

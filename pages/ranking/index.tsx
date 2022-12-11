@@ -18,6 +18,7 @@ function Ranking() {
       ),
       cardPosition: 'top',
       minWidth: 80,
+      sticky: true,
     },
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">nickname</T>} />,
@@ -34,7 +35,8 @@ function Ranking() {
       ),
       filter: { type: 'text-auto' },
       cardPosition: 'top',
-      minWidth: 200,
+      minWidth: 300,
+      sticky: true,
     },
     {
       head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by problems</T>} />,

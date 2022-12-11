@@ -68,7 +68,6 @@ export {
   MdMathViewer,
   MenuIcon,
   Modal,
-  NotFound,
   PlaceIcon,
   PlusIcon,
   Popover,

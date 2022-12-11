@@ -967,14 +967,15 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.202":
-  version "0.0.202"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.202/6a7699f7c8261e47ea0745037795a3dc2d021607#6a7699f7c8261e47ea0745037795a3dc2d021607"
-  integrity sha512-awSQdd1C38ScS0DCwgSR54AKouxAH9pWmCQdtOANnBTPQlzJYyGCS97L92LMbhmr2r+MtdV8RRbLg77dM1pevw==
+"@juki-team/base-ui@^0.0.208":
+  version "0.0.208"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.208/2c455bba72b2a51ad08b7a9fe9ef6f471fd39bad#2c455bba72b2a51ad08b7a9fe9ef6f471fd39bad"
+  integrity sha512-kI13nByPPYz4q/aoIj8u5Ch5EbrYe83WmiGYNOhnEwmeaJu4uGhutBTgQoFKRa5NbBtsdgZ2UypUxygruvYONQ==
   dependencies:
     "@hookform/resolvers" "^2.8.8"
     "@juki-team/commons" "^0.0.206"
     "@monaco-editor/react" "^4.4.2"
+    "@tanstack/react-virtual" "^3.0.0-beta.30"
     codemirror "^5.65.2"
     immutability-helper "^3.1.1"
     prismjs "^1.29.0"
@@ -989,7 +990,6 @@
     react-markdown "^8.0.3"
     react-modal "^3.15.1"
     react-resize-detector "^7.1.2"
-    react-virtual "^2.10.4"
     rehype-katex "^6.0.2"
     remark-gfm "^3.0.1"
     remark-math "^5.1.1"
@@ -1005,10 +1005,10 @@
   resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.206/92cdb00535d795a72ed174528804ad2d7ca19103#92cdb00535d795a72ed174528804ad2d7ca19103"
   integrity sha512-9W7qv0/tMGqQKkz1/9EuCHyA27NkVoHDdUMcYcTpjcSVK4UvOHLw5CX0EenV27orcUrIaxkYNc0xiyqVgGAYMg==
 
-"@juki-team/commons@^0.0.208":
-  version "0.0.208"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.208/d344f818a8c4a5508de7dd67d53ec88ffdd24175#d344f818a8c4a5508de7dd67d53ec88ffdd24175"
-  integrity sha512-qFwfNR2e9BscRjZXyGO/w0ZDsVBRiDeYG7Tv3rBeMR4x16qQXxuo2v8IM6MDkcF0kSVzgl16xqpmCNEH9G72bQ==
+"@juki-team/commons@^0.0.210":
+  version "0.0.210"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.210/3600fcbcb906ac6240b0fec158ce305187645d3a#3600fcbcb906ac6240b0fec158ce305187645d3a"
+  integrity sha512-d+l274hfeGTePkpYJDLqNDIQCcGP/ooV+xB4KKFCxCM8IHJN72POJEMHnV5rrHyh310cxQoQ2zOl4mdTV4An3g==
 
 "@monaco-editor/loader@^1.3.2":
   version "1.3.2"
@@ -1116,11 +1116,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@reach/observe-rect@^1.1.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@reach/observe-rect/-/observe-rect-1.2.0.tgz#d7a6013b8aafcc64c778a0ccb83355a11204d3b2"
-  integrity sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==
-
 "@react-dnd/asap@^5.0.1":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@react-dnd/asap/-/asap-5.0.2.tgz#1f81f124c1cd6f39511c11a881cfb0f715343488"
@@ -1194,6 +1189,18 @@
   integrity sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==
   dependencies:
     tslib "^2.4.0"
+
+"@tanstack/react-virtual@^3.0.0-beta.30":
+  version "3.0.0-beta.30"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.0.0-beta.30.tgz#7236f43bdc4755b00872dfef1cb2006dd8f717f7"
+  integrity sha512-Sn1SSbSjDwb++jVOtgiQ/OHFMdcXFg8Qx02/cn0eq9xxHIhm/SqrKDpywIeydgNdOsdfBomOfxm/4gqTLrY1gg==
+  dependencies:
+    "@tanstack/virtual-core" "3.0.0-beta.30"
+
+"@tanstack/virtual-core@3.0.0-beta.30":
+  version "3.0.0-beta.30"
+  resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.0.0-beta.30.tgz#7fd5e206dd706297b8234227c330c203a795f061"
+  integrity sha512-fewNoKiJeG5v0T4jg7UO99G+hUYDHig6AkiIeqvC1O2zEw96MlzR6DXw91aqxcsIPSVp83IPsgNa7su8yZWldw==
 
 "@types/debug@^4.0.0":
   version "4.1.7"
@@ -3798,13 +3805,6 @@ react-textarea-autosize@^8.3.2:
     "@babel/runtime" "^7.10.2"
     use-composed-ref "^1.3.0"
     use-latest "^1.2.1"
-
-react-virtual@^2.10.4:
-  version "2.10.4"
-  resolved "https://registry.yarnpkg.com/react-virtual/-/react-virtual-2.10.4.tgz#08712f0acd79d7d6f7c4726f05651a13b24d8704"
-  integrity sha512-Ir6+oPQZTVHfa6+JL9M7cvMILstFZH/H3jqeYeKI4MSUX+rIruVwFC6nGVXw9wqAw8L0Kg2KvfXxI85OvYQdpQ==
-  dependencies:
-    "@reach/observe-rect" "^1.1.0"
 
 react@^18.2.0:
   version "18.2.0"

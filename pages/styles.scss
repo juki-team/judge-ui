@@ -21,18 +21,6 @@ body {
   }
 }
 
-.flex-1 { flex: 1; }
-
-.flex-2 { flex: 2; }
-
-.flex-3 { flex: 3; }
-
-.flex-4 { flex: 4; }
-
-.flex-5 { flex: 5; }
-
-.flex-6 { flex: 6; }
-
 .image-404 {
   max-height: calc(var(--100VH) - 300px);
   width: calc(100vw - 400px);
@@ -177,3 +165,7 @@ li > * {
 //.jk-table-head-container, .jk-table-head-scroll, .jk-data-viewer-toolbar {
 //  background: var(--t-color-white-2) !important;
 //}
+
+.text-head-field.jk-row.left, .field.jk-row.left {
+  margin-left: var(--pad-xt);
+}

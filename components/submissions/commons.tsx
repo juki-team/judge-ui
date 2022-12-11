@@ -21,7 +21,7 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
   ),
   sort: true,
   filter: { type: 'text' },
-  cardPosition: 'top',
+  cardPosition: 'center',
   minWidth: 250,
 });
 
@@ -102,7 +102,7 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
     type: 'select',
     options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
   },
-  cardPosition: 'center',
+  cardPosition: 'bottom',
   minWidth: 120,
 });
 
@@ -124,7 +124,7 @@ export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<Su
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
     <Field>
-      <div className="jk-col extend">
+      <div className="jk-col gap extend">
         <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
           <Verdict verdict={verdict} points={points} status={status} />
         </SubmissionInfo>
@@ -138,7 +138,7 @@ export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<Su
     options: Object.values(PROBLEM_VERDICT)
       .map(({ value, label }) => ({ label: <T className="tt-se">{label}</T>, value })),
   },
-  cardPosition: 'center',
+  cardPosition: 'bottom',
   minWidth: 140,
 });
 
@@ -146,7 +146,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
   head: <TextHeadCell text={<T>date</T>} />,
   index: 'timestamp',
   field: ({ record: { timestamp }, isCard }) => (
-    <DateField className="jk-row" date={new Date(timestamp)} label={<T>date</T>} />
+    <DateField className="jk-row" date={new Date(timestamp)} label={<T className="tt-ue">date</T>} />
   ),
   sort: true,
   filter: {
@@ -168,7 +168,7 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDT
   ),
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
-  cardPosition: 'bottom',
+  cardPosition: 'topLeft',
   minWidth: 140,
 });
 
@@ -182,6 +182,6 @@ export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponse
   ),
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
-  cardPosition: 'bottom',
+  cardPosition: 'topRight',
   minWidth: 140,
 });

@@ -23,8 +23,13 @@
     height: 100%;
     width: var(--screen-content-width);
     
-    > .jk-data-viewer-layout.with-pagination {
+    > .jk-data-viewer-layout {
       height: calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
+  
+      .jk-view-container {
+        border: 1px solid var(--t-color-gray-6);
+        @extend .jk-border-radius-inline;
+      }
     }
     
     > .jk-tabs-layout {
@@ -60,19 +65,27 @@
         box-sizing: border-box;
         background-color: var(--t-color-white);
         border-radius: 0 var(--border-radius-inline) var(--border-radius-inline) var(--border-radius-inline);
-        @extend .jk-shadow;
+        //@extend .jk-shadow;
         //overflow-x: auto;
         overflow-x: visible;
         --tab-content-min-height: calc(var(--second-content-layout-min-height, 100%) - var(--tabs-header-height));
         min-height: var(--tab-content-min-height);
         margin-bottom: var(--mobile-bottom-horizontal-menu-height);
-        
+  
+        //min-height: calc(var(--tab-content-min-height) - 2px);
+        //height: calc(var(--tab-content-min-height) - 2px);
+  
+        > div > div {
+          border: 1px solid var(--t-color-gray-6);
+        }
+  
         > div {
           min-height: var(--tab-content-min-height);
-          
+    
           > .jk-data-viewer-layout {
-            height: var(--tab-content-min-height);
-            
+            height: calc(var(--tab-content-min-height) - 2px);
+            //height: var(--tab-content-min-height);
+      
             .jk-view-container {
               .jk-table-rows-container {
                 //overflow: hidden !important;
@@ -86,7 +99,10 @@
         }
         
         .jk-view-container {
-          border-top: 1px solid var(--t-color-gray-6);
+          &.rows {
+            border-top: 1px solid var(--t-color-gray-6);
+          }
+  
           border-radius: 0;
           box-shadow: none;
           box-sizing: border-box;

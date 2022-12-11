@@ -1,4 +1,18 @@
-import { ButtonLoader, CheckIcon, CloseIcon, ContentLayout, Field, PagedDataViewer, PlusIcon, Popover, T, TextField, TextHeadCell, UserNicknameLink } from 'components';
+import { classNames } from '@juki-team/base-ui';
+import {
+  ButtonLoader,
+  CheckIcon,
+  CloseIcon,
+  ContentLayout,
+  Field,
+  PagedDataViewer,
+  PlusIcon,
+  Popover,
+  T,
+  TextField,
+  TextHeadCell,
+  UserNicknameLink,
+} from 'components';
 import { PROBLEM_STATUS, QueryParam, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
@@ -6,7 +20,15 @@ import { useFetcher, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { useUserState } from 'store';
-import { ContentsResponseType, DataViewerHeadersType, FilterSelectOnlineType, GetUrl, ProblemStatus, ProblemSummaryListResponseDTO, ProblemTab } from 'types';
+import {
+  ContentsResponseType,
+  DataViewerHeadersType,
+  FilterSelectOnlineType,
+  GetUrl,
+  ProblemStatus,
+  ProblemSummaryListResponseDTO,
+  ProblemTab,
+} from 'types';
 
 function Problems() {
   
@@ -25,17 +47,17 @@ function Problems() {
       ),
       sort: true,
       filter: { type: 'text' },
-      cardPosition: 'top',
+      cardPosition: 'center',
       minWidth: 100,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} className="left" />,
       index: 'name',
       field: ({ record: { key, name, user } }) => (
-        <Field className="jk-row link fw-bd">
+        <Field className="jk-row link fw-bd left">
           <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
-            <div className="jk-row gap">
-              {name}
+            <div className="jk-row gap nowrap">
+              <div className="jk-row left" style={{ textAlign: 'left' }}>{name}</div>
               {user.solved ? (
                 <Popover
                   content={<T className="tt-se ws-np">solved</T>}
@@ -68,14 +90,14 @@ function Problems() {
       ),
       sort: true,
       filter: { type: 'text' },
-      cardPosition: 'top',
+      cardPosition: 'center',
       minWidth: 300,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} className="left" />,
       index: 'tags',
-      field: ({ record: { tags } }) => (
-        <Field className="jk-row left gap">
+      field: ({ record: { tags }, isCard }) => (
+        <Field className={classNames('jk-row gap', { center: isCard, left: !isCard })}>
           {tags.map(tag => !!tag && <div className="jk-tag gray-6 tx-s">{tag}</div>)}
         </Field>
       ),
@@ -83,7 +105,7 @@ function Problems() {
         type: 'select',
         options: (tags?.success ? tags.contents : []).map(tag => ({ value: tag, label: tag })),
       } as FilterSelectOnlineType,
-      cardPosition: 'center',
+      cardPosition: 'bottom',
       minWidth: 250,
     },
     ...(canCreateProblem ? [
@@ -109,22 +131,26 @@ function Problems() {
             label: <T className="tt-ce">{PROBLEM_STATUS[status].label}</T>,
           })),
         },
-        cardPosition: 'bottom',
-        minWidth: 200,
+        cardPosition: 'topLeft',
+        minWidth: 160,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
       {
         head: <TextHeadCell text={<T className="tt-ue tx-s">owner</T>} />,
         index: 'ownerUserNickname',
         field: ({ record: { ownerUserNickname } }) => (
-          <Field className="jk-row">
-            <UserNicknameLink nickname={ownerUserNickname}>
-              <div className="link">{ownerUserNickname}</div>
-            </UserNicknameLink>
-          </Field>
+          <TextField
+            className="jk-row"
+            text={
+              <UserNicknameLink nickname={ownerUserNickname}>
+                <div className="link">{ownerUserNickname}</div>
+              </UserNicknameLink>
+            }
+            label={<T className="tt-ue">nickname</T>}
+          />
         ),
         sort: true,
         filter: { type: 'text-auto' },
-        cardPosition: 'bottom',
+        cardPosition: 'topRight',
         minWidth: 200,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),

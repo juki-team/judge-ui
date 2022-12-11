@@ -32,7 +32,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
           label: <T className="tt-ce">{option}</T>,
         })),
       },
-      cardPosition: 'center',
+      cardPosition: 'top',
       minWidth: 130,
     },
     contestNameColumn(false),
