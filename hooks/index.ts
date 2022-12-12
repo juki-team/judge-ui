@@ -3,8 +3,16 @@ import { useFetcher as useFetcherJk } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import { useSWRConfig } from 'swr';
-import { ContentResponseType, ContentsResponseType, GetUrl, RequestFilterType, RequestSortType, SetLoaderStatusType, Status, UseFetcherOptionsType } from 'types';
+import { SWRConfiguration, useSWRConfig } from 'swr';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  GetUrl,
+  RequestFilterType,
+  RequestSortType,
+  SetLoaderStatusType,
+  Status,
+} from 'types';
 
 export const useRouter = () => {
   const { query, ...rest } = useNextRouter();
@@ -24,7 +32,7 @@ export const useRouter = () => {
   return { query, queryObject, ...rest };
 };
 
-export const useDataViewerRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: UseFetcherOptionsType) => {
+export const useDataViewerRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: SWRConfiguration) => {
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const [firstRefresh, setFirstRefresh] = useState(false);
@@ -61,7 +69,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
 };
 
 // TODO: check when getUrl changes
-export const useDataViewerRequester2 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(getUrl: GetUrl, options?: UseFetcherOptionsType) => {
+export const useDataViewerRequester2 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(getUrl: GetUrl, options?: SWRConfiguration) => {
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const { nickname } = useUserState();

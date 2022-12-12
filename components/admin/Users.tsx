@@ -25,7 +25,8 @@ import {
 } from 'config/constants';
 import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useRouter } from 'hooks';
-import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import React, { useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -173,16 +174,15 @@ export function Users() {
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
         setLoaderStatusRef={setLoaderStatusRef}
-        extraButtons={[
-          <a
+        extraNodes={[
+          <Link
             href="https://oscargauss.notion.site/Permissions-V2-6487a360cea1482c963d281f6f6317d4"
             target="_blank"
-            rel="noopener noreferrer"
           >
             <Button icon={<LinkIcon />} size="small" style={{ marginLeft: 'var(--pad-xt)' }}>
               <T>open roles</T>
             </Button>
-          </a>,
+          </Link>,
         ]}
         {...DEFAULT_DATA_VIEWER_PROPS}
       />

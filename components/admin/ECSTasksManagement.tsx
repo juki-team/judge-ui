@@ -101,7 +101,7 @@ export const ECSTasksManagement = () => {
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       setLoaderStatusRef={setLoaderStatusRef}
-      extraButtons={[
+      extraNodes={[
         <ButtonLoader
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);

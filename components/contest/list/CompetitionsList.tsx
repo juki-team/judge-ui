@@ -24,6 +24,11 @@ export const CompetitionsList = () => {
   
   const data: ContestSummaryListResponseDTO[] = (response?.success ? response?.contents : []);
   
+  const extraNodes = [];
+  if (canCreateContest) {
+    extraNodes.push(<CreateContestButton />);
+  }
+  
   return (
     <DataViewer<ContestSummaryListResponseDTO>
       headers={columns}
@@ -32,7 +37,7 @@ export const CompetitionsList = () => {
       request={request}
       setLoaderStatusRef={setLoaderStatusRef}
       name={QueryParam.ENDLESS_CONTESTS_TABLE}
-      extraButtons={canCreateContest ? <CreateContestButton /> : null}
+      extraNodes={extraNodes}
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       {...DEFAULT_DATA_VIEWER_PROPS}

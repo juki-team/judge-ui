@@ -1,9 +1,9 @@
-import { CodeEditorKeyMap, CodeEditorTheme, CodeRunnerEditor } from 'components/index';
+import { CodeRunnerEditor } from 'components/index';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { getEditorSettingsStorageKey, getSourcesStoreKey, isStringJson } from 'helpers';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useUserState } from 'store';
-import { CodeEditorMiddleButtonsType, CodeEditorTestCasesType, ProgrammingLanguage } from 'types';
+import { CodeEditorMiddleButtonsType, CodeEditorTestCasesType, ProgrammingLanguage, Theme } from 'types';
 
 const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T, initialValue?: T): [T, Dispatch<SetStateAction<T>>] => {
   
@@ -48,9 +48,12 @@ export const UserCodeEditor = ({
   
   const editorSettingsStorageKey = getEditorSettingsStorageKey(nickname);
   
-  const [editorSettings, setEditorSettings] = useSaveStorage(editorSettingsStorageKey, {
-    theme: CodeEditorTheme.IDEA,
-    keyMap: CodeEditorKeyMap.SUBLIME,
+  const [editorSettings, setEditorSettings] = useSaveStorage<{
+    theme: Theme, lastLanguageUsed: ProgrammingLanguage,
+    tabSize: number,
+    fontSize: number,
+  }>(editorSettingsStorageKey, {
+    theme: Theme.LIGHT,
     lastLanguageUsed: ProgrammingLanguage.CPP,
     tabSize: 2,
     fontSize: 14,
@@ -82,13 +85,12 @@ export const UserCodeEditor = ({
   return (
     <CodeRunnerEditor
       theme={editorSettings.theme}
-      keyMap={editorSettings.keyMap}
       tabSize={editorSettings.tabSize}
       fontSize={editorSettings.fontSize}
       sourceCode={source[problemJudgeKey]?.[PROGRAMMING_LANGUAGE[language].mime] || ''}
       language={language}
       languages={languages}
-      onChange={({ sourceCode, language: newLanguage, testCases, theme, keyMap, tabSize, fontSize }) => {
+      onChange={({ sourceCode, language: newLanguage, testCases, theme, tabSize, fontSize }) => {
         if (typeof sourceCode === 'string') {
           setSource(prevState => ({
             ...prevState,
@@ -104,9 +106,6 @@ export const UserCodeEditor = ({
         }
         if (theme) {
           setEditorSettings(prevState => ({ ...prevState, theme }));
-        }
-        if (keyMap) {
-          setEditorSettings(prevState => ({ ...prevState, keyMap }));
         }
         if (tabSize) {
           setEditorSettings(prevState => ({ ...prevState, tabSize }));

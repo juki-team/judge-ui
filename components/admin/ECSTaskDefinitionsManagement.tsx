@@ -4,7 +4,14 @@ import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/cons
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
-import { ContentResponseType, ContentsResponseType, DataViewerHeadersType, HTTPMethod, Status, TaskDefinitionResponseDTO } from 'types';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  DataViewerHeadersType,
+  HTTPMethod,
+  Status,
+  TaskDefinitionResponseDTO,
+} from 'types';
 
 type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date, isHighRunner: boolean, isLowRunner: boolean };
 type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[] };
@@ -144,7 +151,6 @@ export const ECSTaskDefinitionsManagement = () => {
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       setLoaderStatusRef={setLoaderStatusRef}
-      extraButtons={[]}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

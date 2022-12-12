@@ -169,7 +169,7 @@ function Problems() {
         url={url}
         name={QueryParam.PROBLEMS_TABLE}
         refreshInterval={60000}
-        extraButtons={[
+        extraNodes={[
           ...(canCreateProblem ? [
             <ButtonLoader
               size="small"

@@ -77,7 +77,12 @@ const ProblemView = (): ReactNode => {
                 <h5>{problem.name}</h5>
                 <Popover
                   content={
-                    <ProblemInfo author={problem.author} status={problem.status} tags={problem.tags} settings={problem.settings} />
+                    <ProblemInfo
+                      author={problem.author}
+                      status={problem.status}
+                      tags={problem.tags}
+                      settings={problem.settings}
+                    />
                   }
                   triggerOn="click"
                   placement="bottom"
@@ -90,7 +95,7 @@ const ProblemView = (): ReactNode => {
               selectedTabKey={query.tab as string}
               tabs={tabs}
               onChange={tabKey => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabKey as ProblemTab), query })}
-              actionsSection={
+              extraNodes={
                 data?.content?.user?.isEditor ? [
                   <ButtonLoader
                     size="small"
@@ -119,7 +124,9 @@ const ProblemView = (): ReactNode => {
                             { method: HTTPMethod.POST },
                           ));
                           if (result.success) {
-                            addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>);
+                            addSuccessNotification(
+                              <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
+                            );
                             setLoaderStatus(Status.SUCCESS);
                           } else {
                             addErrorNotification(<T

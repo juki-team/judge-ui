@@ -56,7 +56,8 @@ export default function ProfileView() {
               selectedTabKey={tab as ProfileTab}
               tabs={tabHeaders}
               onChange={tabKey => push({ pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey), query })}
-              actionsSection={[
+              // TODO improve:
+              extraNodes={[
                 ...(data.content?.canUpdatePassword ? [
                   <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('UPDATE_PASSWORD')}>
                     <T className="ws-np">update password</T>
@@ -80,4 +81,3 @@ export default function ProfileView() {
     </FetcherLayer>
   );
 }
-

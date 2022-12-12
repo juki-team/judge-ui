@@ -8,7 +8,7 @@
     "pull": "yarn add @juki-team/commons @juki-team/base-ui"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.0.210",
+    "@juki-team/base-ui": "^0.0.214",
     "@juki-team/commons": "^0.0.210",
     "@vercel/analytics": "^0.1.6",
     "deep-object-diff": "^1.1.7",
@@ -20,7 +20,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-json-view": "^1.21.3",
-    "swr": "^1.2.1",
+    "swr": "^2.0.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

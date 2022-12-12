@@ -5,7 +5,15 @@ import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
-import { ButtonLoaderOnClickType, ContentResponseType, ContestsTab, ContestTab, EditCreateContestType, HTTPMethod, Status } from 'types';
+import {
+  ButtonLoaderOnClickType,
+  ContentResponseType,
+  ContestsTab,
+  ContestTab,
+  EditCreateContestType,
+  HTTPMethod,
+  Status,
+} from 'types';
 import { EditCreateContestProps } from '../types';
 import { EditMembers } from './EditMembers';
 import { EditProblems } from './EditProblems';
@@ -104,7 +112,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       </div>
       <Tabs
         tabs={tabHeaders}
-        actionsSection={[
+        extraNodes={[
           <CheckUnsavedChanges
             onSafeClick={() => push(editing ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS))}
             value={contest}

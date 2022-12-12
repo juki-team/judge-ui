@@ -90,7 +90,6 @@ export type {
   CodeEditorExpandPositionType,
   GetRowKeyType,
   RequestFilterType,
-  UseFetcherOptionsType,
   JkTableHeaderFilterType,
   RequestSortType,
   FilterSelectOnlineType,

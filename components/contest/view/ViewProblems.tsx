@@ -4,7 +4,17 @@ import { authorizedRequest, cleanRequest, getProblemJudgeKey, getProblemUrl } fr
 import { useNotification } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ContentResponseType, ContestResponseDTO, ContestTab, HTTPMethod, Judge, Period, ProblemTab, Status, SubmissionRunStatus } from 'types';
+import {
+  ContentResponseType,
+  ContestResponseDTO,
+  ContestTab,
+  HTTPMethod,
+  Judge,
+  Period,
+  ProblemTab,
+  Status,
+  SubmissionRunStatus,
+} from 'types';
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -34,7 +44,8 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
               {problem.judge === Judge.JUKI_JUDGE ? (
                 (isJudgeOrAdmin ? (
                   <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} target="_blank">
-                    <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon size="tiny" /></div>
+                    <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon size="tiny" />
+                    </div>
                   </Link>
                 ) : (<div className="problem-id tx-xs fw-bd cr-g3">ID: {problem.key}</div>))
               ) : (
@@ -103,11 +114,14 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                         method: HTTPMethod.POST,
                       }));
                     if (result.success) {
-                      addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>);
+                      addSuccessNotification(
+                        <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
+                      );
                       setLoaderStatus(Status.SUCCESS);
                     } else {
-                      addErrorNotification(<T
-                        className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
+                      addErrorNotification(
+                        <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
+                      );
                       setLoaderStatus(Status.ERROR);
                     }
                   }}

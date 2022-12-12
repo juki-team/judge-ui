@@ -57,13 +57,18 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
     JUDGE_API_V1.CONTEST.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
   );
   
+  const extraNodes = [];
+  if (canCreateContest) {
+    extraNodes.push(<CreateContestButton />);
+  }
+  
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
       headers={columns}
       url={url}
       name={endless ? QueryParam.ENDLESS_CONTESTS_TABLE : QueryParam.CONTESTS_TABLE}
       refreshInterval={60000}
-      extraButtons={canCreateContest ? <CreateContestButton /> : null}
+      extraNodes={extraNodes}
     />
   );
 };

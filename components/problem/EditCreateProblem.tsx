@@ -97,7 +97,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
             ),
           },
         ]}
-        actionsSection={[
+        extraNodes={[
           <CheckUnsavedChanges
             onSafeClick={() => push(editing ? ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT) : ROUTES.PROBLEMS.LIST())}
             value={problem}

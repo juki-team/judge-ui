@@ -1,4 +1,15 @@
-import { ButtonLoader, CloseIcon, DataViewer, DateField, DeleteIcon, Field, InputToggle, T, TextHeadCell, UserChip } from 'components';
+import {
+  ButtonLoader,
+  CloseIcon,
+  DataViewer,
+  DateField,
+  DeleteIcon,
+  Field,
+  InputToggle,
+  T,
+  TextHeadCell,
+  UserChip,
+} from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
@@ -109,32 +120,34 @@ export function UsersLogged() {
         rows={{ height: 150 }}
         request={request}
         name={QueryParam.LOGGED_USERS_TABLE}
-        extraButtons={
-          <div className="jk-row gap">
-            <ButtonLoader
-              size="small"
-              icon={<CloseIcon circle />}
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
-                  { method: HTTPMethod.POST }),
-                );
-                if (notifyResponse(response, addNotification)) {
-                  setLoaderStatus(Status.SUCCESS);
-                } else {
-                  setLoaderStatus(Status.ERROR);
-                }
-                await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
-              }}>
-              <T>delete old sessions</T>
-            </ButtonLoader>
-            <InputToggle
-              checked={withGuests}
-              onChange={(newValue) => setWithGuests(newValue)}
-              rightLabel={<T className={classNames({ 'fw-bd': withGuests })}>with guests</T>}
-            />
-          </div>
+        extraNodes={
+          [
+            <div className="jk-row gap">
+              <ButtonLoader
+                size="small"
+                icon={<CloseIcon circle />}
+                onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
+                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                    JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
+                    { method: HTTPMethod.POST }),
+                  );
+                  if (notifyResponse(response, addNotification)) {
+                    setLoaderStatus(Status.SUCCESS);
+                  } else {
+                    setLoaderStatus(Status.ERROR);
+                  }
+                  await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
+                }}>
+                <T>delete old sessions</T>
+              </ButtonLoader>
+              <InputToggle
+                checked={withGuests}
+                onChange={(newValue) => setWithGuests(newValue)}
+                rightLabel={<T className={classNames({ 'fw-bd': withGuests })}>with guests</T>}
+              />
+            </div>,
+          ]
         }
         searchParamsObject={queryObject}
         setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}

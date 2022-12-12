@@ -11,7 +11,7 @@ interface PagedDataViewerPros<T, V = T> {
   toRow?: (row: V, index: number) => T,
   url: GetUrl,
   refreshInterval?: number,
-  extraButtons?: ReactNodeOrFunctionType,
+  extraNodes?: ReactNodeOrFunctionType[],
   getRowKey?: GetRowKeyType<T>
 }
 
@@ -21,7 +21,7 @@ export const PagedDataViewer = <T, V = T>({
   toRow,
   url,
   refreshInterval,
-  extraButtons,
+  extraNodes,
   getRowKey,
 }: PagedDataViewerPros<T, V>) => {
   
@@ -49,7 +49,7 @@ export const PagedDataViewer = <T, V = T>({
       request={request}
       name={name}
       setLoaderStatusRef={setLoaderStatusRef}
-      extraButtons={extraButtons}
+      extraNodes={extraNodes}
       searchParamsObject={queryObject}
       setSearchParamsObject={setSearchParamsObject}
       pagination={{ total: lastTotalRef.current, pageSizeOptions: [16, 32, 64, 128, 256, 512] }}

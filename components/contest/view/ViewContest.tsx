@@ -113,9 +113,9 @@ export function ContestView() {
           });
         }
         
-        const actionsSection = [];
+        const extraNodes = [];
         if (viewPortSize === 'lg' || viewPortSize === 'hg') {
-          actionsSection.push(
+          extraNodes.push(
             <div className={`jk-row jk-tag ${tag}`}>
               <T>{statusLabel}</T>,&nbsp;{literal}
             </div>,
@@ -123,7 +123,7 @@ export function ContestView() {
         }
         
         if (isAdmin) {
-          actionsSection.push(
+          extraNodes.push(
             <ButtonLoader
               size="small"
               onClick={async setLoaderStatus => {
@@ -167,7 +167,7 @@ export function ContestView() {
               selectedTabKey={contestTab as ContestTab}
               tabs={tabHeaders}
               onChange={tabKey => pushTab(tabKey as ContestTab)}
-              actionsSection={actionsSection}
+              extraNodes={extraNodes}
             />
           </TwoContentLayout>
         );

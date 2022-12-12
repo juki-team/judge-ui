@@ -1,11 +1,44 @@
-import { BalloonIcon, ButtonLoader, DataViewer, Field, GearsIcon, Image, Popover, Select, SnowflakeIcon, T, TextHeadCell, UserNicknameLink } from 'components';
+import {
+  BalloonIcon,
+  ButtonLoader,
+  DataViewer,
+  Field,
+  GearsIcon,
+  Image,
+  Popover,
+  Select,
+  SnowflakeIcon,
+  T,
+  TextHeadCell,
+  UserNicknameLink,
+} from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, downloadCsvAsFile, getProblemJudgeKey, isEndlessContest, notifyResponse, searchParamsObjectTypeToQuery, stringToArrayBuffer } from 'helpers';
+import {
+  authorizedRequest,
+  classNames,
+  cleanRequest,
+  downloadBlobAsFile,
+  downloadCsvAsFile,
+  getProblemJudgeKey,
+  isEndlessContest,
+  notifyResponse,
+  searchParamsObjectTypeToQuery,
+  stringToArrayBuffer,
+} from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, ContentsResponseType, ContestResponseDTO, ContestTab, DataViewerHeadersType, HTTPMethod, ScoreboardResponseDTO, Status } from 'types';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  ContestResponseDTO,
+  ContestTab,
+  DataViewerHeadersType,
+  HTTPMethod,
+  ScoreboardResponseDTO,
+  Status,
+} from 'types';
 import { utils, write } from 'xlsx';
 
 const DownloadButton = ({
@@ -210,60 +243,57 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       rows={{ height: 68 }}
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
-      extraButtons={() => (
-        <div className="jk-row gap">
-          <div />
-          {!unfrozen && contest?.isFrozenTime && (
-            <Popover content={<T className="ws-np">scoreboard frozen</T>} showPopperArrow>
-              <div className="cr-io"><SnowflakeIcon /></div>
-            </Popover>
-          )}
-          {!unfrozen && contest?.isQuietTime && (
-            <Popover content={<T className="ws-np">scoreboard on quiet time</T>} showPopperArrow>
-              <div className="cr-er"><GearsIcon /></div>
-            </Popover>
-          )}
-          {((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
-            <div className="jk-row">
-              <ButtonLoader
-                setLoaderStatusRef={setLoaderStatusRef}
-                size="tiny"
-                type="secondary"
-                disabled={isLoading}
-                onClick={() => setUnfrozen(!unfrozen)}
-              >
-                <T>{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
-              </ButtonLoader>
-            </div>
-          )}
-          {(contest?.user?.isAdmin || contest?.user?.isJudge) && (
-            <div className="jk-row">
-              <ButtonLoader
-                size="tiny"
-                type="secondary"
-                disabled={isLoading}
-                onClick={async (setLoaderStatus) => {
-                  setLoaderStatus(Status.LOADING);
-                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
-                    { method: HTTPMethod.POST }),
-                  );
-                  if (notifyResponse(response, addNotification)) {
-                    setLoaderStatus(Status.SUCCESS);
-                  } else {
-                    setLoaderStatus(Status.ERROR);
-                  }
-                }}
-              >
-                <T>recalculate</T>
-              </ButtonLoader>
-            </div>
-          )}
+      extraNodes={[
+        !unfrozen && contest?.isFrozenTime && (
+          <Popover content={<T className="ws-np">scoreboard frozen</T>} showPopperArrow>
+            <div className="cr-io"><SnowflakeIcon /></div>
+          </Popover>
+        ),
+        !unfrozen && contest?.isQuietTime && (
+          <Popover content={<T className="ws-np">scoreboard on quiet time</T>} showPopperArrow>
+            <div className="cr-er"><GearsIcon /></div>
+          </Popover>
+        ),
+        ((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
           <div className="jk-row">
-            <DownloadButton data={data} contest={contest} disabled={isLoading} />
+            <ButtonLoader
+              setLoaderStatusRef={setLoaderStatusRef}
+              size="tiny"
+              type="secondary"
+              disabled={isLoading}
+              onClick={() => setUnfrozen(!unfrozen)}
+            >
+              <T>{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
+            </ButtonLoader>
           </div>
-        </div>
-      )}
+        ),
+        (contest?.user?.isAdmin || contest?.user?.isJudge) && (
+          <div className="jk-row">
+            <ButtonLoader
+              size="tiny"
+              type="secondary"
+              disabled={isLoading}
+              onClick={async (setLoaderStatus) => {
+                setLoaderStatus(Status.LOADING);
+                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                  JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
+                  { method: HTTPMethod.POST }),
+                );
+                if (notifyResponse(response, addNotification)) {
+                  setLoaderStatus(Status.SUCCESS);
+                } else {
+                  setLoaderStatus(Status.ERROR);
+                }
+              }}
+            >
+              <T>recalculate</T>
+            </ButtonLoader>
+          </div>
+        ),
+        <div className="jk-row">
+          <DownloadButton data={data} contest={contest} disabled={isLoading} />
+        </div>,
+      ]}
       cardsView={false}
       searchParamsObject={queryObject}
       setLoaderStatusRef={setLoaderStatusRef}
