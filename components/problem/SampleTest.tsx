@@ -1,4 +1,4 @@
-import { CopyIcon, CopyToClipboard, DeleteIcon, EditIcon, SaveIcon, TextArea } from 'components';
+import { ContentCopyIcon, CopyToClipboard, DeleteIcon, EditIcon, SaveIcon, TextArea } from 'components';
 import React, { useEffect, useState } from 'react';
 import { ProblemSampleCasesType } from 'types';
 
@@ -40,7 +40,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
             />
           ) : (
             <div className="sample-text-content jk-border-radius-inline">
-              <CopyToClipboard text={sample.input}><CopyIcon size="small" className="cursor-pointer" /></CopyToClipboard>
+              <CopyToClipboard text={sample.input}><ContentCopyIcon size="small" className="cursor-pointer" /></CopyToClipboard>
               <span>{sample.input}</span>
             </div>
           )}
@@ -53,7 +53,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
             />
           ) : (
             <div className="sample-text-content jk-border-radius-inline">
-              <CopyToClipboard text={sample.output}><CopyIcon size="small" className="cursor-pointer" /></CopyToClipboard>
+              <CopyToClipboard text={sample.output}><ContentCopyIcon size="small" className="cursor-pointer" /></CopyToClipboard>
               <span>{sample.output}</span>
             </div>
           )}

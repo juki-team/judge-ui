@@ -1,7 +1,16 @@
-import { AdminInformation, ButtonLoader, FrozenInformation, JudgeInformation, MdMathViewer, QuietInformation, SpectatorInformation, T } from 'components';
+import {
+  AdminInformation,
+  ButtonLoader,
+  FrozenInformation,
+  JudgeInformation,
+  MdMathViewer,
+  QuietInformation,
+  SpectatorInformation,
+  T,
+} from 'components';
 import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
-import { addParamQuery, authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
-import { useDateFormat, useNotification, useSWR } from 'hooks';
+import { addParamQuery, authorizedRequest, classNames, cleanRequest, notifyResponse } from 'helpers';
+import { useDateFormat, useJukiBase, useNotification, useSWR } from 'hooks';
 import { useRouter } from 'next/router';
 import { useUserState } from 'store';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, SetLoaderStatusOnClickType, Status } from 'types';
@@ -14,6 +23,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   const { dtf, rlt } = useDateFormat();
   const { addNotification } = useNotification();
   const { mutate } = useSWR();
+  const { viewPortSize } = useJukiBase();
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
     setLoader(Status.LOADING);
@@ -29,38 +39,49 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   };
   
   return (
-    <div className="jk-row gap nowrap left stretch">
+    <div
+      className={classNames('contest-overview gap nowrap left stretch', {
+        'jk-row': viewPortSize !== 'sm',
+        'jk-col': viewPortSize === 'sm',
+      })}
+    >
       <div className="jk-pad-md flex-5">
         <MdMathViewer source={contest?.description} />
       </div>
       <div className="jk-pad-md flex-3 contest-overview-information">
         <div className="content-side-right-bar-top">
           {isAdmin
-            ? <div className="judge-admin jk-row center gap bc-py cr-we jk-border-radius">
-              <T className="tt-se">you are admin</T> <AdminInformation placement="bottom" />
+            ? <div className="judge-admin jk-row center gap br-g6 jk-border-radius-inline fw-bd cr-py">
+              <T className="tt-se">you are admin</T> <AdminInformation filledCircle />
             </div>
             : isJudge
-              ? <div className="judge-admin jk-row center gap bc-py cr-we jk-border-radius">
-                <T className="tt-se">you are judge</T> <JudgeInformation placement="bottom" />
+              ? <div className="judge-admin jk-row center gap br-g6 jk-border-radius-inline fw-bd cr-py">
+                <T className="tt-se">you are judge</T> <JudgeInformation filledCircle />
               </div>
               : (isContestant
-                ? <div className="registered jk-row center gap bc-ss cr-we jk-border-radius fw-br"><T
+                ? <div className="registered jk-row center gap br-g6 jk-border-radius-inline fw-br cr-py"><T
                   className="tt-se">registered</T>
                 </div>
                 : (isGuest && new Date().getTime() <= contest.settings.endTimestamp)
                   ? (
-                    <ButtonLoader
-                      onClick={(setLoader) => isLogged
-                        ? registerContest(setLoader, contest?.key)
-                        : push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
-                      type="secondary"
-                      block
-                    >
-                      <T>{isLogged ? 'register' : 'to register, first login'}</T>
-                    </ButtonLoader>
+                    <>
+                      <div className="jk-row center">
+                        <T className="tt-se">you are guest</T>,&nbsp;
+                        {isLogged ? <T>enroll to participate</T> : <T>sign in to register</T>}
+                      </div>
+                      <ButtonLoader
+                        onClick={(setLoader) => isLogged
+                          ? registerContest(setLoader, contest?.key)
+                          : push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
+                        type="secondary"
+                        block
+                      >
+                        <T>{isLogged ? 'enroll' : 'sign in'}</T>
+                      </ButtonLoader>
+                    </>
                   ) : isSpectator && (
-                  <div className="judge-admin jk-row center gap bc-py cr-we jk-border-radius">
-                    <T className="tt-se">you are spectator</T> <SpectatorInformation placement="bottom" />
+                  <div className="judge-admin jk-row center gap br-g6 jk-border-radius-inline fw-bd cr-py">
+                    <T className="tt-se">you are spectator</T> <SpectatorInformation filledCircle />
                   </div>
                 ))}
         </div>

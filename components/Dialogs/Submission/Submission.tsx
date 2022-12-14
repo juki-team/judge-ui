@@ -1,4 +1,4 @@
-import { CodeViewer, Collapse, DateLiteral, FetcherLayer, Memory, Modal, T, Time, UpIcon, Verdict } from 'components';
+import { CodeViewer, Collapse, DateLiteral, FetcherLayer, Memory, Modal, T, Time, UpIcon_, Verdict } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
@@ -124,7 +124,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                             {verdict !== ProblemVerdict.NONE
                               && verdict !== ProblemVerdict.PENDING
                               && compilationResult?.success === false
-                              && <UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
+                              && <UpIcon_ onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
                           </div>
                           {hasTimeHasMemory(verdict) && <div><Time timeUsed={timeUsed} verdict={verdict} /></div>}
                           {hasTimeHasMemory(verdict) && <div><Memory memoryUsed={memoryUsed} verdict={verdict} /></div>}
@@ -149,4 +149,3 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
     </Modal>
   );
 };
-

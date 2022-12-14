@@ -25,7 +25,9 @@ export const SQSManagement = () => {
                   await mutate(JUDGE_API_V1.SYS.AWS_SQS_LIST());
                   setLoaderStatus(Status.SUCCESS);
                 }}
-              ><T>reload</T></ButtonLoader>
+              >
+                <T>reload</T>
+              </ButtonLoader>
             </div>
             {queues.map(key => (
               <div className="jk-col" key={key}>

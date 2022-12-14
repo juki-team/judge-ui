@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, CheckIcon, CloseIcon, ExternalIcon, LinkIcon, T, TimerLabeled } from 'components';
+import { Button, ButtonLoader, CheckIcon, CloseIcon, OpenInNewIcon, LinkIcon, T, TimerLabeled } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, getProblemUrl } from 'helpers';
 import { useNotification } from 'hooks';
@@ -44,7 +44,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
               {problem.judge === Judge.JUKI_JUDGE ? (
                 (isJudgeOrAdmin ? (
                   <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} target="_blank">
-                    <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<ExternalIcon size="tiny" />
+                    <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<OpenInNewIcon size="tiny" />
                     </div>
                   </Link>
                 ) : (<div className="problem-id tx-xs fw-bd cr-g3">ID: {problem.key}</div>))

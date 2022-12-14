@@ -12,10 +12,9 @@ import {
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter } from 'hooks';
+import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
 import { useUserDispatch } from 'store';
-import { useSWRConfig } from 'swr';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -109,7 +108,7 @@ export function UsersLogged() {
   
   const { queryObject, push } = useRouter();
   const { addNotification } = useNotification();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useSWR();
   const data: UserManagementSessionResponseDTO[] = (response?.success ? response?.contents : []);
   
   return (

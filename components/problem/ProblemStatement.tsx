@@ -1,4 +1,4 @@
-import { ArrowIcon, DownloadIcon, ExclamationIcon, ExternalIcon, FloatToolbar, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
+import { ArrowIcon, DownloadIcon, ExclamationIcon, OpenInNewIcon, FloatToolbar, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { classNames, downloadBlobAsFile, handleShareMdPdf } from 'helpers';
 import { useT } from 'hooks';
@@ -121,7 +121,7 @@ ${sample.output}
                       onClick: handleShareMdPdf('pdf', source, sourceUrl, setSourceUrl),
                     },
                     {
-                      icon: <ExternalIcon />,
+                      icon: <OpenInNewIcon />,
                       label: <T>md</T>,
                       onClick: async () => await downloadBlobAsFile(new Blob([source], { type: 'text/plain' }), `JUKI-JUDGE-${problemKey}.md`),
                     },

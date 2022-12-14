@@ -1,4 +1,4 @@
-import { ButtonLoader, DateField, ExternalIcon, Field, ReloadIcon, T, TextHeadCell, UserNicknameLink } from 'components';
+import { ButtonLoader, DateField, OpenInNewIcon, Field, ReloadIcon, T, TextHeadCell, UserNicknameLink } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import Link from 'next/link';
 import React from 'react';
@@ -40,7 +40,7 @@ export const submissionContestColumn = (props?: { header?: Pick<DataViewerHeader
           target={props?.blankTarget ? '_blank' : ''}
         >
           <div className="jk-row link">
-            {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+            {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <OpenInNewIcon size="small" />}
           </div>
         </Link>
       ) : <div className="jk-row">-</div>}
@@ -65,18 +65,18 @@ export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeader
         >
           {props?.onlyProblem ? (
             <div className="jk-row link">
-              {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
+              {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <OpenInNewIcon size="small" />}
             </div>
           ) : (
             <div className="jk-row link">
-              {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <ExternalIcon size="small" />}
-              <div>{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
+              {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <OpenInNewIcon size="small" />}
+              <div>{problemKey} {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}</div>
             </div>
           )}
         </Link>
       ) : (
         <Link href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)} target={props?.blankTarget ? '_blank' : ''}>
-          <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <ExternalIcon size="small" />}</div>
+          <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}</div>
         </Link>
       )}
     </Field>

@@ -2,7 +2,7 @@ import {
   BalloonIcon,
   ColorPicker,
   DeleteIcon,
-  ExternalIcon,
+  OpenInNewIcon,
   Input,
   InputDate,
   InputToggle,
@@ -42,7 +42,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           <span className="fw-bd">{problem.key}</span>
           {problem.name}
           <a href={`/problem/view/${problem.key}`} target="_blank">
-            <div className="jk-row"><ExternalIcon size="small" /></div>
+            <div className="jk-row"><OpenInNewIcon size="small" /></div>
           </a>
         </div>
         <div className="jk-row" style={{ width: 40 }}>

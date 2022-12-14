@@ -1,10 +1,10 @@
-import { ButtonLoader, FetcherLayer, Popover, T, Tabs, Timer, TwoContentLayout, ViewOverview, ViewProblems } from 'components/index';
+import { ButtonLoader, FetcherLayer, Popover, T, Tabs, Timer, TwoContentLayout, ViewOverview, ViewProblems } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { isEndlessContest } from 'helpers';
 import { useContestRouter, useJukiBase } from 'hooks';
 import { useRouter } from 'next/router';
+import Custom404 from 'pages/404';
 import { ContentResponseType, ContestResponseDTO, ContestTab, Status } from 'types';
-import { isEndlessContest } from '../../../helpers';
-import Custom404 from '../../../pages/404';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
@@ -24,7 +24,13 @@ export function ContestView() {
       errorView={<Custom404 />}
     >
       {({ data: { content: contest } }) => {
-        const { user: { isAdmin, isJudge, isContestant } = { isAdmin: false, isJudge: false, isContestant: false } } = contest || {};
+        const {
+          user: { isAdmin, isJudge, isContestant } = {
+            isAdmin: false,
+            isJudge: false,
+            isContestant: false,
+          },
+        } = contest || {};
         const isEndless = isEndlessContest(contest);
         let statusLabel = '';
         let tag = '';
@@ -53,8 +59,9 @@ export function ContestView() {
             <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
           </>
         );
-        const allLiteralLabel = <div className={`jk-row center extend nowrap jk-tag ${tag}`}><T>{statusLabel}</T>,&nbsp;{literal}</div>;
-        
+        const allLiteralLabel = <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+          <T>{statusLabel}</T>,&nbsp;{literal}</div>;
+  
         const tabHeaders = [
           {
             key: ContestTab.OVERVIEW,

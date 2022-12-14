@@ -1,4 +1,4 @@
-import { Button, ExternalIcon, FetcherLayer, Image, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
+import { Button, OpenInNewIcon, FetcherLayer, Image, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
 import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
@@ -50,7 +50,7 @@ export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
               <Button size="small" type="text" onClick={handleClose}><T>close</T></Button>
               <a href={ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE)} target="_blank">
                 <Button size="small">
-                  <div className="jk-row"><T>see profile</T><ExternalIcon /></div>
+                  <div className="jk-row"><T>see profile</T><OpenInNewIcon /></div>
                 </Button>
               </a>
             </div>

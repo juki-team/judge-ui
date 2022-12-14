@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, CopyIcon, CopyToClipboard, InputPassword, Modal, ReloadIcon, T, UserNicknameLink } from 'components';
+import { Button, ButtonLoader, ContentCopyIcon, CopyToClipboard, InputPassword, Modal, ReloadIcon, T, UserNicknameLink } from 'components';
 import React, { useState } from 'react';
 import { useUserDispatch } from '../../store';
 
@@ -38,7 +38,7 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
                 <CopyToClipboard text={newPassword}>
                   <Button
                     type="text"
-                    icon={<CopyIcon className="cursor-pointer" />}
+                    icon={<ContentCopyIcon className="cursor-pointer" />}
                     size="small"
                   >
                     <T>copy</T>

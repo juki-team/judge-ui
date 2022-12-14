@@ -17,8 +17,7 @@ import { useNotification } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import { useUserState } from 'store';
-import { ContentResponseType, HTTPMethod, ProblemResponseDTO, ProblemTab, Status } from 'types';
-import { SubmissionRunStatus } from '../../../../../types';
+import { ContentResponseType, HTTPMethod, ProblemResponseDTO, ProblemTab, Status, SubmissionRunStatus } from 'types';
 import Custom404 from '../../../../404';
 
 const ProblemView = (): ReactNode => {

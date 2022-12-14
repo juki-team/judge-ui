@@ -1,4 +1,3 @@
-import { PlacementType } from 'types';
 import { ExclamationIcon, Popover, T } from '../index';
 
 export const FrozenInformation = () => {
@@ -7,7 +6,8 @@ export const FrozenInformation = () => {
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
-            in this period the scoreboard is not updated but the contestant will still be able to know the verdict of his submissions
+            in this period the scoreboard is not updated but the contestant will still be able to know the verdict of his
+            submissions
           </T>
         </div>
       }
@@ -25,7 +25,8 @@ export const QuietInformation = () => {
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
-            in this period the scoreboard is not updated and the contestant will not be able to know the verdict of his submissions
+            in this period the scoreboard is not updated and the contestant will not be able to know the verdict of his
+            submissions
           </T>
         </div>
       }
@@ -37,7 +38,7 @@ export const QuietInformation = () => {
   );
 };
 
-export const SpectatorInformation = ({ filledCircle, placement = 'bottom' }: { filledCircle?: boolean, placement?: PlacementType }) => {
+export const SpectatorInformation = ({ filledCircle }: { filledCircle?: boolean, }) => {
   return (
     <Popover
       content={
@@ -59,13 +60,14 @@ export const SpectatorInformation = ({ filledCircle, placement = 'bottom' }: { f
   );
 };
 
-export const JudgeInformation = ({ filledCircle, placement = 'bottom' }: { filledCircle?: boolean, placement?: PlacementType }) => {
+export const JudgeInformation = ({ filledCircle }: { filledCircle?: boolean, }) => {
   return (
     <Popover
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
-            the judge can judge the submissions if necessary and can see the problems, submissions and source codes at any stage of the
+            the judge can judge the submissions if necessary and can see the problems, submissions and source codes at any stage
+            of the
             contest
           </T>
           <T className="tt-se">
@@ -85,7 +87,7 @@ export const JudgeInformation = ({ filledCircle, placement = 'bottom' }: { fille
   );
 };
 
-export const AdminInformation = ({ filledCircle, placement = 'bottom' }: { filledCircle?: boolean, placement?: PlacementType }) => {
+export const AdminInformation = ({ filledCircle }: { filledCircle?: boolean }) => {
   return (
     <Popover
       content={
@@ -99,7 +101,7 @@ export const AdminInformation = ({ filledCircle, placement = 'bottom' }: { fille
         </div>
       }
       triggerOn={['hover', 'click']}
-      placement={placement}
+      placement="top"
     >
       <div className="jk-row">
         {filledCircle

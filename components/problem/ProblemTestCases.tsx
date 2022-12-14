@@ -134,7 +134,8 @@ const ProblemTestCasesPage = ({
     setTestCases(newTestCases);
   };
   
-  const groupsOptions = Object.values(problem.settings.pointsByGroups).map(group => ({ value: group.group, label: group.group + '' }));
+  const groupsOptions = Object.values(problem.settings.pointsByGroups)
+    .map(group => ({ value: group.group, label: group.group + '' }));
   
   const handleUpload = async (testCase: NewTestCaseType, formData: FormData, keyFile: KeyFileType) => {
     setTestCases(prevState => ({

@@ -113,10 +113,26 @@
     width: 100%;
     border: none;
     background-color: transparent;
-    
+  
     .input-icon {
       color: inherit;
       top: 4px;
+    }
+  }
+}
+
+.contest-overview {
+  @include sm { flex-direction: column-reverse !important; }
+  
+  > div:first-child {
+    @include sm {
+      padding-top: 0;
+    }
+  }
+  
+  > div:last-child {
+    @include sm {
+      padding-bottom: 0;
     }
   }
 }

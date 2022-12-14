@@ -9,7 +9,7 @@
 }
 
 .settings-popover {
-  //min-width: 250px !important;
+  width: 200px;
 }
 
 .jk-drawer-body {
@@ -20,7 +20,6 @@
 
 .mobile-left-side-header {
   height: var(--top-horizontal-menu-height);
-  width: 216px;
   overflow: hidden;
   
   > div:first-child {
@@ -68,8 +67,9 @@
     max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: block;
     text-align: center;
+    display: block;
+    @include sm { display: none; }
   }
 }
 

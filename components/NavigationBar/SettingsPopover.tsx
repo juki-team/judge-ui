@@ -4,7 +4,7 @@ import { SettingsPopoverProps } from './types';
 
 export const SettingsPopover = ({ loader, languageChecked, toggleLanguage, themeChecked, toggleTheme }: SettingsPopoverProps) => {
   return (
-    <div className="jk-col filled settings-popover" style={{ width: 180 }}>
+    <div className="jk-col filled settings-popover">
       <div className="jk-row fw-bd"><T className="tt-se">settings</T></div>
       <div className="jk-row extend">
         <div className="jk-row left extend fw-bd"><T className="tt-se">language</T></div>

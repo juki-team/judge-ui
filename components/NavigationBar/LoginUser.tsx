@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, Image, LoadingIcon, Popover, T, UpIcon } from 'components';
+import { Button, ButtonLoader, Image, LoadingIcon, Popover, T, UpIcon_ } from 'components';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { addParamQuery, classNames } from 'helpers';
 import { useJukiBase } from 'hooks';
@@ -22,7 +22,8 @@ export const LoginUser = () => {
       <Popover
         content={
           <div className="jk-col gap user-profile-popup">
-            <Image src={user.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={user.nickname} height={50} width={50} />
+            <Image src={user.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={user.nickname} height={50}
+                   width={50} />
             <Button
               className="jk-row nickname bold"
               onClick={() => push(ROUTES.PROFILE.PAGE(user.nickname, ProfileTab.PROFILE))}
@@ -41,14 +42,16 @@ export const LoginUser = () => {
         triggerOn="click"
         placement="bottomRight"
       >
-        <div className="user-logged-head jk-row gap nowrap">
+        <div
+          className={classNames('user-logged-head nowrap jk-row gap')}
+        >
           <img
             src={user.imageUrl}
             alt={user.nickname}
-            className={classNames('jk-user-profile-img ', { large: viewPortSize !== 'sm' })}
+            className={classNames('jk-user-profile-img', { large: viewPortSize !== 'sm', smalla: viewPortSize == 'sm' })}
           />
           <div className="jk-row nickname">{user.nickname}</div>
-          <UpIcon rotate={180} />
+          <UpIcon_ rotate={180} />
         </div>
       </Popover>
     );
@@ -59,7 +62,7 @@ export const LoginUser = () => {
       type="secondary"
       onClick={() => push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
     >
-      <T>sign in</T>
+      <T className="ws-np">sign in</T>
     </Button>
   );
 };

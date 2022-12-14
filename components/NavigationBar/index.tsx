@@ -17,7 +17,7 @@ import {
   MenuIcon,
   PhoneIcon,
   Popover,
-  SettingIcon,
+  SettingsIcon,
   SignUpModal,
   SubmissionModal,
   T,
@@ -39,7 +39,17 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
   const [loader, setLoader] = useState<Status>(Status.NONE);
-  const { canViewUsersManagement, canViewSubmissionsManagement, canViewFilesManagement, isLogged, settings, isLoading, nickname, flags, setFlags } = useUserState();
+  const {
+    canViewUsersManagement,
+    canViewSubmissionsManagement,
+    canViewFilesManagement,
+    isLogged,
+    settings,
+    isLoading,
+    nickname,
+    flags,
+    setFlags,
+  } = useUserState();
   
   const menu = [
     {
@@ -64,7 +74,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement) {
     menu.push({
       label: <T>admin</T>,
-      icon: <SettingIcon />,
+      icon: <SettingsIcon />,
       selected: ('/' + pathname).includes('//admin'),
       menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS)}>{children}</Link>,
     });
@@ -106,7 +116,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     toggleSetting(ProfileSettingOptions.THEME, settings?.[ProfileSettingOptions.THEME] === Theme.LIGHT ? Theme.DARK : Theme.LIGHT);
   };
   
-  const Settings = (placement: 'bottom' | 'rightBottom') => (
+  const Settings = (placement: 'bottom' | 'topLeft') => (
     <>
       <Popover
         content={
@@ -122,7 +132,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         placement={placement}
       >
         <div>
-          <Button icon={<SettingIcon />} type="text" />
+          <Button icon={<SettingsIcon className="cr-we" />} type="text" />
         </div>
       </Popover>
       <Popover
@@ -143,7 +153,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         placement={placement}
       >
         <div>
-          <Button icon={<AppsIcon />} type="text" />
+          <Button icon={<AppsIcon className="cr-we" />} type="text" />
         </div>
       </Popover>
     </>
@@ -171,7 +181,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         }
         leftMobile={{
           children: ({ toggle }) => (
-            <div className="jk-row gap nowrap left mobile-left-side-header">
+            <div className="jk-row nowrap left mobile-left-side-header">
               <div className="jk-row" onClick={toggle}><MenuIcon className="cr-we" /></div>
               <Link href="/"><JukiJudgeLogoHorImage className="cr-we" /></Link>
             </div>
@@ -181,10 +191,10 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
               <div className="jk-col space-between left-mobile-content">
                 <div className="jk-row nowrap gap left mobile-left-side-header">
                   <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} className="cr-we" /></div>
-                  <JukiJudgeLogoHorImage className="cr-we" />,
+                  <JukiJudgeLogoHorImage className="cr-we" />
                 </div>
                 <div className="jk-col gap mobile-left-side-bottom">
-                  {Settings('rightBottom')}
+                  {Settings('topLeft')}
                   <div />
                   <div />
                 </div>
@@ -222,7 +232,9 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
             <div className="jk-row center fw-bd"><T className="tt-se">contact the webmaster</T>:</div>
             <div className="jk-row gap center">
               <TelegramIcon />
-              <div className="jk-row link fw-bd" style={{ width: 210 }}><Link href="https://t.me/OscarGauss" target="_blank">t.me/OscarGauss</Link></div>
+              <div className="jk-row link fw-bd" style={{ width: 210 }}>
+                <Link href="https://t.me/OscarGauss" target="_blank">t.me/OscarGauss</Link>
+              </div>
             </div>
             <div className="jk-row gap center">
               <PhoneIcon />

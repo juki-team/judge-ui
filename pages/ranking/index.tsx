@@ -1,4 +1,5 @@
-import { ContentLayout, DataViewer, Field, T, TextHeadCell, UserNicknameLink, Image } from 'components';
+import { useJukiBase } from '@juki-team/base-ui';
+import { ContentLayout, DataViewer, Field, Image, T, TextHeadCell, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester2, useRouter } from 'hooks';
@@ -6,7 +7,7 @@ import React, { useCallback, useMemo } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetUrl, UserRankResponseDTO } from 'types';
 
 function Ranking() {
-  
+  const { viewPortSize } = useJukiBase();
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">position</T>} />,
@@ -36,7 +37,7 @@ function Ranking() {
       filter: { type: 'text-auto' },
       cardPosition: 'top',
       minWidth: 300,
-      sticky: true,
+      sticky: viewPortSize !== 'sm',
     },
     {
       head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by problems</T>} />,
@@ -88,7 +89,7 @@ function Ranking() {
       cardPosition: 'bottom',
       minWidth: 200,
     },
-  ], []);
+  ], [viewPortSize]);
   
   const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
     JUDGE_API_V1.RANKING.LIST()

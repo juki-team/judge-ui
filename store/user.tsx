@@ -91,7 +91,7 @@ export const useUserState = (): (UserState & { isLoading: boolean, flags: Flags,
 export const useUserDispatch = () => {
   
   const { addNotification, addSuccessNotification, addErrorNotification, addInfoNotification } = useNotification();
-  const { setUser, mutatePing } = useJukiBase();
+  const { setUser } = useJukiBase();
   const { push, query } = useRouter();
   const { mutate } = useSWR();
   const matchMutate = useMatchMutate();
@@ -108,7 +108,7 @@ export const useUserDispatch = () => {
         body: JSON.stringify(body),
       }));
       if (notifyResponse(response, addNotification)) {
-        await mutatePing();
+        await mutate(JUDGE_API_V1.AUTH.PING());
         await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string));
         setLoaderStatus(Status.SUCCESS);
         onSuccess();
@@ -128,7 +128,7 @@ export const useUserDispatch = () => {
             body: formData,
           }));
           if (notifyResponse(response, addNotification)) {
-            await mutatePing();
+            await mutate(JUDGE_API_V1.AUTH.PING());
             await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string));
             onSuccess();
             setLoader(Status.SUCCESS);
@@ -241,7 +241,7 @@ export const useUserDispatch = () => {
         })),
         addNotification,
         onSuccess: async () => {
-          await mutatePing();
+          await mutate(JUDGE_API_V1.AUTH.PING());
           addSuccessNotification(<T className="tt-se">your personal information has been updated</T>);
         },
         setLoader,

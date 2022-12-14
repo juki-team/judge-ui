@@ -1,3 +1,4 @@
+import { useJukiBase } from '@juki-team/base-ui';
 import {
   BalloonIcon,
   ButtonLoader,
@@ -124,6 +125,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   const { addNotification } = useNotification();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const isEndless = isEndlessContest(contest);
+  const { viewPortSize } = useJukiBase();
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       {
@@ -154,7 +156,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
           </Field>
         ),
         minWidth: 250,
-        sticky: true,
+        sticky: viewPortSize !== 'sm',
       },
       {
         head: <TextHeadCell text={<T>points</T>} />,
@@ -166,7 +168,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
           </Field>
         ),
         minWidth: 128,
-        sticky: true,
+        sticky: viewPortSize !== 'sm',
       },
     ];
     
@@ -221,7 +223,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       }
     }
     return base;
-  }, [query, user.nickname, contest, isEndless]);
+  }, [query, user.nickname, contest, isEndless, viewPortSize]);
   
   const [unfrozen, setUnfrozen] = useState(false);
   const {

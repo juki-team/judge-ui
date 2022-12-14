@@ -1,5 +1,5 @@
 import { ProblemMode } from '@juki-team/commons';
-import { Collapse, T, UpIcon } from 'components';
+import { Collapse, T, UpIcon_ } from 'components';
 import { classNames } from 'helpers';
 import React from 'react';
 import { ProblemVerdict, TestCaseResultType } from 'types';
@@ -31,7 +31,7 @@ export const GroupInfo = ({ groupKey, problemMode, timeUsed, memoryUsed, verdict
           </div>
           <div className="jk-row center gap">
             <Verdict verdict={verdict} points={points} />
-            {!!testCases.length && <UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
+            {!!testCases.length && <UpIcon_ onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
           </div>
           {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && <div className="jk-row">{points}</div>}
           <div className="jk-row center gap"><Time timeUsed={timeUsed} verdict={verdict} /></div>
