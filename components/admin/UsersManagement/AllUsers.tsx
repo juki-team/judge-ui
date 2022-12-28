@@ -1,8 +1,10 @@
 import {
   Button,
   DataViewer,
+  DemographyIcon,
   Field,
-  LinkIcon,
+  GroupAddIcon,
+  OpenInNewIcon,
   ReloadIcon,
   ResetPassword,
   Select,
@@ -10,7 +12,6 @@ import {
   TextHeadCell,
   useNotification,
   UserChip,
-  UserPermissions,
 } from 'components';
 import {
   CONTEST_ROLE,
@@ -36,8 +37,10 @@ import {
   Status,
   UserManagementResponseDTO,
 } from 'types';
+import { GenerateUsersModal } from './GenerateUsersModal';
+import { UserPermissions } from './UserPermissions';
 
-export function Users() {
+export function AllUsers() {
   
   const [nickname, setNickname] = useState('');
   const optionsFilterStatus = Object.values(USER_STATUS).map(status => ({
@@ -161,10 +164,11 @@ export function Users() {
   const { queryObject, push } = useRouter();
   
   const data: UserManagementResponseDTO[] = (response?.success ? response?.contents : []);
-  
+  const [modal, setModal] = useState(false);
   return (
     <>
       <ResetPassword onClose={() => setNickname('')} nickname={nickname} />
+      <GenerateUsersModal isOpen={modal} onClose={() => setModal(false)} />
       <DataViewer<UserManagementResponseDTO>
         headers={columns}
         data={data}
@@ -179,10 +183,13 @@ export function Users() {
             href="https://oscargauss.notion.site/Permissions-V2-6487a360cea1482c963d281f6f6317d4"
             target="_blank"
           >
-            <Button icon={<LinkIcon />} size="small" style={{ marginLeft: 'var(--pad-xt)' }}>
-              <T>open roles</T>
+            <Button icon={<DemographyIcon />} size="small" style={{ marginLeft: 'var(--pad-xt)' }}>
+              <div className="jk-row gap"><T>user roles</T><OpenInNewIcon size="small" /></div>
             </Button>
           </Link>,
+          <Button onClick={() => setModal(true)} size="small" type="text" icon={<GroupAddIcon />}>
+            <T>generate users</T>
+          </Button>,
         ]}
         {...DEFAULT_DATA_VIEWER_PROPS}
       />

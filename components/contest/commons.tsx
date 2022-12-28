@@ -21,12 +21,12 @@ export const CreateContestButton = () => {
 export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: <TextHeadCell text={<T className="tt-ue tx-s">contest name</T>} className="left" />,
   index: 'name',
-  field: ({ record: { name, key, user } }) => (
-    <Field className="jk-row left">
+  field: ({ record: { name, key, user }, isCard }) => (
+    <Field className="jk-row left block">
       {user.isGuest || user.isAdmin || user.isContestant || user.isJudge || user.isSpectator ? (
         <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
-          <div className="jk-row gap nowrap link text-semi-bold">
-            {name}
+          <div className="jk-row gap nowrap link fw-bd space-between">
+            <div style={{ textAlign: isCard ? undefined : 'left' }}>{name}</div>
             {user.isAdmin ? (
               <Popover
                 content={<T className="tt-se ws-np">you are admin</T>}
@@ -71,7 +71,7 @@ export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestS
           </div>
         </Link>
       ) : (
-        <div className="jk-row gap text-semi-bold">
+        <div className="jk-row gap left">
           {name}
         </div>
       )}

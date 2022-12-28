@@ -17,15 +17,15 @@ export function TwoContentLayout({ children }) {
   const { height, ref } = useResizeDetector();
   // TODO: Fix the + 12 solo si hay tabs
   return (
-    <section className="two-content-layout jk-col nowrap top">
+    <section
+      className="two-content-layout jk-col nowrap top"
+      style={{ '--first-content-layout-height': height + 'px' } as CSSProperties}
+    >
       <div ref={ref}>
         {children[0]}
       </div>
       <div
-        style={{
-          '--second-content-layout-min-height': 'calc(100VH - ' + (height/* + 12*/) + 'px - var(--top-horizontal-menu-height) - var(--pad-md) - var(--pad-md) - var(--mobile-bottom-horizontal-menu-height))',
-          minHeight: 'var(--second-content-layout-min-height)',
-        } as CSSProperties}
+        style={{} as CSSProperties}
       >
         {children[1]}
       </div>

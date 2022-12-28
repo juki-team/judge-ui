@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components';
+import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components/index';
 import { CONTEST_ROLE, COURSE_ROLE, JUDGE_API_V1, PROBLEM_ROLE, SYSTEM_ROLE, TEAM_ROLE, USER_ROLE } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import React, { useState } from 'react';

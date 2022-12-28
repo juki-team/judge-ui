@@ -1,16 +1,18 @@
-import { Button, ButtonLoader, CheckIcon, CloseIcon, OpenInNewIcon, LinkIcon, T, TimerLabeled } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, getProblemJudgeKey, getProblemUrl } from 'helpers';
+import { ButtonLoader, CheckIcon, CloseIcon, DataViewer, Field, OpenInNewIcon, T, TextField, TextHeadCell } from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
+import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
 import { useNotification } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import React, { useMemo } from 'react';
 import {
   ContentResponseType,
+  ContestProblemType,
   ContestResponseDTO,
   ContestTab,
+  DataViewerHeadersType,
   HTTPMethod,
   Judge,
-  Period,
   ProblemTab,
   Status,
   SubmissionRunStatus,
@@ -18,122 +20,155 @@ import {
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { problems = {}, user, isLive, key } = contest;
-  const { isContestant, isJudge, isAdmin } = user || {};
+  const { problems = {}, user, key } = contest;
+  const { isJudge, isAdmin } = user || {};
   const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const isJudgeOrAdmin = isJudge || isAdmin;
   
-  return (
-    <div className="jk-row gap jk-pad-md">
-      {Object.values(problems).map(problem => {
-        const canSubmit = isContestant && isLive && problem.startTimestamp <= Date.now() && Date.now() <= problem.endTimestamp;
-        return (
-          <div
-            key={problem.index}
-            className="jk-shadow problem-card jk-col jk-border-radius"
-            style={{ borderTop: `8px solid ${problem.color}` }}
-          >
-            <div className="problem-status jk-row space-between">
+  const columns = useMemo(() => {
+    return [
+      {
+        head: <TextHeadCell text={<T>index</T>} />,
+        index: 'index',
+        field: ({ record: { myAttempts, mySuccess, index, color }, isCard }) => (
+          <Field className="jk-row">
+            <div>
               <div
-                className={'fw-br problem-index bc-g6 jk-border-radius-inline' + (problem.myAttempts ? (problem.mySuccess ? ' accepted' : ' wrong') : '')}
+                className={'fw-br problem-index bc-g6 jk-border-radius-inline' + (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
+                style={{ position: 'relative' }}
               >
-                {!!problem.myAttempts && (problem.mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
-                {problem.index}
+                {!!myAttempts && (mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
+                {index}
               </div>
-              {problem.judge === Judge.JUKI_JUDGE ? (
+              {!isCard && (
+                <div style={{ position: 'absolute', width: 8, height: '100%', top: 0, left: 0, background: color }} />
+              )}
+            </div>
+          </Field>
+        ),
+        sort: { compareFn: () => (recordA, recordB) => lettersToIndex(recordB.index) - lettersToIndex(recordA.index) },
+        cardPosition: isJudgeOrAdmin ? 'topLeft' : 'top',
+        minWidth: 48,
+      } as DataViewerHeadersType<ContestProblemType>,
+      ...(isJudgeOrAdmin ? [
+        {
+          head: <TextHeadCell text={<T>id</T>} />,
+          index: 'id',
+          field: ({ record: { judge, key }, isCard }) => (
+            <TextField
+              text={judge === Judge.JUKI_JUDGE ? (
                 (isJudgeOrAdmin ? (
-                  <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} target="_blank">
-                    <div className="problem-id tx-xs fw-bd cr-g3 jk-row">ID: {problem.key}&nbsp;<OpenInNewIcon size="tiny" />
+                  <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT), query }} target="_blank">
+                    <div className="problem-id fw-bd cr-g3 jk-row">{key}&nbsp;<OpenInNewIcon size="tiny" />
                     </div>
                   </Link>
-                ) : (<div className="problem-id tx-xs fw-bd cr-g3">ID: {problem.key}</div>))
+                ) : (<div className="problem-id fw-bd cr-g3">{key}</div>))
               ) : (
-                <div className="problem-id tx-xs fw-bd cr-g3">
-                  {getProblemJudgeKey(problem.judge, problem.key)}
+                <div className="problem-id fw-bd cr-g3">
+                  {getProblemJudgeKey(judge, key)}
                 </div>
               )}
-            </div>
-            <div className="tx-m fw-br jk-row"> {problem.name} </div>
-            <div className="jk-col gap">
-              {isContestant && isLive && (problem.startTimestamp !== contest.settings.startTimestamp || problem.endTimestamp !== contest.settings.endTimestamp) && (
-                <div className="problem-timing jk-row">
-                  <TimerLabeled
-                    startDate={new Date(problem.startTimestamp)}
-                    endDate={new Date(problem.endTimestamp)}
-                    labels={{
-                      [Period.LIVE_END]: 'close on',
-                      [Period.LIVE_START]: 'close on',
-                      [Period.PAST]: 'closed ago',
-                      [Period.CALC]: '...',
-                      [Period.FUTURE]: 'open on',
-                      [Period.TIME_OUT]: 'time out',
-                    }}
-                    laps={2}
-                    // onFinish={() => console.log('reload contest!!', key)}
-                  />
-                </div>
-              )}
-              <div className="jk-row gap">
-                <div className="jk-col">
-                  <div className="tx-s fw-br">{problem.points}</div>
-                  <div className="tx-t fw-bd"><T>score</T></div>
-                </div>
-                <div className="jk-divider horizontal" />
-                <div className="jk-col">
-                  <div className="tx-s fw-br">
-                    {problem.totalAttempts ? (problem.totalSuccess / problem.totalAttempts * 100).toFixed(1) + ' %' : '-'}
-                  </div>
-                  <div className="tx-t fw-bd"><T>success rate</T></div>
-                </div>
-              </div>
-            </div>
-            <div className="buttons-actions jk-row gap">
-              {problem.judge === Judge.JUKI_JUDGE ? (
-                <Button
-                  onClick={() => push({
-                    pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, problem.index),
-                    query,
-                  }, undefined, { shallow: true })}
-                >
-                  <T>{(problem.mySuccess || !canSubmit) ? 'view problem' : 'solve problem'}</T>
-                </Button>
-              ) : (
-                <a href={getProblemUrl(problem.judge, problem.key)} target="_blank" rel="noopener noreferrer">
-                  <Button icon={<LinkIcon />}>
-                    <T>{(problem.mySuccess || !canSubmit) ? 'view problem' : 'solve problem'}</T>
-                  </Button>
-                </a>
-              )}
-              {isJudgeOrAdmin && (
-                <ButtonLoader
-                  onClick={async (setLoaderStatus, loaderStatus, event) => {
-                    setLoaderStatus(Status.LOADING);
-                    const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(
-                      await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(key, getProblemJudgeKey(problem.judge, problem.key)), {
-                        method: HTTPMethod.POST,
-                      }));
-                    if (result.success) {
-                      addSuccessNotification(
-                        <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
-                      );
-                      setLoaderStatus(Status.SUCCESS);
-                    } else {
-                      addErrorNotification(
-                        <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
-                      );
-                      setLoaderStatus(Status.ERROR);
-                    }
-                  }}
-                  size="tiny"
-                >
-                  <T>rejudge problem</T>
-                </ButtonLoader>
-              )}
-            </div>
-          </div>
-        );
-      })}
-    </div>
+              label={<T>ID</T>}
+            />
+          ),
+          sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
+          cardPosition: 'topRight',
+          minWidth: 48,
+        } as DataViewerHeadersType<ContestProblemType>,
+      ] : []),
+      {
+        head: <TextHeadCell text={<T>name</T>} />,
+        index: 'name',
+        field: ({ record: { name, index, judge, key }, isCard }) => (
+          <Field className="jk-col">
+            <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, index), query }}>
+              <div className="link fw-bd">{name}</div>
+            </Link>
+            {isJudgeOrAdmin && (
+              <ButtonLoader
+                onClick={async (setLoaderStatus, loaderStatus, event) => {
+                  setLoaderStatus(Status.LOADING);
+                  const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(
+                    await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, getProblemJudgeKey(judge, key)), {
+                      method: HTTPMethod.POST,
+                    }));
+                  if (result.success) {
+                    addSuccessNotification(
+                      <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
+                    );
+                    setLoaderStatus(Status.SUCCESS);
+                  } else {
+                    addErrorNotification(
+                      <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
+                    );
+                    setLoaderStatus(Status.ERROR);
+                  }
+                }}
+                size="tiny"
+              >
+                <T>rejudge problem</T>
+              </ButtonLoader>
+            )}
+          </Field>
+        ),
+        sort: { compareFn: () => (recordA, recordB) => recordB.name.localeCompare(recordA.name) },
+        cardPosition: 'center',
+        minWidth: 128,
+      } as DataViewerHeadersType<ContestProblemType>,
+      {
+        head: <TextHeadCell text={<T>points</T>} />,
+        index: 'points',
+        field: ({ record: { points }, isCard }) => (
+          <TextField text={points} label={<T>points</T>} />
+        ),
+        sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
+        cardPosition: 'bottomLeft',
+        minWidth: 64,
+      } as DataViewerHeadersType<ContestProblemType>,
+      {
+        head: <TextHeadCell text={<T>success rate</T>} />,
+        index: 'success-rate',
+        field: ({ record: { totalAttempts, totalSuccess }, isCard }) => (
+          <TextField
+            text={totalAttempts ? (totalSuccess / totalAttempts * 100).toFixed(1) + ' %' : '-'}
+            label={<T>success rate</T>}
+          />
+        ),
+        sort: {
+          compareFn: () => (recordA, recordB) => {
+            const A = recordA.totalAttempts ? recordA.totalSuccess / recordA.totalAttempts : -1;
+            const B = recordB.totalAttempts ? recordB.totalSuccess / recordB.totalAttempts : -1;
+            return B - A;
+          },
+        },
+        cardPosition: 'bottomRight',
+        minWidth: 64,
+      } as DataViewerHeadersType<ContestProblemType>,
+    ];
+  }, [isJudgeOrAdmin, contestKey, query]);
+  const data = Object.values(problems);
+  
+  return (
+    <DataViewer<ContestProblemType>
+      headers={columns}
+      data={data}
+      rows={{ height: 70 }}
+      name={QueryParam.ALL_USERS_TABLE}
+      onRecordClick={async ({ isCard, data, index }) => {
+        if (isCard) {
+          await push({
+            pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
+            query,
+          }, undefined, { shallow: true });
+        }
+      }}
+      getRecordStyle={({ data, index, isCard }) => {
+        if (isCard) {
+          return { borderTop: '6px solid ' + data[index]?.color };
+        }
+      }}
+      {...DEFAULT_DATA_VIEWER_PROPS}
+    />
   );
 };

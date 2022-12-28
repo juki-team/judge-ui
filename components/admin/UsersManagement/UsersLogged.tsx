@@ -9,7 +9,7 @@ import {
   T,
   TextHeadCell,
   UserChip,
-} from 'components';
+} from 'components/index';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';

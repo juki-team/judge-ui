@@ -34,7 +34,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const contestTemplate = getContestTemplate(contest);
   
   return (
-    <div className="jk-col left stretch jk-pad-md gap nowrap">
+    <div className="jk-col left top stretch jk-pad-md gap nowrap">
       <div className="jk-row center gap nowrap">
         <T className="fw-bd tt-se tx-xl cr-py">template</T>:&nbsp;
         <Select
@@ -368,7 +368,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             ...prevState,
             settings: { ...prevState.settings, languages: options.map(option => option.value) },
           }))}
-          block
+          extend
           optionsPlacement="top"
         />
       </div>

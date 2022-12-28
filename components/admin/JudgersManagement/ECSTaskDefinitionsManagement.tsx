@@ -1,5 +1,4 @@
-import { RunnerType } from '@juki-team/commons';
-import { ButtonLoader, CloseIcon, DataViewer, ExclamationIcon, Field, Select, T, TextHeadCell } from 'components';
+import { ButtonLoader, DataViewer, Field, PlayCircleIcon, Select, SettingsAlertIcon, T, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
@@ -9,6 +8,7 @@ import {
   ContentsResponseType,
   DataViewerHeadersType,
   HTTPMethod,
+  RunnerType,
   Status,
   TaskDefinitionResponseDTO,
 } from 'types';
@@ -23,24 +23,28 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
   const { mutate } = useSWR();
   
   return (
-    <div className="jk-col">
-      <div className="fw-br">
-        {family}
-        {revision.isLowRunner && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
-        {revision.isHighRunner && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
-      </div>
-      <div className="tx-s">{revision.memory} (MiB) / {revision.cpu} (unit)</div>
-      <div className="tx-s"><T className="tt-se fw-bd">registered at</T>:&nbsp;{revision.registeredAt.toLocaleString()}</div>
-      <div className="tx-xs fw-br" style={{ lineHeight: '12px' }}>{revision.taskDefinitionArn}</div>
-      <div className="jk-row center gap">
+    <div className="jk-row gap nowrap">
+      <div className="jk-row">
+        <div className="fw-bd">
+          {family}
+          {revision.isLowRunner && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
+          {revision.isHighRunner && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
+        </div>
         <Select
           options={revisions.map((definition) => ({ value: definition, label: definition.revision }))}
           selectedOption={{ value: revision }}
           onChange={({ value }) => setRevision(value)}
         />
+      </div>
+      <div className="jk-col gap">
+        <div className="tx-s">{revision.memory} (MiB) / {revision.cpu} (unit)</div>
+        <div className="tx-s"><T className="tt-se fw-bd">registered at</T>:&nbsp;{revision.registeredAt.toLocaleString()}</div>
+        <div className="tx-xs fw-bd">{revision.taskDefinitionArn}</div>
+      </div>
+      <div className="jk-col gap">
         <ButtonLoader
           size="small"
-          icon={<CloseIcon circle />}
+          icon={<PlayCircleIcon />}
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
             const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
@@ -57,46 +61,50 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
         >
           <T>run task</T>
         </ButtonLoader>
-        <ButtonLoader
-          size="small"
-          className="bc-er"
-          icon={<ExclamationIcon circle />}
-          onClick={async (setLoaderStatus) => {
-            setLoaderStatus(Status.LOADING);
-            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-              JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.HIGH_PERFORMANCE, revision.taskDefinitionArn),
-              { method: HTTPMethod.POST }),
-            );
-            if (notifyResponse(response, addNotification)) {
-              setLoaderStatus(Status.SUCCESS);
-            } else {
-              setLoaderStatus(Status.ERROR);
-            }
-            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
-          }}
-        >
-          <T>set high runner</T>
-        </ButtonLoader>
-        <ButtonLoader
-          size="small"
-          className="bc-er"
-          icon={<ExclamationIcon circle />}
-          onClick={async (setLoaderStatus) => {
-            setLoaderStatus(Status.LOADING);
-            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-              JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.LOW_PERFORMANCE, revision.taskDefinitionArn),
-              { method: HTTPMethod.POST }),
-            );
-            if (notifyResponse(response, addNotification)) {
-              setLoaderStatus(Status.SUCCESS);
-            } else {
-              setLoaderStatus(Status.ERROR);
-            }
-            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
-          }}
-        >
-          <T>set low runner</T>
-        </ButtonLoader>
+        {!revision.isHighRunner && (
+          <ButtonLoader
+            size="small"
+            className="bc-er"
+            icon={<SettingsAlertIcon />}
+            onClick={async (setLoaderStatus) => {
+              setLoaderStatus(Status.LOADING);
+              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.HIGH_PERFORMANCE, revision.taskDefinitionArn),
+                { method: HTTPMethod.POST }),
+              );
+              if (notifyResponse(response, addNotification)) {
+                setLoaderStatus(Status.SUCCESS);
+              } else {
+                setLoaderStatus(Status.ERROR);
+              }
+              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+            }}
+          >
+            <T>set high runner</T>
+          </ButtonLoader>
+        )}
+        {!revision.isLowRunner && (
+          <ButtonLoader
+            size="small"
+            className="bc-er"
+            icon={<SettingsAlertIcon />}
+            onClick={async (setLoaderStatus) => {
+              setLoaderStatus(Status.LOADING);
+              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.LOW_PERFORMANCE, revision.taskDefinitionArn),
+                { method: HTTPMethod.POST }),
+              );
+              if (notifyResponse(response, addNotification)) {
+                setLoaderStatus(Status.SUCCESS);
+              } else {
+                setLoaderStatus(Status.ERROR);
+              }
+              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+            }}
+          >
+            <T>set low runner</T>
+          </ButtonLoader>
+        )}
       </div>
     </div>
   );

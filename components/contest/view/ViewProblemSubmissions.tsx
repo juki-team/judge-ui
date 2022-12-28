@@ -1,10 +1,9 @@
-import { getProblemJudgeKey } from '@juki-team/commons';
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
+import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
 import { useUserState } from 'store';
 import { ContestResponseDTO, DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
-import { toFilterUrl, toSortUrl } from '../../../helpers';
 import {
   submissionDateColumn,
   submissionLanguage,
@@ -15,7 +14,10 @@ import {
   submissionVerdict,
 } from '../../submissions';
 
-export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: ContestResponseDTO, mySubmissions?: boolean }) => {
+export const ViewProblemSubmissions = ({
+  contest,
+  mySubmissions,
+}: { contest: ContestResponseDTO, mySubmissions?: boolean }) => {
   
   const { nickname } = useUserState();
   
@@ -56,7 +58,7 @@ export const ViewProblemSubmissions = ({ contest, mySubmissions }: { contest: Co
       name={mySubmissions ? QueryParam.MY_STATUS_TABLE : QueryParam.STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
-      getRowKey={(data, index) => data[index].submitId}
+      getRowKey={({ data, index }) => data[index].submitId}
     />
   );
 };

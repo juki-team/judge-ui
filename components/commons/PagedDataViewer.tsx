@@ -2,8 +2,8 @@ import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester2, useRouter } from 'hooks';
-import { useCallback, useRef } from 'react';
-import { ContentsResponseType, DataViewerHeadersType, GetRowKeyType, GetUrl, ReactNodeOrFunctionType } from 'types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ContentsResponseType, DataViewerHeadersType, GetRecordKeyType, GetUrl, ReactNodeOrFunctionType } from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
   headers: DataViewerHeadersType<T>[],
@@ -12,7 +12,7 @@ interface PagedDataViewerPros<T, V = T> {
   url: GetUrl,
   refreshInterval?: number,
   extraNodes?: ReactNodeOrFunctionType[],
-  getRowKey?: GetRowKeyType<T>
+  getRowKey?: GetRecordKeyType<T>
 }
 
 export const PagedDataViewer = <T, V = T>({
@@ -32,6 +32,10 @@ export const PagedDataViewer = <T, V = T>({
     request,
     setLoaderStatusRef,
   } = useDataViewerRequester2<ContentsResponseType<V>>(url, { refreshInterval });
+  const [_, setRender] = useState(Date.now()); // TODO: Fix the render of DataViewer
+  useEffect(() => {
+    setTimeout(() => setRender(Date.now()), 100);
+  }, [response]);
   
   const lastTotalRef = useRef(0);
   
@@ -53,7 +57,7 @@ export const PagedDataViewer = <T, V = T>({
       searchParamsObject={queryObject}
       setSearchParamsObject={setSearchParamsObject}
       pagination={{ total: lastTotalRef.current, pageSizeOptions: [16, 32, 64, 128, 256, 512] }}
-      getRowKey={getRowKey}
+      getRecordKey={getRowKey}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

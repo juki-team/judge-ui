@@ -5,15 +5,21 @@ export enum ContestTimeStatus {
 }
 
 export enum AdminTab {
-  LOGGED_USERS = 'logged-users',
-  USERS = 'users',
   SUBMISSIONS = 'submissions',
   RESET_PASSWORD = 'reset-password',
   FILES_MANAGEMENT = 'files-management',
   SQS_MANAGEMENT = 'sqs-management',
+  SETTINGS_MANAGEMENT = 'settings-management',
+  MAIL_MANAGEMENT = 'mail-management',
+
+  USERS_MANAGEMENT = 'users-management',
+  ALL_USERS = 'all-users',
+  LOGGED_USERS = 'logged-users',
+
+  JUDGERS_MANAGEMENT = 'judgers-management',
+  JUDGERS_SETTINGS = 'judgers-settings',
   ECS_TASKS_MANAGEMENT = 'ecs-task-management',
   ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitions-management',
-  SETTINGS_MANAGEMENT = 'settings-management',
 }
 
 export enum ProblemTab {

@@ -1,19 +1,18 @@
+import { AlertModal, CodeEditor, T } from 'components';
 import { diff } from 'deep-object-diff';
-import dynamic from 'next/dynamic';
 import React, { cloneElement, useRef, useState } from 'react';
-import { AlertModal, T } from '../index';
-
-const ReactJson = dynamic(import('react-json-view'), { ssr: false });
+import { ProgrammingLanguage } from 'types';
 
 export const CheckUnsavedChanges = ({ children, onSafeClick, value }) => {
   
   const originalProblemRef = useRef(value);
   const [modal, setModal] = useState(null);
-  
   const handleOnClick = () => {
     if (JSON.stringify(originalProblemRef.current) === JSON.stringify(value)) {
       onSafeClick();
     } else {
+      const text = JSON.stringify(diff(originalProblemRef.current, value), null, 2);
+      const height = text.split('\n').length;
       setModal(
         <AlertModal
           title={<h4><T>attention</T></h4>}
@@ -21,12 +20,14 @@ export const CheckUnsavedChanges = ({ children, onSafeClick, value }) => {
           content={
             <div>
               <T className="tt-se">there are unsaved changes</T>:
-              <div className="alert-modal-json-viewer jk-border-radius-inline">
-                <ReactJson
-                  src={diff(originalProblemRef.current, value)}
-                  enableClipboard={false}
-                  collapsed={true}
-                  name={false}
+              <div
+                className="alert-modal-json-viewer jk-border-radius-inline"
+                style={{ height: height * 24 + 'px' }}
+              >
+                <CodeEditor
+                  sourceCode={text}
+                  language={ProgrammingLanguage.JSON}
+                  readOnly
                 />
               </div>
             </div>

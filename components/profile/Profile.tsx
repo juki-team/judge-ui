@@ -1,4 +1,4 @@
-import { Image, MailIcon, PlaceIcon, SchoolIcon } from 'components';
+import { Image, MailIcon, LocationOnIcon, SchoolIcon } from 'components';
 import { JUDGE } from 'config/constants';
 import { classNames } from 'helpers';
 import { UserProfileResponseDTO } from 'types';
@@ -27,7 +27,7 @@ export function Profile({ user }: { user: UserProfileResponseDTO }) {
         <div className="jk-col gap left stretch">
           {(user?.city?.trim() || user?.country?.trim()) && (
             <div className="jk-row left gap">
-              <PlaceIcon />{user?.city}{user?.city && ','} {user?.country}
+              <LocationOnIcon />{user?.city}{user?.city && ','} {user?.country}
             </div>
           )}
           {user?.institution?.trim() && (

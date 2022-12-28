@@ -25,7 +25,7 @@ const profileSettingsChangePasswordSchema = yup.object().shape({
     .oneOf([yup.ref('newPassword'), ''], 'both passwords must match'),
 });
 
-export const ChangePasswordModal = ({ onClose, nickname: userNickname }: { onClose: () => void, nickname: string }) => {
+export const ChangePasswordModal = ({ onClose }: { onClose: () => void, }) => {
   const { register, handleSubmit, formState: { errors, isValid } } = useForm<ProfileChangePasswordInput>({
     resolver: yupResolver(profileSettingsChangePasswordSchema),
     mode: 'onChange',
@@ -44,7 +44,7 @@ export const ChangePasswordModal = ({ onClose, nickname: userNickname }: { onClo
     >
       <div className="jk-pad-md">
         <form
-          onSubmit={handleSubmit((data: ProfileChangePasswordInput) => updatePassword(userNickname, data.newPassword, onClose)(setLoaderRef.current!, null, null))}>
+          onSubmit={handleSubmit((data: ProfileChangePasswordInput) => updatePassword(data.newPassword, data.oldPassword, onClose)(setLoaderRef.current!, null, null))}>
           <div className="jk-form-item">
             <label>
               <T>new password</T>

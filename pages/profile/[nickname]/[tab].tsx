@@ -48,7 +48,7 @@ export default function ProfileView() {
           <TwoContentLayout>
             <div className="jk-row left gap">
               <h1>{nickname}</h1>
-              {openModal === 'UPDATE_PASSWORD' && <ChangePasswordModal onClose={onClose} nickname={data.content?.nickname} />}
+              {openModal === 'UPDATE_PASSWORD' && <ChangePasswordModal onClose={onClose} />}
               {openModal === 'RESET_PASSWORD' && <ResetPassword onClose={onClose} nickname={data.content?.nickname} />}
               {openModal === 'DATA' && <EditProfileModal onClose={onClose} user={data.content} />}
             </div>

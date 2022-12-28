@@ -6,7 +6,7 @@ import { ContestResponseDTO } from 'types';
 
 export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { query, push } = useRouter();
+  const { query } = useRouter();
   const problem = Object.values(contest?.problems).find(problem => problem.index === query.index as string);
   
   const { user } = contest;

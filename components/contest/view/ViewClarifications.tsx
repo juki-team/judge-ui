@@ -18,7 +18,7 @@ import {
 } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey, notifyResponse } from 'helpers';
-import { useNotification, useRouter, useDateFormat } from 'hooks';
+import { useDateFormat, useNotification, useRouter } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
 
@@ -39,38 +39,40 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
-    <div className="jk-col jk-pad-md">
-      {(isJudgeOrAdmin || isContestant) && (
-        isJudgeOrAdmin ? (
-          <Button
-            icon={<NotificationsActiveIcon />}
-            size="small"
-            onClick={() => setClarification({
-              clarificationId: '',
-              problemJudgeKey: '',
-              question: '',
-              answer: '',
-              public: true,
-            })}
-          >
-            <T className="tt-se fw-bd">send clarification</T>
-          </Button>
-        ) : isContestant && (
-          <Button
-            icon={<NotificationsActiveIcon />}
-            size="small"
-            onClick={() => setClarification({
-              clarificationId: '',
-              problemJudgeKey: '',
-              question: '',
-              answer: '',
-              public: false,
-            })}
-          >
-            <T className="tt-se fw-bd">ask question</T>
-          </Button>
-        )
-      )}
+    <div className="jk-col top jk-pad-md nowrap">
+      <div className="jk-row">
+        {(isJudgeOrAdmin || isContestant) && (
+          isJudgeOrAdmin ? (
+            <Button
+              icon={<NotificationsActiveIcon />}
+              size="small"
+              onClick={() => setClarification({
+                clarificationId: '',
+                problemJudgeKey: '',
+                question: '',
+                answer: '',
+                public: true,
+              })}
+            >
+              <T className="tt-se fw-bd">send clarification</T>
+            </Button>
+          ) : isContestant && (
+            <Button
+              icon={<NotificationsActiveIcon />}
+              size="small"
+              onClick={() => setClarification({
+                clarificationId: '',
+                problemJudgeKey: '',
+                question: '',
+                answer: '',
+                public: false,
+              })}
+            >
+              <T className="tt-se fw-bd">ask question</T>
+            </Button>
+          )
+        )}
+      </div>
       <div className="jk-pad-md jk-col stretch gap">
         {contest?.clarifications
           ?.sort((c1, c2) => {
@@ -85,6 +87,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
             }
             return c2?.answerTimestamp - c1?.answerTimestamp;
           })
+          ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
             return (
               <div className="jk-shadow jk-pad-md jk-border-radius-inline relative">
@@ -139,12 +142,16 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                       {!clarification.problemJudgeKey
                         ? <T className="tt-se">general</T>
                         : <div>
-                          <T className="tt-se">problem</T> <span
-                          className="fw-bd">{contest?.problems?.[clarification.problemJudgeKey]?.index}</span>
+                          <T className="tt-se">problem</T>&nbsp;
+                          <span className="fw-bd">
+                            {contest?.problems?.[clarification.problemJudgeKey]?.index || <><T>problem
+                              deleted</T> ({clarification.problemJudgeKey})</>}
+                          </span>
                         </div>}
                     </div>
                     <div className="jk-tag gray-6">
-                      {clarification.public ? <T>public</T> : isJudgeOrAdmin ? <T>only for the user</T> : <T>only for you</T>}</div>
+                      {clarification.public ? <T>public</T> : isJudgeOrAdmin ? <T>only for the user</T> :
+                        <T>only for you</T>}</div>
                     {!clarification.answerTimestamp && <div className="jk-tag error"><T>not answered yet</T></div>}
                   </div>
                 </div>

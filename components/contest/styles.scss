@@ -18,6 +18,28 @@
   }
 }
 
+.problem-index {
+  padding: 3px 10px;
+  
+  &.wrong, &.accepted {
+    .jk-icon {
+      border-radius: 50%;
+      color: var(--t-color-white);
+      position: absolute;
+      top: -6px;
+      right: -6px;
+    }
+  }
+  
+  &.wrong .jk-icon {
+    background-color: var(--t-color-error);
+  }
+  
+  &.accepted .jk-icon {
+    background-color: var(--t-color-success);
+  }
+}
+
 .problem-card {
   width: calc(var(--screen-col-width) * 3 + var(--screen-col-pad-width) * 2);
   height: 254px;
@@ -25,33 +47,6 @@
   
   .problem-status {
     width: 100%;
-  }
-  
-  .problem-index {
-    position: relative;
-    padding: 3px 10px;
-    
-    &.wrong, &.accepted {
-      .jk-icon {
-        border-radius: 50%;
-        color: var(--t-color-white);
-        position: absolute;
-        top: -6px;
-        right: -6px;
-      }
-    }
-    
-    &.wrong .jk-icon {
-      background-color: var(--t-color-error);
-    }
-    
-    &.accepted .jk-icon {
-      background-color: var(--t-color-success);
-    }
-  }
-  
-  .problem-id {
-  
   }
 }
 

@@ -242,7 +242,7 @@ const ProblemTestCasesPage = ({
                 <div className="jk-row nowrap">
                   <MultiSelect
                     disabled={lock}
-                    block
+                    extend
                     options={groupsOptions}
                     selectedOptions={testCase.groups.map(group => ({ value: group }))}
                     onChange={(options) => {
@@ -400,7 +400,7 @@ const ProblemTestCasesPage = ({
                 options={groupsOptions}
                 selectedOptions={newGroups.map(newGroup => ({ value: newGroup }))}
                 onChange={(options) => setNewGroups(options.map(({ value }) => value))}
-                block
+                extend
                 disabled={lock}
               />
             </div>

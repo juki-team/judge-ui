@@ -18,13 +18,12 @@ import {
   authorizedRequest,
   classNames,
   cleanRequest,
-  downloadBlobAsFile,
   downloadCsvAsFile,
+  downloadXlsxAsFile,
   getProblemJudgeKey,
   isEndlessContest,
   notifyResponse,
   searchParamsObjectTypeToQuery,
-  stringToArrayBuffer,
 } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
@@ -40,7 +39,6 @@ import {
   ScoreboardResponseDTO,
   Status,
 } from 'types';
-import { utils, write } from 'xlsx';
 
 const DownloadButton = ({
   data,
@@ -93,21 +91,7 @@ const DownloadButton = ({
             downloadCsvAsFile(dataCsv, `${contest?.name} (${t('scoreboard')}).csv`);
             break;
           case 'xlsx':
-            const workBook = utils.book_new();
-            const fileName = `${contest?.name} (${t('scoreboard')}).xlsx`;
-            workBook.Props = {
-              Title: fileName,
-              Subject: fileName,
-              Author: 'Juki Judge',
-              CreatedDate: new Date(),
-            };
-            const sheetName = t('scoreboard');
-            workBook.SheetNames.push(sheetName);
-            workBook.Sheets[sheetName] = utils.aoa_to_sheet(dataCsv);
-            const workBookOut = write(workBook, { bookType: 'xlsx', type: 'binary' });
-            const blob = new Blob([stringToArrayBuffer(workBookOut)], { type: 'application/octet-stream' });
-            await downloadBlobAsFile(blob, fileName);
-            
+            await downloadXlsxAsFile(dataCsv, `${contest?.name} (${t('scoreboard')}).xlsx`, t('scoreboard'));
             break;
           case 'pdf':
             break;

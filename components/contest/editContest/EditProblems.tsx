@@ -64,7 +64,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           <Input
             type="number"
             // size="auto"
-            block
+            extend
             value={problem.points}
             onChange={(props) => {
               setProblems(prevState => prevState.map(p => {
@@ -94,7 +94,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                   return p;
                 }));
               }}
-              block
+              extend
             />
           </div>
         )}
@@ -145,7 +145,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                   return p;
                 }));
               }}
-              block
+              extend
             />
           </div>
         )}
@@ -248,8 +248,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [problems]);
   
   return (
-    <div className="jk-col gap stretch jk-pad-md">
-      <div className="jk-col extend left gap stretch">
+    <div className="jk-col top nowrap gap stretch jk-pad-md">
+      <div className="jk-col left gap stretch">
         <div className="jk-row left gap">
           <div className="fw-bd tt-se tx-xl cr-py"><T>Problems with period time restriction</T></div>
           <InputToggle

@@ -95,7 +95,7 @@ export const UsersSelector = ({
         selectedOptions={selectedUsers.map(user => ({ value: user }))}
         onChange={options => onChangeSelectedUsers(options.map(option => option.value))}
         optionsPlacement="bottom"
-        block
+        extend
         rowHeightOption={72}
         onFilter={({ search, option }) => {
           const text = search.toLowerCase();

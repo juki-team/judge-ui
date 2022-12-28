@@ -18,7 +18,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
   const competition = isEndlessContest(contest);
   
   return (
-    <div className="jk-col left stretch jk-pad-md gap nowrap">
+    <div className="jk-col left top stretch jk-pad-md gap nowrap">
       <div className="jk-col gap stretch">
         <div className="jk-row left gap">
           <div className="fw-bd tt-se tx-xl cr-py"><T>guests</T>:</div>

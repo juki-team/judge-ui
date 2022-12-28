@@ -1,8 +1,8 @@
-import { ButtonLoader, FetcherLayer, ReloadIcon, T } from 'components';
+import { ButtonLoader, FetcherLayer, ReloadIcon, T } from 'components/index';
 import { JUDGE_API_V1 } from 'config/constants';
 import { useSWR } from 'hooks';
 import { ContentResponseType, SqsPropertiesResponseDTO, Status } from 'types';
-import Custom404 from '../../pages/404';
+import Custom404 from 'pages/404';
 
 export const SQSManagement = () => {
   
@@ -16,7 +16,7 @@ export const SQSManagement = () => {
       {({ data }) => {
         const queues = Object.keys(data.content); // ['sqsJukiHighRunnerFifo', 'sqsJukiLowRunnerFifo', 'sqsJukiOutRunnerFifo']
         return (
-          <div className="jk-col gap jk-pad-md">
+          <div className="jk-col top gap jk-pad-md">
             <div>
               <ButtonLoader
                 icon={<ReloadIcon />}

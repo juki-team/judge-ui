@@ -6,7 +6,6 @@ import {
   CloseIcon,
   CupIcon,
   GmailIcon,
-  HeadsetMicIcon,
   HorizontalMenu,
   JukiCouchLogoHorImage,
   JukiJudgeLogoHorImage,
@@ -20,6 +19,7 @@ import {
   SettingsIcon,
   SignUpModal,
   SubmissionModal,
+  SupportAgentIcon,
   T,
   TelegramIcon,
   UserPreviewModal,
@@ -76,7 +76,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T>admin</T>,
       icon: <SettingsIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS)}>{children}</Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.ALL_USERS)}>{children}</Link>,
     });
   }
   const { updateUserSettings, setUser } = useUserDispatch();
@@ -132,7 +132,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         placement={placement}
       >
         <div>
-          <Button icon={<SettingsIcon className="cr-we" />} type="text" />
+          <Button icon={<SettingsIcon />} type="text" />
         </div>
       </Popover>
       <Popover
@@ -153,7 +153,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         placement={placement}
       >
         <div>
-          <Button icon={<AppsIcon className="cr-we" />} type="text" />
+          <Button icon={<AppsIcon />} type="text" />
         </div>
       </Popover>
     </>
@@ -182,16 +182,16 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         leftMobile={{
           children: ({ toggle }) => (
             <div className="jk-row nowrap left mobile-left-side-header">
-              <div className="jk-row" onClick={toggle}><MenuIcon className="cr-we" /></div>
-              <Link href="/"><JukiJudgeLogoHorImage className="cr-we" /></Link>
+              <div className="jk-row" onClick={toggle}><MenuIcon /></div>
+              <Link href="/"><JukiJudgeLogoHorImage /></Link>
             </div>
           ),
           content: ({ toggle }) => (
             <div className="bc-py jk-row filled ">
               <div className="jk-col space-between left-mobile-content">
                 <div className="jk-row nowrap gap left mobile-left-side-header">
-                  <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} className="cr-we" /></div>
-                  <JukiJudgeLogoHorImage className="cr-we" />
+                  <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} /></div>
+                  <JukiJudgeLogoHorImage />
                 </div>
                 <div className="jk-col gap mobile-left-side-bottom">
                   {Settings('topLeft')}
@@ -216,7 +216,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           onClick={() => setFlags(prevState => ({ ...prevState, isHelpOpen: true }))}
         >
           <div className="jk-row gap center">
-            <HeadsetMicIcon /><T className="tt-ue tx-s fw-bd">need help?</T>
+            <SupportAgentIcon /><T className="tt-ue tx-s fw-bd">need help?</T>
             <div
               className="jk-row close cursor-pointer"
               style={{ position: 'absolute', right: 'var(--pad-sm)' }}
@@ -232,17 +232,17 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
             <div className="jk-row center fw-bd"><T className="tt-se">contact the webmaster</T>:</div>
             <div className="jk-row gap center">
               <TelegramIcon />
-              <div className="jk-row link fw-bd" style={{ width: 210 }}>
+              <div className="jk-row link fw-bd" style={{ width: 180 }}>
                 <Link href="https://t.me/OscarGauss" target="_blank">t.me/OscarGauss</Link>
               </div>
             </div>
             <div className="jk-row gap center">
               <PhoneIcon />
-              <div className="jk-row fw-bd" style={{ width: 210 }}>+591 79153358</div>
+              <div className="jk-row fw-bd" style={{ width: 180 }}>+591 79153358</div>
             </div>
             <div className="jk-row gap center">
               <GmailIcon />
-              <div className="jk-row fw-bd" style={{ width: 210 }}>oscargausscarvajal@gmail.com</div>
+              <div className="jk-row fw-bd" style={{ width: 180 }}>help@juki.contact</div>
             </div>
           </div>
         </div>

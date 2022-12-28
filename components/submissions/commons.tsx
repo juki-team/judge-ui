@@ -139,7 +139,7 @@ export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<Su
       .map(({ value, label }) => ({ label: <T className="tt-se">{label}</T>, value })),
   },
   cardPosition: 'bottom',
-  minWidth: 140,
+  minWidth: 160,
 });
 
 export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({

@@ -156,7 +156,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                         }),
                       },
                     })}
-                    block
+                    extend
                   />
                 </div>
               )}
@@ -176,7 +176,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                         }),
                       },
                     })}
-                    block
+                    extend
                   />
                 </div>
               )}
@@ -320,7 +320,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
               },
             });
           }}
-          block
+          extend
         />
       </div>
       <div className="jk-row left">
@@ -347,7 +347,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                       },
                     },
                   })}
-                  block
+                  extend
                 />
                 {problem.settings.timeLimit > 1 ? <T>milliseconds</T> : <T>millisecond</T>}
               </div>
@@ -365,7 +365,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                       },
                     },
                   })}
-                  block
+                  extend
                 />
                 <T>KB</T>
               </div>
@@ -379,7 +379,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
         <Input
           onChange={value => setProblem({ ...problem, author: value })}
           value={problem.author}
-          block
+          extend
         />
       </div>
       <div className="jk-row left gap">

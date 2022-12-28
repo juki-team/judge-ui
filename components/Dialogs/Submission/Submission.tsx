@@ -14,7 +14,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
   const handleClose = () => push({ query: removeParamQuery(query, QueryParam.SUBMISSION_VIEW, null) });
   
   return (
-    <Modal isOpen={true} onClose={handleClose} closeIcon shouldCloseOnOverlayClick>
+    <Modal isOpen={true} onClose={handleClose} closeIcon closeWhenClickOutside>
       <section className="jk-pad-md">
         <FetcherLayer<ContentResponseType<SubmitResponseDTO>>
           url={JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId)}
@@ -73,7 +73,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                         <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
                         <div className="jk-row"><T>verdict</T></div>
                         {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) &&
-													<div className="jk-row"><T>points</T></div>}
+                          <div className="jk-row"><T>points</T></div>}
                         <div className="jk-row"><T>time</T></div>
                         <div className="jk-row"><T>memory</T></div>
                       </div>
@@ -132,7 +132,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                         </div>
                       )}
                     >
-                      <div className="submission-stderr-content text-stderr">
+                      <div className="submission-stderr-content jk-text-stderr">
                         {compilationResult?.err}
                       </div>
                     </Collapse>

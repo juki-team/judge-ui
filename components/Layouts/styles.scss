@@ -9,11 +9,6 @@
   }
 }
 
-.content-layout, .two-content-layout {
-  padding: var(--pad-md) 0 var(--pad-md) 0;
-  box-sizing: border-box;
-}
-
 :root {
   --content-height: calc(var(--100VH) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
 }
@@ -21,7 +16,6 @@
 .content-layout {
   > div {
     height: 100%;
-    width: var(--screen-content-width);
     
     > .jk-data-viewer-layout {
       height: calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
@@ -31,24 +25,30 @@
         @extend .jk-border-radius-inline;
       }
     }
-    
-    > .jk-tabs-layout {
-      > .jk-tabs-content {
-        > div > .jk-data-viewer-layout {
-          --tab-content-min-height: calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--tabs-header-height) - var(--top-horizontal-menu-height) - var(--mobile-bottom-horizontal-menu-height));
-          height: 100px;
-        }
-      }
-    }
   }
 }
 
 .content-layout, .two-content-layout {
+  padding: var(--pad-md) 0 var(--pad-md) 0;
+  box-sizing: border-box;
+  
+  --second-content-layout-min-height: calc(
+    100VH
+    - var(--first-content-layout-height, 0px)
+    - var(--top-horizontal-menu-height)
+    - var(--pad-md) - var(--pad-md)
+    - var(--mobile-bottom-horizontal-menu-height));
+  
   > div {
     width: var(--screen-content-width);
     
     > div.jk-tabs-layout {
-      min-height: var(--second-content-layout-min-height, 100%);
+      .jk-tabs-layout {
+        height: 100%;
+      }
+      
+      height: var(--second-content-layout-min-height, 100%);
+      overflow: hidden;
       
       > div.jk-tabs-header:first-child {
         &:before {
@@ -65,36 +65,19 @@
         box-sizing: border-box;
         background-color: var(--t-color-white);
         border-radius: 0 var(--border-radius-inline) var(--border-radius-inline) var(--border-radius-inline);
-        //@extend .jk-shadow;
-        //overflow-x: auto;
-        overflow-x: visible;
         --tab-content-min-height: calc(var(--second-content-layout-min-height, 100%) - var(--tabs-header-height));
         min-height: var(--tab-content-min-height);
-        margin-bottom: var(--mobile-bottom-horizontal-menu-height);
-  
-        //min-height: calc(var(--tab-content-min-height) - 2px);
-        //height: calc(var(--tab-content-min-height) - 2px);
+        border: 1px solid var(--t-color-gray-6);
   
         > div > div {
-          border: 1px solid var(--t-color-gray-6);
-          @extend .jk-border-radius-inline;
-          border-top-left-radius: 0;
+          height: 100%;
+          overflow-x: auto;
         }
   
         > div {
           min-height: var(--tab-content-min-height);
+          height: var(--tab-content-min-height);
     
-          > .jk-data-viewer-layout {
-            height: calc(var(--tab-content-min-height) - 2px);
-            //height: var(--tab-content-min-height);
-      
-            .jk-view-container {
-              .jk-table-rows-container {
-                //overflow: hidden !important;
-              }
-            }
-          }
-          
           > .jk-code-mirror-editor-layout {
             height: var(--tab-content-min-height);
           }
@@ -112,10 +95,6 @@
       }
     }
   }
-}
-
-.two-content-layout {
-  //overflow: hidden;
 }
 
 .need-help-container {
@@ -140,8 +119,8 @@
     @include transition(height);
     @include transition(width);
     height: calc(96px + 24px);
-    width: 260px;
-    
+    width: 240px;
+  
     .close {
       display: initial;
     }

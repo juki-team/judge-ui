@@ -1,9 +1,8 @@
-import { ButtonLoader, CheckUnsavedChanges, Input, MdMathEditor, T, Tabs, TwoContentLayout } from 'components';
+import { ButtonLoader, CheckUnsavedChanges, CodeEditor, Input, MdMathEditor, T, Tabs, TwoContentLayout } from 'components';
 import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
-import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ButtonLoaderOnClickType,
@@ -12,14 +11,13 @@ import {
   ContestTab,
   EditCreateContestType,
   HTTPMethod,
+  ProgrammingLanguage,
   Status,
 } from 'types';
 import { EditCreateContestProps } from '../types';
 import { EditMembers } from './EditMembers';
 import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';
-
-const ReactJson = dynamic(import('react-json-view'), { ssr: false });
 
 export const EditCreateContest = ({ contest: initialContest }: EditCreateContestProps) => {
   
@@ -31,6 +29,8 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const lastContest = useRef(initialContest);
   useEffect(() => {
     if (editing && JSON.stringify(initialContest) !== JSON.stringify(lastContest.current)) {
+      const text = JSON.stringify(diff(lastContest.current, initialContest), null, 2);
+      const height = text.split('\n').length;
       addWarningNotification(
         <div>
           <h6>
@@ -38,12 +38,13 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
               the contest changed, your changes will overwrite another admin's
             </T>
           </h6>
-          <ReactJson
-            src={diff(lastContest.current, initialContest)}
-            enableClipboard={false}
-            collapsed={true}
-            name={false}
-          />
+          <div style={{ height: height * 24 + 'px' }}>
+            <CodeEditor
+              sourceCode={text}
+              language={ProgrammingLanguage.JSON}
+              readOnly
+            />
+          </div>
         </div>,
       );
       lastContest.current = initialContest;

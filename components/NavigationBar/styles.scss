@@ -60,6 +60,10 @@
 
 .settings-apps-login-user-content {
   margin-right: var(--pad-m);
+  
+  .jk-icon {
+    color: var(--t-color-primary-text);
+  }
 }
 
 .user-logged-head {
@@ -95,4 +99,8 @@
     width: 100px;
     height: 100px;
   }
+}
+
+.mobile-left-side-header {
+  color: var(--t-color-primary-text);
 }

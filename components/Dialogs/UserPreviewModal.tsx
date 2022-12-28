@@ -1,4 +1,4 @@
-import { Button, OpenInNewIcon, FetcherLayer, Image, MailIcon, Modal, PlaceIcon, SchoolIcon, T } from 'components';
+import { Button, FetcherLayer, Image, LocationOnIcon, MailIcon, Modal, OpenInNewIcon, SchoolIcon, T } from 'components';
 import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
@@ -14,7 +14,7 @@ export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
       isOpen={true}
       onClose={handleClose}
       className="modal-user-preview"
-      shouldCloseOnOverlayClick
+      closeWhenClickOutside
     >
       <FetcherLayer<ContentResponseType<UserBasicResponseDTO>>
         url={JUDGE_API_V1.USER.NICKNAME(nickname)}
@@ -31,13 +31,13 @@ export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
                 width={100}
                 style={{ overflow: 'visible' }}
               />
-              <div className="jk-col stretch">
+              <div className="jk-col gap stretch">
                 <div className="fw-br">{data?.content?.nickname}</div>
                 <div className="cr-g3">{data?.content?.givenName} {data?.content?.familyName}</div>
                 <div className="jk-divider tiny" />
                 {(data?.content?.city?.trim() || data?.content?.country?.trim()) && (
                   <div className="jk-row left gap">
-                    <PlaceIcon />{data?.content?.city}{data?.content?.city && ','} {data?.content?.country}
+                    <LocationOnIcon />{data?.content?.city}{data?.content?.city && ','} {data?.content?.country}
                   </div>
                 )}
                 {data?.content?.institution?.trim() && (

@@ -1,20 +1,18 @@
 import {
   AllSubmissions,
-  ECSTaskDefinitionsManagement,
   FilesManagement,
-  SQSManagement,
+  JudgersManagement,
+  MailManagement,
   T,
   Tabs,
   TwoContentLayout,
-  Users,
-  UsersLogged,
+  UsersManagement,
 } from 'components';
 import { ROUTES } from 'config/constants';
 import { useRouter } from 'next/router';
+import React from 'react';
 import { useUserState } from 'store';
 import { AdminTab } from 'types';
-import { ECSTasksManagement } from '../../components/admin/ECSTasksManagement';
-import { SettingsManagement } from '../../components/admin/SettingsManagement';
 import Custom404 from '../404';
 
 function Admin() {
@@ -24,8 +22,8 @@ function Admin() {
     canViewUsersManagement,
     canViewSubmissionsManagement,
     canViewFilesManagement,
-    canViewECSManagement,
-    canViewSQSManagement,
+    canViewJudgersManagement,
+    canViewEmailManagement,
   } = useUserState();
   
   if (!canViewUsersManagement && !canViewSubmissionsManagement && !canViewFilesManagement) {
@@ -33,8 +31,7 @@ function Admin() {
   }
   const tabs = [];
   if (canViewUsersManagement) {
-    tabs.push({ key: AdminTab.USERS, header: <T className="tt-ce">users</T>, body: <Users /> });
-    tabs.push({ key: AdminTab.LOGGED_USERS, header: <T className="tt-ce">logged users</T>, body: <UsersLogged /> });
+    tabs.push({ key: AdminTab.USERS_MANAGEMENT, header: <T className="tt-ce">users</T>, body: <UsersManagement /> });
   }
   if (canViewSubmissionsManagement) {
     tabs.push({ key: AdminTab.SUBMISSIONS, header: <T className="tt-ce">submissions</T>, body: <AllSubmissions /> });
@@ -42,26 +39,13 @@ function Admin() {
   if (canViewFilesManagement) {
     tabs.push({ key: AdminTab.FILES_MANAGEMENT, header: <T className="tt-ce">files</T>, body: <FilesManagement /> });
   }
-  if (canViewSQSManagement) {
-    tabs.push({ key: AdminTab.SQS_MANAGEMENT, header: <T className="tt-ce">sqs</T>, body: <SQSManagement /> });
+  if (canViewJudgersManagement) {
+    tabs.push({ key: AdminTab.JUDGERS_MANAGEMENT, header: <T className="tt-ce">judgers</T>, body: <JudgersManagement /> });
   }
-  if (canViewECSManagement) {
-    tabs.push({
-      key: AdminTab.ECS_TASKS_MANAGEMENT,
-      header: <T className="tt-ce">ecs task</T>,
-      body: <ECSTasksManagement />,
-    });
+  if (canViewEmailManagement) {
+    tabs.push({ key: AdminTab.MAIL_MANAGEMENT, header: <T className="tt-ce">mail</T>, body: <MailManagement /> });
   }
-  if (canViewECSManagement) {
-    tabs.push({
-      key: AdminTab.ECS_DEFINITIONS_TASK_MANAGEMENT,
-      header: <T className="tt-ce">ecs definitions task</T>,
-      body: <ECSTaskDefinitionsManagement />,
-    });
-  }
-  if (canViewSQSManagement && canViewECSManagement && canViewFilesManagement) {
-    tabs.push({ key: AdminTab.SETTINGS_MANAGEMENT, header: <T className="tt-ce">settings</T>, body: <SettingsManagement /> });
-  }
+  
   return (
     <TwoContentLayout>
       <div className="jk-col filled">
@@ -71,7 +55,7 @@ function Admin() {
       <Tabs
         selectedTabKey={query.tab as AdminTab}
         tabs={tabs}
-        onChange={tabKey => push(ROUTES.ADMIN.PAGE(tabKey as AdminTab))}
+        onChange={tabKey => push({ pathname: ROUTES.ADMIN.PAGE(tabKey as AdminTab), query })}
       />
     </TwoContentLayout>
   );

@@ -74,7 +74,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                           ? registerContest(setLoader, contest?.key)
                           : push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
                         type="secondary"
-                        block
+                        extend
                       >
                         <T>{isLogged ? 'enroll' : 'sign in'}</T>
                       </ButtonLoader>

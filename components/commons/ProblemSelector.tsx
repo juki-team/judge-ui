@@ -39,7 +39,7 @@ export const ProblemSelector = ({ onSelect }: { onSelect: (selectedUsers: Omit<O
       selectedOptions={[].map(user => ({ value: user }))}
       onChange={options => options[0] ? onSelect({ ...options[0].value }) : null}
       optionsPlacement="bottom"
-      block
+      extend
       rowHeightOption={72}
       onFilter={({ search, option }) => {
         const text = search.toLowerCase();

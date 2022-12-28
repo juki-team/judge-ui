@@ -1,4 +1,4 @@
-import { CodeRunnerEditor } from 'components/index';
+import { CodeRunnerEditor } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { getEditorSettingsStorageKey, getSourcesStoreKey, isStringJson } from 'helpers';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';

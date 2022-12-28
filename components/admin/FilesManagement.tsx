@@ -1,4 +1,4 @@
-import { Button, CurvedArrowIcon, VisibilityIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon_ } from 'components';
+import { Button, CurvedArrowIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon_, VisibilityIcon } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useEffect, useState } from 'react';
@@ -52,7 +52,7 @@ export function FilesManagement() {
             setFilePath('');
             setContentFile('');
           }}
-          shouldCloseOnOverlayClick
+          closeWhenClickOutside
         >
           <div className="jk-pad-md">
             {contentFile === null ? <div className="jk-row"><LoadingIcon size="large" /></div> :
@@ -70,7 +70,7 @@ export function FilesManagement() {
       <div>
         <h3><T>file list</T></h3>
         <div className="jk-row gap nowrap">
-          <Input value={path} onChange={setPath} block />
+          <Input value={path} onChange={setPath} extend />
           <Button icon={<ReloadIcon />} type="text" onClick={loadPath} />
           <CurvedArrowIcon
             onClick={() => {
@@ -89,7 +89,7 @@ export function FilesManagement() {
             style={{ height: 'calc(100VH - 400px)', overflow: 'auto', border: '1px solid var(--t-color-gray-6)' }}
             className="jk-border-radius-inline"
           >
-            {error && <div className="text-stderr">{error}</div>}
+            {error && <div className="jk-text-stderr">{error}</div>}
             <ul>
               {list.map(item => (
                 <li key={item}>

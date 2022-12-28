@@ -1,4 +1,16 @@
-import { Button, ButtonLoader, CityIcon, EditIcon, Input, Modal, PersonIcon, PlaceIcon, SchoolIcon, T, TextArea } from 'components';
+import {
+  Button,
+  ButtonLoader,
+  CityIcon,
+  EditIcon,
+  Input,
+  Modal,
+  PersonIcon,
+  LocationOnIcon,
+  SchoolIcon,
+  T,
+  TextArea, Image,
+} from 'components';
 import { JUDGE } from 'config/constants';
 import { classNames } from 'helpers';
 import { useEffect, useState } from 'react';
@@ -57,7 +69,7 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
             </div>
             <div className="jk-form-item">
               <label>
-                <div className="jk-row left gap"><PlaceIcon size="small" /><T>city</T></div>
+                <div className="jk-row left gap"><LocationOnIcon size="small" /><T>city</T></div>
                 <Input onChange={city => setUserState({ ...userState, city })} value={userState.city} />
               </label>
             </div>
@@ -69,10 +81,17 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
             </label>
           </div>
           {Object.values(JUDGE)
-            .map(({ value, label, logo, url }) => (
+            .map(({ value, label, logo, url, logoSize }) => (
               <div className="jk-form-item" key={value}>
                 <label>
-                  <div className="jk-row left gap"><img src={logo} alt={value}></img><span>{label}</span></div>
+                  <div className="jk-row left gap">
+                    <Image
+                      src={logo}
+                      alt={label}
+                      height={(64 / logoSize[0]) * logoSize[1]}
+                      width={64}
+                    />
+                    <span>{label}</span></div>
                   <Input
                     onChange={nickname => setUserState({
                       ...userState,

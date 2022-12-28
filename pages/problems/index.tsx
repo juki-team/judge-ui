@@ -48,7 +48,7 @@ function Problems() {
       sort: true,
       filter: { type: 'text' },
       cardPosition: 'center',
-      minWidth: 100,
+      minWidth: 120,
     },
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} className="left" />,
@@ -132,7 +132,7 @@ function Problems() {
           })),
         },
         cardPosition: 'topLeft',
-        minWidth: 160,
+        minWidth: 180,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
       {
         head: <TextHeadCell text={<T className="tt-ue tx-s">owner</T>} />,

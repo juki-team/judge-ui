@@ -63,6 +63,8 @@ export type {
   SqsPropertiesResponseDTO,
   UserState,
   UserRankResponseDTO,
+  ContestProblemType,
+  EmailDataResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType } from '@juki-team/base-ui';
@@ -88,7 +90,7 @@ export type {
   CodeEditorMiddleButtonsType,
   CodeEditorTestCasesType,
   CodeEditorExpandPositionType,
-  GetRowKeyType,
+  GetRecordKeyType,
   RequestFilterType,
   JkTableHeaderFilterType,
   RequestSortType,

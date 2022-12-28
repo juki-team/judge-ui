@@ -1,18 +1,21 @@
+import { authorizedRequest, cleanRequest, notifyResponse, useNotification } from '@juki-team/base-ui';
+import { ContentResponseType, HTTPMethod } from '@juki-team/commons';
 import { LoginModalComponent } from 'components';
-import { OpenDialog, QueryParam } from 'config/constants';
+import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
 import { addParamQuery, removeParamQuery } from 'helpers';
 import { useRouter } from 'hooks';
-import React from 'react';
+import React, { useState } from 'react';
 import { useUserDispatch } from 'store';
-import { LoginInputType, SetLoaderStatusOnClickType } from 'types';
+import { LoginInputType, SetLoaderStatusOnClickType, Status } from 'types';
 
 export const LoginModal = () => {
   
   const { query, push } = useRouter();
   const { signIn } = useUserDispatch();
-  
+  const { addNotification } = useNotification();
+  const [highlightForgotPassword, setHighlightForgotPassword] = useState(false);
   const onSubmit = (data: LoginInputType, setLoading: SetLoaderStatusOnClickType) => (
-    signIn(data.nickname, data.password, setLoading)
+    signIn(data.nickname, data.password, setLoading, () => setHighlightForgotPassword(true))
   );
   
   return (
@@ -26,6 +29,15 @@ export const LoginModal = () => {
           OpenDialog.SIGN_UP,
         ),
       })}
+      onForgotPassword={async (email, setStatus) => {
+        setStatus?.(Status.LOADING);
+        const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.AUTH.INITIATE_RESET_PASSWORD(), {
+          method: HTTPMethod.POST,
+          body: JSON.stringify({ email }),
+        }));
+        notifyResponse(response, addNotification, setStatus);
+      }}
+      highlightForgotPassword={highlightForgotPassword}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { ButtonLoader, CloseIcon, DataViewer, Field, T, TextHeadCell } from 'components/index';
+import { ButtonLoader, DataViewer, Field, SettingsSuggestIcon, StopCircleIcon, T, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
@@ -15,14 +15,18 @@ export const ECSTasksManagement = () => {
   const { addNotification, addSuccessNotification } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">group</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue">task definition</T>} />,
       index: 'group',
-      field: ({ record: { group, isHighRunnerGroup, isLowRunnerGroup } }) => (
+      field: ({ record: { group, isHighRunnerGroup, isLowRunnerGroup, memory, cpu, taskDefinitionArn } }) => (
         <Field className="jk-row center gap">
-          <div className="jk-col fw-br">
-            {group}
-            {isLowRunnerGroup && <T className="tt-ue jk-tag info">low</T>}
-            {isHighRunnerGroup && <T className="tt-ue jk-tag info">high</T>}
+          <div className="jk-col gap">
+            <div className="jk-col fw-bd">
+              {isLowRunnerGroup && <T className="tt-ue jk-tag info">low</T>}
+              {isHighRunnerGroup && <T className="tt-ue jk-tag info">high</T>}
+              {group}
+            </div>
+            <div>{memory} (MiB) / {cpu} (unit)</div>
+            <div className="tx-s">{taskDefinitionArn}</div>
           </div>
         </Field>
       ),
@@ -36,31 +40,25 @@ export const ECSTasksManagement = () => {
       field: ({
         record: {
           taskArn,
-          group,
           createdAt,
-          cpu,
-          memory,
           lastStatus,
           desiredStatus,
           launchType,
           startedAt,
-          taskDefinitionArn,
         },
       }) => (
         <Field className="jk-row center gap">
           <div className="jk-col">
             <div className="tx-s"><T className="fw-bd">started at</T>:&nbsp;{new Date(startedAt).toLocaleString()}</div>
             <div className="tx-s"><T className="fw-bd">created at</T>:&nbsp;{new Date(createdAt).toLocaleString()}</div>
-            <div className="tx-s">{memory} (MiB) / {cpu} (unit)</div>
             <div className="tx-s fw-bd">
               <span className={lastStatus === 'RUNNING' ? 'cr-ss' : 'cr-wg'}>{lastStatus}</span> / {desiredStatus}
             </div>
             <div className="tx-s">{launchType}</div>
-            <div className="tx-xs fw-br" style={{ lineHeight: '12px' }}>{taskDefinitionArn}</div>
-            <div className="tx-xs" style={{ lineHeight: '12px' }}>{taskArn}</div>
+            <div className="tx-t">{taskArn}</div>
             <ButtonLoader
               size="small"
-              icon={<CloseIcon circle />}
+              icon={<StopCircleIcon />}
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
                 const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
@@ -95,7 +93,7 @@ export const ECSTasksManagement = () => {
     <DataViewer<TaskResponseDTO>
       headers={columns}
       data={data}
-      rows={{ height: 240 }}
+      rows={{ height: 200 }}
       request={request}
       name={QueryParam.ECS_TASKS_TABLE}
       searchParamsObject={queryObject}
@@ -103,6 +101,8 @@ export const ECSTasksManagement = () => {
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={[
         <ButtonLoader
+          icon={<SettingsSuggestIcon />}
+          size="small"
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
             const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
