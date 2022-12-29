@@ -1,9 +1,9 @@
 import { SignUpModalComponent } from 'components';
 import { OpenDialog, QueryParam } from 'config/constants';
 import { removeParamQuery } from 'helpers';
+import { useUserDispatch } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useUserDispatch } from 'store';
 import { SetLoaderStatusOnClickType, SignUpInputType } from 'types';
 
 export const SignUpModal = () => {

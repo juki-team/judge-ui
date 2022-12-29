@@ -1,9 +1,8 @@
 import { T } from 'components';
 import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiBase, useNotification } from 'hooks';
 import { createContext, PropsWithChildren, useContext } from 'react';
-import { useUserState } from 'store';
 import { ContentsResponseType, HTTPMethod, ProblemVerdict } from 'types';
 
 export const TaskContext = createContext<{ listenSubmission: (submissionId: string, problem: string) => void }>({
@@ -11,7 +10,7 @@ export const TaskContext = createContext<{ listenSubmission: (submissionId: stri
 });
 
 export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
-  const { nickname } = useUserState();
+  const { user: { nickname } } = useJukiBase();
   const { addErrorNotification, addSuccessNotification } = useNotification();
   
   const listenSubmission = async (listenSubmissionId, problemKey) => {
@@ -81,18 +80,4 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
       {children}
     </TaskContext.Provider>
   );
-};
-
-export const useTaskState = () => {
-  const {} = useContext(TaskContext);
-  
-  return {};
-};
-
-export const useTaskDispatch = () => {
-  const { listenSubmission } = useContext(TaskContext);
-  
-  return {
-    listenSubmission,
-  };
 };

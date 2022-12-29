@@ -1,13 +1,13 @@
 import { Button, JukiCompleteLaptopImage, Modal, T } from 'components';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
+import { useJukiBase } from 'hooks';
 import { useRouter } from 'next/router';
-import { useUserState } from 'store';
 import { ProfileTab } from 'types';
 
 export const WelcomeModal = () => {
   
-  const { givenName, nickname } = useUserState();
+  const { user: { nickname } } = useJukiBase();
   const { push, query } = useRouter();
   
   const handleClose = () => push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
@@ -20,7 +20,7 @@ export const WelcomeModal = () => {
     >
       <div className="jk-pad-md jk-row nowrap">
         <div>
-          <h5><T>hi</T><span className="given-name">{givenName}</span>!</h5>
+          <h5><T>hi</T><span className="given-name">{nickname}</span>!</h5>
           <h3><T>welcome to the Online Juki Judge</T></h3>
           <p>
             <T>participe in coding contests ranging from beginner level to week-long coding marathons</T>

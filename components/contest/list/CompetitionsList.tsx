@@ -1,14 +1,13 @@
 import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useRouter } from 'hooks';
+import { useDataViewerRequester, useJukiBase, useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { useUserState } from 'store';
 import { ContentsResponseType, ContestSummaryListResponseDTO, DataViewerHeadersType } from 'types';
 import { contestantsColumn, contestNameColumn, CreateContestButton } from '../commons';
 
 export const CompetitionsList = () => {
-  const { canCreateContest } = useUserState();
+  const { user: { canCreateContest } } = useJukiBase();
   const {
     data: response,
     request,

@@ -1,8 +1,8 @@
 import { DateLiteral, Field, PagedDataViewer, T, TextHeadCell } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
+import { useJukiBase } from 'hooks';
 import { useMemo } from 'react';
-import { useUserState } from 'store';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, GetUrl } from 'types';
 import { contestantsColumn, contestNameColumn, CreateContestButton } from '../commons';
 
@@ -13,7 +13,7 @@ const stateMap = {
 };
 
 export const ContestList = ({ endless }: { endless?: boolean }) => {
-  const { canCreateContest } = useUserState();
+  const { user: { canCreateContest } } = useJukiBase();
   
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     {

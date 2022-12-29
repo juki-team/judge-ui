@@ -1,6 +1,6 @@
 import { Button, ButtonLoader, Modal, T, UserNicknameLink } from 'components';
+import { useUserDispatch } from 'hooks';
 import React from 'react';
-import { useUserDispatch } from 'store';
 
 export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nickname: string }) => {
   

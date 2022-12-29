@@ -1131,10 +1131,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.232":
-  version "0.0.232"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.232/241357228d28cf000bf0370c1429a5545ad61f3b#241357228d28cf000bf0370c1429a5545ad61f3b"
-  integrity sha512-7WEn58+isF28Wnk+ifWPi/9WqD57GbJvEBltVrWrsyKBVMyUMc16TiZeL5Suv+Ochu2oBJnEoSiEXkUoXmGU4Q==
+"@juki-team/base-ui@^0.0.241":
+  version "0.0.241"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.241/b240af2ef5f7fe04a6e13732c52cbe41d6c47895#b240af2ef5f7fe04a6e13732c52cbe41d6c47895"
+  integrity sha512-GtmgGNPWL3ogT4i/aAGhsRrizLGsfbMnls63q6hy2mBlwVGrV1ZdFZ8LiSkRbxS0sHaHePommCcKdFjZEyySiQ==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-java" "^6.0.1"
@@ -1143,7 +1143,7 @@
     "@codemirror/lang-markdown" "^6.0.5"
     "@codemirror/lang-python" "^6.1.0"
     "@hookform/resolvers" "^2.8.8"
-    "@juki-team/commons" "^0.0.213"
+    "@juki-team/commons" "^0.0.219"
     "@monaco-editor/react" "^4.4.2"
     "@tanstack/react-virtual" "^3.0.0-beta.30"
     "@uiw/react-codemirror" "^4.19.3"
@@ -1171,15 +1171,10 @@
     uuid "^9.0.0"
     yup "^0.32.11"
 
-"@juki-team/commons@^0.0.213":
-  version "0.0.213"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.213/7261e770cbba7355ea30c3dda043bc9b40617e55#7261e770cbba7355ea30c3dda043bc9b40617e55"
-  integrity sha512-+fsjzvMV+NxN3TWnGY8l1OHMvAli6ARJqKaNcJWRr6Z6bI87SDQYjwSgzcj1C0gu3fSb670kG0semmBOTx5+eA==
-
-"@juki-team/commons@^0.0.215":
-  version "0.0.215"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.215/b1e1d871bb556c31f8d8b23f493371adea6ff376#b1e1d871bb556c31f8d8b23f493371adea6ff376"
-  integrity sha512-N71no76MUXwVbymUAToJvshrh5rC3bdtBgXypwa8kuiiDKGz5ezNf5y4Ph7Ri7zeNtTJoRz2wheGp7Fwhn6FWQ==
+"@juki-team/commons@^0.0.219":
+  version "0.0.219"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.219/a0be0ebe6b8b06a9e6694902c7774aa5f8df52ab#a0be0ebe6b8b06a9e6694902c7774aa5f8df52ab"
+  integrity sha512-Gbwh4MT2RzRdvwog0OEQgiGqlfLeLHus8XaER7d4gcre+ZRPi/mA7V+POO+5Bu6BH0EtUIkkZqXYv8vQhf3CdQ==
 
 "@lezer/common@^1.0.0":
   version "1.0.2"

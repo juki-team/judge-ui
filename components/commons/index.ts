@@ -18,6 +18,7 @@ export {
   CodeEditorTheme,
   CodeRunnerEditor,
   SettingsIcon,
+  ExpandMoreIcon,
   CodeViewer,
   ConstructionIcon,
   ContentCopyIcon,

@@ -6,6 +6,7 @@
     width: auto;
     margin: 0 var(--pad-m);
   }
+  
 }
 
 .settings-popover {
@@ -67,6 +68,12 @@
 }
 
 .user-logged-head {
+  padding: var(--pad-xt);
+  
+  &:hover {
+    background: var(--t-color-shadow-darkest);
+  }
+  
   .nickname {
     max-width: 150px;
     overflow: hidden;

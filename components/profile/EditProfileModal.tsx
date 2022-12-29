@@ -3,18 +3,19 @@ import {
   ButtonLoader,
   CityIcon,
   EditIcon,
+  Image,
   Input,
+  LocationOnIcon,
   Modal,
   PersonIcon,
-  LocationOnIcon,
   SchoolIcon,
   T,
-  TextArea, Image,
+  TextArea,
 } from 'components';
-import { JUDGE } from 'config/constants';
+import { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, JUDGE } from 'config/constants';
 import { classNames } from 'helpers';
+import { useUserDispatch } from 'hooks';
 import { useEffect, useState } from 'react';
-import { useUserDispatch } from 'store';
 import { UserProfileResponseDTO } from 'types';
 import { ImageProfileModal } from './ImageProfileModal';
 
@@ -24,6 +25,8 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
   const { updateProfileData } = useUserDispatch();
   useEffect(() => setUserState(user), [JSON.stringify(user)]);
   const [modalImageProfile, setModalImageProfile] = useState(false);
+  const validLengthNickname = userState.nickname.length >= 3;
+  const validCharNickname = ALPHANUMERIC_DASH_UNDERSCORE_REGEX.test(userState.nickname);
   
   return (
     <Modal isOpen={true} onClose={onClose}>
@@ -39,6 +42,11 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
               <div className="jk-row left gap"><PersonIcon size="small" /><T>nickname</T></div>
               <Input onChange={nickname => setUserState({ ...userState, nickname })} value={userState.nickname} />
             </label>
+            <p>
+              {!validLengthNickname
+                ? <T>Must be at least 3 characters</T>
+                : !validCharNickname && <T>only alphanumeric characters or dash or underscore is valid</T>}
+            </p>
           </div>
           <div className="jk-row gap">
             <div className="jk-form-item">
@@ -106,6 +114,7 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
         <div className="jk-row gap extend right">
           <Button type="text" onClick={onClose}><T>cancel</T></Button>
           <ButtonLoader
+            disabled={!validLengthNickname || !validCharNickname}
             onClick={updateProfileData(
               user.nickname,
               {

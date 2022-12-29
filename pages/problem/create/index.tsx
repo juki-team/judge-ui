@@ -1,11 +1,11 @@
 import { EditCreateProblem } from 'components';
-import React, { useState } from 'react';
-import { useUserState } from 'store';
+import { useJukiBase } from 'hooks';
+import React from 'react';
 import Custom404 from '../../404';
 
 function ProblemCreate() {
   
-  const { canCreateProblem } = useUserState();
+  const { user: { canCreateProblem } } = useJukiBase();
   
   if (!canCreateProblem) {
     return <Custom404 />;

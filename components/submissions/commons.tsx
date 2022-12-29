@@ -1,9 +1,9 @@
-import { ButtonLoader, DateField, OpenInNewIcon, Field, ReloadIcon, T, TextHeadCell, UserNicknameLink } from 'components';
+import { ButtonLoader, DateField, Field, OpenInNewIcon, ReloadIcon, T, TextHeadCell, UserNicknameLink } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
+import { useRejudgeServices } from 'hooks';
 import Link from 'next/link';
 import React from 'react';
 import { ContestTab, DataViewerHeadersType, ProblemTab, SubmissionResponseDTO } from 'types';
-import { useRejudgeServices } from '../../hooks/rejudge';
 import { SubmissionInfo } from './SubmissionInfo';
 
 import { Memory, Time, Verdict } from './utils';

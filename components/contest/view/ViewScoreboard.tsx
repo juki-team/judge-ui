@@ -1,4 +1,3 @@
-import { useJukiBase } from '@juki-team/base-ui';
 import {
   BalloonIcon,
   ButtonLoader,
@@ -25,10 +24,9 @@ import {
   notifyResponse,
   searchParamsObjectTypeToQuery,
 } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter, useT } from 'hooks';
+import { useDataViewerRequester, useJukiBase, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { useUserState } from 'store';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -105,7 +103,7 @@ const DownloadButton = ({
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const user = useUserState();
+  const { user } = useJukiBase();
   const { addNotification } = useNotification();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const isEndless = isEndlessContest(contest);

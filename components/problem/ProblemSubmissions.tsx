@@ -1,7 +1,7 @@
 import { PagedDataViewer, submissionContestColumn } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
+import { useJukiBase } from 'hooks';
 import React, { useMemo } from 'react';
-import { useUserState } from 'store';
 import { DataViewerHeadersType, GetUrl, ProblemResponseDTO, SubmissionResponseDTO } from 'types';
 import { toFilterUrl, toSortUrl } from '../../helpers';
 import {
@@ -14,7 +14,7 @@ import {
 } from '../submissions';
 
 export const ProblemSubmissions = ({ problem, mySubmissions }: { problem: ProblemResponseDTO, mySubmissions?: boolean }) => {
-  const { nickname } = useUserState();
+  const { user: { nickname } } = useJukiBase();
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => {
     return [
       ...(!mySubmissions ? [submissionNickname()] : []),

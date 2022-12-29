@@ -1,6 +1,6 @@
 import { Button, ButtonLoader, ImageLoaderCropper, Modal, T } from 'components';
+import { useUserDispatch } from 'hooks';
 import { useState } from 'react';
-import { useUserDispatch } from 'store';
 import { CropImageType } from 'types';
 
 export const ImageProfileModal = ({ onClose, nickname }: { onClose: () => void, nickname: string }) => {

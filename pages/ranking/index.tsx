@@ -3,7 +3,7 @@ import { ContentLayout, DataViewer, Field, Image, T, TextHeadCell, UserNicknameL
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester2, useRouter } from 'hooks';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetUrl, UserRankResponseDTO } from 'types';
 
 function Ranking() {
@@ -102,6 +102,10 @@ function Ranking() {
     request,
     setLoaderStatusRef,
   } = useDataViewerRequester2<ContentsResponseType<UserRankResponseDTO>>(url, { refreshInterval: 5 * 60 * 1000 });
+  const [_, setRender] = useState(Date.now()); // TODO: Fix the render of DataViewer
+  useEffect(() => {
+    setTimeout(() => setRender(Date.now()), 100);
+  }, [response]);
   
   const setSearchParamsObject = useCallback(params => replace({ query: searchParamsObjectTypeToQuery(params) }), []);
   
@@ -118,7 +122,6 @@ function Ranking() {
         setLoaderStatusRef={setLoaderStatusRef}
         searchParamsObject={queryObject}
         setSearchParamsObject={setSearchParamsObject}
-        // getRowKey={getRowKey}
         {...DEFAULT_DATA_VIEWER_PROPS}
       />
     </ContentLayout>

@@ -1,11 +1,22 @@
-import { ArrowIcon, DownloadIcon, ExclamationIcon, OpenInNewIcon, FloatToolbar, MdMathViewer, PlusIcon, Popover, ProblemInfo, T, TextLangEdit } from 'components';
+import {
+  ArrowIcon,
+  DownloadIcon,
+  ExclamationIcon,
+  FloatToolbar,
+  MdMathViewer,
+  OpenInNewIcon,
+  PlusIcon,
+  Popover,
+  ProblemInfo,
+  T,
+  TextLangEdit,
+} from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { classNames, downloadBlobAsFile, handleShareMdPdf } from 'helpers';
-import { useT } from 'hooks';
+import { useJukiBase, useT } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useUserState } from 'store';
 import { ContestTab, Language, ProblemSampleCasesType, ProblemSettingsType, ProblemStatementType, ProblemStatus } from 'types';
 import { SampleTest } from './SampleTest';
 
@@ -38,7 +49,7 @@ export const ProblemStatement = ({
 }: ProblemStatementProps) => {
   
   const { query: { key, index, tab, ...query } } = useRouter();
-  const { settings: { preferredLanguage } } = useUserState();
+  const { user: { settings: { preferredLanguage } } } = useJukiBase();
   const { t } = useT();
   
   const statementDescription = statement?.description[preferredLanguage] || statement?.description[Language.EN] || statement?.description[Language.ES];
@@ -108,7 +119,10 @@ ${sample.output}
         </div>
       )}
       <div className="jk-row nowrap stretch left problem-content">
-        <div className={classNames('problem-statement', { 'problem-contest-statement': !!contestIndex, 'editing': !!setStatement })}>
+        <div className={classNames('problem-statement', {
+          'problem-contest-statement': !!contestIndex,
+          'editing': !!setStatement,
+        })}>
           {!setStatement && (
             <FloatToolbar
               actionButtons={[

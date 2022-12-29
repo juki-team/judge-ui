@@ -1,10 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ButtonLoader, InputPassword, Modal, T } from 'components';
+import { useUserDispatch } from 'hooks';
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { SetLoaderStatusOnClickType } from 'types';
 import * as yup from 'yup';
-import { useUserDispatch } from '../../store';
 
 export type ProfileChangePasswordInput = {
   oldPassword: string,

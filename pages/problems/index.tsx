@@ -16,10 +16,9 @@ import {
 import { PROBLEM_STATUS, QueryParam, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useRouter } from 'hooks';
+import { useFetcher, useJukiBase, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { useUserState } from 'store';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -32,7 +31,7 @@ import {
 
 function Problems() {
   
-  const { canCreateProblem } = useUserState();
+  const { user: { canCreateProblem } } = useJukiBase();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {

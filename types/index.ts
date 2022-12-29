@@ -1,7 +1,11 @@
 export * from './commons';
 export * from './contest';
+export * from './flags';
 export * from './problem';
+export * from './profiles';
+export * from './ranking';
 export * from './routing';
+export * from './users';
 
 export {
   ErrorCode,
@@ -46,7 +50,8 @@ export type {
   ContestSummaryListResponseDTO,
   CreateContestDTO,
   UserProfileResponseDTO,
-  UserPingResponseDTO,
+  PingResponseDTO,
+  UserPingType,
   UserBasicResponseDTO,
   ProblemSummaryListResponseDTO,
   CreateProblemDTO,

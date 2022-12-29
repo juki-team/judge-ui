@@ -12,13 +12,12 @@ import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
 import { addParamQuery, authorizedRequest, classNames, cleanRequest, notifyResponse } from 'helpers';
 import { useDateFormat, useJukiBase, useNotification, useSWR } from 'hooks';
 import { useRouter } from 'next/router';
-import { useUserState } from 'store';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, SetLoaderStatusOnClickType, Status } from 'types';
 
 export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { isJudge, isAdmin, isContestant, isGuest, isSpectator } = contest.user;
-  const { isLogged } = useUserState();
+  const { user: { isLogged } } = useJukiBase();
   const { push, query } = useRouter();
   const { dtf, rlt } = useDateFormat();
   const { addNotification } = useNotification();

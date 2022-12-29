@@ -1,6 +1,6 @@
 import { LoadingIcon } from 'components';
-import { renderReactNodeOrFunction, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useFetcher } from 'hooks';
+import { notifyResponse, renderReactNodeOrFunction, renderReactNodeOrFunctionP1 } from 'helpers';
+import { useFetcher, useNotification } from 'hooks';
 import { useEffect } from 'react';
 import { KeyedMutator, SWRConfiguration } from 'swr';
 import { ContentResponseType, ContentsResponseType, ReactNodeOrFunctionP1Type, ReactNodeOrFunctionType } from 'types';
@@ -21,9 +21,11 @@ export const FetcherLayer = <T extends (ContentResponseType<any> | ContentsRespo
   onError,
 }: FetcherLayerProps<T>) => {
   const { isLoading, data, error, mutate } = useFetcher<T>(url, options);
+  const { addNotification } = useNotification();
   
   useEffect(() => {
     if (data?.success === false || error) {
+      notifyResponse(data, addNotification);
       onError?.(error);
     }
   }, [data?.success, error]);

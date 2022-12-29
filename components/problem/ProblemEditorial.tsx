@@ -1,8 +1,8 @@
 import { MdMathViewer, TextLangEdit } from 'components';
 import { classNames } from 'helpers';
+import { useJukiBase } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useUserState } from 'store';
 import { TextLanguageType } from 'types';
 
 interface ProblemStatementProps {
@@ -13,7 +13,7 @@ interface ProblemStatementProps {
 export const ProblemEditorial = ({ editorial, setEditorial }: ProblemStatementProps) => {
   
   const { query: { key, index, tab, ...query } } = useRouter();
-  const { settings: { preferredLanguage } } = useUserState();
+  const { user: { settings: { preferredLanguage } } } = useJukiBase();
   
   return (
     <div className="problem-statement-layout">

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { NotificationType } from '../types';
 
 export interface FlagsState {
@@ -37,3 +38,7 @@ export interface FlagsStateOptions {
     duration?: number,
   } | null
 }
+
+export type FlagsType = { isHelpOpen: boolean, isHelpFocused: boolean };
+
+export type SetFlagsType = Dispatch<SetStateAction<FlagsType>>;

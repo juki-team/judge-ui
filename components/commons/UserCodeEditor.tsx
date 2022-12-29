@@ -1,8 +1,8 @@
 import { CodeRunnerEditor } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { getEditorSettingsStorageKey, getSourcesStoreKey, isStringJson } from 'helpers';
+import { useJukiBase } from 'hooks';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useUserState } from 'store';
 import { CodeEditorMiddleButtonsType, CodeEditorTestCasesType, ProgrammingLanguage, Theme } from 'types';
 
 const useSaveStorage = <T extends Object, >(storeKey: string, defaultValue: T, initialValue?: T): [T, Dispatch<SetStateAction<T>>] => {
@@ -44,7 +44,7 @@ export const UserCodeEditor = ({
   onLanguageChange,
   initialSource,
 }: UserCodeEditorProps) => {
-  const { nickname } = useUserState();
+  const { user: { nickname } } = useJukiBase();
   
   const editorSettingsStorageKey = getEditorSettingsStorageKey(nickname);
   

@@ -1,8 +1,7 @@
 import { Button, ButtonLoader, Input, Modal, Select, T } from 'components/index';
 import { downloadCsvAsFile, downloadXlsxAsFile, getRandomString } from 'helpers';
-import { useT } from 'hooks';
+import { useT, useUserDispatch } from 'hooks';
 import { useState } from 'react';
-import { useUserDispatch } from 'store';
 
 export const GenerateUsersModal = ({ isOpen, onClose }) => {
   const { signUp } = useUserDispatch();

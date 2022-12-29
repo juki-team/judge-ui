@@ -12,9 +12,9 @@ import {
   TwoContentLayout,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { useJukiBase } from 'hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useUserState } from 'store';
 import { ContentResponseType, ProfileTab, UserProfileResponseDTO } from 'types';
 import Custom404 from '../../404';
 
@@ -22,7 +22,7 @@ export default function ProfileView() {
   
   const { query, push } = useRouter();
   const { nickname, tab } = query;
-  const { nickname: userNickname } = useUserState();
+  const { user: { nickname: userNickname } } = useJukiBase();
   const [openModal, setOpenModal] = useState('');
   const onClose = () => setOpenModal('');
   

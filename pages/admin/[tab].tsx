@@ -9,9 +9,9 @@ import {
   UsersManagement,
 } from 'components';
 import { ROUTES } from 'config/constants';
+import { useJukiBase } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useUserState } from 'store';
 import { AdminTab } from 'types';
 import Custom404 from '../404';
 
@@ -19,12 +19,14 @@ function Admin() {
   
   const { query, push } = useRouter();
   const {
-    canViewUsersManagement,
-    canViewSubmissionsManagement,
-    canViewFilesManagement,
-    canViewJudgersManagement,
-    canViewEmailManagement,
-  } = useUserState();
+    user: {
+      canViewUsersManagement,
+      canViewSubmissionsManagement,
+      canViewFilesManagement,
+      canViewJudgersManagement,
+      canViewEmailManagement,
+    },
+  } = useJukiBase();
   
   if (!canViewUsersManagement && !canViewSubmissionsManagement && !canViewFilesManagement) {
     return <Custom404 />;
@@ -43,14 +45,13 @@ function Admin() {
     tabs.push({ key: AdminTab.JUDGERS_MANAGEMENT, header: <T className="tt-ce">judgers</T>, body: <JudgersManagement /> });
   }
   if (canViewEmailManagement) {
-    tabs.push({ key: AdminTab.MAIL_MANAGEMENT, header: <T className="tt-ce">mail</T>, body: <MailManagement /> });
+    tabs.push({ key: AdminTab.MAIL_MANAGEMENT, header: <T className="tt-ce">email</T>, body: <MailManagement /> });
   }
   
   return (
     <TwoContentLayout>
       <div className="jk-col filled">
         <h3><T>admin</T></h3>
-        <div>my roles are</div>
       </div>
       <Tabs
         selectedTabKey={query.tab as AdminTab}

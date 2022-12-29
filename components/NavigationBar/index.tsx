@@ -7,6 +7,7 @@ import {
   CupIcon,
   GmailIcon,
   HorizontalMenu,
+  Image,
   JukiCouchLogoHorImage,
   JukiJudgeLogoHorImage,
   JukiUtilsLogoHorImage,
@@ -27,10 +28,10 @@ import {
 } from 'components';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { classNames, isOrHas, removeParamQuery } from 'helpers';
+import { useJukiBase, useJukiFlags, useUserDispatch } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { useUserDispatch, useUserState } from 'store';
 import { AdminTab, ContestsTab, Language, ProfileSettingOptions, Status, Theme } from 'types';
 import { LoginUser } from './LoginUser';
 import { SettingsPopover } from './SettingsPopover';
@@ -39,17 +40,21 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
   const [loader, setLoader] = useState<Status>(Status.NONE);
+  const { flags, setFlags } = useJukiFlags();
   const {
-    canViewUsersManagement,
-    canViewSubmissionsManagement,
-    canViewFilesManagement,
-    isLogged,
-    settings,
+    user: {
+      canViewUsersManagement,
+      canViewSubmissionsManagement,
+      canViewFilesManagement,
+      canViewEmailManagement,
+      canViewJudgersManagement,
+      isLogged,
+      settings,
+      nickname,
+    },
     isLoading,
-    nickname,
-    flags,
-    setFlags,
-  } = useUserState();
+    company: { emailContact, imageUrl, name },
+  } = useJukiBase();
   
   const menu = [
     {
@@ -71,12 +76,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: (children) => <Link href={ROUTES.RANKING.PAGE()}>{children}</Link>,
     },
   ];
-  if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement) {
+  if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement || canViewEmailManagement || canViewJudgersManagement) {
     menu.push({
       label: <T>admin</T>,
       icon: <SettingsIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.ALL_USERS)}>{children}</Link>,
+      menuItemWrapper: (children) => <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)}>{children}</Link>,
     });
   }
   const { updateUserSettings, setUser } = useUserDispatch();
@@ -131,7 +136,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         triggerOn="click"
         placement={placement}
       >
-        <div>
+        <div className="jk-row">
           <Button icon={<SettingsIcon />} type="text" />
         </div>
       </Popover>
@@ -152,7 +157,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         triggerOn="click"
         placement={placement}
       >
-        <div>
+        <div className="jk-row">
           <Button icon={<AppsIcon />} type="text" />
         </div>
       </Popover>
@@ -169,12 +174,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       <HorizontalMenu
         menu={menu}
         leftSection={() => (
-          <div className="navbar" onClick={() => push('/')}>
-            <JukiJudgeLogoHorImage />
+          <div className="navbar jk-row" onClick={() => push('/')}>
+            {isLoading ? <LoadingIcon /> : <Image src={imageUrl} alt={name} height={40} width={80} />}
           </div>
         )}
         rightSection={
-          <div className="jk-row gap settings-apps-login-user-content nowrap">
+          <div className="jk-row stretch gap settings-apps-login-user-content nowrap">
             {Settings('bottom')}
             <LoginUser />
           </div>
@@ -240,10 +245,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
               <PhoneIcon />
               <div className="jk-row fw-bd" style={{ width: 180 }}>+591 79153358</div>
             </div>
-            <div className="jk-row gap center">
-              <GmailIcon />
-              <div className="jk-row fw-bd" style={{ width: 180 }}>help@juki.contact</div>
-            </div>
+            {!isLoading && (
+              <div className="jk-row gap center">
+                <GmailIcon />
+                <div className="jk-row fw-bd" style={{ width: 180 }}>{emailContact}</div>
+              </div>
+            )}
           </div>
         </div>
       </HorizontalMenu>

@@ -1,11 +1,11 @@
 import { EditCreateContest } from 'components';
+import { useJukiBase } from 'hooks';
 import React from 'react';
-import { useUserState } from 'store';
 import Custom404 from '../../404';
 
 function ContestCreate() {
   
-  const { canCreateContest } = useUserState();
+  const { user: { canCreateContest } } = useJukiBase();
   
   if (!canCreateContest) {
     return <Custom404 />;

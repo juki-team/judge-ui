@@ -13,17 +13,16 @@ import {
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiBase, useNotification } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
-import { useUserState } from 'store';
 import { ContentResponseType, HTTPMethod, ProblemResponseDTO, ProblemTab, Status, SubmissionRunStatus } from 'types';
 import Custom404 from '../../../../404';
 
 const ProblemView = (): ReactNode => {
   
   const { query: { key, ...query }, push, isReady } = useRouter();
-  const user = useUserState();
+  const { user } = useJukiBase();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   
   return (

@@ -20,6 +20,7 @@ export const Image = ({ src, className, alt, height, width, style }: ImageProps)
         height={height}
         width={width}
         style={style}
+
       />
     </span>
   );

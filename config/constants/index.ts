@@ -24,6 +24,10 @@ export {
   USER_GUEST,
 } from '@juki-team/commons';
 
+export {
+  ALPHANUMERIC_DASH_UNDERSCORE_REGEX,
+} from '@juki-team/base-ui';
+
 export * from './contest';
 export * from './defaultObjects';
 export * from './judge';

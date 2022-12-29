@@ -1,9 +1,8 @@
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
 import { JUDGE_API_V1, OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useContestRouter, useNotification, useRouter, useSWR } from 'hooks';
+import { useContestRouter, useJukiBase, useNotification, useRouter, useSWR, useTaskDispatch } from 'hooks';
 import { useMemo, useState } from 'react';
-import { useTaskDispatch, useUserState } from 'store';
 import {
   CodeEditorTestCasesType,
   ContentResponseType,
@@ -39,7 +38,7 @@ export const ProblemCodeEditor = ({
       in: sample.input,
     };
   });
-  const { nickname, isLogged } = useUserState();
+  const { user: { nickname, isLogged } } = useJukiBase();
   const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
   const {

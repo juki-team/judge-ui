@@ -1,8 +1,7 @@
 import { settings } from '@juki-team/base-ui';
-import { useFetcher as useFetcherJk } from 'hooks';
+import { useFetcher as useFetcherJk, useJukiBase } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useUserState } from 'store';
 import { SWRConfiguration, useSWRConfig } from 'swr';
 import {
   ContentResponseType,
@@ -36,7 +35,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const [firstRefresh, setFirstRefresh] = useState(false);
-  const { nickname } = useUserState();
+  const { user: { nickname } } = useJukiBase();
   const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(firstRefresh ? url : null, options);
   
   const request = useCallback(async () => {
@@ -72,7 +71,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
 export const useDataViewerRequester2 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(getUrl: GetUrl, options?: SWRConfiguration) => {
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
-  const { nickname } = useUserState();
+  const { user: { nickname } } = useJukiBase();
   const [url, setUrl] = useState(null);
   const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(url, options);
   
@@ -149,5 +148,8 @@ export {
   useFetcher,
 } from '@juki-team/base-ui';
 export * from './contest';
+export * from './rejudge';
+export * from './task';
 export * from './useDateFormat';
 export * from './useOnline';
+export * from './user';

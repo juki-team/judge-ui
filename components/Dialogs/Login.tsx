@@ -3,9 +3,8 @@ import { ContentResponseType, HTTPMethod } from '@juki-team/commons';
 import { LoginModalComponent } from 'components';
 import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
 import { addParamQuery, removeParamQuery } from 'helpers';
-import { useRouter } from 'hooks';
+import { useRouter, useUserDispatch } from 'hooks';
 import React, { useState } from 'react';
-import { useUserDispatch } from 'store';
 import { LoginInputType, SetLoaderStatusOnClickType, Status } from 'types';
 
 export const LoginModal = () => {
