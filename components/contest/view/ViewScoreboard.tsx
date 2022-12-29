@@ -17,7 +17,7 @@ import {
   authorizedRequest,
   classNames,
   cleanRequest,
-  downloadCsvAsFile,
+  downloadDataTableAsCsvFile,
   downloadXlsxAsFile,
   getProblemJudgeKey,
   isEndlessContest,
@@ -86,7 +86,7 @@ const DownloadButton = ({
       onChange={async ({ value }) => {
         switch (value) {
           case 'csv':
-            downloadCsvAsFile(dataCsv, `${contest?.name} (${t('scoreboard')}).csv`);
+            downloadDataTableAsCsvFile(dataCsv, `${contest?.name} (${t('scoreboard')}).csv`);
             break;
           case 'xlsx':
             await downloadXlsxAsFile(dataCsv, `${contest?.name} (${t('scoreboard')}).xlsx`, t('scoreboard'));

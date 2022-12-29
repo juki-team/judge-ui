@@ -12,7 +12,7 @@ import {
   TextLangEdit,
 } from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
-import { classNames, downloadBlobAsFile, handleShareMdPdf } from 'helpers';
+import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpers';
 import { useJukiBase, useT } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -57,8 +57,9 @@ export const ProblemStatement = ({
   const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]).trim();
   
   const languages = Object.values(settings?.byProgrammingLanguage || {});
+  const problemName = contestIndex ? `(${t('problem')} ${contestIndex}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
   const source = `
-# \\textAlign=center (${t('problem')} ${contestIndex}) ${name}
+# \\textAlign=center ${problemName}
 
 \\textAlign=center **${t('type')}:** ${PROBLEM_TYPE[settings?.type]?.label}, **${t('mode')}:** ${PROBLEM_MODE[settings?.mode]?.label}
 
@@ -132,12 +133,14 @@ ${sample.output}
                     {
                       icon: <DownloadIcon />,
                       label: <T>pdf</T>,
-                      onClick: handleShareMdPdf('pdf', source, sourceUrl, setSourceUrl),
+                      onClick: async () => {
+                        await downloadJukiMarkdownAdPdf(source, `Juki Judge ${problemName}.pdf`);
+                      },
                     },
                     {
                       icon: <OpenInNewIcon />,
                       label: <T>md</T>,
-                      onClick: async () => await downloadBlobAsFile(new Blob([source], { type: 'text/plain' }), `JUKI-JUDGE-${problemKey}.md`),
+                      onClick: async () => await downloadBlobAsFile(new Blob([source], { type: 'text/plain' }), `Juki Judge ${problemName}.md`),
                     },
                   ],
                 },

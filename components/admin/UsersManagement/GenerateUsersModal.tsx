@@ -1,5 +1,5 @@
 import { Button, ButtonLoader, Input, Modal, Select, T } from 'components/index';
-import { downloadCsvAsFile, downloadXlsxAsFile, getRandomString } from 'helpers';
+import { downloadDataTableAsCsvFile, downloadXlsxAsFile, getRandomString } from 'helpers';
 import { useT, useUserDispatch } from 'hooks';
 import { useState } from 'react';
 
@@ -75,7 +75,7 @@ export const GenerateUsersModal = ({ isOpen, onClose }) => {
               const filename = `${usersGen.prefix}[${usersGen.initialNumber},${usersGen.initialNumber + usersGen.total - 1}]@${usersGen.emailDomain}`;
               switch (value) {
                 case 'csv':
-                  downloadCsvAsFile(dataCsv, `${filename}.csv`);
+                  downloadDataTableAsCsvFile(dataCsv, `${filename}.csv`);
                   break;
                 case 'xlsx':
                   await downloadXlsxAsFile(dataCsv, `${filename}.xlsx`, t('users'));

@@ -137,9 +137,9 @@ li > * {
   margin-left: var(--pad-xt);
 }
 
-.only-icon {
+.only-icon.jk-button-text {
   &:hover {
-    background: var(--t-color-shadow-darkest) !important;
+    background: var(--t-color-shadow-light) !important;
   }
 }
 
