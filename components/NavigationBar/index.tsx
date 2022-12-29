@@ -213,7 +213,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       >
         {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" /></div> : children}
         <div
-          className={classNames('need-help-container jk-border-radius-inline', {
+          className={classNames('need-help-container jk-border-radius-inline jk-col nowrap', {
             'open jk-shadow': flags.isHelpOpen,
             'cursor-pointer': !flags.isHelpOpen,
             focus: flags.isHelpFocused,
@@ -221,37 +221,44 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           onClick={() => setFlags(prevState => ({ ...prevState, isHelpOpen: true }))}
         >
           <div className="jk-row gap center">
-            <SupportAgentIcon /><T className="tt-ue tx-s fw-bd">need help?</T>
-            <div
-              className="jk-row close cursor-pointer"
-              style={{ position: 'absolute', right: 'var(--pad-sm)' }}
-              onClick={(event) => {
-                setFlags(prevState => ({ ...prevState, isHelpOpen: false }));
-                event.stopPropagation();
-              }}
-            >
-              <CloseIcon />
-            </div>
-          </div>
-          <div className="jk-col stretch">
-            <div className="jk-row center fw-bd"><T className="tt-se">contact the webmaster</T>:</div>
-            <div className="jk-row gap center">
-              <TelegramIcon />
-              <div className="jk-row link fw-bd" style={{ width: 180 }}>
-                <Link href="https://t.me/OscarGauss" target="_blank">t.me/OscarGauss</Link>
-              </div>
-            </div>
-            <div className="jk-row gap center">
-              <PhoneIcon />
-              <div className="jk-row fw-bd" style={{ width: 180 }}>+591 79153358</div>
-            </div>
-            {!isLoading && (
-              <div className="jk-row gap center">
-                <GmailIcon />
-                <div className="jk-row fw-bd" style={{ width: 180 }}>{emailContact}</div>
-              </div>
+            <SupportAgentIcon />
+            {flags.isHelpOpen && (
+              <>
+                <T className="tt-ue tx-s fw-bd">need help?</T>
+                <div
+                  className="jk-row close cursor-pointer"
+                  style={{ position: 'absolute', right: 'var(--pad-sm)' }}
+                  onClick={(event) => {
+                    setFlags(prevState => ({ ...prevState, isHelpOpen: false }));
+                    event.stopPropagation();
+                  }}
+                >
+                  <CloseIcon />
+                </div>
+              </>
             )}
           </div>
+          {flags.isHelpOpen && (
+            <div className="jk-col center stretch extend">
+              <div className="jk-row center fw-bd"><T className="tt-se">contact the webmaster</T>:</div>
+              <div className="jk-row gap center">
+                <TelegramIcon />
+                <div className="jk-row link fw-bd" style={{ width: 180 }}>
+                  <Link href="https://t.me/OscarGauss" target="_blank">t.me/OscarGauss</Link>
+                </div>
+              </div>
+              <div className="jk-row gap center">
+                <PhoneIcon />
+                <div className="jk-row fw-bd" style={{ width: 180 }}>+591 79153358</div>
+              </div>
+              {!isLoading && !!emailContact && (
+                <div className="jk-row gap center">
+                  <GmailIcon />
+                  <div className="jk-row fw-bd" style={{ width: 180 }}>{emailContact}</div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </HorizontalMenu>
     </>

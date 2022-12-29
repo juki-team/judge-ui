@@ -15,7 +15,7 @@ export const LoginUser = () => {
   const [visible, setVisible] = useState(false);
   
   if (isLoading) {
-    return <LoadingIcon className="cr-we" />;
+    return <div className="jk-row"><LoadingIcon className="cr-we" /></div>;
   }
   
   if (user.isLogged) {
@@ -72,11 +72,14 @@ export const LoginUser = () => {
   }
   
   return (
-    <Button
-      type="secondary"
-      onClick={() => push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
-    >
-      <T className="ws-np">sign in</T>
-    </Button>
+    <div className="jk-row">
+      <Button
+        type="secondary"
+        onClick={() => push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
+        size={viewPortSize === 'sm' ? 'small' : undefined}
+      >
+        <T className="ws-np ws-np">sign in</T>
+      </Button>
+    </div>
   );
 };
