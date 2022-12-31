@@ -1,22 +1,25 @@
 import {
   AllSubmissions,
+  Breadcrumbs,
   FilesManagement,
   JudgersManagement,
   MailManagement,
   T,
-  Tabs,
-  TwoContentLayout,
+  TabsInline,
+  TwoContentSection,
   UsersManagement,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { useJukiBase } from 'hooks';
+import { useJukiBase, useTrackLastPath } from 'hooks';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
-import { AdminTab } from 'types';
+import React, { ReactNode } from 'react';
+import { AdminTab, LastLinkKey } from 'types';
 import Custom404 from '../404';
 
 function Admin() {
   
+  useTrackLastPath(LastLinkKey.SECTION_ADMIN);
   const { query, push } = useRouter();
   const {
     user: {
@@ -31,34 +34,60 @@ function Admin() {
   if (!canViewUsersManagement && !canViewSubmissionsManagement && !canViewFilesManagement) {
     return <Custom404 />;
   }
-  const tabs = [];
+  const tabs: { [key: string]: { key: string, header: ReactNode, body: ReactNode } } = {};
   if (canViewUsersManagement) {
-    tabs.push({ key: AdminTab.USERS_MANAGEMENT, header: <T className="tt-ce">users</T>, body: <UsersManagement /> });
+    tabs[AdminTab.USERS_MANAGEMENT] = {
+      key: AdminTab.USERS_MANAGEMENT,
+      header: <T className="tt-ce">users</T>,
+      body: <div className="pad-left-right pad-bottom"><UsersManagement /></div>,
+    };
   }
   if (canViewSubmissionsManagement) {
-    tabs.push({ key: AdminTab.SUBMISSIONS, header: <T className="tt-ce">submissions</T>, body: <AllSubmissions /> });
+    tabs[AdminTab.SUBMISSIONS] = {
+      key: AdminTab.SUBMISSIONS,
+      header: <T className="tt-ce">submissions</T>,
+      body: <div className="pad-left-right pad-bottom"><AllSubmissions /></div>,
+    };
   }
   if (canViewFilesManagement) {
-    tabs.push({ key: AdminTab.FILES_MANAGEMENT, header: <T className="tt-ce">files</T>, body: <FilesManagement /> });
+    tabs[AdminTab.FILES_MANAGEMENT] = {
+      key: AdminTab.FILES_MANAGEMENT,
+      header: <T className="tt-ce">files</T>,
+      body: <div className="pad-left-right pad-top-bottom"><FilesManagement /></div>,
+    };
   }
   if (canViewJudgersManagement) {
-    tabs.push({ key: AdminTab.JUDGERS_MANAGEMENT, header: <T className="tt-ce">judgers</T>, body: <JudgersManagement /> });
+    tabs[AdminTab.JUDGERS_MANAGEMENT] = {
+      key: AdminTab.JUDGERS_MANAGEMENT,
+      header: <T className="tt-ce">judgers</T>,
+      body: <div className="pad-left-right pad-bottom"><JudgersManagement /></div>,
+    };
   }
   if (canViewEmailManagement) {
-    tabs.push({ key: AdminTab.MAIL_MANAGEMENT, header: <T className="tt-ce">email</T>, body: <MailManagement /> });
+    tabs[AdminTab.MAIL_MANAGEMENT] = {
+      key: AdminTab.MAIL_MANAGEMENT,
+      header: <T className="tt-ce">email</T>,
+      body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement /></div>,
+    };
   }
+  const breadcrumbs = [
+    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+    <Link href="/admin"><T className="tt-se">admin</T></Link>,
+    <T className="tt-se">{query.tab as string}</T>,
+  ];
+  const pushTab = tabKey => push({ pathname: ROUTES.ADMIN.PAGE(tabKey as AdminTab), query });
   
   return (
-    <TwoContentLayout>
-      <div className="jk-col filled">
-        <h3><T>admin</T></h3>
+    <TwoContentSection>
+      <div className="jk-col extend stretch">
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="pad-left-right">
+          <h3 style={{ padding: 'var(--pad-sm) 0' }}><T>admin</T></h3>
+          <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={query.tab} />
+        </div>
       </div>
-      <Tabs
-        selectedTabKey={query.tab as AdminTab}
-        tabs={tabs}
-        onChange={tabKey => push({ pathname: ROUTES.ADMIN.PAGE(tabKey as AdminTab), query })}
-      />
-    </TwoContentLayout>
+      {tabs[query.tab as string]?.body}
+    </TwoContentSection>
   );
 }
 

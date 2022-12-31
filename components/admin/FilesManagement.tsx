@@ -44,7 +44,7 @@ export function FilesManagement() {
     })();
   }, [filePath]);
   return (
-    <div className="jk-pad-md">
+    <div className="jk-col extend stretch top">
       {filePath && (
         <Modal
           isOpen
@@ -67,7 +67,7 @@ export function FilesManagement() {
           </div>
         </Modal>
       )}
-      <div>
+      <div className="jk-col top stretch extend nowrap">
         <h3><T>file list</T></h3>
         <div className="jk-row gap nowrap">
           <Input value={path} onChange={setPath} extend />
@@ -86,7 +86,7 @@ export function FilesManagement() {
         </div>
         {loading ? <LoadingIcon /> : (
           <div
-            style={{ height: 'calc(100VH - 400px)', overflow: 'auto', border: '1px solid var(--t-color-gray-6)' }}
+            style={{ overflow: 'auto', border: '1px solid var(--t-color-gray-6)' }}
             className="jk-border-radius-inline"
           >
             {error && <div className="jk-text-stderr">{error}</div>}

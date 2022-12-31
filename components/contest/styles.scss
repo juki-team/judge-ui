@@ -6,10 +6,6 @@
   p {
     text-align: center;
   }
-  
-  > div {
-    border: 1px solid var(--t-color-gray-6);
-  }
 }
 
 .content-side-right-bar-top {
@@ -50,21 +46,14 @@
   }
 }
 
-.problem-head-box {
-  padding: var(--pad-md) 0 0 0;
-  position: relative;
-  
-  > .back-link {
-    left: var(--pad-md);
-  }
-}
-
 .contest-problem-split-pane {
-  height: 100%;
-  
   .problem-statement-layout {
     height: 100%;
     overflow: auto;
+  }
+  
+  .jk-code-mirror-editor-layout {
+    border-radius: 0;
   }
 }
 

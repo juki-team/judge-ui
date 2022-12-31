@@ -52,13 +52,15 @@ export const ViewProblemSubmissions = ({
   };
   
   return (
-    <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
-      headers={columns}
-      url={url}
-      name={mySubmissions ? QueryParam.MY_STATUS_TABLE : QueryParam.STATUS_TABLE}
-      toRow={submission => submission}
-      refreshInterval={60000}
-      getRowKey={({ data, index }) => data[index].submitId}
-    />
+    <div className="pad-left-right pad-bottom">
+      <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+        headers={columns}
+        url={url}
+        name={mySubmissions ? QueryParam.MY_STATUS_TABLE : QueryParam.STATUS_TABLE}
+        toRow={submission => submission}
+        refreshInterval={60000}
+        getRowKey={({ data, index }) => data[index].submitId}
+      />
+    </div>
   );
 };

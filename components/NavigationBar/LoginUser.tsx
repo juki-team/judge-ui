@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, Image, LoadingIcon, Popover, T } from 'components';
+import { Button, ButtonLoader, Image, LoadingIcon, LoginIcon, Popover, T } from 'components';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { addParamQuery, classNames } from 'helpers';
 import { useJukiBase, useUserDispatch } from 'hooks';
@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ProfileTab } from 'types';
 
-export const LoginUser = () => {
+export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
   
   const { user, isLoading } = useJukiBase();
   const { push, query } = useRouter();
@@ -25,8 +25,13 @@ export const LoginUser = () => {
         onVisibleChange={(visible) => setVisible(visible)}
         content={
           <div className="jk-col gap user-profile-popup">
-            <Image src={user.imageUrl} className="jk-user-profile-img huge jk-shadow" alt={user.nickname} height={50}
-                   width={50} />
+            <Image
+              src={user.imageUrl}
+              className="jk-user-profile-img huge jk-shadow"
+              alt={user.nickname}
+              height={50}
+              width={50}
+            />
             <ButtonLoader
               className="jk-row nickname bold"
               onClick={async () => {
@@ -55,7 +60,8 @@ export const LoginUser = () => {
           </div>
         }
         triggerOn="click"
-        placement="bottomRight"
+        // placement="rightBottom"
+        placement={viewPortSize === 'sm' ? 'bottomRight' : 'rightBottom'}
       >
         <div
           className={classNames('user-logged-head nowrap jk-row gap')}
@@ -63,7 +69,7 @@ export const LoginUser = () => {
           <img
             src={user.imageUrl}
             alt={user.nickname}
-            className={classNames('jk-user-profile-img', { large: viewPortSize !== 'sm', smalla: viewPortSize == 'sm' })}
+            className={classNames('jk-user-profile-img large')}
           />
           {viewPortSize !== 'sm' && viewPortSize !== 'md' && <div className="jk-row nickname">{user.nickname}</div>}
         </div>
@@ -77,8 +83,11 @@ export const LoginUser = () => {
         type="secondary"
         onClick={() => push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
         size={viewPortSize === 'sm' ? 'small' : undefined}
+        icon={<LoginIcon />}
+        extend={collapsed}
+        style={collapsed ? { borderRadius: 0 } : undefined}
       >
-        <T className="ws-np ws-np">sign in</T>
+        {!collapsed ? <T className="ws-np ws-np">sign in</T> : ' '}
       </Button>
     </div>
   );

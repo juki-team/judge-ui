@@ -1,10 +1,24 @@
-import { ButtonLoader, FetcherLayer, Popover, T, Tabs, Timer, TwoContentLayout, ViewOverview, ViewProblems } from 'components';
+import {
+  Breadcrumbs,
+  ButtonLoader,
+  FetcherLayer,
+  Popover,
+  T,
+  TabsInline,
+  Timer,
+  TwoContentSection,
+  ViewOverview,
+  ViewProblems,
+} from 'components';
+import { LinkContests } from 'components/contest/commons';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { isEndlessContest } from 'helpers';
-import { useContestRouter, useJukiBase } from 'hooks';
+import { useContestRouter, useJukiBase, useTrackLastPath } from 'hooks';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Custom404 from 'pages/404';
-import { ContentResponseType, ContestResponseDTO, ContestTab, Status } from 'types';
+import React from 'react';
+import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status } from 'types';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
@@ -14,7 +28,8 @@ import { ViewScoreboard } from './ViewScoreboard';
 export function ContestView() {
   
   const { push } = useRouter();
-  const { lastProblemVisited, pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
+  useTrackLastPath(LastLinkKey.SECTION_CONTEST);
+  const { lastProblemVisited, pushTab, contestKey, problemIndex, contestTab, query } = useContestRouter();
   const { viewPortSize } = useJukiBase();
   
   return (
@@ -35,16 +50,20 @@ export function ContestView() {
         let statusLabel = '';
         let tag = '';
         let timeInterval = 0;
-        if (contest.isPast) {
-          tag = 'success';
+        if (isEndless) {
+          tag = 'info-light';
+          statusLabel = 'endless';
+          timeInterval = -1;
+        } else if (contest.isPast) {
+          tag = 'gray-6';
           statusLabel = 'past';
           timeInterval = new Date().getTime() - contest.settings.endTimestamp;
         } else if (contest.isFuture) {
-          tag = 'info';
+          tag = 'success-light';
           statusLabel = 'upcoming';
           timeInterval = contest.settings.startTimestamp - new Date().getTime();
         } else if (contest.isLive) {
-          tag = 'error';
+          tag = 'error-light';
           statusLabel = 'live';
           timeInterval = contest.settings.endTimestamp - new Date().getTime();
         }
@@ -61,63 +80,62 @@ export function ContestView() {
         );
         const allLiteralLabel = <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
           <T>{statusLabel}</T>,&nbsp;{literal}</div>;
-  
-        const tabHeaders = [
-          {
+        
+        const tabHeaders = {
+          [ContestTab.OVERVIEW]: {
             key: ContestTab.OVERVIEW,
             header: <T className="tt-ce">overview</T>,
             body: <ViewOverview contest={contest} />,
           },
-        ];
+        };
         if (isAdmin || isJudge || contest.isLive || contest.isPast) {
-          tabHeaders.push({
-              key: lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
-              header: (
-                <div className="jk-row gap">
-                  {lastProblemVisited
-                    ? <T className="tt-ce">problem</T>
-                    : <T className="tt-ce">problems</T>} {lastProblemVisited}
-                </div>
-              ),
-              body: problemIndex
-                ? <ViewProblem contest={contest} />
-                : <ViewProblems contest={contest} />,
-            },
-            {
-              key: ContestTab.SCOREBOARD,
-              header: <T className="tt-ce">scoreboard</T>,
-              body: <ViewScoreboard contest={contest} />,
-            },
-          );
+          tabHeaders[lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS] = {
+            key: lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
+            header: (
+              <div className="jk-row gap">
+                {lastProblemVisited
+                  ? <T className="tt-ce">problem</T>
+                  : <T className="tt-ce">problems</T>} {lastProblemVisited}
+              </div>
+            ),
+            body: problemIndex
+              ? <ViewProblem contest={contest} />
+              : <ViewProblems contest={contest} />,
+          };
+          tabHeaders[ContestTab.SCOREBOARD] = {
+            key: ContestTab.SCOREBOARD,
+            header: <T className="tt-ce">scoreboard</T>,
+            body: <div className="pad-left-right pad-bottom"><ViewScoreboard contest={contest} /></div>,
+          };
         }
         if (isAdmin || isJudge || ((contest.isLive || contest.isPast) && isContestant)) {
-          tabHeaders.push({
+          tabHeaders[ContestTab.MY_SUBMISSIONS] = {
             key: ContestTab.MY_SUBMISSIONS,
             header: <T className="tt-ce">my submissions</T>,
             body: <ViewProblemSubmissions contest={contest} mySubmissions />,
-          });
+          };
         }
         if (isAdmin || isJudge || contest.isLive || contest.isPast) {
-          tabHeaders.push({
+          tabHeaders[ContestTab.SUBMISSIONS] = {
             key: ContestTab.SUBMISSIONS,
             header: <T className="tt-ce">submissions</T>,
             body: <ViewProblemSubmissions contest={contest} />,
-          });
+          };
         }
         if (contest.settings.clarifications) {
-          tabHeaders.push({
+          tabHeaders[ContestTab.CLARIFICATIONS] = {
             key: ContestTab.CLARIFICATIONS,
             header: <T className="tt-ce">clarifications</T>,
             body: <ViewClarifications contest={contest} />,
-          });
+          };
         }
         
         if (isAdmin || isJudge) {
-          tabHeaders.push({
+          tabHeaders[ContestTab.MEMBERS] = {
             key: ContestTab.MEMBERS,
             header: <T className="tt-ce">members</T>,
             body: <ViewMembers contest={contest} />,
-          });
+          };
         }
         
         const extraNodes = [];
@@ -144,39 +162,49 @@ export function ContestView() {
           );
         }
         
+        const breadcrumbs = [
+          <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+          <LinkContests><T className="tt-se">contests</T></LinkContests>,
+          <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }} className="link">
+            <div>{contest.name}</div>
+          </Link>,
+        ];
+        if (contestTab === ContestTab.PROBLEM) {
+          breadcrumbs.push(
+            <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.PROBLEMS), query }} className="link">
+              <T className="tt-se">problems</T>
+            </Link>,
+          );
+          breadcrumbs.push(<div>{lastProblemVisited}</div>);
+        } else {
+          breadcrumbs.push(<div><T className="tt-se">{contestTab as string}</T></div>);
+        }
         return (
-          <TwoContentLayout>
-            <div className="content-title jk-col relative">
-              <div className="jk-row nowrap gap extend">
-                {/*<div className="jk-row cr-py back-link">*/}
-                {/*  <Link href={ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS)}>*/}
-                {/*    <a className="jk-row nowrap fw-bd link">*/}
-                {/*      <ArrowIcon rotate={-90} />*/}
-                {/*      <div className="screen lg hg"><T className="tt-se">contests</T></div>*/}
-                {/*    </a>*/}
-                {/*  </Link>*/}
-                {/*</div>*/}
-                <div className="jk-row center gap flex-1">
-                  <h3>{contest.name}</h3>
-                  <Popover
-                    content={literal}
-                    triggerOn="hover"
-                    placement="bottom"
-                    popoverContentClassName={`color-white bg-color-${tag} jk-row nowrap`}
-                  >
-                    <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T>{statusLabel}</T></div>
-                  </Popover>
+          <TwoContentSection>
+            <div>
+              <Breadcrumbs breadcrumbs={breadcrumbs} />
+              <div className="content-title jk-col relative pad-left-right">
+                <div className="jk-row nowrap gap extend">
+                  <div className="jk-row left gap flex-1">
+                    <h2 style={{ padding: 'var(--pad-sm) 0' }}>{contest.name}</h2>
+                    <Popover
+                      content={literal}
+                      triggerOn="hover"
+                      placement="bottom"
+                      popoverContentClassName={`color-white bg-color-${tag} jk-row nowrap`}
+                    >
+                      <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T>{statusLabel}</T></div>
+                    </Popover>
+                  </div>
                 </div>
+                <div className="screen sm jk-row extend">{allLiteralLabel}</div>
               </div>
-              <div className="screen sm jk-row extend">{allLiteralLabel}</div>
+              <div className="pad-left-right">
+                <TabsInline tabs={tabHeaders} tabSelected={contestTab} pushTab={pushTab} extraNodes={extraNodes} />
+              </div>
             </div>
-            <Tabs
-              selectedTabKey={contestTab as ContestTab}
-              tabs={tabHeaders}
-              onChange={tabKey => pushTab(tabKey as ContestTab)}
-              extraNodes={extraNodes}
-            />
-          </TwoContentLayout>
+            {tabHeaders[contestTab as ContestTab]?.body}
+          </TwoContentSection>
         );
       }}
     </FetcherLayer>

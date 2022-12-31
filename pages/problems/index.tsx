@@ -1,9 +1,9 @@
 import { classNames } from '@juki-team/base-ui';
 import {
+  Breadcrumbs,
   ButtonLoader,
   CheckIcon,
   CloseIcon,
-  ContentLayout,
   Field,
   PagedDataViewer,
   PlusIcon,
@@ -11,12 +11,13 @@ import {
   T,
   TextField,
   TextHeadCell,
+  TwoContentSection,
   UserNicknameLink,
 } from 'components';
 import { PROBLEM_STATUS, QueryParam, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiBase, useRouter } from 'hooks';
+import { useFetcher, useJukiBase, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import {
@@ -24,6 +25,7 @@ import {
   DataViewerHeadersType,
   FilterSelectOnlineType,
   GetUrl,
+  LastLinkKey,
   ProblemStatus,
   ProblemSummaryListResponseDTO,
   ProblemTab,
@@ -31,6 +33,8 @@ import {
 
 function Problems() {
   
+  useTrackLastPath(LastLinkKey.PROBLEMS);
+  useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { user: { canCreateProblem } } = useJukiBase();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
@@ -161,26 +165,39 @@ function Problems() {
     JUDGE_API_V1.PROBLEM.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
   );
   
+  const breadcrumbs = [
+    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+    <T className="tt-se">problems</T>,
+  ];
+  
   return (
-    <ContentLayout>
-      <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
-        headers={columns}
-        url={url}
-        name={QueryParam.PROBLEMS_TABLE}
-        refreshInterval={60000}
-        extraNodes={[
-          ...(canCreateProblem ? [
-            <ButtonLoader
-              size="small"
-              icon={<PlusIcon />}
-              onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE()))}
-            >
-              <T>create</T>
-            </ButtonLoader>,
-          ] : []),
-        ]}
-      />
-    </ContentLayout>
+    <TwoContentSection>
+      <div className="jk-col extend stretch">
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="pad-left-right">
+          <h1 style={{ padding: 'var(--pad-lg) 0' }}><T>problems</T></h1>
+        </div>
+      </div>
+      <div className="pad-left-right pad-bottom">
+        <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
+          headers={columns}
+          url={url}
+          name={QueryParam.PROBLEMS_TABLE}
+          refreshInterval={60000}
+          extraNodes={[
+            ...(canCreateProblem ? [
+              <ButtonLoader
+                size="small"
+                icon={<PlusIcon />}
+                onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE()))}
+              >
+                <T>create</T>
+              </ButtonLoader>,
+            ] : []),
+          ]}
+        />
+      </div>
+    </TwoContentSection>
   );
 }
 

@@ -1,26 +1,38 @@
 import {
+  Breadcrumbs,
   ButtonLoader,
   ExclamationIcon,
   FetcherLayer,
+  LinkProblems,
   Popover,
   ProblemCodeEditor,
   ProblemInfo,
   ProblemStatement,
   ProblemSubmissions,
   T,
-  Tabs,
-  TwoContentLayout,
+  TabsInline,
+  TwoContentSection,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useJukiBase, useNotification } from 'hooks';
+import { useJukiBase, useNotification, useTrackLastPath } from 'hooks';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
-import { ContentResponseType, HTTPMethod, ProblemResponseDTO, ProblemTab, Status, SubmissionRunStatus } from 'types';
+import {
+  ContentResponseType,
+  HTTPMethod,
+  LastLinkKey,
+  ProblemResponseDTO,
+  ProblemTab,
+  Status,
+  SubmissionRunStatus,
+} from 'types';
 import Custom404 from '../../../../404';
 
 const ProblemView = (): ReactNode => {
   
+  useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { query: { key, ...query }, push, isReady } = useRouter();
   const { user } = useJukiBase();
   const { addSuccessNotification, addErrorNotification } = useNotification();
@@ -32,8 +44,8 @@ const ProblemView = (): ReactNode => {
     >
       {({ data }) => {
         const problem = data.content;
-        const tabs = [
-          {
+        const tabs = {
+          [ProblemTab.STATEMENT]: {
             key: ProblemTab.STATEMENT,
             header: <T className="tt-ce">statement</T>,
             body: (
@@ -49,98 +61,105 @@ const ProblemView = (): ReactNode => {
               />
             ),
           },
-          {
+          [ProblemTab.EDITOR]: {
             key: ProblemTab.EDITOR,
             header: <T className="tt-ce">code editor</T>,
-            body: <ProblemCodeEditor problem={problem} />,
+            body: <div className="pad-top-bottom pad-left-right"><ProblemCodeEditor problem={problem} /></div>,
           },
-        ];
-        
+        };
+  
         if (user.isLogged) {
-          tabs.push({
+          tabs[ProblemTab.MY_SUBMISSIONS] = {
             key: ProblemTab.MY_SUBMISSIONS,
             header: <T className="tt-ce">my submissions</T>,
-            body: <ProblemSubmissions problem={problem} mySubmissions />,
-          });
+            body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} mySubmissions /></div>,
+          };
         }
-        tabs.push({
+        tabs[ProblemTab.SUBMISSIONS] = {
           key: ProblemTab.SUBMISSIONS,
           header: <T className="tt-ce">submissions</T>,
-          body: <ProblemSubmissions problem={problem} />,
-        });
-        return (
-          <TwoContentLayout>
-            <div className="jk-row nowrap gap extend">
-              <div className="jk-row gap center flex-1">
-                <h5>{problem.name}</h5>
-                <Popover
-                  content={
-                    <ProblemInfo
-                      author={problem.author}
-                      status={problem.status}
-                      tags={problem.tags}
-                      settings={problem.settings}
-                    />
-                  }
-                  triggerOn="click"
-                  placement="bottom"
+          body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} /></div>,
+        };
+        const breadcrumbs = [
+          <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+          <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
+          <T className="tt-se">{query.tab as string}</T>,
+        ];
+  
+        const pushTab = (tabKey) => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabKey as ProblemTab), query });
+        const extraNodes =
+          data?.content?.user?.isEditor ? [
+            <ButtonLoader
+              size="small"
+              onClick={async setLoaderStatus => {
+                setLoaderStatus(Status.LOADING);
+                await push(ROUTES.PROBLEMS.EDIT('' + key));
+                setLoaderStatus(Status.SUCCESS);
+              }}
+            >
+              <T>edit</T>
+            </ButtonLoader>,
+            <Popover
+              content={<T className="ws-np tt-se">only submissions that are not in a contest will be judged</T>}
+              placement="left"
+              showPopperArrow
+            >
+              <div>
+                <ButtonLoader
+                  size="small"
+                  onClick={async setLoaderStatus => {
+                    setLoaderStatus(Status.LOADING);
+                    const bodyProblem = { ...problem };
+                    delete bodyProblem.key;
+                    const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(await authorizedRequest(
+                      JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
+                      { method: HTTPMethod.POST },
+                    ));
+                    if (result.success) {
+                      addSuccessNotification(
+                        <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
+                      );
+                      setLoaderStatus(Status.SUCCESS);
+                    } else {
+                      addErrorNotification(<T
+                        className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
+                      setLoaderStatus(Status.ERROR);
+                    }
+                  }}
                 >
-                  <div className="jk-row link"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
-                </Popover>
+                  <T>rejudge</T>
+                </ButtonLoader>
+              </div>
+            </Popover>,
+          ] : [];
+  
+        return (
+          <TwoContentSection>
+            <div className="jk-col stretch extend nowrap">
+              <Breadcrumbs breadcrumbs={breadcrumbs} />
+              <div className="jk-col extend stretch pad-left-right">
+                <div className="jk-row gap left">
+                  <h2 style={{ padding: 'var(--pad-lg) 0' }}>{problem.name}</h2>
+                  <Popover
+                    content={
+                      <ProblemInfo
+                        author={problem.author}
+                        status={problem.status}
+                        tags={problem.tags}
+                        settings={problem.settings}
+                      />
+                    }
+                    triggerOn="click"
+                    placement="bottom"
+                  >
+                    <div className="jk-row link"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
+                  </Popover>
+                </div>
+                <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={query.tab} extraNodes={extraNodes} />
               </div>
             </div>
-            <Tabs
-              selectedTabKey={query.tab as string}
-              tabs={tabs}
-              onChange={tabKey => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabKey as ProblemTab), query })}
-              extraNodes={
-                data?.content?.user?.isEditor ? [
-                  <ButtonLoader
-                    size="small"
-                    onClick={async setLoaderStatus => {
-                      setLoaderStatus(Status.LOADING);
-                      await push(ROUTES.PROBLEMS.EDIT('' + key));
-                      setLoaderStatus(Status.SUCCESS);
-                    }}
-                  >
-                    <T>edit</T>
-                  </ButtonLoader>,
-                  <Popover
-                    content={<T className="ws-np tt-se">only submissions that are not in a contest will be judged</T>}
-                    placement="left"
-                    showPopperArrow
-                  >
-                    <div>
-                      <ButtonLoader
-                        size="small"
-                        onClick={async setLoaderStatus => {
-                          setLoaderStatus(Status.LOADING);
-                          const bodyProblem = { ...problem };
-                          delete bodyProblem.key;
-                          const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(await authorizedRequest(
-                            JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
-                            { method: HTTPMethod.POST },
-                          ));
-                          if (result.success) {
-                            addSuccessNotification(
-                              <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
-                            );
-                            setLoaderStatus(Status.SUCCESS);
-                          } else {
-                            addErrorNotification(<T
-                              className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
-                            setLoaderStatus(Status.ERROR);
-                          }
-                        }}
-                      >
-                        <T>rejudge</T>
-                      </ButtonLoader>
-                    </div>
-                  </Popover>,
-                ] : []
-              }
-            />
-          </TwoContentLayout>
+            {tabs[query.tab as string]?.body}
+          </TwoContentSection>
         );
       }}
     </FetcherLayer>

@@ -1,7 +1,8 @@
 import { settings } from '@juki-team/base-ui';
+import { LastLinkContext } from 'components';
 import { useFetcher as useFetcherJk, useJukiBase } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SWRConfiguration, useSWRConfig } from 'swr';
 import {
   ContentResponseType,
@@ -138,6 +139,19 @@ export const useSWR = () => {
   return {
     mutate: useCallback((url: string) => mutate([url, token]), []),
   };
+};
+
+export const useLasLink = () => {
+  const { lastLink, pushPath } = useContext(LastLinkContext);
+  return { lastLink, pushPath };
+};
+
+export const useTrackLastPath = (key: string) => {
+  const { pushPath } = useContext(LastLinkContext);
+  const { query, pathname } = useRouter();
+  useEffect(() => {
+    pushPath({ key, pathname, query });
+  }, [key, query, pathname]);
 };
 
 export {

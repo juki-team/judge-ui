@@ -1,14 +1,5 @@
 @import "@juki-team/base-ui/dist/styles/abstracts/index";
 
-.navbar {
-  width: 240px;
-  @include md {
-    width: auto;
-    margin: 0 var(--pad-m);
-  }
-  
-}
-
 .settings-popover {
   width: 200px;
 }
@@ -60,8 +51,7 @@
 }
 
 .settings-apps-login-user-content {
-  margin-right: var(--pad-m);
-  
+  //margin-right: var(--pad-m);
   .jk-icon {
     color: var(--t-color-primary-text);
   }
@@ -110,4 +100,19 @@
 
 .mobile-left-side-header {
   color: var(--t-color-primary-text);
+}
+
+.language-select {
+  .jk-select {
+    margin: 0 2px;
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+    
+    .input-icon {
+      position: relative;
+      width: var(--pad-t);
+      min-width: var(--pad-t);
+    }
+  }
 }

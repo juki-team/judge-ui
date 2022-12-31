@@ -29,7 +29,6 @@ export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
                 alt={nickname}
                 height={100}
                 width={100}
-                style={{ overflow: 'visible' }}
               />
               <div className="jk-col gap stretch">
                 <div className="fw-br">{data?.content?.nickname}</div>

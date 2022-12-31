@@ -90,7 +90,7 @@ export const MailManagement = () => {
       {({ data, mutate }) => {
         const html = data?.success ? data.content.emailTemplate.replace('{{content}}', content) : '';
         return (
-          <div className="jk-col gap nowrap stretch jk-pad-md">
+          <div className="jk-col extend gap nowrap stretch">
             <div className="jk-row center gap">
               <div className="jk-row">
                 <T className="tt-se">main email</T>:&nbsp;

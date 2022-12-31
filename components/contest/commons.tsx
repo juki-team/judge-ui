@@ -1,9 +1,9 @@
 import { ButtonLoader, CheckIcon, Field, PlusIcon, Popover, T, TextField, TextHeadCell } from 'components';
 import { ROUTES } from 'config/constants';
 import { buttonLoaderLink } from 'helpers';
-import { useRouter } from 'hooks';
+import { useLasLink, useRouter } from 'hooks';
 import Link from 'next/link';
-import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, JkTableHeaderFilterType } from 'types';
+import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, JkTableHeaderFilterType, LastLinkKey } from 'types';
 
 export const CreateContestButton = () => {
   const { push } = useRouter();
@@ -93,3 +93,27 @@ export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListRes
   cardPosition: 'bottom',
   minWidth: 160,
 });
+
+export const LinkContests = ({ children }) => {
+  const { lastLink } = useLasLink();
+  return (
+    <Link
+      href={{ pathname: lastLink[LastLinkKey.CONTESTS].pathname, query: lastLink[LastLinkKey.CONTESTS].query }}
+      className="link"
+    >
+      {children}
+    </Link>
+  );
+};
+
+export const LinkSectionContest = ({ children }) => {
+  const { lastLink } = useLasLink();
+  return (
+    <Link
+      href={{ pathname: lastLink[LastLinkKey.SECTION_CONTEST].pathname, query: lastLink[LastLinkKey.SECTION_CONTEST].query }}
+      className="link"
+    >
+      {children}
+    </Link>
+  );
+};

@@ -22,7 +22,7 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
       <ProblemStatement
         problemKey={problem.key}
         author={problem.author}
-        contestIndex={query?.index as string}
+        contest={{ index: query?.index as string, color: problem.color }}
         name={problem.name}
         sampleCases={problem.sampleCases}
         status={problem.status}

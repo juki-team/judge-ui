@@ -1,15 +1,16 @@
 import { DateLiteral, Field, PagedDataViewer, T, TextHeadCell } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
-import { toFilterUrl, toSortUrl } from 'helpers';
+import { isEndlessContest, toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiBase } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, GetUrl } from 'types';
 import { contestantsColumn, contestNameColumn, CreateContestButton } from '../commons';
 
 const stateMap = {
-  [[true, false, false].toString()]: { order: 0, label: 'past', color: 'success' },
-  [[false, true, false].toString()]: { order: 1, label: 'live', color: 'error' },
-  [[false, false, true].toString()]: { order: 2, label: 'upcoming', color: 'info' },
+  [[true, false, false, false].toString()]: { order: 0, label: 'past', color: 'gray-6' },
+  [[false, true, false, false].toString()]: { order: 1, label: 'live', color: 'error-light' },
+  [[false, false, true, false].toString()]: { order: 2, label: 'upcoming', color: 'success-light' },
+  [[false, false, false, true].toString()]: { order: 3, label: 'endless', color: 'info-light' },
 };
 
 export const ContestList = ({ endless }: { endless?: boolean }) => {
@@ -19,10 +20,20 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">state</T>} />,
       index: 'state',
-      field: ({ record: { isPast, isLive, isFuture } }) => (
+      field: ({ record: contest }) => (
         <Field className="jk-row pad">
-          <div className={`jk-tag ${stateMap[[isPast, isLive, isFuture].toString()].color}`}>
-            <T className="tt-ue tx-s">{stateMap[[isPast, isLive, isFuture].toString()].label}</T>
+          <div className={`jk-tag ${stateMap[[
+            contest.isPast,
+            contest.isLive,
+            contest.isFuture,
+            isEndlessContest(contest),
+          ].toString()].color}`}>
+            <T className="tt-ue tx-s">{stateMap[[
+              contest.isPast,
+              contest.isLive,
+              contest.isFuture,
+              isEndlessContest(contest),
+            ].toString()].label}</T>
           </div>
         </Field>
       ),
@@ -63,12 +74,14 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
   }
   
   return (
-    <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
-      headers={columns}
-      url={url}
-      name={endless ? QueryParam.ENDLESS_CONTESTS_TABLE : QueryParam.CONTESTS_TABLE}
-      refreshInterval={60000}
-      extraNodes={extraNodes}
-    />
+    <div className="pad-left-right pad-bottom">
+      <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
+        headers={columns}
+        url={url}
+        name={endless ? QueryParam.ENDLESS_CONTESTS_TABLE : QueryParam.CONTESTS_TABLE}
+        refreshInterval={60000}
+        extraNodes={extraNodes}
+      />
+    </div>
   );
 };

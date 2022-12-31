@@ -17,7 +17,7 @@ export const ProblemEditorial = ({ editorial, setEditorial }: ProblemStatementPr
   
   return (
     <div className="problem-statement-layout">
-      <div className="jk-row nowrap stretch left problem-content">
+      <div className="jk-row nowrap stretch left">
         <div className={classNames('problem-statement', { 'editing': !!setEditorial })}>
           {setEditorial ? (
             <TextLangEdit

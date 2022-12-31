@@ -1,5 +1,4 @@
 import {
-  ArrowIcon,
   DownloadIcon,
   ExclamationIcon,
   FloatToolbar,
@@ -11,13 +10,12 @@ import {
   T,
   TextLangEdit,
 } from 'components';
-import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
+import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpers';
 import { useJukiBase, useT } from 'hooks';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { ContestTab, Language, ProblemSampleCasesType, ProblemSettingsType, ProblemStatementType, ProblemStatus } from 'types';
+import React from 'react';
+import { Language, ProblemSampleCasesType, ProblemSettingsType, ProblemStatementType, ProblemStatus } from 'types';
 import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
@@ -31,7 +29,7 @@ interface ProblemStatementProps {
   setStatement?: (statement: ProblemStatementType) => void,
   sampleCases: ProblemSampleCasesType,
   setSampleCases?: (sampleCases: ProblemSampleCasesType) => void,
-  contestIndex?: string,
+  contest?: { index: string, color: string },
 }
 
 export const ProblemStatement = ({
@@ -45,9 +43,9 @@ export const ProblemStatement = ({
   setStatement,
   sampleCases,
   setSampleCases,
-  contestIndex,
+  contest,
 }: ProblemStatementProps) => {
-  
+  const { index: problemIndex, color: problemColor } = contest || {};
   const { query: { key, index, tab, ...query } } = useRouter();
   const { user: { settings: { preferredLanguage } } } = useJukiBase();
   const { t } = useT();
@@ -57,7 +55,7 @@ export const ProblemStatement = ({
   const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]).trim();
   
   const languages = Object.values(settings?.byProgrammingLanguage || {});
-  const problemName = contestIndex ? `(${t('problem')} ${contestIndex}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
+  const problemName = problemIndex ? `(${t('problem')} ${problemIndex}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
   const source = `
 # \\textAlign=center ${problemName}
 
@@ -93,35 +91,30 @@ ${sample.output}
 \`\`\`
 `)).join('')}
 `;
-  const [sourceUrl, setSourceUrl] = useState('');
-  useEffect(() => setSourceUrl(''), [source]);
   
   return (
-    <div className="problem-statement-layout">
-      {contestIndex && (
-        <div className="problem-head-box fw-br jk-row">
-          <div className="jk-row cr-py back-link">
-            <Link href={{ pathname: ROUTES.CONTESTS.VIEW('' + key, ContestTab.PROBLEMS), query }}
-                  className="jk-row nowrap fw-bd link">
-              <ArrowIcon rotate={-90} />
-            </Link>
+    <div className="jk-row extend" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+      {problemIndex && (
+        <div className="jk-row center extend gap nowrap pad-left-right pad-top fw-bd">
+          <div className="jk-row jk-tag" style={{ backgroundColor: problemColor }}>
+            <p style={{
+              textShadow: 'var(--t-color-white) 0px 1px 2px, var(--t-color-white) 0px -1px 2px, ' +
+                'var(--t-color-white) 1px 0px 2px, var(--t-color-white) -1px 0px 2px',
+              color: 'var(--t-color-gray-1)',
+            }}>{problemIndex}</p>
           </div>
-          <div className="jk-row center gap nowrap">
-            <div className="index">{contestIndex}</div>
-            <h6 className="title">{name}</h6>
-            <Popover
-              content={<ProblemInfo author={author} status={status} tags={tags} settings={settings} />}
-              triggerOn={['hover', 'click']}
-              placement="bottom"
-            >
-              <div className="jk-row"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
-            </Popover>
-          </div>
+          <h6 className="title" style={{ textAlign: 'center' }}>{name}</h6>
+          <Popover
+            content={<ProblemInfo author={author} status={status} tags={tags} settings={settings} />}
+            triggerOn={['hover', 'click']}
+            placement="bottom"
+          >
+            <div className="jk-row"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
+          </Popover>
         </div>
       )}
-      <div className="jk-row nowrap stretch left problem-content">
-        <div className={classNames('problem-statement', {
-          'problem-contest-statement': !!contestIndex,
+      <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
+        <div className={classNames('jk-col top gap stretch flex-3', {
           'editing': !!setStatement,
         })}>
           {!setStatement && (
@@ -147,34 +140,40 @@ ${sample.output}
               ]}
             />
           )}
-          <h6><T>description</T></h6>
-          {setStatement ? (
-            <TextLangEdit
-              text={statement.description}
-              setText={(description) => setStatement({ ...statement, description })}
-            />
-          ) : (
-            <MdMathViewer source={statementDescription} />
-          )}
-          <h6><T>input</T></h6>
-          {}
-          {setStatement ? (
-            <TextLangEdit
-              text={statement.input}
-              setText={(input) => setStatement({ ...statement, input })}
-            />
-          ) : statementInput
-            ? <MdMathViewer source={statementInput} />
-            : <em><T className="tt-se fw-bd">no input description</T></em>}
-          <h6><T>output</T></h6>
-          {setStatement ? (
-            <TextLangEdit
-              text={statement.output}
-              setText={(output) => setStatement({ ...statement, output })}
-            />
-          ) : statementOutput
-            ? <MdMathViewer source={statementOutput} />
-            : <em><T className="tt-se fw-bd">no output description</T></em>}
+          <div>
+            <h6><T>description</T></h6>
+            {setStatement ? (
+              <TextLangEdit
+                text={statement.description}
+                setText={(description) => setStatement({ ...statement, description })}
+              />
+            ) : (
+              <div className="bc-we jk-pad-md jk-border-radius-inline"><MdMathViewer source={statementDescription} /></div>
+            )}
+          </div>
+          <div>
+            <h6><T>input</T></h6>
+            {}
+            {setStatement ? (
+              <TextLangEdit
+                text={statement.input}
+                setText={(input) => setStatement({ ...statement, input })}
+              />
+            ) : statementInput
+              ? <div className="bc-we jk-pad-md jk-border-radius-inline"><MdMathViewer source={statementInput} /></div>
+              : <em><T className="tt-se fw-bd">no input description</T></em>}
+          </div>
+          <div>
+            <h6><T>output</T></h6>
+            {setStatement ? (
+              <TextLangEdit
+                text={statement.output}
+                setText={(output) => setStatement({ ...statement, output })}
+              />
+            ) : statementOutput
+              ? <div className="bc-we jk-pad-md jk-border-radius-inline"><MdMathViewer source={statementOutput} /></div>
+              : <em><T className="tt-se fw-bd">no output description</T></em>}
+          </div>
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1">
               <h6><T>input sample</T></h6>
@@ -196,8 +195,8 @@ ${sample.output}
             ))}
           </div>
         </div>
-        {!contestIndex && (
-          <div className="screen lg hg">
+        {!problemIndex && (
+          <div className="screen lg hg flex-1">
             <ProblemInfo author={author} status={status} tags={tags} settings={settings} />
           </div>
         )}

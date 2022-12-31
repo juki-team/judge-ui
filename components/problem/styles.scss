@@ -42,24 +42,6 @@
   padding-left: var(--pad-sm);
 }
 
-.problem-content {
-  .problem-statement:not(.problem-contest-statement) {
-    padding: var(--pad-md);
-  }
-  
-  .problem-contest-statement {
-    padding: 0 var(--pad-md);
-  }
-  
-  > div:first-child {
-    flex: 3;
-  }
-  
-  > div:last-child {
-    flex: 1;
-  }
-}
-
 .sample-text-content {
   width: 100%;
   padding: var(--pad-xt);

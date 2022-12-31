@@ -39,26 +39,26 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   return (
     <div
-      className={classNames('contest-overview gap nowrap left stretch', {
+      className={classNames('contest-overview gap nowrap left stretch pad-left-right pad-top-bottom', {
         'jk-row': viewPortSize !== 'sm',
         'jk-col': viewPortSize === 'sm',
       })}
     >
-      <div className="jk-pad-md flex-5">
+      <div className="jk-pad-md flex-5 bc-we br-g6 jk-border-radius-inline">
         <MdMathViewer source={contest?.description} />
       </div>
-      <div className="jk-pad-md flex-3 contest-overview-information">
+      <div className="flex-3 contest-overview-information">
         <div className="content-side-right-bar-top">
           {isAdmin
-            ? <div className="judge-admin jk-row center gap br-g6 jk-border-radius-inline fw-bd cr-py">
+            ? <div className="judge-admin jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py">
               <T className="tt-se">you are admin</T> <AdminInformation filledCircle />
             </div>
             : isJudge
-              ? <div className="judge-admin jk-row center gap br-g6 jk-border-radius-inline fw-bd cr-py">
+              ? <div className="judge-admin jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py">
                 <T className="tt-se">you are judge</T> <JudgeInformation filledCircle />
               </div>
               : (isContestant
-                ? <div className="registered jk-row center gap br-g6 jk-border-radius-inline fw-br cr-py"><T
+                ? <div className="registered jk-row center gap bc-we br-g6 jk-border-radius-inline fw-br cr-py"><T
                   className="tt-se">registered</T>
                 </div>
                 : (isGuest && new Date().getTime() <= contest.settings.endTimestamp)
@@ -79,18 +79,18 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                       </ButtonLoader>
                     </>
                   ) : isSpectator && (
-                  <div className="judge-admin jk-row center gap br-g6 jk-border-radius-inline fw-bd cr-py">
+                  <div className="judge-admin jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py">
                     <T className="tt-se">you are spectator</T> <SpectatorInformation filledCircle />
                   </div>
                 ))}
         </div>
         <div className="contest-content-side-right-bar-bottom jk-col stretch gap">
-          <div className="jk-col jk-border-radius-inline jk-pad-sm">
+          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
             <p className="tx-xs cr-g3 text-semi-bold"><T>start date</T></p>
             <p className="tx-s fw-bd">{dtf(contest.settings.startTimestamp)}</p>
           </div>
           {contest.settings.endTimestamp !== contest.settings.frozenTimestamp && (
-            <div className="jk-col jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
               <div className="jk-row gap nowrap tx-xs cr-g3 fw-bd">
                 <T>frozen date</T>
                 <FrozenInformation />
@@ -103,7 +103,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
             </div>
           )}
           {contest.settings.endTimestamp !== contest.settings.quietTimestamp && (
-            <div className="jk-col jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
               <div className="jk-row gap tx-xs cr-g3 fw-bd">
                 <T>quiet date</T>
                 <QuietInformation />
@@ -116,18 +116,18 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
             </div>
           )}
           {(contest.settings.endTimestamp - contest.settings.startTimestamp) !== contest.settings.timeToSolve && (
-            <div className="jk-col jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
               <p className="tx-s semi-bold">{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</p>
               <p className="tx-xs semi-bold"><T>time for solve</T></p>
             </div>
           )}
           {!!contest.settings.penalty && (
-            <div className="jk-col jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
               <p className="tx-xs cr-g3 fw-bd"><T>penalty by incorrect answer</T></p>
               <p className="tx-s fw-bd">{contest.settings.penalty} min</p>
             </div>
           )}
-          <div className="jk-col jk-border-radius-inline jk-pad-sm">
+          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
             <p className="tx-xs cr-g3 fw-bd"><T>clarifications</T></p>
             <p className="tx-s fw-bd">
               <T>{contest.settings.clarifications ? 'clarifications available' : 'clarifications not available'}</T>

@@ -1,4 +1,4 @@
-import { ContentLayout, JukiCourtImage, T } from 'components';
+import { Breadcrumbs, JukiCompleteLaptopImage, JukiCourtImage, T, TwoContentSection } from 'components';
 import Head from 'next/head';
 
 const PWA = () => (
@@ -55,22 +55,31 @@ const PWA = () => (
 );
 
 export default function Home() {
+  const breadcrumbs = [
+    <T className="tt-se">home</T>,
+  ];
+  
   return (
-    <ContentLayout>
-      <Head>
-        {/*<PWA />*/}
-        <title>Juki Judge App</title>
-        {/*<link rel="icon" href="/favicon.ico" />*/}
-      </Head>
-      <div className="jk-col extend center gap">
-        <div className="jk-row extend">
-          <div style={{ maxWidth: 'var(--modal-width)a', width: '50%', minWidth: '150px' }}><JukiCourtImage /></div>
+    <TwoContentSection>
+      <div className="jk-col extend stretch">
+        <Head>
+          {/*<PWA />*/}
+          <title>Juki Judge App</title>
+          {/*<link rel="icon" href="/favicon.ico" />*/}
+        </Head>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="jk-row extend stretch gap">
+          <div className="jk-row"><h1 style={{ padding: 'var(--pad-md) 0' }}><T>welcome to Juki Judge</T></h1></div>
+          <div className="jk-pad-sm"><JukiCourtImage /></div>
         </div>
+      </div>
+      <div className="jk-row extend center gap jk-pad-lg">
+        <div className="jk-pad-md"><JukiCompleteLaptopImage /></div>
         <div className="jk-col gap ta-cr">
           <h3><T>competitive programmers home</T></h3>
           <p>Juki Judge <T>is designed to make people improve their programming skills</T></p>
         </div>
       </div>
-    </ContentLayout>
+    </TwoContentSection>
   );
 }

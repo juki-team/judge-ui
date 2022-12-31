@@ -1,3 +1,4 @@
+export * from './commons';
 export * from './FilesManagement';
 export * from './ResetPassword';
 export * from './MailManagement';

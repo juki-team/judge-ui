@@ -1,8 +1,8 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
+import { toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
 import { DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
-import { toFilterUrl, toSortUrl } from '../../helpers';
 import {
   submissionDateColumn,
   submissionLanguage,

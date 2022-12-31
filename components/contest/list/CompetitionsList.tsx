@@ -29,17 +29,19 @@ export const CompetitionsList = () => {
   }
   
   return (
-    <DataViewer<ContestSummaryListResponseDTO>
-      headers={columns}
-      data={data}
-      rows={{ height: 72 }}
-      request={request}
-      setLoaderStatusRef={setLoaderStatusRef}
-      name={QueryParam.ENDLESS_CONTESTS_TABLE}
-      extraNodes={extraNodes}
-      searchParamsObject={queryObject}
-      setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
-      {...DEFAULT_DATA_VIEWER_PROPS}
-    />
+    <div className="pad-left-right pad-bottom">
+      <DataViewer<ContestSummaryListResponseDTO>
+        headers={columns}
+        data={data}
+        rows={{ height: 72 }}
+        request={request}
+        setLoaderStatusRef={setLoaderStatusRef}
+        name={QueryParam.ENDLESS_CONTESTS_TABLE}
+        extraNodes={extraNodes}
+        searchParamsObject={queryObject}
+        setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
+        {...DEFAULT_DATA_VIEWER_PROPS}
+      />
+    </div>
   );
 };

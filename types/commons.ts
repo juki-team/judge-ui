@@ -23,3 +23,13 @@ export enum Status {
 }
 
 export type GetUrl = (props: { pagination: { page: number, pageSize: number }, filter: RequestFilterType, sort: RequestSortType }) => string
+
+export enum LastLinkKey {
+  SECTION_CONTEST = 'SECTION_CONTESTS',
+  CONTESTS = 'CONTESTS',
+  SECTION_PROBLEM = 'SECTION_PROBLEMS',
+  PROBLEMS = 'PROBLEMS',
+  SECTION_ADMIN = 'SECTION_ADMINS',
+}
+
+export type LastLinkType = { [key in LastLinkKey]: { pathname: string, query: {} } };

@@ -32,7 +32,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
   return (
     <div className="jk-row stretch gap">
       <div className="jk-row block stretch gap flex-1">
-        <div className="jk-row nowrap left stretch gap">
+        <div className="jk-row nowrap left stretch gap bc-we">
           {editable ? (
             <TextArea
               value={sample.input || ''}
@@ -45,7 +45,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
             </div>
           )}
         </div>
-        <div className="jk-row nowrap left stretch gap">
+        <div className="jk-row nowrap left stretch gap bc-we">
           {editable ? (
             <TextArea
               value={sample.output || ''}
@@ -53,7 +53,8 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
             />
           ) : (
             <div className="sample-text-content jk-border-radius-inline">
-              <CopyToClipboard text={sample.output}><ContentCopyIcon size="small" className="cursor-pointer" /></CopyToClipboard>
+              <CopyToClipboard text={sample.output}><ContentCopyIcon size="small"
+                                                                     className="cursor-pointer" /></CopyToClipboard>
               <span>{sample.output}</span>
             </div>
           )}

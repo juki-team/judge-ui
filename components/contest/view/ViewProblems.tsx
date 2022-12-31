@@ -150,25 +150,27 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const data = Object.values(problems);
   
   return (
-    <DataViewer<ContestProblemType>
-      headers={columns}
-      data={data}
-      rows={{ height: 70 }}
-      name={QueryParam.ALL_USERS_TABLE}
-      onRecordClick={async ({ isCard, data, index }) => {
-        if (isCard) {
-          await push({
-            pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
-            query,
-          }, undefined, { shallow: true });
-        }
-      }}
-      getRecordStyle={({ data, index, isCard }) => {
-        if (isCard) {
-          return { borderTop: '6px solid ' + data[index]?.color };
-        }
-      }}
-      {...DEFAULT_DATA_VIEWER_PROPS}
-    />
+    <div className="pad-left-right pad-bottom">
+      <DataViewer<ContestProblemType>
+        headers={columns}
+        data={data}
+        rows={{ height: 70 }}
+        name={QueryParam.ALL_USERS_TABLE}
+        onRecordClick={async ({ isCard, data, index }) => {
+          if (isCard) {
+            await push({
+              pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
+              query,
+            }, undefined, { shallow: true });
+          }
+        }}
+        getRecordStyle={({ data, index, isCard }) => {
+          if (isCard) {
+            return { borderTop: '6px solid ' + data[index]?.color };
+          }
+        }}
+        {...DEFAULT_DATA_VIEWER_PROPS}
+      />
+    </div>
   );
 };

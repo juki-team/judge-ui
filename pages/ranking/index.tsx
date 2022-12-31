@@ -1,8 +1,9 @@
 import { useJukiBase } from '@juki-team/base-ui';
-import { ContentLayout, DataViewer, Field, Image, T, TextHeadCell, UserNicknameLink } from 'components';
+import { Breadcrumbs, DataViewer, Field, Image, T, TextHeadCell, TwoContentSection, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester2, useRouter } from 'hooks';
+import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetUrl, UserRankResponseDTO } from 'types';
 
@@ -111,20 +112,33 @@ function Ranking() {
   
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   
+  const breadcrumbs = [
+    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+    <T className="tt-se">ranking</T>,
+  ];
+  
   return (
-    <ContentLayout style={{ height: '100%' }}>
-      <DataViewer<UserRankResponseDTO>
-        headers={columns}
-        data={data}
-        rows={{ height: 68 }}
-        request={request}
-        name={QueryParam.RANKING_TABLE}
-        setLoaderStatusRef={setLoaderStatusRef}
-        searchParamsObject={queryObject}
-        setSearchParamsObject={setSearchParamsObject}
-        {...DEFAULT_DATA_VIEWER_PROPS}
-      />
-    </ContentLayout>
+    <TwoContentSection>
+      <div className="jk-col extend stretch">
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="pad-left-right">
+          <h1 style={{ padding: 'var(--pad-lg) 0' }}><T>ranking</T></h1>
+        </div>
+      </div>
+      <div className="pad-left-right pad-bottom">
+        <DataViewer<UserRankResponseDTO>
+          headers={columns}
+          data={data}
+          rows={{ height: 68 }}
+          request={request}
+          name={QueryParam.RANKING_TABLE}
+          setLoaderStatusRef={setLoaderStatusRef}
+          searchParamsObject={queryObject}
+          setSearchParamsObject={setSearchParamsObject}
+          {...DEFAULT_DATA_VIEWER_PROPS}
+        />
+      </div>
+    </TwoContentSection>
   );
 }
 

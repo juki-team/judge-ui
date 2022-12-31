@@ -1,7 +1,7 @@
 import { T, Tabs } from 'components';
 import React from 'react';
 import { AdminTab } from 'types';
-import { AllUsers } from 'components/admin/UsersManagement/AllUsers';
+import { AllUsers } from './AllUsers';
 import { UsersLogged } from './UsersLogged';
 
 export const UsersManagement = () => {
@@ -14,6 +14,7 @@ export const UsersManagement = () => {
     <div style={{ height: '100%' }}>
       <Tabs
         tabs={tabs}
+        className="height-100-percent"
       />
     </div>
   );

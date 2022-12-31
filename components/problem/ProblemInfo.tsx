@@ -75,7 +75,7 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
   };
   
   return (
-    <div className={classNames('center problem-info  jk-pad-md', {
+    <div className={classNames('center problem-info jk-pad-md bc-we', {
       gap: horizontal,
       'jk-row': horizontal,
       'jk-col': !horizontal,

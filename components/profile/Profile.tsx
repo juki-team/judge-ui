@@ -1,4 +1,4 @@
-import { Image, MailIcon, LocationOnIcon, SchoolIcon } from 'components';
+import { Image, LocationOnIcon, MailIcon, SchoolIcon } from 'components';
 import { JUDGE } from 'config/constants';
 import { classNames } from 'helpers';
 import { UserProfileResponseDTO } from 'types';
@@ -13,7 +13,8 @@ export function Profile({ user }: { user: UserProfileResponseDTO }) {
           className="jk-user-profile-img huge jk-shadow"
           alt={user?.nickname as string}
           width={104}
-          height={104} />
+          height={104}
+        />
       </div>
       <div className={classNames('jk-col top stretch left jk-pad-md')}>
         <div className="jk-col gap stretch">

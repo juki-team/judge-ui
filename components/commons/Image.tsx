@@ -1,5 +1,6 @@
-import { CSSProperties } from 'react';
 import ImageComp from 'next/image';
+import { CSSProperties } from 'react';
+
 interface ImageProps {
   src: string,
   className?: string,
@@ -20,7 +21,6 @@ export const Image = ({ src, className, alt, height, width, style }: ImageProps)
         height={height}
         width={width}
         style={style}
-
       />
     </span>
   );

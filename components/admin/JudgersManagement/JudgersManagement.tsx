@@ -23,9 +23,10 @@ export const JudgersManagement = () => {
   ];
   
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <Tabs
         tabs={tabs}
+        className="height-100-percent"
       />
     </div>
   );
