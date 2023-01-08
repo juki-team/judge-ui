@@ -178,7 +178,7 @@ function Problems() {
           <h1 style={{ padding: 'var(--pad-lg) 0' }}><T>problems</T></h1>
         </div>
       </div>
-      <div className="pad-left-right pad-bottom">
+      <div className="pad-left-right pad-top-bottom">
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}
           url={url}

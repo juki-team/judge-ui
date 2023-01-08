@@ -27,7 +27,7 @@ export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
           <div className="jk-col gap user-profile-popup">
             <Image
               src={user.imageUrl}
-              className="jk-user-profile-img huge jk-shadow"
+              className="jk-user-profile-img huge elevation-1"
               alt={user.nickname}
               height={50}
               width={50}

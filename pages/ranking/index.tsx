@@ -29,7 +29,7 @@ function Ranking() {
         <Field className="jk-row link fw-bd">
           <UserNicknameLink nickname={nickname}>
             <div className="jk-row gap">
-              <Image src={imageUrl} className="jk-user-profile-img large jk-shadow" alt={nickname} height={50} width={50} />
+              <Image src={imageUrl} className="jk-user-profile-img large elevation-1" alt={nickname} height={50} width={50} />
               {nickname}
             </div>
           </UserNicknameLink>

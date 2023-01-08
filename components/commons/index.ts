@@ -118,6 +118,8 @@ export {
   LoginIcon,
   LogoutIcon,
   LanguageIcon,
+  NavigateBeforeIcon,
+  NavigateNextIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore

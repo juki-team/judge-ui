@@ -148,7 +148,9 @@ ${sample.output}
                 setText={(description) => setStatement({ ...statement, description })}
               />
             ) : (
-              <div className="bc-we jk-pad-md jk-border-radius-inline"><MdMathViewer source={statementDescription} /></div>
+              <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+                <MdMathViewer source={statementDescription} />
+              </div>
             )}
           </div>
           <div>
@@ -160,7 +162,9 @@ ${sample.output}
                 setText={(input) => setStatement({ ...statement, input })}
               />
             ) : statementInput
-              ? <div className="bc-we jk-pad-md jk-border-radius-inline"><MdMathViewer source={statementInput} /></div>
+              ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+                <MdMathViewer source={statementInput} />
+              </div>
               : <em><T className="tt-se fw-bd">no input description</T></em>}
           </div>
           <div>
@@ -171,7 +175,9 @@ ${sample.output}
                 setText={(output) => setStatement({ ...statement, output })}
               />
             ) : statementOutput
-              ? <div className="bc-we jk-pad-md jk-border-radius-inline"><MdMathViewer source={statementOutput} /></div>
+              ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+                <MdMathViewer source={statementOutput} />
+              </div>
               : <em><T className="tt-se fw-bd">no output description</T></em>}
           </div>
           <div className="jk-row stretch gap">

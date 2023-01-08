@@ -10,7 +10,7 @@ export function Profile({ user }: { user: UserProfileResponseDTO }) {
       <div className="jk-col top jk-pad-md">
         <Image
           src={user?.imageUrl}
-          className="jk-user-profile-img huge jk-shadow"
+          className="jk-user-profile-img huge elevation-1"
           alt={user?.nickname as string}
           width={104}
           height={104}

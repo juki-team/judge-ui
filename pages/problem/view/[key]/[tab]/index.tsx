@@ -47,7 +47,7 @@ const ProblemView = (): ReactNode => {
         const tabs = {
           [ProblemTab.STATEMENT]: {
             key: ProblemTab.STATEMENT,
-            header: <T className="tt-ce">statement</T>,
+            header: <T className="ws-np tt-ce">statement</T>,
             body: (
               <ProblemStatement
                 problemKey={problem.key}
@@ -63,7 +63,7 @@ const ProblemView = (): ReactNode => {
           },
           [ProblemTab.EDITOR]: {
             key: ProblemTab.EDITOR,
-            header: <T className="tt-ce">code editor</T>,
+            header: <T className="ws-np tt-ce">code editor</T>,
             body: <div className="pad-top-bottom pad-left-right"><ProblemCodeEditor problem={problem} /></div>,
           },
         };
@@ -71,13 +71,13 @@ const ProblemView = (): ReactNode => {
         if (user.isLogged) {
           tabs[ProblemTab.MY_SUBMISSIONS] = {
             key: ProblemTab.MY_SUBMISSIONS,
-            header: <T className="tt-ce">my submissions</T>,
+            header: <T className="ws-np tt-ce">my submissions</T>,
             body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} mySubmissions /></div>,
           };
         }
         tabs[ProblemTab.SUBMISSIONS] = {
           key: ProblemTab.SUBMISSIONS,
-          header: <T className="tt-ce">submissions</T>,
+          header: <T className="ws-np tt-ce">submissions</T>,
           body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} /></div>,
         };
         const breadcrumbs = [

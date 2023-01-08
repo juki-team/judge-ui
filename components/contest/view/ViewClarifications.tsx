@@ -90,7 +90,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
           ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
             return (
-              <div className="jk-shadow jk-pad-md jk-border-radius-inline relative">
+              <div className="elevation-1 jk-pad-md jk-border-radius-inline relative">
                 {isJudgeOrAdmin && (
                   <div style={{ position: 'absolute', top: 0, right: 0 }}>
                     <Button
@@ -130,7 +130,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                         <UserNicknameLink nickname={clarification.questionUserNickname}>
                           <img
                             src={clarification.questionUserImageUrl}
-                            className="jk-user-profile-img jk-shadow"
+                            className="jk-user-profile-img elevation-1"
                             alt={clarification.questionUserNickname}
                           />
                         </UserNicknameLink>

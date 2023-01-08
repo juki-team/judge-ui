@@ -18,7 +18,6 @@ import {
   LinkSectionProblem,
   LoadingIcon,
   LoginModal,
-  MenuIcon,
   PhoneIcon,
   Popover,
   Select,
@@ -234,30 +233,20 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
               </div>
             );
           }}
-          leftMobile={{
-            children: ({ toggle }) => (
-              <div className="jk-row nowrap left mobile-left-side-header">
-                <div className="jk-row" onClick={toggle}><MenuIcon /></div>
-              </div>
-            ),
-            content: ({ toggle }) => (
-              <div className="bc-py jk-row filled ">
-                <div className="jk-col space-between left-mobile-content">
-                  <div className="jk-row extend nowrap gap left mobile-left-side-header">
-                    <div className="jk-row"><ArrowIcon rotate={-90} onClick={toggle} /></div>
-                  </div>
-                  <div
-                    className="jk-col gap mobile-left-side-bottom"
-                    style={{ color: 'var(--t-color-primary-text)', padding: '0 var(--pad-s)' }}
-                  >
-                    {Settings2(true)}
-                    <div />
-                    <div />
-                  </div>
+          drawerMenuMobile={
+            <div className="bc-py jk-row filled ">
+              <div className="jk-col space-between left-mobile-content">
+                <div
+                  className="jk-col gap mobile-left-side-bottom"
+                  style={{ color: 'var(--t-color-primary-text)', padding: '0 var(--pad-s)' }}
+                >
+                  {Settings2(true)}
+                  <div />
+                  <div />
                 </div>
               </div>
-            ),
-          }}
+            </div>
+          }
           rightMobile={{
             children: <LoginUser collapsed={false} />,
           }}
@@ -268,7 +257,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" /></div> : children}
           <div
             className={classNames('need-help-container jk-border-radius-inline jk-col nowrap', {
-              'open jk-shadow': flags.isHelpOpen,
+              'open elevation-1': flags.isHelpOpen,
               'cursor-pointer': !flags.isHelpOpen,
               focus: flags.isHelpFocused,
             })}

@@ -25,7 +25,7 @@ export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
             <div className="jk-row center gap">
               <Image
                 src={data?.content?.imageUrl}
-                className="jk-user-profile-img jk-shadow"
+                className="jk-user-profile-img elevation-1"
                 alt={nickname}
                 height={100}
                 width={100}

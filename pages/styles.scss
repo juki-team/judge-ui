@@ -149,7 +149,7 @@ li > * {
   @extend .jk-br-ie;
   
   &.cm-focused {
-    @extend .jk-shadow;
+    @extend .elevation-1;
     outline: none !important;
   }
 }
@@ -190,7 +190,7 @@ li > * {
 
 .jk-breadcrumb {
   padding: var(--pad-xt) 0;
-  border-bottom: 1px solid var(--t-color-gray-6);
+  border-bottom: 1px solid var(--t-color-gray-5);
   
   .separator {
     padding: 0 4px;

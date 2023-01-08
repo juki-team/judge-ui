@@ -52,7 +52,7 @@ export const ViewProblemSubmissions = ({
   };
   
   return (
-    <div className="pad-left-right pad-bottom">
+    <div className="pad-left-right pad-top-bottom">
       <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
         headers={columns}
         url={url}

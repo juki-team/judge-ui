@@ -84,6 +84,7 @@ export const UserCodeEditor = ({
   
   return (
     <CodeRunnerEditor
+      className="br-g6"
       theme={editorSettings.theme}
       tabSize={editorSettings.tabSize}
       fontSize={editorSettings.fontSize}
