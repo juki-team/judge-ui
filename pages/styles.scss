@@ -151,3 +151,22 @@ li > * {
     outline: none !important;
   }
 }
+
+.sheet-page {
+  > div > div > .jk-md-math-viewer-layout {
+    width: 100%;
+    background-color: var(--t-color-white);
+    border-radius: var(--pad-xt);
+    padding: var(--pad-xt);
+  }
+  
+  .jk-md-math-editor-layout {
+    background-color: var(--t-color-white);
+    width: 100%;
+    min-height: 48px;
+  }
+  
+  > div {
+    margin: var(--pad-t) 0;
+  }
+}

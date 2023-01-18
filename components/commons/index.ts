@@ -112,6 +112,8 @@ export {
   SettingsSuggestIcon,
   SendIcon,
   AddIcon,
+  ArrowUpwardIcon,
+  ArrowDownwardIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore
