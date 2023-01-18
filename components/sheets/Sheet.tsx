@@ -104,6 +104,8 @@ export const SheetPage = ({
                 <div className="jk-row stretch extent flex-1">
                   {setSheets ? (
                     <MdMathEditor
+                      uploadImageButton
+                      informationButton
                       initEditMode={!!setSheets}
                       source={sheet.content}
                       onChange={(content) => {
@@ -192,7 +194,7 @@ export const SheetPage = ({
               ));
             if (notifyResponse(response, addNotification, setLoaderStatus)) {
               if (!sheetId) {
-                push(`/sheet/${response.content._id}`);
+                push(`/sheet/${response.content.id}`);
               }
             }
           }}
