@@ -161,7 +161,7 @@ const ProblemTestCasesPage = ({
   };
   
   return (
-    <div className="jk-col gap extend stretch">
+    <div className="jk-col gap nowrap stretch">
       <div className="jk-row gap block">
         <ButtonLoader
           size="small"
@@ -284,7 +284,7 @@ const ProblemTestCasesPage = ({
               {['input', 'output'].map((keyPut: KeyFileType) => (
                 <div className="jk-row center gap" key={keyPut}>
                   <div className={classNames('jk-row gap nowrap', { 'cr-ss': testCase[keyPut + 'FileSize'] !== -1 })}>
-                    <div className="jk-row left" style={{ width: 110 }}>
+                    <div className="jk-row left nowrap" style={{ width: 110 }}>
                       <CloudUploadIcon /><T>on server</T>:
                     </div>
                     <div className="jk-row" style={{ width: 80 }}>
@@ -337,7 +337,7 @@ const ProblemTestCasesPage = ({
                     </div>
                   </div>
                   <div className={classNames('jk-row gap nowrap', { 'cr-er': !!testCase[keyPut + 'NewFile'] })}>
-                    <div className="jk-row left" style={{ width: 110 }}>
+                    <div className="jk-row left nowrap" style={{ width: 110 }}>
                       <FileIcon /><T>on local</T>:
                     </div>
                     <div className="jk-row" style={{ width: 80 }}>
@@ -437,16 +437,14 @@ const ProblemTestCasesPage = ({
 
 export const ProblemTestCases = ({ problem }: { problem: EditCreateProblemType }) => {
   return (
-    <div className="jk-pad-md">
-      <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>
-        url={JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key)}
-        errorView={<Custom404 />}
-        options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}
-      >
-        {({ data }) => {
-          return <ProblemTestCasesPage problem={problem} testCases={data.content} />;
-        }}
-      </FetcherLayer>
-    </div>
+    <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>
+      url={JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key)}
+      errorView={<Custom404 />}
+      options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}
+    >
+      {({ data }) => {
+        return <ProblemTestCasesPage problem={problem} testCases={data.content} />;
+      }}
+    </FetcherLayer>
   );
 };

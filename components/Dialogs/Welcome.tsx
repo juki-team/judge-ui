@@ -20,7 +20,7 @@ export const WelcomeModal = () => {
     >
       <div className="jk-pad-md jk-row nowrap">
         <div>
-          <h5><T>hi</T><span className="given-name">{nickname}</span>!</h5>
+          <h2><T>hi</T><span className="given-name">{nickname}</span>!</h2>
           <h3><T>welcome to the Online Juki Judge</T></h3>
           <p>
             <T>participe in coding contests ranging from beginner level to week-long coding marathons</T>

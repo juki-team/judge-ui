@@ -27,12 +27,20 @@ function Contests() {
   
   const tabs = {
     [ContestsTab.CONTESTS]: {
-      body: <ContestList />,
+      body: (
+        <div className="pad-left-right pad-top-bottom">
+          <ContestList />
+        </div>
+      ),
       key: ContestsTab.CONTESTS,
       header: <T className="tt-se">contests</T>,
     },
     [ContestsTab.COMPETITIONS]: {
-      body: <CompetitionsList />,
+      body: (
+        <div className="pad-left-right pad-top-bottom">
+          <CompetitionsList />
+        </div>
+      ),
       key: ContestsTab.COMPETITIONS,
       header: <T className="tt-se">competitions</T>,
     },
@@ -43,10 +51,12 @@ function Contests() {
   ];
   return (
     <TwoContentSection>
-      <div className="jk-col extend stretch">
+      <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="pad-left-right">
-          <h1 style={{ padding: 'var(--pad-sm) 0' }}><T>contests</T></h1>
+          <h1><T>contests</T></h1>
+        </div>
+        <div className="pad-left-right">
           <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={contestsTab} />
         </div>
       </div>

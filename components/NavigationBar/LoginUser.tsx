@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, Image, LoadingIcon, LoginIcon, Popover, T } from 'components';
+import { Button, ButtonLoader, Image, LoadingIcon, LoginIcon, LogoutIcon, Popover, T } from 'components';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { addParamQuery, classNames } from 'helpers';
 import { useJukiBase, useUserDispatch } from 'hooks';
@@ -24,7 +24,12 @@ export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
         visible={visible}
         onVisibleChange={(visible) => setVisible(visible)}
         content={
-          <div className="jk-col gap user-profile-popup">
+          <div
+            className={classNames('jk-col gap user-profile-popup', {
+              'jk-pad-md': viewPortSize === 'sm',
+              'jk-pad-sm': viewPortSize !== 'sm',
+            })}
+          >
             <Image
               src={user.imageUrl}
               className="jk-user-profile-img huge elevation-1"
@@ -32,26 +37,29 @@ export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
               height={50}
               width={50}
             />
-            <ButtonLoader
-              className="jk-row nickname bold"
-              onClick={async () => {
-                await push(ROUTES.PROFILE.PAGE(user.nickname, ProfileTab.PROFILE));
-                setVisible(false);
-              }}
-              type="text"
-            >
-              {user.nickname}
-            </ButtonLoader>
-            <ButtonLoader
-              onClick={async (setLoaderStatus) => {
-                setVisible(false);
-                await logout(setLoaderStatus);
-              }}
-              type="outline"
-              size="small"
-            >
-              <T>sign out</T>
-            </ButtonLoader>
+            {user.nickname}
+            <div className="jk-col gap">
+              <ButtonLoader
+                extend
+                onClick={async () => {
+                  await push(ROUTES.PROFILE.PAGE(user.nickname, ProfileTab.PROFILE));
+                  setVisible(false);
+                }}
+              >
+                <T className="ws-np">ir a mi cuenta</T>
+              </ButtonLoader>
+              <ButtonLoader
+                extend
+                onClick={async (setLoaderStatus) => {
+                  await logout(setLoaderStatus);
+                  setVisible(false);
+                }}
+                type="outline"
+                icon={<LogoutIcon />}
+              >
+                <T className="ws-np">sign out</T>
+              </ButtonLoader>
+            </div>
             {/*<div className="jk-divider tiny" />*/}
             {/*<div className="jk-row space-between nowrap">*/}
             {/*  <div className="tx-s capitalized-case"><T>privacity policy</T></div>*/}
@@ -60,12 +68,9 @@ export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
           </div>
         }
         triggerOn="click"
-        // placement="rightBottom"
-        placement={viewPortSize === 'sm' ? 'bottomRight' : 'rightBottom'}
+        placement={viewPortSize === 'sm' ? 'centerScreen' : 'rightBottom'}
       >
-        <div
-          className={classNames('user-logged-head nowrap jk-row gap')}
-        >
+        <div className={classNames('user-logged-head nowrap jk-row gap')}>
           <img
             src={user.imageUrl}
             alt={user.nickname}
@@ -78,16 +83,16 @@ export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
   }
   
   return (
-    <div className="jk-row">
+    <div className="jk-row extend">
       <Button
         type="secondary"
         onClick={() => push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
         size={viewPortSize === 'sm' ? 'small' : undefined}
-        icon={<LoginIcon />}
-        extend={collapsed}
-        style={collapsed ? { borderRadius: 0 } : undefined}
+        icon={!collapsed && <LoginIcon />}
+        extend
+        style={{ margin: '0 var(--pad-xt)' }}
       >
-        {!collapsed ? <T className="ws-np ws-np">sign in</T> : ' '}
+        {!collapsed ? <T className="ws-np ws-np">sign in</T> : <LoginIcon />}
       </Button>
     </div>
   );

@@ -34,7 +34,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const contestTemplate = getContestTemplate(contest);
   
   return (
-    <div className="jk-col left top stretch jk-pad-md gap nowrap">
+    <div className="jk-col left top stretch gap nowrap">
       <div className="jk-row center gap nowrap">
         <T className="fw-bd tt-se tx-xl cr-py">template</T>:&nbsp;
         <Select
@@ -401,7 +401,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
         />
       </div>
       {/*<div className="jk-divider" />*/}
-      {/*<h6><T>number judge validations</T></h6>*/}
+      {/*<T>number judge validations</T>*/}
       {/*<Input*/}
       {/*  type="number"*/}
       {/*  value={contest.settings.numberJudgeValidations}*/}

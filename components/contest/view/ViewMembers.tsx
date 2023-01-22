@@ -37,30 +37,30 @@ export const ViewMembers = ({ contest }: { contest: ContestResponseDTO }) => {
     <div className="jk-col left top stretch jk-pad-md gap">
       <div>
         <div className="jk-row left gap">
-          <h6><T>administrators</T></h6>
+          <h3><T>administrators</T></h3>
           <AdminInformation filledCircle />
         </div>
         {printNicknames(Object.keys(contest.members.administrators))}
       </div>
       <div>
         <div className="jk-row left gap">
-          <h6><T>judges</T></h6>
+          <h3><T>judges</T></h3>
           <JudgeInformation filledCircle />
         </div>
         {printNicknames(Object.keys(contest.members.judges))}
       </div>
       <div>
         <div className="jk-row left gap">
-          <h6><T>guests</T></h6>
+          <h3><T>guests</T></h3>
         </div>
         {printNicknames(Object.keys(contest.members.guests))}
       </div>
       <div>
-        <h6><T>contestants</T></h6>
+        <h3><T>contestants</T></h3>
         {printNicknames(Object.keys(contest.members.contestants))}
       </div>
       <div>
-        <h6><T>spectators</T></h6>
+        <h3><T>spectators</T></h3>
         {printNicknames(Object.keys(contest.members.spectators))}
       </div>
     </div>

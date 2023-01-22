@@ -31,7 +31,7 @@ export const UserPreviewModal = ({ nickname }: { nickname: string }) => {
                 width={100}
               />
               <div className="jk-col gap stretch">
-                <div className="fw-br">{data?.content?.nickname}</div>
+                <h3>{data?.content?.nickname}</h3>
                 <div className="cr-g3">{data?.content?.givenName} {data?.content?.familyName}</div>
                 <div className="jk-divider tiny" />
                 {(data?.content?.city?.trim() || data?.content?.country?.trim()) && (

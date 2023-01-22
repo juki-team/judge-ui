@@ -1,3 +1,4 @@
+import { useJukiBase } from '@juki-team/base-ui';
 import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
@@ -26,7 +27,7 @@ export const PagedDataViewer = <T, V = T>({
 }: PagedDataViewerPros<T, V>) => {
   
   const { queryObject, replace } = useRouter();
-  
+  const { viewPortSize } = useJukiBase();
   const {
     data: response,
     request,
@@ -51,6 +52,7 @@ export const PagedDataViewer = <T, V = T>({
       data={toRow ? data.map(toRow) : data as unknown as T[]}
       rows={{ height: 68 }}
       request={request}
+      rowsView={viewPortSize !== 'sm'}
       name={name}
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={extraNodes}

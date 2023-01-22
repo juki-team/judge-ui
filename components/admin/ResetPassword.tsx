@@ -14,7 +14,7 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
       closeIcon
     >
       <div className="jk-pad-md jk-col gap left stretch">
-        <h6><T>reset password</T></h6>
+        <h2><T>reset password</T></h2>
         <div className="jk-row left">
           <T className="tt-se">the password for</T>&nbsp;
           <UserNicknameLink nickname={nickname}>

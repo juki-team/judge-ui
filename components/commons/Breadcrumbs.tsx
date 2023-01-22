@@ -1,10 +1,12 @@
 export const Breadcrumbs = ({ breadcrumbs }) => {
   return (
     <div className="jk-row left jk-breadcrumb pad-left-right">
-      {breadcrumbs.map(breadcrumb => {
+      {/*<ArrowRightIcon />*/}
+      <div className="separator">|</div>
+      {breadcrumbs.map((breadcrumb, index) => {
         return (
           <>
-            <div className="separator">/</div>
+            {!!index && <div className="separator">/</div>}
             <div>{breadcrumb}</div>
           </>
         );

@@ -172,13 +172,13 @@ function Problems() {
   
   return (
     <TwoContentSection>
-      <div className="jk-col extend stretch">
+      <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="pad-left-right">
-          <h1 style={{ padding: 'var(--pad-lg) 0' }}><T>problems</T></h1>
+          <h1 style={{ padding: 'var(--pad-sm) 0' }}><T>problems</T></h1>
         </div>
       </div>
-      <div className="pad-left-right pad-top-bottom">
+      <div className="pad-top-bottom pad-left-right">
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}
           url={url}

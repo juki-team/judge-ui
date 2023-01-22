@@ -103,7 +103,7 @@ ${sample.output}
               color: 'var(--t-color-gray-1)',
             }}>{problemIndex}</p>
           </div>
-          <h6 className="title" style={{ textAlign: 'center' }}>{name}</h6>
+          <h3 className="title" style={{ textAlign: 'center' }}>{name}</h3>
           <Popover
             content={<ProblemInfo author={author} status={status} tags={tags} settings={settings} />}
             triggerOn={['hover', 'click']}
@@ -141,7 +141,7 @@ ${sample.output}
             />
           )}
           <div>
-            <h6><T>description</T></h6>
+            <h3><T>description</T></h3>
             {setStatement ? (
               <TextLangEdit
                 text={statement.description}
@@ -154,7 +154,7 @@ ${sample.output}
             )}
           </div>
           <div>
-            <h6><T>input</T></h6>
+            <h3><T>input</T></h3>
             {}
             {setStatement ? (
               <TextLangEdit
@@ -168,7 +168,7 @@ ${sample.output}
               : <em><T className="tt-se fw-bd">no input description</T></em>}
           </div>
           <div>
-            <h6><T>output</T></h6>
+            <h3><T>output</T></h3>
             {setStatement ? (
               <TextLangEdit
                 text={statement.output}
@@ -182,8 +182,8 @@ ${sample.output}
           </div>
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1">
-              <h6><T>input sample</T></h6>
-              <h6><T>output sample</T></h6>
+              <h3><T>input sample</T></h3>
+              <h3><T>output sample</T></h3>
             </div>
             {setSampleCases && (
               <div className="jk-row">

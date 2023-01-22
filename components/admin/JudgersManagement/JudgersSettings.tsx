@@ -28,8 +28,12 @@ export const JudgersSettings = () => {
     <div className="jk-col nowrap top gap jk-pad-md stretch">
       <div className="jk-row gap">
         <T>high performance runner min tasks</T>
-        <Input type="number" value={highPerformanceRunnerMinTasks} onChange={setHighPerformanceRunnerMinTasks}
-               disabled={loading} />
+        <Input
+          type="number"
+          value={highPerformanceRunnerMinTasks}
+          onChange={setHighPerformanceRunnerMinTasks}
+          disabled={loading}
+        />
         <ButtonLoader
           size="small"
           disabled={loading}

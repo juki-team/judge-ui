@@ -90,7 +90,7 @@ export function AllUsers() {
       minWidth: 400,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">country/city</T>} />,
+      head: <TextHeadCell text={<><T className="tt-ue">country</T>/<T className="tt-ue">city</T></>} />,
       index: 'country-city',
       field: ({ record: { country, city } }) => (
         <Field className="jk-col center">
@@ -183,7 +183,7 @@ export function AllUsers() {
             href="https://oscargauss.notion.site/Permissions-V2-6487a360cea1482c963d281f6f6317d4"
             target="_blank"
           >
-            <Button icon={<DemographyIcon />} size="small" style={{ marginLeft: 'var(--pad-xt)' }}>
+            <Button icon={<DemographyIcon />} size="small">
               <div className="jk-row gap"><T>user roles</T><OpenInNewIcon size="small" /></div>
             </Button>
           </Link>,

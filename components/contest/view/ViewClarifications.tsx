@@ -112,7 +112,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                   </div>
                 )}
                 <div className="jk-row left gap">
-                  <h6>{clarification.question}</h6>
+                  <div className="tx-h fw-bd cr-py">{clarification.question}</div>
                   <div className="jk-row gap">
                     <Popover
                       content={<div className="ws-np">{dtf(clarification.questionTimestamp)}</div>}

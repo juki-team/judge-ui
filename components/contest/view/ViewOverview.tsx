@@ -44,8 +44,11 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
         'jk-col': viewPortSize === 'sm',
       })}
     >
-      <div className="jk-pad-md flex-5 bc-we br-g6 jk-border-radius-inline">
-        <MdMathViewer source={contest?.description} />
+      <div className="flex-5">
+        <MdMathViewer
+          source={contest?.description}
+          className="jk-pad-md bc-we br-g6 jk-border-radius-inline"
+        />
       </div>
       <div className="flex-3 contest-overview-information">
         <div className="content-side-right-bar-top">

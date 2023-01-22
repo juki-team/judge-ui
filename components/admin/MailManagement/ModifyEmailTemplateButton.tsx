@@ -17,7 +17,7 @@ export const ModifyEmailTemplateButton = ({ emailTemplate: initialEmailTemplate,
     <>
       <Modal onClose={() => setOpen(false)} isOpen={open} closeIcon>
         <div className="jk-col gap stretch jk-pad-lg">
-          <h5><T>modify email template</T></h5>
+          <h2><T>modify email template</T></h2>
           <div style={{ height: '400px', width: '100%' }} className="jk-row nowrap br-g6 jk-br-ie">
             <div style={{ height: '100%', width: '50%' }}>
               <CodeEditor

@@ -103,7 +103,7 @@ export const MailManagement = () => {
             </div>
             <div className="br-g6" />
             <div className="jk-col gap stretch">
-              <h5><T>send email</T></h5>
+              <h3><T>send email</T></h3>
               <div className="jk-row nowrap">
                 <T className="tt-se fw-bd">from</T>:&nbsp;
                 <Select
@@ -129,7 +129,7 @@ export const MailManagement = () => {
               </div>
             </div>
             <div className="jk-col stretch extend top nowrap">
-              <div className="jk-row gap">
+              <div className="jk-row center gap">
                 <div><T className="tt-se">template</T>:</div>
                 <Button type="text" size="tiny" onClick={() => setContent(passwordReset)}><T>password reset</T></Button>
                 <Button type="text" size="tiny" onClick={() => setContent(validateEmail)}><T>validate email</T></Button>

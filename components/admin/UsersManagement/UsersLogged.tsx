@@ -36,7 +36,7 @@ export function UsersLogged() {
   
   const columns: DataViewerHeadersType<UserManagementSessionResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">id/user</T>} />,
+      head: <TextHeadCell text={<><T className="tt-ue">id</T>/<T className="tt-ue">user</T></>} />,
       index: 'id',
       field: ({ record: { id, user: { imageUrl, nickname, givenName, familyName, email } } }) => (
         <Field className="jk-col center">

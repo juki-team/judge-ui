@@ -59,7 +59,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
               <>
                 {((verdictByGroups && !!Object.keys(verdictByGroups).length) || (testCasesByGroup && !!Object.keys(testCasesByGroup).length)) && (
                   <div>
-                    <h6>
+                    <h3>
                       <T>
                         {problemMode === ProblemMode.SUBTASK
                           ? 'information by subtasks'
@@ -67,7 +67,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                             ? 'information by groups'
                             : 'sample and test case information'}
                       </T>
-                    </h6>
+                    </h3>
                     <div className="jk-col gap">
                       <div className="jk-row extend block gap jk-table-inline-header">
                         <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
@@ -114,7 +114,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                 )}
                 {!!canViewSourceCode && (
                   <div className="jk-col gap stretch">
-                    <h6><T>source code</T></h6>
+                    <h3><T>source code</T></h3>
                     <Collapse
                       header={({ isOpen, toggle }) => (
                         <div className="jk-row">

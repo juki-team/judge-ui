@@ -240,4 +240,12 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rank/list`;
     },
   },
+  SHEET: {
+    CREATE: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/`;
+    },
+    SHEET: (sheetId: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/${sheetId}`;
+    },
+  },
 };

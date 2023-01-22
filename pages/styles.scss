@@ -6,7 +6,6 @@
 @import "components/contest/styles";
 
 body {
-  
   @include md {
     --top-horizontal-menu-height: 56px;
   }
@@ -37,12 +36,6 @@ a {
 
 a:active {
   color: var(--t-color-primary-light);
-}
-
-.content-title {
-  h3 {
-    text-align: center;
-  }
 }
 
 .notification-wrapper {
@@ -189,7 +182,8 @@ li > * {
 }
 
 .jk-breadcrumb {
-  padding: var(--pad-xt) 0;
+  padding-top: var(--pad-xt);
+  padding-bottom: var(--pad-xt);
   border-bottom: 1px solid var(--t-color-gray-5);
   
   .separator {
@@ -228,4 +222,27 @@ li > * {
 
 .height-100-percent {
   height: 100%;
+}
+
+.sheet-page {
+  > div > div > .jk-md-math-viewer-layout {
+    width: 100%;
+    background-color: var(--t-color-white);
+    border-radius: var(--pad-xt);
+    padding: var(--pad-xt);
+  }
+  
+  .jk-md-math-editor-layout {
+    background-color: var(--t-color-white);
+    width: 100%;
+    min-height: 48px;
+  }
+  
+  > div {
+    margin: var(--pad-t) 0;
+  }
+}
+
+.width-auto {
+  width: auto;
 }

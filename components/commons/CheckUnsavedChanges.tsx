@@ -15,7 +15,7 @@ export const CheckUnsavedChanges = ({ children, onSafeClick, value }) => {
       const height = text.split('\n').length;
       setModal(
         <AlertModal
-          title={<h4><T>attention</T></h4>}
+          title={<h2><T>attention</T></h2>}
           accept={{ onClick: () => setModal(null), label: <T>close</T> }}
           content={
             <div>

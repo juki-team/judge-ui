@@ -1,3 +1,4 @@
+import { useJukiBase } from '@juki-team/base-ui';
 import { Button, NavigateBeforeIcon, NavigateNextIcon } from 'components';
 import { classNames, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEffect, useRef, useState } from 'react';
@@ -5,6 +6,7 @@ import { useResizeDetector } from 'react-resize-detector';
 
 export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, tabSelected, pushTab, extraNodes? }) => {
   const { width: widthTabs = 0, ref: refTabs } = useResizeDetector();
+  const { viewPortSize } = useJukiBase();
   const tabsLength = Object.keys(tabs).length;
   const [tabsSize, setTabsSize] = useState(tabsLength);
   const [tabStartIndex, setTabStartIndex] = useState(0);
@@ -28,7 +30,7 @@ export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, t
   const withArrows = tabsSize !== tabsLength;
   
   return (
-    <div className="jk-row space-between nowrap jk-tabs-inline extend">
+    <div className="jk-row gap space-between nowrap jk-tabs-inline extend">
       <div className="jk-row left gap extend">
         {withArrows && (
           <Button
@@ -41,7 +43,10 @@ export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, t
           />
         )}
         <div
-          className={classNames('jk-row left stretch jk-tabs-headers-inline nowrap', { 'block flex-1': withArrows })}
+          className={classNames('jk-row left stretch jk-tabs-headers-inline nowrap', {
+            'block flex-1': withArrows,
+            'block extend': viewPortSize === 'sm',
+          })}
           ref={refTabs}
         >
           {Object.values(tabs).slice(tabStartIndex, tabStartIndex + tabsSize).map(({ key, header }) => (
@@ -64,11 +69,19 @@ export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, t
           />
         )}
       </div>
-      <div className="jk-row gap nowrap">
-        {extraNodes?.map(action => (
-          renderReactNodeOrFunctionP1(action, { selectedTabKey: tabSelected })
-        ))}
-      </div>
+      {viewPortSize === 'sm' ? (
+        <div className="jk-col gap nowrap" style={{ position: 'absolute', bottom: 'var(--pad-t)', right: 'var(--pad-t)' }}>
+          {extraNodes?.map(action => (
+            renderReactNodeOrFunctionP1(action, { selectedTabKey: tabSelected })
+          ))}
+        </div>
+      ) : (
+        <div className="jk-row gap nowrap">
+          {extraNodes?.map(action => (
+            renderReactNodeOrFunctionP1(action, { selectedTabKey: tabSelected })
+          ))}
+        </div>
+      )}
     </div>
   );
 };

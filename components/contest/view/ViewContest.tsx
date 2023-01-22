@@ -1,6 +1,7 @@
 import {
   Breadcrumbs,
   ButtonLoader,
+  EditIcon,
   FetcherLayer,
   Popover,
   T,
@@ -84,7 +85,7 @@ export function ContestView() {
         const tabHeaders = {
           [ContestTab.OVERVIEW]: {
             key: ContestTab.OVERVIEW,
-            header: <T className="tt-ce">overview</T>,
+            header: <T className="tt-ce ws-np">overview</T>,
             body: <ViewOverview contest={contest} />,
           },
         };
@@ -92,10 +93,10 @@ export function ContestView() {
           tabHeaders[lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS] = {
             key: lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
             header: (
-              <div className="jk-row gap">
+              <div className="jk-row gap nowrap">
                 {lastProblemVisited
-                  ? <T className="tt-ce">problem</T>
-                  : <T className="tt-ce">problems</T>} {lastProblemVisited}
+                  ? <T className="tt-ce ws-np">problem</T>
+                  : <T className="tt-ce ws-np">problems</T>} {lastProblemVisited}
               </div>
             ),
             body: problemIndex
@@ -104,28 +105,28 @@ export function ContestView() {
           };
           tabHeaders[ContestTab.SCOREBOARD] = {
             key: ContestTab.SCOREBOARD,
-            header: <T className="tt-ce">scoreboard</T>,
+            header: <T className="tt-ce ws-np">scoreboard</T>,
             body: <div className="pad-left-right pad-bottom"><ViewScoreboard contest={contest} /></div>,
           };
         }
         if (isAdmin || isJudge || ((contest.isLive || contest.isPast) && isContestant)) {
           tabHeaders[ContestTab.MY_SUBMISSIONS] = {
             key: ContestTab.MY_SUBMISSIONS,
-            header: <T className="tt-ce">my submissions</T>,
+            header: <T className="tt-ce ws-np">my submissions</T>,
             body: <ViewProblemSubmissions contest={contest} mySubmissions />,
           };
         }
         if (isAdmin || isJudge || contest.isLive || contest.isPast) {
           tabHeaders[ContestTab.SUBMISSIONS] = {
             key: ContestTab.SUBMISSIONS,
-            header: <T className="tt-ce">submissions</T>,
+            header: <T className="tt-ce ws-np">submissions</T>,
             body: <ViewProblemSubmissions contest={contest} />,
           };
         }
         if (contest.settings.clarifications) {
           tabHeaders[ContestTab.CLARIFICATIONS] = {
             key: ContestTab.CLARIFICATIONS,
-            header: <T className="tt-ce">clarifications</T>,
+            header: <T className="tt-ce ws-np">clarifications</T>,
             body: <ViewClarifications contest={contest} />,
           };
         }
@@ -141,7 +142,7 @@ export function ContestView() {
         const extraNodes = [];
         if (viewPortSize === 'lg' || viewPortSize === 'hg') {
           extraNodes.push(
-            <div className={`jk-row jk-tag ${tag}`}>
+            <div className={`jk-row nowrap jk-tag ${tag}`}>
               <T>{statusLabel}</T>,&nbsp;{literal}
             </div>,
           );
@@ -150,14 +151,15 @@ export function ContestView() {
         if (isAdmin) {
           extraNodes.push(
             <ButtonLoader
-              size="small"
+              size={viewPortSize !== 'sm' ? 'small' : 'large'}
               onClick={async setLoaderStatus => {
                 setLoaderStatus(Status.LOADING);
                 await push(ROUTES.CONTESTS.EDIT(contestKey));
                 setLoaderStatus(Status.SUCCESS);
               }}
+              icon={<EditIcon />}
             >
-              <T>edit</T>
+              {viewPortSize !== 'sm' && <T>edit</T>}
             </ButtonLoader>,
           );
         }
@@ -179,11 +181,12 @@ export function ContestView() {
         } else {
           breadcrumbs.push(<div><T className="tt-se">{contestTab as string}</T></div>);
         }
+  
         return (
           <TwoContentSection>
             <div>
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="content-title jk-col relative pad-left-right">
+              <div className="jk-col relative pad-left-right">
                 <div className="jk-row nowrap gap extend">
                   <div className="jk-row left gap flex-1">
                     <h2 style={{ padding: 'var(--pad-sm) 0' }}>{contest.name}</h2>

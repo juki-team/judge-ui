@@ -2,10 +2,10 @@ import {
   BalloonIcon,
   ColorPicker,
   DeleteIcon,
-  OpenInNewIcon,
   Input,
   InputDate,
   InputToggle,
+  OpenInNewIcon,
   PlusIcon,
   ProblemSelector,
   Select,
@@ -248,7 +248,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [problems]);
   
   return (
-    <div className="jk-col top nowrap gap stretch jk-pad-md">
+    <div className="jk-col top nowrap gap stretch">
       <div className="jk-col left gap stretch">
         <div className="jk-row left gap">
           <div className="fw-bd tt-se tx-xl cr-py"><T>Problems with period time restriction</T></div>
@@ -296,11 +296,15 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           <div className="jk-row fw-bd tt-se" style={{ width: 150 }}><T>judge</T></div>
           <div style={{ width: 30 }} />
         </div>
-        <div>
+        <div className="jk-col extend stretch gap">
           <SimpleSortableRows rows={problems} setRows={setProblems} />
           <div className="jk-row left">
-            <div className="jk-row" style={{ width: 30 }}><PlusIcon /></div>
-            <div className="jk-row" style={{ width: 40 }}>{indexToLetters(problems.length + 1)}</div>
+            <div className="jk-row" style={{ width: 30, padding: '0 var(--pad-xt)' }}>
+              <PlusIcon />
+            </div>
+            <div className="jk-row" style={{ width: 40, padding: '0 var(--pad-xt)' }}>
+              {indexToLetters(problems.length + 1)}
+            </div>
             <div className="jk-row" style={{ flex: 1 }}>
               <ProblemSelector
                 onSelect={(problem) => {
@@ -330,8 +334,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                 }}
               />
             </div>
-            <div className="jk-row" style={{ width: 40 }} />
-            <div className="jk-row" style={{ width: 100 }} />
+            <div className="jk-row" style={{ width: 'var(--pad-t)' }} />
             <div className="jk-row" style={{ width: 150 }}>
               <Select
                 options={[
@@ -344,7 +347,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                 selectedOption={{ value: JUDGE.JUKI_JUDGE.value }}
               />
             </div>
-            <div className="jk-row" style={{ width: 30 }} />
+            <div className="jk-row" style={{ width: 'var(--pad-t)' }} />
           </div>
         </div>
       </div>

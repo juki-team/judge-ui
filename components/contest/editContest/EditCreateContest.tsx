@@ -1,8 +1,23 @@
-import { ButtonLoader, CheckUnsavedChanges, CodeEditor, Input, MdMathEditor, T, Tabs, TwoContentLayout } from 'components';
+import { useJukiBase } from '@juki-team/base-ui';
+import {
+  Breadcrumbs,
+  ButtonLoader,
+  CheckUnsavedChanges,
+  CloseIcon,
+  CodeEditor,
+  Input,
+  MdMathEditor,
+  SaveIcon,
+  T,
+  TabsInline,
+  TwoContentSection,
+} from 'components';
+import { LinkContests } from 'components/contest/commons';
 import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
+import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ButtonLoaderOnClickType,
@@ -25,6 +40,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   
   const { addWarningNotification } = useNotification();
   const { addNotification } = useNotification();
+  const { viewPortSize } = useJukiBase();
   const [contest, setContest] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT());
   const lastContest = useRef(initialContest);
   useEffect(() => {
@@ -33,11 +49,9 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       const height = text.split('\n').length;
       addWarningNotification(
         <div>
-          <h6>
-            <T className="tt-se">
-              the contest changed, your changes will overwrite another admin's
-            </T>
-          </h6>
+          <T className="tt-se">
+            the contest changed, your changes will overwrite another admin's
+          </T>:
           <div style={{ height: height * 24 + 'px' }}>
             <CodeEditor
               sourceCode={text}
@@ -60,71 +74,121 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       }));
     notifyResponse(response, addNotification);
     if (response.success) {
-      push(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
+      await push(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
       setLoaderStatus(Status.SUCCESS);
     } else {
       setLoaderStatus(Status.ERROR);
     }
   };
   
-  const { push } = useRouter();
+  const { push, query } = useRouter();
   
-  const tabHeaders = [
-    {
+  const tabHeaders = {
+    [ContestTab.OVERVIEW]: {
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce">overview</T>,
       body: (
-        <MdMathEditor
-          informationButton
-          uploadImageButton
-          source={contest.description}
-          onChange={value => setContest(prevState => ({ ...prevState, description: value }))}
-        />
+        <div className="pad-top-bottom pad-left-right">
+          <MdMathEditor
+            informationButton
+            uploadImageButton
+            source={contest.description}
+            onChange={value => setContest(prevState => ({ ...prevState, description: value }))}
+          />
+        </div>
       ),
     },
-    {
+    [ContestTab.SETUP]: {
       key: ContestTab.SETUP,
       header: <T className="tt-ce">settings</T>,
-      body: <EditSettings contest={contest} setContest={setContest} />,
+      body: (
+        <div className="pad-top-bottom pad-left-right">
+          <EditSettings contest={contest} setContest={setContest} />,
+        </div>
+      ),
     },
-    {
-      key: 'members',
+    [ContestTab.MEMBERS]: {
+      key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,
-      body: <EditMembers contest={contest} setContest={setContest} editing={editing} />,
+      body: (
+        <div className="pad-top-bottom pad-left-right">
+          <EditMembers contest={contest} setContest={setContest} editing={editing} />,
+        </div>
+      ),
     },
-    {
+    [ContestTab.PROBLEMS]: {
       key: ContestTab.PROBLEMS,
       header: <T className="tt-ce">problems</T>,
-      body: <EditProblems contest={contest} setContest={setContest} />,
+      body: (
+        <div className="pad-top-bottom pad-left-right">
+          <EditProblems contest={contest} setContest={setContest} />
+        </div>
+      ),
     },
+  };
+  
+  const [contestTab, setContestTab] = useState<ContestTab>(ContestTab.OVERVIEW);
+  const extraNodes = [
+    <CheckUnsavedChanges
+      onSafeClick={() => push(editing ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS))}
+      value={contest}
+    >
+      <ButtonLoader
+        size={viewPortSize !== 'sm' ? 'small' : 'large'}
+        icon={<CloseIcon />}
+      >
+        {viewPortSize !== 'sm' && <T>cancel</T>}
+      </ButtonLoader>
+    </CheckUnsavedChanges>,
+    <ButtonLoader
+      type="secondary"
+      size={viewPortSize !== 'sm' ? 'small' : 'large'}
+      onClick={onSave}
+      icon={<SaveIcon />}
+    >
+      {viewPortSize !== 'sm' && (editing ? <T>update</T> : <T>create</T>)}
+    </ButtonLoader>,
   ];
   
+  const breadcrumbs = [
+    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+    <LinkContests><T className="tt-se">contests</T></LinkContests>,
+  ];
+  
+  if (editing) {
+    breadcrumbs.push(
+      <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }} className="link">
+        <div>{contest.name}</div>
+      </Link>,
+    );
+  }
+  breadcrumbs.push(<div><T className="tt-se">{contestTab as string}</T></div>);
+  
   return (
-    <TwoContentLayout>
-      <div className="jk-row center extend tx-h">
-        <h6><T>name</T></h6>:&nbsp;
-        <Input
-          value={contest.name}
-          onChange={value => setContest(prevState => ({
-            ...prevState,
-            name: value,
-          }))}
-        />
+    <TwoContentSection>
+      <div>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="jk-row center pad-left-right">
+          <h3 style={{ padding: 'var(--pad-sm) 0' }}><T>name</T></h3>:&nbsp;
+          <Input
+            value={contest.name}
+            onChange={value => setContest(prevState => ({
+              ...prevState,
+              name: value,
+            }))}
+            size="auto"
+          />
+        </div>
+        <div className="pad-left-right" style={{ overflow: 'hidden' }}>
+          <TabsInline
+            tabs={tabHeaders}
+            tabSelected={contestTab}
+            pushTab={(tab) => setContestTab(tab)}
+            extraNodes={extraNodes}
+          />
+        </div>
       </div>
-      <Tabs
-        tabs={tabHeaders}
-        extraNodes={[
-          <CheckUnsavedChanges
-            onSafeClick={() => push(editing ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS))}
-            value={contest}
-          >
-            <div><ButtonLoader size="small"><T>cancel</T></ButtonLoader></div>
-          </CheckUnsavedChanges>,
-          <ButtonLoader type="secondary" size="small" onClick={onSave}>
-            {editing ? <T>update</T> : <T>create</T>}
-          </ButtonLoader>,
-        ]}
-      />
-    </TwoContentLayout>
+      {tabHeaders[contestTab]?.body}
+    </TwoContentSection>
   );
 };

@@ -74,14 +74,12 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
   }
   
   return (
-    <div className="pad-left-right pad-bottom">
-      <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
-        headers={columns}
-        url={url}
-        name={endless ? QueryParam.ENDLESS_CONTESTS_TABLE : QueryParam.CONTESTS_TABLE}
-        refreshInterval={60000}
-        extraNodes={extraNodes}
-      />
-    </div>
+    <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
+      headers={columns}
+      url={url}
+      name={endless ? QueryParam.ENDLESS_CONTESTS_TABLE : QueryParam.CONTESTS_TABLE}
+      refreshInterval={60000}
+      extraNodes={extraNodes}
+    />
   );
 };

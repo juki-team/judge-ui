@@ -120,6 +120,14 @@ export {
   LanguageIcon,
   NavigateBeforeIcon,
   NavigateNextIcon,
+  ArrowUpwardIcon,
+  ArrowDownwardIcon,
+  AutorenewIcon,
+  HelpIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowBackIcon,
+  ArrowForwardIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore

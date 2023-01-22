@@ -6,11 +6,11 @@ import { UserProfileResponseDTO } from 'types';
 export function Profile({ user }: { user: UserProfileResponseDTO }) {
   
   return (
-    <div className="user-profile jk-row stretch center gap jk-pad-md relative">
+    <div className="user-profile jk-row stretch center gap relative">
       <div className="jk-col top jk-pad-md">
         <Image
           src={user?.imageUrl}
-          className="jk-user-profile-img huge elevation-1"
+          className="jk-user-profile-img elevation-1"
           alt={user?.nickname as string}
           width={104}
           height={104}

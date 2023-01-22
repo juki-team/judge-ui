@@ -33,7 +33,7 @@ export const FetcherLayer = <T extends (ContentResponseType<any> | ContentsRespo
   if (isLoading) {
     return (
       <div className="jk-row jk-col extend">
-        <LoadingIcon size="very-huge" />
+        <LoadingIcon size="very-huge" className="cr-py" />
       </div>
     );
   }

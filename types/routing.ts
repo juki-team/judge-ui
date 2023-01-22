@@ -9,7 +9,6 @@ export enum AdminTab {
   RESET_PASSWORD = 'reset-password',
   FILES_MANAGEMENT = 'files-management',
   SQS_MANAGEMENT = 'sqs-management',
-  SETTINGS_MANAGEMENT = 'settings-management',
   MAIL_MANAGEMENT = 'mail-management',
 
   USERS_MANAGEMENT = 'users-management',

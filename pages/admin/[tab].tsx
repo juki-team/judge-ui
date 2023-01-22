@@ -46,7 +46,7 @@ function Admin() {
     tabs[AdminTab.SUBMISSIONS] = {
       key: AdminTab.SUBMISSIONS,
       header: <T className="tt-ce">submissions</T>,
-      body: <div className="pad-left-right pad-bottom"><AllSubmissions /></div>,
+      body: <div className="pad-left-right pad-top-bottom"><AllSubmissions /></div>,
     };
   }
   if (canViewFilesManagement) {
@@ -79,10 +79,12 @@ function Admin() {
   
   return (
     <TwoContentSection>
-      <div className="jk-col extend stretch">
+      <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="pad-left-right">
           <h3 style={{ padding: 'var(--pad-sm) 0' }}><T>admin</T></h3>
+        </div>
+        <div className="pad-left-right">
           <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={query.tab} />
         </div>
       </div>

@@ -106,6 +106,7 @@
 }
 
 .contest-overview {
+  height: auto;
   @include sm { flex-direction: column-reverse !important; }
   
   > div:first-child {

@@ -86,7 +86,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
   };
   
   return (
-    <div className="jk-col left stretch jk-pad-md gap nowrap">
+    <div className="jk-col left stretch gap nowrap">
       <div className="jk-row left nowrap gap">
         <div className="jk-row nowrap fw-bd tx-xl cr-er"><T className="tt-se ws-np">problem status</T>:</div>
         <Select

@@ -1,5 +1,37 @@
 @import "@juki-team/base-ui/dist/styles/abstracts/index";
 
+.pad-left-right {
+  padding-left: var(--pad-lg);
+  padding-right: var(--pad-lg);
+  @include sm {
+    padding-left: var(--pad-md);
+    padding-right: var(--pad-md);
+  }
+}
+
+.pad-top {
+  padding-top: var(--pad-lg);
+  @include sm {
+    padding-top: var(--pad-md);
+  }
+}
+
+.pad-bottom {
+  padding-bottom: var(--pad-lg);
+  @include sm {
+    padding-bottom: var(--pad-md);
+  }
+}
+
+.pad-top-bottom {
+  padding-top: var(--pad-lg);
+  padding-bottom: var(--pad-lg);
+  @include sm {
+    padding-top: var(--pad-md);
+    padding-bottom: var(--pad-md);
+  }
+}
+
 .two-content-section {
   width: 100%;
   height: calc(var(--100VH) - var(--top-horizontal-menu-height));
@@ -19,32 +51,6 @@
   > div {
     box-sizing: border-box;
     width: 100%;
-    
-    .pad-left {
-      padding-left: var(--pad-lg);
-    }
-    
-    .pad-right {
-      padding-right: var(--pad-lg);
-    }
-    
-    .pad-left-right {
-      padding-left: var(--pad-lg);
-      padding-right: var(--pad-lg);
-    }
-    
-    .pad-top {
-      padding-top: var(--pad-lg);
-    }
-    
-    .pad-bottom {
-      padding-bottom: var(--pad-lg);
-    }
-    
-    .pad-top-bottom {
-      padding-top: var(--pad-lg);
-      padding-bottom: var(--pad-lg);
-    }
   }
   
   > div:first-child {
@@ -108,102 +114,20 @@
   --content-height: calc(var(--100VH) - var(--top-horizontal-menu-height));
 }
 
-.content-layout {
-  > div {
-    height: 100%;
-    
-    > .jk-data-viewer-layout {
-      height: calc(var(--100VH) - var(--pad-md) - var(--pad-md) - var(--top-horizontal-menu-height));
-  
-      .jk-view-container {
-        border: 1px solid var(--t-color-gray-6);
-        @extend .jk-border-radius-inline;
-      }
-    }
-  }
-}
-
-.content-layout, .two-content-layout {
-  padding: var(--pad-md) 0 var(--pad-md) 0;
-  box-sizing: border-box;
-  
-  --second-content-layout-min-height: calc(
-    100VH
-    - var(--first-content-layout-height, 0px)
-    - var(--top-horizontal-menu-height)
-    - var(--pad-md) - var(--pad-md));
-  
-  > div {
-    width: var(--screen-content-width);
-    
-    > div.jk-tabs-layout {
-      .jk-tabs-layout {
-        height: 100%;
-      }
-      
-      height: var(--second-content-layout-min-height, 100%);
-      overflow: hidden;
-      
-      > div.jk-tabs-header:first-child {
-        &:before {
-          border: none;
-          content: none;
-        }
-      }
-      
-      &:before {
-        display: none;
-      }
-      
-      > .jk-tabs-content {
-        box-sizing: border-box;
-        background-color: var(--t-color-white);
-        border-radius: 0 var(--border-radius-inline) var(--border-radius-inline) var(--border-radius-inline);
-        --tab-content-min-height: calc(var(--second-content-layout-min-height, 100%) - var(--tabs-header-height));
-        min-height: var(--tab-content-min-height);
-        border: 1px solid var(--t-color-gray-6);
-  
-        > div > div {
-          height: 100%;
-          overflow-x: auto;
-        }
-  
-        > div {
-          min-height: var(--tab-content-min-height);
-          height: var(--tab-content-min-height);
-    
-          > .jk-code-mirror-editor-layout {
-            height: var(--tab-content-min-height);
-          }
-        }
-        
-        .jk-view-container {
-          &.rows {
-            border-top: 1px solid var(--t-color-gray-6);
-          }
-  
-          border-radius: 0;
-          box-shadow: none;
-          box-sizing: border-box;
-        }
-      }
-    }
-  }
-}
-
-.need-help-container {
+.bottom-badge-with-animation { // not used
   z-index: 1000;
   padding: var(--pad-xt);
   position: fixed;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   bottom: 0;
-  right: var(--pad-m);
   background: var(--t-color-accent);
   height: calc(24px);
   width: calc(24px);
   overflow: hidden;
   @include transition(height);
+  right: var(--pad-m);
+  @include sm { right: calc(var(--pad-xh) + var(--pad-xh)); }
   
   .close {
     display: none;
@@ -214,7 +138,7 @@
     @include transition(width);
     height: calc(96px + 24px);
     width: 240px;
-  
+    
     .close {
       display: initial;
     }
