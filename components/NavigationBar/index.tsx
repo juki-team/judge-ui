@@ -118,6 +118,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       });
     }
   }, [isLogged, query]);
+  const [helpOpen, setHelpOpen] = useState(false);
   
   const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace('white', 'color') : imageUrl;
   
@@ -150,7 +151,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
               <div
                 className="jk-col stretch gap settings-apps-login-user-content nowrap pad-top-bottom"
               >
-                <SettingsSection isOpen={isOpen} isMobile={false} />
+                <SettingsSection isOpen={isOpen} isMobile={false} helpOpen={helpOpen} setHelpOpen={setHelpOpen} />
                 <LoginUser collapsed={!isOpen} />
               </div>
             );
