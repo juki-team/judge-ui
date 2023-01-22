@@ -56,6 +56,7 @@ export const PagedDataViewer = <T, V = T>({
       name={name}
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={extraNodes}
+      extraNodesFloating
       searchParamsObject={queryObject}
       setSearchParamsObject={setSearchParamsObject}
       pagination={{ total: lastTotalRef.current, pageSizeOptions: [16, 32, 64, 128, 256, 512] }}

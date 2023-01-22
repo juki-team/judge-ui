@@ -11,6 +11,7 @@ import {
   ProblemInfo,
   ProblemStatement,
   ProblemSubmissions,
+  ProblemMySubmissions,
   T,
   TabsInline,
   TwoContentSection,
@@ -75,7 +76,7 @@ const ProblemView = (): ReactNode => {
             tabs[ProblemTab.MY_SUBMISSIONS] = {
               key: ProblemTab.MY_SUBMISSIONS,
               header: <T className="ws-np tt-ce">my submissions</T>,
-              body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} mySubmissions /></div>,
+              body: <div className="pad-top-bottom pad-left-right"><ProblemMySubmissions problem={problem} /></div>,
             };
           }
           tabs[ProblemTab.SUBMISSIONS] = {

@@ -1,16 +1,16 @@
-import { Breadcrumbs, CompetitionsList, ContestList, T, TabsInline, TwoContentSection } from 'components';
+import { Breadcrumbs, CompetitionsList, ContestList, CreateContestButton, T, TabsInline, TwoContentSection } from 'components';
 import { ROUTES } from 'config/constants';
-import { useRouter, useTrackLastPath } from 'hooks';
+import { useJukiBase, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { ContestsTab, LastLinkKey } from 'types';
 
 function Contests() {
   
   useTrackLastPath(LastLinkKey.CONTESTS);
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
-  const { isReady, query: { tab: contestsTab, ...query }, push, pathname } = useRouter();
-  
+  const { isReady, query: { tab: contestsTab, ...query }, push } = useRouter();
+  const { user: { canCreateContest } } = useJukiBase();
   useEffect(() => {
     if (isReady && (contestsTab !== ContestsTab.CONTESTS && contestsTab !== ContestsTab.COMPETITIONS)) {
       push({
@@ -49,6 +49,10 @@ function Contests() {
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <T className="tt-se">contests</T>,
   ];
+  const extraNodes = [];
+  if (canCreateContest) {
+    extraNodes.push(<CreateContestButton />);
+  }
   return (
     <TwoContentSection>
       <div>
@@ -57,7 +61,7 @@ function Contests() {
           <h1><T>contests</T></h1>
         </div>
         <div className="pad-left-right">
-          <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={contestsTab} />
+          <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={contestsTab} extraNodes={extraNodes} />
         </div>
       </div>
       {tabs[contestsTab as ContestsTab]?.body}

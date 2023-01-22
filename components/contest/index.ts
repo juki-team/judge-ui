@@ -1,5 +1,5 @@
+export * from './commons';
 export * from './editContest';
 export * from './list';
-export * from './view/ViewOverview';
+export * from './view';
 export * from './Information';
-export * from './view/ViewProblems';

@@ -12,6 +12,7 @@ export const CreateContestButton = () => {
       size="small"
       icon={<PlusIcon />}
       onClick={buttonLoaderLink(() => push(ROUTES.CONTESTS.CREATE()))}
+      responsiveMobile
     >
       <T>create</T>
     </ButtonLoader>

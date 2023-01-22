@@ -4,7 +4,7 @@ import { searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useJukiBase, useRouter } from 'hooks';
 import { useMemo } from 'react';
 import { ContentsResponseType, ContestSummaryListResponseDTO, DataViewerHeadersType } from 'types';
-import { contestantsColumn, contestNameColumn, CreateContestButton } from '../commons';
+import { contestantsColumn, contestNameColumn } from '../commons';
 
 export const CompetitionsList = () => {
   const { user: { canCreateContest } } = useJukiBase();
@@ -23,11 +23,6 @@ export const CompetitionsList = () => {
   
   const data: ContestSummaryListResponseDTO[] = (response?.success ? response?.contents : []);
   
-  const extraNodes = [];
-  if (canCreateContest) {
-    extraNodes.push(<CreateContestButton />);
-  }
-  
   return (
     <DataViewer<ContestSummaryListResponseDTO>
       headers={columns}
@@ -36,9 +31,9 @@ export const CompetitionsList = () => {
       request={request}
       setLoaderStatusRef={setLoaderStatusRef}
       name={QueryParam.ENDLESS_CONTESTS_TABLE}
-      extraNodes={extraNodes}
       searchParamsObject={queryObject}
       setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
+      extraNodesFloating
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

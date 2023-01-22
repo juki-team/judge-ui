@@ -1,10 +1,9 @@
 import { DateLiteral, Field, PagedDataViewer, T, TextHeadCell } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { isEndlessContest, toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiBase } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, GetUrl } from 'types';
-import { contestantsColumn, contestNameColumn, CreateContestButton } from '../commons';
+import { contestantsColumn, contestNameColumn } from '../commons';
 
 const stateMap = {
   [[true, false, false, false].toString()]: { order: 0, label: 'past', color: 'gray-6' },
@@ -14,7 +13,6 @@ const stateMap = {
 };
 
 export const ContestList = ({ endless }: { endless?: boolean }) => {
-  const { user: { canCreateContest } } = useJukiBase();
   
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     {
@@ -68,18 +66,12 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
     JUDGE_API_V1.CONTEST.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
   );
   
-  const extraNodes = [];
-  if (canCreateContest) {
-    extraNodes.push(<CreateContestButton />);
-  }
-  
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
       headers={columns}
       url={url}
       name={endless ? QueryParam.ENDLESS_CONTESTS_TABLE : QueryParam.CONTESTS_TABLE}
       refreshInterval={60000}
-      extraNodes={extraNodes}
     />
   );
 };

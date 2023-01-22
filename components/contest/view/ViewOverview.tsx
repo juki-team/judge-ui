@@ -43,6 +43,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
         'jk-row': viewPortSize !== 'sm',
         'jk-col': viewPortSize === 'sm',
       })}
+      style={{ height: 'auto' }}
     >
       <div className="flex-5">
         <MdMathViewer

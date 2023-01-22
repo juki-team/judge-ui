@@ -129,6 +129,7 @@ function Ranking() {
         <DataViewer<UserRankResponseDTO>
           headers={columns}
           data={data}
+          rowsView={viewPortSize !== 'sm'}
           rows={{ height: 68 }}
           request={request}
           name={QueryParam.RANKING_TABLE}

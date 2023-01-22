@@ -1,22 +1,23 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
 import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
+import { useJukiBase } from 'hooks';
 import { useMemo } from 'react';
 import { ContestResponseDTO, DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
 import {
   submissionDateColumn,
   submissionLanguage,
   submissionMemoryUsed,
-  submissionNickname,
   submissionProblemColumn,
   submissionTimeUsed,
   submissionVerdict,
 } from '../../submissions';
 
-export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDTO }) => {
+export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponseDTO }) => {
+  
+  const { user: { nickname } } = useJukiBase();
   
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
-    submissionNickname(),
     submissionProblemColumn({
       header: {
         filter: {
@@ -40,7 +41,7 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
   const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => {
     const filterUrl = toFilterUrl(filter);
     const sortUrl = toSortUrl(sort);
-    return JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, filterUrl, sortUrl);
+    return JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(contest?.key, nickname, page, pageSize, filterUrl, sortUrl);
   };
   
   return (
@@ -48,7 +49,7 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
       <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
         headers={columns}
         url={url}
-        name={QueryParam.STATUS_TABLE}
+        name={QueryParam.MY_STATUS_TABLE}
         toRow={submission => submission}
         refreshInterval={60000}
         getRowKey={({ data, index }) => data[index].submitId}

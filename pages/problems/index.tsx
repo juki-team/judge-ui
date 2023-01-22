@@ -189,6 +189,7 @@ function Problems() {
               <ButtonLoader
                 size="small"
                 icon={<PlusIcon />}
+                responsiveMobile
                 onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE()))}
               >
                 <T>create</T>

@@ -10,8 +10,9 @@ import {
   TwoContentSection,
   ViewOverview,
   ViewProblems,
+  LinkContests,
+  ViewProblemMySubmissions,
 } from 'components';
-import { LinkContests } from 'components/contest/commons';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { isEndlessContest } from 'helpers';
 import { useContestRouter, useJukiBase, useTrackLastPath } from 'hooks';
@@ -113,7 +114,7 @@ export function ContestView() {
           tabHeaders[ContestTab.MY_SUBMISSIONS] = {
             key: ContestTab.MY_SUBMISSIONS,
             header: <T className="tt-ce ws-np">my submissions</T>,
-            body: <ViewProblemSubmissions contest={contest} mySubmissions />,
+            body: <ViewProblemMySubmissions contest={contest} />,
           };
         }
         if (isAdmin || isJudge || contest.isLive || contest.isPast) {

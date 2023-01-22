@@ -1,3 +1,4 @@
+import { useJukiBase } from '@juki-team/base-ui';
 import { ButtonLoader, CheckIcon, CloseIcon, DataViewer, Field, OpenInNewIcon, T, TextField, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
@@ -24,6 +25,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const { isJudge, isAdmin } = user || {};
   const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
+  const { viewPortSize } = useJukiBase();
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   const columns = useMemo(() => {
@@ -155,6 +157,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         headers={columns}
         data={data}
         rows={{ height: 70 }}
+        rowsView={viewPortSize !== 'sm'}
         name={QueryParam.ALL_USERS_TABLE}
         onRecordClick={async ({ isCard, data, index }) => {
           if (isCard) {
