@@ -161,6 +161,7 @@ export {
   useJukiBase,
   useFetcher,
 } from '@juki-team/base-ui';
+export { useResizeDetector } from 'react-resize-detector';
 export * from './contest';
 export * from './rejudge';
 export * from './task';

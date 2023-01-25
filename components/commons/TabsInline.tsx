@@ -1,35 +1,44 @@
-import { useJukiBase } from '@juki-team/base-ui';
 import { Button, NavigateBeforeIcon, NavigateNextIcon } from 'components';
 import { classNames, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useRef, useState } from 'react';
-import { useResizeDetector } from 'react-resize-detector';
+import { useJukiBase, useResizeDetector } from 'hooks';
+import { Children, useCallback, useEffect, useRef, useState } from 'react';
+
+export const WidthResizer = ({ Component, onOverflow, unOverflow, trigger }) => {
+  const { width = 0, ref } = useResizeDetector();
+  const widthRef = useRef(0);
+  useEffect(() => {
+    if (width && ref.current) {
+      if (ref.current?.scrollWidth > ref.current?.offsetWidth) {
+        widthRef.current = ref.current?.offsetWidth;
+        onOverflow();
+      } else if (ref.current?.scrollWidth === ref.current?.offsetWidth) {
+        if (ref.current?.offsetWidth > widthRef.current) {
+          unOverflow();
+        }
+      }
+    }
+  }, [width, onOverflow, unOverflow, trigger]);
+  
+  return (
+    <Component reference={ref} />
+  );
+};
 
 export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, tabSelected, pushTab, extraNodes? }) => {
-  const { width: widthTabs = 0, ref: refTabs } = useResizeDetector();
+  
   const { viewPortSize } = useJukiBase();
   const tabsLength = Object.keys(tabs).length;
   const [tabsSize, setTabsSize] = useState(tabsLength);
   const [tabStartIndex, setTabStartIndex] = useState(0);
-  const flagRef = useRef(0);
   useEffect(() => {
-    if (widthTabs && refTabs.current) {
-      if (refTabs.current?.scrollWidth > refTabs.current?.offsetWidth) {
-        setTabsSize(prevState => Math.max(prevState - 1, 1));
-        flagRef.current = refTabs.current?.offsetWidth;
-      } else if (refTabs.current?.scrollWidth === refTabs.current?.offsetWidth) {
-        if (refTabs.current?.offsetWidth > flagRef.current) {
-          setTabsSize(prevState => Math.min(prevState + 1, tabsLength));
-        }
-      }
-    }
-    if (tabsSize === tabsLength) {
+    if (tabsSize >= tabsLength) {
       setTabStartIndex(0);
     }
-  }, [tabsSize, widthTabs, tabsLength, tabStartIndex]);
+  }, [tabsSize, tabsLength, tabStartIndex]);
   
   const withArrows = tabsSize !== tabsLength;
   
-  return (
+  const Component = ({ reference }) => (
     <div className="jk-row gap space-between nowrap jk-tabs-inline extend">
       <div className="jk-row left gap extend">
         {withArrows && (
@@ -47,16 +56,16 @@ export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, t
             'block flex-1': withArrows,
             'block extend': viewPortSize === 'sm',
           })}
-          ref={refTabs}
+          ref={reference}
         >
-          {Object.values(tabs).slice(tabStartIndex, tabStartIndex + tabsSize).map(({ key, header }) => (
+          {Children.toArray(Object.values(tabs).slice(tabStartIndex, tabStartIndex + tabsSize).map(({ key, header }) => (
             <div
               onClick={tabKey => pushTab(key)}
               className={classNames('jk-row stretch', { selected: key === tabSelected /*contestsTab*/ })}
             >
               {header}
             </div>
-          ))}
+          )))}
         </div>
         {withArrows && (
           <Button
@@ -71,17 +80,29 @@ export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, t
       </div>
       {viewPortSize === 'sm' ? (
         <div className="jk-col gap nowrap" style={{ position: 'absolute', bottom: 'var(--pad-t)', right: 'var(--pad-t)' }}>
-          {extraNodes?.map(action => (
+          {Children.toArray(extraNodes?.map(action => (
             renderReactNodeOrFunctionP1(action, { selectedTabKey: tabSelected })
-          ))}
+          )))}
         </div>
       ) : (
         <div className="jk-row gap nowrap">
-          {extraNodes?.map(action => (
+          {Children.toArray(extraNodes?.map(action => (
             renderReactNodeOrFunctionP1(action, { selectedTabKey: tabSelected })
-          ))}
+          )))}
         </div>
       )}
     </div>
+  );
+  
+  const onOverflow = useCallback(() => setTabsSize(prevState => Math.max(prevState - 1, 1)), []);
+  const unOverflow = useCallback(() => setTabsSize(prevState => Math.min(prevState + 1, tabsLength)), [tabsLength]);
+  
+  return (
+    <WidthResizer
+      onOverflow={onOverflow}
+      unOverflow={unOverflow}
+      Component={Component}
+      trigger={tabsLength}
+    />
   );
 };

@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { useRouter } from 'hooks';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Children, Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 const Runner = ({ sheet, setSheet, editable }) => {
   const [languageEditor, setLanguageEditor] = useState(ProgrammingLanguage.CPP17);
@@ -68,7 +68,7 @@ export const SheetPage = ({
   return (
     <div className="jk-col gap stretch">
       <div className="jk-col stretch sheet-page">
-        {sheets.map((sheet, index) => {
+        {Children.toArray(sheets.map((sheet, index) => {
             const upButton = (
               <Button
                 icon={<ArrowUpwardIcon />}
@@ -149,7 +149,7 @@ export const SheetPage = ({
               </div>
             );
           },
-        )}
+        ))}
       </div>
       {setSheets && (
         <div className="jk-row gap extend nowrap">

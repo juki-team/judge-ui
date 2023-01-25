@@ -9,9 +9,9 @@ import {
   Popover,
   ProblemCodeEditor,
   ProblemInfo,
+  ProblemMySubmissions,
   ProblemStatement,
   ProblemSubmissions,
-  ProblemMySubmissions,
   T,
   TabsInline,
   TwoContentSection,
@@ -87,7 +87,10 @@ const ProblemView = (): ReactNode => {
           const breadcrumbs = [
             <Link href="/" className="link"><T className="tt-se">home</T></Link>,
             <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
-            <T className="tt-se">{query.tab as string}</T>,
+            <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} className="link">
+              <div className="ws-np">{problem.name}</div>
+            </Link>,
+            tabs[query.tab as string]?.header,
           ];
           
           const pushTab = (tabKey) => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabKey as ProblemTab), query });

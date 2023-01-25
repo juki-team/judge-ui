@@ -68,16 +68,18 @@ export default function Home() {
           {/*<link rel="icon" href="/favicon.ico" />*/}
         </Head>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row extend stretch gap">
+        <div className="pad-left-right jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
           <div className="jk-row"><h1 style={{ padding: 'var(--pad-md) 0' }}><T>welcome to Juki Judge</T></h1></div>
-          <div className="jk-pad-sm"><JukiCourtImage /></div>
+          <div className=""><JukiCourtImage /></div>
         </div>
       </div>
-      <div className="jk-row extend center gap jk-pad-lg">
-        <div className="jk-pad-md"><JukiCompleteLaptopImage /></div>
-        <div className="jk-col gap ta-cr">
-          <h3><T>competitive programmers home</T></h3>
-          <p>Juki Judge <T>is designed to make people improve their programming skills</T></p>
+      <div className="pad-left-right pad-top-bottom">
+        <div className="jk-row nowrap center top extend gap">
+          <div className="jk-pad-md"><JukiCompleteLaptopImage /></div>
+          <div className="jk-col gap ta-cr">
+            <h3><T>competitive programmers home</T></h3>
+            <p>Juki Judge <T>is designed to make people improve their programming skills</T></p>
+          </div>
         </div>
       </div>
     </TwoContentSection>

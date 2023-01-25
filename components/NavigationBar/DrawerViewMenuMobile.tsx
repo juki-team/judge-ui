@@ -1,7 +1,7 @@
 import { ArrowBackIcon, CloseIcon, Image, T } from 'components';
 import { classNames, renderReactNodeOrFunction, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiBase } from 'hooks';
-import React, { useState } from 'react';
+import React, { Children, useState } from 'react';
 import { HelpSection } from './HelpSection';
 import { SettingsSection } from './SettingsSection';
 
@@ -45,7 +45,7 @@ export const DrawerViewMenuMobile = ({ close, menu, logoImageUrl }) => {
       ) : (
         <>
           <div className="jk-menu-items jk-col gap stretch top pad-left-right pad-top-bottom flex-1">
-            {menu.map((menu, index) => {
+            {Children.toArray(menu.map((menu, index) => {
               const menuItem = (
                 <div
                   className={classNames('jk-menu-item jk-row extend gap nowrap left jk-border-radius-inline', {
@@ -59,7 +59,7 @@ export const DrawerViewMenuMobile = ({ close, menu, logoImageUrl }) => {
                 </div>
               );
               return renderReactNodeOrFunctionP1(menu.menuItemWrapper, menuItem);
-            })}
+            }))}
           </div>
           <div className="jk-divider pad-left-right" style={{ boxSizing: 'border-box' }} />
           <div className="jk-row extend block">

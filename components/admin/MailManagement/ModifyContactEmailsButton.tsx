@@ -32,7 +32,7 @@ export const ModifyContactEmailsButton = ({ contactEmails: initialContactEmails,
               </div>
             )}
             {contactEmails.map((contactEmail, index) => (
-              <div className="jk-row block jk-table-inline-row">
+              <div className="jk-row block jk-table-inline-row" key={contactEmail}>
                 <div className="jk-row">{index + 1}</div>
                 <div className="jk-row">
                   <Input

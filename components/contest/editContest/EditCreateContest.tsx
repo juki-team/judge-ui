@@ -162,7 +162,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       </Link>,
     );
   }
-  breadcrumbs.push(<div><T className="tt-se">{contestTab as string}</T></div>);
+  breadcrumbs.push(tabHeaders[contestTab]?.header);
   
   return (
     <TwoContentSection>

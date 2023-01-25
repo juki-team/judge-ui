@@ -169,7 +169,7 @@ export function ContestView() {
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
           <LinkContests><T className="tt-se">contests</T></LinkContests>,
           <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }} className="link">
-            <div>{contest.name}</div>
+            <div className="ws-np">{contest.name}</div>
           </Link>,
         ];
         if (contestTab === ContestTab.PROBLEM) {
@@ -180,7 +180,7 @@ export function ContestView() {
           );
           breadcrumbs.push(<div>{lastProblemVisited}</div>);
         } else {
-          breadcrumbs.push(<div><T className="tt-se">{contestTab as string}</T></div>);
+          breadcrumbs.push(<div><T className="tt-se">{tabHeaders[contestTab as ContestTab]?.header}</T></div>);
         }
   
         return (

@@ -1,3 +1,4 @@
+import { LoadingIcon } from 'components';
 import ImageComp from 'next/image';
 import { CSSProperties } from 'react';
 
@@ -14,14 +15,17 @@ export const Image = ({ src, className, alt, height, width, style }: ImageProps)
   // {/*<span className="next-js-image">*/}
   // {/*    /!*<img src={src} className={className} alt={alt} width={width} height={height} style={style} />*!/*/}
   // </span>
-  return (
-    <ImageComp
-      src={src}
-      className={className}
-      alt={alt}
-      height={height}
-      width={width}
-      style={style}
-    />
-  );
+  if (src) {
+    return (
+      <ImageComp
+        src={src}
+        className={className}
+        alt={alt}
+        height={height}
+        width={width}
+        style={style}
+      />
+    );
+  }
+  return <LoadingIcon />;
 };

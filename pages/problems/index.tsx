@@ -101,7 +101,7 @@ function Problems() {
       index: 'tags',
       field: ({ record: { tags }, isCard }) => (
         <Field className={classNames('jk-row gap', { center: isCard, left: !isCard })}>
-          {tags.map(tag => !!tag && <div className="jk-tag gray-6 tx-s">{tag}</div>)}
+          {tags.filter(tag => !!tag).map(tag => <div className="jk-tag gray-6 tx-s" key={tag}>{tag}</div>)}
         </Field>
       ),
       filter: {

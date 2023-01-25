@@ -106,7 +106,7 @@ export const GenerateUsersModal = ({ isOpen, onClose }) => {
             </div>
           )}
           {users.map((user, index) => (
-            <div className="jk-row block jk-table-inline-row">
+            <div className="jk-row block jk-table-inline-row" key={user.nickname}>
               <div className="jk-row">{index + 1}</div>
               <div className="jk-row">{user.nickname}</div>
               <div className="jk-row">{user.email}</div>

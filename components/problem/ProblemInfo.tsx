@@ -1,6 +1,7 @@
 import { Popover, T } from 'components';
 import { PROBLEM_MODE, PROBLEM_STATUS, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames } from 'helpers';
+import { Children } from 'react';
 import { ProblemMode, ProblemSettingsType, ProblemStatus } from 'types';
 
 export interface ProblemInfoProps {
@@ -30,22 +31,28 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
       </div>
     </>
   );
-  
+  const languages = Object.values(settings?.byProgrammingLanguage || {});
   const limits = () => {
-    const languages = Object.values(settings?.byProgrammingLanguage || {});
-    
+    const limitsLanguages = languages.filter(({
+      memoryLimit,
+      timeLimit,
+    }) => memoryLimit !== settings.memoryLimit || timeLimit !== settings.timeLimit);
     return (
       <>
         <div>
-          <span className="label fw-br tt-ce"><T>time limit</T></span>
-          <div className="problem-sub-info">
-            <div>
-              <span className="label fw-bd tt-se"><T>general</T>:</span>
-              {(settings?.timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T>
+          <T className="fw-bd tt-ce">time limit</T>:&nbsp;
+          {!!limitsLanguages.length ? (
+            <div className="problem-sub-info">
+              <div>
+                <T className="fw-bd tt-se">general</T>:&nbsp;
+                {(settings?.timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T>
+              </div>
             </div>
-          </div>
+          ) : (
+            <>{(settings?.timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T></>
+          )}
           <div className="problem-sub-info">
-            {languages.map((language) => (
+            {limitsLanguages.map((language) => (
               <div key={language.language}>
                 <span className="label fw-bd">{PROGRAMMING_LANGUAGE[language.language]?.label}:</span>
                 {(language?.timeLimit / 1000).toFixed(1)}&nbsp;<T>seconds</T>
@@ -54,15 +61,19 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
           </div>
         </div>
         <div>
-          <span className="label fw-br tt-ce"><T>memory limit</T></span>
-          <div className="problem-sub-info">
-            <div>
-              <span className="label fw-bd tt-se"><T>general</T>:</span>
-              {(settings?.memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T>
+          <T className="fw-bd tt-ce">memory limit</T>:&nbsp;
+          {!!limitsLanguages.length ? (
+            <div className="problem-sub-info">
+              <div>
+                <T className="fw-bd tt-se">general</T>:&nbsp;
+                {(settings?.memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T>
+              </div>
             </div>
-          </div>
+          ) : (
+            <>{(settings?.memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T></>
+          )}
           <div className="problem-sub-info">
-            {languages.map((language) => (
+            {limitsLanguages.map((language) => (
               <div key={language.language}>
                 <span className="label fw-bd">{PROGRAMMING_LANGUAGE[language.language]?.label}:</span>
                 {(language?.memoryLimit / 1000).toFixed(1)}&nbsp;<T>MB</T>
@@ -83,12 +94,20 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
       horizontal,
     })}>
       {limits()}
+      {!!languages.length && (
+        <div>
+          <T className="fw-bd tt-ce">languages</T>:&nbsp;
+          {Children.toArray(languages.map(({ language }) => (
+            <><span className="jk-tag gray-6">{PROGRAMMING_LANGUAGE[language].label}</span>&nbsp;</>
+          )))}
+        </div>
+      )}
       <div>
-        <span className="label fw-br tt-ce"><T>type</T><span>:</span></span>
+        <T className="fw-bd tt-ce">type</T>:&nbsp;
         <T className="tt-ce">{PROBLEM_TYPE[settings?.type]?.label}</T>
       </div>
       <div>
-        <span className="label fw-br tt-ce"><T>mode</T><span>:</span></span>
+        <T className="fw-bd tt-ce">mode</T>:&nbsp;
         {(horizontal && settings?.mode === ProblemMode.SUBTASK) ? (
           <Popover
             content={<div className="groups-popover">{subTasks}</div>}
@@ -101,7 +120,7 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
       </div>
       {!!tags?.length && (
         <div>
-          <span className="label fw-br tt-ce"><T>tags</T><span>:</span></span>
+          <T className="fw-bd tt-ce">tags</T>:&nbsp;
           {horizontal ? (
             <Popover
               content={
@@ -114,21 +133,20 @@ export const ProblemInfo = ({ settings, tags, author, status, horizontal = false
               <div><span className="count-tags">{tags.length}</span></div>
             </Popover>
           ) : (
-            <span className="jk-row left gap">
-              {tags.filter(tag => !!tag.trim()).map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}
-            </span>
+            Children.toArray(tags.filter(tag => !!tag.trim()).map(tag => (
+              <><span className="jk-tag gray-6">{tag}</span>&nbsp;</>
+            )))
           )}
         </div>
       )}
       {author && (
         <div>
-          <span className="label fw-br tt-ce"><T>author</T><span>:</span></span>
-          {author}
+          <T className="fw-bd tt-ce">author</T>:&nbsp;{author}
         </div>
       )}
       {status && (
         <div>
-          <span className="label fw-br tt-ce"><T>visibility</T><span>:</span></span>
+          <T className="fw-bd tt-ce">visibility</T>:&nbsp;
           <T className="tt-ce">{PROBLEM_STATUS[status]?.label}</T>
         </div>
       )}

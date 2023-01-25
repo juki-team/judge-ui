@@ -158,7 +158,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           }}
           drawerMenuMobile={(props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} />}
           rightMobile={{
-            children: <LoginUser collapsed={false} />,
+            children: <div className="jk-row"><LoginUser collapsed={false} /></div>,
           }}
           centerMobile={{
             children: (
