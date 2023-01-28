@@ -103,7 +103,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       header: <T className="tt-ce">settings</T>,
       body: (
         <div className="pad-top-bottom pad-left-right">
-          <EditSettings contest={contest} setContest={setContest} />,
+          <EditSettings contest={contest} setContest={setContest} />
         </div>
       ),
     },
@@ -112,7 +112,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       header: <T className="tt-ce">members</T>,
       body: (
         <div className="pad-top-bottom pad-left-right">
-          <EditMembers contest={contest} setContest={setContest} editing={editing} />,
+          <EditMembers contest={contest} setContest={setContest} editing={editing} />
         </div>
       ),
     },

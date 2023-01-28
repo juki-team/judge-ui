@@ -29,23 +29,14 @@ body {
   min-width: 200px;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-a:active {
-  color: var(--t-color-primary-light);
-}
-
 .notification-wrapper {
-  margin-top: var(--top-horizontal-menu-height);
+  //margin-top: var(--top-horizontal-menu-height);
   
   .message-content {
-    min-height: 42px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    //min-height: 42px;
+    //display: flex;
+    //justify-content: center;
+    //align-items: center;
   }
 }
 
