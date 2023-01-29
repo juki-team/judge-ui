@@ -143,8 +143,8 @@
       box-sizing: border-box;
       
       &.selected {
-        background-color: #E0EEFA;
-        
+        @extend .appearance-primary-light;
+  
         .jk-menu-item-label {
           font-weight: var(--weight-bold);
         }

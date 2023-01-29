@@ -52,6 +52,7 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
         toRow={submission => submission}
         refreshInterval={60000}
         getRowKey={({ data, index }) => data[index].submitId}
+        cards={{ width: 272 }}
       />
     </div>
   );

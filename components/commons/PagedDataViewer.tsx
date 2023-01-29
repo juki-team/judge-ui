@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetRecordKeyType, GetUrl, ReactNodeOrFunctionType } from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
+  cards?: { height?: number, width?: number },
   headers: DataViewerHeadersType<T>[],
   name: string,
   toRow?: (row: V, index: number) => T,
@@ -17,6 +18,7 @@ interface PagedDataViewerPros<T, V = T> {
 }
 
 export const PagedDataViewer = <T, V = T>({
+  cards,
   headers,
   name,
   toRow,
@@ -48,6 +50,7 @@ export const PagedDataViewer = <T, V = T>({
   
   return (
     <DataViewer<T>
+      cards={cards}
       headers={headers}
       data={toRow ? data.map(toRow) : data as unknown as T[]}
       rows={{ height: 68 }}

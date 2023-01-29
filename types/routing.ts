@@ -49,8 +49,11 @@ export enum ContestTab {
 }
 
 export enum ContestsTab {
-  CONTESTS = 'contests',
-  COMPETITIONS = 'competitions',
+  ALL = 'all',
+  ENDLESS = 'endless',
+  LIVE = 'live',
+  UPCOMING = 'upcoming',
+  PAST = 'past',
 }
 
 export type ContestParamsType = { key: string, tab: ContestTab, subTab?: string, subSubTab?: ProblemTab };

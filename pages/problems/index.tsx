@@ -50,17 +50,17 @@ function Problems() {
       ),
       sort: true,
       filter: { type: 'text' },
-      cardPosition: 'center',
+      cardPosition: 'top',
       minWidth: 120,
     },
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} className="left" />,
       index: 'name',
-      field: ({ record: { key, name, user } }) => (
-        <Field className="jk-row link fw-bd left">
+      field: ({ record: { key, name, user }, isCard }) => (
+        <Field className={classNames('jk-row link fw-bd jk-pad-sm', { left: !isCard, center: isCard })}>
           <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
             <div className="jk-row gap nowrap">
-              <div className="jk-row left" style={{ textAlign: 'left' }}>{name}</div>
+              <div className="jk-row">{name}</div>
               {user.solved ? (
                 <Popover
                   content={<T className="tt-se ws-np">solved</T>}
@@ -108,7 +108,7 @@ function Problems() {
         type: 'select',
         options: (tags?.success ? tags.contents : []).map(tag => ({ value: tag, label: tag })),
       } as FilterSelectOnlineType,
-      cardPosition: 'bottom',
+      cardPosition: 'center',
       minWidth: 250,
     },
     ...(canCreateProblem ? [
@@ -117,8 +117,8 @@ function Problems() {
         index: 'status',
         field: ({ record: { status } }) => (
           <TextField
-            text={<T className="tt-ce">{PROBLEM_STATUS[status].label}</T>}
-            label={<T className="tt-ue">visibility</T>}
+            text={<T className="tt-se">{PROBLEM_STATUS[status].label}</T>}
+            label={<T className="tt-se">visibility</T>}
           />
         ),
         sort: true,
@@ -131,10 +131,10 @@ function Problems() {
             ProblemStatus.PUBLIC,
           ] as ProblemStatus[]).map(status => ({
             value: status,
-            label: <T className="tt-ce">{PROBLEM_STATUS[status].label}</T>,
+            label: <T className="tt-se">{PROBLEM_STATUS[status].label}</T>,
           })),
         },
-        cardPosition: 'topLeft',
+        cardPosition: 'bottomLeft',
         minWidth: 180,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
       {
@@ -148,12 +148,12 @@ function Problems() {
                 <div className="link">{ownerUserNickname}</div>
               </UserNicknameLink>
             }
-            label={<T className="tt-ue">nickname</T>}
+            label={<T className="tt-se">nickname</T>}
           />
         ),
         sort: true,
         filter: { type: 'text-auto' },
-        cardPosition: 'topRight',
+        cardPosition: 'bottomRight',
         minWidth: 200,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),
@@ -196,6 +196,7 @@ function Problems() {
               </ButtonLoader>,
             ] : []),
           ]}
+          cards={{ height: 256 }}
         />
       </div>
     </TwoContentSection>

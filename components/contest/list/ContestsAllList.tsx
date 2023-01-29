@@ -1,6 +1,6 @@
-import { DateLiteral, Field, PagedDataViewer, T, TextHeadCell } from 'components';
+import { contestDateColumn, Field, PagedDataViewer, T, TextHeadCell } from 'components';
 import { JUDGE_API_V1, QueryParam } from 'config/constants';
-import { isEndlessContest, toFilterUrl, toSortUrl } from 'helpers';
+import { toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, GetUrl } from 'types';
 import { contestantsColumn, contestNameColumn } from '../commons';
@@ -12,7 +12,7 @@ const stateMap = {
   [[false, false, false, true].toString()]: { order: 3, label: 'endless', color: 'info-light' },
 };
 
-export const ContestList = ({ endless }: { endless?: boolean }) => {
+export const ContestsAllList = () => {
   
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     {
@@ -24,13 +24,13 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
             contest.isPast,
             contest.isLive,
             contest.isFuture,
-            isEndlessContest(contest),
+            contest.isEndless,
           ].toString()].color}`}>
             <T className="tt-ue tx-s">{stateMap[[
               contest.isPast,
               contest.isLive,
               contest.isFuture,
-              isEndlessContest(contest),
+              contest.isEndless,
             ].toString()].label}</T>
           </div>
         </Field>
@@ -45,20 +45,7 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
       minWidth: 130,
     },
     contestNameColumn(false),
-    {
-      head: <TextHeadCell text={<div className="jk-col tt-ue tx-s"><T>start</T><T>end</T></div>} />,
-      index: 'date',
-      field: ({ record: { settings } }) => (
-        <Field className="jk-col">
-          <DateLiteral date={new Date(settings.startTimestamp)} show="year-month-day-hours-minutes" />
-          <DateLiteral date={new Date(settings.endTimestamp)} show="year-month-day-hours-minutes" />
-        </Field>
-      ),
-      sort: true,
-      filter: { type: 'date-range', pickerType: 'year-month-day-hours-minutes' },
-      cardPosition: 'center',
-      minWidth: 340,
-    },
+    contestDateColumn(),
     contestantsColumn(),
   ], []);
   
@@ -70,8 +57,9 @@ export const ContestList = ({ endless }: { endless?: boolean }) => {
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
       headers={columns}
       url={url}
-      name={endless ? QueryParam.ENDLESS_CONTESTS_TABLE : QueryParam.CONTESTS_TABLE}
+      name={QueryParam.ALL_CONTESTS_TABLE}
       refreshInterval={60000}
+      cards={{ width: 320 }}
     />
   );
 };

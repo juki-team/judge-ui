@@ -62,9 +62,6 @@ Oscar Arias | Problem Setter`,
   };
 };
 
-export const MAX_DATE = new Date(8640000000000000);
-export const MIN_DATE = new Date(0);
-
 export const CONTEST_TEMPLATE: { [key in ContestTemplate]: { value: ContestTemplate, label: string, description: string } } = {
   [ContestTemplate.CUSTOM]: { value: ContestTemplate.CUSTOM, label: 'custom', description: 'custom' },
   [ContestTemplate.CLASSIC]: { value: ContestTemplate.CLASSIC, label: 'classic', description: 'classic' },

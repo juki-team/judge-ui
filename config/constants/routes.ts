@@ -13,8 +13,13 @@ export enum QueryParam {
   ECS_DEFINITIONS_TASK_TABLE = 'edt',
   ECS_TASKS_TABLE = 'ett',
   LOGGED_USERS_TABLE = 'lut',
-  CONTESTS_TABLE = 'ctt',
+  // contests
+  ALL_CONTESTS_TABLE = 'act',
   ENDLESS_CONTESTS_TABLE = 'ect',
+  LIVE_CONTESTS_TABLE = 'lct',
+  UPCOMING_CONTESTS_TABLE = 'uct',
+  PAST_CONTESTS_TABLE = 'pct',
+  //
   SCOREBOARD_TABLE = 'sdt',
   PROBLEMS_TABLE = 'pmt',
   RANKING_TABLE = 'rgt',

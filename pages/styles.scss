@@ -119,8 +119,10 @@ li > * {
   line-height: 16px;
 }
 
-.text-head-field.jk-row.left, .field.jk-row.left {
-  margin-left: var(--pad-xt);
+.jk-view-container.rows {
+  .text-head-field.jk-row.left, .field.jk-row.left {
+    margin-left: var(--pad-xt);
+  }
 }
 
 .only-icon.jk-button-text {
@@ -176,6 +178,7 @@ li > * {
   padding-top: var(--pad-xt);
   padding-bottom: var(--pad-xt);
   border-bottom: 1px solid var(--t-color-gray-5);
+  box-sizing: border-box;
   
   .separator {
     padding: 0 4px;

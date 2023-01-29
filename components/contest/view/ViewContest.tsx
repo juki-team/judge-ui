@@ -3,18 +3,17 @@ import {
   ButtonLoader,
   EditIcon,
   FetcherLayer,
+  LinkContests,
   Popover,
   T,
   TabsInline,
   Timer,
   TwoContentSection,
   ViewOverview,
-  ViewProblems,
-  LinkContests,
   ViewProblemMySubmissions,
+  ViewProblems,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { isEndlessContest } from 'helpers';
 import { useContestRouter, useJukiBase, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -48,11 +47,10 @@ export function ContestView() {
             isContestant: false,
           },
         } = contest || {};
-        const isEndless = isEndlessContest(contest);
         let statusLabel = '';
         let tag = '';
         let timeInterval = 0;
-        if (isEndless) {
+        if (contest.isEndless) {
           tag = 'info-light';
           statusLabel = 'endless';
           timeInterval = -1;
@@ -69,7 +67,8 @@ export function ContestView() {
           statusLabel = 'live';
           timeInterval = contest.settings.endTimestamp - new Date().getTime();
         }
-        const literal = isEndless ? <T className="ws-np">endless</T> : (
+  
+        const literal = contest.isEndless ? <T className="ws-np">endless</T> : (
           <>
             {contest.isLive
               ? <T className="ws-np">ends in</T>
@@ -80,6 +79,7 @@ export function ContestView() {
             <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
           </>
         );
+  
         const allLiteralLabel = <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
           <T>{statusLabel}</T>,&nbsp;{literal}</div>;
         
@@ -180,7 +180,7 @@ export function ContestView() {
           );
           breadcrumbs.push(<div>{lastProblemVisited}</div>);
         } else {
-          breadcrumbs.push(<div><T className="tt-se">{tabHeaders[contestTab as ContestTab]?.header}</T></div>);
+          breadcrumbs.push(tabHeaders[contestTab as ContestTab]?.header);
         }
   
         return (

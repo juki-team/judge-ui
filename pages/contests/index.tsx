@@ -7,7 +7,7 @@ function Contests() {
   const { query, push, isReady } = useRouter();
   useEffect(() => {
     if (isReady) {
-      push(ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS));
+      push(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
     }
   }, [push, query, isReady]);
   return null;

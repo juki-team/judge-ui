@@ -1,3 +1,4 @@
+import { TextField } from '@juki-team/base-ui';
 import { ButtonLoader, DateField, Field, OpenInNewIcon, ReloadIcon, T, TextHeadCell, UserNicknameLink } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { useRejudgeServices } from 'hooks';
@@ -9,19 +10,22 @@ import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time, Verdict } from './utils';
 
 export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: <TextHeadCell text={<T>nickname</T>} />,
+  head: <TextHeadCell text={<T>user nickname</T>} />,
   index: 'nickname',
   field: ({ record: { userNickname, userImageUrl }, isCard }) => (
-    <Field className="jk-row center gap">
-      <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
-      <UserNicknameLink nickname={userNickname}>
-        <div className="link">{userNickname}</div>
-      </UserNicknameLink>
-    </Field>
+    <TextField
+      text={<>
+        <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
+        <UserNicknameLink nickname={userNickname}>
+          <div className="link">{userNickname}</div>
+        </UserNicknameLink>
+      </>}
+      label={<T className="tt-se">user nickname</T>}
+    />
   ),
   sort: true,
   filter: { type: 'text' },
-  cardPosition: 'center',
+  cardPosition: 'top',
   minWidth: 250,
 });
 
@@ -33,8 +37,8 @@ export const submissionContestColumn = (props?: { header?: Pick<DataViewerHeader
   ),
   index: 'contest',
   field: ({ record: { problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
-    <Field className="jk-row">
-      {contestKey ? (
+    <TextField
+      text={contestKey ? (
         <Link
           href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
           target={props?.blankTarget ? '_blank' : ''}
@@ -44,10 +48,11 @@ export const submissionContestColumn = (props?: { header?: Pick<DataViewerHeader
           </div>
         </Link>
       ) : <div className="jk-row">-</div>}
-    </Field>
+      label={<T className="tt-se">contest</T>}
+    />
   ),
   sort: true,
-  cardPosition: 'center',
+  cardPosition: 'top',
   minWidth: 280,
 });
 
@@ -57,8 +62,8 @@ export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeader
   ),
   index: 'problemJudgeKeys',
   field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
-    <Field className="jk-row">
-      {contestKey ? (
+    <TextField
+      text={contestKey ? (
         <Link
           href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
           target={props?.blankTarget ? '_blank' : ''}
@@ -79,11 +84,14 @@ export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeader
           <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}</div>
         </Link>
       )}
-    </Field>
+      label={props?.onlyProblem
+        ? <T className="tt-se">problem</T>
+        : <><T className="tt-se">problem</T> / <T className="tt-se">contest</T></>}
+    />
   ),
   sort: true,
   filter: props?.header?.filter,
-  cardPosition: 'center',
+  cardPosition: 'top',
   minWidth: 280,
 });
 
@@ -91,11 +99,12 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
   head: <TextHeadCell text={<T>lang</T>} />,
   index: 'language',
   field: ({ record: { submitId, canViewSourceCode, language }, isCard }) => (
-    <Field>
-      <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
-        <div className="jk-col extend">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
-      </SubmissionInfo>
-    </Field>
+    isCard ? null :
+      <Field>
+        <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
+          <div className="jk-col extend">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+        </SubmissionInfo>
+      </Field>
   ),
   sort: true,
   filter: {
@@ -124,10 +133,15 @@ export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<Su
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
     <Field>
-      <div className="jk-col gap extend">
-        <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
-          <Verdict verdict={verdict} points={points} status={status} />
-        </SubmissionInfo>
+      <div className="jk-col nowrap extend" style={{ padding: '4px 0', boxSizing: 'border-box' }}>
+        <TextField
+          text={<SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
+            <Verdict verdict={verdict} points={points} status={status} />
+          </SubmissionInfo>}
+          label={
+            <T className="tt-se">verdict</T>
+          }
+        />
         {canRejudge && <RejudgeButton submissionId={submitId} />}
       </div>
     </Field>
@@ -146,7 +160,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
   head: <TextHeadCell text={<T>date</T>} />,
   index: 'timestamp',
   field: ({ record: { timestamp }, isCard }) => (
-    <DateField className="jk-row" date={new Date(timestamp)} label={<T className="tt-ue">date</T>} />
+    <DateField className="jk-row" date={new Date(timestamp)} label={<T className="tt-se">date</T>} />
   ),
   sort: true,
   filter: {
@@ -161,14 +175,24 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
 export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>time</T>} />,
   index: 'timeUsed',
-  field: ({ record: { timeUsed, verdict, memoryUsed }, isCard }) => (
-    <Field className="jk-row center">
-      <Time timeUsed={timeUsed} verdict={verdict} />
-    </Field>
+  field: ({ record: { timeUsed, submitId, canViewSourceCode, language, verdict, memoryUsed }, isCard }) => (
+    isCard ? (
+        <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
+          <Field className="jk-row gap nowrap cr-g1">
+            <TextField
+              text={<div className="jk-col extend">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>}
+              label={<T className="tt-se">language</T>}
+            />
+            <TextField text={<Time timeUsed={timeUsed} verdict={verdict} />} label={<T className="tt-se">time used</T>} />
+            <TextField text={<Memory memoryUsed={memoryUsed} verdict={verdict} />} label={<T className="tt-se">memory used</T>} />
+          </Field>
+        </SubmissionInfo>
+      ) :
+      <TextField text={<Time timeUsed={timeUsed} verdict={verdict} />} label={<T>time used</T>} />
   ),
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
-  cardPosition: 'topLeft',
+  cardPosition: 'center',
   minWidth: 140,
 });
 
@@ -176,12 +200,10 @@ export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponse
   head: <TextHeadCell text={<T>memory</T>} />,
   index: 'memoryUsed',
   field: ({ record: { memoryUsed, verdict }, isCard }) => (
-    <Field className="jk-row center">
-      <Memory memoryUsed={memoryUsed} verdict={verdict} />
-    </Field>
+    isCard ? null : <TextField text={<Memory memoryUsed={memoryUsed} verdict={verdict} />} label={<T>memory used</T>} />
   ),
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
-  cardPosition: 'topRight',
+  cardPosition: 'center',
   minWidth: 140,
 });

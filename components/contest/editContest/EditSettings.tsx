@@ -10,7 +10,7 @@ import {
 } from 'config/constants';
 import { adjustContest, classNames, disableOutOfRange, getContestTemplate, isEndlessContest } from 'helpers';
 import React, { useState } from 'react';
-import { ContestTemplate } from '../../../types';
+import { ContestTemplate } from 'types';
 import { EditContestProps } from '../types';
 
 export const EditSettings = ({ contest, setContest }: EditContestProps) => {

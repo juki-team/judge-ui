@@ -160,7 +160,7 @@ const ProblemView = (): ReactNode => {
                     triggerOn="click"
                     placement="bottom"
                   >
-                    <div className="jk-row link"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
+                    <div className="jk-row link"><ExclamationIcon filledCircle className="cr-pl" rotate={180} /></div>
                   </Popover>
                 </div>
                 <div className="pad-left-right">

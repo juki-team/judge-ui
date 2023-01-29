@@ -1,4 +1,4 @@
-import { useJukiBase } from '@juki-team/base-ui';
+import { TextField, useJukiBase } from '@juki-team/base-ui';
 import { Breadcrumbs, DataViewer, Field, Image, T, TextHeadCell, TwoContentSection, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
@@ -14,9 +14,11 @@ function Ranking() {
       head: <TextHeadCell text={<T className="tt-ue tx-s">position</T>} />,
       index: 'key',
       field: ({ record: {}, isCard, recordIndex }) => (
-        <Field className="jk-row fw-br">
-          <div>{recordIndex + 1}</div>
-        </Field>
+        isCard ? null : (
+          <Field className="jk-row fw-br">
+            <div>{recordIndex + 1}</div>
+          </Field>
+        )
       ),
       cardPosition: 'top',
       minWidth: 80,
@@ -25,10 +27,11 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">nickname</T>} />,
       index: 'nickname',
-      field: ({ record: { nickname, imageUrl } }) => (
-        <Field className="jk-row link fw-bd">
+      field: ({ record: { nickname, imageUrl }, isCard, recordIndex }) => (
+        <Field className="jk-row link fw-bd gap">
+          {isCard && <div className="fw-br">{recordIndex + 1}</div>}
           <UserNicknameLink nickname={nickname}>
-            <div className="jk-row gap">
+            <div className="jk-row flex-1 gap">
               <Image src={imageUrl} className="jk-user-profile-img large elevation-1" alt={nickname} height={50} width={50} />
               {nickname}
             </div>
@@ -43,27 +46,33 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by problems</T>} />,
       index: 'problem-points',
-      field: ({ record: { problemPoints } }) => (
-        <Field className="jk-row center">
-          <div className="fw-bd">{problemPoints.toFixed(2)}</div>
-          &nbsp;<T>pnts</T>.
-        </Field>
+      field: ({ record: { problemPoints }, isCard }) => (
+        <TextField
+          text={<>
+            <div className="fw-bd">{problemPoints.toFixed(2)}</div>
+            &nbsp;<T>pnts</T>
+          </>}
+          label={<T className="tt-se">on problems</T>}
+        />
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.problemPoints - rowA.problemPoints },
-      cardPosition: 'center',
+      cardPosition: 'centerLeft',
       minWidth: 150,
     },
     {
       head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by competitions</T>} />,
       index: 'contest-points',
-      field: ({ record: { competitionPoints } }) => (
-        <Field className="jk-row center">
-          <div className="fw-bd">{competitionPoints?.toFixed(2)}</div>
-          &nbsp;<T>pnts</T>.
-        </Field>
+      field: ({ record: { competitionPoints }, isCard }) => (
+        <TextField
+          text={<>
+            <div className="fw-bd">{competitionPoints?.toFixed(2)}</div>
+            &nbsp;<T>pnts</T>
+          </>}
+          label={<T className="tt-se">on contests</T>}
+        />
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.competitionPoints - rowA.competitionPoints },
-      cardPosition: 'center',
+      cardPosition: 'centerRight',
       minWidth: 150,
     },
     {
@@ -136,6 +145,7 @@ function Ranking() {
           setLoaderStatusRef={setLoaderStatusRef}
           searchParamsObject={queryObject}
           setSearchParamsObject={setSearchParamsObject}
+          cards={{ height: 240 }}
           {...DEFAULT_DATA_VIEWER_PROPS}
         />
       </div>

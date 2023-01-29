@@ -40,7 +40,7 @@ export const TabsInline = ({ tabs, tabSelected, pushTab, extraNodes }: { tabs, t
   
   const Component = ({ reference }) => (
     <div className="jk-row gap space-between nowrap jk-tabs-inline extend">
-      <div className="jk-row left gap extend">
+      <div className="jk-row left gap flex-1">
         {withArrows && (
           <Button
             icon={<NavigateBeforeIcon />}

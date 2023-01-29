@@ -47,6 +47,7 @@ export const SettingsSection = ({
   };
   
   const loading = loader === Status.LOADING;
+  const isDark = settings?.[ProfileSettingOptions.THEME] === Theme.DARK;
   
   return (
     <>
@@ -78,13 +79,13 @@ export const SettingsSection = ({
         {loading
           ? <LoadingIcon style={{ margin: '0 var(--pad-xt)' }} />
           : (
-            settings?.[ProfileSettingOptions.THEME] === Theme.DARK
+            isDark
               ? <LightModeIcon style={{ margin: '0 var(--pad-xt)' }} />
               : <DarkModeIcon style={{ margin: '0 var(--pad-xt)' }} />
           )}
         {isOpen && (
           <div style={{ marginRight: 'var(--pad-xt)' }} className="flex-1 ta-cr">
-            {settings?.[ProfileSettingOptions.THEME] === Theme.DARK
+            {isDark
               ? <T className="tt-se">light mode</T>
               : <T className="tt-se">dark mode</T>}
           </div>
@@ -123,7 +124,7 @@ export const SettingsSection = ({
         content={
           <div className="jk-col gap more-apps-popover">
             <div className="semi-bold tt-se"><T>more apps coming soon</T></div>
-            <div className="jk-col gap cr-py">
+            <div className={classNames('jk-col gap ', { 'cr-py': !isDark, 'cr-b2': isDark })}>
               <div className="jk-row">
                 <JukiCouchLogoHorImage /> <LoadingIcon size="small" /> <T className="tt-se">developing</T>...
               </div>

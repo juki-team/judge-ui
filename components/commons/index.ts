@@ -128,6 +128,8 @@ export {
   ArrowRightIcon,
   ArrowBackIcon,
   ArrowForwardIcon,
+  EventIcon,
+  ScheduleIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore

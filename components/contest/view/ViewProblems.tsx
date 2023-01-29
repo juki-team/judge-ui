@@ -122,7 +122,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         head: <TextHeadCell text={<T>points</T>} />,
         index: 'points',
         field: ({ record: { points }, isCard }) => (
-          <TextField text={points} label={<T>points</T>} />
+          <TextField text={points} label={<T className="tt-se">points</T>} />
         ),
         sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
         cardPosition: 'bottomLeft',
@@ -134,7 +134,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         field: ({ record: { totalAttempts, totalSuccess }, isCard }) => (
           <TextField
             text={totalAttempts ? (totalSuccess / totalAttempts * 100).toFixed(1) + ' %' : '-'}
-            label={<T>success rate</T>}
+            label={<T className="tt-se">success rate</T>}
           />
         ),
         sort: {
@@ -172,6 +172,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
             return { borderTop: '6px solid ' + data[index]?.color };
           }
         }}
+        cards={{ height: 200 }}
         {...DEFAULT_DATA_VIEWER_PROPS}
       />
     </div>

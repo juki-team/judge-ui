@@ -1,4 +1,15 @@
-import { Breadcrumbs, CompetitionsList, ContestList, CreateContestButton, T, TabsInline, TwoContentSection } from 'components';
+import {
+  Breadcrumbs,
+  ContestsAllList,
+  ContestsEndlessList,
+  ContestsLiveList,
+  ContestsPastList,
+  ContestsUpcomingList,
+  CreateContestButton,
+  T,
+  TabsInline,
+  TwoContentSection,
+} from 'components';
 import { ROUTES } from 'config/constants';
 import { useJukiBase, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
@@ -12,9 +23,15 @@ function Contests() {
   const { isReady, query: { tab: contestsTab, ...query }, push } = useRouter();
   const { user: { canCreateContest } } = useJukiBase();
   useEffect(() => {
-    if (isReady && (contestsTab !== ContestsTab.CONTESTS && contestsTab !== ContestsTab.COMPETITIONS)) {
+    if (isReady && (![
+      ContestsTab.ALL,
+      ContestsTab.ENDLESS,
+      ContestsTab.LIVE,
+      ContestsTab.UPCOMING,
+      ContestsTab.PAST,
+    ].includes(contestsTab as ContestsTab))) {
       push({
-        pathname: ROUTES.CONTESTS.LIST(ContestsTab.CONTESTS),
+        pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
         query,
       }, undefined, { shallow: true });
     }
@@ -26,23 +43,50 @@ function Contests() {
   }, undefined, { shallow: true });
   
   const tabs = {
-    [ContestsTab.CONTESTS]: {
+    [ContestsTab.ALL]: {
       body: (
         <div className="pad-left-right pad-top-bottom">
-          <ContestList />
+          <ContestsAllList />
         </div>
       ),
-      key: ContestsTab.CONTESTS,
-      header: <T className="tt-se">contests</T>,
+      key: ContestsTab.ALL,
+      header: <T className="tt-se">all</T>,
     },
-    [ContestsTab.COMPETITIONS]: {
+    [ContestsTab.ENDLESS]: {
       body: (
         <div className="pad-left-right pad-top-bottom">
-          <CompetitionsList />
+          <ContestsEndlessList />
         </div>
       ),
-      key: ContestsTab.COMPETITIONS,
-      header: <T className="tt-se">competitions</T>,
+      key: ContestsTab.ENDLESS,
+      header: <T className="tt-se">endless</T>,
+    },
+    [ContestsTab.LIVE]: {
+      body: (
+        <div className="pad-left-right pad-top-bottom">
+          <ContestsLiveList />
+        </div>
+      ),
+      key: ContestsTab.LIVE,
+      header: <T className="tt-se">live</T>,
+    },
+    [ContestsTab.UPCOMING]: {
+      body: (
+        <div className="pad-left-right pad-top-bottom">
+          <ContestsUpcomingList />
+        </div>
+      ),
+      key: ContestsTab.UPCOMING,
+      header: <T className="tt-se">upcoming</T>,
+    },
+    [ContestsTab.PAST]: {
+      body: (
+        <div className="pad-left-right pad-top-bottom">
+          <ContestsPastList />
+        </div>
+      ),
+      key: ContestsTab.PAST,
+      header: <T className="tt-se">past</T>,
     },
   };
   const breadcrumbs = [

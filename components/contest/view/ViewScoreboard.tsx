@@ -20,7 +20,6 @@ import {
   downloadDataTableAsCsvFile,
   downloadXlsxAsFile,
   getProblemJudgeKey,
-  isEndlessContest,
   notifyResponse,
   searchParamsObjectTypeToQuery,
 } from 'helpers';
@@ -106,7 +105,6 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   const { user } = useJukiBase();
   const { addNotification } = useNotification();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
-  const isEndless = isEndlessContest(contest);
   const { viewPortSize } = useJukiBase();
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
@@ -146,7 +144,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
             <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
-            {!isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
+            {!contest.isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
           </Field>
         ),
         minWidth: 128,
@@ -190,7 +188,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                 )}
                 <div className="jk-row nowrap">
                   <div className="tx-xs">{problemData?.attempts || '-'}</div>
-                  {!isEndless && (
+                  {!contest.isEndless && (
                     <>
                       <span className="cr-g3">/</span>
                       <div className="tx-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
@@ -205,7 +203,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       }
     }
     return base;
-  }, [query, user.nickname, contest, isEndless, viewPortSize]);
+  }, [query, user.nickname, contest, viewPortSize]);
   
   const [unfrozen, setUnfrozen] = useState(false);
   const {
