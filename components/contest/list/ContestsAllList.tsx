@@ -25,13 +25,13 @@ export const ContestsAllList = () => {
             contest.isLive,
             contest.isFuture,
             contest.isEndless,
-          ].toString()].color}`}>
+          ].toString()]?.color}`}>
             <T className="tt-ue tx-s">{stateMap[[
               contest.isPast,
               contest.isLive,
               contest.isFuture,
               contest.isEndless,
-            ].toString()].label}</T>
+            ].toString()]?.label}</T>
           </div>
         </Field>
       ),
