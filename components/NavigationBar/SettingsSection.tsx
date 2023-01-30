@@ -1,3 +1,4 @@
+import { FlagEnImage, FlagEsImage } from '@juki-team/base-ui';
 import { UserSettingsType } from '@juki-team/commons';
 import {
   AppsIcon,
@@ -59,7 +60,7 @@ export const useToggleSetting = () => {
   };
 };
 
-export const LanguageSetting = ({ isOpen, popoverPlacement, small }) => {
+export const LanguageSelectSetting = ({ isOpen, popoverPlacement, small }) => {
   
   const { loading, toggleSetting, [ProfileSetting.LANGUAGE]: preferredLanguage } = useToggleSetting();
   
@@ -83,6 +84,40 @@ export const LanguageSetting = ({ isOpen, popoverPlacement, small }) => {
           extend={small}
         />
       </div>
+    </div>
+  );
+};
+
+export const LanguageSetting = ({ isOpen, popoverPlacement, small }) => {
+  
+  const { loading, toggleSetting, [ProfileSetting.LANGUAGE]: preferredLanguage } = useToggleSetting();
+  
+  const isEs = preferredLanguage === Language.ES;
+  
+  return (
+    <div
+      className="jk-row center extend"
+      onClick={loading ? undefined : () => toggleSetting(ProfileSetting.LANGUAGE, preferredLanguage === Language.EN ? Language.ES : Language.EN)}
+      style={{ cursor: loading ? 'initial' : 'pointer' }}
+    >
+      {loading
+        ? <LoadingIcon style={{ margin: '0 var(--pad-xt)' }} />
+        : (
+          isEs
+            ? <div className="jk-row" style={{ ...{ width: 24, height: 24 }, ...(small ? { margin: '0 var(--pad-xt)' } : {}) }}>
+              <FlagEnImage />
+            </div>
+            : <div className="jk-row" style={{ ...{ width: 24, height: 24 }, ...(small ? { margin: '0 var(--pad-xt)' } : {}) }}>
+              <FlagEsImage />
+            </div>
+        )}
+      {isOpen && (
+        <div style={{ marginRight: 'var(--pad-xt)' }} className="flex-1 ta-cr">
+          {isEs
+            ? <T className="tt-se">english</T>
+            : <T className="tt-se">español</T>}
+        </div>
+      )}
     </div>
   );
 };
@@ -186,12 +221,13 @@ export const SettingsSection = ({
   const isDark = preferredTheme === Theme.DARK;
   
   const margin = (popoverPlacement === 'right' && isOpen) || !(viewPortSize === 'md' && popoverPlacement === 'bottom');
+  
   return (
     <>
       <LanguageSetting
         isOpen={isOpen}
         popoverPlacement={popoverPlacement}
-        small={(popoverPlacement === 'right' && !isOpen) || (popoverPlacement === 'bottom' && viewPortSize === 'md')}
+        small={margin}
       />
       <ThemeSetting
         isOpen={isOpen}
