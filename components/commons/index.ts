@@ -14,6 +14,8 @@ export {
   CheckIcon,
   CloseIcon,
   CloudUploadIcon,
+  ViewModuleIcon,
+  VerticalSplitIcon,
   CodeEditorKeyMap,
   CodeEditorTheme,
   CodeRunnerEditor,
@@ -130,6 +132,10 @@ export {
   ArrowForwardIcon,
   EventIcon,
   ScheduleIcon,
+  InputRadio,
+  FlagEnImage,
+  FlagEsImage,
+  LineLoader,
 } from '@juki-team/base-ui';
 
 // @ts-ignore

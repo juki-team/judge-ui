@@ -42,7 +42,8 @@ export const ChangePasswordModal = ({ onClose }: { onClose: () => void, }) => {
       className="modal-change-password"
       onClose={onClose}
     >
-      <div className="jk-pad-md">
+      <div className="jk-pad-md jk-col gap stretch">
+        <h2>update password</h2>
         <form
           onSubmit={handleSubmit((data: ProfileChangePasswordInput) => updatePassword(data.newPassword, data.oldPassword, onClose)(setLoaderRef.current!, null, null))}>
           <div className="jk-form-item">
@@ -61,7 +62,7 @@ export const ChangePasswordModal = ({ onClose }: { onClose: () => void, }) => {
           </div>
           <div className="jk-form-item">
             <label>
-              <T>put your password to update</T>
+              <T>password</T>
               <InputPassword register={register('oldPassword')} />
             </label>
             <p><T>{errors.oldPassword?.message || ''}</T></p>

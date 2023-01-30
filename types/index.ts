@@ -14,7 +14,7 @@ export {
   ProblemStatus,
   ProblemType,
   ProblemVerdict,
-  ProfileSettingOptions,
+  ProfileSetting,
   UserStatus,
   Language,
   Theme,
@@ -29,10 +29,13 @@ export {
   SubmissionRunStatus,
   HTTPMethod,
   RunnerType,
+  MenuViewMode,
+  DataViewMode,
 } from '@juki-team/commons';
 
 export type {
   ErrorType,
+  UserSettingsType,
   ErrorResponseType,
   ContentResponseType,
   ContentsMetaType,

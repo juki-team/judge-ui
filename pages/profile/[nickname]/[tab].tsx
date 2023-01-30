@@ -6,6 +6,7 @@ import {
   FetcherLayer,
   LockIcon,
   Profile,
+  ProfileSettings,
   ProfileSubmissions,
   ResetPassword,
   T,
@@ -44,25 +45,31 @@ export default function ProfileView() {
               </div>
             ),
           },
-          [ProfileTab.SUBMISSIONS]: {
-            key: ProfileTab.SUBMISSIONS,
-            header: userNickname === nickname ? <T className="tt-ce">my submissions</T> :
-              <T className="tt-ce">submissions</T>,
+  
+        };
+        if (data?.content?.nickname === userNickname) {
+          tabHeaders[ProfileTab.SETTINGS] = {
+            key: ProfileTab.SETTINGS,
+            header: <T className="tt-ce">settings</T>,
             body: (
               <div className="pad-top-bottom pad-left-right">
-                <ProfileSubmissions />
+                <ProfileSettings user={data?.content} setOpenModal={setOpenModal} />
               </div>
             ),
-          },
+          };
+        }
+        tabHeaders[ProfileTab.SUBMISSIONS] = {
+          key: ProfileTab.SUBMISSIONS,
+          header: userNickname === nickname ? <T className="tt-ce">my submissions</T> :
+            <T className="tt-ce">submissions</T>,
+          body: (
+            <div className="pad-top-bottom pad-left-right">
+              <ProfileSubmissions />
+            </div>
+          ),
         };
-  
         const pushTab = tabKey => push({ pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey), query });
         const extraNodes = [
-          ...(data.content?.canUpdatePassword ? [
-            <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('UPDATE_PASSWORD')}>
-              <T className="ws-np">update password</T>
-            </Button>,
-          ] : []),
           ...(data.content?.canResetPassword ? [
             <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('RESET_PASSWORD')}>
               <T className="ws-np">reset password</T>
@@ -77,6 +84,8 @@ export default function ProfileView() {
   
         const breadcrumbs = [
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+          <Link href={ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE)} className="link">{nickname}</Link>,
+          tabHeaders[tab as ProfileTab]?.header,
         ];
   
         return (

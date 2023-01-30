@@ -68,6 +68,10 @@
     display: block;
     @include sm { display: none; }
   }
+  
+  > img.jk-user-profile-img {
+    border-color: var(--t-color-primary-text) !important;
+  }
 }
 
 .modal-user-preview {
@@ -95,12 +99,13 @@
 }
 
 .language-select {
-  .jk-select {
-    display: flex;
-    justify-content: space-around;
-  }
   
-  @include md-hg {
+  &.small {
+    .jk-select {
+      display: flex;
+      justify-content: space-around;
+    }
+    
     .jk-select {
       margin: 0 2px;
       padding: 0;
@@ -121,10 +126,8 @@
     
     &:hover {
       text-decoration: none !important;
-      font-weight: var(--weight-bold);
     }
   }
-  
 }
 
 .jk-horizontal-menu-layout-container {

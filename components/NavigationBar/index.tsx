@@ -1,7 +1,8 @@
-import { Theme } from '@juki-team/commons';
+import { ProfileSetting } from '@juki-team/commons';
 import {
   AssignmentIcon,
   CupIcon,
+  HorizontalMenu,
   Image,
   LeaderboardIcon,
   LinkSectionAdmin,
@@ -25,7 +26,7 @@ import { useJukiBase } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
-import { AdminTab, LastLinkKey, LastLinkType } from 'types';
+import { AdminTab, LastLinkKey, LastLinkType, MenuViewMode, Theme } from 'types';
 import { LoginUser } from './LoginUser';
 
 const initialLastLink = {
@@ -71,7 +72,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       canViewEmailManagement,
       canViewJudgersManagement,
       isLogged,
-      settings: { preferredTheme },
+      settings: { [ProfileSetting.THEME]: preferredTheme, [ProfileSetting.MENU_VIEW_MODE]: preferredMenuViewMode },
     },
     isLoading,
     company: { imageUrl, name },
@@ -122,6 +123,81 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace('white', 'color') : imageUrl;
   
+  const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} />;
+  const rightMobile = {
+    children: <div className="jk-row"><LoginUser collapsed={false} popoverPlacement="bottomRight" /></div>,
+  };
+  const centerMobile = {
+    children: (
+      <div className="jk-row"><Link href="/">
+        <Image
+          src={logoImageUrl}
+          alt={name}
+          height={40}
+          width={80}
+        />
+      </Link></div>
+    ),
+  };
+  
+  const topSection = ({ isOpen }) => (
+    <div className="jk-row" onClick={() => push('/')} style={{ padding: 'calc(var(--pad-lg) + var(--pad-lg)) 0' }}>
+      {isLoading
+        ? <LoadingIcon />
+        : (
+          <Image
+            src={isOpen ? logoImageUrl : logoImageUrl.replace('horizontal', 'vertical')}
+            alt={name}
+            height={isOpen ? 50 : 80}
+            width={isOpen ? 100 : 40}
+          />
+        )}
+    </div>
+  );
+  const bottomSection = ({ isOpen }) => {
+    return (
+      <div className="jk-col stretch gap settings-apps-login-user-content nowrap pad-top-bottom">
+        <SettingsSection
+          isOpen={isOpen}
+          isMobile={false}
+          helpOpen={helpOpen}
+          setHelpOpen={setHelpOpen}
+          popoverPlacement="right"
+        />
+        <LoginUser collapsed={!isOpen} popoverPlacement="rightBottom" />
+      </div>
+    );
+  };
+  
+  const leftSection = () => (
+    <div className="jk-row pad-left-right" onClick={() => push('/')}>
+      {isLoading
+        ? <LoadingIcon />
+        : (
+          <Image
+            src={logoImageUrl}
+            alt={name}
+            height={viewPortSize === 'md' ? 40 : 46}
+            width={viewPortSize === 'md' ? 80 : 92}
+          />
+        )}
+    </div>
+  );
+  const rightSection = () => {
+    return (
+      <div className="jk-row stretch gap settings-apps-login-user-content nowrap pad-left-right">
+        <SettingsSection
+          isOpen={false}
+          isMobile={false}
+          helpOpen={helpOpen}
+          setHelpOpen={setHelpOpen}
+          popoverPlacement="bottom"
+        />
+        <LoginUser collapsed={false} popoverPlacement="bottomRight" />
+      </div>
+    );
+  };
+  
   return (
     <>
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) && <SignUpModal />}
@@ -130,51 +206,32 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {query[QueryParam.USER_PREVIEW] && <UserPreviewModal nickname={query[QueryParam.USER_PREVIEW] as string} />}
       {query[QueryParam.SUBMISSION_VIEW] && <SubmissionModal submitId={query[QueryParam.SUBMISSION_VIEW] as string} />}
       <LasLinkProvider>
-        <VerticalMenu
-          menu={menu}
-          topSection={({ isOpen }) => (
-            <div className="jk-row" onClick={() => push('/')} style={{ padding: 'calc(var(--pad-lg) + var(--pad-lg)) 0' }}>
-              {isLoading
-                ? <LoadingIcon />
-                : (
-                  <Image
-                    src={isOpen ? logoImageUrl : logoImageUrl.replace('horizontal', 'vertical')}
-                    alt={name}
-                    height={isOpen ? 50 : 80}
-                    width={isOpen ? 100 : 40}
-                  />
-                )}
-            </div>
-          )}
-          bottomSection={({ isOpen }) => {
-            return (
-              <div
-                className="jk-col stretch gap settings-apps-login-user-content nowrap pad-top-bottom"
-              >
-                <SettingsSection isOpen={isOpen} isMobile={false} helpOpen={helpOpen} setHelpOpen={setHelpOpen} />
-                <LoginUser collapsed={!isOpen} />
-              </div>
-            );
-          }}
-          drawerMenuMobile={(props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} />}
-          rightMobile={{
-            children: <div className="jk-row"><LoginUser collapsed={false} /></div>,
-          }}
-          centerMobile={{
-            children: (
-              <div className="jk-row"><Link href="/">
-                <Image
-                  src={logoImageUrl}
-                  alt={name}
-                  height={40}
-                  width={80}
-                />
-              </Link></div>
-            ),
-          }}
-        >
-          {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
-        </VerticalMenu>
+        {preferredMenuViewMode === MenuViewMode.HORIZONTAL
+          ? (
+            <HorizontalMenu
+              menu={menu}
+              leftSection={leftSection}
+              rightSection={rightSection}
+              drawerMenuMobile={drawerMenuMobile}
+              rightMobile={rightMobile}
+              centerMobile={centerMobile}
+            >
+              {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
+            </HorizontalMenu>
+          )
+          : (
+            <VerticalMenu
+              menu={menu}
+              topSection={topSection}
+              bottomSection={bottomSection}
+              drawerMenuMobile={drawerMenuMobile}
+              rightMobile={rightMobile}
+              centerMobile={centerMobile}
+            >
+              {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
+            </VerticalMenu>
+          )
+        }
       </LasLinkProvider>
     </>
   );

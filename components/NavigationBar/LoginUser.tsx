@@ -6,7 +6,10 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ProfileTab } from 'types';
 
-export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
+export const LoginUser = ({
+  collapsed,
+  popoverPlacement,
+}: { collapsed: boolean, popoverPlacement: 'rightBottom' | 'bottomRight' }) => {
   
   const { user, isLoading } = useJukiBase();
   const { push, query } = useRouter();
@@ -68,7 +71,7 @@ export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
           </div>
         }
         triggerOn="click"
-        placement={viewPortSize === 'sm' ? 'centerScreen' : 'rightBottom'}
+        placement={popoverPlacement}
       >
         <div className={classNames('user-logged-head nowrap jk-row gap')}>
           <img
@@ -76,7 +79,9 @@ export const LoginUser = ({ collapsed }: { collapsed: boolean }) => {
             alt={user.nickname}
             className={classNames('jk-user-profile-img large')}
           />
-          {viewPortSize !== 'sm' && viewPortSize !== 'md' && <div className="jk-row nickname">{user.nickname}</div>}
+          {viewPortSize !== 'sm' && viewPortSize !== 'md' && !collapsed && (
+            <div className="jk-row nickname">{user.nickname}</div>
+          )}
         </div>
       </Popover>
     );

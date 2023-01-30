@@ -64,7 +64,7 @@
           }
   
           .jk-view-container.rows {
-            background-color: transparent;
+            //background-color: transparent;
     
             .jk-table-head {
               @extend .jk-border-radius-inline;
@@ -76,8 +76,8 @@
           }
           
           .jk-data-viewer-toolbar.cards {
-            background-color: transparent;
-            border-bottom: 1px solid var(--t-color-gray-5);
+            //background-color: transparent;
+            //border-bottom: 1px solid var(--t-color-gray-5);
             @extend .jk-border-radius-inline;
             box-sizing: border-box;
           }

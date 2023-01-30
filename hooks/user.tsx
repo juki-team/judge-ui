@@ -18,13 +18,12 @@ import {
   ContentResponseType,
   FlagsType,
   HTTPMethod,
-  Language,
   PingResponseDTO,
   ProfileTab,
   SetFlagsType,
   SetLoaderStatusOnClickType,
   Status,
-  Theme,
+  UserSettingsType,
 } from 'types';
 
 export const useJukiFlags = (): { flags: FlagsType, setFlags: SetFlagsType } => {
@@ -172,7 +171,7 @@ export const useUserDispatch = () => {
         setLoaderStatus(Status.SUCCESS);
       }
     },
-    updateUserSettings: async (nickname: string, settings: { preferredTheme: Theme, preferredLanguage: Language }, setLoader: SetLoaderStatusOnClickType) => {
+    updateUserSettings: async (nickname: string, settings: UserSettingsType, setLoader: SetLoaderStatusOnClickType) => {
       setLoader?.(Status.LOADING);
       const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.UPDATE_PREFERENCES(nickname), {
         method: HTTPMethod.PUT,

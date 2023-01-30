@@ -64,7 +64,7 @@ export const DrawerViewMenuMobile = ({ close, menu, logoImageUrl }) => {
           <div className="jk-divider pad-left-right" style={{ boxSizing: 'border-box' }} />
           <div className="jk-row extend block">
             <div className="jk-col gap pad-left-right pad-top-bottom">
-              <SettingsSection isOpen isMobile={true} helpOpen={helpOpen} setHelpOpen={setHelpOpen} />
+              <SettingsSection isOpen isMobile={true} helpOpen={helpOpen} setHelpOpen={setHelpOpen} popoverPlacement="top" />
             </div>
           </div>
         </>

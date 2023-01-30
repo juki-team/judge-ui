@@ -1,4 +1,13 @@
 {
+  "data view mode": "modo de visualización de datos",
+  "data view": "visualización de datos",
+  "list": "lista",
+  "rows": "filas",
+  "cards": "tarjetas",
+  "menu view mode": "modo de vista de menú",
+  "menu view": "vista del menú",
+  "vertical": "vertical",
+  "horizontal": "horizontal",
   "dark mode": "modo oscuro",
   "light mode": "modo claro",
   "more apps": "más aplicaciones",
