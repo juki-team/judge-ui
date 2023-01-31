@@ -133,8 +133,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         <Image
           src={logoImageUrl}
           alt={name}
-          height={40}
-          width={80}
+          height={45}
+          width={90}
         />
       </Link></div>
     ),
@@ -148,8 +148,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           <Image
             src={isOpen ? logoImageUrl : logoImageUrl.replace('horizontal', 'vertical')}
             alt={name}
-            height={isOpen ? 50 : 80}
-            width={isOpen ? 100 : 40}
+            height={isOpen ? 60 : 80}
+            width={isOpen ? 120 : 40}
           />
         )}
     </div>

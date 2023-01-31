@@ -1,5 +1,4 @@
 import { Breadcrumbs, JukiCompleteLaptopImage, JukiCourtImage, T, TwoContentSection } from 'components';
-import Head from 'next/head';
 
 const PWA = () => (
   <>
@@ -62,11 +61,6 @@ export default function Home() {
   return (
     <TwoContentSection>
       <div className="jk-col extend stretch">
-        <Head>
-          {/*<PWA />*/}
-          <title>Juki Judge App</title>
-          {/*<link rel="icon" href="/favicon.ico" />*/}
-        </Head>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="pad-left-right jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
           <div className="jk-row"><h1 style={{ padding: 'var(--pad-md) 0' }}><T>welcome to Juki Judge</T></h1></div>

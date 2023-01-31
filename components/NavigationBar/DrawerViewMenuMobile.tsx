@@ -32,8 +32,8 @@ export const DrawerViewMenuMobile = ({ close, menu, logoImageUrl }) => {
             <Image
               src={logoImageUrl}
               alt={name}
-              height={40}
-              width={80}
+              height={45}
+              width={90}
             />
           )}
         </div>
