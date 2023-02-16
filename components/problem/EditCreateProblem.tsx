@@ -114,19 +114,21 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
       value={problem}
     >
       <ButtonLoader
-        size={viewPortSize !== 'sm' ? 'small' : 'large'}
+        size="small"
         icon={<CloseIcon />}
+        responsiveMobile
       >
-        {viewPortSize !== 'sm' && <T>cancel</T>}
+        <T>cancel</T>
       </ButtonLoader>
     </CheckUnsavedChanges>,
     <ButtonLoader
       type="secondary"
-      size={viewPortSize !== 'sm' ? 'small' : 'large'}
+      size="small"
       icon={<SaveIcon />}
       onClick={onSave}
+      responsiveMobile
     >
-      {viewPortSize !== 'sm' && (editing ? <T>update</T> : <T>create</T>)}
+      {editing ? <T>update</T> : <T>create</T>}
     </ButtonLoader>,
   ];
   
@@ -149,10 +151,10 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
           />
         </div>
         <div className="pad-left-right" style={{ overflow: 'hidden' }}>
-          <TabsInline
+          <TabsInline<ProblemTab>
             tabs={tabs}
-            pushTab={(tab) => setTab(tab)}
-            tabSelected={tab}
+            onChange={(tab) => setTab(tab)}
+            selectedTabKey={tab}
             extraNodes={extraNodes}
           />
         </div>

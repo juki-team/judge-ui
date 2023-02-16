@@ -4,6 +4,7 @@ export * from './NavigationBar';
 export * from './admin';
 export * from './commons';
 export * from './contest';
+export * from './course';
 export * from './problem';
 export * from './profile';
 export * from './sheets';

@@ -42,8 +42,8 @@ function Problems() {
       head: <TextHeadCell text={<T className="tt-ue tx-s">id</T>} />,
       index: 'key',
       field: ({ record: { key }, isCard }) => (
-        <Field className="jk-row link fw-bd">
-          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
+        <Field className="jk-row fw-bd">
+          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)} className="link">
             {key}
           </Link>
         </Field>
@@ -57,8 +57,8 @@ function Problems() {
       head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} className="left" />,
       index: 'name',
       field: ({ record: { key, name, user }, isCard }) => (
-        <Field className={classNames('jk-row link fw-bd jk-pad-sm', { left: !isCard, center: isCard })}>
-          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)}>
+        <Field className={classNames('jk-row fw-bd jk-pad-sm', { left: !isCard, center: isCard })}>
+          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)} className="link">
             <div className="jk-row gap nowrap">
               <div className="jk-row">{name}</div>
               {user.solved ? (
@@ -174,8 +174,8 @@ function Problems() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right">
-          <h1 style={{ padding: 'var(--pad-sm) 0' }}><T>problems</T></h1>
+        <div className="pad-left-right pad-top-bottom">
+          <h1><T>problems</T></h1>
         </div>
       </div>
       <div className="pad-top-bottom pad-left-right">

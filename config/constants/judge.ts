@@ -221,6 +221,11 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification/${clarificationId}`;
     },
   },
+  COURSE: {
+    LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/course/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+    },
+  },
   REJUDGE: {
     PROBLEM: (problemJudgeKey: string) => {
       if (!problemJudgeKey) return null;
@@ -241,6 +246,9 @@ export const JUDGE_API_V1 = {
     },
   },
   SHEET: {
+    LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+    },
     CREATE: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/`;
     },

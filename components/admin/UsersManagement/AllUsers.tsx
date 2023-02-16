@@ -172,7 +172,8 @@ export function AllUsers() {
       <DataViewer<UserManagementResponseDTO>
         headers={columns}
         data={data}
-        rows={{ height: 170 }}
+        rows={{ height: 200 }}
+        cards={{ width: 400, height: 400 }}
         request={request}
         name={QueryParam.ALL_USERS_TABLE}
         searchParamsObject={queryObject}

@@ -25,7 +25,7 @@ export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestS
   head: <TextHeadCell text={<T className="tt-ue tx-s">contest name</T>} className="left" />,
   index: 'name',
   field: ({ record: { name, key, user }, isCard }) => (
-    <Field className="jk-row left block jk-pad-sm">
+    <Field className="jk-row left block">
       {user.isGuest || user.isAdmin || user.isContestant || user.isJudge || user.isSpectator ? (
         <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
           <div className={classNames('gap nowrap link fw-bd space-between', { 'jk-col': isCard, 'jk-row': !isCard })}>

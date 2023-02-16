@@ -12,20 +12,20 @@ export const HelpSection = () => {
       <h3><T className="tt-se ws-np">need help?</T></h3>
       <div className="jk-row left"><T className="tt-se ws-np">contact the webmaster</T>:</div>
       <div />
-      <div className="jk-row gap left">
+      <div className="jk-row gap nowrap left">
         <TelegramIcon />
         <div className="jk-row link fw-bd">
           <Link href="https://t.me/OscarGauss" target="_blank">t.me/OscarGauss</Link>
         </div>
       </div>
       <div />
-      <div className="jk-row gap left">
+      <div className="jk-row gap nowrap left">
         <PhoneIcon />
         <div className="jk-row fw-bd">+591 79153358</div>
       </div>
       <div />
       {!isLoading && !!emailContact && (
-        <div className="jk-row gap left">
+        <div className="jk-row gap nowrap left">
           <MailIcon />
           <div className="jk-row fw-bd">{emailContact}</div>
         </div>

@@ -1,4 +1,4 @@
-import { AdminTab, ContestsTab, ContestTab, ProblemTab, ProfileTab } from '../../types';
+import { AdminTab, ContestsTab, ContestTab, CourseTab, ProblemTab, ProfileTab } from 'types';
 
 export enum QueryParam {
   DIALOG = 'dg',
@@ -23,6 +23,10 @@ export enum QueryParam {
   SCOREBOARD_TABLE = 'sdt',
   PROBLEMS_TABLE = 'pmt',
   RANKING_TABLE = 'rgt',
+  // courses
+  COURSES_TABLE = 'cst',
+  // sheets
+  SHEETS_TABLE = 'set',
   // table queries
   PAGE_TABLE = 'p',
   PAGE_SIZE_TABLE = 'z',
@@ -57,6 +61,10 @@ export const ROUTES = {
     CREATE: 'create',
     EDIT: 'edit',
     PROFILE: 'profile',
+    COURSES: 'courses',
+    COURSE: 'course',
+    SHEETS: 'sheets',
+    SHEET: 'sheet',
   },
   POSTS: {
     PAGE(key?: string) {
@@ -108,6 +116,14 @@ export const ROUTES = {
       return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.EDIT, key].join('/');
     },
   },
+  COURSES: {
+    VIEW(key: string, tab: CourseTab | typeof _TAB) {
+      return ['', ROUTES.PARAMS.COURSE, ROUTES.PARAMS.VIEW, key, tab].join('/');
+    },
+    CREATE() {
+      return ['', ROUTES.PARAMS.COURSE, ROUTES.PARAMS.CREATE].join('/');
+    },
+  },
   RANKING: {
     PAGE() {
       return '/' + ROUTES.PARAMS.RANKING;
@@ -121,6 +137,20 @@ export const ROUTES = {
   PROFILE: {
     PAGE(key: string, tab?: ProfileTab | typeof _TAB) {
       return ['', ROUTES.PARAMS.PROFILE, key, tab].join('/');
+    },
+  },
+  SHEETS: {
+    LIST() {
+      return '/' + ROUTES.PARAMS.SHEETS;
+    },
+    CREATE() {
+      return ['', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.CREATE].join('/');
+    },
+    VIEW(key: string) {
+      return ['', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.VIEW, key].join('/');
+    },
+    EDIT(key: string) {
+      return ['', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.EDIT, key].join('/');
     },
   },
 };

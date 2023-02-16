@@ -66,3 +66,13 @@ export enum ProfileTab {
 }
 
 export type SearchParams = { [key: string]: Array<number | string> };
+
+export enum CourseTab {
+  OVERVIEW = 'overview',
+  UNITS = 'units'
+}
+
+export enum SheetTab {
+  CONTENT = 'content',
+  SETUP = 'setup',
+}

@@ -85,7 +85,7 @@ function Admin() {
           <h3 style={{ padding: 'var(--pad-sm) 0' }}><T>admin</T></h3>
         </div>
         <div className="pad-left-right">
-          <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={query.tab} />
+          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={query.tab} />
         </div>
       </div>
       {tabs[query.tab as string]?.body}

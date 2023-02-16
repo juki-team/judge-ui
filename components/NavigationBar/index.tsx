@@ -1,4 +1,3 @@
-import { ProfileSetting } from '@juki-team/commons';
 import {
   AssignmentIcon,
   CupIcon,
@@ -17,17 +16,17 @@ import {
   VerticalMenu,
   WelcomeModal,
 } from 'components';
-import { LinkSectionContest } from 'components/contest/commons';
-import { DrawerViewMenuMobile } from 'components/NavigationBar/DrawerViewMenuMobile';
-import { SettingsSection } from 'components/NavigationBar/SettingsSection';
+import { LinkSectionContest } from 'components/contest';
 import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
 import { isOrHas, removeParamQuery } from 'helpers';
 import { useJukiBase } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
-import { AdminTab, LastLinkKey, LastLinkType, MenuViewMode, Theme } from 'types';
+import { AdminTab, LastLinkKey, LastLinkType, MenuViewMode, ProfileSetting, Theme } from 'types';
+import { DrawerViewMenuMobile } from './DrawerViewMenuMobile';
 import { LoginUser } from './LoginUser';
+import { SettingsSection } from './SettingsSection';
 
 const initialLastLink = {
   [LastLinkKey.SECTION_CONTEST]: { pathname: '/contests', query: {} },
@@ -35,6 +34,8 @@ const initialLastLink = {
   [LastLinkKey.SECTION_PROBLEM]: { pathname: '/problems', query: {} },
   [LastLinkKey.PROBLEMS]: { pathname: '/problems', query: {} },
   [LastLinkKey.SECTION_ADMIN]: { pathname: `/admin/${AdminTab.USERS_MANAGEMENT}`, query: {} },
+  [LastLinkKey.SHEETS]: { pathname: `/sheets`, query: {} },
+  [LastLinkKey.SECTION_SHEET]: { pathname: `/sheets`, query: {} },
 };
 
 export const LastLinkContext = createContext<{

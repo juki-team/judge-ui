@@ -1,4 +1,3 @@
-import { useJukiBase } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -12,11 +11,11 @@ import {
   TabsInline,
   TwoContentSection,
 } from 'components';
-import { LinkContests } from 'components/contest/commons';
+import { LinkContests } from 'components/contest';
 import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
-import { useNotification, useRouter } from 'hooks';
+import { useJukiBase, useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -182,8 +181,8 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
         <div className="pad-left-right" style={{ overflow: 'hidden' }}>
           <TabsInline
             tabs={tabHeaders}
-            tabSelected={contestTab}
-            pushTab={(tab) => setContestTab(tab)}
+            selectedTabKey={contestTab}
+            onChange={(tab) => setContestTab(tab)}
             extraNodes={extraNodes}
           />
         </div>

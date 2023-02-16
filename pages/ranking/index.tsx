@@ -25,13 +25,13 @@ function Ranking() {
       sticky: true,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">nickname</T>} />,
+      head: <TextHeadCell text={<T className="tt-ue tx-s">nickname</T>} className="left" />,
       index: 'nickname',
       field: ({ record: { nickname, imageUrl }, isCard, recordIndex }) => (
         <Field className="jk-row link fw-bd gap">
-          {isCard && <div className="fw-br">{recordIndex + 1}</div>}
+          {isCard && <div className="fw-br jk-pad-sm">{recordIndex + 1}</div>}
           <UserNicknameLink nickname={nickname}>
-            <div className="jk-row flex-1 gap">
+            <div className="jk-row flex-1 gap left">
               <Image src={imageUrl} className="jk-user-profile-img large elevation-1" alt={nickname} height={50} width={50} />
               {nickname}
             </div>
@@ -130,8 +130,8 @@ function Ranking() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right">
-          <h1 style={{ padding: 'var(--pad-sm) 0' }}><T>ranking</T></h1>
+        <div className="pad-left-right pad-top-bottom">
+          <h1><T>ranking</T></h1>
         </div>
       </div>
       <div className="pad-left-right pad-top-bottom">

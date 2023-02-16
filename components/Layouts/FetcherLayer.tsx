@@ -20,7 +20,11 @@ export const FetcherLayer = <T extends (ContentResponseType<any> | ContentsRespo
   children,
   onError,
 }: FetcherLayerProps<T>) => {
-  const { isLoading, data, error, mutate } = useFetcher<T>(url, options);
+  const { isLoading, data, error, mutate } = useFetcher<T>(url, {
+    revalidateOnFocus: true,
+    revalidateIfStale: true,
+    ...options,
+  });
   const { addNotification } = useNotification();
   
   useEffect(() => {

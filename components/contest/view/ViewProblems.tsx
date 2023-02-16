@@ -37,8 +37,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
           <Field className="jk-row">
             <div>
               <div
-                className={'fw-br problem-index bc-g6 jk-border-radius-inline' + (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
-                style={{ position: 'relative' }}
+                className={'fw-br problem-index bc-g6 jk-border-radius-inline pn-re' + (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
               >
                 {!!myAttempts && (mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
                 {index}

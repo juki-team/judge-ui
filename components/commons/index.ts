@@ -136,18 +136,20 @@ export {
   FlagEnImage,
   FlagEsImage,
   LineLoader,
+  UploadImageButton,
+  Breadcrumbs,
+  TabsInline,
+  CodeIcon,
+  NoteAddIcon,
 } from '@juki-team/base-ui';
 
 // @ts-ignore
 // export const SimpleSortableRows = dynamic(() => import('@juki-team/base-ui').then(module => ({ default: module.SimpleSortableRows })), { ssr: false });
 
-export * from './Breadcrumbs';
 export * from './CheckUnsavedChanges';
-// export * from './messages';
 export * from './Image';
 export * from './PagedDataViewer';
 export * from './ProblemSelector';
-export * from './TabsInline';
 export * from './TextLangEdit';
 export * from './User';
 export * from './UserCodeEditor';

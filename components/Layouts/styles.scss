@@ -1,5 +1,9 @@
 @import "@juki-team/base-ui/dist/styles/abstracts/index";
 
+.pad-left-right, .pad-top, .pad-bottom, .pad-top-bottom {
+  box-sizing: border-box;
+}
+
 .pad-left-right {
   padding-left: var(--pad-border);
   padding-right: var(--pad-border);

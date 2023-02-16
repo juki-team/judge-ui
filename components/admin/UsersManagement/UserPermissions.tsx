@@ -1,5 +1,14 @@
 import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components/index';
-import { CONTEST_ROLE, COURSE_ROLE, JUDGE_API_V1, PROBLEM_ROLE, SYSTEM_ROLE, TEAM_ROLE, USER_ROLE } from 'config/constants';
+import {
+  CONTEST_ROLE,
+  COURSE_ROLE,
+  JUDGE_API_V1,
+  PROBLEM_ROLE,
+  SHEET_ROLE,
+  SYSTEM_ROLE,
+  TEAM_ROLE,
+  USER_ROLE,
+} from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import React, { useState } from 'react';
 import {
@@ -39,6 +48,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     problemRole: userToUpdate.problemRole,
     teamRole: userToUpdate.teamRole,
     courseRole: userToUpdate.courseRole,
+    sheetRole: userToUpdate.sheetRole,
     systemRole: userToUpdate.systemRole,
   };
   const [newRoles, setNewRoles] = useState<Roles>(roles);
@@ -50,6 +60,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     contest: CONTEST_ROLE,
     team: TEAM_ROLE,
     course: COURSE_ROLE,
+    sheet: SHEET_ROLE,
   };
   
   return (
@@ -72,12 +83,12 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
           ))}
         </div>
         {userToUpdate.canEditPermissionsData && (
-          <div className="editing-actions-box">
+          <div style={{ width: 40 }}>
             {editing ? (
               <>
                 <ButtonLoader
-                  type="text"
-                  icon={<SaveIcon filledCircle className="cr-py" />}
+                  size="small"
+                  icon={<SaveIcon />}
                   onClick={async setLoaderStatus => {
                     if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
                       setLoaderStatus?.(Status.LOADING);
@@ -98,15 +109,15 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
                   }}
                 />
                 <Button
-                  icon={<CloseIcon filledCircle className="cr-py" />}
-                  type="text"
+                  size="small"
+                  icon={<CloseIcon />}
                   onClick={() => {
                     setNewRoles(roles);
                     setEditing(false);
                   }}
                 />
               </>
-            ) : <Button type="text" icon={<EditIcon filledCircle className="cr-py" />} onClick={() => setEditing(true)} />}
+            ) : <Button size="small" icon={<EditIcon />} onClick={() => setEditing(true)} />}
           </div>
         )}
       </div>

@@ -30,7 +30,7 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
   
   return (
     <Modal isOpen={true} onClose={onClose}>
-      <div className="user-profile jk-row stretch center gap jk-pad-md relative">
+      <div className="user-profile jk-row stretch center gap jk-pad-md pn-re">
         {modalImageProfile && <ImageProfileModal onClose={() => setModalImageProfile(false)} nickname={user.nickname} />}
         <div className="jk-col top jk-pad-md">
           <img src={user?.imageUrl} className="jk-user-profile-img huge elevation-1" alt={user?.nickname as string} />

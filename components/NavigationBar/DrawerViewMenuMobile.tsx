@@ -16,14 +16,14 @@ export const DrawerViewMenuMobile = ({ close, menu, logoImageUrl }) => {
       style={{ backgroundColor: 'var(--t-color-white-2)' }}
     >
       <div
-        className="jk-row extend center nowrap bc-we elevation-1"
-        style={{ position: 'relative', height: 'var(--top-horizontal-menu-height)' }}
+        className="jk-row extend center nowrap bc-we elevation-1 pn-re"
+        style={{ height: 'var(--top-horizontal-menu-height)' }}
       >
         <div className="jk-row pad-left-right" style={{ position: helpOpen ? undefined : 'absolute', left: 0 }}>
           {helpOpen ? (
             <ArrowBackIcon className="clickable jk-border-radius-inline" onClick={() => setHelpOpen(false)} />
           ) : <CloseIcon className="clickable jk-border-radius-inline" onClick={close} />}
-        
+  
         </div>
         <div className="jk-row extend">
           {helpOpen ? (

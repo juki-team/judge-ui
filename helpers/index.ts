@@ -73,6 +73,7 @@ export {
   humanFileSize,
   stringToArrayBuffer,
   getRandomString,
+  mex,
 } from '@juki-team/commons';
 
 export {

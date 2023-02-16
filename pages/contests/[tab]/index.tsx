@@ -101,11 +101,11 @@ function Contests() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right">
+        <div className="pad-left-right pad-top">
           <h1><T>contests</T></h1>
         </div>
         <div className="pad-left-right">
-          <TabsInline tabs={tabs} pushTab={pushTab} tabSelected={contestsTab} extraNodes={extraNodes} />
+          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={contestsTab} extraNodes={extraNodes} />
         </div>
       </div>
       {tabs[contestsTab as ContestsTab]?.body}

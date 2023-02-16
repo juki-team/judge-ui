@@ -95,11 +95,11 @@ export default function ProfileView() {
               {openModal === 'RESET_PASSWORD' && <ResetPassword onClose={onClose} nickname={data.content?.nickname} />}
               {openModal === 'DATA' && <EditProfileModal onClose={onClose} user={data.content} />}
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="pad-left-right">
+              <div className="pad-left-right pad-top">
                 <h1>{nickname}</h1>
               </div>
               <div className="pad-left-right">
-                <TabsInline tabs={tabHeaders} tabSelected={tab} pushTab={pushTab} extraNodes={extraNodes} />
+                <TabsInline tabs={tabHeaders} selectedTabKey={tab} onChange={pushTab} extraNodes={extraNodes} />
               </div>
             </div>
             {tabHeaders[tab as ProfileTab]?.body}

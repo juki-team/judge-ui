@@ -5,6 +5,7 @@ import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { consoleWarn } from 'helpers';
 import { OnlineStatusProvider } from 'hooks';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import '../i18n';
@@ -34,12 +35,15 @@ export default function MyApp({ Component, pageProps, router }) {
       utilsSocketServiceUrl={JUKI_SERVICE_BASE_URL}
     >
       <div className="jk-app">
+        <Head>
+          <title>Juki Judge App</title>
+        </Head>
         <UserProvider>
           <TaskProvider>
             <OnlineStatusProvider>
               <SWRConfig
                 value={{
-                  revalidateIfStale: false,
+                  revalidateIfStale: true, // when back to pages
                   revalidateOnFocus: false,
                   revalidateOnReconnect: false,
                 }}

@@ -1,8 +1,8 @@
-import { FlagEnImage, FlagEsImage } from '@juki-team/base-ui';
-import { UserSettingsType } from '@juki-team/commons';
 import {
   AppsIcon,
   DarkModeIcon,
+  FlagEnImage,
+  FlagEsImage,
   HelpIcon,
   Image,
   JukiCouchLogoHorImage,
@@ -21,34 +21,39 @@ import {
 import { classNames } from 'helpers';
 import { useJukiBase, useUserDispatch } from 'hooks';
 import React, { Dispatch, useState } from 'react';
-import { DataViewMode, Language, MenuViewMode, ProfileSetting, Status, Theme } from 'types';
+import { DataViewMode, Language, MenuViewMode, ProfileSetting, Status, Theme, UserSettingsType } from 'types';
 import { HelpSection } from './HelpSection';
 
 export const useToggleSetting = () => {
   const { user: { isLogged, settings, nickname } } = useJukiBase();
   const { updateUserSettings, setUser } = useUserDispatch();
   const [loader, setLoader] = useState<Status>(Status.NONE);
-  const toggleSetting = async (key: ProfileSetting, value: string | boolean) => {
+  const toggleSetting = async (settingsToUpdate: { key: ProfileSetting, value: string | boolean }[]) => {
     const newSettings: UserSettingsType = { ...settings };
-    if (key === ProfileSetting.LANGUAGE) {
-      newSettings[ProfileSetting.LANGUAGE] = value as Language;
+    for (const { key, value } of settingsToUpdate) {
+      if (key === ProfileSetting.LANGUAGE) {
+        newSettings[ProfileSetting.LANGUAGE] = value as Language;
+      }
+      if (key === ProfileSetting.THEME) {
+        newSettings[ProfileSetting.THEME] = value as Theme;
+      }
+      if (key === ProfileSetting.DATA_VIEW_MODE) {
+        newSettings[ProfileSetting.DATA_VIEW_MODE] = value as DataViewMode;
+      }
+      if (key === ProfileSetting.MENU_VIEW_MODE) {
+        newSettings[ProfileSetting.MENU_VIEW_MODE] = value as MenuViewMode;
+      }
+      if (key === ProfileSetting.NEWSLETTER_SUBSCRIPTION) {
+        newSettings[ProfileSetting.NEWSLETTER_SUBSCRIPTION] = value as boolean;
+      }
     }
-    if (key === ProfileSetting.THEME) {
-      newSettings[ProfileSetting.THEME] = value as Theme;
-    }
-    if (key === ProfileSetting.DATA_VIEW_MODE) {
-      newSettings[ProfileSetting.DATA_VIEW_MODE] = value as DataViewMode;
-    }
-    if (key === ProfileSetting.MENU_VIEW_MODE) {
-      newSettings[ProfileSetting.MENU_VIEW_MODE] = value as MenuViewMode;
-    }
-    if (key === ProfileSetting.NEWSLETTER_SUBSCRIPTION) {
-      newSettings[ProfileSetting.NEWSLETTER_SUBSCRIPTION] = value as boolean;
-    }
+    
     if (isLogged) {
       await updateUserSettings(nickname, newSettings, (status: Status) => setLoader(status));
     } else {
-      localStorage.setItem(key, value + '');
+      for (const { key, value } of settingsToUpdate) {
+        localStorage.setItem(key, value + '');
+      }
       setUser(prevState => ({ ...prevState, settings: newSettings }));
     }
   };
@@ -77,7 +82,7 @@ export const LanguageSelectSetting = ({ isOpen, popoverPlacement, small }) => {
             { value: Language.EN, label: 'English' }, { value: Language.ES, label: 'Español' },
           ]}
           selectedOption={{ value: preferredLanguage }}
-          onChange={({ value }) => toggleSetting(ProfileSetting.LANGUAGE, value)}
+          onChange={({ value }) => toggleSetting([{ key: ProfileSetting.LANGUAGE, value }])}
           disabled={loading}
           optionsPlacement={popoverPlacement}
           className={classNames('language-select', { 'tx-t small': !!small })}
@@ -97,7 +102,12 @@ export const LanguageSetting = ({ isOpen, popoverPlacement, small }) => {
   return (
     <div
       className="jk-row center extend"
-      onClick={loading ? undefined : () => toggleSetting(ProfileSetting.LANGUAGE, preferredLanguage === Language.EN ? Language.ES : Language.EN)}
+      onClick={loading ? undefined : () => toggleSetting([
+        {
+          key: ProfileSetting.LANGUAGE,
+          value: preferredLanguage === Language.EN ? Language.ES : Language.EN,
+        },
+      ])}
       style={{ cursor: loading ? 'initial' : 'pointer' }}
     >
       {loading
@@ -131,7 +141,12 @@ export const ThemeSetting = ({ isOpen, small }) => {
   return (
     <div
       className="jk-row center extend"
-      onClick={loading ? undefined : () => toggleSetting(ProfileSetting.THEME, preferredTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT)}
+      onClick={loading ? undefined : () => toggleSetting([
+        {
+          key: ProfileSetting.THEME,
+          value: preferredTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT,
+        },
+      ])}
       style={{ cursor: loading ? 'initial' : 'pointer' }}
     >
       {loading
@@ -161,7 +176,12 @@ export const DataViewModeSetting = () => {
   return (
     <div
       className="jk-row nowrap center extend"
-      onClick={loading ? undefined : () => toggleSetting(ProfileSetting.DATA_VIEW_MODE, preferredDataViewMode === DataViewMode.ROWS ? DataViewMode.CARDS : DataViewMode.ROWS)}
+      onClick={loading ? undefined : () => toggleSetting([
+        {
+          key: ProfileSetting.DATA_VIEW_MODE,
+          value: preferredDataViewMode === DataViewMode.ROWS ? DataViewMode.CARDS : DataViewMode.ROWS,
+        },
+      ])}
       style={{ cursor: loading ? 'initial' : 'pointer' }}
     >
       {loading
@@ -189,7 +209,12 @@ export const MenuViewModeSetting = () => {
   return (
     <div
       className="jk-row nowrap center extend"
-      onClick={loading ? undefined : () => toggleSetting(ProfileSetting.MENU_VIEW_MODE, preferredMenuViewMode === MenuViewMode.VERTICAL ? MenuViewMode.HORIZONTAL : MenuViewMode.VERTICAL)}
+      onClick={loading ? undefined : () => toggleSetting([
+        {
+          key: ProfileSetting.MENU_VIEW_MODE,
+          value: preferredMenuViewMode === MenuViewMode.VERTICAL ? MenuViewMode.HORIZONTAL : MenuViewMode.VERTICAL,
+        },
+      ])}
       style={{ cursor: loading ? 'initial' : 'pointer' }}
     >
       {loading

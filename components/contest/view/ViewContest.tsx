@@ -187,10 +187,10 @@ export function ContestView() {
           <TwoContentSection>
             <div>
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="jk-col relative pad-left-right">
+              <div className="jk-col pn-re pad-left-right pad-top">
                 <div className="jk-row nowrap gap extend">
                   <div className="jk-row left gap flex-1">
-                    <h2 style={{ padding: 'var(--pad-sm) 0' }}>{contest.name}</h2>
+                    <h2>{contest.name}</h2>
                     <Popover
                       content={literal}
                       triggerOn="hover"
@@ -204,7 +204,7 @@ export function ContestView() {
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>
               </div>
               <div className="pad-left-right">
-                <TabsInline tabs={tabHeaders} tabSelected={contestTab} pushTab={pushTab} extraNodes={extraNodes} />
+                <TabsInline tabs={tabHeaders} selectedTabKey={contestTab} onChange={pushTab} extraNodes={extraNodes} />
               </div>
             </div>
             {tabHeaders[contestTab as ContestTab]?.body}

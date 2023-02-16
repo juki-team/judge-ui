@@ -8,7 +8,7 @@ export function Profile({ user }: { user: UserProfileResponseDTO }) {
   
   return (
     <div className="jk-col gap">
-      <div className="user-profile jk-row stretch center gap relative">
+      <div className="user-profile jk-row stretch center gap pn-re">
         <div className="jk-col top jk-pad-md">
           <Image
             src={user?.imageUrl}
