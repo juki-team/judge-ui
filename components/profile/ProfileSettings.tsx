@@ -118,7 +118,7 @@ export function ProfileSettings({ user, setOpenModal }) {
                 ),
               },
             ].map(({ title, key, value, valueFirst, labelFirst, valueSecond, labelSecond }) => (
-              <div className="jk-col stretch left gap" style={{ width: '100%' }}>
+              <div className="jk-col stretch left gap" style={{ width: '100%' }} key={key}>
                 <div className="jk-row left extend">
                   <T className="tt-se tx-l fw-bd ta-ed ws-np">{title}</T>:&nbsp;
                 </div>
@@ -142,7 +142,7 @@ export function ProfileSettings({ user, setOpenModal }) {
                 </div>
               </div>
             ))}
-          
+  
             <div className="jk-col left gap nowrap jk-pad-sm" style={{ width: '100%' }}>
               <Button
                 size="small"
@@ -158,7 +158,7 @@ export function ProfileSettings({ user, setOpenModal }) {
               </Button>
             </div>
             {/*<div className="jk-divider" />*/}
-        
+
           </div>
         </div>
       </div>

@@ -72,8 +72,8 @@ function Admin() {
   }
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <Link href="/admin"><T className="tt-se">admin</T></Link>,
-    <T className="tt-se">{query.tab as string}</T>,
+    <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)} className="link"><T className="tt-se">admin</T></Link>,
+    tabs[query.tab as string]?.header,
   ];
   const pushTab = tabKey => push({ pathname: ROUTES.ADMIN.PAGE(tabKey as AdminTab), query });
   

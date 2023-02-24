@@ -139,8 +139,9 @@ li > * {
   > div > div > .jk-md-math-viewer-layout {
     width: 100%;
     background-color: var(--t-color-white);
-    border-radius: var(--pad-xt);
-    padding: var(--pad-xt);
+    @extend .jk-border-radius-inline;
+    padding: 0 var(--pad-t);
+    box-sizing: border-box;
   }
   
   .jk-md-math-editor-layout {
@@ -150,7 +151,7 @@ li > * {
   }
   
   > div {
-    margin: var(--pad-t) 0;
+    margin: 0 0 var(--pad-xt) 0;
   }
 }
 

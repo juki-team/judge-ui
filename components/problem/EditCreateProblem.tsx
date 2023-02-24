@@ -1,10 +1,11 @@
-import { CloseIcon, SaveIcon, useJukiBase } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   ButtonLoader,
   CheckUnsavedChanges,
+  CloseIcon,
   LinkProblems,
   ProblemStatement,
+  SaveIcon,
   T,
   TabsInline,
   TwoContentSection,
@@ -32,10 +33,9 @@ import { ProblemTestCases } from './ProblemTestCases';
 export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditCreateProblemType }) => {
   
   const editing = !!initialProblem;
-  const { push } = useRouter();
+  const { query, push } = useRouter();
   const [problem, setProblem] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { addNotification } = useNotification();
-  const { viewPortSize } = useJukiBase();
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const bodyProblem = { ...problem };
@@ -136,7 +136,11 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LinkProblems><T className="tt-se">contests</T></LinkProblems>,
+    <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
+    <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} className="link">
+      <div className="ws-np">{problem.name}</div>
+    </Link>,
+    tabs[tab as string]?.header,
   ];
   
   return (
