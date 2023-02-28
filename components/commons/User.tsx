@@ -1,8 +1,8 @@
 import { Image } from 'components';
+import { replaceParamQuery } from 'helpers';
+import { useRouter } from 'hooks';
 import { cloneElement } from 'react';
-import { QueryParam } from '../../config/constants';
-import { replaceParamQuery } from '../../helpers';
-import { useRouter } from '../../hooks';
+import { QueryParam } from 'types';
 
 interface UserChipProps {
   imageUrl: string,

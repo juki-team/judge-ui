@@ -1,5 +1,4 @@
-import { SearchParamsObjectType } from 'types';
-import { QueryParam } from '../config/constants';
+import { QueryParam, SearchParamsObjectType } from 'types';
 
 export const searchParamsObjectTypeToQuery = (params: SearchParamsObjectType) => {
   const query = {};

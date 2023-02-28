@@ -4,17 +4,18 @@ import {
   ChangePasswordModal,
   EditProfileModal,
   FetcherLayer,
+  Image,
   LockIcon,
-  Profile,
-  ProfileSettings,
   ProfileSubmissions,
   ResetPassword,
   T,
   TabsInline,
   TwoContentSection,
+  UserProfile,
+  UserProfileSettings,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useJukiBase } from 'hooks';
+import { useJukiUser } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -25,7 +26,7 @@ export default function ProfileView() {
   
   const { query, push } = useRouter();
   const { nickname, tab } = query;
-  const { user: { nickname: userNickname } } = useJukiBase();
+  const { user: { nickname: userNickname } } = useJukiUser();
   const [openModal, setOpenModal] = useState('');
   const onClose = () => setOpenModal('');
   
@@ -41,11 +42,10 @@ export default function ProfileView() {
             header: <T className="tt-ce">profile</T>,
             body: (
               <div className="pad-top-bottom pad-left-right">
-                <Profile user={data?.content} />
+                <UserProfile user={data?.content} ImageCmp={Image} />
               </div>
             ),
           },
-  
         };
         if (data?.content?.nickname === userNickname) {
           tabHeaders[ProfileTab.SETTINGS] = {
@@ -53,7 +53,10 @@ export default function ProfileView() {
             header: <T className="tt-ce">settings</T>,
             body: (
               <div className="pad-top-bottom pad-left-right">
-                <ProfileSettings user={data?.content} setOpenModal={setOpenModal} />
+                <UserProfileSettings
+                  user={data?.content}
+                  onClickUpdatePassword={() => setOpenModal('UPDATE_PASSWORD')}
+                />
               </div>
             ),
           };

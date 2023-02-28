@@ -1,9 +1,9 @@
 import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1, QueryParam } from 'config/constants';
+import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiBase } from 'hooks';
+import { useJukiUser } from 'hooks';
 import { useMemo } from 'react';
-import { ContestResponseDTO, DataViewerHeadersType, GetUrl, SubmissionResponseDTO } from 'types';
+import { ContestResponseDTO, DataViewerHeadersType, GetUrl, QueryParam, SubmissionResponseDTO } from 'types';
 import {
   submissionDateColumn,
   submissionLanguage,
@@ -15,7 +15,7 @@ import {
 
 export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { user: { nickname } } = useJukiBase();
+  const { user: { nickname } } = useJukiUser();
   
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
     submissionProblemColumn({

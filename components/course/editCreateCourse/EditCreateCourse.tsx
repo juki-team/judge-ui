@@ -1,4 +1,3 @@
-import { CourseStatus } from '@juki-team/commons';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -17,8 +16,8 @@ import {
 } from 'components';
 import { COURSE_DEFAULT, COURSE_STATUS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
-import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
-import { useJukiBase, useNotification, useRouter } from 'hooks';
+import { authorizedRequest, cleanRequest } from 'helpers';
+import { useJukiUI, useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -26,6 +25,7 @@ import {
   ContentResponseType,
   ContestsTab,
   ContestTab,
+  CourseStatus,
   CourseTab,
   EditCreateCourseType,
   HTTPMethod,
@@ -42,8 +42,8 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
   const editing = !!initialCourse;
   
   const { addWarningNotification } = useNotification();
-  const { addNotification } = useNotification();
-  const { viewPortSize } = useJukiBase();
+  const { notifyResponse } = useNotification();
+  const { viewPortSize } = useJukiUI();
   const [course, setCourse] = useState<EditCreateCourseType>(initialCourse || COURSE_DEFAULT());
   const lastContest = useRef(initialCourse);
   useEffect(() => {
@@ -52,9 +52,11 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
       const height = text.split('\n').length;
       addWarningNotification(
         <div>
-          <T className="tt-se">
-            the course changed, your changes will overwrite another admin's
-          </T>:
+          <>
+            <T className="tt-se">the course changed</T>
+            <T>your changes can override other admins</T>
+          </>
+          :
           <div style={{ height: height * 24 + 'px' }}>
             <CodeEditor
               sourceCode={text}
@@ -75,12 +77,10 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
         method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
         body: JSON.stringify(course),
       }));
-    notifyResponse(response, addNotification);
-    if (response.success) {
+    if (notifyResponse(response, setLoaderStatus)) {
+      setLoaderStatus(Status.LOADING);
       await push(ROUTES.CONTESTS.VIEW(course.key, ContestTab.OVERVIEW));
       setLoaderStatus(Status.SUCCESS);
-    } else {
-      setLoaderStatus(Status.ERROR);
     }
   };
   

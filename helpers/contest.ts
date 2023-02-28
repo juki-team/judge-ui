@@ -1,18 +1,6 @@
-import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from '../config/constants';
-import { ContestProblemBasicType, ContestTemplate, EditCreateContestType } from '../types';
+import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
+import { ContestProblemBasicType, ContestTemplate, EditCreateContestType } from 'types';
 import { roundTimestamp } from './index';
-
-export const getContestStatus = (startTimestamp: number, endTimestamp: number) => {
-  const currentDateMilliseconds = new Date().getTime();
-  let contestStatus = 'upcoming';
-  
-  if (startTimestamp < currentDateMilliseconds && currentDateMilliseconds < endTimestamp) {
-    contestStatus = 'live';
-  } else if (currentDateMilliseconds > startTimestamp) {
-    contestStatus = 'past';
-  }
-  return contestStatus;
-};
 
 export const adjustContest = (contest: EditCreateContestType): EditCreateContestType => {
   const startTimestamp = roundTimestamp(contest.settings.startTimestamp);

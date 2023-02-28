@@ -1,11 +1,11 @@
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import { ButtonLoaderOnClickType, ContentResponseType, HTTPMethod, Status, SubmissionRunStatus } from 'types';
 
 export const useRejudgeServices = () => {
   
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   
   return {
     rejudgeSubmission: (submissionId: string): ButtonLoaderOnClickType => async (setLoaderStatus, loaderStatus, event) => {
@@ -14,12 +14,7 @@ export const useRejudgeServices = () => {
         await authorizedRequest(JUDGE_API_V1.REJUDGE.SUBMISSION(submissionId), {
           method: HTTPMethod.POST,
         }));
-      if (notifyResponse(response, addNotification)) {
-        setLoaderStatus(Status.SUCCESS);
-      } else {
-        setLoaderStatus(Status.ERROR);
-      }
+      notifyResponse(response, setLoaderStatus);
     },
-    
   };
 };

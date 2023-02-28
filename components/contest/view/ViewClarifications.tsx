@@ -1,4 +1,3 @@
-import { useFetcher } from '@juki-team/base-ui';
 import {
   Button,
   ButtonLoader,
@@ -17,8 +16,8 @@ import {
   UserNicknameLink,
 } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey, notifyResponse } from 'helpers';
-import { useDateFormat, useNotification, useRouter } from 'hooks';
+import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey } from 'helpers';
+import { useDateFormat, useFetcher, useNotification, useRouter } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
 
@@ -34,7 +33,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
     answer: string,
     public: boolean,
   }>(null);
-  const { addNotification } = useNotification();
+  const { addNotification, notifyResponse } = useNotification();
   const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
   const isJudgeOrAdmin = isJudge || isAdmin;
   
@@ -145,7 +144,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                           <T className="tt-se">problem</T>&nbsp;
                           <span className="fw-bd">
                             {contest?.problems?.[clarification.problemJudgeKey]?.index || <><T>problem
-                              deleted</T> ({clarification.problemJudgeKey})</>}
+                                deleted</T> ({clarification.problemJudgeKey})</>}
                           </span>
                         </div>}
                     </div>
@@ -257,12 +256,11 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                       method: clarification.clarificationId ? HTTPMethod.PUT : HTTPMethod.POST,
                       body: JSON.stringify(payload),
                     }));
-                  if (notifyResponse(response, addNotification)) {
+                  if (notifyResponse(response, setLoaderStatus)) {
+                    setLoaderStatus(Status.LOADING);
                     await mutate();
                     setLoaderStatus(Status.SUCCESS);
                     setClarification(null);
-                  } else {
-                    setLoaderStatus(Status.ERROR);
                   }
                 }}
               >

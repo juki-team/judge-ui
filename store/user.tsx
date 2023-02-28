@@ -1,4 +1,4 @@
-import { useJukiBase, useT } from 'hooks';
+import { useJukiUser, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import { FlagsType, Language, ProfileSetting, SetFlagsType, Theme } from 'types';
@@ -16,13 +16,13 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   const { i18n } = useT();
   const { locale, pathname, asPath, query, isReady, replace } = useRouter();
-  const { user } = useJukiBase();
+  const { user } = useJukiUser();
   const [flags, setFlags] = useState<FlagsType>({ isHelpOpen: false, isHelpFocused: false });
   _setFlags.current = setFlags;
   useEffect(() => {
     if (isReady) {
       const newLocale = user.settings?.[ProfileSetting.LANGUAGE] === Language.ES ? 'es' : 'en';
-      i18n?.changeLanguage?.(newLocale);
+      void i18n?.changeLanguage?.(newLocale);
     }
   }, [user.settings?.[ProfileSetting.LANGUAGE], isReady]);
   
@@ -30,7 +30,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
     if (isReady) {
       const newLocale = user.settings?.[ProfileSetting.LANGUAGE] === Language.ES ? 'es' : 'en';
       if (locale !== newLocale) {
-        replace({ pathname, query }, asPath, { locale: newLocale });
+        void replace({ pathname, query }, asPath, { locale: newLocale });
       }
     }
   }, [user.settings?.[ProfileSetting.LANGUAGE], user.nickname, locale, pathname, /*query,*/ asPath, isReady]);

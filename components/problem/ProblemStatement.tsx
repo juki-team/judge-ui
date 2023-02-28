@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpers';
-import { useJukiBase, useT } from 'hooks';
+import { useJukiUser, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
 import {
@@ -54,7 +54,7 @@ export const ProblemStatement = ({
 }: ProblemStatementProps) => {
   const { index: problemIndex, color: problemColor } = contest || {};
   const { query: { key, index, tab, ...query } } = useRouter();
-  const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiBase();
+  const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
   const { t } = useT();
   
   const statementDescription = statement?.description[preferredLanguage] || statement?.description[Language.EN] || statement?.description[Language.ES];

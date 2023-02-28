@@ -1,20 +1,19 @@
 import { Button, ButtonLoader, Image, LoadingIcon, LoginIcon, LogoutIcon, Popover, T } from 'components';
-import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { ROUTES } from 'config/constants';
 import { addParamQuery, classNames } from 'helpers';
-import { useJukiBase, useUserDispatch } from 'hooks';
+import { useJukiUI, useJukiUser } from 'hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { ProfileTab } from 'types';
+import { OpenDialog, ProfileTab, QueryParam } from 'types';
 
 export const LoginUser = ({
   collapsed,
   popoverPlacement,
 }: { collapsed: boolean, popoverPlacement: 'rightBottom' | 'bottomRight' }) => {
   
-  const { user, isLoading } = useJukiBase();
+  const { user, isLoading, logout } = useJukiUser();
   const { push, query } = useRouter();
-  const { logout } = useUserDispatch();
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   const [visible, setVisible] = useState(false);
   
   if (isLoading) {
@@ -53,10 +52,7 @@ export const LoginUser = ({
               </ButtonLoader>
               <ButtonLoader
                 extend
-                onClick={async (setLoaderStatus) => {
-                  await logout(setLoaderStatus);
-                  setVisible(false);
-                }}
+                onClick={(setLoader) => logout({ setLoader, onSuccess: () => setVisible(false) })}
                 type="outline"
                 icon={<LogoutIcon />}
               >
@@ -65,7 +61,7 @@ export const LoginUser = ({
             </div>
             {/*<div className="jk-divider tiny" />*/}
             {/*<div className="jk-row space-between nowrap">*/}
-            {/*  <div className="tx-s capitalized-case"><T>privacity policy</T></div>*/}
+            {/*  <div className="tx-s capitalized-case"><T>privacy policy</T></div>*/}
             {/*  <div className="tx-s capitalized-case"><T>terms of service</T></div>*/}
             {/*</div>*/}
           </div>

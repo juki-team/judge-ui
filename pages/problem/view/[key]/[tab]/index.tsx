@@ -18,7 +18,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useJukiBase, useNotification, useTrackLastPath } from 'hooks';
+import { useJukiUI, useJukiUser, useNotification, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
@@ -37,9 +37,9 @@ const ProblemView = (): ReactNode => {
   
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { query: { key, ...query }, push, isReady } = useRouter();
-  const { user } = useJukiBase();
+  const { user } = useJukiUser();
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>

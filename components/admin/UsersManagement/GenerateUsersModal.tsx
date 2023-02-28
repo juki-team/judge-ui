@@ -1,10 +1,11 @@
-import { Button, ButtonLoader, Input, Modal, Select, T } from 'components/index';
+import { Button, ButtonLoader, Input, Modal, Select, T } from 'components';
 import { downloadDataTableAsCsvFile, downloadXlsxAsFile, getRandomString } from 'helpers';
-import { useT, useUserDispatch } from 'hooks';
+import { useJukiUser, useT } from 'hooks';
 import { useState } from 'react';
 
 export const GenerateUsersModal = ({ isOpen, onClose }) => {
-  const { signUp } = useUserDispatch();
+  
+  const { createUser } = useJukiUser();
   const [users, setUsers] = useState([]);
   const [usersGen, setUsersGen] = useState({ prefix: 'team-test-', initialNumber: 0, total: 1, emailDomain: 'juki.contact' });
   const { t } = useT();
@@ -54,14 +55,25 @@ export const GenerateUsersModal = ({ isOpen, onClose }) => {
         </div>
         <div className="jk-row center gap">
           <ButtonLoader
-            onClick={async (setLoaderStatus, loaderStatus, event) => {
+            onClick={async (setLoader, loaderStatus, event) => {
               setUsers([]);
               for (let i = usersGen.initialNumber; i < usersGen.initialNumber + usersGen.total; i++) {
                 const nickname = `${usersGen.prefix}${i}`;
                 const password = getRandomString(8);
                 const email = `${nickname}@${usersGen.emailDomain}`;
-                const result = await signUp('', '', nickname, email, password, setLoaderStatus, false);
-                setUsers(users => [...users, { nickname, password, email, message: result?.message }]);
+                await createUser({
+                  body: {
+                    nickname,
+                    email,
+                    password,
+                    familyName: '',
+                    givenName: '',
+                  },
+                  setLoader,
+                  onFinally: (response) => {
+                    setUsers(users => [...users, { nickname, password, email, message: response.message }]);
+                  },
+                });
               }
             }}
           >

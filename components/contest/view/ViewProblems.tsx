@@ -1,8 +1,7 @@
-import { useJukiBase } from '@juki-team/base-ui';
 import { ButtonLoader, CheckIcon, CloseIcon, DataViewer, Field, OpenInNewIcon, T, TextField, TextHeadCell } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiUI, useNotification } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
@@ -15,6 +14,7 @@ import {
   HTTPMethod,
   Judge,
   ProblemTab,
+  QueryParam,
   Status,
   SubmissionRunStatus,
 } from 'types';
@@ -25,7 +25,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const { isJudge, isAdmin } = user || {};
   const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   const columns = useMemo(() => {

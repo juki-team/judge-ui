@@ -1,11 +1,11 @@
 import { EditCreateCourse } from 'components';
-import { useJukiBase } from 'hooks';
+import { useJukiUser } from 'hooks';
 import React from 'react';
 import Custom404 from '../../404';
 
 function CourseCreate() {
   
-  const { user: { canCreateContest } } = useJukiBase();
+  const { user: { canCreateContest } } = useJukiUser();
   
   if (!canCreateContest) {
     return <Custom404 />;

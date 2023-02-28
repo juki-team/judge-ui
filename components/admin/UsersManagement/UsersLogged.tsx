@@ -9,10 +9,10 @@ import {
   T,
   TextHeadCell,
   UserChip,
-} from 'components/index';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter, useSWR, useUserDispatch } from 'hooks';
+} from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
+import { authorizedRequest, classNames, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
+import { useDataViewerRequester, useJukiUser, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -20,13 +20,14 @@ import {
   DataViewerHeadersType,
   FilterTextOfflineType,
   HTTPMethod,
+  QueryParam,
   Status,
   UserManagementSessionResponseDTO,
 } from 'types';
 
 export function UsersLogged() {
   
-  const { deleteSession } = useUserDispatch();
+  const { deleteUserSession } = useJukiUser();
   const [withGuests, setWithGuests] = useState(false);
   const {
     data: response,
@@ -92,7 +93,15 @@ export function UsersLogged() {
           <Field className="jk-col center gap">
             <ButtonLoader
               icon={<DeleteIcon />}
-              onClick={deleteSession(id)}
+              onClick={(setLoader) => deleteUserSession({
+                params: { sessionId: id },
+                setLoader,
+                onSuccess: async () => {
+                  setLoader(Status.LOADING);
+                  await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
+                  setLoader(Status.SUCCESS);
+                },
+              })}
               size="tiny"
             >
               <T>delete session</T>
@@ -106,7 +115,7 @@ export function UsersLogged() {
   ], []);
   
   const { queryObject, push } = useRouter();
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
   const data: UserManagementSessionResponseDTO[] = (response?.success ? response?.contents : []);
   
@@ -130,11 +139,7 @@ export function UsersLogged() {
                     JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
                     { method: HTTPMethod.POST }),
                   );
-                  if (notifyResponse(response, addNotification)) {
-                    setLoaderStatus(Status.SUCCESS);
-                  } else {
-                    setLoaderStatus(Status.ERROR);
-                  }
+                  notifyResponse(response, setLoaderStatus);
                   await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
                 }}>
                 <T>delete old sessions</T>

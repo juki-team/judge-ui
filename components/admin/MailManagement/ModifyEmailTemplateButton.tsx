@@ -1,6 +1,6 @@
 import { Button, ButtonLoader, CodeEditor, Modal, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { ContentResponseType, HTTPMethod, ProgrammingLanguage, Status } from 'types';
@@ -8,7 +8,7 @@ import { ContentResponseType, HTTPMethod, ProgrammingLanguage, Status } from 'ty
 export const ModifyEmailTemplateButton = ({ emailTemplate: initialEmailTemplate, mutate }) => {
   const [emailTemplate, setEmailTemplate] = useState(initialEmailTemplate);
   const [open, setOpen] = useState(false);
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   useEffect(() => {
     setEmailTemplate(initialEmailTemplate);
   }, [initialEmailTemplate, open]);
@@ -39,11 +39,8 @@ export const ModifyEmailTemplateButton = ({ emailTemplate: initialEmailTemplate,
                   { method: HTTPMethod.PUT, body: JSON.stringify({ emailTemplate }) },
                 ));
                 await mutate();
-                if (notifyResponse(response, addNotification)) {
-                  setLoaderStatus(Status.SUCCESS);
+                if (notifyResponse(response, setLoaderStatus)) {
                   setOpen(false);
-                } else {
-                  setLoaderStatus(Status.ERROR);
                 }
               }}
             >

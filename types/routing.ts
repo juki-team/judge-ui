@@ -1,7 +1,40 @@
-export enum ContestTimeStatus {
-  UPCOMING = 'upcoming',
-  LIVE = 'live',
-  PAST = 'past'
+export enum QueryParam {
+  DIALOG = 'dg',
+  USER_PREVIEW = 'up',
+  SUBMISSION_VIEW = 'sv',
+  // tables
+  MY_STATUS_TABLE = 'mst',
+  STATUS_TABLE = 'sst',
+  ALL_SUBMISSIONS_TABLE = 'ast',
+  PROFILE_SUBMISSIONS_TABLE = 'pst',
+  ALL_USERS_TABLE = 'aut',
+  ECS_DEFINITIONS_TASK_TABLE = 'edt',
+  ECS_TASKS_TABLE = 'ett',
+  LOGGED_USERS_TABLE = 'lut',
+  // contests
+  ALL_CONTESTS_TABLE = 'act',
+  ENDLESS_CONTESTS_TABLE = 'ect',
+  LIVE_CONTESTS_TABLE = 'lct',
+  UPCOMING_CONTESTS_TABLE = 'uct',
+  PAST_CONTESTS_TABLE = 'pct',
+  //
+  SCOREBOARD_TABLE = 'sdt',
+  PROBLEMS_TABLE = 'pmt',
+  RANKING_TABLE = 'rgt',
+  // courses
+  COURSES_TABLE = 'cst',
+  // table queries
+  PAGE_TABLE = 'p',
+  PAGE_SIZE_TABLE = 'z',
+  SORT_TABLE = 's',
+  FILTER_TABLE = 'f',
+  VIEW_MODE_TABLE = 'v',
+}
+
+export enum OpenDialog {
+  WELCOME = 'w',
+  SIGN_IN = 'si',
+  SIGN_UP = 'sup',
 }
 
 export enum AdminTab {
@@ -10,13 +43,13 @@ export enum AdminTab {
   FILES_MANAGEMENT = 'files-management',
   SQS_MANAGEMENT = 'sqs-management',
   MAIL_MANAGEMENT = 'mail-management',
-
+  
   USERS_MANAGEMENT = 'users-management',
   ALL_USERS = 'all-users',
   LOGGED_USERS = 'logged-users',
-
-  JUDGERS_MANAGEMENT = 'judgers-management',
-  JUDGERS_SETTINGS = 'judgers-settings',
+  
+  RUNNERS_MANAGEMENT = 'runners-management',
+  RUNNERS_SETTINGS = 'runners-settings',
   ECS_TASKS_MANAGEMENT = 'ecs-task-management',
   ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitions-management',
 }
@@ -27,13 +60,11 @@ export enum ProblemTab {
   MY_SUBMISSIONS = 'my-submissions',
   SUBMISSIONS = 'submissions',
   TESTS = 'tests',
-  RANKING = 'ranking',
-  STATISTICS = 'statistics',
+  // RANKING = 'ranking',
+  // STATISTICS = 'statistics',
   SETUP = 'setup',
   EDITORIAL = 'editorial',
 }
-
-export type ProblemParamsType = { key: string, tab: ProblemTab };
 
 export enum ContestTab {
   OVERVIEW = 'overview',
@@ -44,7 +75,7 @@ export enum ContestTab {
   CLARIFICATIONS = 'clarifications',
   SUBMISSIONS = 'submissions',
   SETUP = 'setup',
-  JUDGE = 'judge',
+  // JUDGE = 'judge',
   MEMBERS = 'members',
 }
 
@@ -56,20 +87,16 @@ export enum ContestsTab {
   PAST = 'past',
 }
 
-export type ContestParamsType = { key: string, tab: ContestTab, subTab?: string, subSubTab?: ProblemTab };
-
 export enum ProfileTab {
   PROFILE = 'profile',
   SETTINGS = 'settings',
   SUBMISSIONS = 'submissions',
-  CONTESTS = 'contests'
+  CONTESTS = 'contests',
 }
-
-export type SearchParams = { [key: string]: Array<number | string> };
 
 export enum CourseTab {
   OVERVIEW = 'overview',
-  UNITS = 'units'
+  UNITS = 'units',
 }
 
 export enum SheetTab {

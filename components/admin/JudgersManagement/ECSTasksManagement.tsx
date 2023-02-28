@@ -1,9 +1,17 @@
 import { ButtonLoader, DataViewer, Field, SettingsSuggestIcon, StopCircleIcon, T, TextHeadCell } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
+import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo } from 'react';
-import { ContentResponseType, ContentsResponseType, DataViewerHeadersType, HTTPMethod, Status, TaskResponseDTO } from 'types';
+import {
+  ContentResponseType,
+  ContentsResponseType,
+  DataViewerHeadersType,
+  HTTPMethod,
+  QueryParam,
+  Status,
+  TaskResponseDTO,
+} from 'types';
 
 export const ECSTasksManagement = () => {
   const {
@@ -12,7 +20,7 @@ export const ECSTasksManagement = () => {
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
   const { mutate } = useSWR();
-  const { addNotification, addSuccessNotification } = useNotification();
+  const { addNotification, addSuccessNotification, notifyResponse } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue">task definition</T>} />,
@@ -65,13 +73,8 @@ export const ECSTasksManagement = () => {
                   JUDGE_API_V1.SYS.AWS_ECS_STOP_TASK_TASK_ARN(taskArn),
                   { method: HTTPMethod.POST }),
                 );
-                const success = notifyResponse(response, addNotification);
+                notifyResponse(response, setLoaderStatus);
                 await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
-                if (success) {
-                  setLoaderStatus(Status.SUCCESS);
-                } else {
-                  setLoaderStatus(Status.ERROR);
-                }
               }}
             >
               <T>stop</T>
@@ -109,16 +112,12 @@ export const ECSTasksManagement = () => {
               JUDGE_API_V1.SYS.AWS_ECS_ADJUST_TASKS(),
               { method: HTTPMethod.POST }),
             );
-            const success = notifyResponse(response, addNotification);
-            if (response.success) {
+            if (notifyResponse(response, setLoaderStatus)) {
               addSuccessNotification(<pre>{JSON.stringify(response.content, null, 2)}</pre>);
             }
+            setLoaderStatus(Status.LOADING);
             await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
-            if (success) {
-              setLoaderStatus(Status.SUCCESS);
-            } else {
-              setLoaderStatus(Status.ERROR);
-            }
+            setLoaderStatus(Status.SUCCESS);
           }}
           style={{ marginLeft: 'var(--pad-xt)' }}
         >

@@ -12,7 +12,7 @@ import {
   TextHeadCell,
   UserNicknameLink,
 } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import {
   authorizedRequest,
   classNames,
@@ -20,10 +20,9 @@ import {
   downloadDataTableAsCsvFile,
   downloadXlsxAsFile,
   getProblemJudgeKey,
-  notifyResponse,
   searchParamsObjectTypeToQuery,
 } from 'helpers';
-import { useDataViewerRequester, useJukiBase, useNotification, useRouter, useT } from 'hooks';
+import { useDataViewerRequester, useJukiUI, useJukiUser, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import {
@@ -33,6 +32,7 @@ import {
   ContestTab,
   DataViewerHeadersType,
   HTTPMethod,
+  QueryParam,
   ScoreboardResponseDTO,
   Status,
 } from 'types';
@@ -102,10 +102,10 @@ const DownloadButton = ({
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { user } = useJukiBase();
-  const { addNotification } = useNotification();
+  const { user } = useJukiUser();
+  const { notifyResponse } = useNotification();
   const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       {
@@ -261,11 +261,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                   JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
                   { method: HTTPMethod.POST }),
                 );
-                if (notifyResponse(response, addNotification)) {
-                  setLoaderStatus(Status.SUCCESS);
-                } else {
-                  setLoaderStatus(Status.ERROR);
-                }
+                notifyResponse(response, setLoaderStatus);
               }}
             >
               <T>recalculate</T>

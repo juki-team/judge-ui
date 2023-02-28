@@ -1,16 +1,16 @@
 import { Breadcrumbs, ButtonLoader, Field, PagedDataViewer, PlusIcon, T, TextHeadCell, TwoContentSection } from 'components';
-import { JUDGE_API_V1, QueryParam, ROUTES } from 'config/constants';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiBase, useRouter, useTrackLastPath } from 'hooks';
+import { useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, GetUrl, LastLinkKey } from 'types';
+import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, GetUrl, LastLinkKey, QueryParam } from 'types';
 
 function Problems() {
   
   useTrackLastPath(LastLinkKey.PROBLEMS);
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
-  const { user: { canCreateProblem } } = useJukiBase();
+  const { user: { canCreateProblem } } = useJukiUser();
   const columns: DataViewerHeadersType<CourseSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">name</T>} />,

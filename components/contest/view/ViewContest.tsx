@@ -14,9 +14,8 @@ import {
   ViewProblems,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useContestRouter, useJukiBase, useTrackLastPath } from 'hooks';
+import { useContestRouter, useJukiUI, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import Custom404 from 'pages/404';
 import React from 'react';
 import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status } from 'types';
@@ -31,7 +30,7 @@ export function ContestView() {
   const { push } = useRouter();
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
   const { lastProblemVisited, pushTab, contestKey, problemIndex, contestTab, query } = useContestRouter();
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>

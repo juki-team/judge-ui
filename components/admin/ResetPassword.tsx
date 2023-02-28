@@ -1,10 +1,10 @@
 import { Button, ButtonLoader, Modal, T, UserNicknameLink } from 'components';
-import { useUserDispatch } from 'hooks';
+import { useJukiUser } from 'hooks';
 import React from 'react';
 
 export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nickname: string }) => {
   
-  const { resetPassword } = useUserDispatch();
+  const { resetUserPassword } = useJukiUser();
   
   return (
     <Modal
@@ -27,7 +27,13 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
         </div>
         <div className="jk-row right gap extend">
           <Button type="text" onClick={onClose}><T>cancel</T></Button>
-          <ButtonLoader onClick={resetPassword(nickname, onClose)}>
+          <ButtonLoader
+            onClick={(setLoader) => resetUserPassword({
+              params: { nickname },
+              setLoader,
+              onSuccess: onClose,
+            })}
+          >
             <T>reset_2</T>
           </ButtonLoader>
         </div>

@@ -20,7 +20,7 @@ Este concurso esta enfocado para estudiantes de primer año de Informática o ca
 ## Contenido
 
 \\textAlign=justify
-En este concurso podras encontrar problemas de Grafos y Estructura de Datos. Para tener un buen desepeño en el concurso necesitarás conocimientos en:
+En este concurso podrás encontrar problemas de Grafos y Estructura de Datos. Para tener un buen desempeño en el concurso necesitarás conocimientos en:
 
 * [Segment Tree](https://cp-algorithms.com/data_structures/segment_tree.html)
 * Fenwick Tree
@@ -41,7 +41,7 @@ Nombre | Rol
 -- | --
 Juki | Admin
 Alberto Jimenez | Juez
-Fernando Savedra | Staff
+Fernando Mendoza | Staff
 Oscar Arias | Problem Setter`,
     problems: {},
     settings: {

@@ -1,14 +1,23 @@
-import { TextField, useJukiBase } from '@juki-team/base-ui';
-import { Breadcrumbs, DataViewer, Field, Image, T, TextHeadCell, TwoContentSection, UserNicknameLink } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
+import {
+  Breadcrumbs,
+  DataViewer,
+  Field,
+  Image,
+  T,
+  TextField,
+  TextHeadCell,
+  TwoContentSection,
+  UserNicknameLink,
+} from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester2, useRouter } from 'hooks';
+import { useDataViewerRequester2, useJukiUI, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ContentsResponseType, DataViewerHeadersType, GetUrl, UserRankResponseDTO } from 'types';
+import { ContentsResponseType, DataViewerHeadersType, GetUrl, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">position</T>} />,
@@ -50,7 +59,7 @@ function Ranking() {
         <TextField
           text={<>
             <div className="fw-bd">{problemPoints.toFixed(2)}</div>
-            &nbsp;<T>pnts</T>
+            &nbsp;<T>pts.</T>
           </>}
           label={<T className="tt-se">on problems</T>}
         />
@@ -66,7 +75,7 @@ function Ranking() {
         <TextField
           text={<>
             <div className="fw-bd">{competitionPoints?.toFixed(2)}</div>
-            &nbsp;<T>pnts</T>
+            &nbsp;<T>pts.</T>
           </>}
           label={<T className="tt-se">on contests</T>}
         />

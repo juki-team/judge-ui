@@ -1,4 +1,3 @@
-import { classNames } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -14,10 +13,10 @@ import {
   TwoContentSection,
   UserNicknameLink,
 } from 'components';
-import { PROBLEM_STATUS, QueryParam, ROUTES } from 'config/constants';
+import { PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
-import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiBase, useRouter, useTrackLastPath } from 'hooks';
+import { buttonLoaderLink, classNames, toFilterUrl, toSortUrl } from 'helpers';
+import { useFetcher, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import {
@@ -29,13 +28,14 @@ import {
   ProblemStatus,
   ProblemSummaryListResponseDTO,
   ProblemTab,
+  QueryParam,
 } from 'types';
 
 function Problems() {
   
   useTrackLastPath(LastLinkKey.PROBLEMS);
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
-  const { user: { canCreateProblem } } = useJukiBase();
+  const { user: { canCreateProblem } } = useJukiUser();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {

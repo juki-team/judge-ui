@@ -7,7 +7,7 @@ function View() {
   const { query: { key }, push, isReady } = useRouter();
   useEffect(() => {
     if (isReady) {
-      push(ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT));
+      void push(ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT));
     }
   }, [push, isReady]);
   return null;

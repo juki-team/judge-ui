@@ -11,7 +11,7 @@ import {
   TwoContentSection,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { useJukiBase, useRouter, useTrackLastPath } from 'hooks';
+import { useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { ContestsTab, LastLinkKey } from 'types';
@@ -21,7 +21,7 @@ function Contests() {
   useTrackLastPath(LastLinkKey.CONTESTS);
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
   const { isReady, query: { tab: contestsTab, ...query }, push } = useRouter();
-  const { user: { canCreateContest } } = useJukiBase();
+  const { user: { canCreateContest } } = useJukiUser();
   useEffect(() => {
     if (isReady && (![
       ContestsTab.ALL,
@@ -30,7 +30,7 @@ function Contests() {
       ContestsTab.UPCOMING,
       ContestsTab.PAST,
     ].includes(contestsTab as ContestsTab))) {
-      push({
+      void push({
         pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
         query,
       }, undefined, { shallow: true });
@@ -94,9 +94,11 @@ function Contests() {
     <T className="tt-se">contests</T>,
   ];
   const extraNodes = [];
+  
   if (canCreateContest) {
     extraNodes.push(<CreateContestButton />);
   }
+  
   return (
     <TwoContentSection>
       <div>

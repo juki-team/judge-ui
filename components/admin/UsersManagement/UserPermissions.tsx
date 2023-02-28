@@ -1,10 +1,10 @@
-import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components/index';
+import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components';
 import {
   CONTEST_ROLE,
   COURSE_ROLE,
+  FILE_ROLE,
   JUDGE_API_V1,
   PROBLEM_ROLE,
-  SHEET_ROLE,
   SYSTEM_ROLE,
   TEAM_ROLE,
   USER_ROLE,
@@ -48,7 +48,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     problemRole: userToUpdate.problemRole,
     teamRole: userToUpdate.teamRole,
     courseRole: userToUpdate.courseRole,
-    sheetRole: userToUpdate.sheetRole,
+    fileRole: userToUpdate.fileRole,
     systemRole: userToUpdate.systemRole,
   };
   const [newRoles, setNewRoles] = useState<Roles>(roles);
@@ -60,7 +60,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     contest: CONTEST_ROLE,
     team: TEAM_ROLE,
     course: COURSE_ROLE,
-    sheet: SHEET_ROLE,
+    sheet: FILE_ROLE,
   };
   
   return (

@@ -96,7 +96,7 @@ export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeader
 });
 
 export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: <TextHeadCell text={<T>lang</T>} />,
+  head: <TextHeadCell text={<T>lang.</T>} />,
   index: 'language',
   field: ({ record: { submitId, canViewSourceCode, language }, isCard }) => (
     isCard ? null :

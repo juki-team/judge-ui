@@ -1,9 +1,9 @@
-import { settings } from '@juki-team/base-ui';
+import { useJukiUser } from '@juki-team/base-ui';
 import { LastLinkContext } from 'components';
-import { useFetcher as useFetcherJk, useJukiBase } from 'hooks';
+import { useFetcher as useFetcherJk } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { SWRConfiguration, useSWRConfig } from 'swr';
+import { SWRConfiguration } from 'swr';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -36,7 +36,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const [firstRefresh, setFirstRefresh] = useState(false);
-  const { user: { nickname } } = useJukiBase();
+  const { user: { nickname } } = useJukiUser();
   const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(firstRefresh ? url : null, options);
   
   const request = useCallback(async () => {
@@ -48,7 +48,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   }, [mutate, firstRefresh]);
   
   useEffect(() => {
-    mutate();
+    void mutate();
   }, [nickname]);
   
   useEffect(() => {
@@ -72,7 +72,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
 export const useDataViewerRequester2 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(getUrl: GetUrl, options?: SWRConfiguration) => {
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
-  const { user: { nickname } } = useJukiBase();
+  const { user: { nickname } } = useJukiUser();
   const [url, setUrl] = useState(null);
   const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(url, options);
   
@@ -90,7 +90,7 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
   }, [mutate, url]);
   
   useEffect(() => {
-    mutate();
+    void mutate();
   }, [nickname]);
   
   useEffect(() => {
@@ -107,37 +107,6 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
     isLoading: isLoading || isValidating,
     request,
     setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
-  };
-};
-
-export function useMatchMutate() {
-  const { cache, mutate } = useSWRConfig();
-  return (matcher, ...args) => {
-    if (!(cache instanceof Map)) {
-      throw new Error('matchMutate requires the cache provider to be a Map instance');
-    }
-    
-    const keys = [];
-    
-    // @ts-ignore
-    for (const key of cache.keys()) {
-      if (matcher.test(key)) {
-        keys.push(key);
-      }
-    }
-    const mutations = keys.map((key) => mutate(key, ...args));
-    return Promise.all(mutations);
-  };
-}
-
-export const useSWR = () => {
-  const { mutate } = useSWRConfig();
-  let token = '';
-  if (typeof window !== 'undefined') {
-    token = localStorage.getItem(settings.TOKEN_NAME) || '';
-  }
-  return {
-    mutate: useCallback((url: string) => mutate([url, token]), []),
   };
 };
 
@@ -158,13 +127,14 @@ export {
   useOutsideAlerter,
   useNotification,
   useT,
-  useJukiBase,
+  useJukiUser,
+  useJukiUI,
   useFetcher,
+  useSWR,
+  useJukiUserToggleSetting,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export * from './contest';
 export * from './rejudge';
 export * from './task';
 export * from './useDateFormat';
-export * from './useOnline';
-export * from './user';

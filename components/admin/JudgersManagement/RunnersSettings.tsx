@@ -1,17 +1,17 @@
 import { ButtonLoader, Input, SaveIcon, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import { useEffect, useState } from 'react';
 import { ContentResponseType, HTTPMethod, RunnerType, Status } from 'types';
 
-export const JudgersSettings = () => {
+export const RunnersSettings = () => {
   
   const [highPerformanceRunnerMinTasks, setHighPerformanceRunnerMinTasks] = useState(0);
   const [lowPerformanceRunnerMinTasks, setLowPerformanceRunnerMinTasks] = useState(0);
   const [reload, setReload] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -45,11 +45,7 @@ export const JudgersSettings = () => {
               JUDGE_API_V1.SYS.AWS_ECS_RUNNER_MIN_TASK(RunnerType.HIGH_PERFORMANCE, highPerformanceRunnerMinTasks),
               { method: HTTPMethod.POST }),
             );
-            if (notifyResponse(response, addNotification)) {
-              setLoaderStatus(Status.SUCCESS);
-            } else {
-              setLoaderStatus(Status.ERROR);
-            }
+            notifyResponse(response, setLoaderStatus);
             setLoading(false);
             setReload(Date.now());
           }}
@@ -72,11 +68,7 @@ export const JudgersSettings = () => {
               JUDGE_API_V1.SYS.AWS_ECS_RUNNER_MIN_TASK(RunnerType.LOW_PERFORMANCE, lowPerformanceRunnerMinTasks),
               { method: HTTPMethod.POST }),
             );
-            if (notifyResponse(response, addNotification)) {
-              setLoaderStatus(Status.SUCCESS);
-            } else {
-              setLoaderStatus(Status.ERROR);
-            }
+            notifyResponse(response, setLoaderStatus);
             setLoading(false);
             setReload(Date.now());
           }}

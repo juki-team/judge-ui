@@ -1,4 +1,4 @@
-import { QueryParam } from './routes';
+import { QueryParam } from 'types';
 
 export const DEFAULT_DATA_VIEWER_PROPS = {
   getPageQueryParam: (name: string) => (name ? name + '.' : name) + QueryParam.PAGE_TABLE,

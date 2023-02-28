@@ -236,6 +236,17 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                 style={{ height: 'calc(var(--vh) * 100 - 200px)', width: '100%', border: '1px solid var(--t-color-gray-6)' }}
               >
                 <UserCodeEditor
+                  className="br-g6"
+                  expandPosition={{
+                    // width: 'var(--screen-content-width)',
+                    // height: 'calc(var(--content-height) - var(--pad-md) - var(--pad-md))',
+                    width: '100vw',
+                    height: 'calc(100vh - 41px)',
+                    // top: 'calc(var(--top-horizontal-menu-height) + var(--pad-md))',
+                    top: '41px',
+                    left: '0',
+                    // left: 'calc((100vw - var(--screen-content-width)) / 2)',
+                  }}
                   languages={[ProgrammingLanguage.CPP17]}
                   onSourceChange={setSource}
                   initialTestCases={{

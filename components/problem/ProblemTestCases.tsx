@@ -17,7 +17,7 @@ import {
   T,
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize, notifyResponse } from 'helpers';
+import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize } from 'helpers';
 import { useNotification, useSWR } from 'hooks';
 import { useEffect, useState } from 'react';
 import {
@@ -85,7 +85,7 @@ const ProblemTestCasesPage = ({
   useEffect(() => {
     setTestCases(transform(problemTestCases));
   }, [problemTestCases]);
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
   
   const handleServerDelete = (testCaseKey: string, keyFile: KeyFileType): ButtonLoaderOnClickType => async (setLoaderStatus) => {
@@ -96,11 +96,7 @@ const ProblemTestCasesPage = ({
         method: HTTPMethod.DELETE,
       }));
     await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
-    if (notifyResponse(response, addNotification)) {
-      setLoaderStatus(Status.SUCCESS);
-    } else {
-      setLoaderStatus(Status.ERROR);
-    }
+    notifyResponse(response, setLoaderStatus);
     setLock(false);
   };
   
@@ -209,7 +205,7 @@ const ProblemTestCasesPage = ({
                   await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, keyFile), {
                     method: HTTPMethod.DELETE,
                   }));
-                notifyResponse(response, addNotification);
+                notifyResponse(response);
               }));
               setLoaderStatus(Status.SUCCESS);
             }
@@ -267,11 +263,7 @@ const ProblemTestCasesPage = ({
                           method: HTTPMethod.PUT,
                           body: JSON.stringify({ testCases: { [testCase.testCaseKey]: { groups: testCase.groups } } }),
                         }));
-                      if (notifyResponse(response, addNotification)) {
-                        setLoaderStatus(Status.SUCCESS);
-                      } else {
-                        setLoaderStatus(Status.ERROR);
-                      }
+                      notifyResponse(response);
                       await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
                       setLock(false);
                     }}

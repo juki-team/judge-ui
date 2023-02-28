@@ -6,7 +6,7 @@ function View() {
   const { query, push, isReady } = useRouter();
   useEffect(() => {
     if (isReady) {
-      push(ROUTES.PROBLEMS.LIST());
+      void push(ROUTES.PROBLEMS.LIST());
     }
   }, [push, query, isReady]);
   return null;

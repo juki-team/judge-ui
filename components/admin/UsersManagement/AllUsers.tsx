@@ -19,7 +19,6 @@ import {
   DEFAULT_DATA_VIEWER_PROPS,
   JUDGE_API_V1,
   PROBLEM_ROLE,
-  QueryParam,
   TEAM_ROLE,
   USER_ROLE,
   USER_STATUS,
@@ -34,6 +33,7 @@ import {
   DataViewerHeadersType,
   FilterTextOfflineType,
   HTTPMethod,
+  QueryParam,
   Status,
   UserManagementResponseDTO,
 } from 'types';
@@ -47,7 +47,7 @@ export function AllUsers() {
     value: status.value,
     label: <T className="tt-ce">{status.label}</T>,
   }));
-  const { addSuccessNotification, addErrorNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   const {
     data: response,
     request,
@@ -60,14 +60,8 @@ export function AllUsers() {
       method: HTTPMethod.PUT,
       body: JSON.stringify({ status }),
     }));
-    if (response.success) {
-      addSuccessNotification(<T>success</T>);
-      setLoader?.(Status.SUCCESS);
-    } else {
-      addErrorNotification(<T>error</T>);
-      setLoader?.(Status.ERROR);
-    }
-    request();
+    notifyResponse(response, setLoader);
+    await request();
   };
   
   const columns: DataViewerHeadersType<UserManagementResponseDTO>[] = useMemo(() => [

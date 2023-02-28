@@ -1,1 +1,1 @@
-export * from './JudgersManagement';
+export * from 'components/admin/JudgersManagement/RunnersManagement';

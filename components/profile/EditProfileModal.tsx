@@ -12,21 +12,23 @@ import {
   T,
   TextArea,
 } from 'components';
-import { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, JUDGE } from 'config/constants';
+import { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
-import { useUserDispatch } from 'hooks';
+import { useJukiUser, useRouter, useSWR } from 'hooks';
 import { useEffect, useState } from 'react';
-import { UserProfileResponseDTO } from 'types';
+import { ProfileTab, Status, UserProfileResponseDTO } from 'types';
 import { ImageProfileModal } from './ImageProfileModal';
 
 export function EditProfileModal({ user, onClose }: { user: UserProfileResponseDTO, onClose: () => void }) {
   
   const [userState, setUserState] = useState(user);
-  const { updateProfileData } = useUserDispatch();
+  const { updateUserProfileData, mutatePing } = useJukiUser();
+  const { mutate } = useSWR();
   useEffect(() => setUserState(user), [JSON.stringify(user)]);
   const [modalImageProfile, setModalImageProfile] = useState(false);
   const validLengthNickname = userState.nickname.length >= 3;
   const validCharNickname = ALPHANUMERIC_DASH_UNDERSCORE_REGEX.test(userState.nickname);
+  const { push, query } = useRouter();
   
   return (
     <Modal isOpen={true} onClose={onClose}>
@@ -115,20 +117,33 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
           <Button type="text" onClick={onClose}><T>cancel</T></Button>
           <ButtonLoader
             disabled={!validLengthNickname || !validCharNickname}
-            onClick={updateProfileData(
-              user.nickname,
-              {
-                nickname: userState.nickname,
-                givenName: userState.givenName,
-                familyName: userState.familyName,
-                aboutMe: userState.aboutMe,
-                country: userState.country,
-                city: userState.city,
-                institution: userState.institution,
-                handles: userState.handles,
-              },
-              onClose,
-            )}
+            onClick={(setLoader) =>
+              updateUserProfileData({
+                params: { nickname: user.nickname },
+                body: {
+                  nickname: userState.nickname,
+                  givenName: userState.givenName,
+                  familyName: userState.familyName,
+                  aboutMe: userState.aboutMe,
+                  country: userState.country,
+                  city: userState.city,
+                  institution: userState.institution,
+                  handles: userState.handles,
+                },
+                setLoader,
+                onSuccess: async () => {
+                  setLoader?.(Status.LOADING);
+                  let tab = ProfileTab.PROFILE;
+                  if (query.tab === ProfileTab.SUBMISSIONS) {
+                    tab = ProfileTab.SUBMISSIONS;
+                  }
+                  await push({ pathname: ROUTES.PROFILE.PAGE(userState.nickname, tab), query });
+                  await mutatePing();
+                  await mutate(JUDGE_API_V1.USER.PROFILE(user.nickname));
+                  setLoader?.(Status.SUCCESS);
+                  onClose();
+                },
+              })}
           >
             <T>update</T>
           </ButtonLoader>

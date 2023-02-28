@@ -13,15 +13,3 @@ export const LinkSheets = ({ children }) => {
     </Link>
   );
 };
-
-export const LinkSectionSheet = ({ children }) => {
-  const { lastLink } = useLasLink();
-  return (
-    <Link
-      href={{ pathname: lastLink[LastLinkKey.SECTION_SHEET].pathname, query: lastLink[LastLinkKey.SECTION_SHEET].query }}
-      className="link"
-    >
-      {children}
-    </Link>
-  );
-};

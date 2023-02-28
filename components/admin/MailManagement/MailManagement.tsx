@@ -1,6 +1,6 @@
 import { Button, ButtonLoader, CodeEditor, FetcherLayer, Input, Select, SendIcon, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, EmailDataResponseDTO, HTTPMethod, ProgrammingLanguage, Status } from 'types';
@@ -75,7 +75,8 @@ Exitos a todos.
 Sigan programando.`;
 
 export const MailManagement = () => {
-  const { addNotification } = useNotification();
+  
+  const { notifyResponse } = useNotification();
   const [password, setPassword] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
@@ -157,11 +158,7 @@ export const MailManagement = () => {
                   JUDGE_API_V1.SYS.MAIL_SEND(),
                   { method: HTTPMethod.POST, body: JSON.stringify({ from, to, subject, html, password }) }),
                 );
-                if (notifyResponse(response, addNotification)) {
-                  setLoaderStatus(Status.SUCCESS);
-                } else {
-                  setLoaderStatus(Status.ERROR);
-                }
+                notifyResponse(response, setLoaderStatus);
               }}
             >
               <T>send</T>

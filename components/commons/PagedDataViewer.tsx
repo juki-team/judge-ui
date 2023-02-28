@@ -1,8 +1,7 @@
-import { useJukiBase } from '@juki-team/base-ui';
 import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester2, useRouter } from 'hooks';
+import { useDataViewerRequester2, useJukiUI, useRouter } from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetRecordKeyType, GetUrl, ReactNodeOrFunctionType } from 'types';
 
@@ -31,7 +30,7 @@ export const PagedDataViewer = <T, V = T>({
 }: PagedDataViewerPros<T, V>) => {
   
   const { queryObject, replace } = useRouter();
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   const {
     data: response,
     request,
@@ -54,7 +53,7 @@ export const PagedDataViewer = <T, V = T>({
     <DataViewer<T>
       cards={cards}
       headers={headers}
-      data={toRow ? data.map(toRow) : data as unknown as T[]}
+      data={toRow ? data.map(toRow) : (data as unknown as T[])}
       rows={rows}
       request={request}
       rowsView={viewPortSize !== 'sm'}

@@ -1,16 +1,15 @@
-import { authorizedRequest, cleanRequest } from '@juki-team/base-ui';
-import { ContentResponseType, HTTPMethod } from '@juki-team/commons';
 import { AddIcon, Button, ButtonLoader, DeleteIcon, Input, Modal, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
-import { Status } from 'types';
+import { ContentResponseType, HTTPMethod, Status } from 'types';
 
 export const ModifyContactEmailsButton = ({ contactEmails: initialContactEmails, mutate }) => {
+  
   const [contactEmails, setContactEmails] = useState<string[]>(initialContactEmails);
   const [open, setOpen] = useState(false);
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   useEffect(() => {
     setContactEmails(initialContactEmails);
   }, [JSON.stringify(initialContactEmails), open]);
@@ -74,11 +73,8 @@ export const ModifyContactEmailsButton = ({ contactEmails: initialContactEmails,
                   { method: HTTPMethod.PUT, body: JSON.stringify({ contactEmails }) },
                 ));
                 await mutate();
-                if (notifyResponse(response, addNotification)) {
-                  setLoaderStatus(Status.SUCCESS);
+                if (notifyResponse(response, setLoaderStatus)) {
                   setOpen(false);
-                } else {
-                  setLoaderStatus(Status.ERROR);
                 }
               }}
             >

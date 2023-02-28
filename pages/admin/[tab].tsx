@@ -2,15 +2,15 @@ import {
   AllSubmissions,
   Breadcrumbs,
   FilesManagement,
-  JudgersManagement,
   MailManagement,
+  RunnersManagement,
   T,
   TabsInline,
   TwoContentSection,
   UsersManagement,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { useJukiBase, useTrackLastPath } from 'hooks';
+import { useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
@@ -26,10 +26,10 @@ function Admin() {
       canViewUsersManagement,
       canViewSubmissionsManagement,
       canViewFilesManagement,
-      canViewJudgersManagement,
+      canViewRunnersManagement,
       canViewEmailManagement,
     },
-  } = useJukiBase();
+  } = useJukiUser();
   
   if (!canViewUsersManagement && !canViewSubmissionsManagement && !canViewFilesManagement) {
     return <Custom404 />;
@@ -56,11 +56,11 @@ function Admin() {
       body: <div className="pad-left-right pad-top-bottom"><FilesManagement /></div>,
     };
   }
-  if (canViewJudgersManagement) {
-    tabs[AdminTab.JUDGERS_MANAGEMENT] = {
-      key: AdminTab.JUDGERS_MANAGEMENT,
-      header: <T className="tt-ce">judgers</T>,
-      body: <div className="pad-left-right pad-bottom"><JudgersManagement /></div>,
+  if (canViewRunnersManagement) {
+    tabs[AdminTab.RUNNERS_MANAGEMENT] = {
+      key: AdminTab.RUNNERS_MANAGEMENT,
+      header: <T className="tt-ce">runners</T>,
+      body: <div className="pad-left-right pad-bottom"><RunnersManagement /></div>,
     };
   }
   if (canViewEmailManagement) {

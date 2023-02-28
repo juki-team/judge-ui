@@ -1,6 +1,6 @@
 import { ButtonLoader, DataViewer, Field, PlayCircleIcon, Select, SettingsAlertIcon, T, TextHeadCell } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, QueryParam } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse, searchParamsObjectTypeToQuery } from 'helpers';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
+import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
 import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
@@ -8,17 +8,19 @@ import {
   ContentsResponseType,
   DataViewerHeadersType,
   HTTPMethod,
+  QueryParam,
   RunnerType,
   Status,
   TaskDefinitionResponseDTO,
 } from 'types';
 
 type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date, isHighRunner: boolean, isLowRunner: boolean };
+
 type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[] };
 
 const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) => {
   
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   const [revision, setRevision] = useState<RevisionType>(revisions[0]);
   const { mutate } = useSWR();
   
@@ -51,11 +53,7 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
               JUDGE_API_V1.SYS.AWS_ECS_RUN_TASK_TASK_DEFINITION(revision.taskDefinitionArn),
               { method: HTTPMethod.POST }),
             );
-            if (notifyResponse(response, addNotification)) {
-              setLoaderStatus(Status.SUCCESS);
-            } else {
-              setLoaderStatus(Status.ERROR);
-            }
+            notifyResponse(response, setLoaderStatus);
             await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
           }}
         >
@@ -72,11 +70,7 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
                 JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.HIGH_PERFORMANCE, revision.taskDefinitionArn),
                 { method: HTTPMethod.POST }),
               );
-              if (notifyResponse(response, addNotification)) {
-                setLoaderStatus(Status.SUCCESS);
-              } else {
-                setLoaderStatus(Status.ERROR);
-              }
+              notifyResponse(response, setLoaderStatus);
               await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
             }}
           >
@@ -94,11 +88,7 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
                 JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.LOW_PERFORMANCE, revision.taskDefinitionArn),
                 { method: HTTPMethod.POST }),
               );
-              if (notifyResponse(response, addNotification)) {
-                setLoaderStatus(Status.SUCCESS);
-              } else {
-                setLoaderStatus(Status.ERROR);
-              }
+              notifyResponse(response, setLoaderStatus);
               await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
             }}
           >

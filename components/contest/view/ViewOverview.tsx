@@ -8,32 +8,39 @@ import {
   SpectatorInformation,
   T,
 } from 'components';
-import { JUDGE_API_V1, OpenDialog, QueryParam } from 'config/constants';
-import { addParamQuery, authorizedRequest, classNames, cleanRequest, notifyResponse } from 'helpers';
-import { useDateFormat, useJukiBase, useNotification, useSWR } from 'hooks';
+import { JUDGE_API_V1 } from 'config/constants';
+import { addParamQuery, authorizedRequest, classNames, cleanRequest } from 'helpers';
+import { useDateFormat, useJukiUI, useJukiUser, useNotification, useSWR } from 'hooks';
 import { useRouter } from 'next/router';
-import { ContentResponseType, ContestResponseDTO, HTTPMethod, SetLoaderStatusOnClickType, Status } from 'types';
+import {
+  ContentResponseType,
+  ContestResponseDTO,
+  HTTPMethod,
+  OpenDialog,
+  QueryParam,
+  SetLoaderStatusOnClickType,
+  Status,
+} from 'types';
 
 export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { isJudge, isAdmin, isContestant, isGuest, isSpectator } = contest.user;
-  const { user: { isLogged } } = useJukiBase();
+  const { user: { isLogged } } = useJukiUser();
   const { push, query } = useRouter();
   const { dtf, rlt } = useDateFormat();
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
-  const { viewPortSize } = useJukiBase();
+  const { viewPortSize } = useJukiUI();
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
     setLoader(Status.LOADING);
     const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(query.key as string), {
       method: HTTPMethod.POST,
     }));
-    if (notifyResponse(response, addNotification)) {
+    if (notifyResponse(response)) {
+      setLoader(Status.LOADING);
       await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
       setLoader(Status.SUCCESS);
-    } else {
-      setLoader(Status.ERROR);
     }
   };
   

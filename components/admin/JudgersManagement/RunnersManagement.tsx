@@ -3,10 +3,10 @@ import React from 'react';
 import { AdminTab } from 'types';
 import { ECSTaskDefinitionsManagement } from './ECSTaskDefinitionsManagement';
 import { ECSTasksManagement } from './ECSTasksManagement';
-import { JudgersSettings } from './JudgersSettings';
+import { RunnersSettings } from 'components/admin/JudgersManagement/RunnersSettings';
 import { SQSManagement } from './SQSManagement';
 
-export const JudgersManagement = () => {
+export const RunnersManagement = () => {
   const tabs = [
     {
       key: AdminTab.ECS_TASKS_MANAGEMENT,
@@ -19,7 +19,7 @@ export const JudgersManagement = () => {
       body: <ECSTaskDefinitionsManagement />,
     },
     { key: AdminTab.SQS_MANAGEMENT, header: <T className="tt-ce">sqs</T>, body: <SQSManagement /> },
-    { key: AdminTab.JUDGERS_SETTINGS, header: <T className="tt-ce">settings</T>, body: <JudgersSettings /> },
+    { key: AdminTab.RUNNERS_SETTINGS, header: <T className="tt-ce">settings</T>, body: <RunnersSettings /> },
   ];
   
   return (

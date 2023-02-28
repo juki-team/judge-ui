@@ -1,7 +1,7 @@
-import { QueryParam } from 'config/constants';
 import { classNames, replaceParamQuery } from 'helpers';
 import { useRouter } from 'hooks';
 import React, { PropsWithChildren } from 'react';
+import { QueryParam } from 'types';
 
 export const SubmissionInfo = ({
   submitId,

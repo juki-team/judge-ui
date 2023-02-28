@@ -11,7 +11,7 @@ import {
   TwoContentSection,
 } from 'components';
 import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, notifyResponse } from 'helpers';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -35,7 +35,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
   const editing = !!initialProblem;
   const { query, push } = useRouter();
   const [problem, setProblem] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
-  const { addNotification } = useNotification();
+  const { notifyResponse } = useNotification();
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const bodyProblem = { ...problem };
@@ -46,13 +46,11 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
         method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
         body: JSON.stringify(problem),
       }));
-    notifyResponse(response, addNotification);
-    if (response.success) {
+    if (notifyResponse(response)) {
+      setLoaderStatus(Status.LOADING);
       await mutate(JUDGE_API_V1.PROBLEM.PROBLEM(response.content.key));
       await push(ROUTES.PROBLEMS.VIEW(response.content?.key, ProblemTab.STATEMENT));
       setLoaderStatus(Status.SUCCESS);
-    } else {
-      setLoaderStatus(Status.ERROR);
     }
   };
   const tabs = {

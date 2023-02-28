@@ -1,14 +1,17 @@
 import {
   AssignmentIcon,
   CupIcon,
+  DrawerViewMenuMobile,
   HorizontalMenu,
   Image,
   LeaderboardIcon,
   LinkSectionAdmin,
+  LinkSectionContest,
   LinkSectionProblem,
   LoadingIcon,
   LoginModal,
   SettingsIcon,
+  SettingsSection,
   SignUpModal,
   SubmissionModal,
   T,
@@ -16,17 +19,24 @@ import {
   VerticalMenu,
   WelcomeModal,
 } from 'components';
-import { LinkSectionContest } from 'components/contest';
-import { OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { ROUTES } from 'config/constants';
 import { isOrHas, removeParamQuery } from 'helpers';
-import { useJukiBase } from 'hooks';
+import { useJukiUI, useJukiUser } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
-import { AdminTab, LastLinkKey, LastLinkType, MenuViewMode, ProfileSetting, Theme } from 'types';
-import { DrawerViewMenuMobile } from './DrawerViewMenuMobile';
+import {
+  AdminTab,
+  LastLinkKey,
+  LastLinkType,
+  MenuViewMode,
+  OpenDialog,
+  ProfileSetting,
+  ProfileTab,
+  QueryParam,
+  Theme,
+} from 'types';
 import { LoginUser } from './LoginUser';
-import { SettingsSection } from './SettingsSection';
 
 const initialLastLink = {
   [LastLinkKey.SECTION_CONTEST]: { pathname: '/contests', query: {} },
@@ -65,20 +75,20 @@ export const LasLinkProvider = ({ children }: PropsWithChildren<{}>) => {
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
+  const { viewPortSize } = useJukiUI();
   const {
     user: {
       canViewUsersManagement,
       canViewSubmissionsManagement,
       canViewFilesManagement,
       canViewEmailManagement,
-      canViewJudgersManagement,
+      canViewRunnersManagement,
       isLogged,
       settings: { [ProfileSetting.THEME]: preferredTheme, [ProfileSetting.MENU_VIEW_MODE]: preferredMenuViewMode },
     },
     isLoading,
     company: { imageUrl, name },
-    viewPortSize,
-  } = useJukiBase();
+  } = useJukiUser();
   
   const menu = [
     {
@@ -100,7 +110,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: (children) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
     },
   ];
-  if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement || canViewEmailManagement || canViewJudgersManagement) {
+  if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement || canViewEmailManagement || canViewRunnersManagement) {
     menu.push({
       label: <T className="tt-se">admin</T>,
       icon: <SettingsIcon />,
@@ -111,7 +121,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   useEffect(() => {
     if (isLogged && (isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) || isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN))) {
-      push({
+      void push({
         query: removeParamQuery(
           removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP),
           QueryParam.DIALOG,
@@ -124,7 +134,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace('white', 'color') : imageUrl;
   
-  const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} />;
+  const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} ImageCmp={Image} />;
   const rightMobile = {
     children: <div className="jk-row"><LoginUser collapsed={false} popoverPlacement="bottomRight" /></div>,
   };
@@ -159,6 +169,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     return (
       <div className="jk-col stretch gap settings-apps-login-user-content nowrap pad-top-bottom">
         <SettingsSection
+          ImageCmp={Image}
           isOpen={isOpen}
           isMobile={false}
           helpOpen={helpOpen}
@@ -188,6 +199,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     return (
       <div className="jk-row stretch gap settings-apps-login-user-content nowrap pad-left-right">
         <SettingsSection
+          ImageCmp={Image}
           isOpen={false}
           isMobile={false}
           helpOpen={helpOpen}
@@ -204,7 +216,14 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) && <SignUpModal />}
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN) && <LoginModal />}
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.WELCOME) && <WelcomeModal />}
-      {query[QueryParam.USER_PREVIEW] && <UserPreviewModal nickname={query[QueryParam.USER_PREVIEW] as string} />}
+      {query[QueryParam.USER_PREVIEW] && (
+        <UserPreviewModal
+          ImageCmp={Image}
+          nickname={query[QueryParam.USER_PREVIEW] as string}
+          onClose={() => push({ query: removeParamQuery(query, QueryParam.USER_PREVIEW, null) })}
+          userHref={ROUTES.PROFILE.PAGE(query[QueryParam.USER_PREVIEW] as string, ProfileTab.PROFILE)}
+        />
+      )}
       {query[QueryParam.SUBMISSION_VIEW] && <SubmissionModal submitId={query[QueryParam.SUBMISSION_VIEW] as string} />}
       <LasLinkProvider>
         {preferredMenuViewMode === MenuViewMode.HORIZONTAL

@@ -1,9 +1,8 @@
-import { settings } from '@juki-team/base-ui';
 import { Analytics } from '@vercel/analytics/react';
-import { JukiBaseUiProvider, NavigationBar } from 'components';
+import { JukiUIProvider, JukiUserProvider, NavigationBar } from 'components';
+import { settings } from 'config';
 import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { consoleWarn } from 'helpers';
-import { OnlineStatusProvider } from 'hooks';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
@@ -27,20 +26,20 @@ export default function MyApp({ Component, pageProps, router }) {
   }
   
   return (
-    <JukiBaseUiProvider
-      utilsServiceUrl={JUKI_SERVICE_BASE_URL}
-      utilsServiceApiVersion="api/v1"
-      utilsUiUrl="https://utils.juki.app"
-      tokenName={JUKI_TOKEN_NAME}
-      utilsSocketServiceUrl={JUKI_SERVICE_BASE_URL}
-    >
-      <div className="jk-app">
-        <Head>
-          <title>Juki Judge App</title>
-        </Head>
-        <UserProvider>
-          <TaskProvider>
-            <OnlineStatusProvider>
+    <JukiUIProvider>
+      <JukiUserProvider
+        utilsServiceUrl={JUKI_SERVICE_BASE_URL}
+        utilsServiceApiVersion="api/v1"
+        utilsUiUrl="https://utils.juki.app"
+        tokenName={JUKI_TOKEN_NAME}
+        utilsSocketServiceUrl={JUKI_SERVICE_BASE_URL}
+      >
+        <div className="jk-app">
+          <Head>
+            <title>Juki Judge App</title>
+          </Head>
+          <UserProvider>
+            <TaskProvider>
               <SWRConfig
                 value={{
                   revalidateIfStale: true, // when back to pages
@@ -53,10 +52,10 @@ export default function MyApp({ Component, pageProps, router }) {
                   <Component {...pageProps} />
                 </NavigationBar>
               </SWRConfig>
-            </OnlineStatusProvider>
-          </TaskProvider>
-        </UserProvider>
-      </div>
-    </JukiBaseUiProvider>
+            </TaskProvider>
+          </UserProvider>
+        </div>
+      </JukiUserProvider>
+    </JukiUIProvider>
   );
 }

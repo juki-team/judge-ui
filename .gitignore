@@ -32,4 +32,4 @@ yarn-error.log*
 
 # IDEs
 /.idea/
-/public
+/public/*.js*

@@ -74,84 +74,10 @@
   }
 }
 
-.modal-user-preview {
-  max-width: 460px;
-  min-height: 200px;
-  
-  .jk-modal-body {
-    > .jk-row {
-      min-height: 200px;
-    }
-    
-    > .jk-col > .jk-row:first-child {
-      padding: var(--pad-m) 0;
-    }
-  }
-  
-  .jk-row img {
-    width: 100px;
-    height: 100px;
-  }
-}
-
 .mobile-left-side-header {
   color: var(--t-color-primary-text);
 }
 
-.language-select {
-  
-  &.small {
-    .jk-select {
-      display: flex;
-      justify-content: space-around;
-    }
-    
-    .jk-select {
-      margin: 0 2px;
-      padding: 0;
-      
-      .input-icon {
-        position: relative;
-        width: var(--pad-t);
-        min-width: var(--pad-t);
-      }
-    }
-  }
-}
-
-.jk-menu-items {
-  a {
-    text-decoration: none !important;
-    color: inherit !important;
-    
-    &:hover {
-      text-decoration: none !important;
-    }
-  }
-}
-
 .jk-horizontal-menu-layout-container {
   overflow: hidden;
-}
-
-.jk-drawer-menu-mobile {
-  width: 100vw;
-  height: var(--100VH);
-  
-  .jk-menu-items > a {
-    width: 100%;
-    
-    .jk-menu-item {
-      padding: var(--pad-xt);
-      box-sizing: border-box;
-      
-      &.selected {
-        @extend .appearance-primary-light;
-  
-        .jk-menu-item-label {
-          font-weight: var(--weight-bold);
-        }
-      }
-    }
-  }
 }

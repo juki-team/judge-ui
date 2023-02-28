@@ -1,6 +1,5 @@
 @import "@juki-team/base-ui/dist/styles/base";
 @import "components/NavigationBar/styles";
-@import "components/Layouts/styles";
 @import "components/problem/styles";
 @import "components/profile/styles";
 @import "components/contest/styles";
@@ -27,23 +26,6 @@ body {
   width: calc(100vw - 400px);
   max-width: 512px;
   min-width: 200px;
-}
-
-.notification-wrapper {
-  //margin-top: var(--top-horizontal-menu-height);
-  
-  .message-content {
-    //min-height: 42px;
-    //display: flex;
-    //justify-content: center;
-    //align-items: center;
-  }
-}
-
-.sticky-top {
-  position: sticky;
-  top: 0;
-  z-index: 1;
 }
 
 li > * {
@@ -80,50 +62,14 @@ li > * {
   }
 }
 
-.problem-statement.editing {
-  .jk-md-math-editor-layout {
-    @extend .jk-md-math-editor-style;
-  }
-}
-
-.width-120px {
-  width: 120px;
-  display: none;
-}
 
 .text-head-field, .text-head-field span.tx-s {
   line-height: 16px;
 }
 
-.jk-view-container.rows {
-  .text-head-field.jk-row.left {
-    margin-left: calc(var(--pad-xt) - 4px);
-    //margin-left: 4px;
-  }
-}
-
-.only-icon.jk-button-text {
+.only-icon.jk-button-text { // used on base-ui
   &:hover {
     background: var(--t-color-shadow-light) !important;
-  }
-}
-
-.cm-editor {
-  @extend .jk-br-ie;
-  
-  &.cm-focused {
-    @extend .elevation-1;
-    outline: none !important;
-  }
-}
-
-.jk-code-mirror-editor-expanded-layout {
-  z-index: 50;
-  
-  .jk-code-mirror-editor-layout {
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
   }
 }
 
@@ -153,8 +99,4 @@ li > * {
   > div {
     margin: 0 0 var(--pad-xt) 0;
   }
-}
-
-.width-auto {
-  width: auto;
 }

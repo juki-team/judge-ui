@@ -1,0 +1,30 @@
+<html lang="">
+  <head>
+    <script>
+        const PERMITTED_DOMAINS = [
+            'https://judge.juki.app',
+            'https://utils.juki.app',
+            'https://couch.juki.app'
+        ];
+        window.addEventListener('message', function (event) {
+            console.log('message', { event });
+            if (PERMITTED_DOMAINS.includes(event.origin)) {
+                const { action, key, value } = event.data;
+                if (action === 'localStorage.setItem') {
+                    console.log('localStorage.setItem(key, value) on Juki Judge', { key, value });
+                    localStorage.setItem(key, value);
+                } else if (action === 'localStorage.removeItem') {
+                    console.log('localStorage.removeItem(key) on Juki Judge', { key });
+                    localStorage.removeItem(key);
+                }
+            }
+        });
+    </script>
+    <title>Juki Judge</title>
+  </head>
+  <body>
+<!--    <iframe style="display:none;" src="https://judge.juki.app/jk-cross.html" class="juki-iframe-cross-domain"></iframe>-->
+    <iframe style="display:none;" src="https://utils.juki.app/jk-cross.html" class="juki-iframe-cross-domain"></iframe>
+    <iframe style="display:none;" src="https://couch.juki.app/jk-cross.html" class="juki-iframe-cross-domain"></iframe>
+  </body>
+</html>

@@ -7,7 +7,7 @@ function View() {
   const { query, push, isReady } = useRouter();
   useEffect(() => {
     if (isReady) {
-      push(ROUTES.CONTESTS.VIEW(query.key as string, ContestTab.OVERVIEW));
+      void push(ROUTES.CONTESTS.VIEW(query.key as string, ContestTab.OVERVIEW));
     }
   }, [push, query, isReady]);
   return null;

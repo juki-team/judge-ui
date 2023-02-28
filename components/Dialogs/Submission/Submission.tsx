@@ -1,9 +1,9 @@
 import { CodeViewer, Collapse, DateLiteral, FetcherLayer, Memory, Modal, T, Time, UpIcon_, Verdict } from 'components';
-import { JUDGE_API_V1, PROGRAMMING_LANGUAGE, QueryParam } from 'config/constants';
+import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
+import { ContentResponseType, ProblemMode, ProblemVerdict, QueryParam, SubmitResponseDTO, TestCaseResultType } from 'types';
 import Custom404 from '../../../pages/404';
 import { hasTimeHasMemory } from '../../submissions';
 import { GroupInfo } from './GroupInfo';
@@ -18,17 +18,13 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
       <section className="jk-pad-md">
         <FetcherLayer<ContentResponseType<SubmitResponseDTO>>
           url={JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId)}
-          // onError={() => {
-          //   addErrorNotification(somethingWentWrongMessage());
-          //   setOpen(false);
-          // }}
           errorView={() => {
             return (
               <div><Custom404 /></div>
             );
           }}
         >
-          {({ data }: { data: ContentResponseType<SubmitResponseDTO> }) => {
+          {({ data }) => {
             const {
               problemMode,
               language,
@@ -73,7 +69,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                         <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
                         <div className="jk-row"><T>verdict</T></div>
                         {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) &&
-                          <div className="jk-row"><T>points</T></div>}
+                            <div className="jk-row"><T>points</T></div>}
                         <div className="jk-row"><T>time</T></div>
                         <div className="jk-row"><T>memory</T></div>
                       </div>

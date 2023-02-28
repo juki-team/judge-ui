@@ -1,24 +1,24 @@
+import { Status } from '@juki-team/commons';
 import { SignUpModalComponent } from 'components';
-import { OpenDialog, QueryParam } from 'config/constants';
-import { removeParamQuery } from 'helpers';
-import { useUserDispatch } from 'hooks';
+import { addParamQuery, removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { SetLoaderStatusOnClickType, SignUpInputType } from 'types';
+import { OpenDialog, QueryParam } from 'types';
 
 export const SignUpModal = () => {
   
-  const { signUp } = useUserDispatch();
   const { push, query } = useRouter();
   
-  const onSubmit = async (data: SignUpInputType, setLoading: SetLoaderStatusOnClickType) => {
-    await signUp(data.givenName, data.familyName, data.nickname, data.email, data.password, setLoading, true);
-  };
+  const onSuccess = async () => await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.WELCOME) });
   
   return (
     <SignUpModalComponent
-      onCancel={() => push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP) })}
-      onSubmit={onSubmit}
+      onClose={async (setLoaderStatus) => {
+        setLoaderStatus(Status.LOADING);
+        await push({ query: removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP) });
+        setLoaderStatus(Status.LOADING);
+      }}
+      onSuccess={onSuccess}
     />
   );
 };

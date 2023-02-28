@@ -1,5 +1,4 @@
 export * from './Dialogs';
-export * from './Layouts';
 export * from './NavigationBar';
 export * from './admin';
 export * from './commons';

@@ -1,46 +1,5 @@
 import { AdminTab, ContestsTab, ContestTab, CourseTab, ProblemTab, ProfileTab } from 'types';
 
-export enum QueryParam {
-  DIALOG = 'dg',
-  USER_PREVIEW = 'up',
-  SUBMISSION_VIEW = 'sv',
-  // tables
-  MY_STATUS_TABLE = 'mst',
-  STATUS_TABLE = 'sst',
-  ALL_SUBMISSIONS_TABLE = 'ast',
-  PROFILE_SUBMISSIONS_TABLE = 'pst',
-  ALL_USERS_TABLE = 'aut',
-  ECS_DEFINITIONS_TASK_TABLE = 'edt',
-  ECS_TASKS_TABLE = 'ett',
-  LOGGED_USERS_TABLE = 'lut',
-  // contests
-  ALL_CONTESTS_TABLE = 'act',
-  ENDLESS_CONTESTS_TABLE = 'ect',
-  LIVE_CONTESTS_TABLE = 'lct',
-  UPCOMING_CONTESTS_TABLE = 'uct',
-  PAST_CONTESTS_TABLE = 'pct',
-  //
-  SCOREBOARD_TABLE = 'sdt',
-  PROBLEMS_TABLE = 'pmt',
-  RANKING_TABLE = 'rgt',
-  // courses
-  COURSES_TABLE = 'cst',
-  // sheets
-  SHEETS_TABLE = 'set',
-  // table queries
-  PAGE_TABLE = 'p',
-  PAGE_SIZE_TABLE = 'z',
-  SORT_TABLE = 's',
-  FILTER_TABLE = 'f',
-  VIEW_MODE_TABLE = 'v',
-}
-
-export enum OpenDialog {
-  WELCOME = 'w',
-  SIGN_IN = 'si',
-  SIGN_UP = 'sup'
-}
-
 export const _TAB = ':tab';
 export const _SUB_SUB_TAB = ':subSubTab?';
 
@@ -66,11 +25,6 @@ export const ROUTES = {
     SHEETS: 'sheets',
     SHEET: 'sheet',
   },
-  POSTS: {
-    PAGE(key?: string) {
-      return '/' + ROUTES.PARAMS.POSTS + (key ? ('/' + key) : '');
-    },
-  },
   RESUME: {
     PAGE: '/resume',
   },
@@ -91,9 +45,6 @@ export const ROUTES = {
         ...(subTab ? [subTab] : []),
         ...(subSubTab ? [subSubTab] : []),
       ].join('/');
-    },
-    PRINT_SCORE(key: string) {
-      return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.VIEW, key, ROUTES.PARAMS.PRINT_SCORE].join('/');
     },
     CREATE() {
       return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE].join('/');
@@ -143,14 +94,8 @@ export const ROUTES = {
     LIST() {
       return '/' + ROUTES.PARAMS.SHEETS;
     },
-    CREATE() {
-      return ['', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.CREATE].join('/');
-    },
     VIEW(key: string) {
       return ['', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.VIEW, key].join('/');
-    },
-    EDIT(key: string) {
-      return ['', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.EDIT, key].join('/');
     },
   },
 };

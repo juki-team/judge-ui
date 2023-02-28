@@ -36,22 +36,7 @@
   }
 }
 
-.problem-card {
-  width: calc(var(--screen-col-width) * 3 + var(--screen-col-pad-width) * 2);
-  height: 254px;
-  padding: 0 var(--pad-md);
-  
-  .problem-status {
-    width: 100%;
-  }
-}
-
 .contest-problem-split-pane {
-  .problem-statement-layout {
-    height: 100%;
-    overflow: auto;
-  }
-  
   .jk-code-mirror-editor-layout {
     border-radius: 0;
   }
@@ -69,12 +54,6 @@
       padding: 0 var(--pad-t);
     }
   }
-}
-
-.contest-live-timer {
-  position: absolute;
-  top: -10px;
-  right: 0;
 }
 
 .popover-padding-xt {

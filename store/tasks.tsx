@@ -1,8 +1,8 @@
 import { T } from 'components';
 import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiBase, useNotification } from 'hooks';
-import { createContext, PropsWithChildren, useContext } from 'react';
+import { useJukiUser, useNotification } from 'hooks';
+import { createContext, PropsWithChildren } from 'react';
 import { ContentsResponseType, HTTPMethod, ProblemVerdict } from 'types';
 
 export const TaskContext = createContext<{ listenSubmission: (submissionId: string, problem: string) => void }>({
@@ -10,7 +10,7 @@ export const TaskContext = createContext<{ listenSubmission: (submissionId: stri
 });
 
 export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
-  const { user: { nickname } } = useJukiBase();
+  const { user: { nickname } } = useJukiUser();
   const { addErrorNotification, addSuccessNotification } = useNotification();
   
   const listenSubmission = async (listenSubmissionId, problemKey) => {
@@ -48,7 +48,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
               }
               <T className="tt-ce">{PROBLEM_VERDICT[ProblemVerdict.PA].label}</T>
               &bnsp;
-              ({points} <T>pnts</T>)
+              ({points} <T>pts.</T>)
             </div>,
           );
         } else if (Object.keys(PROBLEM_VERDICT).includes(verdict)) {

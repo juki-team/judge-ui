@@ -52,29 +52,6 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/data`;
     },
   },
-  AUTH: {
-    SIGN_IN: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/auth/sign-in`;
-    },
-    SIGN_UP: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/auth/sign-up`;
-    },
-    SIGN_OUT: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/auth/sign-out`;
-    },
-    PING: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/auth/ping`;
-    },
-    RESET_PASSWORD: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/auth/nickname/${nickname}/reset-password`;
-    },
-    UPDATE_PASSWORD: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/auth/update-password`;
-    },
-    INITIATE_RESET_PASSWORD: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/auth/initiate-reset-password`;
-    },
-  },
   USER: {
     SUMMARY_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/summary-list`;
@@ -88,23 +65,8 @@ export const JUDGE_API_V1 = {
     ONLINE_USERS: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/online-users`;
     },
-    SESSION_SESSION_ID: (sessionId: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/session/${sessionId}`;
-    },
-    NICKNAME: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}`;
-    },
     PROFILE: (nickname: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile`;
-    },
-    UPDATE_PROFILE_IMAGE: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile-image`;
-    },
-    UPDATE_PROFILE_DATA: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile-data`;
-    },
-    UPDATE_PREFERENCES: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/preferences`;
     },
     ROLES: (nickname: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/roles`;
@@ -181,9 +143,6 @@ export const JUDGE_API_V1 = {
   CONTEST: {
     LIST: (page: number, size: number, filterUrl: string | undefined, sortUrl: string | undefined) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
-    },
-    LIST_ENDLESS: (filterUrl?: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/list-endless${filterUrl ? '?' + filterUrl : ''}`;
     },
     CREATE: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest`;

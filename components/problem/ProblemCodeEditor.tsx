@@ -1,7 +1,7 @@
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
-import { JUDGE_API_V1, OpenDialog, QueryParam, ROUTES } from 'config/constants';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useContestRouter, useJukiBase, useNotification, useRouter, useSWR, useTaskDispatch } from 'hooks';
+import { useContestRouter, useJukiUser, useNotification, useRouter, useSWR, useTaskDispatch } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   CodeEditorTestCasesType,
@@ -9,9 +9,11 @@ import {
   ContestTab,
   HTTPMethod,
   Judge,
+  OpenDialog,
   ProblemResponseDTO,
   ProblemTab,
   ProgrammingLanguage,
+  QueryParam,
   Status,
   SubmissionRunStatus,
 } from 'types';
@@ -38,7 +40,7 @@ export const ProblemCodeEditor = ({
       in: sample.input,
     };
   });
-  const { user: { nickname, isLogged } } = useJukiBase();
+  const { user: { nickname, isLogged } } = useJukiUser();
   const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
   const {
@@ -53,6 +55,17 @@ export const ProblemCodeEditor = ({
   
   return (
     <UserCodeEditor
+      className="br-g6"
+      expandPosition={{
+        // width: 'var(--screen-content-width)',
+        // height: 'calc(var(--content-height) - var(--pad-md) - var(--pad-md))',
+        width: '100vw',
+        height: 'calc(100vh - 41px)',
+        // top: 'calc(var(--top-horizontal-menu-height) + var(--pad-md))',
+        top: '41px',
+        left: '0',
+        // left: 'calc((100vw - var(--screen-content-width)) / 2)',
+      }}
       sourceStoreKey={problemJudgeKey}
       languages={languages}
       onSourceChange={setSourceCode}

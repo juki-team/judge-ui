@@ -18,7 +18,6 @@ export type EditCreateCourseType = CreateCourseDTO & {
       title: '',
       activities: [
         {
-          
           content: string
           estimatedTime: number,
         }

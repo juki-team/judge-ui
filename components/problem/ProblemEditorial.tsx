@@ -1,5 +1,5 @@
 import { MdMathViewer, TextLangEdit } from 'components';
-import { useJukiBase } from 'hooks';
+import { useJukiUser } from 'hooks';
 import React from 'react';
 import { ProfileSetting, TextLanguageType } from 'types';
 
@@ -10,7 +10,7 @@ interface ProblemStatementProps {
 
 export const ProblemEditorial = ({ editorial, setEditorial }: ProblemStatementProps) => {
   
-  const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiBase();
+  const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
   
   return setEditorial ? (
     <TextLangEdit
