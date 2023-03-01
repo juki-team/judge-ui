@@ -52,19 +52,19 @@ export default function Document() {
         <meta property="og:url" content="https://judge.juki.app" />
         <meta property="og:image" content="https://judge.juki.app/icons/apple-touch-icon.png" />
   
-        <Script>
-          {`if (typeof navigator.serviceWorker !== 'undefined') { navigator.serviceWorker.register('pwa-builder-sw.js') }`}
-        </Script>
+        {/*<Script>*/}
+        {/*  {`if (typeof navigator.serviceWorker !== 'undefined') { navigator.serviceWorker.register('pwa-builder-sw.js') }`}*/}
+        {/*</Script>*/}
       </Head>
       <body>
         <iframe
           style={{ display: 'none' }} src="https://utils.juki.app/jk-cross.html"
           className="juki-iframe-cross-domain"
         />
-        <iframe
-          style={{ display: 'none' }} src="https://couch.juki.app/jk-cross.html"
-          className="juki-iframe-cross-domain"
-        />
+        {/*<iframe*/}
+        {/*  style={{ display: 'none' }} src="https://couch.juki.app/jk-cross.html"*/}
+        {/*  className="juki-iframe-cross-domain"*/}
+        {/*/>*/}
         <Main />
         <NextScript />
       </body>
