@@ -1,6 +1,14 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target" : { "namespace": "android_app", "package_name": "app.juki.judge",
-    "sha256_cert_fingerprints": ["C6:2D:89:82:C8:B2:9C:5F:2E:25:4E:B5:74:7D:08:E8:40:92:C9:72:70:A5:85:A9:9E:5D:81:08:C0:B9:53:E4"] }
-}
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.juki.judge.twa",
+      "sha256_cert_fingerprints": [
+        "05:AA:48:B8:07:CE:DD:45:3C:8A:D9:91:15:F5:E1:77:83:BD:B2:15:51:0C:2C:51:5E:E7:DD:9A:55:04:13:DF"
+      ]
+    }
+  }
 ]
