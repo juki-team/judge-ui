@@ -13,7 +13,7 @@ export default function Document() {
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="msapplication-TileImage" content="/icons/144.png" />
+        <meta name="msapplication-TileImage" content="/icons/ios/144.png" />
         <meta name="msapplication-TileColor" content="#164066" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content="#FFFFFF" />
