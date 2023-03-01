@@ -13,7 +13,7 @@ export default function Document() {
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
+        <meta name="msapplication-TileImage" content="/icons/144.png" />
         <meta name="msapplication-TileColor" content="#164066" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content="#FFFFFF" />
@@ -41,8 +41,9 @@ export default function Document() {
         <meta name="twitter:url" content="https://judge.juki.app" />
         <meta name="twitter:title" content="Juki Judge App" />
         <meta name="twitter:description" content="Juki Judge is designed to make people improve their programming skills" />
-        <meta name="twitter:image" content="https://judge.juki.app/icons/android-chrome-192x192.png" />
+        <meta name="twitter:image" content="https://judge.juki.app/icons/ios/192.png" />
         <meta name="twitter:creator" content="@oscar_gauss" />
+  
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Juki Judge App" />
         <meta property="og:description" content="Juki Judge is designed to make people improve their programming skills" />
