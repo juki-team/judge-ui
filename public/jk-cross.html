@@ -3,24 +3,21 @@
   <head>
     <meta charset="UTF-8">
     <script>
-        const PERMITTED_DOMAINS = [
-            'https://judge.juki.app',
-            'https://utils.juki.app',
-            'https://couch.juki.app'
-        ];
-        window.addEventListener('message', function (event) {
-            console.log('message', { event });
-            if (PERMITTED_DOMAINS.includes(event.origin)) {
-                const { action, key, value } = event.data;
-                if (action === 'localStorage.setItem') {
-                    console.log('localStorage.setItem(key, value) on Juki Judge', { key, value });
-                    localStorage.setItem(key, value);
-                } else if (action === 'localStorage.removeItem') {
-                    console.log('localStorage.removeItem(key) on Juki Judge', { key });
-                    localStorage.removeItem(key);
-                }
-            }
-        });
+      const PERMITTED_DOMAINS = [
+        'https://judge.juki.app',
+        'https://utils.juki.app',
+        'https://couch.juki.app'
+      ];
+      window.addEventListener('message', function (event) {
+        if (PERMITTED_DOMAINS.includes(event.origin)) {
+          const { action, key, value } = event.data;
+          if (action === 'localStorage.setItem') {
+            localStorage.setItem(key, value);
+          } else if (action === 'localStorage.removeItem') {
+            localStorage.removeItem(key);
+          }
+        }
+      });
     </script>
     <title>Juki Judge</title>
   </head>

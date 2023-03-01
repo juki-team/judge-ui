@@ -28,10 +28,11 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
-/worker
 
-# IDEs
-/.idea/
+# local development files
 /public/fallback-development*.js*
 /public/service-worker*.js*
 /public/workbox-*.js*
+
+# IDEs
+/.idea/
