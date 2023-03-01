@@ -464,8 +464,19 @@
       "src": "/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png"
+    },
+    {
+      "src": "/icons/juki-head-monochrome-solid-fill.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "monochrome"
     }
   ],
+  "features": {
+    "playBilling": {
+      "enabled": true
+    }
+  },
   "shortcuts": [
     {
       "name": "Problems",
