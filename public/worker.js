@@ -1,5 +1,7 @@
 self.__WB_DISABLE_DEV_LOGS = true;
 
+const UPDATE_CHECK = 'update-check'
+
 if (self.controller) {
   self.controller.postMessage(UPDATE_CHECK);
   self.addEventListener('controllerchange', () => {
