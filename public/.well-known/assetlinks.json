@@ -1,0 +1,6 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "app.juki.judge",
+    "sha256_cert_fingerprints": ["C6:2D:89:82:C8:B2:9C:5F:2E:25:4E:B5:74:7D:08:E8:40:92:C9:72:70:A5:85:A9:9E:5D:81:08:C0:B9:53:E4"] }
+}
+]
