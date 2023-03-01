@@ -1,4 +1,5 @@
 import { Head, Html, Main, NextScript } from 'next/document';
+import Script from 'next/script';
 
 export default function Document() {
   return (
@@ -50,6 +51,10 @@ export default function Document() {
         <meta property="og:site_name" content="Juki Judge App" />
         <meta property="og:url" content="https://judge.juki.app" />
         <meta property="og:image" content="https://judge.juki.app/icons/apple-touch-icon.png" />
+  
+        <Script>
+          {`if (typeof navigator.serviceWorker !== 'undefined') { navigator.serviceWorker.register('pwa-builder-sw.js') }`}
+        </Script>
       </Head>
       <body>
         <iframe
