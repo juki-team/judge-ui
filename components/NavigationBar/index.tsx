@@ -1,4 +1,3 @@
-import { MenuType } from '@juki-team/base-ui';
 import {
   AssignmentIcon,
   CupIcon,
@@ -30,6 +29,7 @@ import {
   AdminTab,
   LastLinkKey,
   LastLinkType,
+  MenuType,
   MenuViewMode,
   OpenDialog,
   ProfileSetting,
@@ -54,7 +54,7 @@ export const LastLinkContext = createContext<{
     key,
     pathname,
     query,
-  }) => void, lastLink: LastLinkType
+  }: { key: string, pathname: string, query: (NodeJS.Dict<string | string[]>) }) => void, lastLink: LastLinkType
 }>({
   pushPath: () => null,
   lastLink: initialLastLink,
@@ -116,7 +116,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T className="tt-se">admin</T>,
       icon: <SettingsIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: (children) => <LinkSectionAdmin>{children}</LinkSectionAdmin>,
+      menuItemWrapper: ({ children }) => <LinkSectionAdmin>{{ children }}</LinkSectionAdmin>,
     });
   }
   

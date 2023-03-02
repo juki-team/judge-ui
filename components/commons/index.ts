@@ -165,3 +165,4 @@ export * from './PagedDataViewer';
 export * from './TextLangEdit';
 export * from './User';
 export * from './UsersSelector';
+export * from './ErrorBoundary';

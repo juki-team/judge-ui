@@ -88,6 +88,7 @@ export type {
 
 export { Period, NotificationType } from '@juki-team/base-ui';
 export type {
+  MenuType,
   DataViewerHeadersType,
   FilterSelectOfflineType,
   RowSortableItemContentType,

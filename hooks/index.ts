@@ -1,6 +1,5 @@
-import { useJukiUser } from '@juki-team/base-ui';
 import { LastLinkContext } from 'components';
-import { useFetcher as useFetcherJk } from 'hooks';
+import { useFetcher as useFetcherJk, useJukiUser } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SWRConfiguration } from 'swr';
@@ -18,7 +17,7 @@ export const useRouter = () => {
   const { query, ...rest } = useNextRouter();
   
   const queryObject = useMemo(() => {
-    const searchParamsObject = {};
+    const searchParamsObject: { [key: string]: string[] } = {};
     Object.entries(query).forEach(([key, value]) => {
       if (typeof value === 'string') {
         searchParamsObject[key] = [value];
@@ -64,7 +63,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
     error,
     isLoading: isLoading || isValidating,
     request,
-    setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
+    setLoaderStatusRef: useCallback((setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus, []),
   };
 };
 
@@ -106,7 +105,7 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
     error,
     isLoading: isLoading || isValidating,
     request,
-    setLoaderStatusRef: useCallback(setLoaderStatus => setLoaderStatusRef.current = setLoaderStatus, []),
+    setLoaderStatusRef: useCallback((setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus, []),
   };
 };
 

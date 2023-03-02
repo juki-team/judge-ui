@@ -1,3 +1,4 @@
+import { SetSearchParamsObjectType } from '@juki-team/base-ui';
 import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { searchParamsObjectTypeToQuery } from 'helpers';
@@ -45,7 +46,7 @@ export const PagedDataViewer = <T, V = T>({
   
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   
-  const setSearchParamsObject = useCallback(params => replace({ query: searchParamsObjectTypeToQuery(params) }), []);
+  const setSearchParamsObject: SetSearchParamsObjectType = useCallback(params => replace({ query: searchParamsObjectTypeToQuery(params) }), []);
   
   const data: V[] = (response?.success ? response.contents : []);
   

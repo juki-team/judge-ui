@@ -2,11 +2,11 @@ import { getProblemJudgeKey } from 'helpers';
 import { Judge, KeyFileType, RunnerType } from 'types';
 import { API_VERSION, JUKI_SERVICE_BASE_URL } from './settings';
 
-const withSort = (path, sortUrl) => {
+const withSort = (path: string, sortUrl?: string) => {
   return path + (sortUrl ? '&' + sortUrl : '');
 };
 
-const withFilter = (path, filterUrl) => {
+const withFilter = (path: string, filterUrl?: string) => {
   return path + (filterUrl ? '&' + filterUrl : '');
 };
 
@@ -208,11 +208,10 @@ export const JUDGE_API_V1 = {
     LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
     },
-    CREATE: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/`;
-    },
-    SHEET: (sheetId: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/${sheetId}`;
+  },
+  LOG: {
+    ERROR: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/log/error`;
     },
   },
 };

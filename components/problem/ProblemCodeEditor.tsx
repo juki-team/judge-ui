@@ -92,24 +92,24 @@ export const ProblemCodeEditor = ({
             disabled={sourceCode === ''}
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
-              const result = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
+              const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
                 contest?.problemIndex
                   ? JUDGE_API_V1.CONTEST.SUBMIT(query.key + '', problemJudgeKey)
                   : JUDGE_API_V1.PROBLEM.SUBMIT(query.key + ''), {
                   method: HTTPMethod.POST,
                   body: JSON.stringify({ language, source: sourceCode }),
                 }));
-              if (result.success) {
-                if (result?.content.submitId) {
+              if (response.success) {
+                if (response?.content.submitId) {
                   if (problem.judge === Judge.JUKI_JUDGE) {
-                    listenSubmission(result.content.submitId, contest?.problemIndex ? problem.key : query.key as string);
+                    listenSubmission(response.content.submitId, contest?.problemIndex ? problem.key : query.key as string);
                   }
                   addSuccessNotification(<T className="tt-se">submission received</T>);
                 }
                 setLoaderStatus(Status.SUCCESS);
               } else {
                 addErrorNotification(<T
-                  className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
+                  className="tt-se">{response.message || 'something went wrong, please try again later'}</T>);
                 setLoaderStatus(Status.ERROR);
               }
               
