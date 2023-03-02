@@ -154,6 +154,7 @@ export {
   VisibilityIcon,
   WelcomeModal as WelcomeModalComponent,
   useNotification,
+  ErrorBoundary,
 } from '@juki-team/base-ui';
 
 // @ts-ignore
@@ -165,4 +166,3 @@ export * from './PagedDataViewer';
 export * from './TextLangEdit';
 export * from './User';
 export * from './UsersSelector';
-export * from './ErrorBoundary';
