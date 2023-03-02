@@ -23,7 +23,7 @@ export const ContestsPastList = () => {
       url={url}
       name={QueryParam.PAST_CONTESTS_TABLE}
       refreshInterval={60000}
-      cards={{ width: 320 }}
+      cards={{ width: 320, expanded: true }}
     />
   );
 };

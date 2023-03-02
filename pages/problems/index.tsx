@@ -196,7 +196,7 @@ function Problems() {
               </ButtonLoader>,
             ] : []),
           ]}
-          cards={{ height: 256 }}
+          cards={{ height: 256, expanded: true }}
         />
       </div>
     </TwoContentSection>

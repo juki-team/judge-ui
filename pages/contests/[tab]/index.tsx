@@ -50,7 +50,7 @@ function Contests() {
         </div>
       ),
       key: ContestsTab.ALL,
-      header: <T className="tt-se">all</T>,
+      header: <T className="tt-se ws-np">all</T>,
     },
     [ContestsTab.ENDLESS]: {
       body: (
@@ -59,7 +59,7 @@ function Contests() {
         </div>
       ),
       key: ContestsTab.ENDLESS,
-      header: <T className="tt-se">endless</T>,
+      header: <T className="tt-se ws-np">endless</T>,
     },
     [ContestsTab.LIVE]: {
       body: (
@@ -68,7 +68,7 @@ function Contests() {
         </div>
       ),
       key: ContestsTab.LIVE,
-      header: <T className="tt-se">live</T>,
+      header: <T className="tt-se ws-np">live</T>,
     },
     [ContestsTab.UPCOMING]: {
       body: (
@@ -77,7 +77,7 @@ function Contests() {
         </div>
       ),
       key: ContestsTab.UPCOMING,
-      header: <T className="tt-se">upcoming</T>,
+      header: <T className="tt-se ws-np">upcoming</T>,
     },
     [ContestsTab.PAST]: {
       body: (
@@ -86,7 +86,7 @@ function Contests() {
         </div>
       ),
       key: ContestsTab.PAST,
-      header: <T className="tt-se">past</T>,
+      header: <T className="tt-se ws-np">past</T>,
     },
   };
   const breadcrumbs = [

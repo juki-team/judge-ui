@@ -154,7 +154,7 @@ function Ranking() {
           setLoaderStatusRef={setLoaderStatusRef}
           searchParamsObject={queryObject}
           setSearchParamsObject={setSearchParamsObject}
-          cards={{ height: 240 }}
+          cards={{ height: 240, expanded: true }}
           {...DEFAULT_DATA_VIEWER_PROPS}
         />
       </div>

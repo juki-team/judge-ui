@@ -23,7 +23,7 @@ export const ContestsUpcomingList = () => {
       url={url}
       name={QueryParam.UPCOMING_CONTESTS_TABLE}
       refreshInterval={60000}
-      cards={{ width: 320 }}
+      cards={{ width: 320, expanded: true }}
     />
   );
 };

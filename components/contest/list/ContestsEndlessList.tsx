@@ -23,7 +23,7 @@ export const ContestsEndlessList = () => {
       url={url}
       name={QueryParam.ENDLESS_CONTESTS_TABLE}
       refreshInterval={60000}
-      cards={{ width: 320 }}
+      cards={{ width: 320, expanded: true }}
     />
   );
 };

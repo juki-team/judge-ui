@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetRecordKeyType, GetUrl, ReactNodeOrFunctionType } from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
-  cards?: { height?: number, width?: number },
+  cards?: { height?: number, width?: number, expanded?: boolean },
   rows?: { height?: number, width?: number },
   headers: DataViewerHeadersType<T>[],
   name: string,

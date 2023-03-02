@@ -59,7 +59,7 @@ export const ContestsAllList = () => {
       url={url}
       name={QueryParam.ALL_CONTESTS_TABLE}
       refreshInterval={60000}
-      cards={{ width: 320 }}
+      cards={{ width: 320, expanded: true }}
     />
   );
 };

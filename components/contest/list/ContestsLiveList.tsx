@@ -23,7 +23,7 @@ export const ContestsLiveList = () => {
       url={url}
       name={QueryParam.LIVE_CONTESTS_TABLE}
       refreshInterval={60000}
-      cards={{ width: 320 }}
+      cards={{ width: 320, expanded: true }}
     />
   );
 };
