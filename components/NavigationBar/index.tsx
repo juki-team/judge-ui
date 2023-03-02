@@ -1,3 +1,4 @@
+import { MenuType } from '@juki-team/base-ui';
 import {
   AssignmentIcon,
   CupIcon,
@@ -90,24 +91,24 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     company: { imageUrl, name },
   } = useJukiUser();
   
-  const menu = [
+  const menu: MenuType[] = [
     {
       label: <T className="tt-se">contests</T>,
       icon: <CupIcon />,
       selected: ('/' + pathname).includes('//contest'),
-      menuItemWrapper: (children) => <LinkSectionContest>{children}</LinkSectionContest>,
+      menuItemWrapper: ({ children }) => <LinkSectionContest>{children}</LinkSectionContest>,
     },
     {
       label: <T className="tt-se">problems</T>,
       icon: <AssignmentIcon />,
       selected: ('/' + pathname).includes('//problem'),
-      menuItemWrapper: (children) => <LinkSectionProblem>{children}</LinkSectionProblem>,
+      menuItemWrapper: ({ children }) => <LinkSectionProblem>{children}</LinkSectionProblem>,
     },
     {
       label: <T className="tt-se">ranking</T>,
       icon: <LeaderboardIcon />,
       selected: ('/' + pathname).includes('//ranking'),
-      menuItemWrapper: (children) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
+      menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
     },
   ];
   if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement || canViewEmailManagement || canViewRunnersManagement) {
@@ -135,9 +136,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace('white', 'color') : imageUrl;
   
   const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} ImageCmp={Image} />;
+  
   const rightMobile = {
     children: <div className="jk-row"><LoginUser collapsed={false} popoverPlacement="bottomRight" /></div>,
   };
+  
   const centerMobile = {
     children: (
       <div className="jk-row"><Link href="/">
