@@ -116,7 +116,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T className="tt-se">admin</T>,
       icon: <SettingsIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: ({ children }) => <LinkSectionAdmin>{{ children }}</LinkSectionAdmin>,
+      menuItemWrapper: ({ children }) => <LinkSectionAdmin>{children}</LinkSectionAdmin>,
     });
   }
   
