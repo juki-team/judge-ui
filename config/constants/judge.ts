@@ -209,9 +209,4 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
     },
   },
-  LOG: {
-    ERROR: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/log/error`;
-    },
-  },
 };
