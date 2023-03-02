@@ -63,7 +63,8 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
     error,
     isLoading: isLoading || isValidating,
     request,
-    setLoaderStatusRef: useCallback((setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus, []),
+    setLoaderStatusRef: useCallback((setLoaderStatus) => setLoaderStatusRef.current = setLoaderStatus, []),
+    // setLoaderStatusRef: useCallback((setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus, []),
   };
 };
 
