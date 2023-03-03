@@ -61,7 +61,6 @@ export {
 export {
   classNames,
   downloadBlobAsFile,
-  getSearchParamsObject,
   renderReactNodeOrFunction,
   renderReactNodeOrFunctionP1,
   authorizedRequest,
