@@ -95,7 +95,6 @@ export type {
   RowSortableItem,
   CropImageType,
   FilterTextOfflineType,
-  SearchParamsObjectType,
   LoaderStatusOnClickType,
   SetLoaderStatusOnClickType,
   NewNotificationType,

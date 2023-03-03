@@ -1,12 +1,4 @@
-import { QueryParam, SearchParamsObjectType } from 'types';
-
-export const searchParamsObjectTypeToQuery = (params: SearchParamsObjectType) => {
-  const query = {};
-  for (const key in params) {
-    query[key] = params[key].map(param => Array.isArray(param) ? param.join(',') : param);
-  }
-  return query;
-};
+import { QueryParam } from 'types';
 
 export const addParamQuery = (query: { [key: string]: string | string[] | undefined }, queryParamKey: QueryParam, value: string) => {
   const { [queryParamKey]: queryParam, ...restQuery } = query;

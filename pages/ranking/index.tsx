@@ -10,10 +10,9 @@ import {
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester2, useJukiUI, useRouter } from 'hooks';
+import { useDataViewerRequester2, useJukiUI } from 'hooks';
 import Link from 'next/link';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetUrl, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {
@@ -114,8 +113,6 @@ function Ranking() {
     JUDGE_API_V1.RANKING.LIST()
   );
   
-  const { queryObject, replace } = useRouter();
-  
   const {
     data: response,
     request,
@@ -125,8 +122,6 @@ function Ranking() {
   useEffect(() => {
     setTimeout(() => setRender(Date.now()), 100);
   }, [response]);
-  
-  const setSearchParamsObject = useCallback(params => replace({ query: searchParamsObjectTypeToQuery(params) }), []);
   
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   
@@ -152,8 +147,6 @@ function Ranking() {
           request={request}
           name={QueryParam.RANKING_TABLE}
           setLoaderStatusRef={setLoaderStatusRef}
-          searchParamsObject={queryObject}
-          setSearchParamsObject={setSearchParamsObject}
           cards={{ height: 240, expanded: true }}
           {...DEFAULT_DATA_VIEWER_PROPS}
         />

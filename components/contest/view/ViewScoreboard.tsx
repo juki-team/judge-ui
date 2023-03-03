@@ -20,11 +20,10 @@ import {
   downloadDataTableAsCsvFile,
   downloadXlsxAsFile,
   getProblemJudgeKey,
-  searchParamsObjectTypeToQuery,
 } from 'helpers';
 import { useDataViewerRequester, useJukiUI, useJukiUser, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,

@@ -30,7 +30,7 @@ yarn-error.log*
 .env.production.local
 
 # local development files
-/public/fallback-development*.js*
+/public/fallback-*.js*
 /public/service-worker*.js*
 /public/workbox-*.js*
 
