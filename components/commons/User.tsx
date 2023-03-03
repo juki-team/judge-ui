@@ -1,7 +1,7 @@
 import { Image } from 'components';
 import { replaceParamQuery } from 'helpers';
 import { useRouter } from 'hooks';
-import { cloneElement } from 'react';
+import React, { cloneElement } from 'react';
 import { QueryParam } from 'types';
 
 interface UserChipProps {
@@ -28,6 +28,13 @@ export const UserChip = ({ imageUrl, email, familyName, nickname, givenName }: U
 };
 
 export const UserNicknameLink = ({ children, nickname }) => {
-  const { query, push } = useRouter();
+  const { query, push, pathname } = useRouter();
+  const queries = replaceParamQuery(query, QueryParam.USER_PREVIEW, nickname);
+  // console.log({ queries });
+  // return (
+  //   <Link href={{ query: { a: 1 } }}>
+  //     {children}
+  //   </Link>
+  // );
   return cloneElement(children, { onClick: () => push({ query: replaceParamQuery(query, QueryParam.USER_PREVIEW, nickname) }) });
 };

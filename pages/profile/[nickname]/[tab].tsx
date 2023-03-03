@@ -4,7 +4,6 @@ import {
   ChangePasswordModal,
   EditProfileModal,
   FetcherLayer,
-  Image,
   LockIcon,
   ProfileSubmissions,
   ResetPassword,
@@ -42,7 +41,7 @@ export default function ProfileView() {
             header: <T className="tt-ce">profile</T>,
             body: (
               <div className="pad-top-bottom pad-left-right">
-                <UserProfile user={data?.content} ImageCmp={Image} />
+                <UserProfile user={data?.content} />
               </div>
             ),
           },

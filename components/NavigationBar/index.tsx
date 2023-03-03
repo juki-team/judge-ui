@@ -135,7 +135,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace('white', 'color') : imageUrl;
   
-  const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} ImageCmp={Image} />;
+  const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} />;
   
   const rightMobile = {
     children: <div className="jk-row"><LoginUser collapsed={false} popoverPlacement="bottomRight" /></div>,
@@ -172,7 +172,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     return (
       <div className="jk-col stretch gap settings-apps-login-user-content nowrap pad-top-bottom">
         <SettingsSection
-          ImageCmp={Image}
           isOpen={isOpen}
           isMobile={false}
           helpOpen={helpOpen}
@@ -202,7 +201,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     return (
       <div className="jk-row stretch gap settings-apps-login-user-content nowrap pad-left-right">
         <SettingsSection
-          ImageCmp={Image}
           isOpen={false}
           isMobile={false}
           helpOpen={helpOpen}
@@ -221,7 +219,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.WELCOME) && <WelcomeModal />}
       {query[QueryParam.USER_PREVIEW] && (
         <UserPreviewModal
-          ImageCmp={Image}
           nickname={query[QueryParam.USER_PREVIEW] as string}
           onClose={() => push({ query: removeParamQuery(query, QueryParam.USER_PREVIEW, null) })}
           userHref={ROUTES.PROFILE.PAGE(query[QueryParam.USER_PREVIEW] as string, ProfileTab.PROFILE)}

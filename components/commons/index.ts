@@ -155,6 +155,7 @@ export {
   WelcomeModal as WelcomeModalComponent,
   useNotification,
   ErrorBoundary,
+  
 } from '@juki-team/base-ui';
 
 // @ts-ignore

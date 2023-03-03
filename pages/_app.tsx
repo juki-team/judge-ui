@@ -1,3 +1,4 @@
+import { ImageCmpProps } from '@juki-team/base-ui';
 import { Analytics } from '@vercel/analytics/react';
 import { ErrorBoundary, JukiUIProvider, JukiUserProvider, NavigationBar } from 'components';
 import { settings } from 'config';
@@ -6,7 +7,8 @@ import { consoleWarn } from 'helpers';
 import { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import React from 'react';
+import Image from 'next/image';
+import React, { FC } from 'react';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import '../i18n';
@@ -29,7 +31,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   
   return (
     <ErrorBoundary>
-      <JukiUIProvider>
+      <JukiUIProvider components={{ Image: Image as FC<ImageCmpProps> }}>
         <JukiUserProvider
           utilsServiceUrl={JUKI_SERVICE_BASE_URL}
           utilsServiceApiVersion="api/v1"
