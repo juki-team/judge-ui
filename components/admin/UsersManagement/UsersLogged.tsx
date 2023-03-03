@@ -11,8 +11,8 @@ import {
   UserChip,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useJukiUser, useNotification, useRouter, useSWR } from 'hooks';
+import { authorizedRequest, classNames, cleanRequest } from 'helpers';
+import { useDataViewerRequester, useJukiUser, useNotification, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -114,7 +114,6 @@ export function UsersLogged() {
     },
   ], []);
   
-  const { queryObject, push } = useRouter();
   const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
   const data: UserManagementSessionResponseDTO[] = (response?.success ? response?.contents : []);
@@ -152,8 +151,6 @@ export function UsersLogged() {
             </div>,
           ]
         }
-        searchParamsObject={queryObject}
-        setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
         setLoaderStatusRef={setLoaderStatusRef}
         {...DEFAULT_DATA_VIEWER_PROPS}
       />

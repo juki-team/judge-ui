@@ -1,7 +1,7 @@
 import { ButtonLoader, DataViewer, Field, SettingsSuggestIcon, StopCircleIcon, T, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
+import { authorizedRequest, cleanRequest } from 'helpers';
+import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
 import { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -20,7 +20,7 @@ export const ECSTasksManagement = () => {
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
   const { mutate } = useSWR();
-  const { addNotification, addSuccessNotification, notifyResponse } = useNotification();
+  const { addSuccessNotification, notifyResponse } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue">task definition</T>} />,
@@ -90,8 +90,6 @@ export const ECSTasksManagement = () => {
   
   const data: TaskResponseDTO[] = (response?.success ? response?.contents : []);
   
-  const { queryObject, push } = useRouter();
-  
   return (
     <DataViewer<TaskResponseDTO>
       headers={columns}
@@ -99,8 +97,6 @@ export const ECSTasksManagement = () => {
       rows={{ height: 200 }}
       request={request}
       name={QueryParam.ECS_TASKS_TABLE}
-      searchParamsObject={queryObject}
-      setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={[
         <ButtonLoader

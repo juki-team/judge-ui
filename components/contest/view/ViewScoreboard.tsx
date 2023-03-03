@@ -104,7 +104,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   
   const { user } = useJukiUser();
   const { notifyResponse } = useNotification();
-  const { queryObject, query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
+  const { query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const { viewPortSize } = useJukiUI();
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
@@ -216,7 +216,6 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
-  const setSearchParamsObject = useCallback(params => push({ query: searchParamsObjectTypeToQuery(params) }), []);
   
   return (
     <DataViewer<ScoreboardResponseDTO>
@@ -273,9 +272,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         </div>,
       ]}
       cardsView={false}
-      searchParamsObject={queryObject}
       setLoaderStatusRef={setLoaderStatusRef}
-      setSearchParamsObject={setSearchParamsObject}
       className="contest-scoreboard"
       {...DEFAULT_DATA_VIEWER_PROPS}
     />

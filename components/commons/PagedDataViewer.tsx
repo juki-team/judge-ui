@@ -1,9 +1,7 @@
-import { SetSearchParamsObjectType } from '@juki-team/base-ui';
 import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
-import { searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester2, useJukiUI, useRouter } from 'hooks';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDataViewerRequester2, useJukiUI } from 'hooks';
+import { useEffect, useRef, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, GetRecordKeyType, GetUrl, ReactNodeOrFunctionType } from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
@@ -30,7 +28,6 @@ export const PagedDataViewer = <T, V = T>({
   getRowKey,
 }: PagedDataViewerPros<T, V>) => {
   
-  const { queryObject, replace } = useRouter();
   const { viewPortSize } = useJukiUI();
   const {
     data: response,
@@ -46,8 +43,6 @@ export const PagedDataViewer = <T, V = T>({
   
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   
-  const setSearchParamsObject: SetSearchParamsObjectType = useCallback(params => replace({ query: searchParamsObjectTypeToQuery(params) }), []);
-  
   const data: V[] = (response?.success ? response.contents : []);
   
   return (
@@ -62,8 +57,6 @@ export const PagedDataViewer = <T, V = T>({
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={extraNodes}
       extraNodesFloating
-      searchParamsObject={queryObject}
-      setSearchParamsObject={setSearchParamsObject}
       pagination={{ total: lastTotalRef.current, pageSizeOptions: [16, 32, 64, 128, 256, 512] }}
       getRecordKey={getRowKey}
       {...DEFAULT_DATA_VIEWER_PROPS}

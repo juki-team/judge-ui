@@ -23,8 +23,8 @@ import {
   USER_ROLE,
   USER_STATUS,
 } from 'config/constants';
-import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useRouter } from 'hooks';
+import { authorizedRequest, cleanRequest } from 'helpers';
+import { useDataViewerRequester } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 import {
@@ -155,10 +155,9 @@ export function AllUsers() {
     },
   ], []);
   
-  const { queryObject, push } = useRouter();
-  
   const data: UserManagementResponseDTO[] = (response?.success ? response?.contents : []);
   const [modal, setModal] = useState(false);
+  
   return (
     <>
       <ResetPassword onClose={() => setNickname('')} nickname={nickname} />
@@ -170,8 +169,6 @@ export function AllUsers() {
         cards={{ width: 400, height: 400 }}
         request={request}
         name={QueryParam.ALL_USERS_TABLE}
-        searchParamsObject={queryObject}
-        setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
         setLoaderStatusRef={setLoaderStatusRef}
         extraNodes={[
           <Link

@@ -1,7 +1,7 @@
 import { ButtonLoader, DataViewer, Field, PlayCircleIcon, Select, SettingsAlertIcon, T, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, searchParamsObjectTypeToQuery } from 'helpers';
-import { useDataViewerRequester, useNotification, useRouter, useSWR } from 'hooks';
+import { authorizedRequest, cleanRequest } from 'helpers';
+import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -137,7 +137,6 @@ export const ECSTaskDefinitionsManagement = () => {
     ...rest,
     revisions: revisions.sort((a, b) => b.revision - a.revision),
   }));
-  const { queryObject, push } = useRouter();
   
   return (
     <DataViewer<AwsEcsTaskDefinitionList>
@@ -146,8 +145,6 @@ export const ECSTaskDefinitionsManagement = () => {
       rows={{ height: 180 }}
       request={request}
       name={QueryParam.ECS_DEFINITIONS_TASK_TABLE}
-      searchParamsObject={queryObject}
-      setSearchParamsObject={(params) => push({ query: searchParamsObjectTypeToQuery(params) })}
       setLoaderStatusRef={setLoaderStatusRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
