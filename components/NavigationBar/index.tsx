@@ -36,6 +36,7 @@ import {
   ProfileTab,
   QueryParam,
   Theme,
+  SearchParamKey,
 } from 'types';
 import { LoginUser } from './LoginUser';
 
@@ -217,11 +218,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) && <SignUpModal />}
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN) && <LoginModal />}
       {isOrHas(query[QueryParam.DIALOG], OpenDialog.WELCOME) && <WelcomeModal />}
-      {query[QueryParam.USER_PREVIEW] && (
+      {query[SearchParamKey.USER_PREVIEW] && (
         <UserPreviewModal
-          nickname={query[QueryParam.USER_PREVIEW] as string}
-          onClose={() => push({ query: removeParamQuery(query, QueryParam.USER_PREVIEW, null) })}
-          userHref={ROUTES.PROFILE.PAGE(query[QueryParam.USER_PREVIEW] as string, ProfileTab.PROFILE)}
+          nickname={query[SearchParamKey.USER_PREVIEW] as string}
+          onClose={() => push({ query: removeParamQuery(query, SearchParamKey.USER_PREVIEW, null) })}
+          userHref={ROUTES.PROFILE.PAGE(query[SearchParamKey.USER_PREVIEW] as string, ProfileTab.PROFILE)}
         />
       )}
       {query[QueryParam.SUBMISSION_VIEW] && <SubmissionModal submitId={query[QueryParam.SUBMISSION_VIEW] as string} />}

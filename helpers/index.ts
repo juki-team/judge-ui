@@ -71,8 +71,9 @@ export {
   downloadXlsxAsFile,
   downloadLink,
   cleanRequest,
+  toFilterUrl,
+  toSortUrl,
 } from '@juki-team/base-ui';
 
 export * from './contest';
 export * from './routes';
-export * from './services';

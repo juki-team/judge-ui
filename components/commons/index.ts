@@ -17,6 +17,7 @@ export {
   ButtonLoader,
   ChangePasswordModal,
   CheckIcon,
+  CheckUnsavedChanges,
   CityIcon,
   ClockIcon,
   CloseIcon,
@@ -45,6 +46,7 @@ export {
   DragIcon,
   DrawerViewMenuMobile,
   EditIcon,
+  ErrorBoundary,
   EventIcon,
   ExclamationIcon,
   ExpandMoreIcon,
@@ -143,10 +145,13 @@ export {
   TwoContentSection,
   UpIcon_,
   UploadImageButton,
+  UserChip,
   UserCodeEditor,
+  UserNicknameLink,
   UserPreviewModal,
   UserProfile,
   UserProfileSettings,
+  UsersSelector,
   VerticalMenu,
   VerticalSplitIcon,
   ViewHeadlineIcon,
@@ -154,16 +159,8 @@ export {
   VisibilityIcon,
   WelcomeModal as WelcomeModalComponent,
   useNotification,
-  ErrorBoundary,
-  
 } from '@juki-team/base-ui';
 
-// @ts-ignore
-// export const SimpleSortableRows = dynamic(() => import('@juki-team/base-ui').then(module => ({ default: module.SimpleSortableRows })), { ssr: false });
-
-export * from './CheckUnsavedChanges';
 export * from './Image';
 export * from './PagedDataViewer';
 export * from './TextLangEdit';
-export * from './User';
-export * from './UsersSelector';

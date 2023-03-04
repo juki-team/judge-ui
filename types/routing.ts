@@ -1,6 +1,5 @@
 export enum QueryParam {
-  DIALOG = 'dg',
-  USER_PREVIEW = 'up',
+  DIALOG = 'dialog',
   SUBMISSION_VIEW = 'sv',
   // tables
   MY_STATUS_TABLE = 'mst',

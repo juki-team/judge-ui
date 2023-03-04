@@ -129,7 +129,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const [contestTab, setContestTab] = useState<ContestTab>(ContestTab.OVERVIEW);
   const extraNodes = [
     <CheckUnsavedChanges
-      onSafeClick={() => push(editing ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
+      onClickContinue={() => push(editing ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
       value={contest}
     >
       <ButtonLoader

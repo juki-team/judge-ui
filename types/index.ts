@@ -86,7 +86,7 @@ export type {
   CreateFileDTO,
 } from '@juki-team/commons';
 
-export { Period, NotificationType } from '@juki-team/base-ui';
+export { Period, NotificationType, SearchParamKey } from '@juki-team/base-ui';
 export type {
   MenuType,
   DataViewerHeadersType,

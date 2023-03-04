@@ -36,10 +36,10 @@ import Custom404 from '../../../../404';
 const ProblemView = (): ReactNode => {
   
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
-  const { query: { key, ...query }, push, isReady } = useRouter();
+  const { query: { key, tab: problemTab, ...query }, push, isReady } = useRouter();
   const { user } = useJukiUser();
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, router: { setSearchParam } } = useJukiUI();
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
@@ -90,10 +90,11 @@ const ProblemView = (): ReactNode => {
           <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} className="link">
             <div className="ws-np">{problem.name}</div>
           </Link>,
-          tabs[query.tab as string]?.header,
+          tabs[problemTab as string]?.header,
         ];
-        
-        const pushTab = (tabKey) => push({ pathname: ROUTES.PROBLEMS.VIEW('' + key, tabKey as ProblemTab), query });
+  
+        const pushTab = (tabKey) => setSearchParam({ name: 'tab', value: tabKey });
+  
         const extraNodes =
           data?.content?.user?.isEditor ? [
             <ButtonLoader
@@ -165,10 +166,10 @@ const ProblemView = (): ReactNode => {
                 </Popover>
               </div>
               <div className="pad-left-right">
-                <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={query.tab} extraNodes={extraNodes} />
+                <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={problemTab} extraNodes={extraNodes} />
               </div>
             </div>
-            {tabs[query.tab as string]?.body}
+            {tabs[problemTab as string]?.body}
           </TwoContentSection>
         );
       }}

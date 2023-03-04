@@ -1,6 +1,6 @@
-import { QueryParam } from 'types';
+import { QueryParam, SearchParamKey } from 'types';
 
-export const addParamQuery = (query: { [key: string]: string | string[] | undefined }, queryParamKey: QueryParam, value: string) => {
+export const addParamQuery = (query: { [key: string]: string | string[] | undefined }, queryParamKey: QueryParam | SearchParamKey, value: string) => {
   const { [queryParamKey]: queryParam, ...restQuery } = query;
   if (Array.isArray(queryParam)) {
     const newQueryParam = queryParam.filter(v => v !== value);
@@ -11,7 +11,7 @@ export const addParamQuery = (query: { [key: string]: string | string[] | undefi
   return { ...restQuery, [queryParamKey]: value };
 };
 
-export const removeParamQuery = (query: { [key: string]: string | string[] | undefined }, queryParamKey: QueryParam, value: string | null) => {
+export const removeParamQuery = (query: { [key: string]: string | string[] | undefined }, queryParamKey: QueryParam | SearchParamKey, value: string | null) => {
   const { [queryParamKey]: queryParam, ...restQuery } = query;
   if (value === null) {
     return restQuery;
@@ -27,6 +27,6 @@ export const removeParamQuery = (query: { [key: string]: string | string[] | und
   return restQuery;
 };
 
-export const replaceParamQuery = (query: { [key: string]: string | string[] | undefined }, queryParamKey: QueryParam, value: string) => {
+export const replaceParamQuery = (query: { [key: string]: string | string[] | undefined }, queryParamKey: QueryParam | SearchParamKey, value: string) => {
   return addParamQuery(removeParamQuery(query, queryParamKey, null), queryParamKey, value);
 };

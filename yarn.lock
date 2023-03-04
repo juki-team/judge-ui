@@ -1134,10 +1134,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.375":
-  version "0.0.375"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.375/91c8039039ed394b40cf15785b000b4d4e72ab2b#91c8039039ed394b40cf15785b000b4d4e72ab2b"
-  integrity sha512-Sx9U33VvejF9ttXrME06DXUfP/Oj2E1XqeFBfiYdzQ9NoC0bwFpfaQJI6mrPM0aKlyOavqNh8hO+wf87JRPcYQ==
+"@juki-team/base-ui@^0.0.378":
+  version "0.0.378"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.378/b52e3666ac973b87e64cb7e2b93eb1bd25df1fb6#b52e3666ac973b87e64cb7e2b93eb1bd25df1fb6"
+  integrity sha512-GAPFQBBByEpcgX7syqOScykIlLt/GNCFz1SisOYgQvK1xCa9xehGe5fgnPkPmfjIEqvstcFGU4SoaHFEvpcLFA==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-java" "^6.0.1"
@@ -1151,6 +1151,7 @@
     "@tanstack/react-virtual" "^3.0.0-beta.30"
     "@uiw/react-codemirror" "^4.19.3"
     codemirror "^5.65.2"
+    deep-object-diff "^1.1.9"
     immutability-helper "^3.1.1"
     prismjs "^1.29.0"
     react-color "^2.19.3"
@@ -2193,7 +2194,7 @@ decode-named-character-reference@^1.0.0:
   dependencies:
     character-entities "^2.0.0"
 
-deep-object-diff@^1.1.7:
+deep-object-diff@^1.1.7, deep-object-diff@^1.1.9:
   version "1.1.9"
   resolved "https://registry.yarnpkg.com/deep-object-diff/-/deep-object-diff-1.1.9.tgz#6df7ef035ad6a0caa44479c536ed7b02570f4595"
   integrity sha512-Rn+RuwkmkDwCi2/oXOFS9Gsr5lJZu/yTGpK7wAaAIE75CC+LCGEZHpY6VQJa/RoJcrmaA/docWJZvYohlNkWPA==

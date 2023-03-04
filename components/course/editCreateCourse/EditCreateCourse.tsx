@@ -169,7 +169,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
   const [contestTab, setContestTab] = useState<CourseTab>(CourseTab.OVERVIEW);
   const extraNodes = [
     <CheckUnsavedChanges
-      onSafeClick={() => push(editing ? ROUTES.COURSES.VIEW(course.key, CourseTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
+      onClickContinue={() => push(editing ? ROUTES.COURSES.VIEW(course.key, CourseTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
       value={course}
     >
       <ButtonLoader
