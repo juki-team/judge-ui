@@ -133,19 +133,21 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       value={contest}
     >
       <ButtonLoader
-        size={viewPortSize !== 'sm' ? 'small' : 'large'}
+        size="small"
         icon={<CloseIcon />}
+        responsiveMobile
       >
-        {viewPortSize !== 'sm' && <T>cancel</T>}
+        <T>cancel</T>
       </ButtonLoader>
     </CheckUnsavedChanges>,
     <ButtonLoader
       type="secondary"
-      size={viewPortSize !== 'sm' ? 'small' : 'large'}
+      size="small"
       onClick={onSave}
       icon={<SaveIcon />}
+      responsiveMobile
     >
-      {viewPortSize !== 'sm' && (editing ? <T>update</T> : <T>create</T>)}
+      {editing ? <T>update</T> : <T>create</T>}
     </ButtonLoader>,
   ];
   
@@ -167,8 +169,9 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row center pad-left-right">
-          <h3 style={{ padding: 'var(--pad-sm) 0' }}><T>name</T></h3>:&nbsp;
+        <div className="jk-row extend center tx-h">
+          <div style={{ padding: 'var(--pad-sm) 0' }}><T className="tt-se fw-bd">name</T></div>
+          :&nbsp;
           <Input
             value={contest.name}
             onChange={value => setContest(prevState => ({
@@ -184,6 +187,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
             selectedTabKey={contestTab}
             onChange={(tab) => setContestTab(tab)}
             extraNodes={extraNodes}
+            extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
           />
         </div>
       </div>

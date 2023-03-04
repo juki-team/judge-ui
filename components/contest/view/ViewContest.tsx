@@ -151,15 +151,16 @@ export function ContestView() {
         if (isAdmin) {
           extraNodes.push(
             <ButtonLoader
-              size={viewPortSize !== 'sm' ? 'small' : 'large'}
+              size="small"
               onClick={async setLoaderStatus => {
                 setLoaderStatus(Status.LOADING);
                 await push(ROUTES.CONTESTS.EDIT(contestKey));
                 setLoaderStatus(Status.SUCCESS);
               }}
               icon={<EditIcon />}
+              responsiveMobile
             >
-              {viewPortSize !== 'sm' && <T>edit</T>}
+              <T>edit</T>
             </ButtonLoader>,
           );
         }
@@ -203,7 +204,13 @@ export function ContestView() {
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>
               </div>
               <div className="pad-left-right">
-                <TabsInline tabs={tabHeaders} selectedTabKey={contestTab} onChange={pushTab} extraNodes={extraNodes} />
+                <TabsInline
+                  tabs={tabHeaders}
+                  selectedTabKey={contestTab}
+                  onChange={pushTab}
+                  extraNodes={extraNodes}
+                  extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
+                />
               </div>
             </div>
             {tabHeaders[contestTab as ContestTab]?.body}

@@ -116,7 +116,7 @@ const ProblemView = (): ReactNode => {
             >
               <div>
                 <ButtonLoader
-                  size={viewPortSize !== 'sm' ? 'small' : 'large'}
+                  size="small"
                   icon={<AutorenewIcon />}
                   onClick={async setLoaderStatus => {
                     setLoaderStatus(Status.LOADING);
@@ -137,13 +137,13 @@ const ProblemView = (): ReactNode => {
                       setLoaderStatus(Status.ERROR);
                     }
                   }}
+                  responsiveMobile
                 >
-                  {viewPortSize !== 'sm' && <T>rejudge</T>}
+                  <T>rejudge</T>
                 </ButtonLoader>
               </div>
             </Popover>,
           ] : [];
-        
         return (
           <TwoContentSection>
             <div className="jk-col stretch extend nowrap">
@@ -166,7 +166,13 @@ const ProblemView = (): ReactNode => {
                 </Popover>
               </div>
               <div className="pad-left-right">
-                <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={problemTab} extraNodes={extraNodes} />
+                <TabsInline
+                  tabs={tabs}
+                  onChange={pushTab}
+                  selectedTabKey={problemTab}
+                  extraNodes={extraNodes}
+                  extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
+                />
               </div>
             </div>
             {tabs[problemTab as string]?.body}

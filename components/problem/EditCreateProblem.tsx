@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification, useRouter } from 'hooks';
+import { useJukiUI, useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { mutate } from 'swr';
@@ -36,6 +36,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
   const { query, push } = useRouter();
   const [problem, setProblem] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { notifyResponse } = useNotification();
+  const { viewPortSize } = useJukiUI();
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const bodyProblem = { ...problem };
@@ -146,10 +147,12 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="jk-row extend center tx-h">
-          <h3 style={{ padding: 'var(--pad-sm) 0' }}><T>name</T></h3>:&nbsp;
+          <div style={{ padding: 'var(--pad-sm) 0' }}><T className="tt-se fw-bd">name</T></div>
+          :&nbsp;
           <Input
             value={problem.name}
             onChange={value => setProblem({ ...problem, name: value })}
+            size="auto"
           />
         </div>
         <div className="pad-left-right" style={{ overflow: 'hidden' }}>
@@ -158,6 +161,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
             onChange={(tab) => setTab(tab)}
             selectedTabKey={tab}
             extraNodes={extraNodes}
+            extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
           />
         </div>
       </div>

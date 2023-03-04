@@ -38,35 +38,35 @@ function Admin() {
   if (canViewUsersManagement) {
     tabs[AdminTab.USERS_MANAGEMENT] = {
       key: AdminTab.USERS_MANAGEMENT,
-      header: <T className="tt-ce">users</T>,
+      header: <T className="tt-ce ws-np">users</T>,
       body: <div className="pad-left-right pad-bottom"><UsersManagement /></div>,
     };
   }
   if (canViewSubmissionsManagement) {
     tabs[AdminTab.SUBMISSIONS] = {
       key: AdminTab.SUBMISSIONS,
-      header: <T className="tt-ce">submissions</T>,
+      header: <T className="tt-ce ws-np">submissions</T>,
       body: <div className="pad-left-right pad-top-bottom"><AllSubmissions /></div>,
     };
   }
   if (canViewFilesManagement) {
     tabs[AdminTab.FILES_MANAGEMENT] = {
       key: AdminTab.FILES_MANAGEMENT,
-      header: <T className="tt-ce">files</T>,
+      header: <T className="tt-ce ws-np">files</T>,
       body: <div className="pad-left-right pad-top-bottom"><FilesManagement /></div>,
     };
   }
   if (canViewRunnersManagement) {
     tabs[AdminTab.RUNNERS_MANAGEMENT] = {
       key: AdminTab.RUNNERS_MANAGEMENT,
-      header: <T className="tt-ce">runners</T>,
+      header: <T className="tt-ce ws-np">runners</T>,
       body: <div className="pad-left-right pad-bottom"><RunnersManagement /></div>,
     };
   }
   if (canViewEmailManagement) {
     tabs[AdminTab.MAIL_MANAGEMENT] = {
       key: AdminTab.MAIL_MANAGEMENT,
-      header: <T className="tt-ce">email</T>,
+      header: <T className="tt-ce ws-np">email</T>,
       body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement /></div>,
     };
   }
