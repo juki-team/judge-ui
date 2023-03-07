@@ -1,4 +1,4 @@
-import { PagedDataViewer } from 'components';
+import { PagedDataViewer, submissionActionsColumn } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUser } from 'hooks';
@@ -32,7 +32,8 @@ export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponse
       onlyProblem: true,
     }),
     submissionDateColumn(),
-    submissionVerdictColumn(contest.user.isJudge || contest.user.isAdmin),
+    submissionVerdictColumn(),
+    ...(contest.user.isJudge || contest.user.isAdmin ? [submissionActionsColumn({ canRejudge: true })] : []),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),

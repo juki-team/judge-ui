@@ -1,4 +1,4 @@
-import { PagedDataViewer } from 'components';
+import { PagedDataViewer, submissionActionsColumn } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
@@ -31,7 +31,8 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
       onlyProblem: true,
     }),
     submissionDateColumn(),
-    submissionVerdictColumn(contest.user.isJudge || contest.user.isAdmin),
+    submissionVerdictColumn(),
+    ...(contest.user.isJudge || contest.user.isAdmin ? [submissionActionsColumn({ canRejudge: true })] : []),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
