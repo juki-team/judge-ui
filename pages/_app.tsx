@@ -30,7 +30,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
     setTimeout(() => _setFlags.current(prevState => ({ ...prevState, isHelpFocused: false })), 2000);
   });
   
-  const { query, pathname, route, asPath, push, ...test } = useRouter();
+  const { query, push } = useRouter();
   
   const searchParams = useMemo(() => {
     const urlSearchParams = new URLSearchParams('');

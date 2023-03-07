@@ -89,7 +89,7 @@ export function ContestView() {
             body: <ViewOverview contest={contest} />,
           },
         };
-        if (isAdmin || isJudge || contest.isLive || contest.isPast) {
+        if (isAdmin || isJudge || contest.isLive || contest.isPast || contest.isEndless) {
           tabHeaders[lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS] = {
             key: lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
             header: (
@@ -109,14 +109,14 @@ export function ContestView() {
             body: <div className="pad-left-right pad-bottom"><ViewScoreboard contest={contest} /></div>,
           };
         }
-        if (isAdmin || isJudge || ((contest.isLive || contest.isPast) && isContestant)) {
+        if (isAdmin || isJudge || ((contest.isLive || contest.isPast || contest.isEndless) && isContestant)) {
           tabHeaders[ContestTab.MY_SUBMISSIONS] = {
             key: ContestTab.MY_SUBMISSIONS,
             header: <T className="tt-ce ws-np">my submissions</T>,
             body: <ViewProblemMySubmissions contest={contest} />,
           };
         }
-        if (isAdmin || isJudge || contest.isLive || contest.isPast) {
+        if (isAdmin || isJudge || contest.isLive || contest.isPast || contest.isEndless) {
           tabHeaders[ContestTab.SUBMISSIONS] = {
             key: ContestTab.SUBMISSIONS,
             header: <T className="tt-ce ws-np">submissions</T>,
