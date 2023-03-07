@@ -1,4 +1,4 @@
-import { PagedDataViewer } from 'components';
+import { PagedDataViewer, submissionActionsColumn } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
@@ -10,7 +10,7 @@ import {
   submissionNickname,
   submissionProblemColumn,
   submissionTimeUsed,
-  submissionVerdict,
+  submissionVerdictColumn,
 } from '../submissions';
 
 export function AllSubmissions() {
@@ -23,7 +23,8 @@ export function AllSubmissions() {
     submissionNickname(),
     submissionProblemColumn(),
     submissionDateColumn(),
-    submissionVerdict(true),
+    submissionVerdictColumn(),
+    submissionActionsColumn({ canRejudge: true }),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),

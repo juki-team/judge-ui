@@ -112,7 +112,7 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
     options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
   },
   cardPosition: 'bottom',
-  minWidth: 120,
+  minWidth: 140,
 });
 
 export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
@@ -128,21 +128,22 @@ export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
   );
 };
 
-export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>verdict</T>} />,
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
     <Field>
       <div className="jk-col nowrap extend" style={{ padding: '4px 0', boxSizing: 'border-box' }}>
         <TextField
-          text={<SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
-            <Verdict verdict={verdict} points={points} status={status} />
-          </SubmissionInfo>}
+          text={
+            <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
+              <Verdict verdict={verdict} points={points} status={status} />
+            </SubmissionInfo>
+          }
           label={
             <T className="tt-se">verdict</T>
           }
         />
-        {canRejudge && <RejudgeButton submissionId={submitId} />}
       </div>
     </Field>
   ),
@@ -152,6 +153,20 @@ export const submissionVerdict = (canRejudge: boolean): DataViewerHeadersType<Su
     options: Object.values(PROBLEM_VERDICT)
       .map(({ value, label }) => ({ label: <T className="tt-se">{label}</T>, value })),
   },
+  cardPosition: 'bottom',
+  minWidth: 180,
+});
+
+export const submissionActionsColumn = ({ canRejudge }: { canRejudge: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
+  head: <TextHeadCell text={<T>actions</T>} />,
+  index: 'actions',
+  field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
+    <Field>
+      <div className="jk-col nowrap extend" style={{ padding: '4px 0', boxSizing: 'border-box' }}>
+        {canRejudge && <RejudgeButton submissionId={submitId} />}
+      </div>
+    </Field>
+  ),
   cardPosition: 'bottom',
   minWidth: 160,
 });

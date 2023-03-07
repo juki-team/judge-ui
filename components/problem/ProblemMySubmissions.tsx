@@ -1,4 +1,4 @@
-import { PagedDataViewer, submissionContestColumn } from 'components';
+import { PagedDataViewer, submissionActionsColumn, submissionContestColumn } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUser } from 'hooks';
@@ -9,7 +9,7 @@ import {
   submissionLanguage,
   submissionMemoryUsed,
   submissionTimeUsed,
-  submissionVerdict,
+  submissionVerdictColumn,
 } from '../submissions';
 
 export const ProblemMySubmissions = ({ problem }: { problem: ProblemResponseDTO }) => {
@@ -18,7 +18,8 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemResponseDTO 
     return [
       submissionContestColumn(),
       submissionDateColumn(),
-      submissionVerdict(problem.user.isEditor),
+      submissionVerdictColumn(),
+      ...(problem.user.isEditor ? [submissionActionsColumn({ canRejudge: true })] : []),
       submissionLanguage(),
       submissionTimeUsed(),
       submissionMemoryUsed(),

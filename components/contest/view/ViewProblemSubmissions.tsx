@@ -10,7 +10,7 @@ import {
   submissionNickname,
   submissionProblemColumn,
   submissionTimeUsed,
-  submissionVerdict,
+  submissionVerdictColumn,
 } from '../../submissions';
 
 export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDTO }) => {
@@ -31,7 +31,7 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
       onlyProblem: true,
     }),
     submissionDateColumn(),
-    submissionVerdict(contest.user.isJudge || contest.user.isAdmin),
+    submissionVerdictColumn(contest.user.isJudge || contest.user.isAdmin),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),

@@ -1,4 +1,4 @@
-import { Popover, T } from 'components';
+import { LoadingIcon, Popover, T } from 'components';
 import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
 import { ProblemVerdict, SubmissionRunStatus } from 'types';
 
@@ -20,11 +20,13 @@ export const Verdict = ({
   status,
 }: { verdict: ProblemVerdict, points?: number, status?: SubmissionRunStatus }) => {
   
-  const verdictLabel = PROBLEM_VERDICT[verdict]?.label ? <T className="ws-np">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
+  const verdictLabel = PROBLEM_VERDICT[verdict]?.label ?
+    <T className="tt-se">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
   const content = (
-    <div className="jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
-      {verdict}
-      {verdict === ProblemVerdict.PA && points && <>({+points.toFixed(3)})</>}
+    <div className="jk-row jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      {verdict === ProblemVerdict.PENDING && <><LoadingIcon size="small" />&nbsp;</>}
+      {verdict === ProblemVerdict.PENDING ? verdictLabel : verdict}
+      {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
     </div>
   );
   
