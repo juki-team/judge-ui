@@ -124,6 +124,7 @@ export function UsersLogged() {
         headers={columns}
         data={data}
         rows={{ height: 150 }}
+        cards={{ width: 300 }}
         request={request}
         name={QueryParam.LOGGED_USERS_TABLE}
         extraNodes={

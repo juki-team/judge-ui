@@ -1,7 +1,17 @@
-import { TextField } from '@juki-team/base-ui';
-import { ButtonLoader, DateField, Field, OpenInNewIcon, ReloadIcon, T, TextHeadCell, UserNicknameLink } from 'components';
+import { settings } from '@juki-team/base-ui';
+import {
+  ButtonLoader,
+  DateField,
+  Field,
+  OpenInNewIcon,
+  ReloadIcon,
+  T,
+  TextField,
+  TextHeadCell,
+  UserNicknameLink,
+} from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
-import { useRejudgeServices } from 'hooks';
+import { useMatchMutate, useRejudgeServices } from 'hooks';
 import Link from 'next/link';
 import React from 'react';
 import { ContestTab, DataViewerHeadersType, ProblemTab, SubmissionResponseDTO } from 'types';
@@ -117,9 +127,14 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
 
 export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
   const { rejudgeSubmission } = useRejudgeServices();
+  const { matchMutate } = useMatchMutate();
   return (
     <ButtonLoader
-      onClick={rejudgeSubmission(submissionId)}
+      onClick={async (...props) => {
+        await rejudgeSubmission(submissionId)(...props);
+        // TODO Fix the next
+        await matchMutate(new RegExp(`^${settings.UTILS_SERVICE_API_URL}/submissions`, 'g'));
+      }}
       size="tiny"
       icon={<ReloadIcon />}
     >
@@ -137,7 +152,7 @@ export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionRespo
         <TextField
           text={
             <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
-              <Verdict verdict={verdict} points={points} status={status} />
+              <Verdict verdict={verdict} points={points} status={status} submitId={submitId} />
             </SubmissionInfo>
           }
           label={

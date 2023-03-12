@@ -37,20 +37,22 @@ export enum OpenDialog {
 }
 
 export enum AdminTab {
-  SUBMISSIONS = 'submissions',
-  RESET_PASSWORD = 'reset-password',
-  FILES_MANAGEMENT = 'files-management',
-  SQS_MANAGEMENT = 'sqs-management',
-  MAIL_MANAGEMENT = 'mail-management',
-  
   USERS_MANAGEMENT = 'users-management',
   ALL_USERS = 'all-users',
   LOGGED_USERS = 'logged-users',
-  
+
+  SUBMISSIONS = 'submissions',
+
   RUNNERS_MANAGEMENT = 'runners-management',
-  RUNNERS_SETTINGS = 'runners-settings',
   ECS_TASKS_MANAGEMENT = 'ecs-task-management',
   ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitions-management',
+  SQS_MANAGEMENT = 'sqs-management',
+  RUNNERS_SETTINGS = 'runners-settings',
+  EC2_MANAGEMENT = 'ec2-management',
+
+  MAIL_MANAGEMENT = 'mail-management',
+
+  FILES_MANAGEMENT = 'files-management',
 }
 
 export enum ProblemTab {

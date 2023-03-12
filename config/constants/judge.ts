@@ -42,8 +42,14 @@ export const JUDGE_API_V1 = {
     AWS_SQS_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/list`;
     },
+    AWS_SQS_QUEUE: (queueType: 'high' | 'low' | 'out') => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/purge/${queueType}`;
+    },
     AWS_ECS_ADJUST_TASKS: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/adjust-tasks`;
+    },
+    AWS_EC2_LIST: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ec2/list`;
     },
     MAIL_SEND: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/send`;
@@ -53,9 +59,6 @@ export const JUDGE_API_V1 = {
     },
   },
   USER: {
-    SUMMARY_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/summary-list`;
-    },
     MANAGEMENT_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/management-list`;
     },

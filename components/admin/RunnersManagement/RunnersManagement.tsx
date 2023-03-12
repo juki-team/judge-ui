@@ -1,10 +1,11 @@
 import { T, TabsInline } from 'components';
-import { RunnersSettings } from 'components/admin/JudgersManagement/RunnersSettings';
 import { useJukiUI } from 'hooks';
 import React from 'react';
 import { AdminTab } from 'types';
+import { EC2Management } from './EC2Management';
 import { ECSTaskDefinitionsManagement } from './ECSTaskDefinitionsManagement';
 import { ECSTasksManagement } from './ECSTasksManagement';
+import { RunnersSettings } from './RunnersSettings';
 import { SQSManagement } from './SQSManagement';
 
 export const RunnersManagement = () => {
@@ -29,6 +30,11 @@ export const RunnersManagement = () => {
       header: <T className="tt-ce ws-np">settings</T>,
       body: <RunnersSettings />,
     },
+    [AdminTab.EC2_MANAGEMENT]: {
+      key: AdminTab.EC2_MANAGEMENT,
+      header: <T className="tt-ce ws-np">ec2</T>,
+      body: <EC2Management />,
+    },
   };
   
   const { router: { searchParams, setSearchParam } } = useJukiUI();
@@ -42,7 +48,7 @@ export const RunnersManagement = () => {
         selectedTabKey={selectedTabKey}
         onChange={pushTab}
       />
-      <div style={{ height: '100%' }}>
+      <div style={{ height: 'calc(100% - 40px)' }}>
         {tabs[selectedTabKey]?.body}
       </div>
     </div>

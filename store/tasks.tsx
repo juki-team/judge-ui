@@ -1,17 +1,31 @@
+import { SocketEvent } from '@juki-team/commons';
 import { T } from 'components';
 import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiUser, useNotification } from 'hooks';
-import { createContext, PropsWithChildren } from 'react';
-import { ContentsResponseType, HTTPMethod, ProblemVerdict } from 'types';
+import { useJkSocket, useJukiUser, useNotification } from 'hooks';
+import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { ContentsResponseType, HTTPMethod, ProblemVerdict, SubmissionRunStatus } from 'types';
 
-export const TaskContext = createContext<{ listenSubmission: (submissionId: string, problem: string) => void }>({
+export const TaskContext = createContext<{
+  listenSubmission: (submissionId: string, problem: string) => void,
+  submissions: { [key: string]: { submitId: string, status: SubmissionRunStatus } },
+}>({
+  submissions: {},
   listenSubmission: () => null,
 });
 
 export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   const { user: { nickname } } = useJukiUser();
   const { addErrorNotification, addSuccessNotification } = useNotification();
+  const [submissions, setSubmissions] = useState({});
+  const { pop } = useJkSocket(SocketEvent.SUBMISSION);
+  
+  useEffect(() => {
+    const data = pop();
+    if (data?.content?.submitId) {
+      setSubmissions((prevState) => ({ ...prevState, [data?.content?.submitId]: data.content }));
+    }
+  }, [pop]);
   
   const listenSubmission = async (listenSubmissionId: string, problemKey: string) => {
     const result = cleanRequest<ContentsResponseType<{ submitId: string, verdict: ProblemVerdict, points: number, contestName?: string, contestProblemIndex?: string, problemName: string }>>(
@@ -74,9 +88,12 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   };
   
   return (
-    <TaskContext.Provider value={{
-      listenSubmission,
-    }}>
+    <TaskContext.Provider
+      value={{
+        listenSubmission,
+        submissions,
+      }}
+    >
       {children}
     </TaskContext.Provider>
   );

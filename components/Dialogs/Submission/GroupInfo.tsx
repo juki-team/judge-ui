@@ -13,9 +13,19 @@ export interface GroupInfoProps {
   verdict: ProblemVerdict,
   points: number,
   testCases: TestCaseResultType[],
+  submitId: string,
 }
 
-export const GroupInfo = ({ groupKey, problemMode, timeUsed, memoryUsed, verdict, points, testCases }: GroupInfoProps) => {
+export const GroupInfo = ({
+  groupKey,
+  problemMode,
+  timeUsed,
+  memoryUsed,
+  verdict,
+  points,
+  testCases,
+  submitId,
+}: GroupInfoProps) => {
   return (
     <Collapse
       header={({ isOpen, toggle }) => (
@@ -30,10 +40,11 @@ export const GroupInfo = ({ groupKey, problemMode, timeUsed, memoryUsed, verdict
               <T className="tt-se">sample test cases</T>}
           </div>
           <div className="jk-row center gap">
-            <Verdict verdict={verdict} points={points} />
+            <Verdict verdict={verdict} points={points} submitId={submitId} />
             {!!testCases.length && <UpIcon_ onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
           </div>
-          {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && <div className="jk-row">{points}</div>}
+          {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) &&
+              <div className="jk-row">{points}</div>}
           <div className="jk-row center gap"><Time timeUsed={timeUsed} verdict={verdict} /></div>
           <div className="jk-row center gap"><Memory verdict={verdict} memoryUsed={memoryUsed} /></div>
         </div>
@@ -52,7 +63,7 @@ export const GroupInfo = ({ groupKey, problemMode, timeUsed, memoryUsed, verdict
         {testCases.map((testCase, index) => (
           <div className="jk-row extend block gap jk-table-inline-row" key={index}>
             <div className="jk-row">{index + 1}</div>
-            <div className="jk-row"><Verdict verdict={testCase.verdict} /></div>
+            <div className="jk-row"><Verdict verdict={testCase.verdict} submitId={submitId} /></div>
             {problemMode === ProblemMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
             <div className="jk-row center gap"><Time verdict={testCase.verdict} timeUsed={testCase.timeUsed} /></div>
             <div className="jk-row center gap"><Memory verdict={testCase.verdict} memoryUsed={testCase.memoryUsed} /></div>

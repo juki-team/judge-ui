@@ -166,7 +166,7 @@ export function AllUsers() {
         headers={columns}
         data={data}
         rows={{ height: 200 }}
-        cards={{ width: 400, height: 400 }}
+        cards={{ width: 400, height: 400, expanded: true }}
         request={request}
         name={QueryParam.ALL_USERS_TABLE}
         setLoaderStatusRef={setLoaderStatusRef}

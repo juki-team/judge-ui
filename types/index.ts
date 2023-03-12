@@ -33,6 +33,7 @@ export {
   FileStatus,
   FileType,
   CourseType,
+  SocketEvent,
 } from '@juki-team/commons';
 
 export type {

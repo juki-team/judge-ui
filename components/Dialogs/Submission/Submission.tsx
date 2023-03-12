@@ -86,6 +86,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                             timeUsed={result.timeUsed}
                             points={result.points}
                             testCases={testCasesByGroup[result.group] || []}
+                            submitId={submitId}
                           />
                         ))}
                       </div>
@@ -102,6 +103,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                             points={problemMode === ProblemMode.PARTIAL ? +result.reduce((sum, testCase) => sum + testCase.points, 0)
                               .toFixed(3) : 0}
                             testCases={result}
+                            submitId={submitId}
                           />
                         ))}
                       </div>
@@ -116,7 +118,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
                         <div className="jk-row">
                           <div>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
                           <div className="jk-row gap center">
-                            <Verdict verdict={verdict} points={points} status={status} />
+                            <Verdict verdict={verdict} points={points} status={status} submitId={submitId} />
                             {verdict !== ProblemVerdict.NONE
                               && verdict !== ProblemVerdict.PENDING
                               && compilationResult?.success === false

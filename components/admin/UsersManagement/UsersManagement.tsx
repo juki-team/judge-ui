@@ -31,7 +31,7 @@ export const UsersManagement = () => {
         onChange={pushTab}
         selectedTabKey={selectedTabKey}
       />
-      <div style={{ height: '100%' }}>
+      <div style={{ height: 'calc(100% - 40px)' }}>
         {tabs[selectedTabKey]?.body}
       </div>
     </div>

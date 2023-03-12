@@ -49,13 +49,6 @@ function Admin() {
       body: <div className="pad-left-right pad-top-bottom"><AllSubmissions /></div>,
     };
   }
-  if (canViewFilesManagement) {
-    tabs[AdminTab.FILES_MANAGEMENT] = {
-      key: AdminTab.FILES_MANAGEMENT,
-      header: <T className="tt-ce ws-np">files</T>,
-      body: <div className="pad-left-right pad-top-bottom"><FilesManagement /></div>,
-    };
-  }
   if (canViewRunnersManagement) {
     tabs[AdminTab.RUNNERS_MANAGEMENT] = {
       key: AdminTab.RUNNERS_MANAGEMENT,
@@ -68,6 +61,13 @@ function Admin() {
       key: AdminTab.MAIL_MANAGEMENT,
       header: <T className="tt-ce ws-np">email</T>,
       body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement /></div>,
+    };
+  }
+  if (canViewFilesManagement) {
+    tabs[AdminTab.FILES_MANAGEMENT] = {
+      key: AdminTab.FILES_MANAGEMENT,
+      header: <T className="tt-ce ws-np">files</T>,
+      body: <div className="pad-left-right pad-top-bottom"><FilesManagement /></div>,
     };
   }
   const breadcrumbs = [

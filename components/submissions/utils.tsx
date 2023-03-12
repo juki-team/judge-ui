@@ -1,5 +1,6 @@
 import { LoadingIcon, Popover, T } from 'components';
 import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
+import { useTask } from 'hooks';
 import { ProblemVerdict, SubmissionRunStatus } from 'types';
 
 export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
@@ -14,20 +15,113 @@ export const Memory = ({ verdict, memoryUsed }: { verdict: ProblemVerdict, memor
   return hasTimeHasMemory(verdict) ? <>{memoryUsed}&nbsp;<T className="cr-g3">KB</T></> : <>-</>;
 };
 
-export const Verdict = ({
-  verdict,
-  points,
-  status,
-}: { verdict: ProblemVerdict, points?: number, status?: SubmissionRunStatus }) => {
+export interface VerdictProps {
+  verdict: ProblemVerdict,
+  points?: number,
+  status?: SubmissionRunStatus,
+  submitId: string,
+}
+
+export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => {
+  const { submissions } = useTask();
+  
+  const submissionData = submissions[submitId];
   
   const verdictLabel = PROBLEM_VERDICT[verdict]?.label ?
     <T className="tt-se">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
+  
+  const SubmissionLabel = {
+    [SubmissionRunStatus.RECEIVED]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.RECEIVED].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.COMPILING]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.COMPILING].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.FETCHING_TEST_CASES]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.FETCHING_TEST_CASES].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.EXECUTED_TEST_CASE]: ({ sampleCase, caseResultsExecuted, caseResultsTotal, verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t nowrap" style={{ lineHeight: 1, padding: '4px 0' }}>
+          {sampleCase ? <T className="tt-se">running sample cases</T> : <T className="tt-se">running test cases</T>}&nbsp;
+          <span className="ws-np">{caseResultsExecuted}/{caseResultsTotal}</span>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.RUNNING_TEST_CASE]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.RUNNING_TEST_CASE].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.RUNNING_TEST_CASES]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.RUNNING_TEST_CASES].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.JUDGING_TEST_CASE]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.JUDGING_TEST_CASE].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.GRADING]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.GRADING].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.COMPLETED]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        {verdict === ProblemVerdict.PENDING ? <><LoadingIcon size="small" />&nbsp;{verdictLabel}</> : verdictLabel}
+        {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
+      </div>
+    ),
+  };
+  
   const content = (
-    <div className="jk-row jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
-      {verdict === ProblemVerdict.PENDING && <><LoadingIcon size="small" />&nbsp;</>}
-      {verdict === ProblemVerdict.PENDING ? verdictLabel : verdict}
-      {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
-    </div>
+    submissionData ?
+      <>
+        {SubmissionLabel[submissionData.status]?.(submissionData) || submissionData.status}
+      </> : (
+        <div className="jk-row jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+          {verdict === ProblemVerdict.PENDING ? <><LoadingIcon size="small" />&nbsp;{verdictLabel}</> : verdictLabel}
+          {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
+        </div>
+      )
   );
   
   return (

@@ -62,7 +62,6 @@ li > * {
   }
 }
 
-
 .text-head-field, .text-head-field span.tx-s {
   line-height: 16px;
 }
@@ -98,5 +97,11 @@ li > * {
   
   > div {
     margin: 0 0 var(--pad-xt) 0;
+  }
+}
+
+.two-content-section {
+  > div:last-child {
+  
   }
 }

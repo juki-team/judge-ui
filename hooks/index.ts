@@ -132,6 +132,8 @@ export {
   useFetcher,
   useSWR,
   useJukiUserToggleSetting,
+  useJkSocket,
+  useMatchMutate,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export * from './contest';

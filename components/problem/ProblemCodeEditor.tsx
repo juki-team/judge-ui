@@ -1,7 +1,7 @@
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useContestRouter, useJukiUser, useNotification, useRouter, useSWR, useTaskDispatch } from 'hooks';
+import { useContestRouter, useJukiUser, useNotification, useRouter, useSWR, useTask } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   CodeEditorTestCasesType,
@@ -25,7 +25,7 @@ export const ProblemCodeEditor = ({
   
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWR();
-  const { listenSubmission } = useTaskDispatch();
+  const { listenSubmission } = useTask();
   const initialTestCases: CodeEditorTestCasesType = {};
   problem.sampleCases?.forEach((sample, index) => {
     const key = 'sample-' + index;
