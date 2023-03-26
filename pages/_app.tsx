@@ -2,7 +2,7 @@ import { ImageCmpProps } from '@juki-team/base-ui';
 import { Analytics } from '@vercel/analytics/react';
 import { ErrorBoundary, JukiUIProvider, JukiUserProvider, NavigationBar } from 'components';
 import { settings } from 'config';
-import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME } from 'config/constants';
+import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV } from 'config/constants';
 import { consoleWarn } from 'helpers';
 import { useRouter } from 'hooks';
 import { AppProps } from 'next/app';
@@ -95,42 +95,42 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
     return <div><MyComponent {...pageProps} /></div>;
   }
   
-  return (
-    <ErrorBoundary>
-      <JukiUIProvider
-        components={{ Image: Image as FC<ImageCmpProps> }}
-        router={{ searchParams, setSearchParam, deleteSearchParam, appendSearchParam }}
+  const app = (
+    <JukiUIProvider
+      components={{ Image: Image as FC<ImageCmpProps> }}
+      router={{ searchParams, setSearchParam, deleteSearchParam, appendSearchParam }}
+    >
+      <JukiUserProvider
+        utilsServiceUrl={JUKI_SERVICE_BASE_URL}
+        utilsServiceApiVersion="api/v1"
+        utilsUiUrl="https://utils.juki.app"
+        tokenName={JUKI_TOKEN_NAME}
+        utilsSocketServiceUrl={JUKI_SERVICE_BASE_URL}
       >
-        <JukiUserProvider
-          utilsServiceUrl={JUKI_SERVICE_BASE_URL}
-          utilsServiceApiVersion="api/v1"
-          utilsUiUrl="https://utils.juki.app"
-          tokenName={JUKI_TOKEN_NAME}
-          utilsSocketServiceUrl={JUKI_SERVICE_BASE_URL}
-        >
-          <div className="jk-app">
-            <Head>
-              <title>Juki Judge App</title>
-            </Head>
-            <UserProvider>
-              <TaskProvider>
-                <SWRConfig
-                  value={{
-                    revalidateIfStale: true, // when back to pages
-                    revalidateOnFocus: false,
-                    revalidateOnReconnect: false,
-                  }}
-                >
-                  <NavigationBar>
-                    <Analytics />
-                    <Component {...pageProps} />
-                  </NavigationBar>
-                </SWRConfig>
-              </TaskProvider>
-            </UserProvider>
-          </div>
-        </JukiUserProvider>
-      </JukiUIProvider>
-    </ErrorBoundary>
+        <div className="jk-app">
+          <Head>
+            <title>Juki Judge App</title>
+          </Head>
+          <UserProvider>
+            <TaskProvider>
+              <SWRConfig
+                value={{
+                  revalidateIfStale: true, // when back to pages
+                  revalidateOnFocus: false,
+                  revalidateOnReconnect: false,
+                }}
+              >
+                <NavigationBar>
+                  <Analytics />
+                  <Component {...pageProps} />
+                </NavigationBar>
+              </SWRConfig>
+            </TaskProvider>
+          </UserProvider>
+        </div>
+      </JukiUserProvider>
+    </JukiUIProvider>
   );
+  
+  return NODE_ENV === 'development' ? app : <ErrorBoundary>{app}</ErrorBoundary>;
 }

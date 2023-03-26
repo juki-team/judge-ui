@@ -108,7 +108,7 @@ export const JUDGE_API_V1 = {
   },
   PROBLEM: {
     LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/list?page=${page}&size=${size}&judge=JUKI_JUDGE${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
     },
     TAG_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/tag-list`;

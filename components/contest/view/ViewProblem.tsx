@@ -20,11 +20,11 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
       className="contest-problem-split-pane"
     >
       <ProblemStatement
+        judge={problem.judge}
         problemKey={problem.key}
         author={problem.author}
         contest={{ index: query?.index as string, color: problem.color }}
         name={problem.name}
-        sampleCases={problem.sampleCases}
         status={problem.status}
         statement={problem.statement}
         settings={problem.settings}

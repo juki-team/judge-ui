@@ -1,3 +1,4 @@
+import { Judge } from '@juki-team/commons';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -60,15 +61,14 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
       header: <T className="tt-ce ws-np">statement</T>,
       body: (
         <ProblemStatement
+          judge={Judge.JUKI_JUDGE}
           problemKey={problem.key}
           author={problem.author}
           name={problem.name}
-          sampleCases={problem.sampleCases}
           status={problem.status}
           statement={problem.statement}
           settings={problem.settings}
           tags={problem.tags}
-          setSampleCases={(sampleCases) => setProblem(prevState => ({ ...prevState, sampleCases }))}
           setStatement={(statement) => setProblem(prevState => ({ ...prevState, statement }))}
         />
       ),

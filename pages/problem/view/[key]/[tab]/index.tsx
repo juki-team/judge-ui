@@ -54,10 +54,10 @@ const ProblemView = (): ReactNode => {
             header: <T className="ws-np tt-ce">statement</T>,
             body: (
               <ProblemStatement
+                judge={problem.judge}
                 problemKey={problem.key}
                 author={problem.author}
                 name={problem.name}
-                sampleCases={problem.sampleCases}
                 status={problem.status}
                 statement={problem.statement}
                 settings={problem.settings}

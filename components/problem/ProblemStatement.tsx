@@ -1,3 +1,4 @@
+import { Judge } from '@juki-team/commons';
 import {
   DownloadIcon,
   ExclamationIcon,
@@ -15,17 +16,11 @@ import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpe
 import { useJukiUser, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React from 'react';
-import {
-  Language,
-  ProblemSampleCasesType,
-  ProblemSettingsType,
-  ProblemStatementType,
-  ProblemStatus,
-  ProfileSetting,
-} from 'types';
+import { Language, ProblemSettingsType, ProblemStatementType, ProblemStatus, ProfileSetting } from 'types';
 import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
+  judge: Judge,
   problemKey: string,
   settings: ProblemSettingsType,
   name: string,
@@ -34,12 +29,11 @@ interface ProblemStatementProps {
   status: ProblemStatus,
   statement: ProblemStatementType,
   setStatement?: (statement: ProblemStatementType) => void,
-  sampleCases: ProblemSampleCasesType,
-  setSampleCases?: (sampleCases: ProblemSampleCasesType) => void,
   contest?: { index: string, color: string },
 }
 
 export const ProblemStatement = ({
+  judge,
   problemKey,
   name,
   settings,
@@ -48,8 +42,6 @@ export const ProblemStatement = ({
   status,
   statement,
   setStatement,
-  sampleCases,
-  setSampleCases,
   contest,
 }: ProblemStatementProps) => {
   const { index: problemIndex, color: problemColor } = contest || {};
@@ -60,6 +52,7 @@ export const ProblemStatement = ({
   const statementDescription = statement?.description[preferredLanguage] || statement?.description[Language.EN] || statement?.description[Language.ES];
   const statementInput = (statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES]).trim();
   const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]).trim();
+  const statementSampleCases = statement?.sampleCases || [];
   
   const languages = Object.values(settings?.byProgrammingLanguage || {});
   const problemName = problemIndex ? `(${t('problem')} ${problemIndex}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
@@ -87,7 +80,7 @@ ${statementInput}
 
 ${statementOutput}
   
-${sampleCases.map((sample, index) => (
+${statementSampleCases.map((sample, index) => (
     `### ${t('input sample')} ${index + 1}
 \`\`\`
 ${sample.input}
@@ -98,11 +91,18 @@ ${sample.output}
 \`\`\`
 `)).join('')}
 `;
+  if (judge === Judge.CODEFORCES) {
+    return (
+      <div className="jk-row extend" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+        <div dangerouslySetInnerHTML={{ __html: statement.html[Language.EN] }} />
+      </div>
+    );
+  }
   
   return (
     <div className="jk-row extend" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-      {problemIndex && (
-        <div className="jk-row center extend gap nowrap pad-left-right pad-top fw-bd">
+      <div className="jk-row center extend gap nowrap pad-left-right pad-top fw-bd">
+        {problemIndex && (
           <div className="jk-row jk-tag" style={{ backgroundColor: problemColor }}>
             <p style={{
               textShadow: 'var(--t-color-white) 0px 1px 2px, var(--t-color-white) 0px -1px 2px, ' +
@@ -110,16 +110,20 @@ ${sample.output}
               color: 'var(--t-color-gray-1)',
             }}>{problemIndex}</p>
           </div>
-          <h3 className="title" style={{ textAlign: 'center' }}>{name}</h3>
-          <Popover
-            content={<ProblemInfo author={author} status={status} tags={tags} settings={settings} />}
-            triggerOn={['hover', 'click']}
-            placement="bottom"
-          >
-            <div className="jk-row"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
-          </Popover>
+        )}
+        <h3 className="title" style={{ textAlign: 'center' }}>{name}</h3>
+        <div>
+        
         </div>
-      )}
+        <Popover
+          content={<ProblemInfo author={author} status={status} tags={tags} settings={settings} />}
+          triggerOn={['hover', 'click']}
+          placement="bottom"
+        >
+          <div className="jk-row"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
+        </Popover>
+      </div>
+      {/*)}*/}
       <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
         <div className={classNames('jk-col top gap stretch flex-3', {
           'editing': !!setStatement,
@@ -192,19 +196,27 @@ ${sample.output}
               <h3><T>input sample</T></h3>
               <h3><T>output sample</T></h3>
             </div>
-            {setSampleCases && (
+            {setStatement && (
               <div className="jk-row">
                 <PlusIcon
                   className="cr-py"
                   filledCircle
-                  onClick={() => setSampleCases([...sampleCases, { input: '', output: '' }])}
+                  onClick={() => setStatement({
+                    ...statement,
+                    sampleCases: [...statement.sampleCases, { input: '', output: '' }],
+                  })}
                 />
               </div>
             )}
           </div>
           <div className="jk-col stretch gap">
-            {(sampleCases || [{ input: '', output: '' }]).map((sample, index) => (
-              <SampleTest index={index} sampleCases={sampleCases} key={index} setSampleCases={setSampleCases} />
+            {(statement.sampleCases || [{ input: '', output: '' }]).map((sample, index) => (
+              <SampleTest
+                index={index}
+                sampleCases={statement.sampleCases}
+                key={index}
+                setSampleCases={setStatement ? (sampleCases) => setStatement({ ...statement, sampleCases }) : undefined}
+              />
             ))}
           </div>
         </div>

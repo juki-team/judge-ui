@@ -1,3 +1,4 @@
+import { PROBLEM_MODE, PROBLEM_MODES } from '@juki-team/commons';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -95,6 +96,22 @@ function Problems() {
       filter: { type: 'text' },
       cardPosition: 'center',
       minWidth: 300,
+    },
+    {
+      head: <TextHeadCell text={<T className="tt-ue tx-s">mode</T>} />,
+      index: 'mode',
+      field: ({ record: { key, settings: { mode } }, isCard }) => (
+        <Field className="jk-row">
+          <T className="tt-se">{PROBLEM_MODE[mode].label}</T>
+        </Field>
+      ),
+      sort: true,
+      filter: {
+        type: 'select',
+        options: PROBLEM_MODES.map((problemMode) => ({ value: problemMode, label: PROBLEM_MODE[problemMode].label })),
+      },
+      cardPosition: 'top',
+      minWidth: 120,
     },
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} className="left" />,

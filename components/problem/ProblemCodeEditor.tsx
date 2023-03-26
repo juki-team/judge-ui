@@ -27,7 +27,7 @@ export const ProblemCodeEditor = ({
   const { mutate } = useSWR();
   const { listenSubmission } = useTask();
   const initialTestCases: CodeEditorTestCasesType = {};
-  problem.sampleCases?.forEach((sample, index) => {
+  problem.statement.sampleCases?.forEach((sample, index) => {
     const key = 'sample-' + index;
     initialTestCases[key] = {
       key,

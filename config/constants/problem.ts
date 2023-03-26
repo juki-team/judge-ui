@@ -7,7 +7,6 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
     editorial: { [Language.ES]: '', [Language.EN]: '' },
     key: '',
     name: '',
-    sampleCases: [],
     settings: {
       timeLimit: 1000,
       memoryLimit: 256000,
@@ -32,6 +31,11 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
         [Language.EN]: '',
         [Language.ES]: '',
       },
+      html: {
+        [Language.EN]: '',
+        [Language.ES]: '',
+      },
+      sampleCases: [],
     },
     status: ProblemStatus.RESERVED,
     tags: [],
