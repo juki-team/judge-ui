@@ -29,11 +29,13 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemResponseDTO 
   const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => {
     const filterUrl = toFilterUrl(filter);
     const sortUrl = toSortUrl(sort);
-    return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, page, pageSize, filterUrl, sortUrl);
+    return JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.judge, problem?.key, nickname, page, pageSize, filterUrl, sortUrl);
   };
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+      rows={{ height: 80 }}
+      cards={{ expanded: true }}
       headers={columns}
       url={url}
       name={QueryParam.MY_STATUS_TABLE}

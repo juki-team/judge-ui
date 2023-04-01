@@ -4,12 +4,12 @@ import { useEffect } from 'react';
 import { ProblemTab } from 'types';
 
 function View() {
-  const { query: { key }, push, isReady } = useRouter();
+  const { query: { key }, replace, isReady } = useRouter();
   useEffect(() => {
     if (isReady) {
-      void push(ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT));
+      void replace(ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT));
     }
-  }, [push, isReady]);
+  }, [replace, isReady]);
   return null;
 }
 

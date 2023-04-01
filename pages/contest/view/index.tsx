@@ -4,12 +4,12 @@ import { useEffect } from 'react';
 import { ContestsTab } from 'types';
 
 function View() {
-  const { query, push, isReady } = useRouter();
+  const { query, replace, isReady } = useRouter();
   useEffect(() => {
     if (isReady) {
-      void push(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
+      void replace(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
     }
-  }, [push, query, isReady]);
+  }, [replace, query, isReady]);
   return null;
 }
 

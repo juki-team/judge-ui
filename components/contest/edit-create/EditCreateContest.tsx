@@ -72,7 +72,8 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       {
         method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
         body: JSON.stringify(contest),
-      }));
+      },
+    ));
     if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
       await push(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
@@ -92,7 +93,9 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
             informationButton
             uploadImageButton
             source={contest.description}
-            onChange={value => setContest(prevState => ({ ...prevState, description: value }))}
+            onChange={value => setContest(prevState => (
+              { ...prevState, description: value }
+            ))}
           />
         </div>
       ),
@@ -129,7 +132,9 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const [contestTab, setContestTab] = useState<ContestTab>(ContestTab.OVERVIEW);
   const extraNodes = [
     <CheckUnsavedChanges
-      onClickContinue={() => push(editing ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
+      onClickContinue={() => push(editing
+        ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW)
+        : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
       value={contest}
     >
       <ButtonLoader
@@ -154,16 +159,14 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <LinkContests><T className="tt-se">contests</T></LinkContests>,
+    editing
+      ? (
+        <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }} className="link">
+          <div>{contest.name}</div>
+        </Link>
+      ) : <div>{contest.name}</div>,
+    tabHeaders[contestTab]?.header,
   ];
-  
-  if (editing) {
-    breadcrumbs.push(
-      <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }} className="link">
-        <div>{contest.name}</div>
-      </Link>,
-    );
-  }
-  breadcrumbs.push(tabHeaders[contestTab]?.header);
   
   return (
     <TwoContentSection>
@@ -174,10 +177,12 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
           :&nbsp;
           <Input
             value={contest.name}
-            onChange={value => setContest(prevState => ({
-              ...prevState,
-              name: value,
-            }))}
+            onChange={value => setContest(prevState => (
+              {
+                ...prevState,
+                name: value,
+              }
+            ))}
             size="auto"
           />
         </div>

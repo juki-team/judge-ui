@@ -10,6 +10,7 @@ export {
   ArrowRightIcon,
   ArrowUpwardIcon,
   AssignmentIcon,
+  WarningIcon,
   AutorenewIcon,
   BalloonIcon,
   Breadcrumbs,

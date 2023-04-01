@@ -1,4 +1,13 @@
-import { Judge } from '@juki-team/commons';
+import {
+  ButtonLoaderOnClickType,
+  ContentResponseType,
+  EditCreateProblemType,
+  HTTPMethod,
+  Judge,
+  ProblemResponseDTO,
+  ProblemTab,
+  Status,
+} from 'types';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -17,15 +26,6 @@ import { useJukiUI, useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { mutate } from 'swr';
-import {
-  ButtonLoaderOnClickType,
-  ContentResponseType,
-  EditCreateProblemType,
-  HTTPMethod,
-  ProblemResponseDTO,
-  ProblemTab,
-  Status,
-} from 'types';
 import { Input } from '../index';
 import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemSettings } from './ProblemSettings';
@@ -47,14 +47,16 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
       {
         method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
         body: JSON.stringify(problem),
-      }));
-    if (notifyResponse(response)) {
+      },
+    ));
+    if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
       await mutate(JUDGE_API_V1.PROBLEM.PROBLEM(response.content.key));
       await push(ROUTES.PROBLEMS.VIEW(response.content?.key, ProblemTab.STATEMENT));
       setLoaderStatus(Status.SUCCESS);
     }
   };
+  
   const tabs = {
     [ProblemTab.STATEMENT]: {
       key: ProblemTab.STATEMENT,
@@ -69,7 +71,9 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
           statement={problem.statement}
           settings={problem.settings}
           tags={problem.tags}
-          setStatement={(statement) => setProblem(prevState => ({ ...prevState, statement }))}
+          setStatement={(statement) => setProblem(prevState => (
+            { ...prevState, statement }
+          ))}
         />
       ),
     },
@@ -82,17 +86,19 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
         </div>
       ),
     },
-    ...(editing ? {
-      [ProblemTab.TESTS]: {
-        key: ProblemTab.TESTS,
-        header: <T className="tt-se ws-np">test cases</T>,
-        body: (
-          <div className="pad-top-bottom pad-left-right">
-            <ProblemTestCases problem={problem} />
-          </div>
-        ),
-      },
-    } : {}),
+    ...(
+      editing ? {
+        [ProblemTab.TESTS]: {
+          key: ProblemTab.TESTS,
+          header: <T className="tt-se ws-np">test cases</T>,
+          body: (
+            <div className="pad-top-bottom pad-left-right">
+              <ProblemTestCases problem={problem} />
+            </div>
+          ),
+        },
+      } : {}
+    ),
     [ProblemTab.EDITORIAL]: {
       key: ProblemTab.EDITORIAL,
       header: <T className="tt-se ws-np">editorial</T>,
@@ -100,7 +106,9 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
         <div className="pad-top-bottom pad-left-right">
           <ProblemEditorial
             editorial={problem.editorial}
-            setEditorial={(editorial) => setProblem(prevState => ({ ...prevState, editorial }))}
+            setEditorial={(editorial) => setProblem(prevState => (
+              { ...prevState, editorial }
+            ))}
           />
         </div>
       ),
@@ -109,7 +117,9 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
   
   const extraNodes = [
     <CheckUnsavedChanges
-      onClickContinue={() => push(editing ? ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT) : ROUTES.PROBLEMS.LIST())}
+      onClickContinue={() => push(editing
+        ? ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT)
+        : ROUTES.PROBLEMS.LIST())}
       value={problem}
     >
       <ButtonLoader
@@ -136,9 +146,12 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
-    <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} className="link">
-      <div className="ws-np">{problem.name}</div>
-    </Link>,
+    editing
+      ? (
+        <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} className="link">
+          <div className="ws-np">{problem.name}</div>
+        </Link>
+      ) : <div className="ws-np">{problem.name}</div>,
     tabs[tab as string]?.header,
   ];
   

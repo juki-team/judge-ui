@@ -33,7 +33,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
     answer: string,
     public: boolean,
   }>(null);
-  const { addNotification, notifyResponse } = useNotification();
+  const { notifyResponse } = useNotification();
   const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
   const isJudgeOrAdmin = isJudge || isAdmin;
   
@@ -89,7 +89,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
           ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
             return (
-              <div className="elevation-1 jk-pad-md jk-border-radius-inline pn-re" key={clarification.key}>
+              <div className="elevation-1 jk-pad-md jk-border-radius-inline pn-re bc-we" key={clarification.key}>
                 {isJudgeOrAdmin && (
                   <div style={{ position: 'absolute', top: 0, right: 0 }}>
                     <Button

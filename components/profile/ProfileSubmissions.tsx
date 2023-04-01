@@ -30,6 +30,8 @@ export function ProfileSubmissions() {
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+      rows={{ height: 80 }}
+      cards={{ expanded: true }}
       headers={columns}
       url={url}
       name={QueryParam.PROFILE_SUBMISSIONS_TABLE}

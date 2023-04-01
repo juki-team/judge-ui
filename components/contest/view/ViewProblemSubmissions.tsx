@@ -47,13 +47,14 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
   return (
     <div className="pad-left-right pad-top-bottom">
       <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+        rows={{ height: 80 }}
+        cards={{ width: 272, expanded: true }}
         headers={columns}
         url={url}
         name={QueryParam.STATUS_TABLE}
         toRow={submission => submission}
         refreshInterval={60000}
         getRowKey={({ data, index }) => data[index].submitId}
-        cards={{ width: 272 }}
       />
     </div>
   );

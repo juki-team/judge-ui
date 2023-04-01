@@ -1,10 +1,12 @@
-import { EditCreateContest, FetcherLayer } from 'components';
+import { EditCreateContest, FetcherLayer, LinkContests, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { useContestRouter } from 'hooks';
 import React from 'react';
 import { ContentResponseType, ContestResponseDTO, EditContestProblemBasicType, EditCreateContestType } from 'types';
 import Custom404 from '../../../404';
+import { Breadcrumbs, TwoContentSection } from '@juki-team/base-ui';
+import Link from 'next/link';
 
 const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContestType => {
   const problems: { [key: string]: EditContestProblemBasicType } = {};
@@ -45,10 +47,22 @@ function ContestEdit() {
   
   const { contestKey } = useContestRouter();
   
+  const breadcrumbs = [
+    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+    <LinkContests><T className="tt-se">contests</T></LinkContests>,
+  ];
+  
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
       url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
-      errorView={<Custom404 />}
+      errorView={
+        <TwoContentSection>
+          <div className="jk-col stretch extend nowrap">
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          </div>
+          <Custom404 />
+        </TwoContentSection>
+      }
     >
       {({ data, isLoading, error }) => {
         if (data.content.user.isAdmin) {

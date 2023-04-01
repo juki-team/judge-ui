@@ -95,7 +95,7 @@ export const ProblemCodeEditor = ({
               const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
                 contest?.problemIndex
                   ? JUDGE_API_V1.CONTEST.SUBMIT(query.key + '', problemJudgeKey)
-                  : JUDGE_API_V1.PROBLEM.SUBMIT(query.key + ''), {
+                  : JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problem.key), {
                   method: HTTPMethod.POST,
                   body: JSON.stringify({ language, source: sourceCode }),
                 }));
@@ -119,7 +119,7 @@ export const ProblemCodeEditor = ({
                 await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize, '', ''));
               } else {
                 // TODO fix the filter Url param
-                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem?.key, nickname, 1, +myStatusPageSize, '', ''));
+                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem.judge, problem.key, nickname, 1, +myStatusPageSize, '', ''));
                 await push({ pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS), query: restQuery });
               }
             }}

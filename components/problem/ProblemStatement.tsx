@@ -1,22 +1,23 @@
-import { Judge } from '@juki-team/commons';
+import { MdMathEditor, TabsInline } from '@juki-team/base-ui';
 import {
+  ButtonLoader,
   DownloadIcon,
-  ExclamationIcon,
+  ExtraProblemInfo,
   FloatToolbar,
   MdMathViewer,
-  OpenInNewIcon,
   PlusIcon,
-  Popover,
-  ProblemInfo,
+  ProblemMemoryLimitInfo,
+  ProblemModeInfo,
+  ProblemTimeLimitInfo,
+  ProblemTypeInfo,
   T,
-  TextLangEdit,
 } from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpers';
-import { useJukiUser, useT } from 'hooks';
+import { useJukiUI, useJukiUser, useT } from 'hooks';
 import { useRouter } from 'next/router';
-import React from 'react';
-import { Language, ProblemSettingsType, ProblemStatementType, ProblemStatus, ProfileSetting } from 'types';
+import React, { useState } from 'react';
+import { Judge, Language, ProblemSettingsType, ProblemStatementType, ProblemStatus, ProfileSetting, Status } from 'types';
 import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
@@ -44,14 +45,16 @@ export const ProblemStatement = ({
   setStatement,
   contest,
 }: ProblemStatementProps) => {
+  
   const { index: problemIndex, color: problemColor } = contest || {};
   const { query: { key, index, tab, ...query } } = useRouter();
+  const { viewPortSize } = useJukiUI();
   const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
   const { t } = useT();
   
-  const statementDescription = statement?.description[preferredLanguage] || statement?.description[Language.EN] || statement?.description[Language.ES];
-  const statementInput = (statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES]).trim();
-  const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES]).trim();
+  const statementDescription = (statement?.description?.[preferredLanguage] || statement?.description?.[Language.EN] || statement?.description?.[Language.ES] || '').trim();
+  const statementInput = (statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES] || '').trim();
+  const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES] || '').trim();
   const statementSampleCases = statement?.sampleCases || [];
   
   const languages = Object.values(settings?.byProgrammingLanguage || {});
@@ -91,44 +94,45 @@ ${sample.output}
 \`\`\`
 `)).join('')}
 `;
+  
   if (judge === Judge.CODEFORCES) {
     return (
-      <div className="jk-row extend" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-        <div dangerouslySetInnerHTML={{ __html: statement.html[Language.EN] }} />
+      <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+        <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
+          <div className="codeforces-statement" dangerouslySetInnerHTML={{ __html: statement.html[Language.EN] }} />
+        </div>
       </div>
     );
   }
   
+  const handleDownloadPdf = async () => {
+    await downloadJukiMarkdownAdPdf(source, `Juki Judge ${problemName}.pdf`);
+  };
+  
+  const handleDownloadMd = async () => {
+    await downloadBlobAsFile(new Blob([source], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
+  };
+  
+  const [language, setLanguage] = useState<Language>(Language.EN);
+  
+  const tabs = {
+    [Language.EN]: {
+      key: Language.EN,
+      header: <span>english</span>,
+    },
+    [Language.ES]: {
+      key: Language.ES,
+      header: <span>español</span>,
+    },
+  };
+  
   return (
-    <div className="jk-row extend" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-      <div className="jk-row center extend gap nowrap pad-left-right pad-top fw-bd">
-        {problemIndex && (
-          <div className="jk-row jk-tag" style={{ backgroundColor: problemColor }}>
-            <p style={{
-              textShadow: 'var(--t-color-white) 0px 1px 2px, var(--t-color-white) 0px -1px 2px, ' +
-                'var(--t-color-white) 1px 0px 2px, var(--t-color-white) -1px 0px 2px',
-              color: 'var(--t-color-gray-1)',
-            }}>{problemIndex}</p>
-          </div>
-        )}
-        <h3 className="title" style={{ textAlign: 'center' }}>{name}</h3>
-        <div>
-        
-        </div>
-        <Popover
-          content={<ProblemInfo author={author} status={status} tags={tags} settings={settings} />}
-          triggerOn={['hover', 'click']}
-          placement="bottom"
-        >
-          <div className="jk-row"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
-        </Popover>
-      </div>
-      {/*)}*/}
+    <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
       <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
         <div className={classNames('jk-col top gap stretch flex-3', {
           'editing': !!setStatement,
         })}>
-          {!setStatement && (
+          {!setStatement && viewPortSize !== 'hg' && viewPortSize !== 'lg' && (
             <FloatToolbar
               actionButtons={[
                 {
@@ -137,27 +141,69 @@ ${sample.output}
                     {
                       icon: <DownloadIcon />,
                       label: <T>pdf</T>,
-                      onClick: async () => {
-                        await downloadJukiMarkdownAdPdf(source, `Juki Judge ${problemName}.pdf`);
-                      },
+                      onClick: handleDownloadPdf,
                     },
                     {
-                      icon: <OpenInNewIcon />,
+                      icon: <DownloadIcon />,
                       label: <T>md</T>,
-                      onClick: async () => await downloadBlobAsFile(new Blob([source], { type: 'text/plain' }), `Juki Judge ${problemName}.md`),
+                      onClick: handleDownloadMd,
                     },
                   ],
                 },
               ]}
             />
           )}
+          <div className="jk-row center extend gap nowrap fw-bd">
+            {problemIndex && (
+              <div className="jk-row jk-tag" style={{ backgroundColor: problemColor }}>
+                <p style={{
+                  textShadow: 'var(--t-color-white) 0px 1px 2px, var(--t-color-white) 0px -1px 2px, ' +
+                    'var(--t-color-white) 1px 0px 2px, var(--t-color-white) -1px 0px 2px',
+                  color: 'var(--t-color-gray-1)',
+                }}>{problemIndex}</p>
+              </div>
+            )}
+            {!setStatement && (
+              <div className="jk-col fw-nl">
+                <h3>{name}</h3>
+                <div className={classNames({ 'screen sm md': !problemIndex })}>
+                  <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
+                    <ProblemTimeLimitInfo settings={settings} />
+                    <ProblemMemoryLimitInfo settings={settings} />
+                  </div>
+                  <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
+                    <ProblemTypeInfo settings={settings} />
+                    <ProblemModeInfo settings={settings} expand={false} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          {setStatement && (
+            <div className="jk-col">
+              <div className="jk-row">
+                <TabsInline<Language>
+                  tabs={tabs}
+                  onChange={(language) => setLanguage(language)}
+                  selectedTabKey={language}
+                />
+              </div>
+            </div>
+          )}
           <div>
             <h3><T>description</T></h3>
             {setStatement ? (
-              <TextLangEdit
-                text={statement.description}
-                setText={(description) => setStatement({ ...statement, description })}
-              />
+              <div className="text-edit">
+                <MdMathEditor
+                  informationButton
+                  uploadImageButton
+                  source={statement.description?.[language]}
+                  onChange={value => setStatement({
+                    ...statement,
+                    description: { ...statement.description, [language]: value },
+                  })}
+                />
+              </div>
             ) : (
               <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
                 <MdMathViewer source={statementDescription} />
@@ -166,12 +212,18 @@ ${sample.output}
           </div>
           <div>
             <h3><T>input</T></h3>
-            {}
             {setStatement ? (
-              <TextLangEdit
-                text={statement.input}
-                setText={(input) => setStatement({ ...statement, input })}
-              />
+              <div className="text-edit">
+                <MdMathEditor
+                  informationButton
+                  uploadImageButton
+                  source={statement.input?.[language]}
+                  onChange={value => setStatement({
+                    ...statement,
+                    input: { ...statement.input, [language]: value },
+                  })}
+                />
+              </div>
             ) : statementInput
               ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
                 <MdMathViewer source={statementInput} />
@@ -181,10 +233,17 @@ ${sample.output}
           <div>
             <h3><T>output</T></h3>
             {setStatement ? (
-              <TextLangEdit
-                text={statement.output}
-                setText={(output) => setStatement({ ...statement, output })}
-              />
+              <div className="text-edit">
+                <MdMathEditor
+                  informationButton
+                  uploadImageButton
+                  source={statement.output?.[language]}
+                  onChange={value => setStatement({
+                    ...statement,
+                    output: { ...statement.output, [language]: value },
+                  })}
+                />
+              </div>
             ) : statementOutput
               ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
                 <MdMathViewer source={statementOutput} />
@@ -222,7 +281,43 @@ ${sample.output}
         </div>
         {!problemIndex && (
           <div className="screen lg hg flex-1">
-            <ProblemInfo author={author} status={status} tags={tags} settings={settings} />
+            <div className="jk-border-radius-inline jk-pad-md bc-we jk-col gap stretch">
+              <ProblemTimeLimitInfo settings={settings} expand />
+              <ProblemMemoryLimitInfo settings={settings} expand />
+              <ProblemTypeInfo settings={settings} />
+              <ProblemModeInfo settings={settings} expand />
+              <ExtraProblemInfo author={author} status={status} tags={tags} settings={settings} />
+              <ButtonLoader
+                size="small"
+                icon={<DownloadIcon />}
+                onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
+                  try {
+                    await handleDownloadPdf();
+                    setLoaderStatus(Status.SUCCESS);
+                  } catch (error) {
+                    setLoaderStatus(Status.ERROR);
+                  }
+                }}
+              >
+                <T>download as pdf</T>
+              </ButtonLoader>
+              <ButtonLoader
+                size="small"
+                icon={<DownloadIcon />}
+                onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
+                  try {
+                    await handleDownloadMd();
+                    setLoaderStatus(Status.SUCCESS);
+                  } catch (error) {
+                    setLoaderStatus(Status.ERROR);
+                  }
+                }}
+              >
+                <T>download as md</T>
+              </ButtonLoader>
+            </div>
           </div>
         )}
       </div>

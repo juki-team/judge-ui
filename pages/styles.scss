@@ -62,6 +62,16 @@ li > * {
   }
 }
 
+.text-edit {
+  .jk-md-math-editor-layout {
+    @extend .jk-md-math-editor-style;
+    
+    .content-preview {
+      box-sizing: border-box;
+    }
+  }
+}
+
 .text-head-field, .text-head-field span.tx-s {
   line-height: 16px;
 }

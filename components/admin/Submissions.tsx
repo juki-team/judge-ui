@@ -32,6 +32,8 @@ export function AllSubmissions() {
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+      rows={{ height: 80 }}
+      cards={{ expanded: true }}
       headers={columns}
       url={url}
       name={QueryParam.ALL_SUBMISSIONS_TABLE}

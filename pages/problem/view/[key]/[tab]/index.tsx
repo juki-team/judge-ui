@@ -1,3 +1,4 @@
+import { JUDGE } from '@juki-team/commons';
 import {
   AutorenewIcon,
   Breadcrumbs,
@@ -25,6 +26,8 @@ import React, { ReactNode } from 'react';
 import {
   ContentResponseType,
   HTTPMethod,
+  Judge,
+  Language,
   LastLinkKey,
   ProblemResponseDTO,
   ProblemTab,
@@ -38,13 +41,25 @@ const ProblemView = (): ReactNode => {
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { query: { key, tab: problemTab, ...query }, push, isReady } = useRouter();
   const { user } = useJukiUser();
-  const { addSuccessNotification, addErrorNotification } = useNotification();
+  const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
   const { viewPortSize, router: { setSearchParam } } = useJukiUI();
+  
+  const breadcrumbs = [
+    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+    <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
+  ];
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
       url={isReady && JUDGE_API_V1.PROBLEM.DATA(key as string)}
-      errorView={<Custom404 />}
+      errorView={
+        <TwoContentSection>
+          <div className="jk-col stretch extend nowrap">
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          </div>
+          <Custom404 />
+        </TwoContentSection>
+      }
     >
       {({ data }) => {
         const problem = data.content;
@@ -64,8 +79,7 @@ const ProblemView = (): ReactNode => {
                 tags={problem.tags}
               />
             ),
-          },
-          [ProblemTab.EDITOR]: {
+          }, [ProblemTab.EDITOR]: {
             key: ProblemTab.EDITOR,
             header: <T className="ws-np tt-ce">code editor</T>,
             body: <div className="pad-top-bottom pad-left-right"><ProblemCodeEditor problem={problem} /></div>,
@@ -86,83 +100,118 @@ const ProblemView = (): ReactNode => {
         };
         const breadcrumbs = [
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-          <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
-          <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} className="link">
+          <LinkProblems><T className="tt-se">problems</T></LinkProblems>, <Link
+            href={{
+              pathname: ROUTES.PROBLEMS.VIEW(problem.judge ===
+                Judge.JUKI_JUDGE ? problem.key : getProblemJudgeKey(problem.judge, problem.key),
+                ProblemTab.STATEMENT,
+              ),
+              query,
+            }}
+            className="link"
+          >
             <div className="ws-np">{problem.name}</div>
-          </Link>,
-          tabs[problemTab as string]?.header,
+          </Link>, tabs[problemTab as string]?.header,
         ];
-  
+        
         const pushTab = (tabKey) => setSearchParam({ name: 'tab', value: tabKey });
-  
-        const extraNodes =
-          data?.content?.user?.isEditor ? [
-            <ButtonLoader
-              size="small"
-              icon={<EditIcon />}
-              onClick={async setLoaderStatus => {
-                setLoaderStatus(Status.LOADING);
-                await push(ROUTES.PROBLEMS.EDIT('' + key));
-                setLoaderStatus(Status.SUCCESS);
-              }}
-              responsiveMobile
-            >
-              {<T>edit</T>}
-            </ButtonLoader>,
-            <Popover
-              content={<T className="ws-np tt-se">only submissions that are not in a contest will be judged</T>}
-              placement="left"
-              showPopperArrow
-            >
-              <div>
-                <ButtonLoader
-                  size="small"
-                  icon={<AutorenewIcon />}
-                  onClick={async setLoaderStatus => {
-                    setLoaderStatus(Status.LOADING);
-                    const bodyProblem = { ...problem };
-                    delete bodyProblem.key;
-                    const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(await authorizedRequest(
-                      JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
-                      { method: HTTPMethod.POST },
-                    ));
-                    if (result.success) {
-                      addSuccessNotification(
-                        <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
-                      );
-                      setLoaderStatus(Status.SUCCESS);
-                    } else {
-                      addErrorNotification(<T
-                        className="tt-se">{result.message || 'something went wrong, please try again later'}</T>);
-                      setLoaderStatus(Status.ERROR);
-                    }
-                  }}
-                  responsiveMobile
-                >
-                  <T>rejudge</T>
-                </ButtonLoader>
-              </div>
-            </Popover>,
-          ] : [];
+        
+        const extraNodes = [];
+        if (data?.content?.user?.isEditor && data?.content?.judge === Judge.JUKI_JUDGE) {
+          extraNodes.push(<ButtonLoader
+            size="small"
+            icon={<EditIcon />}
+            onClick={async setLoaderStatus => {
+              setLoaderStatus(Status.LOADING);
+              await push(ROUTES.PROBLEMS.EDIT('' + key));
+              setLoaderStatus(Status.SUCCESS);
+            }}
+            responsiveMobile
+          >
+            {<T>edit</T>}
+          </ButtonLoader>, <Popover
+            content={<T className="ws-np tt-se">only submissions that are not in a contest will be
+              judged</T>}
+            placement="left"
+            showPopperArrow
+          >
+            <div>
+              <ButtonLoader
+                size="small"
+                icon={<AutorenewIcon />}
+                onClick={async setLoaderStatus => {
+                  setLoaderStatus(Status.LOADING);
+                  const bodyProblem = { ...problem };
+                  delete bodyProblem.key;
+                  const result = cleanRequest<ContentResponseType<{
+                    listCount: number, status: SubmissionRunStatus.RECEIVED
+                  }>>(await authorizedRequest(JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge,
+                    problem.key,
+                  )), { method: HTTPMethod.POST }));
+                  if (result.success) {
+                    addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
+                      <T>submissions</T></div>);
+                    setLoaderStatus(Status.SUCCESS);
+                  } else {
+                    addErrorNotification(<T
+                      className="tt-se"
+                    >{result.message ||
+                      'something went wrong, please try again later'}</T>);
+                    setLoaderStatus(Status.ERROR);
+                  }
+                }}
+                responsiveMobile
+              >
+                <T>rejudge</T>
+              </ButtonLoader>
+            </div>
+          </Popover>);
+        } else if (data?.content?.judge === Judge.CODEFORCES && user.isLogged) {
+          extraNodes.push(<ButtonLoader
+            size="small"
+            icon={<AutorenewIcon />}
+            onClick={async setLoaderStatus => {
+              setLoaderStatus(Status.LOADING);
+              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
+                { method: HTTPMethod.POST },
+              ));
+              notifyResponse(response, setLoaderStatus);
+            }}
+            responsiveMobile
+          >
+            <T className="tt-se ws-np">re crawl</T>
+          </ButtonLoader>);
+        }
+        
         return (
           <TwoContentSection>
             <div className="jk-col stretch extend nowrap">
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="jk-row gap left pad-left-right pad-top">
+              <div className="jk-row gap left pad-left-right">
                 <h2>{problem.name}</h2>
+                {problem.judge ===
+                  Judge.CODEFORCES &&
+                    <div className="jk-tag warning">{JUDGE[Judge.CODEFORCES].label}</div>}
                 <Popover
-                  content={
-                    <ProblemInfo
-                      author={problem.author}
-                      status={problem.status}
-                      tags={problem.tags}
-                      settings={problem.settings}
+                  content={problem.judge === Judge.JUKI_JUDGE ? <ProblemInfo
+                    author={problem.author}
+                    status={problem.status}
+                    tags={problem.tags}
+                    settings={problem.settings}
+                  /> : problem.judge === Judge.CODEFORCES ? <div className="jk-row extend top">
+                    <div
+                      className="codeforces-statement only-info"
+                      dangerouslySetInnerHTML={{ __html: problem.statement.html[Language.EN] }}
                     />
-                  }
+                  </div> : <div></div>}
                   triggerOn="click"
                   placement="bottom"
                 >
-                  <div className="jk-row link"><ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
+                  <div className="jk-row link"><ExclamationIcon
+                    filledCircle className="cr-py"
+                    rotate={180}
+                  /></div>
                 </Popover>
               </div>
               <div className="pad-left-right">

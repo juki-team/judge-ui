@@ -190,7 +190,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
   head: <TextHeadCell text={<T>date</T>} />,
   index: 'timestamp',
   field: ({ record: { timestamp }, isCard }) => (
-    <DateField className="jk-row" date={new Date(timestamp)} label={<T className="tt-se">date</T>} />
+    <DateField className="jk-row" date={new Date(timestamp)} label={<T className="tt-se">date</T>} twoLines={!isCard} />
   ),
   sort: true,
   filter: {
@@ -199,7 +199,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
     pickerType: 'year-month-day-hours-minutes',
   },
   cardPosition: 'center',
-  minWidth: 280,
+  minWidth: 180,
 });
 
 export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDTO> => ({

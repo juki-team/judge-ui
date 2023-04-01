@@ -27,16 +27,28 @@ import { ViewScoreboard } from './ViewScoreboard';
 
 export function ContestView() {
   
-  const { push } = useRouter();
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
+  const { push } = useRouter();
   const { lastProblemVisited, pushTab, contestKey, problemIndex, contestTab, query } = useContestRouter();
   const { viewPortSize } = useJukiUI();
+  
+  const breadcrumbs = [
+    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
+    <LinkContests><T className="tt-se">contests</T></LinkContests>,
+  ];
   
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
       url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
       options={{ refreshInterval: 60000 }}
-      errorView={<Custom404 />}
+      errorView={
+        <TwoContentSection>
+          <div className="jk-col stretch extend nowrap">
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          </div>
+          <Custom404 />
+        </TwoContentSection>
+      }
     >
       {({ data: { content: contest } }) => {
         const {
@@ -66,7 +78,7 @@ export function ContestView() {
           statusLabel = 'live';
           timeInterval = contest.settings.endTimestamp - new Date().getTime();
         }
-  
+        
         const literal = contest.isEndless ? <T className="ws-np">endless</T> : (
           <>
             {contest.isLive
@@ -78,7 +90,7 @@ export function ContestView() {
             <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
           </>
         );
-  
+        
         const allLiteralLabel = <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
           <T>{statusLabel}</T>,&nbsp;{literal}</div>;
         
@@ -109,7 +121,13 @@ export function ContestView() {
             body: <div className="pad-left-right pad-bottom"><ViewScoreboard contest={contest} /></div>,
           };
         }
-        if (isAdmin || isJudge || ((contest.isLive || contest.isPast || contest.isEndless) && isContestant)) {
+        if (isAdmin ||
+          isJudge ||
+          (
+            (
+              contest.isLive || contest.isPast || contest.isEndless
+            ) && isContestant
+          )) {
           tabHeaders[ContestTab.MY_SUBMISSIONS] = {
             key: ContestTab.MY_SUBMISSIONS,
             header: <T className="tt-ce ws-np">my submissions</T>,
@@ -143,7 +161,7 @@ export function ContestView() {
         if (viewPortSize === 'lg' || viewPortSize === 'hg') {
           extraNodes.push(
             <div className={`jk-row nowrap jk-tag ${tag}`}>
-              <T>{statusLabel}</T>,&nbsp;{literal}
+              <T className="ws-np">{statusLabel}</T>,&nbsp;{literal}
             </div>,
           );
         }
@@ -182,12 +200,12 @@ export function ContestView() {
         } else {
           breadcrumbs.push(tabHeaders[contestTab as ContestTab]?.header);
         }
-  
+        
         return (
           <TwoContentSection>
             <div>
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="jk-col pn-re pad-left-right pad-top">
+              <div className="jk-col pn-re pad-left-right">
                 <div className="jk-row nowrap gap extend">
                   <div className="jk-row left gap flex-1">
                     <h2>{contest.name}</h2>

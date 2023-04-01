@@ -1,13 +1,12 @@
 import { ROUTES } from 'config/constants';
 import { useRouter } from 'hooks';
 import { useEffect } from 'react';
-import { ContestTab } from 'types';
 
 function View() {
-  const { query, replace, isReady } = useRouter();
+  const { query, isReady, replace } = useRouter();
   useEffect(() => {
     if (isReady) {
-      void replace(ROUTES.CONTESTS.VIEW(query.key as string, ContestTab.OVERVIEW));
+      void replace(ROUTES.ROOT);
     }
   }, [replace, query, isReady]);
   return null;

@@ -1,2 +1,1 @@
-export * from './GroupInfo';
 export * from './Submission';

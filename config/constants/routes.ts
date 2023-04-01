@@ -6,6 +6,7 @@ export const _SUB_SUB_TAB = ':subSubTab?';
 export const ROUTES = {
   ROOT: '/',
   PARAMS: {
+    SUBMISSION: 'submission',
     POSTS: 'posts',
     RESUME: 'resume',
     ABOUT: 'about',
@@ -42,8 +43,12 @@ export const ROUTES = {
         ROUTES.PARAMS.VIEW,
         key,
         tab,
-        ...(subTab ? [subTab] : []),
-        ...(subSubTab ? [subSubTab] : []),
+        ...(
+          subTab ? [subTab] : []
+        ),
+        ...(
+          subSubTab ? [subSubTab] : []
+        ),
       ].join('/');
     },
     CREATE() {
@@ -65,6 +70,11 @@ export const ROUTES = {
     },
     EDIT(key: string) {
       return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.EDIT, key].join('/');
+    },
+  },
+  SUBMISSIONS: {
+    VIEW(key: string) {
+      return ['', ROUTES.PARAMS.SUBMISSION, ROUTES.PARAMS.VIEW, key].join('/');
     },
   },
   COURSES: {

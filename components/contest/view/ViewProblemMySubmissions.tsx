@@ -48,6 +48,8 @@ export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponse
   return (
     <div className="pad-left-right pad-top-bottom">
       <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+        rows={{ height: 80 }}
+        cards={{ expanded: true }}
         headers={columns}
         url={url}
         name={QueryParam.MY_STATUS_TABLE}
