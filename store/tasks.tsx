@@ -1,4 +1,4 @@
-import { SocketEvent } from '@juki-team/commons';
+import { Judge, SocketEvent } from '@juki-team/commons';
 import { T } from 'components';
 import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
@@ -7,7 +7,7 @@ import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import { ContentsResponseType, HTTPMethod, ProblemVerdict, SubmissionRunStatus } from 'types';
 
 export const TaskContext = createContext<{
-  listenSubmission: (submissionId: string, problem: string) => void,
+  listenSubmission: (submissionId: string, judge: Judge, key: string) => void,
   submissions: { [key: string]: { submitId: string, status: SubmissionRunStatus } },
 }>({
   submissions: {},
@@ -17,7 +17,7 @@ export const TaskContext = createContext<{
 export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   const { user: { nickname } } = useJukiUser();
   const { addErrorNotification, addSuccessNotification } = useNotification();
-  const [submissions, setSubmissions] = useState({});
+  const [ submissions, setSubmissions ] = useState({});
   const { pop } = useJkSocket(SocketEvent.SUBMISSION);
   
   useEffect(() => {
@@ -25,11 +25,26 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
     if (data?.content?.submitId) {
       setSubmissions((prevState) => ({ ...prevState, [data?.content?.submitId]: data.content }));
     }
-  }, [pop]);
+  }, [ pop ]);
   
-  const listenSubmission = async (listenSubmissionId: string, problemKey: string) => {
-    const result = cleanRequest<ContentsResponseType<{ submitId: string, verdict: ProblemVerdict, points: number, contestName?: string, contestProblemIndex?: string, problemName: string }>>(
-      await authorizedRequest(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problemKey, nickname, 1, 16, '', ''), {
+  const listenSubmission = async (listenSubmissionId: string, problemJudge: Judge, problemKey: string) => {
+    const result = cleanRequest<ContentsResponseType<{
+      submitId: string,
+      verdict: ProblemVerdict,
+      points: number,
+      contestName?: string,
+      contestProblemIndex?: string,
+      problemName: string
+    }>>(
+      await authorizedRequest(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(
+        problemJudge,
+        problemKey,
+        nickname,
+        1,
+        16,
+        '',
+        '',
+      ), {
         method: HTTPMethod.GET,
       }));
     if (result.success) {
@@ -82,7 +97,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
           addErrorNotification(<div className="jk-pad-md">{verdict}</div>);
         }
       } else {
-        setTimeout(() => listenSubmission(listenSubmissionId, problemKey), 10000);
+        setTimeout(() => listenSubmission(listenSubmissionId, problemJudge, problemKey), 10000);
       }
     }
   };

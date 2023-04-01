@@ -1,10 +1,11 @@
+import { ContentCopyIcon, CopyToClipboard } from '@juki-team/base-ui';
 import { Modal, OpenInNewIcon, SubmitView, T } from 'components';
+import { ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { QueryParam } from 'types';
-import { ROUTES } from 'config/constants';
-import Link from 'next/link';
 
 export const SubmissionModal = ({ submitId }: { submitId: string }) => {
   
@@ -14,14 +15,18 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
   return (
     <Modal isOpen={true} onClose={handleClose} closeIcon closeWhenClickOutside>
       <section className="jk-pad-md">
-        <Link href={ROUTES.SUBMISSIONS.VIEW(submitId)} className="link" target="_blank">
-          <div className="fw-bd tx-l jk-row left">
+        <div className="fw-bd tx-l jk-row left gap">
+          <div className="jk-row">
             <T>submission</T>&nbsp;
             <div className="tx-s fw-nl">{submitId}</div>
-            &nbsp;
-            <div className="jk-row"><OpenInNewIcon size="small" /></div>
           </div>
-        </Link>
+          <Link href={ROUTES.SUBMISSIONS.VIEW(submitId)} target="_blank">
+            <div className="jk-row link"><OpenInNewIcon size="small" /></div>
+          </Link>
+          <CopyToClipboard text={submitId}>
+            <div className="jk-row link"><ContentCopyIcon size="small" /></div>
+          </CopyToClipboard>
+        </div>
         <SubmitView submitId={submitId} />
       </section>
     </Modal>

@@ -8,7 +8,6 @@ import {
   ContentResponseType,
   ContestTab,
   HTTPMethod,
-  Judge,
   OpenDialog,
   ProblemResponseDTO,
   ProblemTab,
@@ -21,7 +20,17 @@ import {
 export const ProblemCodeEditor = ({
   problem,
   contest,
-}: { problem: ProblemResponseDTO, contest?: { isAdmin: boolean, isJudge: boolean, isContestant: boolean, isGuest: boolean, isSpectator: boolean, problemIndex: string } }) => {
+}: {
+  problem: ProblemResponseDTO,
+  contest?: {
+    isAdmin: boolean,
+    isJudge: boolean,
+    isContestant: boolean,
+    isGuest: boolean,
+    isSpectator: boolean,
+    problemIndex: string
+  }
+}) => {
   
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWR();
@@ -48,10 +57,13 @@ export const ProblemCodeEditor = ({
     [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`]: filter,
   } = query;
   const { key: problemKey, ...restQuery } = query;
-  const languages = useMemo(() => Object.values(problem?.settings.languages || {}), [JSON.stringify(problem?.settings.languages)]);
-  const [language, setLanguage] = useState(ProgrammingLanguage.TEXT);
+  const languages = useMemo(
+    () => Object.values(problem?.settings.languages || {}),
+    [ JSON.stringify(problem?.settings.languages) ],
+  );
+  const [ language, setLanguage ] = useState(ProgrammingLanguage.TEXT);
   const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
-  const [sourceCode, setSourceCode] = useState('');
+  const [ sourceCode, setSourceCode ] = useState('');
   
   return (
     <UserCodeEditor
@@ -101,26 +113,47 @@ export const ProblemCodeEditor = ({
                 }));
               if (response.success) {
                 if (response?.content.submitId) {
-                  if (problem.judge === Judge.JUKI_JUDGE) {
-                    listenSubmission(response.content.submitId, contest?.problemIndex ? problem.key : query.key as string);
-                  }
+                  listenSubmission(
+                    response.content.submitId,
+                    problem.judge,
+                    problem.key,
+                  );
                   addSuccessNotification(<T className="tt-se">submission received</T>);
                 }
                 setLoaderStatus(Status.SUCCESS);
               } else {
                 addErrorNotification(<T
-                  className="tt-se">{response.message || 'something went wrong, please try again later'}</T>);
+                  className="tt-se"
+                >{response.message || 'something went wrong, please try again later'}</T>);
                 setLoaderStatus(Status.ERROR);
               }
               
               if (contest?.problemIndex) {
                 await pushTab(ContestTab.MY_SUBMISSIONS);
                 // TODO fix the filter Url param
-                await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(query.key as string, nickname, 1, +myStatusPageSize, '', ''));
+                await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(
+                  query.key as string,
+                  nickname,
+                  1,
+                  +myStatusPageSize,
+                  '',
+                  '',
+                ));
               } else {
                 // TODO fix the filter Url param
-                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(problem.judge, problem.key, nickname, 1, +myStatusPageSize, '', ''));
-                await push({ pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS), query: restQuery });
+                await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(
+                  problem.judge,
+                  problem.key,
+                  nickname,
+                  1,
+                  +myStatusPageSize,
+                  '',
+                  '',
+                ));
+                await push({
+                  pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS),
+                  query: restQuery,
+                });
               }
             }}
           >

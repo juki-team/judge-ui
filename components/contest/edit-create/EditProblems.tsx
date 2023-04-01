@@ -308,6 +308,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <div className="jk-row" style={{ flex: 1 }}>
               <ProblemSelector
                 onSelect={(problem) => {
+                  console.log({ problem });
                   if (!problems.some(p => p.key === problem.key)) {
                     let colors = PALLETE.VIVOS.filter(color => !problems.some(p => p.value.color === color.color));
                     if (!colors.length) {
@@ -336,16 +337,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             </div>
             <div className="jk-row" style={{ width: 'var(--pad-t)' }} />
             <div className="jk-row" style={{ width: 150 }}>
-              <Select
-                options={[
-                  { value: JUDGE.JUKI_JUDGE.value, label: JUDGE.JUKI_JUDGE.label },
-                  { value: JUDGE.CODEFORCES.value, label: JUDGE.CODEFORCES.label, disabled: true },
-                  { value: JUDGE.AT_CODER.value, label: JUDGE.AT_CODER.label, disabled: true },
-                  { value: JUDGE.UVA_ONLINE_JUDGE.value, label: JUDGE.UVA_ONLINE_JUDGE.label, disabled: true },
-                  { value: JUDGE.CODECHEF.value, label: JUDGE.CODECHEF.label, disabled: true },
-                ]}
-                selectedOption={{ value: JUDGE.JUKI_JUDGE.value }}
-              />
+            
             </div>
             <div className="jk-row" style={{ width: 'var(--pad-t)' }} />
           </div>
