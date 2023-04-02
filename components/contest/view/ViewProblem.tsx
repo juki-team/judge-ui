@@ -38,6 +38,7 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
           isSpectator: user.isSpectator,
           isContestant: user.isContestant,
           problemIndex: query?.index as string,
+          key: contest.key,
         }}
         problem={problem}
       />

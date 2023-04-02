@@ -16,7 +16,6 @@ import {
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { useContestRouter, useJukiUI, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import Custom404 from 'pages/404';
 import React from 'react';
 import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status } from 'types';
 import { ViewClarifications } from './ViewClarifications';
@@ -24,6 +23,8 @@ import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
 import { ViewProblemSubmissions } from './ViewProblemSubmissions';
 import { ViewScoreboard } from './ViewScoreboard';
+import { JukiSurprisedImage } from '../../index';
+import { CupIcon } from '@juki-team/base-ui';
 
 export function ContestView() {
   
@@ -41,21 +42,27 @@ export function ContestView() {
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
       url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
       options={{ refreshInterval: 60000 }}
-      errorView={
-        <TwoContentSection>
-          <div className="jk-col stretch extend nowrap">
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
+      errorView={<TwoContentSection>
+        <div className="jk-col stretch extend nowrap">
+          <Breadcrumbs breadcrumbs={breadcrumbs} />
+        </div>
+        <div className="jk-col extend jk-pad-md">
+          <div className="jk-col gap center">
+            <div className="image-404"><JukiSurprisedImage /></div>
+            <h3><T className="tt-ue">contest not found</T></h3>
+            <p><T className="tt-se">the contest does not exist or you do not have permissions to view
+              it</T></p>
+            <Link href="/contests" className="link tt-ue">
+              <div className="jk-row gap"><CupIcon /><T>go to contest list page</T></div>
+            </Link>
           </div>
-          <Custom404 />
-        </TwoContentSection>
-      }
+        </div>
+      </TwoContentSection>}
     >
       {({ data: { content: contest } }) => {
         const {
           user: { isAdmin, isJudge, isContestant } = {
-            isAdmin: false,
-            isJudge: false,
-            isContestant: false,
+            isAdmin: false, isJudge: false, isContestant: false,
           },
         } = contest || {};
         let statusLabel = '';
@@ -81,11 +88,8 @@ export function ContestView() {
         
         const literal = contest.isEndless ? <T className="ws-np">endless</T> : (
           <>
-            {contest.isLive
-              ? <T className="ws-np">ends in</T>
-              : contest.isPast
-                ? <T className="ws-np">ends ago</T>
-                : <T className="ws-np">stars in</T>}
+            {contest.isLive ? <T className="ws-np">ends in</T> : contest.isPast ?
+              <T className="ws-np">ends ago</T> : <T className="ws-np">stars in</T>}
             &nbsp;
             <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
           </>
@@ -111,9 +115,7 @@ export function ContestView() {
                   : <T className="tt-ce ws-np">problems</T>} {lastProblemVisited}
               </div>
             ),
-            body: problemIndex
-              ? <ViewProblem contest={contest} />
-              : <ViewProblems contest={contest} />,
+            body: problemIndex ? <ViewProblem contest={contest} /> : <ViewProblems contest={contest} />,
           };
           tabHeaders[ContestTab.SCOREBOARD] = {
             key: ContestTab.SCOREBOARD,
@@ -186,13 +188,19 @@ export function ContestView() {
         const breadcrumbs = [
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
           <LinkContests><T className="tt-se">contests</T></LinkContests>,
-          <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }} className="link">
+          <Link
+            href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }}
+            className="link"
+          >
             <div className="ws-np">{contest.name}</div>
           </Link>,
         ];
         if (contestTab === ContestTab.PROBLEM) {
           breadcrumbs.push(
-            <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.PROBLEMS), query }} className="link">
+            <Link
+              href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.PROBLEMS), query }}
+              className="link"
+            >
               <T className="tt-se">problems</T>
             </Link>,
           );

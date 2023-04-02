@@ -17,7 +17,7 @@ export const SubmissionModal = ({ submitId }: { submitId: string }) => {
       <section className="jk-pad-md">
         <div className="fw-bd tx-l jk-row left gap">
           <div className="jk-row">
-            <T>submission</T>&nbsp;
+            <T className="tt-se">submission</T>&nbsp;
             <div className="tx-s fw-nl">{submitId}</div>
           </div>
           <Link href={ROUTES.SUBMISSIONS.VIEW(submitId)} target="_blank">

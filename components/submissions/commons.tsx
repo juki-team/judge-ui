@@ -39,7 +39,10 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
   minWidth: 250,
 });
 
-export const submissionContestColumn = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionContestColumn = (props?: {
+  header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>,
+  blankTarget?: boolean
+}): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: (
     <TextHeadCell
       text={<T className="tt-se">contest</T>}
@@ -66,12 +69,19 @@ export const submissionContestColumn = (props?: { header?: Pick<DataViewerHeader
   minWidth: 280,
 });
 
-export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>, onlyProblem?: boolean, blankTarget?: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionProblemColumn = (props?: {
+  header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>,
+  onlyProblem?: boolean,
+  blankTarget?: boolean
+}): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: (
     <TextHeadCell text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="tt-se">contest</T></>} />
   ),
   index: 'problemJudgeKeys',
-  field: ({ record: { problemKey, problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
+  field: ({
+    record: { problemKey, problemName, contestName, contestKey, contestProblemIndex, contestProblemColor },
+    isCard,
+  }) => (
     <TextField
       text={contestKey ? (
         <Link
@@ -80,18 +90,29 @@ export const submissionProblemColumn = (props?: { header?: Pick<DataViewerHeader
         >
           {props?.onlyProblem ? (
             <div className="jk-row link">
-              {problemName} ({contestProblemIndex}) {!!props?.blankTarget && <OpenInNewIcon size="small" />}
+              ({contestProblemIndex || '-'})
+              &nbsp;
+              {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}
             </div>
           ) : (
-            <div className="jk-row link">
-              {contestName} ({contestProblemIndex}) {!!props?.blankTarget && <OpenInNewIcon size="small" />}
-              <div>{problemKey} {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}</div>
+            <div className="jk-col link">
+              <div className="jk-row">
+                {contestName}&nbsp;({contestProblemIndex || '-'})
+              </div>
+              <div className="jk-row">
+                {problemKey} {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}
+              </div>
             </div>
           )}
         </Link>
       ) : (
-        <Link href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)} target={props?.blankTarget ? '_blank' : ''}>
-          <div className="jk-row link">{problemKey} {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}</div>
+        <Link
+          href={ROUTES.PROBLEMS.VIEW(problemKey + '', ProblemTab.STATEMENT)}
+          target={props?.blankTarget ? '_blank' : ''}
+        >
+          <div className="jk-row link">
+            {problemKey} {problemName} {!!props?.blankTarget && <OpenInNewIcon size="small" />}
+          </div>
         </Link>
       )}
       label={props?.onlyProblem
@@ -119,7 +140,10 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
   sort: true,
   filter: {
     type: 'select',
-    options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({ label: PROGRAMMING_LANGUAGE[language].label, value: language })),
+    options: ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({
+      label: PROGRAMMING_LANGUAGE[language].label,
+      value: language,
+    })),
   },
   cardPosition: 'bottom',
   minWidth: 140,
@@ -172,7 +196,9 @@ export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionRespo
   minWidth: 180,
 });
 
-export const submissionActionsColumn = ({ canRejudge }: { canRejudge: boolean }): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionActionsColumn = ({ canRejudge }: {
+  canRejudge: boolean
+}): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: <TextHeadCell text={<T>actions</T>} />,
   index: 'actions',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
@@ -213,8 +239,14 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDT
               text={<div className="jk-col extend">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>}
               label={<T className="tt-se">language</T>}
             />
-            <TextField text={<Time timeUsed={timeUsed} verdict={verdict} />} label={<T className="tt-se">time used</T>} />
-            <TextField text={<Memory memoryUsed={memoryUsed} verdict={verdict} />} label={<T className="tt-se">memory used</T>} />
+            <TextField
+              text={<Time timeUsed={timeUsed} verdict={verdict} />}
+              label={<T className="tt-se">time used</T>}
+            />
+            <TextField
+              text={<Memory memoryUsed={memoryUsed} verdict={verdict} />}
+              label={<T className="tt-se">memory used</T>}
+            />
           </Field>
         </SubmissionInfo>
       ) :

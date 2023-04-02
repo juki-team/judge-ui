@@ -17,8 +17,17 @@ import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpe
 import { useJukiUI, useJukiUser, useT } from 'hooks';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Judge, Language, ProblemSettingsType, ProblemStatementType, ProblemStatus, ProfileSetting, Status } from 'types';
+import {
+  Judge,
+  Language,
+  ProblemSettingsType,
+  ProblemStatementType,
+  ProblemStatus,
+  ProfileSetting,
+  Status,
+} from 'types';
 import { SampleTest } from './SampleTest';
+import { ProblemLetter } from './ProblemLetter';
 
 interface ProblemStatementProps {
   judge: Judge,
@@ -52,9 +61,18 @@ export const ProblemStatement = ({
   const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
   const { t } = useT();
   
-  const statementDescription = (statement?.description?.[preferredLanguage] || statement?.description?.[Language.EN] || statement?.description?.[Language.ES] || '').trim();
-  const statementInput = (statement?.input[preferredLanguage] || statement?.input[Language.EN] || statement?.input[Language.ES] || '').trim();
-  const statementOutput = (statement?.output[preferredLanguage] || statement?.output[Language.EN] || statement?.output[Language.ES] || '').trim();
+  const statementDescription = (statement?.description?.[preferredLanguage] ||
+    statement?.description?.[Language.EN] ||
+    statement?.description?.[Language.ES] ||
+    '').trim();
+  const statementInput = (statement?.input[preferredLanguage] ||
+    statement?.input[Language.EN] ||
+    statement?.input[Language.ES] ||
+    '').trim();
+  const statementOutput = (statement?.output[preferredLanguage] ||
+    statement?.output[Language.EN] ||
+    statement?.output[Language.ES] ||
+    '').trim();
   const statementSampleCases = statement?.sampleCases || [];
   
   const languages = Object.values(settings?.byProgrammingLanguage || {});
@@ -66,9 +84,11 @@ export const ProblemStatement = ({
 
 |${t('language')}|${t('time limit')}|${t('memory limit')}|
 |--|--|--|
-| ${t('general')} | ${(settings?.timeLimit / 1000).toFixed(1)} ${t('seconds')} | ${(settings?.memoryLimit / 1000).toFixed(1)} ${t('MB')} |
+| ${t('general')} | ${(settings?.timeLimit / 1000).toFixed(1)} ${t('seconds')} | ${(settings?.memoryLimit /
+    1000).toFixed(1)} ${t('MB')} |
 ${languages.map((language) => (
-    `| ${PROGRAMMING_LANGUAGE[language.language]?.label} | ${(language?.timeLimit / 1000).toFixed(1)} ${t('seconds')} | ${(language?.memoryLimit / 1000).toFixed(1)} ${t('MB')}|`
+    `| ${PROGRAMMING_LANGUAGE[language.language]?.label} | ${(language?.timeLimit /
+      1000).toFixed(1)} ${t('seconds')} | ${(language?.memoryLimit / 1000).toFixed(1)} ${t('MB')}|`
   )).join('\n')}
 
 # ${t('description')}
@@ -98,7 +118,17 @@ ${sample.output}
   if (judge === Judge.CODEFORCES) {
     return (
       <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-        <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
+        <div
+          className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom"
+          style={{ position: 'relative' }}
+        >
+          {problemIndex && (
+            <ProblemLetter
+              index={problemIndex}
+              color={problemColor}
+              style={{ position: 'absolute', top: 'var(--pad-m)', left: 'var(--pad-m)' }}
+            />
+          )}
           <div className="codeforces-statement" dangerouslySetInnerHTML={{ __html: statement.html[Language.EN] }} />
         </div>
       </div>
@@ -110,10 +140,10 @@ ${sample.output}
   };
   
   const handleDownloadMd = async () => {
-    await downloadBlobAsFile(new Blob([source], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
+    await downloadBlobAsFile(new Blob([ source ], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
   };
   
-  const [language, setLanguage] = useState<Language>(Language.EN);
+  const [ language, setLanguage ] = useState<Language>(Language.EN);
   
   const tabs = {
     [Language.EN]: {
@@ -129,9 +159,11 @@ ${sample.output}
   return (
     <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
       <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
-        <div className={classNames('jk-col top gap stretch flex-3', {
-          'editing': !!setStatement,
-        })}>
+        <div
+          className={classNames('jk-col top gap stretch flex-3', {
+            'editing': !!setStatement,
+          })}
+        >
           {!setStatement && viewPortSize !== 'hg' && viewPortSize !== 'lg' && (
             <FloatToolbar
               actionButtons={[
@@ -154,15 +186,7 @@ ${sample.output}
             />
           )}
           <div className="jk-row center extend gap nowrap fw-bd">
-            {problemIndex && (
-              <div className="jk-row jk-tag" style={{ backgroundColor: problemColor }}>
-                <p style={{
-                  textShadow: 'var(--t-color-white) 0px 1px 2px, var(--t-color-white) 0px -1px 2px, ' +
-                    'var(--t-color-white) 1px 0px 2px, var(--t-color-white) -1px 0px 2px',
-                  color: 'var(--t-color-gray-1)',
-                }}>{problemIndex}</p>
-              </div>
-            )}
+            {problemIndex && <ProblemLetter index={problemIndex} color={problemColor} />}
             {!setStatement && (
               <div className="jk-col fw-nl">
                 <h3>{name}</h3>
@@ -262,14 +286,14 @@ ${sample.output}
                   filledCircle
                   onClick={() => setStatement({
                     ...statement,
-                    sampleCases: [...statement.sampleCases, { input: '', output: '' }],
+                    sampleCases: [ ...statement.sampleCases, { input: '', output: '' } ],
                   })}
                 />
               </div>
             )}
           </div>
           <div className="jk-col stretch gap">
-            {(statement.sampleCases || [{ input: '', output: '' }]).map((sample, index) => (
+            {(statement.sampleCases || [ { input: '', output: '' } ]).map((sample, index) => (
               <SampleTest
                 index={index}
                 sampleCases={statement.sampleCases}

@@ -12,9 +12,9 @@ import {
   UpIcon_,
   Verdict,
 } from 'components';
-import Custom404 from '../../pages/404';
 import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
+import { JukiSurprisedImage } from '@juki-team/base-ui';
 
 export const SubmitView = ({ submitId }: { submitId: string }) => {
   
@@ -23,7 +23,15 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
       url={JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId)}
       errorView={() => {
         return (
-          <div><Custom404 /></div>
+          <div className="jk-col extend jk-pad-md">
+            <div className="jk-col gap center">
+              <div className="image-404"><JukiSurprisedImage /></div>
+              <h3><T className="tt-ue">submission not found</T></h3>
+              <p>
+                <T className="tt-se">the submission does not exist or you do not have permissions to view it</T>
+              </p>
+            </div>
+          </div>
         );
       }}
     >
@@ -54,7 +62,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
           if (testCasesByGroup[group]) {
             testCasesByGroup[group].push(testCase);
           } else {
-            testCasesByGroup[group] = [testCase];
+            testCasesByGroup[group] = [ testCase ];
           }
         });
         
@@ -94,7 +102,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                   verdictByGroups && !!Object.keys(verdictByGroups).length
                 ) ? (
                   <div className="jk-col jk-border-radius-inline">
-                    {Object.entries(verdictByGroups).map(([groupKey, result]) => (
+                    {Object.entries(verdictByGroups).map(([ groupKey, result ]) => (
                       <GroupInfo
                         key={groupKey}
                         groupKey={+groupKey}
@@ -110,7 +118,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                   </div>
                 ) : (
                   <div className="jk-col jk-border-radius-inline">
-                    {Object.entries(testCasesByGroup).map(([groupKey, result]) => (
+                    {Object.entries(testCasesByGroup).map(([ groupKey, result ]) => (
                       <GroupInfo
                         key={groupKey}
                         groupKey={+groupKey}
@@ -120,7 +128,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                         timeUsed={0}
                         points={problemMode === ProblemMode.PARTIAL ? +result.reduce((sum, testCase) => sum +
                           testCase.points, 0)
-                        .toFixed(3) : 0}
+                          .toFixed(3) : 0}
                         testCases={result}
                         submitId={submitId}
                       />
@@ -162,5 +170,5 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
         );
       }}
     </FetcherLayer>
-  )
-}
+  );
+};

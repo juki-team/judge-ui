@@ -1,4 +1,14 @@
-import { ButtonLoader, CheckIcon, CloseIcon, DataViewer, Field, OpenInNewIcon, T, TextField, TextHeadCell } from 'components';
+import {
+  ButtonLoader,
+  CheckIcon,
+  CloseIcon,
+  DataViewer,
+  Field,
+  OpenInNewIcon,
+  T,
+  TextField,
+  TextHeadCell,
+} from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
 import { useJukiUI, useNotification } from 'hooks';
@@ -12,12 +22,11 @@ import {
   ContestTab,
   DataViewerHeadersType,
   HTTPMethod,
-  Judge,
-  ProblemTab,
   QueryParam,
   Status,
   SubmissionRunStatus,
 } from 'types';
+import { JUDGE } from '@juki-team/commons';
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
@@ -37,7 +46,8 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
           <Field className="jk-row">
             <div>
               <div
-                className={'fw-br problem-index bc-g6 jk-border-radius-inline pn-re' + (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
+                className={'fw-br problem-index bc-g6 jk-border-radius-inline pn-re' +
+                  (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
               >
                 {!!myAttempts && (mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
                 {index}
@@ -58,19 +68,29 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
           index: 'id',
           field: ({ record: { judge, key }, isCard }) => (
             <TextField
-              text={judge === Judge.JUKI_JUDGE ? (
-                (isJudgeOrAdmin ? (
-                  <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT), query }} target="_blank">
-                    <div className="problem-id fw-bd cr-g3 jk-row">{key}&nbsp;<OpenInNewIcon size="tiny" />
+              text={
+                isJudgeOrAdmin
+                  ? (
+                    <Link href={JUDGE[judge]?.getProblemUrl(key) || ''} target="_blank">
+                      <div className="jk-row gap">
+                        <div className="fw-bd cr-g3 jk-col">
+                          {JUDGE[judge]?.label || judge}
+                          <div>{key}</div>
+                        </div>
+                        <OpenInNewIcon size="tiny" />
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="jk-row gap">
+                      <div className="fw-bd cr-g3 jk-col">
+                        {JUDGE[judge]?.label || judge}
+                        <div>{key}</div>
+                      </div>
+                      <OpenInNewIcon size="tiny" />
                     </div>
-                  </Link>
-                ) : (<div className="problem-id fw-bd cr-g3">{key}</div>))
-              ) : (
-                <div className="problem-id fw-bd cr-g3">
-                  {getProblemJudgeKey(judge, key)}
-                </div>
-              )}
-              label={<T>ID</T>}
+                  )
+              }
+              label={<T>id</T>}
             />
           ),
           sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
@@ -90,8 +110,14 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
               <ButtonLoader
                 onClick={async (setLoaderStatus, loaderStatus, event) => {
                   setLoaderStatus(Status.LOADING);
-                  const result = cleanRequest<ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>>(
-                    await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, getProblemJudgeKey(judge, key)), {
+                  const result = cleanRequest<ContentResponseType<{
+                    listCount: number,
+                    status: SubmissionRunStatus.RECEIVED
+                  }>>(
+                    await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(
+                      contestKey as string,
+                      getProblemJudgeKey(judge, key),
+                    ), {
                       method: HTTPMethod.POST,
                     }));
                   if (result.success) {
@@ -147,7 +173,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         minWidth: 64,
       } as DataViewerHeadersType<ContestProblemType>,
     ];
-  }, [isJudgeOrAdmin, contestKey, query]);
+  }, [ isJudgeOrAdmin, contestKey, query ]);
   const data = Object.values(problems);
   
   return (

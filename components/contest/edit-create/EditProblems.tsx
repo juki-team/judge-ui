@@ -8,12 +8,18 @@ import {
   OpenInNewIcon,
   PlusIcon,
   ProblemSelector,
-  Select,
   SimpleSortableRows,
   T,
 } from 'components';
 import { JUDGE, PALLETE } from 'config/constants';
-import { classNames, disableOutOfRange, getProblemJudgeKey, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
+import {
+  classNames,
+  disableOutOfRange,
+  getProblemJudgeKey,
+  indexToLetters,
+  lettersToIndex,
+  roundTimestamp,
+} from 'helpers';
 import React, { useEffect, useRef, useState } from 'react';
 import { ContestProblemBasicType, RowSortableItem, RowSortableItemContentType } from 'types';
 import { EditContestProps } from '../types';
@@ -23,7 +29,7 @@ type Problem = Omit<ContestProblemBasicType, 'index'> & {
 }
 
 export const EditProblems = ({ contest, setContest }: EditContestProps) => {
-  const [withTime, setWithTime] = useState(0);
+  const [ withTime, setWithTime ] = useState(0);
   const contestStartDate = new Date(contest.settings.startTimestamp);
   const contestEndDate = new Date(contest.settings.endTimestamp);
   const renderRowProblem = (problem): RowSortableItemContentType => ({
@@ -41,7 +47,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         <div className="jk-row center gap" style={{ flex: 1 }}>
           <span className="fw-bd">{problem.key}</span>
           {problem.name}
-          <a href={`/problem/view/${problem.key}`} target="_blank">
+          <a href={JUDGE[problem.judge]?.getProblemUrl(problem.key)} target="_blank">
             <div className="jk-row"><OpenInNewIcon size="small" /></div>
           </a>
         </div>
@@ -63,7 +69,6 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         <div className="jk-row" style={{ width: 100 }}>
           <Input
             type="number"
-            // size="auto"
             extend
             value={problem.points}
             onChange={(props) => {
@@ -87,7 +92,13 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                   if (p.key === problem.key) {
                     const value = {
                       ...p.value,
-                      startTimestamp: Math.min(contest.settings.endTimestamp, Math.max(contest.settings.startTimestamp, roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)))),
+                      startTimestamp: Math.min(
+                        contest.settings.endTimestamp,
+                        Math.max(
+                          contest.settings.startTimestamp,
+                          roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
+                        ),
+                      ),
                     };
                     return { ...p, value, content: renderRowProblem(value) };
                   }
@@ -103,12 +114,14 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <InputDate
               type="year-month-day-hours-minutes"
               date={new Date(problem.startTimestamp)}
-              isSelected={(date) => ({
-                day: date.isWithinInterval({
-                  start: new Date(problem.startTimestamp).startOfDay(),
-                  end: new Date(problem.endTimestamp).endOfDay(),
-                }),
-              })}
+              isSelected={(date) => (
+                {
+                  day: date.isWithinInterval({
+                    start: new Date(problem.startTimestamp).startOfDay(),
+                    end: new Date(problem.endTimestamp).endOfDay(),
+                  }),
+                }
+              )}
               isDisabled={(date) => disableOutOfRange(date, contestStartDate, contestEndDate)}
               baseDate={new Date(problem.startTimestamp)}
               onDatePick={(date) => {
@@ -116,7 +129,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                   if (p.key === problem.key) {
                     const value = {
                       ...p.value,
-                      startTimestamp: Math.min(contest.settings.endTimestamp, Math.max(contest.settings.startTimestamp, roundTimestamp(date.getTime()))),
+                      startTimestamp: Math.min(
+                        contest.settings.endTimestamp,
+                        Math.max(contest.settings.startTimestamp, roundTimestamp(date.getTime())),
+                      ),
                     };
                     return { ...p, value, content: renderRowProblem(value) };
                   }
@@ -138,7 +154,13 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                   if (p.key === problem.key) {
                     const value = {
                       ...p.value,
-                      endTimestamp: Math.min(contest.settings.endTimestamp, Math.max(problem.startTimestamp, roundTimestamp(problem.startTimestamp + (v * 1000 * 60)))),
+                      endTimestamp: Math.min(
+                        contest.settings.endTimestamp,
+                        Math.max(
+                          problem.startTimestamp,
+                          roundTimestamp(problem.startTimestamp + (v * 1000 * 60)),
+                        ),
+                      ),
                     };
                     return { ...p, value, content: renderRowProblem(value) };
                   }
@@ -154,12 +176,14 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <InputDate
               type="year-month-day-hours-minutes"
               date={new Date(problem.endTimestamp)}
-              isSelected={(date) => ({
-                day: date.isWithinInterval({
-                  start: new Date(problem.startTimestamp).startOfDay(),
-                  end: new Date(problem.endTimestamp).endOfDay(),
-                }),
-              })}
+              isSelected={(date) => (
+                {
+                  day: date.isWithinInterval({
+                    start: new Date(problem.startTimestamp).startOfDay(),
+                    end: new Date(problem.endTimestamp).endOfDay(),
+                  }),
+                }
+              )}
               isDisabled={(date) => disableOutOfRange(date, new Date(problem.startTimestamp), contestEndDate)}
               baseDate={new Date(problem.endTimestamp)}
               onDatePick={(date) => {
@@ -167,7 +191,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                   if (p.key === problem.key) {
                     const value = {
                       ...p.value,
-                      endTimestamp: Math.min(contest.settings.endTimestamp, Math.max(problem.startTimestamp, roundTimestamp(date.getTime()))),
+                      endTimestamp: Math.min(
+                        contest.settings.endTimestamp,
+                        Math.max(problem.startTimestamp, roundTimestamp(date.getTime())),
+                      ),
                     };
                     return { ...p, value, content: renderRowProblem(value) };
                   }
@@ -179,35 +206,39 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             />
           </div>
         )}
-        <div className="jk-row" style={{ width: 150 }}>{problem.judge}</div>
+        <div className="jk-row" style={{ width: 150 }}>{JUDGE[problem.judge]?.label || problem.judge}</div>
         <div className="jk-row" style={{ width: 30 }}>
           <DeleteIcon
             className="cursor-pointer"
-            onClick={() => setProblems(prevState => (prevState.filter(p => p.key !== problem.key)))}
+            onClick={() => setProblems(prevState => (
+              prevState.filter(p => p.key !== problem.key)
+            ))}
           />
         </div>
       </div>
     );
   };
   const parseProblems = (problems: { [key: string]: ContestProblemBasicType & { name: string } }) => {
-    return Object.values(problems).sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index)).map((problem, index) => {
-      const value: Problem = {
-        key: problem.key,
-        judge: problem.judge,
-        name: problem.name,
-        points: problem.points,
-        color: problem.color,
-        startTimestamp: problem.startTimestamp,
-        endTimestamp: problem.endTimestamp,
-      };
-      return {
-        key: problem.key,
-        content: renderRowProblem(value),
-        value,
-      };
-    });
+    return Object.values(problems)
+      .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
+      .map((problem, index) => {
+        const value: Problem = {
+          key: problem.key,
+          judge: problem.judge,
+          name: problem.name,
+          points: problem.points,
+          color: problem.color,
+          startTimestamp: problem.startTimestamp,
+          endTimestamp: problem.endTimestamp,
+        };
+        return {
+          key: problem.key,
+          content: renderRowProblem(value),
+          value,
+        };
+      });
   };
-  const [problems, setProblems] = useState<RowSortableItem<Problem>[]>(parseProblems(contest.problems));
+  const [ problems, setProblems ] = useState<RowSortableItem<Problem>[]>(parseProblems(contest.problems));
   useEffect(() => {
     setProblems(prevState => prevState.map(problem => {
       const value = { ...problem.value };
@@ -217,14 +248,14 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       }
       return { ...problem, content: renderRowProblem(value), value };
     }));
-  }, [withTime]);
+  }, [ withTime ]);
   const lastContest = useRef(contest);
   useEffect(() => {
     if (JSON.stringify(contest) !== JSON.stringify(lastContest.current)) {
       setProblems(parseProblems(contest.problems));
       lastContest.current = contest;
     }
-  }, [contest]);
+  }, [ contest ]);
   useEffect(() => {
     setContest(prevState => {
       const problemsObj = {};
@@ -245,7 +276,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         problems: problemsObj,
       };
     });
-  }, [problems]);
+  }, [ problems ]);
   
   return (
     <div className="jk-col top nowrap gap stretch">
@@ -262,7 +293,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         </div>
         {!!withTime && (
           <div className="jk-col  gap left stretch">
-            <div><T>Set a the time start relative to start of contest and the duration to resolve for each problem</T>:</div>
+            <div><T>Set a the time start relative to start of contest and the duration to resolve for each problem</T>:
+            </div>
             <InputToggle
               checked={withTime === 1}
               onChange={(value) => setWithTime(value ? 1 : 2)}
@@ -308,7 +340,6 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <div className="jk-row" style={{ flex: 1 }}>
               <ProblemSelector
                 onSelect={(problem) => {
-                  console.log({ problem });
                   if (!problems.some(p => p.key === problem.key)) {
                     let colors = PALLETE.VIVOS.filter(color => !problems.some(p => p.value.color === color.color));
                     if (!colors.length) {
@@ -323,23 +354,20 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       key: problem.key,
                       color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
                       points: 1,
-                      judge: JUDGE.JUKI_JUDGE.value,
+                      judge: problem.judge,
                       startTimestamp: contest.settings.startTimestamp,
                       endTimestamp: contest.settings.endTimestamp,
                     };
-                    setProblems(prevState => ([
-                      ...prevState,
-                      { key: problem.key, content: renderRowProblem(value), value },
-                    ]));
+                    setProblems(prevState => (
+                      [
+                        ...prevState,
+                        { key: problem.key, content: renderRowProblem(value), value },
+                      ]
+                    ));
                   }
                 }}
               />
             </div>
-            <div className="jk-row" style={{ width: 'var(--pad-t)' }} />
-            <div className="jk-row" style={{ width: 150 }}>
-            
-            </div>
-            <div className="jk-row" style={{ width: 'var(--pad-t)' }} />
           </div>
         </div>
       </div>

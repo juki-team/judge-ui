@@ -28,7 +28,8 @@ export const ProblemCodeEditor = ({
     isContestant: boolean,
     isGuest: boolean,
     isSpectator: boolean,
-    problemIndex: string
+    problemIndex: string,
+    key: string,
   }
 }) => {
   
@@ -106,8 +107,8 @@ export const ProblemCodeEditor = ({
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
                 contest?.problemIndex
-                  ? JUDGE_API_V1.CONTEST.SUBMIT(query.key + '', problemJudgeKey)
-                  : JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problem.key), {
+                  ? JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problemJudgeKey)
+                  : JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problemJudgeKey), {
                   method: HTTPMethod.POST,
                   body: JSON.stringify({ language, source: sourceCode }),
                 }));
