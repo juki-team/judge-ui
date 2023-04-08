@@ -43,13 +43,13 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
   const [editing, setEditing] = useState(false);
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const roles = {
+    systemRole: userToUpdate.systemRole,
     userRole: userToUpdate.userRole,
-    contestRole: userToUpdate.contestRole,
     problemRole: userToUpdate.problemRole,
+    contestRole: userToUpdate.contestRole,
     teamRole: userToUpdate.teamRole,
     courseRole: userToUpdate.courseRole,
     fileRole: userToUpdate.fileRole,
-    systemRole: userToUpdate.systemRole,
   };
   const [newRoles, setNewRoles] = useState<Roles>(roles);
   
@@ -60,7 +60,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     contest: CONTEST_ROLE,
     team: TEAM_ROLE,
     course: COURSE_ROLE,
-    sheet: FILE_ROLE,
+    file: FILE_ROLE,
   };
   
   return (

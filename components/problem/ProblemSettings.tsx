@@ -1,4 +1,16 @@
-import { Button, CloseIcon, DeleteIcon, Input, InputToggle, Modal, MultiSelect, PlusIcon, Select, T, UserCodeEditor } from 'components';
+import {
+  Button,
+  CloseIcon,
+  DeleteIcon,
+  Input,
+  InputToggle,
+  Modal,
+  MultiSelect,
+  PlusIcon,
+  Select,
+  T,
+  UserCodeEditor,
+} from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   PROBLEM_MODE,
@@ -22,7 +34,7 @@ import {
 
 export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: string[]) => void }) => {
   
-  const [text, setText] = useState('');
+  const [ text, setText ] = useState('');
   
   return (
     <div className="jk-row left gap">
@@ -47,7 +59,7 @@ export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: s
         icon={<PlusIcon />}
         size="small"
         onClick={() => {
-          onChange([...tags, text]);
+          onChange([ ...tags, text ]);
           setText('');
         }}
       />
@@ -62,8 +74,8 @@ interface ProblemSettingsProps {
 
 export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) => {
   
-  const [open, setOpen] = useState(false);
-  const [source, setSource] = useState('');
+  const [ open, setOpen ] = useState(false);
+  const [ source, setSource ] = useState('');
   const onCloseModal = () => setOpen(false);
   
   const fixPointsByGroups = (_pointsByGroups: ProblemSettingsPointsByGroupsType, toFilter?: number): ProblemSettingsPointsByGroupsType => {
@@ -119,8 +131,10 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           <div className="fw-bd tt-se nowrap"><T className="ws-np">points by groups</T>:</div>
           <div className="jk-row jk-table-inline-header block">
             <div className="jk-row"><T className="tt-se">group</T></div>
-            {problem.settings.mode === ProblemMode.SUBTASK && <div className="jk-row"><T className="tt-se">subtask points</T></div>}
-            {problem.settings.mode === ProblemMode.PARTIAL && <div className="jk-row"><T className="tt-se">partial points</T></div>}
+            {problem.settings.mode === ProblemMode.SUBTASK && <div className="jk-row"><T className="tt-se">subtask
+              points</T></div>}
+            {problem.settings.mode === ProblemMode.PARTIAL && <div className="jk-row"><T className="tt-se">partial
+              points</T></div>}
           </div>
           {Object.values(problem.settings.pointsByGroups).map(({ group, points, partial }) => (
             <div key={group} className="jk-row jk-table-inline-row block">
@@ -233,7 +247,11 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
             <div className="jk-pad-md jk-col gap nowrap">
               <div
                 className="jk-border-radius-inline"
-                style={{ height: 'calc(var(--vh) * 100 - 200px)', width: '100%', border: '1px solid var(--t-color-gray-6)' }}
+                style={{
+                  height: 'calc(var(--vh) * 100 - 200px)',
+                  width: '100%',
+                  border: '1px solid var(--t-color-gray-6)',
+                }}
               >
                 <UserCodeEditor
                   className="br-g6"
@@ -247,7 +265,12 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                     left: '0',
                     // left: 'calc((100vw - var(--screen-content-width)) / 2)',
                   }}
-                  languages={[ProgrammingLanguage.CPP17]}
+                  languages={[
+                    {
+                      value: ProgrammingLanguage.CPP17,
+                      label: PROGRAMMING_LANGUAGE[ProgrammingLanguage.CPP17].label,
+                    },
+                  ]}
                   onSourceChange={setSource}
                   initialTestCases={{
                     'custom-0': {
@@ -266,10 +289,12 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
               </div>
               <div className="jk-row extend gap right">
                 <Button type="text" onClick={onCloseModal}><T>close</T></Button>
-                <Button onClick={() => {
-                  setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource: source } });
-                  onCloseModal();
-                }}>
+                <Button
+                  onClick={() => {
+                    setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource: source } });
+                    onCloseModal();
+                  }}
+                >
                   <T>save</T>
                 </Button>
               </div>
@@ -300,9 +325,14 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
         <InputToggle
           checked={problem.settings.withPE}
           size="small"
-          onChange={(value) => setProblem(prevState => ({ ...prevState, settings: { ...prevState.settings, withPE: value } }))}
-          leftLabel={<T className={classNames('tt-se', { 'fw-bd': !problem.settings.withPE })}>without presentation error</T>}
-          rightLabel={<T className={classNames('tt-se', { 'fw-bd': problem.settings.withPE })}>with presentation error</T>}
+          onChange={(value) => setProblem(prevState => ({
+            ...prevState,
+            settings: { ...prevState.settings, withPE: value },
+          }))}
+          leftLabel={<T className={classNames('tt-se', { 'fw-bd': !problem.settings.withPE })}>without presentation
+            error</T>}
+          rightLabel={<T className={classNames('tt-se', { 'fw-bd': problem.settings.withPE })}>with presentation
+            error</T>}
         />
       </div>
       <div className="jk-row left nowrap gap">
@@ -318,7 +348,8 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
               const language = value.value;
               byProgrammingLanguage[language] = {
                 timeLimit: problem.settings.byProgrammingLanguage?.[language]?.timeLimit || problem.settings.timeLimit,
-                memoryLimit: problem.settings.byProgrammingLanguage?.[language]?.memoryLimit || problem.settings.memoryLimit,
+                memoryLimit: problem.settings.byProgrammingLanguage?.[language]?.memoryLimit
+                  || problem.settings.memoryLimit,
                 language,
               };
             });

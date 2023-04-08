@@ -25,7 +25,7 @@ export const RunnersSettings = () => {
   }, [reload]);
   
   return (
-    <div className="jk-col nowrap top gap jk-pad-md stretch">
+    <div className="jk-col nowrap top gap jk-pad-md stretch bc-we jk-br-ie">
       <div className="jk-row gap">
         <T>high performance runner min tasks</T>
         <Input

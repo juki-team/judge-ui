@@ -35,9 +35,9 @@ module.exports = withPWA({
         return [
             {
                 source: '/admin',
-                destination: '/admin/users',
-                permanent: true
-            }
+                destination: '/admin/users-management',
+                permanent: true,
+            },
         ];
     }
     // future: { webpack5: true },

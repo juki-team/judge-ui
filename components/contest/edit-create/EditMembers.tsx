@@ -27,7 +27,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
             checked={openRegistration}
             onChange={(value) => setContest(prevState => ({
               ...prevState,
-              members: { ...prevState.members, guests: value ? ['*'] : [] },
+              members: { ...prevState.members, guests: value ? [ '*' ] : [] },
             }))}
             leftLabel={<T className={classNames('tt-se', { 'fw-bd': !openRegistration })}>only guests</T>}
             rightLabel={<T className={classNames('tt-se', { 'fw-bd': openRegistration })}>open</T>}
@@ -38,10 +38,10 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
           {openRegistration ? <T className="tt-se">the contest is open to all users of the judge</T> : (
             <UsersSelector
               selectedUsers={guests}
-              onChangeSelectedUsers={guests => {
+              onChangeSelectedUsers={users => {
                 setContest(prevState => ({
                   ...prevState,
-                  members: { ...prevState.members, guests },
+                  members: { ...prevState.members, guests: users.map(user => user.nickname) },
                 }));
               }}
             />
@@ -54,10 +54,10 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
           <div style={{ minHeight: 34 }}>
             <UsersSelector
               selectedUsers={contestants}
-              onChangeSelectedUsers={contestants => {
+              onChangeSelectedUsers={users => {
                 setContest(prevState => ({
                   ...prevState,
-                  members: { ...prevState.members, contestants },
+                  members: { ...prevState.members, contestants: users.map(user => user.nickname) },
                 }));
               }}
             />
@@ -72,7 +72,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
             checked={openScore}
             onChange={(value) => setContest(prevState => ({
               ...prevState,
-              members: { ...prevState.members, spectators: value ? ['*'] : [] },
+              members: { ...prevState.members, spectators: value ? [ '*' ] : [] },
             }))}
             leftLabel={<T className={classNames('tt-se', { 'fw-bd': !openScore })}>only guests</T>}
             rightLabel={<T className={classNames('tt-se', { 'fw-bd': openScore })}>open</T>}
@@ -83,10 +83,10 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
           {openScore ? <T className="tt-se">the scoreboard of the contest is open to all users of the judge</T> : (
             <UsersSelector
               selectedUsers={spectators}
-              onChangeSelectedUsers={spectators => {
+              onChangeSelectedUsers={users => {
                 setContest(prevState => ({
                   ...prevState,
-                  members: { ...prevState.members, spectators },
+                  members: { ...prevState.members, spectators: users.map(user => user.nickname) },
                 }));
               }}
             />
@@ -100,10 +100,10 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
         </div>
         <UsersSelector
           selectedUsers={judges}
-          onChangeSelectedUsers={judges => {
+          onChangeSelectedUsers={users => {
             setContest(prevState => ({
               ...prevState,
-              members: { ...prevState.members, judges },
+              members: { ...prevState.members, judges: users.map(user => user.nickname) },
             }));
           }}
         />
@@ -115,10 +115,10 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
         </div>
         <UsersSelector
           selectedUsers={administrators}
-          onChangeSelectedUsers={administrators => {
+          onChangeSelectedUsers={users => {
             setContest(prevState => ({
               ...prevState,
-              members: { ...prevState.members, administrators },
+              members: { ...prevState.members, administrators: users.map(user => user.nickname) },
             }));
           }}
         />

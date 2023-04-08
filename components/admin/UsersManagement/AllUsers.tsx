@@ -37,7 +37,7 @@ import {
   Status,
   UserManagementResponseDTO,
 } from 'types';
-import { GenerateUsersModal } from './GenerateUsersModal';
+import { GenerateUsers } from './GenerateUsers';
 import { UserPermissions } from './UserPermissions';
 
 export function AllUsers() {
@@ -68,9 +68,17 @@ export function AllUsers() {
     {
       head: <TextHeadCell text={<T className="tt-ue">name</T>} />,
       index: 'name',
-      field: ({ record: { givenName, familyName, nickname, imageUrl, email } }) => (
+      field: ({ record: { givenName, familyName, nickname, imageUrl, email, city, country } }) => (
         <Field className="jk-row center gap">
-          <UserChip imageUrl={imageUrl} nickname={nickname} givenName={givenName} familyName={familyName} email={email} />
+          <UserChip
+            imageUrl={imageUrl}
+            nickname={nickname}
+            givenName={givenName}
+            familyName={familyName}
+            email={email}
+          />
+          {city}
+          <div className="fw-bd">{country}</div>
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
@@ -82,18 +90,6 @@ export function AllUsers() {
       } as FilterTextOfflineType<UserManagementResponseDTO>,
       cardPosition: 'top',
       minWidth: 400,
-    },
-    {
-      head: <TextHeadCell text={<><T className="tt-ue">country</T>/<T className="tt-ue">city</T></>} />,
-      index: 'country-city',
-      field: ({ record: { country, city } }) => (
-        <Field className="jk-col center">
-          {city}
-          <div className="fw-bd">{country}</div>
-        </Field>
-      ),
-      cardPosition: 'bottom',
-      minWidth: 250,
     },
     {
       head: <TextHeadCell text={<T className="tt-ue">permissions</T>} />,
@@ -156,12 +152,10 @@ export function AllUsers() {
   ], []);
   
   const data: UserManagementResponseDTO[] = (response?.success ? response?.contents : []);
-  const [modal, setModal] = useState(false);
   
   return (
     <>
       <ResetPassword onClose={() => setNickname('')} nickname={nickname} />
-      <GenerateUsersModal isOpen={modal} onClose={() => setModal(false)} />
       <DataViewer<UserManagementResponseDTO>
         headers={columns}
         data={data}
@@ -179,9 +173,6 @@ export function AllUsers() {
               <div className="jk-row gap"><T>user roles</T><OpenInNewIcon size="small" /></div>
             </Button>
           </Link>,
-          <Button onClick={() => setModal(true)} size="small" type="text" icon={<GroupAddIcon />}>
-            <T>generate users</T>
-          </Button>,
         ]}
         {...DEFAULT_DATA_VIEWER_PROPS}
       />

@@ -31,7 +31,8 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
     },
     AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION: (runnerType: RunnerType, taskDefinition: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/task-definition/${encodeURIComponent(taskDefinition)}`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/task-definition/${encodeURIComponent(
+        taskDefinition)}`;
     },
     AWS_ECS_RUNNER_MIN_TASKS: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/min-tasks`;
@@ -88,41 +89,62 @@ export const JUDGE_API_V1 = {
   },
   SUBMISSIONS: {
     LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}`, filterUrl), sortUrl);
+      return withSort(withFilter(
+        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}`,
+        filterUrl,
+      ), sortUrl);
     },
     NICKNAME: (nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&nickname=${nickname}`, filterUrl), sortUrl);
+      return withSort(withFilter(
+        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&nickname=${nickname}`,
+        filterUrl,
+      ), sortUrl);
     },
     CONTEST: (contestKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(contestKey)}`, filterUrl), sortUrl);
+      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(
+        contestKey)}`, filterUrl), sortUrl);
     },
     CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(contestKey)}&nickname=${nickname}`, filterUrl), sortUrl);
+      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(
+        contestKey)}&nickname=${nickname}`, filterUrl), sortUrl);
     },
     PROBLEM: (judge: Judge, problemKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(judge, problemKey)}`, filterUrl), sortUrl);
+      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(
+        judge,
+        problemKey,
+      )}`, filterUrl), sortUrl);
     },
     PROBLEM_NICKNAME: (judge: Judge, problemKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(judge, problemKey)}&nickname=${nickname}`, filterUrl), sortUrl);
+      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(
+        judge,
+        problemKey,
+      )}&nickname=${nickname}`, filterUrl), sortUrl);
     },
   },
   PROBLEM: {
     LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/list?page=${page}&size=${size}&judge=JUKI_JUDGE${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/list?page=${page}&size=${size}&judge=JUKI_JUDGE${filterUrl ? '&'
+        + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
     },
     TAG_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/tag-list`;
     },
     DATA: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}/data`;
     },
     PROBLEM: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}`;
     },
     RE_CRAWL_PROBLEM: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/re-crawl/${key}`;
     },
     CREATE: () => {
@@ -149,60 +171,84 @@ export const JUDGE_API_V1 = {
   },
   CONTEST: {
     LIST: (page: number, size: number, filterUrl: string | undefined, sortUrl: string | undefined) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/list?page=${page}&size=${size}${filterUrl ? '&'
+        + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
     },
     CREATE: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest`;
     },
     CONTEST: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}`;
     },
     CONTEST_DATA: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/data`;
     },
     REGISTER: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/register`;
     },
     SUBMIT: (key: string, problemJudgeKey: string) => {
-      if (!key || !problemJudgeKey) return null;
+      if (!key || !problemJudgeKey) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submit/contest/${key}/problem-judge-key/${problemJudgeKey}`;
     },
     SCOREBOARD: (key: string, unfrozen: boolean) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen' : ''}`;
     },
     RECALCULATE_SCOREBOARD: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/recalculate-scoreboard`;
     },
     CLARIFICATION: (key: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification`;
     },
     ANSWER_CLARIFICATION: (key: string, clarificationId: string) => {
-      if (!key) return null;
+      if (!key) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification/${clarificationId}`;
     },
   },
   COURSE: {
     LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/course/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/course/list?page=${page}&size=${size}${filterUrl ? '&'
+        + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
     },
   },
   REJUDGE: {
     PROBLEM: (problemJudgeKey: string) => {
-      if (!problemJudgeKey) return null;
+      if (!problemJudgeKey) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/problem/${problemJudgeKey}`;
     },
     CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string) => {
-      if (!contestKey) return null;
+      if (!contestKey) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}`;
     },
     SUBMISSION: (submissionId: string) => {
-      if (!submissionId) return null;
+      if (!submissionId) {
+        return null;
+      }
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/submission/${submissionId}`;
     },
   },
@@ -211,9 +257,22 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rank/list`;
     },
   },
-  SHEET: {
-    LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sheet/list?page=${page}&size=${size}${filterUrl ? '&' + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+  COMPANY: {
+    CURRENT: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company`;
+    },
+  },
+  JUDGE: {
+    GET: (judge: Judge) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}`;
+    },
+    CRAWL_LANGUAGES: (judge: Judge) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/re-crawl-languages`;
+    },
+  },
+  VIRTUAL_USER: {
+    LIST: (judge: Judge) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/${judge}`;
     },
   },
 };

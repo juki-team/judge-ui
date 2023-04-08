@@ -37,6 +37,9 @@ export {
 } from '@juki-team/commons';
 
 export type {
+  VirtualUserResponseDTO,
+  CompanyResponseDTO,
+  JudgeResponseDTO,
   ErrorType,
   UserSettingsType,
   ErrorResponseType,

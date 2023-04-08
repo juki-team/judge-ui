@@ -1,9 +1,9 @@
-import { Button, CurvedArrowIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon_, VisibilityIcon } from 'components';
+import { Button, CurvedArrowIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon_, VisibilityIcon } from 'components/index';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useEffect, useState } from 'react';
 import { ContentResponseType, ProgrammingLanguage } from 'types';
-import { CodeViewer, Modal } from '../index';
+import { CodeViewer, Modal } from '../../index';
 
 export function FilesManagement() {
   const [path, setPath] = useState('/');
@@ -44,7 +44,7 @@ export function FilesManagement() {
     })();
   }, [filePath]);
   return (
-    <div className="jk-col extend stretch top">
+    <div className="jk-col extend stretch top jk-pad-md bc-we jk-br-ie">
       {filePath && (
         <Modal
           isOpen

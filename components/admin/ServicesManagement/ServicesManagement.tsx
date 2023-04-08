@@ -5,10 +5,11 @@ import { AdminTab } from 'types';
 import { EC2Management } from './EC2Management';
 import { ECSTaskDefinitionsManagement } from './ECSTaskDefinitionsManagement';
 import { ECSTasksManagement } from './ECSTasksManagement';
+import { FilesManagement } from './FilesManagement';
 import { RunnersSettings } from './RunnersSettings';
 import { SQSManagement } from './SQSManagement';
 
-export const RunnersManagement = () => {
+export const ServicesManagement = () => {
   const tabs = {
     [AdminTab.ECS_TASKS_MANAGEMENT]: {
       key: AdminTab.ECS_TASKS_MANAGEMENT,
@@ -35,11 +36,16 @@ export const RunnersManagement = () => {
       header: <T className="tt-ce ws-np">ec2</T>,
       body: <EC2Management />,
     },
+    [AdminTab.FILES_MANAGEMENT]: {
+      key: AdminTab.FILES_MANAGEMENT,
+      header: <T className="tt-ce ws-np">files</T>,
+      body: <FilesManagement />,
+    },
   };
   
   const { router: { searchParams, setSearchParam } } = useJukiUI();
-  const selectedTabKey = searchParams.get('runnerTab') || AdminTab.ALL_USERS;
-  const pushTab = tabKey => setSearchParam({ name: 'runnerTab', value: tabKey });
+  const selectedTabKey = searchParams.get('servicesTab') || AdminTab.ECS_TASKS_MANAGEMENT;
+  const pushTab = tabKey => setSearchParam({ name: 'servicesTab', value: tabKey });
   
   return (
     <div style={{ height: '100%' }}>

@@ -4,8 +4,6 @@ import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, EmailDataResponseDTO, HTTPMethod, ProgrammingLanguage, Status } from 'types';
-import { ModifyContactEmailsButton } from './ModifyContactEmailsButton';
-import { ModifyEmailTemplateButton } from './ModifyEmailTemplateButton';
 
 const passwordReset = `Hola, <span id="nombre-completo">{{nombre completo}}</span>.
 <br />
@@ -91,24 +89,13 @@ export const MailManagement = () => {
       {({ data, mutate }) => {
         const html = data?.success ? data.content.emailTemplate.replace('{{content}}', content) : '';
         return (
-          <div className="jk-col extend gap nowrap stretch">
-            <div className="jk-row center gap">
-              <div className="jk-row">
-                <T className="tt-se">main email</T>:&nbsp;
-                <span className="fw-bd">{data?.success && data?.content.mainEmail}</span>
-              </div>
-              <div className="jk-row gap">
-                <ModifyEmailTemplateButton emailTemplate={data?.success ? data.content.emailTemplate : ''} mutate={mutate} />
-                <ModifyContactEmailsButton contactEmails={data?.success ? data.content.contactEmails : []} mutate={mutate} />
-              </div>
-            </div>
-            <div className="br-g6" />
+          <div className="jk-col extend gap nowrap stretch jk-pad-md bc-we jk-br-ie">
             <div className="jk-col gap stretch">
               <h3><T>send email</T></h3>
               <div className="jk-row nowrap">
                 <T className="tt-se fw-bd">from</T>:&nbsp;
                 <Select
-                  options={(data?.success ? ['', ...data.content.contactEmails] : ['']).map(value => ({
+                  options={(data?.success ? [ '', ...data.content.contactEmails ] : [ '' ]).map(value => ({
                     value,
                     label: value || '-',
                     disabled: !value,

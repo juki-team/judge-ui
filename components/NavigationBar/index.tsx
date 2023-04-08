@@ -35,8 +35,8 @@ import {
   ProfileSetting,
   ProfileTab,
   QueryParam,
-  Theme,
   SearchParamKey,
+  Theme,
 } from 'types';
 import { LoginUser } from './LoginUser';
 
@@ -62,13 +62,18 @@ export const LastLinkContext = createContext<{
 });
 
 export const LasLinkProvider = ({ children }: PropsWithChildren<{}>) => {
-  const [lastLink, setLastLink] = useState<LastLinkType>(initialLastLink);
+  const [ lastLink, setLastLink ] = useState<LastLinkType>(initialLastLink);
   
   return (
-    <LastLinkContext.Provider value={{
-      pushPath: ({ key, pathname, query }) => setLastLink(prevState => ({ ...prevState, [key]: { pathname, query } })),
-      lastLink,
-    }}>
+    <LastLinkContext.Provider
+      value={{
+        pushPath: ({ key, pathname, query }) => setLastLink(prevState => ({
+          ...prevState,
+          [key]: { pathname, query },
+        })),
+        lastLink,
+      }}
+    >
       {children}
     </LastLinkContext.Provider>
   );
@@ -80,11 +85,13 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const { viewPortSize } = useJukiUI();
   const {
     user: {
-      canViewUsersManagement,
       canViewSubmissionsManagement,
-      canViewFilesManagement,
-      canViewEmailManagement,
-      canViewRunnersManagement,
+      canSendEmail,
+      canHandleJudges,
+      canCreateUser,
+      canHandleUsers,
+      canHandleServices,
+      canHandleSettings,
       isLogged,
       settings: { [ProfileSetting.THEME]: preferredTheme, [ProfileSetting.MENU_VIEW_MODE]: preferredMenuViewMode },
     },
@@ -112,7 +119,15 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
     },
   ];
-  if (canViewUsersManagement || canViewSubmissionsManagement || canViewFilesManagement || canViewEmailManagement || canViewRunnersManagement) {
+  if (
+    canViewSubmissionsManagement
+    || canSendEmail
+    || canHandleJudges
+    || canCreateUser
+    || canHandleUsers
+    || canHandleServices
+    || canHandleSettings
+  ) {
     menu.push({
       label: <T className="tt-se">admin</T>,
       icon: <SettingsIcon />,
@@ -122,7 +137,10 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   }
   
   useEffect(() => {
-    if (isLogged && (isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) || isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN))) {
+    if (isLogged && (isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) || isOrHas(
+      query[QueryParam.DIALOG],
+      OpenDialog.SIGN_IN,
+    ))) {
       void push({
         query: removeParamQuery(
           removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP),
@@ -131,10 +149,13 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         ),
       });
     }
-  }, [isLogged, query]);
-  const [helpOpen, setHelpOpen] = useState(false);
+  }, [ isLogged, query ]);
+  const [ helpOpen, setHelpOpen ] = useState(false);
   
-  const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace('white', 'color') : imageUrl;
+  const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace(
+    'white',
+    'color',
+  ) : imageUrl;
   
   const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} />;
   
@@ -237,7 +258,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
               rightMobile={rightMobile}
               centerMobile={centerMobile}
             >
-              {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
+              {isLoading ?
+                <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
             </HorizontalMenu>
           )
           : (
@@ -249,7 +271,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
               rightMobile={rightMobile}
               centerMobile={centerMobile}
             >
-              {isLoading ? <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
+              {isLoading ?
+                <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
             </VerticalMenu>
           )
         }

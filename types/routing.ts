@@ -40,19 +40,26 @@ export enum AdminTab {
   USERS_MANAGEMENT = 'users-management',
   ALL_USERS = 'all-users',
   LOGGED_USERS = 'logged-users',
-
+  CREATE_USERS = 'create-users',
+  
   SUBMISSIONS = 'submissions',
-
-  RUNNERS_MANAGEMENT = 'runners-management',
+  
+  SERVICES_MANAGEMENT = 'services-management',
   ECS_TASKS_MANAGEMENT = 'ecs-task-management',
   ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitions-management',
   SQS_MANAGEMENT = 'sqs-management',
   RUNNERS_SETTINGS = 'runners-settings',
   EC2_MANAGEMENT = 'ec2-management',
-
-  MAIL_MANAGEMENT = 'mail-management',
-
+  
+  EMAIL_SENDER = 'mail-sender',
+  
   FILES_MANAGEMENT = 'files-management',
+  
+  SETTINGS_MANAGEMENT = 'settings-management',
+  
+  JUDGES_MANAGEMENT = 'judges-management',
+  JUKI_JUDGE = 'juki-judge',
+  CODEFORCES_JUDGE = 'codeforces-judge',
 }
 
 export enum ProblemTab {

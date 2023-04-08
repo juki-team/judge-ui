@@ -1,9 +1,10 @@
 import {
   AllSubmissions,
   Breadcrumbs,
-  FilesManagement,
+  JudgesManagement,
   MailManagement,
-  RunnersManagement,
+  ServicesManagement,
+  SettingsManagement,
   T,
   TabsInline,
   TwoContentSection,
@@ -23,19 +24,27 @@ function Admin() {
   const { query, push } = useRouter();
   const {
     user: {
-      canViewUsersManagement,
       canViewSubmissionsManagement,
-      canViewFilesManagement,
-      canViewRunnersManagement,
-      canViewEmailManagement,
+      canSendEmail,
+      canHandleJudges,
+      canCreateUser,
+      canHandleUsers,
+      canHandleServices,
+      canHandleSettings,
     },
   } = useJukiUser();
   
-  if (!canViewUsersManagement && !canViewSubmissionsManagement && !canViewFilesManagement) {
+  if (!canViewSubmissionsManagement
+    && !canSendEmail
+    && !canHandleJudges
+    && !canCreateUser
+    && !canHandleUsers
+    && !canHandleServices
+    && !canHandleSettings) {
     return <Custom404 />;
   }
   const tabs: { [key: string]: { key: string, header: ReactNode, body: ReactNode } } = {};
-  if (canViewUsersManagement) {
+  if (canCreateUser || canHandleUsers) {
     tabs[AdminTab.USERS_MANAGEMENT] = {
       key: AdminTab.USERS_MANAGEMENT,
       header: <T className="tt-ce ws-np">users</T>,
@@ -49,27 +58,35 @@ function Admin() {
       body: <div className="pad-left-right pad-top-bottom"><AllSubmissions /></div>,
     };
   }
-  if (canViewRunnersManagement) {
-    tabs[AdminTab.RUNNERS_MANAGEMENT] = {
-      key: AdminTab.RUNNERS_MANAGEMENT,
-      header: <T className="tt-ce ws-np">runners</T>,
-      body: <div className="pad-left-right pad-bottom"><RunnersManagement /></div>,
+  if (canHandleServices) {
+    tabs[AdminTab.SERVICES_MANAGEMENT] = {
+      key: AdminTab.SERVICES_MANAGEMENT,
+      header: <T className="tt-ce ws-np">services</T>,
+      body: <div className="pad-left-right pad-bottom"><ServicesManagement /></div>,
     };
   }
-  if (canViewEmailManagement) {
-    tabs[AdminTab.MAIL_MANAGEMENT] = {
-      key: AdminTab.MAIL_MANAGEMENT,
-      header: <T className="tt-ce ws-np">email</T>,
+  if (canSendEmail) {
+    tabs[AdminTab.EMAIL_SENDER] = {
+      key: AdminTab.EMAIL_SENDER,
+      header: <T className="tt-ce ws-np">email sender</T>,
       body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement /></div>,
     };
   }
-  if (canViewFilesManagement) {
-    tabs[AdminTab.FILES_MANAGEMENT] = {
-      key: AdminTab.FILES_MANAGEMENT,
-      header: <T className="tt-ce ws-np">files</T>,
-      body: <div className="pad-left-right pad-top-bottom"><FilesManagement /></div>,
+  if (canHandleJudges) {
+    tabs[AdminTab.JUDGES_MANAGEMENT] = {
+      key: AdminTab.JUDGES_MANAGEMENT,
+      header: <T className="tt-ce ws-np">judges</T>,
+      body: <div className="pad-left-right pad-bottom"><JudgesManagement /></div>,
     };
   }
+  if (canHandleSettings) {
+    tabs[AdminTab.SETTINGS_MANAGEMENT] = {
+      key: AdminTab.SETTINGS_MANAGEMENT,
+      header: <T className="tt-ce ws-np">settings</T>,
+      body: <div className="pad-left-right pad-top-bottom"><SettingsManagement /></div>,
+    };
+  }
+  
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)} className="link"><T className="tt-se">admin</T></Link>,

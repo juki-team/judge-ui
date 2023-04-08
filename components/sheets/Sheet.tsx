@@ -33,9 +33,12 @@ import {
 } from 'types';
 import { v4 } from 'uuid';
 
-const EditInputTestsButton = ({ sheet, setSheet }: { sheet: CodeEditorSheetType, setSheet: Dispatch<CodeEditorSheetType> }) => {
-  const [open, setOpen] = useState(false);
-  const [testCaseKey, setTestCaseKey] = useState('');
+const EditInputTestsButton = ({ sheet, setSheet }: {
+  sheet: CodeEditorSheetType,
+  setSheet: Dispatch<CodeEditorSheetType>
+}) => {
+  const [ open, setOpen ] = useState(false);
+  const [ testCaseKey, setTestCaseKey ] = useState('');
   
   const tabs: { [key: string]: TabType<string> } = {};
   const testCasesValues = Object.values(sheet.testCases);
@@ -90,7 +93,16 @@ const EditInputTestsButton = ({ sheet, setSheet }: { sheet: CodeEditorSheetType,
               ...sheet,
               testCases: {
                 ...sheet.testCases,
-                [key]: { key, index, in: '', out: '', err: '', log: '', sample: true, status: SubmissionRunStatus.NONE },
+                [key]: {
+                  key,
+                  index,
+                  in: '',
+                  out: '',
+                  err: '',
+                  log: '',
+                  sample: true,
+                  status: SubmissionRunStatus.NONE,
+                },
               },
             });
           }}
@@ -134,12 +146,12 @@ const Runner = ({
 }: {
   sheet: CodeEditorSheetType, setSheet?: Dispatch<CodeEditorSheetType>
 }) => {
-  const [languageEditor, setLanguageEditor] = useState(ProgrammingLanguage.CPP17);
-  const [testCases, setTestCases] = useState(sheet.testCases);
+  const [ languageEditor, setLanguageEditor ] = useState(ProgrammingLanguage.CPP17);
+  const [ testCases, setTestCases ] = useState(sheet.testCases);
   
   useEffect(() => {
     setTestCases(sheet.testCases);
-  }, [sheet.testCases]);
+  }, [ sheet.testCases ]);
   
   const sourceCode = sheet.sourceCode?.[languageEditor] || '';
   return (
@@ -192,7 +204,11 @@ const Runner = ({
         </div>
       )}
       <div
-        style={{ height: typeof sheet.height === 'number' ? sheet.height + 'px' : Math.max(sourceCode.split('\n').length * 20 + 60, 320) }}
+        style={{
+          height: typeof sheet.height === 'number' ? sheet.height + 'px' : Math.max(sourceCode.split('\n').length
+            * 20
+            + 60, 320),
+        }}
       >
         <CodeRunnerEditor
           readOnly
@@ -214,27 +230,30 @@ const Runner = ({
           }}
           language={languageEditor}
           testCases={testCases}
-          languages={sheet.languages}
+          languages={sheet.languages.map(lang => ({ value: lang, label: PROGRAMMING_LANGUAGE[lang]?.label || lang }))}
         />
       </div>
     </div>
   );
 };
 
-export const SheetPage = ({ sheets, setSheets }: { sheets: BodySheetType[], setSheets?: Dispatch<BodySheetType[]> }) => {
+export const SheetPage = ({ sheets, setSheets }: {
+  sheets: BodySheetType[],
+  setSheets?: Dispatch<BodySheetType[]>
+}) => {
   
   return (
     <div className="jk-col stretch sheet-page nowrap">
       {Children.toArray(sheets.map((sheet, index) => {
-          const upButton = (
-            <Button
-              icon={<ArrowUpwardIcon />}
-              disabled={index === 0}
-              onClick={() => {
-                const newSheets = [...sheets];
-                [newSheets[index], newSheets[index - 1]] = [newSheets[index - 1], newSheets[index]];
-                setSheets(newSheets);
-              }}
+        const upButton = (
+          <Button
+            icon={<ArrowUpwardIcon />}
+            disabled={index === 0}
+            onClick={() => {
+              const newSheets = [ ...sheets ];
+              [ newSheets[index], newSheets[index - 1] ] = [ newSheets[index - 1], newSheets[index] ];
+              setSheets(newSheets);
+            }}
             />
           );
           const downButton = (
@@ -242,8 +261,8 @@ export const SheetPage = ({ sheets, setSheets }: { sheets: BodySheetType[], setS
               icon={<ArrowDownwardIcon />}
               disabled={index === sheets.length - 1}
               onClick={() => {
-                const newSheets = [...sheets];
-                [newSheets[index], newSheets[index + 1]] = [newSheets[index + 1], newSheets[index]];
+                const newSheets = [ ...sheets ];
+                [ newSheets[index], newSheets[index + 1] ] = [ newSheets[index + 1], newSheets[index] ];
                 setSheets(newSheets);
               }}
             />
@@ -273,7 +292,7 @@ export const SheetPage = ({ sheets, setSheets }: { sheets: BodySheetType[], setS
                         initEditMode={!!setSheets}
                         source={sheet.content}
                         onChange={(content) => {
-                          const newSheets = [...sheets];
+                          const newSheets = [ ...sheets ];
                           newSheets[index] = { ...sheets[index], content } as JkmdSheetType;
                           setSheets(newSheets);
                         }}
@@ -295,7 +314,7 @@ export const SheetPage = ({ sheets, setSheets }: { sheets: BodySheetType[], setS
                   <Runner
                     sheet={sheet}
                     setSheet={setSheets ? (sheet) => {
-                      const newSheets = [...sheets];
+                      const newSheets = [ ...sheets ];
                       newSheets[index] = sheet;
                       setSheets?.(newSheets);
                     } : undefined}
@@ -316,7 +335,7 @@ export const SheetPage = ({ sheets, setSheets }: { sheets: BodySheetType[], setS
                     size="small"
                     type="outline"
                     onClick={() => {
-                      const newSheets = [...sheets];
+                      const newSheets = [ ...sheets ];
                       newSheets.splice(index + 1, 0, { type: 'jkmd', content: '' });
                       setSheets(newSheets);
                     }}
@@ -335,7 +354,7 @@ export const SheetPage = ({ sheets, setSheets }: { sheets: BodySheetType[], setS
                         languages: RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES,
                         height: 'auto',
                       };
-                      const newSheets = [...sheets];
+                      const newSheets = [ ...sheets ];
                       newSheets.splice(index + 1, 0, newSheet);
                       setSheets(newSheets);
                     }}

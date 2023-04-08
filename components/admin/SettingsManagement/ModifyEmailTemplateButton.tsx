@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, CodeEditor, Modal, T } from 'components';
+import { Button, ButtonLoader, CodeEditor, Modal, T } from 'components/index';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';

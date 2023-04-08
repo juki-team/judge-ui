@@ -1,3 +1,5 @@
+import { useFetcher } from '@juki-team/base-ui';
+import { Judge, JudgeResponseDTO, PROGRAMMING_LANGUAGE } from '@juki-team/commons';
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
@@ -58,11 +60,24 @@ export const ProblemCodeEditor = ({
     [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`]: filter,
   } = query;
   const { key: problemKey, ...restQuery } = query;
-  const languages = useMemo(
-    () => Object.values(problem?.settings.languages || {}),
-    [ JSON.stringify(problem?.settings.languages) ],
+  const { data: codeforcesData } = useFetcher<ContentResponseType<JudgeResponseDTO>>(
+    problem.judge === Judge.CODEFORCES ? JUDGE_API_V1.JUDGE.GET(Judge.CODEFORCES) : null,
   );
-  const [ language, setLanguage ] = useState(ProgrammingLanguage.TEXT);
+  const languages = useMemo(
+    () => {
+      if (problem.judge === Judge.CODEFORCES) {
+        return ((codeforcesData?.success && codeforcesData.content.languages) || []).map(lang => ({
+          value: lang.value,
+          label: lang.label || lang.value,
+        }));
+      }
+      return Object.values(problem?.settings.languages || {}).map(lang => ({
+        value: lang,
+        label: PROGRAMMING_LANGUAGE[lang].label || lang,
+      }));
+    }, [ JSON.stringify(problem?.settings.languages), codeforcesData, problem.judge ],
+  );
+  const [ language, setLanguage ] = useState<string>(ProgrammingLanguage.TEXT);
   const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
   const [ sourceCode, setSourceCode ] = useState('');
   
@@ -108,7 +123,7 @@ export const ProblemCodeEditor = ({
               const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
                 contest?.problemIndex
                   ? JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problemJudgeKey)
-                  : JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problemJudgeKey), {
+                  : JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problem.key), {
                   method: HTTPMethod.POST,
                   body: JSON.stringify({ language, source: sourceCode }),
                 }));
