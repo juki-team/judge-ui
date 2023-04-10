@@ -1,10 +1,13 @@
 import { LoadingIcon, Popover, T } from 'components';
 import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
 import { useTask } from 'hooks';
-import { ProblemVerdict, SubmissionRunStatus } from 'types';
+import { ProblemVerdict, SocketEventSubmissionResponseDTO, SubmissionRunStatus } from 'types';
 
 export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
-  return !(verdict === ProblemVerdict.CE || verdict === ProblemVerdict.HIDDEN || verdict === ProblemVerdict.NONE || verdict === ProblemVerdict.PENDING);
+  return !(verdict === ProblemVerdict.CE
+    || verdict === ProblemVerdict.HIDDEN
+    || verdict === ProblemVerdict.NONE
+    || verdict === ProblemVerdict.PENDING);
 };
 
 export const Time = ({ verdict, timeUsed }: { verdict: ProblemVerdict, timeUsed: number }) => {
@@ -20,15 +23,14 @@ export interface VerdictProps {
   points?: number,
   status?: SubmissionRunStatus,
   submitId: string,
+  submissionData?: SocketEventSubmissionResponseDTO,
 }
 
-export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => {
-  const { submissions } = useTask();
+export const Verdict = ({ verdict, points, status, submitId, submissionData }: VerdictProps) => {
   
-  const submissionData = submissions[submitId];
-  
-  const verdictLabel = PROBLEM_VERDICT[verdict]?.label ?
-    <T className="tt-se">{PROBLEM_VERDICT[verdict]?.label}</T> : verdict;
+  const verdictLabel = (verdict) => PROBLEM_VERDICT[verdict]?.label
+    ? <T className="tt-se">{PROBLEM_VERDICT[verdict]?.label}</T>
+    : verdict;
   
   const SubmissionLabel = {
     [SubmissionRunStatus.RECEIVED]: ({ verdict }) => (
@@ -63,7 +65,8 @@ export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => 
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t nowrap" style={{ lineHeight: 1, padding: '4px 0' }}>
-          {sampleCase ? <T className="tt-se">running sample cases</T> : <T className="tt-se">running test cases</T>}&nbsp;
+          {sampleCase ? <T className="tt-se">running sample cases</T> :
+            <T className="tt-se">running test cases</T>}&nbsp;
           <span className="ws-np">{caseResultsExecuted}/{caseResultsTotal}</span>
         </div>
       </div>
@@ -74,6 +77,15 @@ export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => 
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
           <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.RUNNING_TEST_CASE].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.RUNNING_SAMPLE_TEST_CASES]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.RUNNING_SAMPLE_TEST_CASES].label}</T>
         </div>
       </div>
     ),
@@ -106,7 +118,8 @@ export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => 
     ),
     [SubmissionRunStatus.COMPLETED]: ({ verdict }) => (
       <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
-        {verdict === ProblemVerdict.PENDING ? <><LoadingIcon size="small" />&nbsp;{verdictLabel}</> : verdictLabel}
+        {verdict === ProblemVerdict.PENDING ? <>
+          <LoadingIcon size="small" />&nbsp;{verdictLabel(verdict)}</> : verdictLabel(verdict)}
         {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
       </div>
     ),
@@ -118,7 +131,8 @@ export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => 
         {SubmissionLabel[submissionData.status]?.(submissionData) || submissionData.status}
       </> : (
         <div className="jk-row jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
-          {verdict === ProblemVerdict.PENDING ? <><LoadingIcon size="small" />&nbsp;{verdictLabel}</> : verdictLabel}
+          {verdict === ProblemVerdict.PENDING
+            ? <><LoadingIcon size="small" />&nbsp;{verdictLabel(verdict)}</> : verdictLabel(verdict)}
           {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
         </div>
       )
@@ -129,9 +143,9 @@ export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => 
       content={
         <div className="tt-se ws-np">
           {verdict === ProblemVerdict.PENDING ? (
-            SUBMISSION_RUN_STATUS[status]?.label ?
-              <T className="ws-np">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel
-          ) : verdictLabel}
+            SUBMISSION_RUN_STATUS[status]?.label
+              ? <T className="ws-np">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel(verdict)
+          ) : verdictLabel(verdict)}
         </div>
       }
       triggerOn="hover"
@@ -140,5 +154,21 @@ export const Verdict = ({ verdict, points, status, submitId }: VerdictProps) => 
     >
       {content}
     </Popover>
+  );
+};
+
+export const ListenerVerdict = ({ verdict, points, status, submitId }: Omit<VerdictProps, 'submissionData'>) => {
+  const { submissions } = useTask();
+  
+  const submissionData = submissions[submitId];
+  
+  return (
+    <Verdict
+      verdict={verdict}
+      points={points}
+      status={status}
+      submitId={submitId}
+      submissionData={submissionData}
+    />
   );
 };

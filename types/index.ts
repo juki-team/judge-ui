@@ -38,6 +38,7 @@ export {
 
 export type {
   VirtualUserResponseDTO,
+  SocketEventSubmissionResponseDTO,
   CompanyResponseDTO,
   JudgeResponseDTO,
   ErrorType,

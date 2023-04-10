@@ -1,9 +1,8 @@
-import { Status } from '@juki-team/commons';
 import { SignUpModalComponent } from 'components';
 import { addParamQuery, removeParamQuery } from 'helpers';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { OpenDialog, QueryParam } from 'types';
+import { OpenDialog, QueryParam, Status } from 'types';
 
 export const SignUpModal = () => {
   

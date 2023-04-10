@@ -1,12 +1,12 @@
-import { Theme } from '@juki-team/commons';
 import { MdMathViewer } from 'components';
 import { consoleWarn } from 'helpers';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { Theme } from 'types';
 
 const MarkdownSharedView = () => {
   const { query: { source, sourceUrl, theme } } = useRouter();
-  const [sourceContent, setSourceContent] = useState(source as string || '');
+  const [ sourceContent, setSourceContent ] = useState(source as string || '');
   useEffect(() => {
     if (theme === Theme.DARK) {
       document.querySelector('body')?.classList.add('jk-theme-dark');
@@ -22,7 +22,7 @@ const MarkdownSharedView = () => {
         .then(data => setSourceContent(data))
         .catch(error => consoleWarn(error));
     }
-  }, [sourceUrl]);
+  }, [ sourceUrl ]);
   return (
     <div className="jk-pad-md bc-we">
       <MdMathViewer source={sourceContent} />

@@ -1,9 +1,9 @@
-import { MdMathEditor, TabsInline } from '@juki-team/base-ui';
 import {
   ButtonLoader,
   DownloadIcon,
   ExtraProblemInfo,
   FloatToolbar,
+  MdMathEditor,
   MdMathViewer,
   PlusIcon,
   ProblemMemoryLimitInfo,
@@ -11,6 +11,7 @@ import {
   ProblemTimeLimitInfo,
   ProblemTypeInfo,
   T,
+  TabsInline,
 } from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpers';
@@ -26,8 +27,8 @@ import {
   ProfileSetting,
   Status,
 } from 'types';
-import { SampleTest } from './SampleTest';
 import { ProblemLetter } from './ProblemLetter';
+import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
   judge: Judge,

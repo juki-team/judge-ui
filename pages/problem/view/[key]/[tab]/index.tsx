@@ -1,4 +1,3 @@
-import { JUDGE } from '@juki-team/commons';
 import {
   AutorenewIcon,
   Breadcrumbs,
@@ -17,7 +16,7 @@ import {
   TabsInline,
   TwoContentSection,
 } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
 import { useJukiUI, useJukiUser, useNotification, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
@@ -102,7 +101,8 @@ const ProblemView = (): ReactNode => {
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
           <LinkProblems><T className="tt-se">problems</T></LinkProblems>, <Link
             href={{
-              pathname: ROUTES.PROBLEMS.VIEW(problem.judge ===
+              pathname: ROUTES.PROBLEMS.VIEW(
+                problem.judge ===
                 Judge.JUKI_JUDGE ? problem.key : getProblemJudgeKey(problem.judge, problem.key),
                 ProblemTab.STATEMENT,
               ),
@@ -145,7 +145,8 @@ const ProblemView = (): ReactNode => {
                   delete bodyProblem.key;
                   const result = cleanRequest<ContentResponseType<{
                     listCount: number, status: SubmissionRunStatus.RECEIVED
-                  }>>(await authorizedRequest(JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge,
+                  }>>(await authorizedRequest(JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(
+                    problem.judge,
                     problem.key,
                   )), { method: HTTPMethod.POST }));
                   if (result.success) {
@@ -192,7 +193,7 @@ const ProblemView = (): ReactNode => {
                 <h2>{problem.name}</h2>
                 {problem.judge ===
                   Judge.CODEFORCES &&
-                    <div className="jk-tag warning">{JUDGE[Judge.CODEFORCES].label}</div>}
+                  <div className="jk-tag warning">{JUDGE[Judge.CODEFORCES].label}</div>}
                 <Popover
                   content={problem.judge === Judge.JUKI_JUDGE ? <ProblemInfo
                     author={problem.author}

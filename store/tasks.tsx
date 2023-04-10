@@ -1,14 +1,21 @@
-import { Judge, SocketEvent } from '@juki-team/commons';
 import { T } from 'components';
 import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJkSocket, useJukiUser, useNotification } from 'hooks';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
-import { ContentsResponseType, HTTPMethod, ProblemVerdict, SubmissionRunStatus } from 'types';
+import {
+  ContentsResponseType,
+  HTTPMethod,
+  Judge,
+  ProblemVerdict,
+  SocketEvent,
+  SocketEventSubmissionResponseDTO,
+  SubmissionRunStatus,
+} from 'types';
 
 export const TaskContext = createContext<{
   listenSubmission: (submissionId: string, judge: Judge, key: string) => void,
-  submissions: { [key: string]: { submitId: string, status: SubmissionRunStatus } },
+  submissions: { [key: string]: SocketEventSubmissionResponseDTO },
 }>({
   submissions: {},
   listenSubmission: () => null,
@@ -19,11 +26,73 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   const { addErrorNotification, addSuccessNotification } = useNotification();
   const [ submissions, setSubmissions ] = useState({});
   const { pop } = useJkSocket(SocketEvent.SUBMISSION);
-  
   useEffect(() => {
     const data = pop();
-    if (data?.content?.submitId) {
-      setSubmissions((prevState) => ({ ...prevState, [data?.content?.submitId]: data.content }));
+    const submitId = data?.content?.submitId;
+    if (submitId) {
+      setSubmissions((prevState) => {
+        const submissionData = prevState[submitId];
+        const currentStatus = prevState[submitId]?.status;
+        const nextStatus = data.content.status;
+        if (!submissionData) {
+          return { ...prevState, [submitId]: data.content };
+        }
+        if (
+          [ SubmissionRunStatus.COMPILING, SubmissionRunStatus.COMPILED, SubmissionRunStatus.FAILED ]
+            .includes(nextStatus)
+          && (data.content.messageTimestamp > submissionData.messageTimestamp)
+        ) {
+          return { ...prevState, [submitId]: data.content };
+        }
+        if (
+          [
+            SubmissionRunStatus.FETCHING_TEST_CASES,
+            SubmissionRunStatus.RUNNING_SAMPLE_TEST_CASES,
+            SubmissionRunStatus.RUNNING_TEST_CASES,
+            SubmissionRunStatus.EXECUTED_TEST_CASE,
+          ].includes(nextStatus) && (
+            [
+              SubmissionRunStatus.COMPILING,
+              SubmissionRunStatus.COMPILED,
+              SubmissionRunStatus.FAILED,
+              SubmissionRunStatus.FETCHING_TEST_CASES,
+              SubmissionRunStatus.RUNNING_SAMPLE_TEST_CASES,
+              SubmissionRunStatus.RUNNING_TEST_CASES,
+              SubmissionRunStatus.EXECUTED_TEST_CASE,
+            ].includes(currentStatus)
+          )
+          && (data.content.messageTimestamp > submissionData.messageTimestamp)
+        ) {
+          return {
+            ...prevState,
+            [submitId]: {
+              ...data.content,
+              
+            },
+          };
+        }
+        
+        if (
+          [
+            SubmissionRunStatus.GRADING,
+            SubmissionRunStatus.COMPLETED,
+          ].includes(nextStatus) && (
+            [
+              SubmissionRunStatus.COMPILING,
+              SubmissionRunStatus.COMPILED,
+              SubmissionRunStatus.FAILED,
+              SubmissionRunStatus.FETCHING_TEST_CASES,
+              SubmissionRunStatus.RUNNING_SAMPLE_TEST_CASES,
+              SubmissionRunStatus.RUNNING_TEST_CASES,
+              SubmissionRunStatus.EXECUTED_TEST_CASE,
+              SubmissionRunStatus.GRADING,
+            ].includes(currentStatus)
+          )
+        ) {
+          return { ...prevState, [submitId]: data.content };
+        }
+        return prevState;
+      });
     }
   }, [ pop ]);
   

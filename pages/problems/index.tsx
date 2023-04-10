@@ -1,4 +1,3 @@
-import { PROBLEM_MODE, PROBLEM_MODES } from '@juki-team/commons';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -14,7 +13,7 @@ import {
   TwoContentSection,
   UserNicknameLink,
 } from 'components';
-import { PROBLEM_STATUS, ROUTES } from 'config/constants';
+import { PROBLEM_MODE, PROBLEM_MODES, PROBLEM_STATUS, ROUTES } from 'config/constants';
 import { JUDGE_API_V1 } from 'config/constants/judge';
 import { buttonLoaderLink, classNames, toFilterUrl, toSortUrl } from 'helpers';
 import { useFetcher, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
@@ -174,7 +173,7 @@ function Problems() {
         minWidth: 200,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),
-  ], [canCreateProblem, tags]);
+  ], [ canCreateProblem, tags ]);
   
   const { push } = useRouter();
   

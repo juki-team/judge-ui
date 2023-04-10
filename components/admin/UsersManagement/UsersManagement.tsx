@@ -1,6 +1,5 @@
-import { useJukiUser } from '@juki-team/base-ui';
 import { T, TabsInline } from 'components';
-import { useJukiUI } from 'hooks';
+import { useJukiUI, useJukiUser } from 'hooks';
 import React from 'react';
 import { AdminTab } from 'types';
 import { AllUsers } from './AllUsers';

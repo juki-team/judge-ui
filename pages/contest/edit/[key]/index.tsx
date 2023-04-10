@@ -1,12 +1,11 @@
-import { EditCreateContest, FetcherLayer, LinkContests, T } from 'components';
+import { Breadcrumbs, EditCreateContest, FetcherLayer, LinkContests, T, TwoContentSection } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { useContestRouter } from 'hooks';
+import Link from 'next/link';
 import React from 'react';
 import { ContentResponseType, ContestResponseDTO, EditContestProblemBasicType, EditCreateContestType } from 'types';
 import Custom404 from '../../../404';
-import { Breadcrumbs, TwoContentSection } from '@juki-team/base-ui';
-import Link from 'next/link';
 
 const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContestType => {
   const problems: { [key: string]: EditContestProblemBasicType } = {};

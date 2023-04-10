@@ -1,5 +1,4 @@
-import { ContestStatus } from '@juki-team/commons';
-import { ContestTemplate, EditCreateContestType, ProgrammingLanguage } from 'types';
+import { ContestStatus, ContestTemplate, EditCreateContestType, ProgrammingLanguage } from 'types';
 
 export const FIVE_HOURS = 1000 * 60 * 60 * 5;
 export const ONE_HOUR = 1000 * 60 * 60;
@@ -47,7 +46,7 @@ Oscar Arias | Problem Setter`,
     settings: {
       clarifications: true,
       numberJudgeValidations: 0,
-      languages: [ProgrammingLanguage.CPP17, ProgrammingLanguage.JAVA, ProgrammingLanguage.PYTHON3],
+      languages: [ ProgrammingLanguage.CPP17, ProgrammingLanguage.JAVA, ProgrammingLanguage.PYTHON3 ],
       penalty: 20,
       timeToSolve: 0,
       startTimestamp: now.getTime(),
@@ -56,13 +55,19 @@ Oscar Arias | Problem Setter`,
       endTimestamp: now.getTime() + FIVE_HOURS,
       problemEditorials: false,
     },
-    members: { administrators: [], judges: [], contestants: [], guests: ['*'], spectators: ['*'] },
+    members: { administrators: [], judges: [], contestants: [], guests: [ '*' ], spectators: [ '*' ] },
     tags: [],
     status: ContestStatus.PUBLIC,
   };
 };
 
-export const CONTEST_TEMPLATE: { [key in ContestTemplate]: { value: ContestTemplate, label: string, description: string } } = {
+export const CONTEST_TEMPLATE: {
+  [key in ContestTemplate]: {
+    value: ContestTemplate,
+    label: string,
+    description: string
+  }
+} = {
   [ContestTemplate.CUSTOM]: { value: ContestTemplate.CUSTOM, label: 'custom', description: 'custom' },
   [ContestTemplate.CLASSIC]: { value: ContestTemplate.CLASSIC, label: 'classic', description: 'classic' },
   [ContestTemplate.ENDLESS]: { value: ContestTemplate.ENDLESS, label: 'endless', description: 'endless' },

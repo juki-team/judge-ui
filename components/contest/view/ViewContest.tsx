@@ -1,8 +1,10 @@
 import {
   Breadcrumbs,
   ButtonLoader,
+  CupIcon,
   EditIcon,
   FetcherLayer,
+  JukiSurprisedImage,
   LinkContests,
   Popover,
   T,
@@ -23,8 +25,6 @@ import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
 import { ViewProblemSubmissions } from './ViewProblemSubmissions';
 import { ViewScoreboard } from './ViewScoreboard';
-import { JukiSurprisedImage } from '../../index';
-import { CupIcon } from '@juki-team/base-ui';
 
 export function ContestView() {
   

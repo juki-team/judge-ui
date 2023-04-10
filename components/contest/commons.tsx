@@ -1,11 +1,28 @@
-import { DateLiteral, EventIcon, ScheduleIcon } from '@juki-team/base-ui';
-import { ButtonLoader, CheckIcon, Field, GroupIcon, PlusIcon, Popover, T, TextHeadCell } from 'components';
+import {
+  ButtonLoader,
+  CheckIcon,
+  DateLiteral,
+  EventIcon,
+  Field,
+  GroupIcon,
+  PlusIcon,
+  Popover,
+  ScheduleIcon,
+  T,
+  TextHeadCell,
+} from 'components';
 import { ROUTES } from 'config/constants';
 import { buttonLoaderLink, classNames } from 'helpers';
 import { useLasLink, useRouter } from 'hooks';
 import Link from 'next/link';
 import React from 'react';
-import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, JkTableHeaderFilterType, LastLinkKey } from 'types';
+import {
+  ContestSummaryListResponseDTO,
+  ContestTab,
+  DataViewerHeadersType,
+  JkTableHeaderFilterType,
+  LastLinkKey,
+} from 'types';
 
 export const CreateContestButton = () => {
   const { push } = useRouter();
@@ -182,7 +199,10 @@ export const LinkSectionContest = ({ children }) => {
   const { lastLink } = useLasLink();
   return (
     <Link
-      href={{ pathname: lastLink[LastLinkKey.SECTION_CONTEST].pathname, query: lastLink[LastLinkKey.SECTION_CONTEST].query }}
+      href={{
+        pathname: lastLink[LastLinkKey.SECTION_CONTEST].pathname,
+        query: lastLink[LastLinkKey.SECTION_CONTEST].query,
+      }}
       className="link"
     >
       {children}

@@ -9,7 +9,7 @@ import {
   TextField,
   TextHeadCell,
 } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
 import { useJukiUI, useNotification } from 'hooks';
 import Link from 'next/link';
@@ -26,7 +26,6 @@ import {
   Status,
   SubmissionRunStatus,
 } from 'types';
-import { JUDGE } from '@juki-team/commons';
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   

@@ -134,6 +134,7 @@ export {
   useJukiUserToggleSetting,
   useJkSocket,
   useMatchMutate,
+  usePrevious,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export * from './contest';

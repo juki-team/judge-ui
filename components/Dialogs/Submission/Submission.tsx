@@ -1,5 +1,4 @@
-import { ContentCopyIcon, CopyToClipboard } from '@juki-team/base-ui';
-import { Modal, OpenInNewIcon, SubmitView, T } from 'components';
+import { ContentCopyIcon, CopyToClipboard, Modal, OpenInNewIcon, SubmitView, T } from 'components';
 import { ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
 import Link from 'next/link';

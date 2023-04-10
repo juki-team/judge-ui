@@ -1,5 +1,4 @@
-import { Language, ProblemMode, ProblemStatus, ProblemType } from '@juki-team/commons';
-import { EditCreateProblemType } from 'types';
+import { EditCreateProblemType, Language, ProblemMode, ProblemStatus, ProblemType } from 'types';
 
 export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
   return {

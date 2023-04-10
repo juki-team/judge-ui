@@ -1,5 +1,4 @@
-import { ContentCopyIcon, CopyToClipboard } from '@juki-team/base-ui';
-import { ButtonLoader, DateLiteral, FetcherLayer, ReloadIcon, T } from 'components';
+import { ButtonLoader, ContentCopyIcon, CopyToClipboard, DateLiteral, FetcherLayer, ReloadIcon, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import Custom404 from 'pages/404';
 import { ContentResponseType, Status } from 'types';

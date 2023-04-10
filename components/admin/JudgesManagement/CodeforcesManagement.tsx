@@ -1,5 +1,4 @@
-import { DateField, TextField, TextHeadCell } from '@juki-team/base-ui';
-import { ButtonLoader, DataViewer, FetcherLayer, Select, T } from 'components';
+import { ButtonLoader, DataViewer, DateField, FetcherLayer, Select, T, TextField, TextHeadCell } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification } from 'hooks';
@@ -24,7 +23,6 @@ interface CodeforcesManagementBodyProps {
 
 export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagementBodyProps) => {
   
-  console.log({ judge });
   const { notifyResponse } = useNotification();
   
   const {
@@ -128,18 +126,10 @@ export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagement
         <h3><T>virtual users</T></h3>
         <div style={{ width: '100%', height: '100%' }}>
           <DataViewer<VirtualUserResponseDTO>
-            // cards={cards}
             headers={headers}
             data={data}
-            // rows={rows}
             request={request}
-            // rowsView={viewPortSize !== 'sm'}
-            // name={name}
             setLoaderStatusRef={setLoaderStatusRef}
-            // extraNodes={extraNodes}
-            // extraNodesFloating
-            // pagination={{ total: lastTotalRef.current, pageSizeOptions: [16, 32, 64, 128, 256, 512] }}
-            // getRecordKey={getRowKey}
           />
         </div>
       </div>

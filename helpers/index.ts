@@ -6,9 +6,9 @@ export const isOrHas = (value: string | string[] | undefined, v: string) => {
 
 export const buttonLoaderLink = (fun) => async setLoader => {
   const now = new Date().getTime();
-  setLoader([now, Status.LOADING]);
+  setLoader([ now, Status.LOADING ]);
   await fun();
-  setLoader([now, Status.SUCCESS]);
+  setLoader([ now, Status.SUCCESS ]);
 };
 
 export const roundTimestamp = (timestamp) => {
@@ -56,6 +56,7 @@ export {
   stringToArrayBuffer,
   getRandomString,
   mex,
+  contentResponse,
 } from '@juki-team/commons';
 
 export {

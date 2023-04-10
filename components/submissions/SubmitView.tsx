@@ -1,20 +1,23 @@
-import { JukiSurprisedImage } from '@juki-team/base-ui';
 import {
+  ButtonLoader,
   CodeViewer,
   Collapse,
   DateLiteral,
   FetcherLayer,
   GroupInfo,
   hasTimeHasMemory,
+  JukiSurprisedImage,
+  ListenerVerdict,
   Memory,
+  RefreshIcon,
   T,
   Time,
+  Timer,
   UpIcon_,
-  Verdict,
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import React from 'react';
-import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
+import { ContentResponseType, ProblemMode, ProblemVerdict, Status, SubmitResponseDTO, TestCaseResultType } from 'types';
 
 export const SubmitView = ({ submitId }: { submitId: string }) => {
   
@@ -35,7 +38,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
         );
       }}
     >
-      {({ data }) => {
+      {({ data, mutate }) => {
         const {
           isProblemEditor,
           problemMode,
@@ -51,6 +54,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
           verdictByGroups,
           canViewSourceCode,
           compilationResult,
+          judgmentTime,
         } = data.content;
         const date = new Date(timestamp);
         const testCasesByGroup: { [key: number]: TestCaseResultType[] } = {};
@@ -69,6 +73,66 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
         
         return (
           <>
+            <Collapse
+              header={({ isOpen, toggle }) => (
+                <div className="jk-row" style={{ padding: 'var(--pad-sm) 0' }}>
+                  <div className="jk-col">
+                    <div>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+                    <T className="fw-bd tt-se">language</T>
+                  </div>
+                  <div className="jk-col">
+                    <div className="jk-row gap center">
+                      <ListenerVerdict verdict={verdict} points={points} status={status} submitId={submitId} />
+                      {verdict !== ProblemVerdict.NONE
+                        && verdict !== ProblemVerdict.PENDING
+                        && compilationResult?.success === false
+                        && <UpIcon_ onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
+                    </div>
+                    <T className="fw-bd tt-se">verdict</T>
+                  </div>
+                  {hasTimeHasMemory(verdict) && (
+                    <div className="jk-col">
+                      <div><Time timeUsed={timeUsed} verdict={verdict} /></div>
+                      <T className="fw-bd tt-se">time used</T>
+                    </div>
+                  )}
+                  {hasTimeHasMemory(verdict) && (
+                    <div className="jk-col">
+                      <div><Memory memoryUsed={memoryUsed} verdict={verdict} /></div>
+                      <T className="fw-bd tt-se">memory used</T>
+                    </div>
+                  )}
+                  <div className="jk-col">
+                    <DateLiteral date={date} twoLines={false} />
+                    <T className="fw-bd tt-se">date</T>
+                  </div>
+                  {isProblemEditor && (
+                    <div className="jk-col">
+                      <div>
+                        {judgmentTime > 0
+                          ? <Timer currentTimestamp={judgmentTime} interval={0} literal laps={2} />
+                          : <T>judging</T>}
+                      </div>
+                      <T className="fw-bd tt-se">judgment time</T>
+                    </div>
+                  )}
+                  <div>
+                    <ButtonLoader
+                      icon={<RefreshIcon />}
+                      onClick={async (setLoaderStatus) => {
+                        setLoaderStatus(Status.LOADING);
+                        await mutate();
+                        setLoaderStatus(Status.SUCCESS);
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            >
+              <div className="submission-stderr-content jk-text-stderr">
+                {compilationResult?.err}
+              </div>
+            </Collapse>
             {(
               (verdictByGroups && !!Object.keys(verdictByGroups).length)
               || (testCasesByGroup && !!Object.keys(testCasesByGroup).length)
@@ -138,27 +202,6 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
             {!!canViewSourceCode && (
               <div className="jk-col gap stretch">
                 <h3><T>source code</T></h3>
-                <Collapse
-                  header={({ isOpen, toggle }) => (
-                    <div className="jk-row">
-                      <div>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
-                      <div className="jk-row gap center">
-                        <Verdict verdict={verdict} points={points} status={status} submitId={submitId} />
-                        {verdict !== ProblemVerdict.NONE
-                          && verdict !== ProblemVerdict.PENDING
-                          && compilationResult?.success === false
-                          && <UpIcon_ onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
-                      </div>
-                      {hasTimeHasMemory(verdict) && <div><Time timeUsed={timeUsed} verdict={verdict} /></div>}
-                      {hasTimeHasMemory(verdict) && <div><Memory memoryUsed={memoryUsed} verdict={verdict} /></div>}
-                      <DateLiteral date={date} twoLines={false} />
-                    </div>
-                  )}
-                >
-                  <div className="submission-stderr-content jk-text-stderr">
-                    {compilationResult?.err}
-                  </div>
-                </Collapse>
                 <div className="submission-info-code-source">
                   <CodeViewer code={sourceCode} language={language} lineNumbers withCopyButton withLanguageLabel />
                 </div>

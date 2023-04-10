@@ -1,8 +1,7 @@
-import { ProblemMode } from '@juki-team/commons';
-import { Collapse, T, UpIcon_ } from 'components/index';
+import { Collapse, T, UpIcon_ } from 'components';
 import { classNames } from 'helpers';
 import React from 'react';
-import { ProblemVerdict, TestCaseResultType } from 'types';
+import { ProblemMode, ProblemVerdict, TestCaseResultType } from 'types';
 import { Memory, Time, Verdict } from './index';
 
 export interface GroupInfoProps {

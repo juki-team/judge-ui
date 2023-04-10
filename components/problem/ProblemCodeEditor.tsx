@@ -1,15 +1,15 @@
-import { useFetcher } from '@juki-team/base-ui';
-import { Judge, JudgeResponseDTO, PROGRAMMING_LANGUAGE } from '@juki-team/commons';
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { JUDGE_API_V1, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useContestRouter, useJukiUser, useNotification, useRouter, useSWR, useTask } from 'hooks';
+import { useContestRouter, useFetcher, useJukiUser, useNotification, useRouter, useSWR, useTask } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   CodeEditorTestCasesType,
   ContentResponseType,
   ContestTab,
   HTTPMethod,
+  Judge,
+  JudgeResponseDTO,
   OpenDialog,
   ProblemResponseDTO,
   ProblemTab,

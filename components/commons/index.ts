@@ -1,4 +1,5 @@
 export {
+  RefreshIcon,
   AddIcon,
   AlertModal,
   AppsIcon,

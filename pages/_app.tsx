@@ -1,4 +1,3 @@
-import { ImageCmpProps } from '@juki-team/base-ui';
 import { Analytics } from '@vercel/analytics/react';
 import { ErrorBoundary, JukiUIProvider, JukiUserProvider, NavigationBar } from 'components';
 import { settings } from 'config';
@@ -12,6 +11,7 @@ import Image from 'next/image';
 import React, { FC, useCallback, useMemo } from 'react';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
+import { ImageCmpProps } from 'types';
 import '../i18n';
 import './styles.scss';
 
@@ -23,7 +23,13 @@ const cloneURLSearchParams = (urlSearchParams: URLSearchParams) => {
 
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   
-  settings.setSetting(JUKI_SERVICE_BASE_URL, 'api/v1', JUKI_SERVICE_BASE_URL, 'https://utils.juki.app', JUKI_TOKEN_NAME);
+  settings.setSetting(
+    JUKI_SERVICE_BASE_URL,
+    'api/v1',
+    JUKI_SERVICE_BASE_URL,
+    'https://utils.juki.app',
+    JUKI_TOKEN_NAME,
+  );
   settings.setOnError((error) => {
     consoleWarn(error);
     _setFlags.current(prevState => ({ ...prevState, isHelpOpen: true, isHelpFocused: true }));
@@ -34,7 +40,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   
   const searchParams = useMemo(() => {
     const urlSearchParams = new URLSearchParams('');
-    for (const [key, values] of Object.entries(query)) {
+    for (const [ key, values ] of Object.entries(query)) {
       if (typeof values === 'string') {
         urlSearchParams.append(key, values);
       } else {
@@ -44,7 +50,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       }
     }
     return urlSearchParams;
-  }, [query]);
+  }, [ query ]);
   
   const setSearchParams = useCallback(async (newSearchParams: URLSearchParams) => {
     const newSearchParamsSorted = cloneURLSearchParams(newSearchParams);
@@ -54,13 +60,13 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
     if (newSearchParamsSorted.toString() !== searchParamsSorted.toString()) {
       await push({ query: newSearchParams.toString() });
     }
-  }, [searchParams]);
+  }, [ searchParams ]);
   
   const appendSearchParam = useCallback(async ({ name, value }: { name: string, value: string }) => {
     const newSearchParams = cloneURLSearchParams(searchParams);
     newSearchParams.append(name, value);
     await setSearchParams(newSearchParams);
-  }, [searchParams, setSearchParams]);
+  }, [ searchParams, setSearchParams ]);
   
   const deleteSearchParam = useCallback(async ({ name, value }: { name: string, value?: string }) => {
     const newSearchParams = cloneURLSearchParams(searchParams);
@@ -74,7 +80,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       }
     }
     await setSearchParams(newSearchParams);
-  }, [searchParams, setSearchParams]);
+  }, [ searchParams, setSearchParams ]);
   
   const setSearchParam = useCallback(async ({ name, value }: { name: string, value: string | string[] }) => {
     const newSearchParams = cloneURLSearchParams(searchParams);
@@ -89,7 +95,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       newSearchParams.append(name, value);
     }
     await setSearchParams(newSearchParams);
-  }, [searchParams, setSearchParams]);
+  }, [ searchParams, setSearchParams ]);
   
   if (router.route === '/md-print') {
     return <div><MyComponent {...pageProps} /></div>;

@@ -1,4 +1,10 @@
 {
+  "attention": "atención",
+  "a new interface is available": "una nueva interfaz está disponible",
+  "an interface update is available": "una actualización de la interfaz esta disponible",
+  "to use the new interface it is necessary to reload the application": "para usar la nueva interfaz es necesario recargar la aplicación",
+  "an interface update may mean improvements in the user experience and/or bug fixes": "una actualización de la interfaz puede significar mejoras en la experiencia de usuario  y/o correccion de errores",
+  "if you reload the page the changes that are not saved will be lost": "si recargas la pagina los cambios que no estan guardados se perderan",
   "% success rate": "% tasa de éxito",
   "April": "abril",
   "Are you sure?": "¿Estas seguro?",

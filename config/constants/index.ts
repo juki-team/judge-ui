@@ -29,9 +29,7 @@ export {
   RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES,
 } from '@juki-team/commons';
 
-export {
-  ALPHANUMERIC_DASH_UNDERSCORE_REGEX,
-} from '@juki-team/base-ui';
+export { ALPHANUMERIC_DASH_UNDERSCORE_REGEX } from '@juki-team/base-ui';
 
 export * from './contest';
 export * from './course';
