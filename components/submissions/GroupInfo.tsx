@@ -6,6 +6,7 @@ import { ProblemVerdict, TestCaseResultType } from 'types';
 import { Memory, Time, Verdict } from './index';
 
 export interface GroupInfoProps {
+  isProblemEditor: boolean,
   groupKey: number,
   problemMode: ProblemMode,
   timeUsed: number,
@@ -25,11 +26,17 @@ export const GroupInfo = ({
   points,
   testCases,
   submitId,
+  isProblemEditor,
 }: GroupInfoProps) => {
   return (
     <Collapse
       header={({ isOpen, toggle }) => (
-        <div className={classNames('jk-row extend block gap jk-table-inline-row jk-pad-md group-info', { 'fw-br': isOpen })}>
+        <div
+          className={classNames(
+            'jk-row extend block gap jk-table-inline-row jk-pad-md group-info',
+            { 'fw-br': isOpen },
+          )}
+        >
           <div className="jk-row">
             {+groupKey ? (
                 problemMode === ProblemMode.SUBTASK
@@ -44,7 +51,7 @@ export const GroupInfo = ({
             {!!testCases.length && <UpIcon_ onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
           </div>
           {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) &&
-              <div className="jk-row">{points}</div>}
+            <div className="jk-row">{points}</div>}
           <div className="jk-row center gap"><Time timeUsed={timeUsed} verdict={verdict} /></div>
           <div className="jk-row center gap"><Memory verdict={verdict} memoryUsed={memoryUsed} /></div>
         </div>
@@ -54,8 +61,10 @@ export const GroupInfo = ({
       <div className={classNames('jk-row extend group-info-details')}>
         <div className={classNames('jk-row extend block gap jk-table-inline-row fw-bd')}>
           <div className="jk-row"><T>#</T></div>
+          {isProblemEditor && <div className="jk-row"><T className="tt-se ta-cr">test case key</T></div>}
           <div className="jk-row center gap"><T className="tt-se">verdict</T></div>
-          {problemMode === ProblemMode.PARTIAL && <div className="jk-row center gap"><T className="tt-se">points</T></div>}
+          {problemMode === ProblemMode.PARTIAL && <div className="jk-row center gap"><T className="tt-se">points</T>
+          </div>}
           <div className="jk-row center gap"><T className="tt-se">time</T></div>
           <div className="jk-row center gap"><T className="tt-se">memory</T></div>
           <div className="jk-row center gap"><T className="tt-se">exit code</T></div>
@@ -63,10 +72,12 @@ export const GroupInfo = ({
         {testCases.map((testCase, index) => (
           <div className="jk-row extend block gap jk-table-inline-row" key={index}>
             <div className="jk-row">{index + 1}</div>
+            {isProblemEditor && <div className="jk-row">{testCase.testCaseKey}</div>}
             <div className="jk-row"><Verdict verdict={testCase.verdict} submitId={submitId} /></div>
             {problemMode === ProblemMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
             <div className="jk-row center gap"><Time verdict={testCase.verdict} timeUsed={testCase.timeUsed} /></div>
-            <div className="jk-row center gap"><Memory verdict={testCase.verdict} memoryUsed={testCase.memoryUsed} /></div>
+            <div className="jk-row center gap"><Memory verdict={testCase.verdict} memoryUsed={testCase.memoryUsed} />
+            </div>
             <div className={classNames('jk-row center gap', { 'cr-er fw-bd': testCase?.exitCode !== 0 })}>
               {testCase.exitCode}
             </div>

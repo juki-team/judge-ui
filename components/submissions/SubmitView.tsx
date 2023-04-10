@@ -1,4 +1,4 @@
-import React from 'react';
+import { JukiSurprisedImage } from '@juki-team/base-ui';
 import {
   CodeViewer,
   Collapse,
@@ -12,9 +12,9 @@ import {
   UpIcon_,
   Verdict,
 } from 'components';
-import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
-import { JukiSurprisedImage } from '@juki-team/base-ui';
+import React from 'react';
+import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
 
 export const SubmitView = ({ submitId }: { submitId: string }) => {
   
@@ -37,6 +37,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
     >
       {({ data }) => {
         const {
+          isProblemEditor,
           problemMode,
           language,
           sourceCode,
@@ -69,12 +70,8 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
         return (
           <>
             {(
-              (
-                verdictByGroups && !!Object.keys(verdictByGroups).length
-              ) ||
-              (
-                testCasesByGroup && !!Object.keys(testCasesByGroup).length
-              )
+              (verdictByGroups && !!Object.keys(verdictByGroups).length)
+              || (testCasesByGroup && !!Object.keys(testCasesByGroup).length)
             ) && (
               <div>
                 <h3>
@@ -90,10 +87,9 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                   <div className="jk-row extend block gap jk-table-inline-header">
                     <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
                     <div className="jk-row"><T>verdict</T></div>
-                    {(
-                        problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL
-                      ) &&
-                        <div className="jk-row"><T>points</T></div>}
+                    {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && (
+                      <div className="jk-row"><T>points</T></div>
+                    )}
                     <div className="jk-row"><T>time</T></div>
                     <div className="jk-row"><T>memory</T></div>
                   </div>
@@ -106,6 +102,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                       <GroupInfo
                         key={groupKey}
                         groupKey={+groupKey}
+                        isProblemEditor={isProblemEditor}
                         problemMode={problemMode}
                         memoryUsed={result.memoryUsed}
                         verdict={result.verdict}
@@ -122,13 +119,14 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                       <GroupInfo
                         key={groupKey}
                         groupKey={+groupKey}
+                        isProblemEditor={isProblemEditor}
                         problemMode={problemMode}
                         memoryUsed={0}
                         verdict={ProblemVerdict.PENDING}
                         timeUsed={0}
-                        points={problemMode === ProblemMode.PARTIAL ? +result.reduce((sum, testCase) => sum +
-                          testCase.points, 0)
-                          .toFixed(3) : 0}
+                        points={problemMode === ProblemMode.PARTIAL
+                          ? +result.reduce((sum, testCase) => sum + testCase.points, 0).toFixed(3)
+                          : 0}
                         testCases={result}
                         submitId={submitId}
                       />
