@@ -35,7 +35,7 @@ function Contests() {
         query,
       }, undefined, { shallow: true });
     }
-  }, [isReady, contestsTab]);
+  }, [ isReady, contestsTab ]);
   
   const pushTab = (tab: ContestsTab) => push({
     pathname: ROUTES.CONTESTS.LIST(tab),
@@ -107,7 +107,13 @@ function Contests() {
           <h1><T>contests</T></h1>
         </div>
         <div className="pad-left-right">
-          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={contestsTab} extraNodes={extraNodes} />
+          <TabsInline
+            tabs={tabs}
+            onChange={pushTab}
+            selectedTabKey={contestsTab}
+            extraNodes={extraNodes}
+            extraNodesPlacement="bottomRight"
+          />
         </div>
       </div>
       {tabs[contestsTab as ContestsTab]?.body}

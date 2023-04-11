@@ -25,35 +25,38 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   const version = (data?.success && data.content.version) || '';
   const previousVersion = usePrevious(version);
   const [ modal, setModal ] = useState(null);
-  console.log({ version, previousVersion });
   const router = useRouter();
   useEffect(() => {
-    if (previousVersion) {
-      if (version !== previousVersion) {
-        setModal(
-          <AlertModal
-            decline={{ label: <T>cancel</T>, onClick: () => setModal(null) }}
-            accept={{ label: <T>reload</T>, onClick: () => router.reload() }}
-            title={<div><T>attention</T></div>}
-            content={
-              <div className="jk-col gap left stretch">
-                <div className="jk-row left">
-                  <T className="tt-se">an interface update is available</T>,&nbsp;
-                  <T>to use the new interface it is necessary to reload the application</T>.
-                </div>
-                <div className="jk-row left">
-                  <T className="tt-se">an interface update may mean improvements in the user experience and/or bug
-                    fixes</T>.
-                </div>
-                <div className="jk-row left">
-                  <T className="tt-se fw-bd">if you reload the page the changes that are not saved will be lost</T>.
-                </div>
+    if (previousVersion && version && version !== previousVersion) {
+      setModal(
+        <AlertModal
+          decline={{ label: <T>cancel</T>, onClick: () => setModal(null) }}
+          accept={{ label: <T>reload</T>, onClick: () => router.reload() }}
+          title={<div><T>attention</T></div>}
+          content={
+            <div className="jk-col gap left stretch">
+              <div>
+                <T className="tt-se">an interface update is available, to use the new interface it is necessary to
+                  reload the application.</T>
               </div>
-            }
-            onClose={() => setModal(null)}
-          />,
-        );
-      }
+              <div>
+                <T className="tt-se">your UI version is</T>&nbsp;
+                <span className="jk-tag gray-6">{previousVersion}</span>&nbsp;
+                <T>and the new UI version available is</T>&nbsp;
+                <span className="jk-tag gray-6">{version}</span>.
+              </div>
+              <div>
+                <T className="tt-se">an interface update may mean improvements in the user experience and/or bug
+                  fixes.</T>
+              </div>
+              <div>
+                <T className="tt-se fw-bd">if you reload the page the changes that are not saved will be lost.</T>
+              </div>
+            </div>
+          }
+          onClose={() => setModal(null)}
+        />,
+      );
     }
   }, [ version, previousVersion ]);
   const [ flags, setFlags ] = useState<FlagsType>({ isHelpOpen: false, isHelpFocused: false });
