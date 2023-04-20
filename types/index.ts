@@ -118,4 +118,6 @@ export type {
   FilterSelectOnlineType,
   TabType,
   ImageCmpProps,
+  OnRecordClickType,
+  RefreshType,
 } from '@juki-team/base-ui';

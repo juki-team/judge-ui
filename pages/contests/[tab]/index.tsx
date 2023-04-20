@@ -103,8 +103,8 @@ function Contests() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right pad-top">
-          <h1><T>contests</T></h1>
+        <div className="pad-left-right">
+          <h2><T>contests</T></h2>
         </div>
         <div className="pad-left-right">
           <TabsInline

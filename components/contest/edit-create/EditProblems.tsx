@@ -29,7 +29,19 @@ type Problem = Omit<ContestProblemBasicType, 'index'> & {
 }
 
 export const EditProblems = ({ contest, setContest }: EditContestProps) => {
-  const [ withTime, setWithTime ] = useState(0);
+  let withTimeRestriction = false;
+  Object.values(contest.problems).forEach(problem => {
+    if (problem.startTimestamp !== contest.settings.startTimestamp
+      || problem.endTimestamp !== contest.settings.endTimestamp) {
+      withTimeRestriction = true;
+    }
+  });
+  const [ withTime, setWithTime ] = useState(withTimeRestriction ? 1 : 0);
+  useEffect(() => {
+    if (withTimeRestriction && withTime === 0) {
+      setWithTime(1);
+    }
+  }, [ withTimeRestriction, withTime ]);
   const contestStartDate = new Date(contest.settings.startTimestamp);
   const contestEndDate = new Date(contest.settings.endTimestamp);
   const renderRowProblem = (problem): RowSortableItemContentType => ({
@@ -239,6 +251,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       });
   };
   const [ problems, setProblems ] = useState<RowSortableItem<Problem>[]>(parseProblems(contest.problems));
+  
   useEffect(() => {
     setProblems(prevState => prevState.map(problem => {
       const value = { ...problem.value };
@@ -267,8 +280,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           name: problem.value.name,
           points: problem.value.points,
           color: problem.value.color,
-          startTimestamp: prevState.settings.startTimestamp,
-          endTimestamp: prevState.settings.endTimestamp,
+          startTimestamp: problem.value.startTimestamp,
+          endTimestamp: problem.value.endTimestamp,
         };
       });
       return {
@@ -293,7 +306,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         </div>
         {!!withTime && (
           <div className="jk-col  gap left stretch">
-            <div><T>Set a the time start relative to start of contest and the duration to resolve for each problem</T>:
+            <div><T>Set a the time start relative to start of contest and the duration to resolve for each
+              problem</T>:
             </div>
             <InputToggle
               checked={withTime === 1}

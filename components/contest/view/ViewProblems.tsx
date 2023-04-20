@@ -1,3 +1,4 @@
+import { Judge } from '@juki-team/commons';
 import {
   ButtonLoader,
   CheckIcon,
@@ -70,7 +71,13 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
               text={
                 isJudgeOrAdmin
                   ? (
-                    <Link href={JUDGE[judge]?.getProblemUrl(key) || ''} target="_blank">
+                    <Link
+                      href={judge === Judge.JUKI_JUDGE
+                        ? window?.location.origin + '/' + (JUDGE[judge]?.getProblemUrl(key)
+                        || '').split('/').slice(3).join('/')
+                        : (JUDGE[judge]?.getProblemUrl(key) || '')}
+                      target="_blank"
+                    >
                       <div className="jk-row gap">
                         <div className="fw-bd cr-g3 jk-col">
                           {JUDGE[judge]?.label || judge}

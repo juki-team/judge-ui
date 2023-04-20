@@ -1,4 +1,14 @@
-import { FrozenInformation, Input, InputDate, InputToggle, MultiSelect, QuietInformation, Select, T, Timer } from 'components';
+import {
+  FrozenInformation,
+  Input,
+  InputDate,
+  InputToggle,
+  MultiSelect,
+  QuietInformation,
+  Select,
+  T,
+  Timer,
+} from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   CONTEST_DEFAULT,
@@ -15,7 +25,7 @@ import { EditContestProps } from '../types';
 
 export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
-  const [checks, setChecks] = useState({ duration: true, frozen: true, quiet: true });
+  const [ checks, setChecks ] = useState({ duration: true, frozen: true, quiet: true });
   
   const startDate = new Date(contest.settings.startTimestamp);
   const endDate = new Date(contest.settings.endTimestamp);
@@ -38,7 +48,10 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       <div className="jk-row center gap nowrap">
         <T className="fw-bd tt-se tx-xl cr-py">template</T>:&nbsp;
         <Select
-          options={Object.values(CONTEST_TEMPLATE).map(template => ({ value: template.value, label: <T>{template.label}</T> }))}
+          options={Object.values(CONTEST_TEMPLATE).map(template => ({
+            value: template.value,
+            label: <T>{template.label}</T>,
+          }))}
           selectedOption={{ value: contestTemplate }}
           onChange={({ value }) => {
             if (contestTemplate === value) {
@@ -55,8 +68,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   endTimestamp: MAX_DATE.getTime(),
                   penalty: 0,
                 },
-                members: { ...prevState.members, spectators: ['*'], guests: ['*'] },
-              }));
+                members: { ...prevState.members, spectators: [ '*' ], guests: [ '*' ] },
+              }, prevState));
             } else if (value === ContestTemplate.CLASSIC || value === ContestTemplate.CUSTOM) {
               const contestDefault = CONTEST_DEFAULT();
               setContest(prevState => adjustContest({
@@ -69,7 +82,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   endTimestamp: contestDefault.settings.endTimestamp,
                   penalty: contestDefault.settings.penalty,
                 },
-              }));
+              }, prevState));
             }
           }}
         />
@@ -117,7 +130,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             onDatePick={(date) => setContest(prevState => adjustContest({
               ...prevState,
               settings: { ...prevState.settings, startTimestamp: date.getTime() },
-            }))}
+            }, prevState))}
             todayButton
           />
         </div>
@@ -147,7 +160,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     ...prevState.settings,
                     endTimestamp: prevState.settings.startTimestamp + (value * 1000 * 60),
                   },
-                }))}
+                }, prevState))}
               />
               <T>minutes of the start of the contest</T>
             </div>
@@ -174,7 +187,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     ...prevState.settings,
                     endTimestamp: date.getTime(),
                   },
-                }))}
+                }, prevState))}
                 todayButton
               />
             </div>
@@ -222,7 +235,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     ...prevState.settings,
                     frozenTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
                   },
-                }))}
+                }, prevState))}
               />
               <T>minutes of the start of the contest</T>
             </div>
@@ -246,7 +259,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     ...prevState.settings,
                     frozenTimestamp: date.getTime(),
                   },
-                }))}
+                }, prevState))}
                 todayButton
               />
             </div>

@@ -122,9 +122,11 @@ export const JUDGE_API_V1 = {
     },
   },
   PROBLEM: {
-    LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/list?page=${page}&size=${size}&judge=JUKI_JUDGE${filterUrl ? '&'
-        + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
+    LIST: (judge: Judge, page: number, size: number, filterUrl: string, sortUrl: string) => {
+      return withSort(withFilter(
+        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/list?page=${page}&size=${size}&judge=${judge}`,
+        filterUrl,
+      ), sortUrl);
     },
     TAG_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/tag-list`;

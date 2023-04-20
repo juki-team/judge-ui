@@ -2,7 +2,15 @@ import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { useDataViewerRequester2, useJukiUI } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
-import { ContentsResponseType, DataViewerHeadersType, GetRecordKeyType, GetUrl, ReactNodeOrFunctionType } from 'types';
+import {
+  ContentsResponseType,
+  DataViewerHeadersType,
+  GetRecordKeyType,
+  GetUrl,
+  OnRecordClickType,
+  ReactNodeOrFunctionType,
+  RefreshType,
+} from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
   cards?: { height?: number, width?: number, expanded?: boolean },
@@ -14,6 +22,8 @@ interface PagedDataViewerPros<T, V = T> {
   refreshInterval?: number,
   extraNodes?: ReactNodeOrFunctionType[],
   getRowKey?: GetRecordKeyType<T>
+  onRecordClick?: OnRecordClickType<T>,
+  refreshRef?: (refresh: RefreshType) => void,
 }
 
 export const PagedDataViewer = <T, V = T>({
@@ -26,6 +36,8 @@ export const PagedDataViewer = <T, V = T>({
   refreshInterval,
   extraNodes,
   getRowKey,
+  onRecordClick,
+  refreshRef,
 }: PagedDataViewerPros<T, V>) => {
   
   const { viewPortSize } = useJukiUI();
@@ -34,10 +46,10 @@ export const PagedDataViewer = <T, V = T>({
     request,
     setLoaderStatusRef,
   } = useDataViewerRequester2<ContentsResponseType<V>>(url, { refreshInterval });
-  const [_, setRender] = useState(Date.now()); // TODO: Fix the render of DataViewer
+  const [ _, setRender ] = useState(Date.now()); // TODO: Fix the render of DataViewer
   useEffect(() => {
     setTimeout(() => setRender(Date.now()), 100);
-  }, [response]);
+  }, [ response ]);
   
   const lastTotalRef = useRef(0);
   
@@ -57,8 +69,10 @@ export const PagedDataViewer = <T, V = T>({
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={extraNodes}
       extraNodesFloating
-      pagination={{ total: lastTotalRef.current, pageSizeOptions: [16, 32, 64, 128, 256, 512] }}
+      pagination={{ total: lastTotalRef.current, pageSizeOptions: [ 16, 32, 64, 128, 256, 512 ] }}
       getRecordKey={getRowKey}
+      onRecordClick={onRecordClick}
+      refreshRef={refreshRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

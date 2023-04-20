@@ -18,15 +18,15 @@ export const useRouter = () => {
   
   const queryObject = useMemo(() => {
     const searchParamsObject: { [key: string]: string[] } = {};
-    Object.entries(query).forEach(([key, value]) => {
+    Object.entries(query).forEach(([ key, value ]) => {
       if (typeof value === 'string') {
-        searchParamsObject[key] = [value];
+        searchParamsObject[key] = [ value ];
       } else {
         searchParamsObject[key] = value;
       }
     });
     return searchParamsObject;
-  }, [query]);
+  }, [ query ]);
   
   return { query, queryObject, ...rest };
 };
@@ -34,7 +34,7 @@ export const useRouter = () => {
 export const useDataViewerRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: SWRConfiguration) => {
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
-  const [firstRefresh, setFirstRefresh] = useState(false);
+  const [ firstRefresh, setFirstRefresh ] = useState(false);
   const { user: { nickname } } = useJukiUser();
   const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(firstRefresh ? url : null, options);
   
@@ -44,11 +44,11 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
     } else {
       await mutate();
     }
-  }, [mutate, firstRefresh]);
+  }, [ mutate, firstRefresh ]);
   
   useEffect(() => {
     void mutate();
-  }, [nickname]);
+  }, [ nickname ]);
   
   useEffect(() => {
     if (isLoading || isValidating) {
@@ -56,7 +56,7 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
     } else {
       setLoaderStatusRef.current?.(Status.NONE);
     }
-  }, [isLoading, isValidating]);
+  }, [ isLoading, isValidating ]);
   
   return {
     data,
@@ -73,9 +73,8 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const { user: { nickname } } = useJukiUser();
-  const [url, setUrl] = useState(null);
+  const [ url, setUrl ] = useState(null);
   const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(url, options);
-  
   const request = useCallback(async ({
     pagination,
     filter,
@@ -87,11 +86,11 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
     } else {
       await mutate();
     }
-  }, [mutate, url]);
+  }, [ mutate, url ]);
   
   useEffect(() => {
     void mutate();
-  }, [nickname]);
+  }, [ nickname ]);
   
   useEffect(() => {
     if (isLoading || isValidating) {
@@ -99,14 +98,17 @@ export const useDataViewerRequester2 = <T extends ContentResponseType<any> | Con
     } else {
       setLoaderStatusRef.current?.(Status.NONE);
     }
-  }, [isLoading, isValidating]);
+  }, [ isLoading, isValidating ]);
   
   return {
     data,
     error,
     isLoading: isLoading || isValidating,
     request,
-    setLoaderStatusRef: useCallback((setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus, []),
+    setLoaderStatusRef: useCallback(
+      (setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus,
+      [],
+    ),
   };
 };
 
@@ -120,7 +122,7 @@ export const useTrackLastPath = (key: string) => {
   const { query, pathname } = useRouter();
   useEffect(() => {
     pushPath({ key, pathname, query });
-  }, [key, query, pathname]);
+  }, [ key, query, pathname ]);
 };
 
 export {

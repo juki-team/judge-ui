@@ -1,11 +1,12 @@
 import {
   Breadcrumbs,
   ButtonLoader,
+  contestStateMap,
   CupIcon,
   EditIcon,
   FetcherLayer,
-  JukiSurprisedImage,
   LinkContests,
+  LoadingIcon,
   Popover,
   T,
   TabsInline,
@@ -20,6 +21,7 @@ import { useContestRouter, useJukiUI, useRouter, useTrackLastPath } from 'hooks'
 import Link from 'next/link';
 import React from 'react';
 import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status } from 'types';
+import Custom404 from '../../../pages/404';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
@@ -36,28 +38,83 @@ export function ContestView() {
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <LinkContests><T className="tt-se">contests</T></LinkContests>,
+    <Link
+      href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.OVERVIEW), query }}
+      className="link"
+    >
+      <div className="ws-np">{contestKey}</div>
+    </Link>,
+  ];
+  
+  const breadcrumbsLoading = [
+    ...breadcrumbs,
+    <T className="tt-ce ws-np">overview</T>,
   ];
   
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
       url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
       options={{ refreshInterval: 60000 }}
-      errorView={<TwoContentSection>
-        <div className="jk-col stretch extend nowrap">
-          <Breadcrumbs breadcrumbs={breadcrumbs} />
-        </div>
-        <div className="jk-col extend jk-pad-md">
-          <div className="jk-col gap center">
-            <div className="image-404"><JukiSurprisedImage /></div>
+      loadingView={
+        <TwoContentSection>
+          <div className="jk-col stretch extend nowrap">
+            <Breadcrumbs breadcrumbs={breadcrumbsLoading} />
+            <div className="jk-col pn-re pad-left-right">
+              <div className="jk-row nowrap gap extend">
+                <h2
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    width: 'calc(100vw - var(--pad-border) - var(--pad-border))',
+                  }}
+                >
+                  {contestKey}
+                </h2>
+              </div>
+            </div>
+            <div className="pad-left-right">
+              <TabsInline
+                tabs={{
+                  [ContestTab.OVERVIEW]: {
+                    key: ContestTab.OVERVIEW,
+                    header: <T className="tt-ce ws-np">overview</T>,
+                    body: '',
+                  },
+                  'loading': {
+                    key: 'loading',
+                    header: <div className="jk-row">
+                      <div className="dot-flashing" />
+                    </div>,
+                    body: '',
+                  },
+                }}
+                selectedTabKey={ContestTab.OVERVIEW}
+                onChange={() => null}
+              />
+            </div>
+          </div>
+          <div className="jk-row jk-col extend">
+            <LoadingIcon size="very-huge" className="cr-py" />
+          </div>
+        </TwoContentSection>
+      }
+      errorView={
+        <TwoContentSection>
+          <div>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          </div>
+          <Custom404>
             <h3><T className="tt-ue">contest not found</T></h3>
-            <p><T className="tt-se">the contest does not exist or you do not have permissions to view
-              it</T></p>
+            <p>
+              <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
+            </p>
             <Link href="/contests" className="link tt-ue">
               <div className="jk-row gap"><CupIcon /><T>go to contest list page</T></div>
             </Link>
-          </div>
-        </div>
-      </TwoContentSection>}
+          </Custom404>
+        </TwoContentSection>
+      }
     >
       {({ data: { content: contest } }) => {
         const {
@@ -65,24 +122,17 @@ export function ContestView() {
             isAdmin: false, isJudge: false, isContestant: false,
           },
         } = contest || {};
-        let statusLabel = '';
-        let tag = '';
+        const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
+        let statusLabel = contestStateMap[key].label;
+        let tag = contestStateMap[key].color;
         let timeInterval = 0;
         if (contest.isEndless) {
-          tag = 'info-light';
-          statusLabel = 'endless';
           timeInterval = -1;
         } else if (contest.isPast) {
-          tag = 'gray-6';
-          statusLabel = 'past';
           timeInterval = new Date().getTime() - contest.settings.endTimestamp;
         } else if (contest.isFuture) {
-          tag = 'success-light';
-          statusLabel = 'upcoming';
           timeInterval = contest.settings.startTimestamp - new Date().getTime();
         } else if (contest.isLive) {
-          tag = 'error-light';
-          statusLabel = 'live';
           timeInterval = contest.settings.endTimestamp - new Date().getTime();
         }
         
@@ -215,17 +265,24 @@ export function ContestView() {
               <Breadcrumbs breadcrumbs={breadcrumbs} />
               <div className="jk-col pn-re pad-left-right">
                 <div className="jk-row nowrap gap extend">
-                  <div className="jk-row left gap flex-1">
-                    <h2>{contest.name}</h2>
-                    <Popover
-                      content={literal}
-                      triggerOn="hover"
-                      placement="bottom"
-                      popoverContentClassName={`color-white bg-color-${tag} jk-row nowrap`}
-                    >
-                      <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T>{statusLabel}</T></div>
-                    </Popover>
-                  </div>
+                  <h2
+                    style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      width: 'calc(100vw - var(--pad-border) - var(--pad-border))',
+                    }}
+                  >
+                    {contest.name}
+                  </h2>
+                  <Popover
+                    content={literal}
+                    triggerOn="hover"
+                    placement="bottom"
+                    popoverContentClassName={`color-white bg-color-${tag} jk-row nowrap`}
+                  >
+                    <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T>{statusLabel}</T></div>
+                  </Popover>
                 </div>
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>
               </div>

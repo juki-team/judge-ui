@@ -78,6 +78,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
             SubmissionRunStatus.COMPLETED,
           ].includes(nextStatus) && (
             [
+              SubmissionRunStatus.RECEIVED,
               SubmissionRunStatus.COMPILING,
               SubmissionRunStatus.COMPILED,
               SubmissionRunStatus.FAILED,

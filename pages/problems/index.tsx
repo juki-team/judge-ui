@@ -7,36 +7,41 @@ import {
   PagedDataViewer,
   PlusIcon,
   Popover,
+  Select,
   T,
   TextField,
   TextHeadCell,
   TwoContentSection,
   UserNicknameLink,
 } from 'components';
-import { PROBLEM_MODE, PROBLEM_MODES, PROBLEM_STATUS, ROUTES } from 'config/constants';
-import { JUDGE_API_V1 } from 'config/constants/judge';
-import { buttonLoaderLink, classNames, toFilterUrl, toSortUrl } from 'helpers';
+import { JUDGE, JUDGE_API_V1, PROBLEM_MODE, PROBLEM_MODES, PROBLEM_STATUS, ROUTES } from 'config/constants';
+import { buttonLoaderLink, classNames, getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
 import { useFetcher, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
   FilterSelectOnlineType,
   GetUrl,
+  Judge,
   LastLinkKey,
   ProblemStatus,
   ProblemSummaryListResponseDTO,
   ProblemTab,
   QueryParam,
+  RefreshType,
 } from 'types';
 
 function Problems() {
   
   useTrackLastPath(LastLinkKey.PROBLEMS);
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
-  const { user: { canCreateProblem } } = useJukiUser();
+  const { user: { canCreateProblem, canHandleJudges } } = useJukiUser();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
+  const [ judge, setJudge ] = useState(Judge.JUKI_JUDGE);
+  const refreshRef = useRef<RefreshType>();
+  const judgeRef = useRef<Judge>(Judge.JUKI_JUDGE);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">id</T>} />,
@@ -56,9 +61,15 @@ function Problems() {
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} className="left" />,
       index: 'name',
-      field: ({ record: { key, name, user }, isCard }) => (
+      field: ({ record: { key, judge, name, user }, isCard }) => (
         <Field className={classNames('jk-row fw-bd jk-pad-sm', { left: !isCard, center: isCard })}>
-          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)} className="link">
+          <Link
+            href={judge === Judge.JUKI_JUDGE ? ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT) : ROUTES.PROBLEMS.VIEW(
+              getProblemJudgeKey(judge, key),
+              ProblemTab.STATEMENT,
+            )}
+            className="link"
+          >
             <div className="jk-row gap nowrap">
               <div className="jk-row">{name}</div>
               {user.solved ? (
@@ -96,37 +107,41 @@ function Problems() {
       cardPosition: 'center',
       minWidth: 300,
     },
-    {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">mode</T>} />,
-      index: 'mode',
-      field: ({ record: { key, settings: { mode } }, isCard }) => (
-        <Field className="jk-row">
-          <T className="tt-se">{PROBLEM_MODE[mode].label}</T>
-        </Field>
-      ),
-      sort: true,
-      filter: {
-        type: 'select',
-        options: PROBLEM_MODES.map((problemMode) => ({ value: problemMode, label: PROBLEM_MODE[problemMode].label })),
+    ...(judge === Judge.JUKI_JUDGE ? [
+      {
+        head: <TextHeadCell text={<T className="tt-ue tx-s">mode</T>} />,
+        index: 'mode',
+        field: ({ record: { key, settings: { mode } }, isCard }) => (
+          <Field className="jk-row">
+            <T className="tt-se">{PROBLEM_MODE[mode].label}</T>
+          </Field>
+        ),
+        sort: true,
+        filter: {
+          type: 'select',
+          options: PROBLEM_MODES.map((problemMode) => ({ value: problemMode, label: PROBLEM_MODE[problemMode].label })),
+        },
+        cardPosition: 'top',
+        minWidth: 140,
       },
-      cardPosition: 'top',
-      minWidth: 120,
-    },
-    {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} className="left" />,
-      index: 'tags',
-      field: ({ record: { tags }, isCard }) => (
-        <Field className={classNames('jk-row gap', { center: isCard, left: !isCard })}>
-          {tags.filter(tag => !!tag).map(tag => <div className="jk-tag gray-6 tx-s" key={tag}>{tag}</div>)}
-        </Field>
-      ),
-      filter: {
-        type: 'select',
-        options: (tags?.success ? tags.contents : []).map(tag => ({ value: tag, label: tag })),
-      } as FilterSelectOnlineType,
-      cardPosition: 'center',
-      minWidth: 250,
-    },
+    ] as DataViewerHeadersType<ProblemSummaryListResponseDTO>[] : []),
+    ...(judge === Judge.JUKI_JUDGE ? [
+      {
+        head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} className="left" />,
+        index: 'tags',
+        field: ({ record: { tags }, isCard }) => (
+          <Field className={classNames('jk-row gap', { center: isCard, left: !isCard })}>
+            {tags.filter(tag => !!tag).map(tag => <div className="jk-tag gray-6 tx-s" key={tag}>{tag}</div>)}
+          </Field>
+        ),
+        filter: {
+          type: 'select',
+          options: (tags?.success ? tags.contents : []).map(tag => ({ value: tag, label: tag })),
+        } as FilterSelectOnlineType,
+        cardPosition: 'center',
+        minWidth: 250,
+      },
+    ] as DataViewerHeadersType<ProblemSummaryListResponseDTO>[] : []),
     ...(canCreateProblem ? [
       {
         head: <TextHeadCell text={<T className="tt-ue tx-s">visibility</T>} />,
@@ -173,25 +188,42 @@ function Problems() {
         minWidth: 200,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),
-  ], [ canCreateProblem, tags ]);
+  ], [ canCreateProblem, tags, judge ]);
   
   const { push } = useRouter();
+  useEffect(() => {
+    if (judgeRef.current !== judge) {
+      judgeRef.current = judge;
+      refreshRef.current?.();
+    }
+  }, [ judge ]);
   
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
-    JUDGE_API_V1.PROBLEM.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
-  );
+  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => {
+    return JUDGE_API_V1.PROBLEM.LIST(judgeRef.current, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
+  };
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <T className="tt-se">problems</T>,
   ];
+  const refresh = useCallback((reload) => refreshRef.current = reload, []);
   
   return (
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right pad-top-bottom">
-          <h1><T>problems</T></h1>
+        <div className="jk-row space-between pad-left-right pad-top-bottom">
+          <h2><T>problems</T></h2>
+          {canHandleJudges && (
+            <div>
+              <Select
+                className="jk-border-radius-inline jk-button-secondary"
+                options={Object.values(JUDGE).map(judge => ({ value: judge.value, label: judge.label }))}
+                selectedOption={{ value: judge }}
+                onChange={({ value }) => setJudge(value)}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="pad-top-bottom pad-left-right">
@@ -213,6 +245,12 @@ function Problems() {
             ] : []),
           ]}
           cards={{ height: 256, expanded: true }}
+          onRecordClick={async ({ isCard, data, index }) => {
+            if (isCard) {
+              await push({ pathname: ROUTES.PROBLEMS.VIEW(data[index].key, ProblemTab.STATEMENT) });
+            }
+          }}
+          refreshRef={refresh}
         />
       </div>
     </TwoContentSection>

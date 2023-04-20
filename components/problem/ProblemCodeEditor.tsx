@@ -201,7 +201,7 @@ export const ProblemCodeEditor = ({
           return validSubmit;
         }
       }}
-      initialTestCases={initialTestCases}
+      initialTestCases={problem.judge === Judge.JUKI_JUDGE ? initialTestCases : undefined}
     />
   );
 };

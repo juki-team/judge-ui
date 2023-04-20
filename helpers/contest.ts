@@ -1,20 +1,40 @@
+import { getProblemJudgeKey } from '@juki-team/commons';
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
 import { ContestProblemBasicType, ContestTemplate, EditCreateContestType } from 'types';
 import { roundTimestamp } from './index';
 
-export const adjustContest = (contest: EditCreateContestType): EditCreateContestType => {
+export const adjustContest = (contest: EditCreateContestType, prevContest: EditCreateContestType): EditCreateContestType => {
   const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
   const endTimestamp = Math.max(roundTimestamp(contest.settings.endTimestamp), startTimestamp);
-  const frozenTimestamp = Math.min(Math.max(roundTimestamp(contest.settings.frozenTimestamp), startTimestamp), endTimestamp);
-  const quietTimestamp = Math.min(Math.max(roundTimestamp(contest.settings.quietTimestamp), frozenTimestamp), endTimestamp);
+  const frozenTimestamp = Math.min(
+    Math.max(roundTimestamp(contest.settings.frozenTimestamp), startTimestamp),
+    endTimestamp,
+  );
+  const quietTimestamp = Math.min(
+    Math.max(roundTimestamp(contest.settings.quietTimestamp), frozenTimestamp),
+    endTimestamp,
+  );
   const problems: { [key: string]: ContestProblemBasicType & { name: string } } = {};
-  Object.values(contest.problems).forEach(problem => {
-    problems[problem.key] = {
+  Object.entries(contest.problems).forEach(([ problemJudgeKey, problem ]) => {
+    let problemStartTimestamp = prevContest.problems[problemJudgeKey].startTimestamp
+    === prevContest.settings.startTimestamp ? startTimestamp : problem.startTimestamp;
+    problemStartTimestamp = Math.min(
+      Math.max(roundTimestamp(problemStartTimestamp), contest.settings.startTimestamp),
+      contest.settings.endTimestamp,
+    );
+    let problemEndTimestamp = prevContest.problems[problemJudgeKey].endTimestamp
+    === prevContest.settings.endTimestamp ? endTimestamp : problem.endTimestamp;
+    problemEndTimestamp = Math.min(
+      Math.max(roundTimestamp(problemEndTimestamp), problemStartTimestamp),
+      contest.settings.endTimestamp,
+    );
+    problems[getProblemJudgeKey(problem.judge, problem.key)] = {
       ...problem,
-      startTimestamp: Math.min(Math.max(roundTimestamp(problem.startTimestamp), contest.settings.startTimestamp), contest.settings.endTimestamp),
-      endTimestamp: Math.min(Math.max(roundTimestamp(problem.endTimestamp), problem.startTimestamp), contest.settings.endTimestamp),
+      startTimestamp: problemStartTimestamp,
+      endTimestamp: problemEndTimestamp,
     };
   });
+  
   return {
     ...contest,
     settings: {
@@ -28,7 +48,15 @@ export const adjustContest = (contest: EditCreateContestType): EditCreateContest
   };
 };
 
-type ContestForTemplate = { settings: { startTimestamp: number, endTimestamp: number, frozenTimestamp: number, quietTimestamp: number, penalty: number } };
+type ContestForTemplate = {
+  settings: {
+    startTimestamp: number,
+    endTimestamp: number,
+    frozenTimestamp: number,
+    quietTimestamp: number,
+    penalty: number
+  }
+};
 export const isEndlessContest = (contest: ContestForTemplate) => (
   contest.settings.startTimestamp === MIN_DATE.getTime() &&
   contest.settings.frozenTimestamp === MAX_DATE.getTime() &&
