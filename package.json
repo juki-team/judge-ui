@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "1.1.2",
   "scripts": {
     "dev": "next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
