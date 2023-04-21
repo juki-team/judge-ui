@@ -5,6 +5,7 @@ import {
   EditProfileModal,
   FetcherLayer,
   LockIcon,
+  MyActiveSessions,
   ProfileSubmissions,
   ResetPassword,
   T,
@@ -26,7 +27,7 @@ export default function ProfileView() {
   const { query, push } = useRouter();
   const { nickname, tab } = query;
   const { user: { nickname: userNickname } } = useJukiUser();
-  const [openModal, setOpenModal] = useState('');
+  const [ openModal, setOpenModal ] = useState('');
   const onClose = () => setOpenModal('');
   
   return (
@@ -59,6 +60,16 @@ export default function ProfileView() {
               </div>
             ),
           };
+          tabHeaders[ProfileTab.MY_SESSIONS] = {
+            key: ProfileTab.MY_SESSIONS,
+            header: <T className="tt-ce">my sessions</T>,
+            body: (
+              <div className="pad-top-bottom pad-left-right">
+                <MyActiveSessions />
+              </div>
+            ),
+          };
+          
         }
         tabHeaders[ProfileTab.SUBMISSIONS] = {
           key: ProfileTab.SUBMISSIONS,
@@ -83,13 +94,13 @@ export default function ProfileView() {
             </Button>,
           ] : []),
         ];
-  
+        
         const breadcrumbs = [
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
           <Link href={ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE)} className="link">{nickname}</Link>,
           tabHeaders[tab as ProfileTab]?.header,
         ];
-  
+        
         return (
           <TwoContentSection>
             <div>

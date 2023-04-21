@@ -100,6 +100,7 @@ export enum ProfileTab {
   SETTINGS = 'settings',
   SUBMISSIONS = 'submissions',
   CONTESTS = 'contests',
+  MY_SESSIONS = 'my-sessions',
 }
 
 export enum CourseTab {

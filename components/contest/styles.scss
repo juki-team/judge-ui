@@ -44,15 +44,7 @@
 
 .contest-scoreboard {
   .jk-table-view-tools {
-    > div:first-child {
-      display: none;
-    }
-  }
-  
-  .own {
-    > div {
-      padding: 0 var(--pad-t);
-    }
+    flex-direction: row;
   }
 }
 
@@ -76,7 +68,7 @@
     width: 100%;
     border: none;
     background-color: transparent;
-  
+    
     .input-icon {
       color: inherit;
       top: 4px;
@@ -86,7 +78,9 @@
 
 .contest-overview {
   height: auto;
-  @include sm { flex-direction: column-reverse !important; }
+  @include sm {
+    flex-direction: column-reverse !important;
+  }
   
   > div:first-child {
     @include sm {

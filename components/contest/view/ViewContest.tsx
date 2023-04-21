@@ -145,8 +145,11 @@ export function ContestView() {
           </>
         );
         
-        const allLiteralLabel = <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
-          <T>{statusLabel}</T>,&nbsp;{literal}</div>;
+        const allLiteralLabel = contest.isEndless
+          ? <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+            <T>{statusLabel}</T></div>
+          : <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+            <T>{statusLabel}</T>,&nbsp;{literal}</div>;
         
         const tabHeaders = {
           [ContestTab.OVERVIEW]: {
@@ -281,7 +284,7 @@ export function ContestView() {
                     placement="bottom"
                     popoverContentClassName={`color-white bg-color-${tag} jk-row nowrap`}
                   >
-                    <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T>{statusLabel}</T></div>
+                    <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T className="ws-np">{statusLabel}</T></div>
                   </Popover>
                 </div>
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>

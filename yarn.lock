@@ -1134,10 +1134,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.406":
-  version "0.0.406"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.406/9c374aa298e2604a379232dccc4eb8671f73cdfc#9c374aa298e2604a379232dccc4eb8671f73cdfc"
-  integrity sha512-8nJ51XM/Kdcbf8zamolSLq8YY+U4YZeemc4piPS4AidSrIOacu9GMOixoemAK4ccoFoWX0FfmDYzmB97ZfKLLA==
+"@juki-team/base-ui@^0.0.407":
+  version "0.0.407"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.407/4fd3bc5b525b8606bf52820748cc6effa0063a2b#4fd3bc5b525b8606bf52820748cc6effa0063a2b"
+  integrity sha512-bdXq41rh/0Ibgek5ZnaKvcsl5CiqZAYraJ7Z5xuwL0l7juAlZp6kZQPCNJ5v8f4JrAksc3dhkAxa/v63PLf1AA==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-java" "^6.0.1"
@@ -1146,7 +1146,7 @@
     "@codemirror/lang-markdown" "^6.0.5"
     "@codemirror/lang-python" "^6.1.0"
     "@hookform/resolvers" "^2.8.8"
-    "@juki-team/commons" "^0.0.300"
+    "@juki-team/commons" "^0.0.306"
     "@monaco-editor/react" "^4.4.2"
     "@tanstack/react-virtual" "^3.0.0-beta.30"
     "@uiw/react-codemirror" "^4.19.3"
@@ -1156,6 +1156,7 @@
     prismjs "^1.29.0"
     react-color "^2.19.3"
     react-copy-to-clipboard "^5.1.0"
+    react-device-detect "^2.2.3"
     react-dnd "^16.0.1"
     react-dnd-html5-backend "^16.0.1"
     react-hook-form "^7.43.2"
@@ -1174,15 +1175,15 @@
     xlsx "^0.18.5"
     yup "^0.32.11"
 
-"@juki-team/commons@^0.0.300":
-  version "0.0.300"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.300/97011929da5a3a804e9c0f5da05dd29b33f72edc#97011929da5a3a804e9c0f5da05dd29b33f72edc"
-  integrity sha512-xEn44aUsVwjJTe9oa9giUyvcNgKI/pQksoCz89LP+4oLtiyf7NPkvig/GlUnpFkoJg6BZRLsOLZ2ppPBw+kDJA==
+"@juki-team/commons@^0.0.306":
+  version "0.0.306"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.306/0644e8ae4379ac9d5f8cedff202ecbccda08e4b1#0644e8ae4379ac9d5f8cedff202ecbccda08e4b1"
+  integrity sha512-6+ZsTkuGQOoZSwk67iM0NR36zEEV4zMf5QhXhHSpjlzUlD0IZe66soZ/DqaroZ+/bypj+Nct3RwQMSZTuVPizw==
 
-"@juki-team/commons@^0.0.303":
-  version "0.0.303"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.303/9b73ca6230638670971c9c178402fce045c84aaf#9b73ca6230638670971c9c178402fce045c84aaf"
-  integrity sha512-3BmiD+08yCb7slvkJ/4kYmiz/jTvmdKu3ljqYNYyMSF0lQnc+8K4mU1Q2j/MAEtM6xi418rGhmZt0ps2WKeV1A==
+"@juki-team/commons@^0.0.308":
+  version "0.0.308"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.308/60e73ac845735c94a13ca759f850f794e2f0ea44#60e73ac845735c94a13ca759f850f794e2f0ea44"
+  integrity sha512-+Nwpfh27QvwFPjkAPCEXuOAfHsUE5jECu96v+Z2maejNdDBZNPwA6T8gAEWnJU1hECZeZsXX1scMwGvazfkqKg==
 
 "@lezer/common@^1.0.0":
   version "1.0.2"
@@ -3966,6 +3967,13 @@ react-copy-to-clipboard@^5.1.0:
     copy-to-clipboard "^3.3.1"
     prop-types "^15.8.1"
 
+react-device-detect@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-device-detect/-/react-device-detect-2.2.3.tgz#97a7ae767cdd004e7c3578260f48cf70c036e7ca"
+  integrity sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==
+  dependencies:
+    ua-parser-js "^1.0.33"
+
 react-dnd-html5-backend@^16.0.1:
   version "16.0.1"
   resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-16.0.1.tgz#87faef15845d512a23b3c08d29ecfd34871688b6"
@@ -4644,6 +4652,11 @@ typescript@^4.9.5:
   version "4.9.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
   integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
+
+ua-parser-js@^1.0.33:
+  version "1.0.35"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.35.tgz#c4ef44343bc3db0a3cbefdf21822f1b1fc1ab011"
+  integrity sha512-fKnGuqmTBnIE+/KXSzCn4db8RTigUzw1AN0DmdU6hJovUTbYJKyqj+8Mt1c4VfRDnOVJnENmfYkIPZ946UrSAA==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

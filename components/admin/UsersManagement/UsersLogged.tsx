@@ -1,3 +1,4 @@
+import { TextField } from '@juki-team/base-ui';
 import {
   ButtonLoader,
   CloseIcon,
@@ -21,27 +22,33 @@ import {
   FilterTextOfflineType,
   HTTPMethod,
   QueryParam,
+  SessionResponseDTO,
   Status,
-  UserManagementSessionResponseDTO,
 } from 'types';
 
 export function UsersLogged() {
   
   const { deleteUserSession } = useJukiUser();
-  const [withGuests, setWithGuests] = useState(false);
+  const [ withGuests, setWithGuests ] = useState(false);
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<UserManagementSessionResponseDTO>>(withGuests ? JUDGE_API_V1.USER.ALL_ONLINE_USERS() : JUDGE_API_V1.USER.ONLINE_USERS());
+  } = useDataViewerRequester<ContentsResponseType<SessionResponseDTO>>(withGuests ? JUDGE_API_V1.USER.ALL_ONLINE_USERS() : JUDGE_API_V1.USER.ONLINE_USERS());
   
-  const columns: DataViewerHeadersType<UserManagementSessionResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<SessionResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<><T className="tt-ue">id</T>/<T className="tt-ue">user</T></>} />,
       index: 'id',
       field: ({ record: { id, user: { imageUrl, nickname, givenName, familyName, email } } }) => (
         <Field className="jk-col center">
-          <UserChip imageUrl={imageUrl} nickname={nickname} givenName={givenName} familyName={familyName} email={email} />
+          <UserChip
+            imageUrl={imageUrl}
+            nickname={nickname}
+            givenName={givenName}
+            familyName={familyName}
+            email={email}
+          />
           <div className="jk-row">{id}</div>
         </Field>
       ),
@@ -49,9 +56,12 @@ export function UsersLogged() {
       filter: {
         type: 'text', callbackFn: ({ text }) => ({ user: { givenName, familyName, nickname, email } }) => {
           const regExp = new RegExp(text, 'gi');
-          return !!(nickname?.match?.(regExp)) || !!(givenName?.match?.(regExp)) || !!(familyName?.match?.(regExp)) || !!(email?.match?.(regExp));
+          return !!(nickname?.match?.(regExp))
+            || !!(givenName?.match?.(regExp))
+            || !!(familyName?.match?.(regExp))
+            || !!(email?.match?.(regExp));
         },
-      } as FilterTextOfflineType<UserManagementSessionResponseDTO>,
+      } as FilterTextOfflineType<SessionResponseDTO>,
       cardPosition: 'top',
       minWidth: 400,
     },
@@ -63,7 +73,10 @@ export function UsersLogged() {
       ),
       cardPosition: 'bottom',
       minWidth: 250,
-      sort: { compareFn: () => (rowA, rowB) => new Date(rowB.createdAt).getTime() - new Date(rowA.createdAt).getTime() },
+      sort: {
+        compareFn: () => (rowA, rowB) => new Date(rowB.createdAt).getTime()
+          - new Date(rowA.createdAt).getTime(),
+      },
     },
     {
       head: <TextHeadCell text={<T className="tt-ue">updated at</T>} />,
@@ -73,7 +86,11 @@ export function UsersLogged() {
       ),
       cardPosition: 'bottom',
       minWidth: 250,
-      sort: { compareFn: () => (rowA, rowB) => new Date(rowB.updatedAt).getTime() - new Date(rowA.updatedAt).getTime() },
+      sort: {
+        compareFn: () => (rowA, rowB) => (
+          new Date(rowB.updatedAt).getTime() - new Date(rowA.updatedAt).getTime()
+        ),
+      },
     },
     {
       head: <TextHeadCell text={<T className="tt-ue">valid until</T>} />,
@@ -83,7 +100,39 @@ export function UsersLogged() {
       ),
       cardPosition: 'bottom',
       minWidth: 250,
-      sort: { compareFn: () => (rowA, rowB) => new Date(rowB.validUntil).getTime() - new Date(rowA.validUntil).getTime() },
+      sort: {
+        compareFn: () => (rowA, rowB) => (
+          new Date(rowB.validUntil).getTime() - new Date(rowA.validUntil).getTime()
+        ),
+      },
+    },
+    {
+      head: <TextHeadCell text={<T className="tt-ue">device</T>} />,
+      index: 'device',
+      field: ({ record: { deviceName } }) => (
+        <TextField text={deviceName} label={<T>device</T>} />
+      ),
+      cardPosition: 'bottom',
+      minWidth: 250,
+      sort: {
+        compareFn: () => (rowA, rowB) => (
+          rowA.deviceName.localeCompare(rowB.deviceName)
+        ),
+      },
+    },
+    {
+      head: <TextHeadCell text={<T className="tt-ue">os</T>} />,
+      index: 'os',
+      field: ({ record: { osName } }) => (
+        <TextField text={osName} label={<T>os</T>} />
+      ),
+      cardPosition: 'bottom',
+      minWidth: 250,
+      sort: {
+        compareFn: () => (rowA, rowB) => (
+          rowA.osName.localeCompare(rowB.osName)
+        ),
+      },
     },
     {
       head: <TextHeadCell text={<T className="tt-ue">operations</T>} />,
@@ -116,11 +165,11 @@ export function UsersLogged() {
   
   const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
-  const data: UserManagementSessionResponseDTO[] = (response?.success ? response?.contents : []);
+  const data: SessionResponseDTO[] = (response?.success ? response?.contents : []);
   
   return (
     <>
-      <DataViewer<UserManagementSessionResponseDTO>
+      <DataViewer<SessionResponseDTO>
         headers={columns}
         data={data}
         rows={{ height: 150 }}
@@ -136,12 +185,14 @@ export function UsersLogged() {
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
-                    { method: HTTPMethod.POST }),
+                      JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
+                      { method: HTTPMethod.POST },
+                    ),
                   );
                   notifyResponse(response, setLoaderStatus);
                   await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
-                }}>
+                }}
+              >
                 <T>delete old sessions</T>
               </ButtonLoader>
               <InputToggle

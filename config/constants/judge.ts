@@ -81,6 +81,9 @@ export const JUDGE_API_V1 = {
     DELETE_OLD_SESSIONS: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/delete-old-sessions`;
     },
+    MY_SESSIONS: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/my-sessions`;
+    },
   },
   SUBMIT: {
     SUBMIT_ID: (submitId: string) => {
