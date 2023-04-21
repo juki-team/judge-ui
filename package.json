@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@juki-team/base-ui": "^0.0.407",
-    "@juki-team/commons": "^0.0.308",
+    "@juki-team/commons": "^0.0.309",
     "@vercel/analytics": "^0.1.6",
     "deep-object-diff": "^1.1.7",
     "i18next": "^22.4.5",

@@ -274,6 +274,12 @@ export const JUDGE_API_V1 = {
     CRAWL_LANGUAGES: (judge: Judge) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/re-crawl-languages`;
     },
+    SQS_STATUS: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/sqs/status`;
+    },
+    SQS_DELETE: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/sqs/purge`;
+    },
   },
   VIRTUAL_USER: {
     LIST: (judge: Judge) => {

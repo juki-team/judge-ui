@@ -1180,10 +1180,10 @@
   resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.306/0644e8ae4379ac9d5f8cedff202ecbccda08e4b1#0644e8ae4379ac9d5f8cedff202ecbccda08e4b1"
   integrity sha512-6+ZsTkuGQOoZSwk67iM0NR36zEEV4zMf5QhXhHSpjlzUlD0IZe66soZ/DqaroZ+/bypj+Nct3RwQMSZTuVPizw==
 
-"@juki-team/commons@^0.0.308":
-  version "0.0.308"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.308/60e73ac845735c94a13ca759f850f794e2f0ea44#60e73ac845735c94a13ca759f850f794e2f0ea44"
-  integrity sha512-+Nwpfh27QvwFPjkAPCEXuOAfHsUE5jECu96v+Z2maejNdDBZNPwA6T8gAEWnJU1hECZeZsXX1scMwGvazfkqKg==
+"@juki-team/commons@^0.0.309":
+  version "0.0.309"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.309/e28eb4e39650d79e7a567ee406c2017e8b56a342#e28eb4e39650d79e7a567ee406c2017e8b56a342"
+  integrity sha512-FHB+5io/F5vyJcOc37PX2LxK3pVogB8P6XuFwGJuimTHXYOZpI+JRP+v7ZHyHgTLSQ73F/uqoZzfvecU8IaFIA==
 
 "@lezer/common@^1.0.0":
   version "1.0.2"

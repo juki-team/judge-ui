@@ -3,9 +3,15 @@ import { useJukiUI } from 'hooks';
 import React from 'react';
 import { AdminTab } from 'types';
 import { CodeforcesManagement } from './CodeforcesManagement';
+import { VirtualSubmissionsQueueManagement } from './VirtualSubmissionsQueueManagement';
 
 export const JudgesManagement = () => {
   const tabs = {
+    [AdminTab.VIRTUAL_SUBMISSIONS_QUEUE]: {
+      key: AdminTab.VIRTUAL_SUBMISSIONS_QUEUE,
+      header: <T className="tt-ce ws-np">virtual submissions queue</T>,
+      body: <VirtualSubmissionsQueueManagement />,
+    },
     [AdminTab.CODEFORCES_JUDGE]: {
       key: AdminTab.CODEFORCES_JUDGE,
       header: <T className="tt-ce ws-np">codeforces</T>,
@@ -14,7 +20,7 @@ export const JudgesManagement = () => {
   };
   
   const { router: { searchParams, setSearchParam } } = useJukiUI();
-  const selectedTabKey = searchParams.get('judgeTab') || AdminTab.CODEFORCES_JUDGE;
+  const selectedTabKey = searchParams.get('judgeTab') || AdminTab.VIRTUAL_SUBMISSIONS_QUEUE;
   const pushTab = tabKey => setSearchParam({ name: 'judgeTab', value: tabKey });
   
   return (

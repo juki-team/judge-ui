@@ -58,8 +58,9 @@ export enum AdminTab {
   SETTINGS_MANAGEMENT = 'settings-management',
   
   JUDGES_MANAGEMENT = 'judges-management',
-  JUKI_JUDGE = 'juki-judge',
+  VIRTUAL_SUBMISSIONS_QUEUE = 'virtual-submissions-queue',
   CODEFORCES_JUDGE = 'codeforces-judge',
+  
 }
 
 export enum ProblemTab {

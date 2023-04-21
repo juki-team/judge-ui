@@ -90,6 +90,7 @@ export type {
   JkmdSheetType,
   SourceCodeType,
   CreateFileDTO,
+  SqsPropertiesType,
 } from '@juki-team/commons';
 
 export { Period, NotificationType, SearchParamKey } from '@juki-team/base-ui';
