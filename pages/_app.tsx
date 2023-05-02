@@ -8,6 +8,7 @@ import { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { FC, useCallback, useMemo } from 'react';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
@@ -103,7 +104,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   
   const app = (
     <JukiUIProvider
-      components={{ Image: Image as FC<ImageCmpProps> }}
+      components={{ Image: Image as FC<ImageCmpProps>, Link: Link }}
       router={{ searchParams, setSearchParam, deleteSearchParam, appendSearchParam }}
     >
       <JukiUserProvider

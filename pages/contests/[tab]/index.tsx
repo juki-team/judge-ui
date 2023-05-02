@@ -11,7 +11,7 @@ import {
   TwoContentSection,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { ContestsTab, LastLinkKey } from 'types';
@@ -22,6 +22,7 @@ function Contests() {
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
   const { isReady, query: { tab: contestsTab, ...query }, push } = useRouter();
   const { user: { canCreateContest } } = useJukiUser();
+  const { viewPortSize } = useJukiUI();
   useEffect(() => {
     if (isReady && (![
       ContestsTab.ALL,
@@ -112,7 +113,7 @@ function Contests() {
             onChange={pushTab}
             selectedTabKey={contestsTab}
             extraNodes={extraNodes}
-            extraNodesPlacement="bottomRight"
+            extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
           />
         </div>
       </div>

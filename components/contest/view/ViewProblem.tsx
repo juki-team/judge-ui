@@ -1,6 +1,5 @@
-import { useJukiUI } from '@juki-team/base-ui';
 import { ProblemCodeEditor, ProblemStatement, SplitPane, T } from 'components';
-import { useRouter } from 'hooks';
+import { useJukiUI, useRouter } from 'hooks';
 import Custom404 from 'pages/404';
 import React from 'react';
 import { ContestResponseDTO } from 'types';

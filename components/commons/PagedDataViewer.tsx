@@ -1,12 +1,12 @@
 import { DataViewer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
-import { useDataViewerRequester2, useJukiUI } from 'hooks';
+import { useDataViewerRequester, useJukiUI } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
   GetRecordKeyType,
-  GetUrl,
+  DataViewerRequesterGetUrlType,
   OnRecordClickType,
   ReactNodeOrFunctionType,
   RefreshType,
@@ -18,7 +18,7 @@ interface PagedDataViewerPros<T, V = T> {
   headers: DataViewerHeadersType<T>[],
   name: string,
   toRow?: (row: V, index: number) => T,
-  url: GetUrl,
+  getUrl: DataViewerRequesterGetUrlType,
   refreshInterval?: number,
   extraNodes?: ReactNodeOrFunctionType[],
   getRowKey?: GetRecordKeyType<T>
@@ -32,7 +32,7 @@ export const PagedDataViewer = <T, V = T>({
   headers,
   name,
   toRow,
-  url,
+  getUrl,
   refreshInterval,
   extraNodes,
   getRowKey,
@@ -45,7 +45,7 @@ export const PagedDataViewer = <T, V = T>({
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester2<ContentsResponseType<V>>(url, { refreshInterval });
+  } = useDataViewerRequester<ContentsResponseType<V>>(getUrl, { refreshInterval });
   const [ _, setRender ] = useState(Date.now()); // TODO: Fix the render of DataViewer
   useEffect(() => {
     setTimeout(() => setRender(Date.now()), 100);

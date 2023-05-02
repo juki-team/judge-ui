@@ -30,7 +30,6 @@ export {
   MenuViewMode,
   DataViewMode,
   CourseStatus,
-  FileStatus,
   FileType,
   CourseType,
   SocketEvent,
@@ -83,7 +82,6 @@ export type {
   EmailDataResponseDTO,
   CourseSummaryListResponseDTO,
   CreateCourseDTO,
-  BodySheetType,
   CodeEditorTestCasesType,
   CodeEditorTestCaseType,
   CodeEditorSheetType,
@@ -122,4 +120,5 @@ export type {
   ImageCmpProps,
   OnRecordClickType,
   RefreshType,
+  DataViewerRequesterGetUrlType,
 } from '@juki-team/base-ui';

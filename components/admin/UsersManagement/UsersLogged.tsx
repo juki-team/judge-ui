@@ -1,4 +1,3 @@
-import { TextField } from '@juki-team/base-ui';
 import {
   ButtonLoader,
   CloseIcon,
@@ -8,13 +7,14 @@ import {
   Field,
   InputToggle,
   T,
+  TextField,
   TextHeadCell,
   UserChip,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDataViewerRequester, useJukiUser, useNotification, useSWR } from 'hooks';
-import { useMemo, useState } from 'react';
+import { useDataViewerRequester, useJukiUser, useNotification } from 'hooks';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -33,9 +33,15 @@ export function UsersLogged() {
   const {
     data: response,
     request,
+    reload,
+    refreshRef,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<SessionResponseDTO>>(withGuests ? JUDGE_API_V1.USER.ALL_ONLINE_USERS() : JUDGE_API_V1.USER.ONLINE_USERS());
-  
+  } = useDataViewerRequester<ContentsResponseType<SessionResponseDTO>>(
+    () => withGuests ? JUDGE_API_V1.USER.ALL_ONLINE_USERS() : JUDGE_API_V1.USER.ONLINE_USERS(),
+  );
+  useEffect(() => {
+    void reload();
+  }, [ withGuests, reload ]);
   const columns: DataViewerHeadersType<SessionResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<><T className="tt-ue">id</T>/<T className="tt-ue">user</T></>} />,
@@ -147,7 +153,7 @@ export function UsersLogged() {
                 setLoader,
                 onSuccess: async () => {
                   setLoader(Status.LOADING);
-                  await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
+                  await reload();
                   setLoader(Status.SUCCESS);
                 },
               })}
@@ -161,10 +167,9 @@ export function UsersLogged() {
       cardPosition: 'center',
       minWidth: 190,
     },
-  ], []);
+  ], [ reload ]);
   
   const { notifyResponse } = useNotification();
-  const { mutate } = useSWR();
   const data: SessionResponseDTO[] = (response?.success ? response?.contents : []);
   
   return (
@@ -176,6 +181,7 @@ export function UsersLogged() {
         cards={{ width: 300 }}
         request={request}
         name={QueryParam.LOGGED_USERS_TABLE}
+        refreshRef={refreshRef}
         extraNodes={
           [
             <div className="jk-row gap">
@@ -185,12 +191,12 @@ export function UsersLogged() {
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                      JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
+                    JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
                       { method: HTTPMethod.POST },
                     ),
                   );
                   notifyResponse(response, setLoaderStatus);
-                  await mutate(JUDGE_API_V1.USER.ONLINE_USERS());
+                  await reload();
                 }}
               >
                 <T>delete old sessions</T>

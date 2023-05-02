@@ -1,4 +1,13 @@
-import { ButtonLoader, DataViewer, Field, PlayCircleIcon, Select, SettingsAlertIcon, T, TextHeadCell } from 'components';
+import {
+  ButtonLoader,
+  DataViewer,
+  Field,
+  PlayCircleIcon,
+  Select,
+  SettingsAlertIcon,
+  T,
+  TextHeadCell,
+} from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
@@ -14,14 +23,22 @@ import {
   TaskDefinitionResponseDTO,
 } from 'types';
 
-type RevisionType = { taskDefinitionArn: string, revision: number, memory: string, cpu: string, registeredAt: Date, isHighRunner: boolean, isLowRunner: boolean };
+type RevisionType = {
+  taskDefinitionArn: string,
+  revision: number,
+  memory: string,
+  cpu: string,
+  registeredAt: Date,
+  isHighRunner: boolean,
+  isLowRunner: boolean
+};
 
 type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[] };
 
 const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) => {
   
   const { notifyResponse } = useNotification();
-  const [revision, setRevision] = useState<RevisionType>(revisions[0]);
+  const [ revision, setRevision ] = useState<RevisionType>(revisions[0]);
   const { mutate } = useSWR();
   
   return (
@@ -40,7 +57,8 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
       </div>
       <div className="jk-col gap">
         <div className="tx-s">{revision.memory} (MiB) / {revision.cpu} (unit)</div>
-        <div className="tx-s"><T className="tt-se fw-bd">registered at</T>:&nbsp;{revision.registeredAt.toLocaleString()}</div>
+        <div className="tx-s"><T className="tt-se fw-bd">registered
+          at</T>:&nbsp;{revision.registeredAt.toLocaleString()}</div>
         <div className="tx-xs fw-bd">{revision.taskDefinitionArn}</div>
       </div>
       <div className="jk-col gap">
@@ -50,8 +68,9 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
             const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-              JUDGE_API_V1.SYS.AWS_ECS_RUN_TASK_TASK_DEFINITION(revision.taskDefinitionArn),
-              { method: HTTPMethod.POST }),
+                JUDGE_API_V1.SYS.AWS_ECS_RUN_TASK_TASK_DEFINITION(revision.taskDefinitionArn),
+                { method: HTTPMethod.POST },
+              ),
             );
             notifyResponse(response, setLoaderStatus);
             await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
@@ -67,8 +86,12 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.HIGH_PERFORMANCE, revision.taskDefinitionArn),
-                { method: HTTPMethod.POST }),
+                  JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(
+                    RunnerType.HIGH_PERFORMANCE,
+                    revision.taskDefinitionArn,
+                  ),
+                  { method: HTTPMethod.POST },
+                ),
               );
               notifyResponse(response, setLoaderStatus);
               await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
@@ -85,8 +108,12 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(RunnerType.LOW_PERFORMANCE, revision.taskDefinitionArn),
-                { method: HTTPMethod.POST }),
+                  JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(
+                    RunnerType.LOW_PERFORMANCE,
+                    revision.taskDefinitionArn,
+                  ),
+                  { method: HTTPMethod.POST },
+                ),
               );
               notifyResponse(response, setLoaderStatus);
               await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
@@ -105,7 +132,7 @@ export const ECSTaskDefinitionsManagement = () => {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<TaskDefinitionResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_DEFINITION_LIST());
+  } = useDataViewerRequester<ContentsResponseType<TaskDefinitionResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_DEFINITION_LIST());
   
   const columns: DataViewerHeadersType<AwsEcsTaskDefinitionList>[] = useMemo(() => [
     {
@@ -123,7 +150,16 @@ export const ECSTaskDefinitionsManagement = () => {
   const responseData: TaskDefinitionResponseDTO[] = (response?.success ? response?.contents : []);
   
   const definitions: { [key: string]: AwsEcsTaskDefinitionList } = {};
-  responseData.forEach(({ taskDefinitionArn, family, revision, memory, cpu, registeredAt, isLowRunner, isHighRunner }) => {
+  responseData.forEach(({
+      taskDefinitionArn,
+      family,
+      revision,
+      memory,
+      cpu,
+      registeredAt,
+      isLowRunner,
+      isHighRunner,
+    }) => {
       definitions[family] = {
         family,
         revisions: [

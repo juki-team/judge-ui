@@ -23,7 +23,7 @@ import {
 } from 'helpers';
 import { useDataViewerRequester, useJukiUI, useJukiUser, useNotification, useRouter, useT } from 'hooks';
 import Link from 'next/link';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -43,7 +43,7 @@ const DownloadButton = ({
 }: { data: ScoreboardResponseDTO[], contest: ContestResponseDTO, disabled: boolean }) => {
   const { t } = useT();
   
-  const head = ['#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty')];
+  const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
   for (const problem of Object.values(contest?.problems)) {
     head.push(problem.index);
   }
@@ -74,12 +74,12 @@ const DownloadButton = ({
     }
     return base;
   });
-  const dataCsv = [head, ...body];
+  const dataCsv = [ head, ...body ];
   
   return (
     <Select
       disabled={disabled}
-      options={[{ value: 'csv', label: 'as csv' }, { value: 'xlsx', label: 'as xlsx' }]}
+      options={[ { value: 'csv', label: 'as csv' }, { value: 'xlsx', label: 'as xlsx' } ]}
       selectedOption={{ value: 'x', label: 'download' }}
       onChange={async ({ value }) => {
         switch (value) {
@@ -157,7 +157,12 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
           head: (
             <Popover content={<div className="ws-np">{problem.name}</div>}>
               <div className="jk-col extend fw-bd">
-                <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index), query }}>
+                <Link
+                  href={{
+                    pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index),
+                    query,
+                  }}
+                >
                   {problem.index}
                 </Link>
               </div>
@@ -202,16 +207,23 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       }
     }
     return base;
-  }, [query, user.nickname, contest, viewPortSize]);
+  }, [ query, user.nickname, contest, viewPortSize ]);
   
-  const [unfrozen, setUnfrozen] = useState(false);
+  const [ unfrozen, setUnfrozen ] = useState(false);
   const {
     data: response,
     request,
     isLoading,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen), { refreshInterval: 60000 });
-  
+    reload,
+    refreshRef,
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(
+    contest?.key,
+    unfrozen,
+  ), { refreshInterval: 60000 });
+  useEffect(() => {
+    reload();
+  }, [ unfrozen ]);
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
@@ -237,7 +249,6 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         ((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
           <div className="jk-row">
             <ButtonLoader
-              setLoaderStatusRef={setLoaderStatusRef}
               size="tiny"
               type="secondary"
               disabled={isLoading}
@@ -256,8 +267,9 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
                 const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
-                  { method: HTTPMethod.POST }),
+                    JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
+                    { method: HTTPMethod.POST },
+                  ),
                 );
                 notifyResponse(response, setLoaderStatus);
               }}
@@ -273,6 +285,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
       className="contest-scoreboard"
+      refreshRef={refreshRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

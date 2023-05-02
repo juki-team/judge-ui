@@ -1,7 +1,7 @@
 import { ButtonLoader, DataViewer, Field, SettingsSuggestIcon, StopCircleIcon, T, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
+import { useDataViewerRequester, useNotification } from 'hooks';
 import { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -18,8 +18,9 @@ export const ECSTasksManagement = () => {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
-  const { mutate } = useSWR();
+    reload,
+    refreshRef,
+  } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
   const { addSuccessNotification, notifyResponse } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
@@ -70,11 +71,12 @@ export const ECSTasksManagement = () => {
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
                 const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.SYS.AWS_ECS_STOP_TASK_TASK_ARN(taskArn),
-                  { method: HTTPMethod.POST }),
+                    JUDGE_API_V1.SYS.AWS_ECS_STOP_TASK_TASK_ARN(taskArn),
+                    { method: HTTPMethod.POST },
+                  ),
                 );
                 notifyResponse(response, setLoaderStatus);
-                await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+                reload();
               }}
             >
               <T>stop</T>
@@ -98,6 +100,7 @@ export const ECSTasksManagement = () => {
       request={request}
       name={QueryParam.ECS_TASKS_TABLE}
       setLoaderStatusRef={setLoaderStatusRef}
+      refreshRef={refreshRef}
       extraNodes={[
         <ButtonLoader
           icon={<SettingsSuggestIcon />}
@@ -105,15 +108,14 @@ export const ECSTasksManagement = () => {
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
             const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-              JUDGE_API_V1.SYS.AWS_ECS_ADJUST_TASKS(),
-              { method: HTTPMethod.POST }),
+                JUDGE_API_V1.SYS.AWS_ECS_ADJUST_TASKS(),
+                { method: HTTPMethod.POST },
+              ),
             );
             if (notifyResponse(response, setLoaderStatus)) {
               addSuccessNotification(<pre>{JSON.stringify(response.content, null, 2)}</pre>);
             }
-            setLoaderStatus(Status.LOADING);
-            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
-            setLoaderStatus(Status.SUCCESS);
+            reload();
           }}
           style={{ marginLeft: 'var(--pad-xt)' }}
         >

@@ -4,6 +4,7 @@ import React from 'react';
 import { AdminTab } from 'types';
 import { CodeforcesManagement } from './CodeforcesManagement';
 import { VirtualSubmissionsQueueManagement } from './VirtualSubmissionsQueueManagement';
+import { VirtualUsersTable } from './VirtualUsersTable';
 
 export const JudgesManagement = () => {
   const tabs = {
@@ -11,6 +12,11 @@ export const JudgesManagement = () => {
       key: AdminTab.VIRTUAL_SUBMISSIONS_QUEUE,
       header: <T className="tt-ce ws-np">virtual submissions queue</T>,
       body: <VirtualSubmissionsQueueManagement />,
+    },
+    [AdminTab.VIRTUAL_USERS]: {
+      key: AdminTab.VIRTUAL_USERS,
+      header: <T className="tt-ce ws-np">virtual users</T>,
+      body: <VirtualUsersTable />,
     },
     [AdminTab.CODEFORCES_JUDGE]: {
       key: AdminTab.CODEFORCES_JUDGE,

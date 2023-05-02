@@ -1,5 +1,4 @@
-import { DateLiteral } from '@juki-team/base-ui';
-import { ButtonLoader, DataViewer, DateField, DeleteIcon, Field, T, TextField, TextHeadCell } from 'components';
+import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T, TextHeadCell } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { useDataViewerRequester, useJukiUser, useSWR } from 'hooks';
 import { useMemo } from 'react';
@@ -12,7 +11,7 @@ export function MyActiveSessions() {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<SessionBasicResponseDTO>>(JUDGE_API_V1.USER.MY_SESSIONS());
+  } = useDataViewerRequester<ContentsResponseType<SessionBasicResponseDTO>>(() => JUDGE_API_V1.USER.MY_SESSIONS());
   
   const columns: DataViewerHeadersType<SessionBasicResponseDTO>[] = useMemo(() => [
     {

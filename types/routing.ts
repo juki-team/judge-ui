@@ -59,6 +59,7 @@ export enum AdminTab {
   
   JUDGES_MANAGEMENT = 'judges-management',
   VIRTUAL_SUBMISSIONS_QUEUE = 'virtual-submissions-queue',
+  VIRTUAL_USERS = 'virtual-users',
   CODEFORCES_JUDGE = 'codeforces-judge',
   
 }

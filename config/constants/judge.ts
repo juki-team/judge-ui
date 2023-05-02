@@ -274,6 +274,9 @@ export const JUDGE_API_V1 = {
     CRAWL_LANGUAGES: (judge: Judge) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/re-crawl-languages`;
     },
+    LANGUAGES: (judge: Judge) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/languages`;
+    },
     SQS_STATUS: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/sqs/status`;
     },
@@ -282,8 +285,14 @@ export const JUDGE_API_V1 = {
     },
   },
   VIRTUAL_USER: {
-    LIST: (judge: Judge) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/${judge}`;
+    LIST: (filterUrl: string) => {
+      return withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/list?`, filterUrl);
+    },
+    UPDATE_DATA: (virtualUserId: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/${virtualUserId}/update-data`;
+    },
+    SET_FREE: (virtualUserId: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/${virtualUserId}/set-free`;
     },
   },
 };

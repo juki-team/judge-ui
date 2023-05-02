@@ -7,8 +7,6 @@ export enum Status {
   NONE = 'NONE'
 }
 
-export type GetUrl = (props: { pagination: { page: number, pageSize: number }, filter: RequestFilterType, sort: RequestSortType }) => string
-
 export enum LastLinkKey {
   SECTION_CONTEST = 'SECTION_CONTESTS',
   CONTESTS = 'CONTESTS',

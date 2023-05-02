@@ -10,12 +10,13 @@ import {
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { useDataViewerRequester2, useJukiUI } from 'hooks';
+import { useDataViewerRequester, useJukiUI } from 'hooks';
 import Link from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ContentsResponseType, DataViewerHeadersType, GetUrl, QueryParam, UserRankResponseDTO } from 'types';
+import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {
+  
   const { viewPortSize } = useJukiUI();
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {
@@ -40,7 +41,13 @@ function Ranking() {
           {isCard && <div className="fw-br jk-pad-sm">{recordIndex + 1}</div>}
           <UserNicknameLink nickname={nickname}>
             <div className="jk-row flex-1 gap left">
-              <Image src={imageUrl} className="jk-user-profile-img large elevation-1" alt={nickname} height={50} width={50} />
+              <Image
+                src={imageUrl}
+                className="jk-user-profile-img large elevation-1"
+                alt={nickname}
+                height={50}
+                width={50}
+              />
               {nickname}
             </div>
           </UserNicknameLink>
@@ -107,21 +114,22 @@ function Ranking() {
       cardPosition: 'bottom',
       minWidth: 200,
     },
-  ], [viewPortSize]);
-  
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
-    JUDGE_API_V1.RANKING.LIST()
-  );
+  ], [ viewPortSize ]);
   
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester2<ContentsResponseType<UserRankResponseDTO>>(url, { refreshInterval: 5 * 60 * 1000 });
-  const [_, setRender] = useState(Date.now()); // TODO: Fix the render of DataViewer
+  } = useDataViewerRequester<ContentsResponseType<UserRankResponseDTO>>(
+    ({ pagination: { page, pageSize }, filter, sort }) => (
+      JUDGE_API_V1.RANKING.LIST()
+    ),
+    { refreshInterval: 5 * 60 * 1000 },
+  );
+  const [ _, setRender ] = useState(Date.now()); // TODO: Fix the render of DataViewer
   useEffect(() => {
     setTimeout(() => setRender(Date.now()), 100);
-  }, [response]);
+  }, [ response ]);
   
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   

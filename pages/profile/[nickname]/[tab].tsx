@@ -15,7 +15,7 @@ import {
   UserProfileSettings,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useJukiUser } from 'hooks';
+import { useJukiUI, useJukiUser } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -28,6 +28,7 @@ export default function ProfileView() {
   const { nickname, tab } = query;
   const { user: { nickname: userNickname } } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
+  const { viewPortSize } = useJukiUI();
   const onClose = () => setOpenModal('');
   
   return (
@@ -39,7 +40,7 @@ export default function ProfileView() {
         const tabHeaders = {
           [ProfileTab.PROFILE]: {
             key: ProfileTab.PROFILE,
-            header: <T className="tt-ce">profile</T>,
+            header: <T className="tt-ce ws-np">profile</T>,
             body: (
               <div className="pad-top-bottom pad-left-right">
                 <UserProfile user={data?.content} />
@@ -50,7 +51,7 @@ export default function ProfileView() {
         if (data?.content?.nickname === userNickname) {
           tabHeaders[ProfileTab.SETTINGS] = {
             key: ProfileTab.SETTINGS,
-            header: <T className="tt-ce">settings</T>,
+            header: <T className="tt-ce ws-np">settings</T>,
             body: (
               <div className="pad-top-bottom pad-left-right">
                 <UserProfileSettings
@@ -62,7 +63,7 @@ export default function ProfileView() {
           };
           tabHeaders[ProfileTab.MY_SESSIONS] = {
             key: ProfileTab.MY_SESSIONS,
-            header: <T className="tt-ce">my sessions</T>,
+            header: <T className="tt-ce ws-np">my sessions</T>,
             body: (
               <div className="pad-top-bottom pad-left-right">
                 <MyActiveSessions />
@@ -73,8 +74,8 @@ export default function ProfileView() {
         }
         tabHeaders[ProfileTab.SUBMISSIONS] = {
           key: ProfileTab.SUBMISSIONS,
-          header: userNickname === nickname ? <T className="tt-ce">my submissions</T> :
-            <T className="tt-ce">submissions</T>,
+          header: userNickname === nickname ? <T className="tt-ce ws-np">my submissions</T> :
+            <T className="tt-ce ws-np">submissions</T>,
           body: (
             <div className="pad-top-bottom pad-left-right">
               <ProfileSubmissions />
@@ -84,12 +85,22 @@ export default function ProfileView() {
         const pushTab = tabKey => push({ pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey), query });
         const extraNodes = [
           ...(data.content?.canResetPassword ? [
-            <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('RESET_PASSWORD')}>
+            <Button
+              size={(viewPortSize !== 'sm') ? 'tiny' : 'regular'}
+              icon={<LockIcon />}
+              onClick={() => setOpenModal('RESET_PASSWORD')}
+              extend={viewPortSize === 'sm'}
+            >
               <T className="ws-np">reset password</T>
             </Button>,
           ] : []),
           ...(data.content?.canEditProfileData ? [
-            <Button size="tiny" icon={<LockIcon />} onClick={() => setOpenModal('DATA')}>
+            <Button
+              size={(viewPortSize !== 'sm') ? 'tiny' : 'regular'}
+              icon={<LockIcon />}
+              onClick={() => setOpenModal('DATA')}
+              extend={viewPortSize === 'sm'}
+            >
               <T className="ws-np">update profile</T>
             </Button>,
           ] : []),
@@ -108,11 +119,17 @@ export default function ProfileView() {
               {openModal === 'RESET_PASSWORD' && <ResetPassword onClose={onClose} nickname={data.content?.nickname} />}
               {openModal === 'DATA' && <EditProfileModal onClose={onClose} user={data.content} />}
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="pad-left-right pad-top">
+              <div className="pad-left-right">
                 <h1>{nickname}</h1>
               </div>
               <div className="pad-left-right">
-                <TabsInline tabs={tabHeaders} selectedTabKey={tab} onChange={pushTab} extraNodes={extraNodes} />
+                <TabsInline
+                  tabs={tabHeaders}
+                  selectedTabKey={tab}
+                  onChange={pushTab}
+                  extraNodes={extraNodes}
+                  extraNodesPlacement={(viewPortSize === 'sm') ? 'bottomRight' : undefined}
+                />
               </div>
             </div>
             {tabHeaders[tab as ProfileTab]?.body}

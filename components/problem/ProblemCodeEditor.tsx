@@ -66,10 +66,12 @@ export const ProblemCodeEditor = ({
   const languages = useMemo(
     () => {
       if (problem.judge === Judge.CODEFORCES) {
-        return ((codeforcesData?.success && codeforcesData.content.languages) || []).map(lang => ({
-          value: lang.value,
-          label: lang.label || lang.value,
-        }));
+        return ((codeforcesData?.success && codeforcesData.content.languages) || [])
+          .filter(lang => lang.enabled)
+          .map(lang => ({
+            value: lang.value,
+            label: lang.label || lang.value,
+          }));
       }
       return Object.values(problem?.settings.languages || {}).map(lang => ({
         value: lang,

@@ -2,7 +2,7 @@ import { PagedDataViewer, submissionActionsColumn, submissionContestColumn } fro
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import React, { useMemo } from 'react';
-import { DataViewerHeadersType, GetUrl, ProblemResponseDTO, QueryParam, SubmissionResponseDTO } from 'types';
+import { DataViewerHeadersType, ProblemResponseDTO, QueryParam, SubmissionResponseDTO } from 'types';
 import {
   submissionDateColumn,
   submissionLanguage,
@@ -19,25 +19,28 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemResponseDTO })
       submissionContestColumn(),
       submissionDateColumn(),
       submissionVerdictColumn(),
-      ...(problem.user.isEditor ? [submissionActionsColumn({ canRejudge: true })] : []),
+      ...(problem.user.isEditor ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
       submissionLanguage(),
       submissionTimeUsed(),
       submissionMemoryUsed(),
     ];
-  }, [problem.user.isEditor]);
-  
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => {
-    const filterUrl = toFilterUrl(filter);
-    const sortUrl = toSortUrl(sort);
-    return JUDGE_API_V1.SUBMISSIONS.PROBLEM(problem?.judge, problem?.key, page, pageSize, filterUrl, sortUrl);
-  };
+  }, [ problem.user.isEditor ]);
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}
-      url={url}
+      getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
+        JUDGE_API_V1.SUBMISSIONS.PROBLEM(
+          problem?.judge,
+          problem?.key,
+          page,
+          pageSize,
+          toFilterUrl(filter),
+          toSortUrl(sort),
+        )
+      )}
       name={QueryParam.STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}

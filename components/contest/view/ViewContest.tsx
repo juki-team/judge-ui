@@ -216,7 +216,9 @@ export function ContestView() {
         if (viewPortSize === 'lg' || viewPortSize === 'hg') {
           extraNodes.push(
             <div className={`jk-row nowrap jk-tag ${tag}`}>
-              <T className="ws-np">{statusLabel}</T>,&nbsp;{literal}
+              {contest.isEndless
+                ? <T className="ws-np">{statusLabel}</T>
+                : <><T className="ws-np">{statusLabel}</T>,&nbsp;{literal}</>}
             </div>,
           );
         }

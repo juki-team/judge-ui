@@ -3,15 +3,7 @@ import { useFetcher as useFetcherJk, useJukiUser } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SWRConfiguration } from 'swr';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  GetUrl,
-  RequestFilterType,
-  RequestSortType,
-  SetLoaderStatusType,
-  Status,
-} from 'types';
+import { ContentResponseType, ContentsResponseType, SetLoaderStatusType, Status } from 'types';
 
 export const useRouter = () => {
   const { query, ...rest } = useNextRouter();
@@ -31,7 +23,7 @@ export const useRouter = () => {
   return { query, queryObject, ...rest };
 };
 
-export const useDataViewerRequester = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: SWRConfiguration) => {
+export const useDataViewerRequester3 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: SWRConfiguration) => {
   
   const setLoaderStatusRef = useRef<SetLoaderStatusType>();
   const [ firstRefresh, setFirstRefresh ] = useState(false);
@@ -68,50 +60,6 @@ export const useDataViewerRequester = <T extends ContentResponseType<any> | Cont
   };
 };
 
-// TODO: check when getUrl changes
-export const useDataViewerRequester2 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(getUrl: GetUrl, options?: SWRConfiguration) => {
-  
-  const setLoaderStatusRef = useRef<SetLoaderStatusType>();
-  const { user: { nickname } } = useJukiUser();
-  const [ url, setUrl ] = useState(null);
-  const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(url, options);
-  const request = useCallback(async ({
-    pagination,
-    filter,
-    sort,
-  }: { pagination?: { page: number, pageSize: number }, filter: RequestFilterType, sort: RequestSortType }) => {
-    const newUrl = getUrl({ pagination: pagination || { page: 0, pageSize: 16 }, filter, sort });
-    if (url !== newUrl) {
-      setUrl(newUrl);
-    } else {
-      await mutate();
-    }
-  }, [ mutate, url ]);
-  
-  useEffect(() => {
-    void mutate();
-  }, [ nickname ]);
-  
-  useEffect(() => {
-    if (isLoading || isValidating) {
-      setLoaderStatusRef.current?.(Status.LOADING);
-    } else {
-      setLoaderStatusRef.current?.(Status.NONE);
-    }
-  }, [ isLoading, isValidating ]);
-  
-  return {
-    data,
-    error,
-    isLoading: isLoading || isValidating,
-    request,
-    setLoaderStatusRef: useCallback(
-      (setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus,
-      [],
-    ),
-  };
-};
-
 export const useLasLink = () => {
   const { lastLink, pushPath } = useContext(LastLinkContext);
   return { lastLink, pushPath };
@@ -137,6 +85,7 @@ export {
   useJkSocket,
   useMatchMutate,
   usePrevious,
+  useDataViewerRequester,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export * from './contest';

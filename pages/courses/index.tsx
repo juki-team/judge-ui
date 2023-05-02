@@ -1,10 +1,19 @@
-import { Breadcrumbs, ButtonLoader, Field, PagedDataViewer, PlusIcon, T, TextHeadCell, TwoContentSection } from 'components';
+import {
+  Breadcrumbs,
+  ButtonLoader,
+  Field,
+  PagedDataViewer,
+  PlusIcon,
+  T,
+  TextHeadCell,
+  TwoContentSection,
+} from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, GetUrl, LastLinkKey, QueryParam } from 'types';
+import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, LastLinkKey, QueryParam } from 'types';
 
 function Problems() {
   
@@ -39,13 +48,9 @@ function Problems() {
       cardPosition: 'center',
       minWidth: 120,
     },
-  ], [canCreateProblem]);
+  ], [ canCreateProblem ]);
   
   const { push } = useRouter();
-  
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
-    JUDGE_API_V1.COURSE.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
-  );
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
@@ -63,7 +68,9 @@ function Problems() {
       <div className="pad-top-bottom pad-left-right">
         <PagedDataViewer<CourseSummaryListResponseDTO, CourseSummaryListResponseDTO>
           headers={columns}
-          url={url}
+          getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
+            JUDGE_API_V1.COURSE.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
+          )}
           name={QueryParam.COURSES_TABLE}
           extraNodes={[
             ...(canCreateProblem ? [

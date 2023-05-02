@@ -1,20 +1,11 @@
-import { ButtonLoader, DataViewer, DateField, FetcherLayer, Select, T, TextField, TextHeadCell } from 'components';
+import { ButtonLoader, FetcherLayer, InputToggle, T } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useDataViewerRequester, useNotification } from 'hooks';
-import React, { useMemo } from 'react';
+import { useNotification } from 'hooks';
+import React, { useState } from 'react';
 import { KeyedMutator } from 'swr';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  HTTPMethod,
-  Judge,
-  JudgeResponseDTO,
-  Status,
-  VirtualUserResponseDTO,
-} from 'types';
+import { ContentResponseType, HTTPMethod, Judge, JudgeResponseDTO, Status } from 'types';
 import Custom404 from '../../../pages/404';
-import { DataViewerHeadersType } from '../../../types';
 
 interface CodeforcesManagementBodyProps {
   judge: JudgeResponseDTO,
@@ -24,88 +15,18 @@ interface CodeforcesManagementBodyProps {
 export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagementBodyProps) => {
   
   const { notifyResponse } = useNotification();
-  
-  const {
-    data: response,
-    request,
-    setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<VirtualUserResponseDTO>>(JUDGE_API_V1.VIRTUAL_USER.LIST(Judge.CODEFORCES));
-  
-  const data: VirtualUserResponseDTO[] = (response?.success ? response.contents : []);
-  
-  const headers = useMemo(() => {
-    return [
-      {
-        head: <TextHeadCell text={<T className="tt-ue">email</T>} />,
-        index: 'email',
-        field: ({ record: { email } }) => (
-          <TextField label={<T>email</T>} text={email} />
-        ),
-        minWidth: 280,
-      },
-      {
-        head: <TextHeadCell text={<T className="tt-ue">user</T>} />,
-        index: 'user',
-        field: ({ record: { user } }) => (
-          <TextField label={<T>user</T>} text={user} />
-        ),
-        minWidth: 200,
-      },
-      {
-        head: <TextHeadCell text={<T className="tt-ue">password</T>} />,
-        index: 'password',
-        field: ({ record: { password } }) => (
-          <TextField label={<T>password</T>} text={password} />
-        ),
-        minWidth: 140,
-      },
-      {
-        head: <TextHeadCell text={<T className="tt-ue">working in</T>} />,
-        index: 'workingIn',
-        field: ({ record: { workingIn } }) => (
-          <TextField label={<T>working in</T>} text={workingIn} />
-        ),
-        minWidth: 140,
-      },
-      {
-        head: <TextHeadCell text={<T className="tt-ue">submitId</T>} />,
-        index: 'submitId',
-        field: ({ record: { submitId } }) => (
-          <TextField label={<T>submitId</T>} text={submitId} />
-        ),
-        minWidth: 100,
-      },
-      {
-        head: <TextHeadCell text={<T className="tt-ue">attempts</T>} />,
-        index: 'attempts',
-        field: ({ record: { attempts } }) => (
-          <TextField label={<T>attempts</T>} text={attempts} />
-        ),
-        minWidth: 100,
-      },
-      {
-        head: <TextHeadCell text={<T className="tt-ue">update at</T>} />,
-        index: 'updatedAt',
-        field: ({ record: { updatedAt } }) => (
-          <DateField label={<T>updated at</T>} date={new Date(updatedAt)} twoLines />
-        ),
-        minWidth: 200,
-      },
-    ] as DataViewerHeadersType<VirtualUserResponseDTO>[];
-  }, []);
+  const [ languages, setLanguages ] = useState(judge.languages);
   
   return (
     <div className="jk-col nowrap top gap stretch">
       <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
         <h3>{JUDGE[judge.key]?.label || judge.key}</h3>
         <div><T className="fw-bd tt-se">key</T>:&nbsp;{judge.key}</div>
-        <div className="jk-row-col gap">
-          <div><T className="fw-bd tt-se">languages</T>:&nbsp;</div>
-          <Select
-            options={judge.languages.map(language => ({ value: language.label, label: language.label }))}
-            selectedOption={judge.languages[0] || { value: '', label: '' }}
-          />
+        <div className="jk-divider tiny" />
+        <div className="jk-col gap block">
+          <div className="fw-bd"><T className="tt-se">languages</T></div>
           <ButtonLoader
+            size="small"
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<{}>>(
@@ -120,17 +41,46 @@ export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagement
           >
             <T>crawl languages</T>
           </ButtonLoader>
-        </div>
-      </div>
-      <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
-        <h3><T>virtual users</T></h3>
-        <div style={{ width: '100%', height: '100%' }}>
-          <DataViewer<VirtualUserResponseDTO>
-            headers={headers}
-            data={data}
-            request={request}
-            setLoaderStatusRef={setLoaderStatusRef}
-          />
+          <div className="jk-col stretch">
+            <div className="jk-row jk-table-inline-header">
+              <div className="jk-row" style={{ width: 120 }}><T>value</T></div>
+              <div className="jk-row" style={{ width: 300 }}><T>label</T></div>
+              <div className="jk-row" style={{ width: 120 }}><T>enabled</T></div>
+            </div>
+            {languages?.map((language, index) => (
+              <div className="jk-row jk-table-inline-row" key={language.value}>
+                <div className="jk-row" style={{ width: 120 }}>{language.value}</div>
+                <div className="jk-row ws-np" style={{ width: 300 }}>{language.label}</div>
+                <div className="jk-row" style={{ width: 120 }}>
+                  <InputToggle
+                    checked={language.enabled}
+                    onChange={(enabled) => {
+                      const newLanguages = [ ...languages ];
+                      newLanguages[index] = { ...languages[index], enabled };
+                      setLanguages(newLanguages);
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <ButtonLoader
+            size="small"
+            disabled={JSON.stringify(languages) === JSON.stringify(judge.languages)}
+            onClick={async (setLoaderStatus) => {
+              setLoaderStatus(Status.LOADING);
+              const response = cleanRequest<ContentResponseType<{}>>(
+                await authorizedRequest(
+                  JUDGE_API_V1.JUDGE.LANGUAGES(Judge.CODEFORCES),
+                  { method: HTTPMethod.POST, body: JSON.stringify({ languages }) },
+                ),
+              );
+              notifyResponse(response, setLoaderStatus);
+              await mutate();
+            }}
+          >
+            <T>save languages</T>
+          </ButtonLoader>
         </div>
       </div>
     </div>

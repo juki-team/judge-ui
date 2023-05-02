@@ -3,7 +3,7 @@ import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useRouter } from 'hooks';
 import { useMemo } from 'react';
-import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, GetUrl, QueryParam } from 'types';
+import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, QueryParam } from 'types';
 import { contestantsColumn, contestNameColumn } from '../commons';
 
 export const ContestsUpcomingList = () => {
@@ -14,15 +14,12 @@ export const ContestsUpcomingList = () => {
     contestantsColumn(),
   ], []);
   const { push } = useRouter();
-  
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => (
-    JUDGE_API_V1.CONTEST.LIST(page, pageSize, toFilterUrl({ ...filter, state: 'upcoming' }), toSortUrl(sort))
-  );
-  
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
       headers={columns}
-      url={url}
+      getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
+        JUDGE_API_V1.CONTEST.LIST(page, pageSize, toFilterUrl({ ...filter, state: 'upcoming' }), toSortUrl(sort))
+      )}
       name={QueryParam.UPCOMING_CONTESTS_TABLE}
       refreshInterval={60000}
       cards={{ width: 320, expanded: true }}

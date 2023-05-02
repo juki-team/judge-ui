@@ -23,7 +23,6 @@ import {
   ContentsResponseType,
   DataViewerHeadersType,
   FilterSelectOnlineType,
-  GetUrl,
   Judge,
   LastLinkKey,
   ProblemStatus,
@@ -41,7 +40,6 @@ function Problems() {
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const [ judge, setJudge ] = useState(Judge.JUKI_JUDGE);
   const refreshRef = useRef<RefreshType>();
-  const judgeRef = useRef<Judge>(Judge.JUKI_JUDGE);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">id</T>} />,
@@ -192,15 +190,8 @@ function Problems() {
   
   const { push } = useRouter();
   useEffect(() => {
-    if (judgeRef.current !== judge) {
-      judgeRef.current = judge;
-      refreshRef.current?.();
-    }
+    refreshRef.current?.();
   }, [ judge ]);
-  
-  const url: GetUrl = ({ pagination: { page, pageSize }, filter, sort }) => {
-    return JUDGE_API_V1.PROBLEM.LIST(judgeRef.current, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
-  };
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
@@ -229,7 +220,9 @@ function Problems() {
       <div className="pad-top-bottom pad-left-right">
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}
-          url={url}
+          getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
+            return JUDGE_API_V1.PROBLEM.LIST(judge, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
+          }}
           name={QueryParam.PROBLEMS_TABLE}
           refreshInterval={60000}
           extraNodes={[
