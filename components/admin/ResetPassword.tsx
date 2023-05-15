@@ -2,7 +2,11 @@ import { Button, ButtonLoader, Modal, T, UserNicknameLink } from 'components';
 import { useJukiUser } from 'hooks';
 import React from 'react';
 
-export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nickname: string }) => {
+export const ResetPassword = ({ onClose, nickname, companyKey }: {
+  onClose: () => void,
+  nickname: string,
+  companyKey: string,
+}) => {
   
   const { resetUserPassword } = useJukiUser();
   
@@ -29,7 +33,7 @@ export const ResetPassword = ({ onClose, nickname }: { onClose: () => void, nick
           <Button type="text" onClick={onClose}><T>cancel</T></Button>
           <ButtonLoader
             onClick={(setLoader) => resetUserPassword({
-              params: { nickname },
+              params: { nickname, companyKey },
               setLoader,
               onSuccess: onClose,
             })}

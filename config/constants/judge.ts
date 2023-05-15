@@ -66,8 +66,8 @@ export const JUDGE_API_V1 = {
     PROFILE: (nickname: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile`;
     },
-    ROLES: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/roles`;
+    ROLES: (companyKey: string, nickname: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/company/${companyKey}/nickname/${nickname}/roles`;
     },
     STATUS: (nickname: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/status`;

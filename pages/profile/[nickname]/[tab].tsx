@@ -26,7 +26,7 @@ export default function ProfileView() {
   
   const { query, push } = useRouter();
   const { nickname, tab } = query;
-  const { user: { nickname: userNickname } } = useJukiUser();
+  const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
   const { viewPortSize } = useJukiUI();
   const onClose = () => setOpenModal('');
@@ -116,7 +116,7 @@ export default function ProfileView() {
           <TwoContentSection>
             <div>
               {openModal === 'UPDATE_PASSWORD' && <ChangePasswordModal onClose={onClose} />}
-              {openModal === 'RESET_PASSWORD' && <ResetPassword onClose={onClose} nickname={data.content?.nickname} />}
+              {openModal === 'RESET_PASSWORD' && <ResetPassword onClose={onClose} nickname={data.content?.nickname} companyKey={company.key} />}
               {openModal === 'DATA' && <EditProfileModal onClose={onClose} user={data.content} />}
               <Breadcrumbs breadcrumbs={breadcrumbs} />
               <div className="pad-left-right">

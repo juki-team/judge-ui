@@ -27,6 +27,7 @@ import {
 export interface ProblemPermissionsProps {
   user: UserManagementResponseDTO,
   refresh: () => void,
+  companyKey: string,
 }
 
 type Roles = {
@@ -38,9 +39,9 @@ type Roles = {
   courseRole: CourseRole;
 }
 
-export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissionsProps) => {
+export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: ProblemPermissionsProps) => {
   
-  const [editing, setEditing] = useState(false);
+  const [ editing, setEditing ] = useState(false);
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const roles = {
     systemRole: userToUpdate.systemRole,
@@ -51,7 +52,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     courseRole: userToUpdate.courseRole,
     fileRole: userToUpdate.fileRole,
   };
-  const [newRoles, setNewRoles] = useState<Roles>(roles);
+  const [ newRoles, setNewRoles ] = useState<Roles>(roles);
   
   const ROLES = {
     system: SYSTEM_ROLE,
@@ -67,7 +68,7 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
     <div>
       <div className="permissions-cell jk-row nowrap">
         <div className="permissions-box">
-          {Object.entries(ROLES).map(([key, roles]) => (
+          {Object.entries(ROLES).map(([ key, roles ]) => (
             <div className="jk-row nowrap space-between" style={{ width: 300 }} key={key}>
               <div style={{ width: 150 }} className="jk-row left"><T>{key}</T></div>
               <Select
@@ -92,10 +93,12 @@ export const UserPermissions = ({ user: userToUpdate, refresh }: ProblemPermissi
                   onClick={async setLoaderStatus => {
                     if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
                       setLoaderStatus?.(Status.LOADING);
-                      const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.USER.ROLES(userToUpdate.nickname), {
-                        method: HTTPMethod.PUT,
-                        body: JSON.stringify(newRoles),
-                      }));
+                      const response = cleanRequest<ContentResponseType<any>>(
+                        await authorizedRequest(
+                          JUDGE_API_V1.USER.ROLES(companyKey, userToUpdate.nickname),
+                          { method: HTTPMethod.PUT, body: JSON.stringify(newRoles) },
+                        ),
+                      );
                       if (response.success) {
                         addSuccessNotification(<T>success</T>);
                         setLoaderStatus?.(Status.SUCCESS);

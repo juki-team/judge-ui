@@ -106,9 +106,10 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
       field: ({ record }) => (
         <Field className="jk-col">
           <UserPermissions
+            key={record.nickname}
+            companyKey={company.key}
             user={record}
             refresh={reload}
-            key={record.nickname}
           />
         </Field>
       ),
@@ -168,13 +169,13 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
       cardPosition: 'center',
       minWidth: 190,
     },
-  ], [ reload ]);
+  ], [ reload, company.key ]);
   
   const data: UserManagementResponseDTO[] = (response?.success ? response?.contents : []);
   
   return (
     <>
-      <ResetPassword onClose={() => setNickname('')} nickname={nickname} />
+      <ResetPassword onClose={() => setNickname('')} nickname={nickname} companyKey={company.key} />
       <DataViewer<UserManagementResponseDTO>
         headers={columns}
         data={data}
