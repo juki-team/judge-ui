@@ -1,5 +1,3 @@
-import { RequestFilterType, RequestSortType } from 'types';
-
 export enum Status {
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR',

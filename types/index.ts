@@ -33,7 +33,6 @@ export {
   FileType,
   CourseType,
   SocketEvent,
-  CompanyResourceSpecificationsResponseDTO,
 } from '@juki-team/commons';
 
 export type {
@@ -90,6 +89,7 @@ export type {
   SourceCodeType,
   CreateFileDTO,
   SqsPropertiesType,
+  CompanyResourceSpecificationsResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType, SearchParamKey } from '@juki-team/base-ui';
