@@ -8,6 +8,7 @@ const withPWA = require('next-pwa')({
 });
 
 module.exports = withPWA({
+    // output:"standalone",
     i18n: {
         locales: ['en', 'es'],
         defaultLocale: 'en'

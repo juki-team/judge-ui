@@ -81,3 +81,8 @@
 .jk-horizontal-menu-layout-container {
   overflow: hidden;
 }
+
+.settings-apps-login-user-content.pad-top-bottom > .jk-row > .flex-1 {
+  text-align: left;
+  padding-left: var(--pad-xt);
+}

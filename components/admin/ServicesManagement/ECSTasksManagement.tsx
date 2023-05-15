@@ -4,6 +4,7 @@ import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification } from 'hooks';
 import { useMemo } from 'react';
 import {
+  CompanyResponseDTO,
   ContentResponseType,
   ContentsResponseType,
   DataViewerHeadersType,
@@ -13,14 +14,14 @@ import {
   TaskResponseDTO,
 } from 'types';
 
-export const ECSTasksManagement = () => {
+export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO }) => {
   const {
     data: response,
     request,
     setLoaderStatusRef,
     reload,
     refreshRef,
-  } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+  } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(company.key));
   const { addSuccessNotification, notifyResponse } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
@@ -47,15 +48,15 @@ export const ECSTasksManagement = () => {
       head: <TextHeadCell text={<T className="tt-ue">task</T>} />,
       index: 'task',
       field: ({
-        record: {
-          taskArn,
-          createdAt,
-          lastStatus,
-          desiredStatus,
-          launchType,
-          startedAt,
-        },
-      }) => (
+                record: {
+                  taskArn,
+                  createdAt,
+                  lastStatus,
+                  desiredStatus,
+                  launchType,
+                  startedAt,
+                },
+              }) => (
         <Field className="jk-row center gap">
           <div className="jk-col">
             <div className="tx-s"><T className="fw-bd">started at</T>:&nbsp;{new Date(startedAt).toLocaleString()}</div>

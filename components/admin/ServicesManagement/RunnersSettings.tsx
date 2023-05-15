@@ -1,81 +1,150 @@
-import { ButtonLoader, Input, SaveIcon, T } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { CompanyPlan } from '@juki-team/commons';
+import { ButtonLoader, Input, LoadingIcon, Popover, SaveIcon, T } from 'components';
+import { COMPANY_PLAN, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
-import { useEffect, useState } from 'react';
-import { ContentResponseType, HTTPMethod, RunnerType, Status } from 'types';
+import { useFetcher, useNotification } from 'hooks';
+import React, { useEffect, useState } from 'react';
+import {
+  CompanyResourceSpecificationsResponseDTO,
+  CompanyResponseDTO,
+  ContentResponseType,
+  HTTPMethod,
+  Status,
+} from 'types';
 
-export const RunnersSettings = () => {
+export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) => {
   
-  const [highPerformanceRunnerMinTasks, setHighPerformanceRunnerMinTasks] = useState(0);
-  const [lowPerformanceRunnerMinTasks, setLowPerformanceRunnerMinTasks] = useState(0);
-  const [reload, setReload] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const { notifyResponse } = useNotification();
+  const [ resource, setResource ] = useState({
+    highPerformanceRunnerTaskDefinition: '',
+    highPerformanceRunnerMinimum: -1,
+    highPerformanceRunnerMaximum: -1,
+    lowPerformanceRunnerTaskDefinition: '',
+    lowPerformanceRunnerMinimum: -1,
+    lowPerformanceRunnerMaximum: -1,
+  });
+  const [ loading, setLoading ] = useState(false);
+  const {
+    data,
+    isLoading,
+    mutate,
+    isValidating,
+  } = useFetcher<ContentResponseType<CompanyResourceSpecificationsResponseDTO>>(JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(company.key));
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const response = cleanRequest<ContentResponseType<{ highPerformanceRunnerMinTasks: number, lowPerformanceRunnerMinTasks: number }>>(await authorizedRequest(JUDGE_API_V1.SYS.AWS_ECS_RUNNER_MIN_TASKS()));
-      if (response.success) {
-        setHighPerformanceRunnerMinTasks(response.content.highPerformanceRunnerMinTasks ?? 0);
-        setLowPerformanceRunnerMinTasks(response.content.lowPerformanceRunnerMinTasks ?? 0);
-      }
-      setLoading(false);
-    })();
-  }, [reload]);
+    if (data?.success) {
+      setResource({
+        highPerformanceRunnerTaskDefinition: data.content.highPerformanceRunner.taskDefinition,
+        highPerformanceRunnerMinimum: data.content.highPerformanceRunner.minimum,
+        highPerformanceRunnerMaximum: data.content.highPerformanceRunner.maximum,
+        lowPerformanceRunnerTaskDefinition: data.content.lowPerformanceRunner.taskDefinition,
+        lowPerformanceRunnerMinimum: data.content.lowPerformanceRunner.minimum,
+        lowPerformanceRunnerMaximum: data.content.lowPerformanceRunner.maximum,
+      });
+    }
+  }, [ data ]);
+  
+  const { notifyResponse } = useNotification();
+  
+  if (isLoading || isValidating) {
+    return (
+      <div className="jk-col center jk-pad-md bc-we jk-br-ie">
+        <div className="jk-row">
+          <LoadingIcon size="very-huge" className="cr-py" />
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="jk-col nowrap top gap jk-pad-md stretch bc-we jk-br-ie">
-      <div className="jk-row gap">
-        <T>high performance runner min tasks</T>
-        <Input
-          type="number"
-          value={highPerformanceRunnerMinTasks}
-          onChange={setHighPerformanceRunnerMinTasks}
-          disabled={loading}
-        />
-        <ButtonLoader
-          size="small"
-          disabled={loading}
-          icon={<SaveIcon />}
-          onClick={async (setLoaderStatus) => {
-            setLoading(true);
-            setLoaderStatus(Status.LOADING);
-            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-              JUDGE_API_V1.SYS.AWS_ECS_RUNNER_MIN_TASK(RunnerType.HIGH_PERFORMANCE, highPerformanceRunnerMinTasks),
-              { method: HTTPMethod.POST }),
-            );
-            notifyResponse(response, setLoaderStatus);
-            setLoading(false);
-            setReload(Date.now());
-          }}
-        >
-          <T>save</T>
-        </ButtonLoader>
+      <Popover
+        content={
+          <div><T>{COMPANY_PLAN[company.plan]?.description}</T></div>
+        }
+      >
+        <div className="jk-row">
+          <div className="jk-tag">{company.plan}</div>
+        </div>
+      </Popover>
+      <div className="jk-form-item">
+        <label>
+          <T>high performance runner min tasks</T>
+          <Input
+            type="number"
+            value={resource.highPerformanceRunnerMinimum}
+            onChange={(highPerformanceRunnerMinimum) => setResource(prevState => ({
+              ...prevState,
+              highPerformanceRunnerMinimum,
+            }))}
+            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+          />
+        </label>
       </div>
-      <div className="jk-row gap">
-        <T>low performance runner min tasks</T>
-        <Input type="number" value={lowPerformanceRunnerMinTasks} onChange={setLowPerformanceRunnerMinTasks}
-               disabled={loading} />
-        <ButtonLoader
-          size="small"
-          disabled={loading}
-          icon={<SaveIcon />}
-          onClick={async (setLoaderStatus) => {
-            setLoading(true);
-            setLoaderStatus(Status.LOADING);
-            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-              JUDGE_API_V1.SYS.AWS_ECS_RUNNER_MIN_TASK(RunnerType.LOW_PERFORMANCE, lowPerformanceRunnerMinTasks),
-              { method: HTTPMethod.POST }),
-            );
-            notifyResponse(response, setLoaderStatus);
-            setLoading(false);
-            setReload(Date.now());
-          }}
-        >
-          <T>save</T>
-        </ButtonLoader>
+      <div className="jk-form-item">
+        <label>
+          <T>high performance runner max tasks</T>
+          <Input
+            type="number"
+            value={resource.highPerformanceRunnerMaximum}
+            onChange={(highPerformanceRunnerMaximum) => setResource(prevState => ({
+              ...prevState,
+              highPerformanceRunnerMaximum,
+            }))}
+            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+          />
+        </label>
       </div>
+      <div className="jk-form-item">
+        <label>
+          <T>low performance runner min tasks</T>
+          <Input
+            type="number"
+            value={resource.lowPerformanceRunnerMinimum}
+            onChange={(lowPerformanceRunnerMinimum) => setResource(prevState => ({
+              ...prevState,
+              lowPerformanceRunnerMinimum,
+            }))}
+            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+          />
+        </label>
+      </div>
+      <div className="jk-form-item">
+        <label>
+          <T>low performance runner max tasks</T>
+          <Input
+            type="number"
+            value={resource.lowPerformanceRunnerMaximum}
+            onChange={(lowPerformanceRunnerMaximum) => setResource(prevState => ({
+              ...prevState,
+              lowPerformanceRunnerMaximum,
+            }))}
+            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+          />
+        </label>
+      </div>
+      {company.plan === CompanyPlan.CUSTOM && (
+        <div className="jk-row gap">
+          <ButtonLoader
+            size="small"
+            disabled={loading}
+            icon={<SaveIcon />}
+            onClick={async (setLoaderStatus) => {
+              setLoading(true);
+              setLoaderStatus(Status.LOADING);
+              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(company.key),
+                {
+                  method: HTTPMethod.POST, body: JSON.stringify(resource),
+                }),
+              );
+              notifyResponse(response, setLoaderStatus);
+              setLoading(false);
+              await mutate();
+            }}
+          >
+            <T>save</T>
+          </ButtonLoader>
+        </div>
+      )}
     </div>
   );
 };

@@ -27,6 +27,8 @@ export {
   MIN_DATE,
   COURSE_STATUS,
   RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES,
+  JUKI_APP_COMPANY_KEY,
+  COMPANY_PLAN,
 } from '@juki-team/commons';
 
 export { ALPHANUMERIC_DASH_UNDERSCORE_REGEX } from '@juki-team/base-ui';

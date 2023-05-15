@@ -1,4 +1,4 @@
-import { ButtonLoader, FetcherLayer, Image, Input, T, UserChip, UsersSelector } from 'components';
+import { ButtonLoader, Image, Input, T, UserChip, UsersSelector } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
@@ -12,7 +12,6 @@ import {
   SubmissionRunStatus,
   UserSummaryResponseDTO,
 } from 'types';
-import Custom404 from '../../../pages/404';
 import { ModifyContactEmailsButton } from './ModifyContactEmailsButton';
 import { ModifyEmailTemplateButton } from './ModifyEmailTemplateButton';
 
@@ -21,7 +20,7 @@ interface SettingsManagementBodyProps {
   mutate: KeyedMutator<string>
 }
 
-export const SettingsManagementBody = ({ company, mutate }: SettingsManagementBodyProps) => {
+export const SettingsManagement = ({ company, mutate }: SettingsManagementBodyProps) => {
   
   const { notifyResponse } = useNotification();
   const [ user, setUser ] = useState<UserSummaryResponseDTO>({} as UserSummaryResponseDTO);
@@ -146,21 +145,5 @@ export const SettingsManagementBody = ({ company, mutate }: SettingsManagementBo
         </div>
       </div>
     </div>
-  );
-};
-
-export const SettingsManagement = () => {
-  
-  return (
-    <FetcherLayer<ContentResponseType<CompanyResponseDTO>>
-      url={JUDGE_API_V1.COMPANY.CURRENT()}
-      errorView={<Custom404 />}
-    >
-      {({ data, mutate }) => {
-        return (
-          <SettingsManagementBody company={data.content} mutate={mutate} />
-        );
-      }}
-    </FetcherLayer>
   );
 };

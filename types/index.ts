@@ -33,6 +33,7 @@ export {
   FileType,
   CourseType,
   SocketEvent,
+  CompanyResourceSpecificationsResponseDTO,
 } from '@juki-team/commons';
 
 export type {

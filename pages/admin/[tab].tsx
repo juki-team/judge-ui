@@ -1,8 +1,10 @@
+import { ContentResponseType } from '@juki-team/commons';
 import {
   AllSubmissions,
   Breadcrumbs,
   JudgesManagement,
   MailManagement,
+  Select,
   ServicesManagement,
   SettingsManagement,
   T,
@@ -10,12 +12,12 @@ import {
   TwoContentSection,
   UsersManagement,
 } from 'components';
-import { ROUTES } from 'config/constants';
-import { useJukiUser, useTrackLastPath } from 'hooks';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { useFetcher, useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { ReactNode } from 'react';
-import { AdminTab, LastLinkKey } from 'types';
+import React, { ReactNode, useState } from 'react';
+import { AdminTab, CompanyResponseDTO, ContentsResponseType, LastLinkKey } from 'types';
 import Custom404 from '../404';
 
 function Admin() {
@@ -33,6 +35,16 @@ function Admin() {
       canHandleSettings,
     },
   } = useJukiUser();
+  const {
+    data,
+    mutate,
+  } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings && JUDGE_API_V1.COMPANY.LIST());
+  const { data: myCompany } = useFetcher<ContentResponseType<CompanyResponseDTO>>(JUDGE_API_V1.COMPANY.CURRENT());
+  const [ companyKey, setCompanyKey ] = useState('');
+  const companies = data?.success ? data.contents : [];
+  const company: CompanyResponseDTO | undefined = canHandleSettings
+    ? companies.find((company) => company.key === companyKey)
+    : (myCompany?.success ? myCompany.content : undefined);
   
   if (!canViewSubmissionsManagement
     && !canSendEmail
@@ -48,21 +60,33 @@ function Admin() {
     tabs[AdminTab.USERS_MANAGEMENT] = {
       key: AdminTab.USERS_MANAGEMENT,
       header: <T className="tt-ce ws-np">users</T>,
-      body: <div className="pad-left-right pad-bottom"><UsersManagement /></div>,
+      body: company
+        ? <div className="pad-left-right pad-bottom"><UsersManagement company={company} /></div>
+        : <div className="pad-left-right pad-top-bottom">
+          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
+        </div>,
     };
   }
   if (canViewSubmissionsManagement) {
     tabs[AdminTab.SUBMISSIONS] = {
       key: AdminTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,
-      body: <div className="pad-left-right pad-top-bottom"><AllSubmissions /></div>,
+      body: company
+        ? <div className="pad-left-right pad-top-bottom"><AllSubmissions company={company} /></div>
+        : <div className="pad-left-right pad-top-bottom">
+          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
+        </div>,
     };
   }
   if (canHandleServices) {
     tabs[AdminTab.SERVICES_MANAGEMENT] = {
       key: AdminTab.SERVICES_MANAGEMENT,
       header: <T className="tt-ce ws-np">services</T>,
-      body: <div className="pad-left-right pad-bottom"><ServicesManagement /></div>,
+      body: company
+        ? <div className="pad-left-right pad-bottom"><ServicesManagement company={company} /></div>
+        : <div className="pad-left-right pad-top-bottom">
+          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
+        </div>,
     };
   }
   if (canSendEmail) {
@@ -83,7 +107,11 @@ function Admin() {
     tabs[AdminTab.SETTINGS_MANAGEMENT] = {
       key: AdminTab.SETTINGS_MANAGEMENT,
       header: <T className="tt-ce ws-np">settings</T>,
-      body: <div className="pad-left-right pad-top-bottom"><SettingsManagement /></div>,
+      body: company
+        ? <div className="pad-left-right pad-top-bottom"><SettingsManagement company={company} mutate={mutate} /></div>
+        : <div className="pad-left-right pad-top-bottom">
+          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
+        </div>,
     };
   }
   
@@ -98,8 +126,22 @@ function Admin() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right">
-          <h3 style={{ padding: 'var(--pad-sm) 0' }}><T>admin</T></h3>
+        <div className="jk-row-col extend pad-left-right">
+          <h3 className="flex-1" style={{ padding: 'var(--pad-sm) 0' }}><T>administration</T></h3>
+          {canHandleSettings && (
+            <div style={{ width: 200 }}>
+              <Select
+                options={companies.map(company => ({
+                  value: company.key,
+                  label: <span className="ws-np">{company.name}</span>,
+                }))}
+                selectedOption={{ value: companyKey, label: companyKey ? undefined : <T>select</T> }}
+                onChange={({ value }) => setCompanyKey(value)}
+                className="jk-br-ie jk-button-secondary"
+                extend
+              />
+            </div>
+          )}
         </div>
         <div className="pad-left-right">
           <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={query.tab} />

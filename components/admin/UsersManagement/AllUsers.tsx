@@ -25,8 +25,9 @@ import {
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester } from 'hooks';
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
+  CompanyResponseDTO,
   ContentResponseType,
   ContentsResponseType,
   DataViewerHeadersType,
@@ -38,7 +39,7 @@ import {
 } from 'types';
 import { UserPermissions } from './UserPermissions';
 
-export function AllUsers() {
+export function AllUsers({ company }: { company: CompanyResponseDTO }) {
   
   const [ nickname, setNickname ] = useState('');
   const optionsFilterStatus = Object.values(USER_STATUS).map(status => ({
@@ -53,9 +54,9 @@ export function AllUsers() {
     reload,
     refreshRef,
   } = useDataViewerRequester<ContentsResponseType<UserManagementResponseDTO>>(
-    () => JUDGE_API_V1.USER.MANAGEMENT_LIST(),
+    () => JUDGE_API_V1.USER.MANAGEMENT_LIST(company.key),
   );
-  
+  useEffect(reload, [ company.key ]);
   const changeUserStatus = async (nickname, status, setLoader) => {
     setLoader?.(Status.LOADING);
     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(

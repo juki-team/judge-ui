@@ -5,11 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
-  GetRecordKeyType,
   DataViewerRequesterGetUrlType,
+  GetRecordKeyType,
   OnRecordClickType,
   ReactNodeOrFunctionType,
-  RefreshType,
 } from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
@@ -23,7 +22,7 @@ interface PagedDataViewerPros<T, V = T> {
   extraNodes?: ReactNodeOrFunctionType[],
   getRowKey?: GetRecordKeyType<T>
   onRecordClick?: OnRecordClickType<T>,
-  refreshRef?: (refresh: RefreshType) => void,
+  dependencies?: any[],
 }
 
 export const PagedDataViewer = <T, V = T>({
@@ -37,7 +36,7 @@ export const PagedDataViewer = <T, V = T>({
   extraNodes,
   getRowKey,
   onRecordClick,
-  refreshRef,
+  dependencies = [],
 }: PagedDataViewerPros<T, V>) => {
   
   const { viewPortSize } = useJukiUI();
@@ -45,7 +44,15 @@ export const PagedDataViewer = <T, V = T>({
     data: response,
     request,
     setLoaderStatusRef,
+    reload,
+    refreshRef,
   } = useDataViewerRequester<ContentsResponseType<V>>(getUrl, { refreshInterval });
+  
+  useEffect(() => {
+    if (dependencies.length) {
+      reload();
+    }
+  }, dependencies);
   const [ _, setRender ] = useState(Date.now()); // TODO: Fix the render of DataViewer
   useEffect(() => {
     setTimeout(() => setRender(Date.now()), 100);

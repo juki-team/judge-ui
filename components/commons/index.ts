@@ -5,6 +5,7 @@ export {
   AppsIcon,
   ArrowBackIcon,
   ArrowDownwardIcon,
+  InfoIcon,
   ArrowForwardIcon,
   ArrowIcon,
   ArrowLeftIcon,

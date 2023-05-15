@@ -60,22 +60,6 @@
   }
 }
 
-.jk-select-layout.jk-button-secondary {
-  border: none;
-  padding: 0 !important;
-  
-  .jk-select {
-    width: 100%;
-    border: none;
-    background-color: transparent;
-    
-    .input-icon {
-      color: inherit;
-      top: 4px;
-    }
-  }
-}
-
 .contest-overview {
   height: auto;
   @include sm {

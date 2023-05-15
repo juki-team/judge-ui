@@ -1,3 +1,4 @@
+import { useJukiUser } from '@juki-team/base-ui';
 import { Breadcrumbs, JukiCompleteLaptopImage, JukiCourtImage, T, TwoContentSection } from 'components';
 
 export default function Home() {
@@ -5,12 +6,18 @@ export default function Home() {
     <T className="tt-se">home</T>,
   ];
   
+  const { company: { name } } = useJukiUser();
+  
   return (
     <TwoContentSection>
       <div className="jk-col extend stretch">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="pad-left-right jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
-          <div className="jk-row"><h1 style={{ padding: 'var(--pad-md) 0' }}><T>welcome to Juki Judge</T></h1></div>
+          <div className="jk-row">
+            <h1 style={{ padding: 'var(--pad-md) 0' }}>
+              <T>welcome to</T>&nbsp;<span className="fw-br cr-sy ws-np">{name}</span>&nbsp;
+              <span className="fw-br cr-py">judge</span></h1>
+          </div>
           <div className=""><JukiCourtImage /></div>
         </div>
       </div>
@@ -19,7 +26,7 @@ export default function Home() {
           <div className="jk-pad-md"><JukiCompleteLaptopImage /></div>
           <div className="jk-col gap ta-cr">
             <h3><T>competitive programmers home</T></h3>
-            <p>Juki Judge <T>is designed to make people improve their programming skills</T></p>
+            <p>{name} judge <T>is designed to make people improve their programming skills</T></p>
           </div>
         </div>
       </div>

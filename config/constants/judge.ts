@@ -18,11 +18,11 @@ export const JUDGE_API_V1 = {
     CAT: (filePath: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/cat/${encodeURIComponent(filePath)}`;
     },
-    AWS_ECS_TASK_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-list`;
+    AWS_ECS_TASK_LIST: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/company/${companyKey}/aws/ecs/task-list`;
     },
-    AWS_ECS_TASK_DEFINITION_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-definition-list`;
+    AWS_ECS_TASK_DEFINITION_LIST: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/company/${companyKey}/aws/ecs/task-definition-list`;
     },
     AWS_ECS_STOP_TASK_TASK_ARN: (taskArn: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/stop-task/${encodeURIComponent(taskArn)}`;
@@ -33,12 +33,6 @@ export const JUDGE_API_V1 = {
     AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION: (runnerType: RunnerType, taskDefinition: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/task-definition/${encodeURIComponent(
         taskDefinition)}`;
-    },
-    AWS_ECS_RUNNER_MIN_TASKS: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/min-tasks`;
-    },
-    AWS_ECS_RUNNER_MIN_TASK: (runnerType: RunnerType, minTasks: number) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/min/${minTasks}`;
     },
     AWS_SQS_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/list`;
@@ -60,14 +54,14 @@ export const JUDGE_API_V1 = {
     },
   },
   USER: {
-    MANAGEMENT_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/management-list`;
+    MANAGEMENT_LIST: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/management-list?companyKey=${companyKey}`;
     },
-    ALL_ONLINE_USERS: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/all-online-users`;
+    ALL_ONLINE_USERS: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/all-online-users?companyKey=${companyKey}`;
     },
-    ONLINE_USERS: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/online-users`;
+    ONLINE_USERS: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/online-users?companyKey=${companyKey}`;
     },
     PROFILE: (nickname: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile`;
@@ -263,8 +257,14 @@ export const JUDGE_API_V1 = {
     },
   },
   COMPANY: {
+    LIST: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/list`;
+    },
     CURRENT: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company`;
+    },
+    RESOURCE_SPECIFICATIONS: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}/resource-specifications`;
     },
   },
   JUDGE: {

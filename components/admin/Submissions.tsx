@@ -2,7 +2,7 @@ import { PagedDataViewer, submissionActionsColumn } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
-import { DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
+import { CompanyResponseDTO, DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
 import {
   submissionDateColumn,
   submissionLanguage,
@@ -13,7 +13,7 @@ import {
   submissionVerdictColumn,
 } from '../submissions';
 
-export function AllSubmissions() {
+export function AllSubmissions({ company }: { company: CompanyResponseDTO }) {
   
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
     submissionNickname(),
@@ -32,11 +32,17 @@ export function AllSubmissions() {
       cards={{ expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        JUDGE_API_V1.SUBMISSIONS.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
+        JUDGE_API_V1.SUBMISSIONS.LIST(
+          page,
+          pageSize,
+          toFilterUrl({ ...filter, companyKey: company.key }),
+          toSortUrl(sort),
+        )
       )}
       name={QueryParam.ALL_SUBMISSIONS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
+      dependencies={[ company.key ]}
     />
   );
 }

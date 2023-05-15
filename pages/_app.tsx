@@ -1,3 +1,4 @@
+import { useJukiUser } from '@juki-team/base-ui';
 import { Analytics } from '@vercel/analytics/react';
 import { ErrorBoundary, JukiUIProvider, JukiUserProvider, NavigationBar } from 'components';
 import { settings } from 'config';
@@ -20,6 +21,15 @@ const MyComponent = dynamic(() => import('./md-print'), { ssr: false });
 
 const cloneURLSearchParams = (urlSearchParams: URLSearchParams) => {
   return new URLSearchParams(urlSearchParams.toString());
+};
+
+const CustomHead = () => {
+  const { company } = useJukiUser();
+  return (
+    <Head>
+      <title>{company.name + ' judge'}</title>
+    </Head>
+  );
 };
 
 export default function MyApp({ Component, pageProps, router }: AppProps) {
@@ -115,9 +125,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
         utilsSocketServiceUrl={JUKI_SERVICE_BASE_URL}
       >
         <div className="jk-app">
-          <Head>
-            <title>Juki Judge App</title>
-          </Head>
+          <CustomHead />
           <UserProvider>
             <TaskProvider>
               <SWRConfig

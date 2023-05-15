@@ -16,6 +16,7 @@ import { authorizedRequest, classNames, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useJukiUser, useNotification } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import {
+  CompanyResponseDTO,
   ContentResponseType,
   ContentsResponseType,
   DataViewerHeadersType,
@@ -26,7 +27,7 @@ import {
   Status,
 } from 'types';
 
-export function UsersLogged() {
+export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
   
   const { deleteUserSession } = useJukiUser();
   const [ withGuests, setWithGuests ] = useState(false);
@@ -37,11 +38,9 @@ export function UsersLogged() {
     refreshRef,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<SessionResponseDTO>>(
-    () => withGuests ? JUDGE_API_V1.USER.ALL_ONLINE_USERS() : JUDGE_API_V1.USER.ONLINE_USERS(),
+    () => withGuests ? JUDGE_API_V1.USER.ALL_ONLINE_USERS(company.key) : JUDGE_API_V1.USER.ONLINE_USERS(company.key),
   );
-  useEffect(() => {
-    void reload();
-  }, [ withGuests, reload ]);
+  useEffect(reload, [ withGuests, reload, company.key ]);
   const columns: DataViewerHeadersType<SessionResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<><T className="tt-ue">id</T>/<T className="tt-ue">user</T></>} />,
@@ -191,7 +190,7 @@ export function UsersLogged() {
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
+                      JUDGE_API_V1.USER.DELETE_OLD_SESSIONS(),
                       { method: HTTPMethod.POST },
                     ),
                   );

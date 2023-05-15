@@ -1,22 +1,40 @@
 import { Button, ButtonLoader, Input, Select, T } from 'components';
 import { downloadDataTableAsCsvFile, downloadXlsxAsFile, getRandomString } from 'helpers';
 import { useJukiUser, useT } from 'hooks';
-import { useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { CompanyResponseDTO } from 'types';
 
-export const GenerateUsers = () => {
+type UserType = {
+  nickname: string,
+  password: string,
+  email: string,
+  message: ReactNode,
+}
+
+export const GenerateUsers = ({ company }: { company: CompanyResponseDTO }) => {
   
   const { createUser } = useJukiUser();
-  const [ users, setUsers ] = useState([]);
+  const [ users, setUsers ] = useState<{ [key: string]: UserType }>({});
   const [ usersGen, setUsersGen ] = useState({
     prefix: 'team-test-',
     initialNumber: 0,
     total: 1,
     emailDomain: 'juki.contact',
   });
+  useEffect(() => {
+    const users = {};
+    for (let i = usersGen.initialNumber; i < usersGen.initialNumber + usersGen.total; i++) {
+      const nickname = `${usersGen.prefix}${i}`;
+      const password = getRandomString(8);
+      const email = `${nickname}@${usersGen.emailDomain}`;
+      users[nickname] = { nickname, password, email, message: <T className="cr-er tt-se fw-bd">to create</T> };
+    }
+    setUsers(users);
+  }, [ usersGen ]);
   const { t } = useT();
   
   const head = [ '#', t('nickname'), t('email'), t('password'), t('message') ];
-  const body = users.map((user, index) => ([
+  const body = Object.values(users).map((user, index) => ([
     index,
     user.nickname,
     user.email,
@@ -65,11 +83,7 @@ export const GenerateUsers = () => {
       <div className="jk-row center gap">
         <ButtonLoader
           onClick={async (setLoader, loaderStatus, event) => {
-            setUsers([]);
-            for (let i = usersGen.initialNumber; i < usersGen.initialNumber + usersGen.total; i++) {
-              const nickname = `${usersGen.prefix}${i}`;
-              const password = getRandomString(8);
-              const email = `${nickname}@${usersGen.emailDomain}`;
+            for (const { nickname, password, email } of Object.values(users)) {
               await createUser({
                 body: {
                   nickname,
@@ -77,10 +91,21 @@ export const GenerateUsers = () => {
                   password,
                   familyName: '',
                   givenName: '',
+                  companyKey: company.key,
                 },
                 setLoader,
                 onFinally: (response) => {
-                  setUsers(users => [ ...users, { nickname, password, email, message: response.message } ]);
+                  setUsers(users => ({
+                    ...users,
+                    [nickname]: {
+                      ...users[nickname],
+                      message: (
+                        response.message === 'welcome'
+                          ? <T className="cr-ss tt-se fw-bd">created</T>
+                          : <T className="cr-er tt-se fw-bd">{response.message}</T>
+                      ),
+                    },
+                  }));
                 },
               });
             }
@@ -89,7 +114,7 @@ export const GenerateUsers = () => {
           <T>generate</T>
         </ButtonLoader>
         <Select
-          disabled={!users.length}
+          disabled={!Object.keys(users).length}
           options={[ { value: 'csv', label: 'as csv' }, { value: 'xlsx', label: 'as xlsx' } ]}
           selectedOption={{ value: 'x', label: 'download' }}
           onChange={async ({ value }) => {
@@ -119,22 +144,22 @@ export const GenerateUsers = () => {
         </Select>
       </div>
       <div className="jk-col extend stretch">
-        {!!users.length && (
+        {!!Object.keys(users).length && (
           <div className="jk-row block stretch jk-table-inline-header">
-            <div className="jk-row">#</div>
+            <div className="jk-row" style={{ maxWidth: 30 }}>#</div>
             <div className="jk-row">nickname</div>
             <div className="jk-row">email</div>
             <div className="jk-row">password</div>
             <div className="jk-row">message</div>
           </div>
         )}
-        {users.map((user, index) => (
+        {Object.values(users).map((user, index) => (
           <div className="jk-row block jk-table-inline-row" key={user.nickname}>
-            <div className="jk-row">{index + 1}</div>
+            <div className="jk-row" style={{ maxWidth: 30 }}>{index + 1}</div>
             <div className="jk-row">{user.nickname}</div>
             <div className="jk-row">{user.email}</div>
             <div className="jk-row">{user.password}</div>
-            <div className="jk-r0w">{user.message}</div>
+            <div className="jk-row">{user.message}</div>
           </div>
         ))}
       </div>

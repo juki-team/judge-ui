@@ -351,7 +351,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <div className="jk-row" style={{ width: 40, padding: '0 var(--pad-xt)' }}>
               {indexToLetters(problems.length + 1)}
             </div>
-            <div className="jk-row" style={{ flex: 1 }}>
+            <div className="jk-row block" style={{ flex: 1 }}>
               <ProblemSelector
                 onSelect={(problem) => {
                   if (!problems.some(p => p.key === problem.key)) {

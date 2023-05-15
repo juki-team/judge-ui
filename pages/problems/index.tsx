@@ -4,6 +4,9 @@ import {
   CheckIcon,
   CloseIcon,
   Field,
+  InfoIcon,
+  Input,
+  Modal,
   PagedDataViewer,
   PlusIcon,
   Popover,
@@ -14,11 +17,19 @@ import {
   TwoContentSection,
   UserNicknameLink,
 } from 'components';
-import { JUDGE, JUDGE_API_V1, PROBLEM_MODE, PROBLEM_MODES, PROBLEM_STATUS, ROUTES } from 'config/constants';
+import {
+  JUDGE,
+  JUDGE_API_V1,
+  JUKI_APP_COMPANY_KEY,
+  PROBLEM_MODE,
+  PROBLEM_MODES,
+  PROBLEM_STATUS,
+  ROUTES,
+} from 'config/constants';
 import { buttonLoaderLink, classNames, getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
 import { useFetcher, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -29,17 +40,56 @@ import {
   ProblemSummaryListResponseDTO,
   ProblemTab,
   QueryParam,
-  RefreshType,
+  Status,
 } from 'types';
+
+export const CrawlCodeforcesProblemModal = ({ onClose }: { onClose: () => void }) => {
+  const [ key, setKey ] = useState('');
+  const { push } = useRouter();
+  
+  return (
+    <Modal isOpen={true} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
+      <div className="jk-col gap jk-pad-md">
+        <label>
+          <T className="tt-se ws-np fw-bd">contest id</T>:&nbsp;
+          <Input
+            size={6}
+            value={key.split('-')[0] || ''}
+            onChange={(value) => setKey(prevState => `${value}-${key.split('-')[1] || ''}`)}
+          />
+        </label>
+        <label className="jk-row nowrap">
+          <T className="tt-se ws-np fw-bd">index</T>:&nbsp;
+          <Input
+            size="auto"
+            value={key.split('-')[1] || ''}
+            onChange={(value) => setKey(prevState => `${key.split('-')[0] || ''}-${value}`)}
+          />
+        </label>
+        <ButtonLoader
+          size="small"
+          icon={<PlusIcon />}
+          responsiveMobile
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            await push(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(Judge.CODEFORCES, key), ProblemTab.STATEMENT));
+            setLoaderStatus(Status.SUCCESS);
+          }}
+        >
+          <T>crawl</T>
+        </ButtonLoader>
+      </div>
+    </Modal>
+  );
+};
 
 function Problems() {
   
   useTrackLastPath(LastLinkKey.PROBLEMS);
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
-  const { user: { canCreateProblem, canHandleJudges } } = useJukiUser();
+  const { user: { canCreateProblem }, company: { name, key } } = useJukiUser();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
-  const [ judge, setJudge ] = useState(Judge.JUKI_JUDGE);
-  const refreshRef = useRef<RefreshType>();
+  const [ judge, setJudge ] = useState<Judge>(Judge.CUSTOMER);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">id</T>} />,
@@ -166,55 +216,101 @@ function Problems() {
         cardPosition: 'bottomLeft',
         minWidth: 180,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-      {
-        head: <TextHeadCell text={<T className="tt-ue tx-s">owner</T>} />,
-        index: 'ownerUserNickname',
-        field: ({ record: { ownerUserNickname } }) => (
-          <TextField
-            className="jk-row"
-            text={
-              <UserNicknameLink nickname={ownerUserNickname}>
-                <div className="link">{ownerUserNickname}</div>
-              </UserNicknameLink>
-            }
-            label={<T className="tt-se">nickname</T>}
-          />
-        ),
-        sort: true,
-        filter: { type: 'text-auto' },
-        cardPosition: 'bottomRight',
-        minWidth: 200,
-      } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
+      ...(judge === Judge.JUKI_JUDGE ? [
+        {
+          head: <TextHeadCell text={<T className="tt-ue tx-s">owner</T>} />,
+          index: 'ownerUserNickname',
+          field: ({ record: { ownerUserNickname } }) => (
+            <TextField
+              className="jk-row"
+              text={
+                <UserNicknameLink nickname={ownerUserNickname}>
+                  <div className="link">{ownerUserNickname}</div>
+                </UserNicknameLink>
+              }
+              label={<T className="tt-se">nickname</T>}
+            />
+          ),
+          sort: true,
+          filter: { type: 'text-auto' },
+          cardPosition: 'bottomRight',
+          minWidth: 200,
+        } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
+      ] : []),
     ] : []),
   ], [ canCreateProblem, tags, judge ]);
-  
   const { push } = useRouter();
-  useEffect(() => {
-    refreshRef.current?.();
-  }, [ judge ]);
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <T className="tt-se">problems</T>,
   ];
-  const refresh = useCallback((reload) => refreshRef.current = reload, []);
+  
+  const extraNodes = [];
+  if (canCreateProblem && judge === Judge.CUSTOMER) {
+    extraNodes.push(
+      <ButtonLoader
+        size="small"
+        icon={<PlusIcon />}
+        responsiveMobile
+        onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE()))}
+      >
+        <T>create</T>
+      </ButtonLoader>,
+    );
+  }
+  const [ modal, setModal ] = useState(null);
+  if (judge === Judge.CODEFORCES) {
+    extraNodes.push(
+      <div className="jk-row gap">
+        {modal}
+        <ButtonLoader
+          size="small"
+          icon={<PlusIcon />}
+          responsiveMobile
+          onClick={() => {
+            setModal(<CrawlCodeforcesProblemModal onClose={() => setModal(null)} />);
+          }}
+        >
+          <T>crawl</T>
+        </ButtonLoader>
+      </div>,
+    );
+  }
   
   return (
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="jk-row space-between pad-left-right pad-top-bottom">
-          <h2><T>problems</T></h2>
-          {canHandleJudges && (
-            <div>
-              <Select
-                className="jk-border-radius-inline jk-button-secondary"
-                options={Object.values(JUDGE).map(judge => ({ value: judge.value, label: judge.label }))}
-                selectedOption={{ value: judge }}
-                onChange={({ value }) => setJudge(value)}
-              />
-            </div>
-          )}
+          <div className="jk-row gap">
+            <h2><T>problems</T></h2>
+            {judge === Judge.CODEFORCES && (
+              <Popover
+                content={<div><T className="tt-se">only tracked problems are displayed</T></div>}
+                placement="bottom"
+              >
+                <div><InfoIcon /></div>
+              </Popover>
+            )}
+          </div>
+          <div>
+            <Select
+              className="jk-border-radius-inline jk-button-secondary"
+              options={[
+                { value: Judge.CUSTOMER, label: <>{name + ' judge'}</> },
+                ...(key === JUKI_APP_COMPANY_KEY ? [] : [
+                  {
+                    value: Judge.JUKI_JUDGE,
+                    label: <span className="ws-np">{JUDGE[Judge.JUKI_JUDGE].label}</span>,
+                  },
+                ]),
+                { value: Judge.CODEFORCES, label: <>{JUDGE[Judge.CODEFORCES].label}</> },
+              ]}
+              selectedOption={{ value: judge }}
+              onChange={({ value }) => setJudge(value)}
+            />
+          </div>
         </div>
       </div>
       <div className="pad-top-bottom pad-left-right">
@@ -225,25 +321,14 @@ function Problems() {
           }}
           name={QueryParam.PROBLEMS_TABLE}
           refreshInterval={60000}
-          extraNodes={[
-            ...(canCreateProblem ? [
-              <ButtonLoader
-                size="small"
-                icon={<PlusIcon />}
-                responsiveMobile
-                onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE()))}
-              >
-                <T>create</T>
-              </ButtonLoader>,
-            ] : []),
-          ]}
+          extraNodes={extraNodes}
           cards={{ height: 256, expanded: true }}
           onRecordClick={async ({ isCard, data, index }) => {
             if (isCard) {
               await push({ pathname: ROUTES.PROBLEMS.VIEW(data[index].key, ProblemTab.STATEMENT) });
             }
           }}
-          refreshRef={refresh}
+          dependencies={[ judge ]}
         />
       </div>
     </TwoContentSection>

@@ -1134,10 +1134,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.433":
-  version "0.0.433"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.433/61d749f0dc18e2829b061ff5273b49f74cc9e014#61d749f0dc18e2829b061ff5273b49f74cc9e014"
-  integrity sha512-dr4A1fDWfIhhQ9AadBBRY4ISJZIhYQk2WF0ylJzJYHIBG6AozBKQlqvyd6zb8tfRlxg34ON12xCd9EcXDIkcVA==
+"@juki-team/base-ui@^0.0.438":
+  version "0.0.438"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.438/46823764a16c3dff5f09a4b5cf8c633084a15512#46823764a16c3dff5f09a4b5cf8c633084a15512"
+  integrity sha512-bLImQWju0U5wOEz1G39FypdTcQpPVsG3ctzPWxgn6gkQbwH2W1bxMEtNgJ5RQRFbPL3YwcuEPb/KoDE45uxn+A==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-java" "^6.0.1"
@@ -1146,7 +1146,7 @@
     "@codemirror/lang-markdown" "^6.0.5"
     "@codemirror/lang-python" "^6.1.0"
     "@hookform/resolvers" "^2.8.8"
-    "@juki-team/commons" "^0.0.306"
+    "@juki-team/commons" "^0.0.337"
     "@monaco-editor/react" "^4.4.2"
     "@tanstack/react-virtual" "^3.0.0-beta.30"
     "@uiw/react-codemirror" "^4.19.3"
@@ -1175,15 +1175,15 @@
     xlsx "^0.18.5"
     yup "^0.32.11"
 
-"@juki-team/commons@^0.0.306":
-  version "0.0.306"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.306/0644e8ae4379ac9d5f8cedff202ecbccda08e4b1#0644e8ae4379ac9d5f8cedff202ecbccda08e4b1"
-  integrity sha512-6+ZsTkuGQOoZSwk67iM0NR36zEEV4zMf5QhXhHSpjlzUlD0IZe66soZ/DqaroZ+/bypj+Nct3RwQMSZTuVPizw==
+"@juki-team/commons@^0.0.337":
+  version "0.0.337"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.337/fe95251424da8df9873a0dbe412704e564eb49c8#fe95251424da8df9873a0dbe412704e564eb49c8"
+  integrity sha512-dbFGk/j+xGY60kKSReLfO9lJhR5wEHYRICcPoLUJgl8uUmwju19X3f+Cv0sbClIAquLz/5UB8ytVYWKMoEhX1A==
 
-"@juki-team/commons@^0.0.330":
-  version "0.0.330"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.330/a996edae95e7587794b0c5c9766c82425c777141#a996edae95e7587794b0c5c9766c82425c777141"
-  integrity sha512-NV2fWxqLGbgp7U6AIb8WxbOhepTCPgMQ6mP8PJDpsKKjMV4ErPNl+CTlsY0rlQLAzFQiuVQhea6oc/TfQ0pS0Q==
+"@juki-team/commons@^0.0.341":
+  version "0.0.341"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.341/66f5dd8b89dc162e5e61614ebf9da8410b5ddcc0#66f5dd8b89dc162e5e61614ebf9da8410b5ddcc0"
+  integrity sha512-TULSU2vdWRFm4CtBZ3pwkMu7/3bBPx4fgRbx/5tbzQNVnXo9ekkk+iibAAKs14Bf3CI7tzrQHSz532xrkpzxgA==
 
 "@lezer/common@^1.0.0":
   version "1.0.2"

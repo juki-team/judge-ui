@@ -13,6 +13,7 @@ import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
+  CompanyResponseDTO,
   ContentResponseType,
   ContentsResponseType,
   DataViewerHeadersType,
@@ -33,9 +34,9 @@ type RevisionType = {
   isLowRunner: boolean
 };
 
-type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[] };
+type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[], companyKey: string };
 
-const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) => {
+const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefinitionList) => {
   
   const { notifyResponse } = useNotification();
   const [ revision, setRevision ] = useState<RevisionType>(revisions[0]);
@@ -73,7 +74,7 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
               ),
             );
             notifyResponse(response, setLoaderStatus);
-            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(companyKey));
           }}
         >
           <T>run task</T>
@@ -94,7 +95,7 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
                 ),
               );
               notifyResponse(response, setLoaderStatus);
-              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(companyKey));
             }}
           >
             <T>set high runner</T>
@@ -116,7 +117,7 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
                 ),
               );
               notifyResponse(response, setLoaderStatus);
-              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST());
+              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(companyKey));
             }}
           >
             <T>set low runner</T>
@@ -127,12 +128,12 @@ const FieldTaskDefinition = ({ family, revisions }: AwsEcsTaskDefinitionList) =>
   );
 };
 
-export const ECSTaskDefinitionsManagement = () => {
+export const ECSTaskDefinitionsManagement = ({ company }: { company: CompanyResponseDTO }) => {
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<TaskDefinitionResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_DEFINITION_LIST());
+  } = useDataViewerRequester<ContentsResponseType<TaskDefinitionResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_DEFINITION_LIST(company.key));
   
   const columns: DataViewerHeadersType<AwsEcsTaskDefinitionList>[] = useMemo(() => [
     {
@@ -140,7 +141,7 @@ export const ECSTaskDefinitionsManagement = () => {
       index: 'taskDefinition',
       field: ({ record }) => (
         <Field className="jk-row center gap">
-          <FieldTaskDefinition {...record} />
+          <FieldTaskDefinition {...record} companyKey={company.key} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.family.localeCompare(rowA.family) },
@@ -151,21 +152,22 @@ export const ECSTaskDefinitionsManagement = () => {
   
   const definitions: { [key: string]: AwsEcsTaskDefinitionList } = {};
   responseData.forEach(({
-      taskDefinitionArn,
-      family,
-      revision,
-      memory,
-      cpu,
-      registeredAt,
-      isLowRunner,
-      isHighRunner,
-    }) => {
+                          taskDefinitionArn,
+                          family,
+                          revision,
+                          memory,
+                          cpu,
+                          registeredAt,
+                          isLowRunner,
+                          isHighRunner,
+                        }) => {
       definitions[family] = {
         family,
         revisions: [
           ...(definitions[family]?.revisions || []),
           { taskDefinitionArn, revision, memory, cpu, registeredAt: new Date(registeredAt), isHighRunner, isLowRunner },
         ],
+        companyKey: company.key,
       };
     },
   );

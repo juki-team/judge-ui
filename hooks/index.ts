@@ -1,5 +1,5 @@
+import { useFetcher as useFetcherJk, useJukiUser } from '@juki-team/base-ui';
 import { LastLinkContext } from 'components';
-import { useFetcher as useFetcherJk, useJukiUser } from 'hooks';
 import { useRouter as useNextRouter } from 'next/router';
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SWRConfiguration } from 'swr';
