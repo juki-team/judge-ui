@@ -1,4 +1,3 @@
-import { ContentResponseType } from '@juki-team/commons';
 import {
   AllSubmissions,
   Breadcrumbs,
@@ -17,7 +16,7 @@ import { useFetcher, useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
-import { AdminTab, CompanyResponseDTO, ContentsResponseType, LastLinkKey } from 'types';
+import { AdminTab, CompanyResponseDTO, ContentResponseType, ContentsResponseType, LastLinkKey } from 'types';
 import Custom404 from '../404';
 
 function Admin() {
@@ -103,17 +102,15 @@ function Admin() {
       body: <div className="pad-left-right pad-bottom"><JudgesManagement /></div>,
     };
   }
-  if (canHandleSettings) {
-    tabs[AdminTab.SETTINGS_MANAGEMENT] = {
-      key: AdminTab.SETTINGS_MANAGEMENT,
-      header: <T className="tt-ce ws-np">settings</T>,
-      body: company
-        ? <div className="pad-left-right pad-top-bottom"><SettingsManagement company={company} mutate={mutate} /></div>
-        : <div className="pad-left-right pad-top-bottom">
-          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
-        </div>,
-    };
-  }
+  tabs[AdminTab.SETTINGS_MANAGEMENT] = {
+    key: AdminTab.SETTINGS_MANAGEMENT,
+    header: <T className="tt-ce ws-np">settings</T>,
+    body: company
+      ? <div className="pad-left-right pad-top-bottom"><SettingsManagement company={company} mutate={mutate} /></div>
+      : <div className="pad-left-right pad-top-bottom">
+        <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
+      </div>,
+  };
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,

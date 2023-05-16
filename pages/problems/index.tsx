@@ -294,11 +294,11 @@ function Problems() {
               </Popover>
             )}
           </div>
-          <div>
+          <div style={{ width: 200 }}>
             <Select
               className="jk-border-radius-inline jk-button-secondary"
               options={[
-                { value: Judge.CUSTOMER, label: <>{name + ' judge'}</> },
+                { value: Judge.CUSTOMER, label: <span className="ws-np">{name + ' judge'}</span> },
                 ...(key === JUKI_APP_COMPANY_KEY ? [] : [
                   {
                     value: Judge.JUKI_JUDGE,
@@ -309,6 +309,7 @@ function Problems() {
               ]}
               selectedOption={{ value: judge }}
               onChange={({ value }) => setJudge(value)}
+              extend
             />
           </div>
         </div>

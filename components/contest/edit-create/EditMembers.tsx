@@ -1,11 +1,13 @@
 import { InputToggle, T, UsersSelector } from 'components';
 import { classNames, isEndlessContest } from 'helpers';
+import { useJukiUser } from 'hooks';
 import React from 'react';
 import { AdminInformation, JudgeInformation } from '../Information';
 import { EditContestProps } from '../types';
 
 export const EditMembers = ({ setContest, contest, editing }: EditContestProps) => {
   
+  const { company: { key } } = useJukiUser();
   const guests = contest.members.guests;
   const spectators = contest.members.spectators;
   const contestants = contest.members.contestants;
@@ -44,6 +46,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
                   members: { ...prevState.members, guests: users.map(user => user.nickname) },
                 }));
               }}
+              companyKey={key}
             />
           )}
         </div>
@@ -60,6 +63,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
                   members: { ...prevState.members, contestants: users.map(user => user.nickname) },
                 }));
               }}
+              companyKey={key}
             />
           </div>
         </div>
@@ -89,6 +93,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
                   members: { ...prevState.members, spectators: users.map(user => user.nickname) },
                 }));
               }}
+              companyKey={key}
             />
           )}
         </div>
@@ -106,6 +111,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
               members: { ...prevState.members, judges: users.map(user => user.nickname) },
             }));
           }}
+          companyKey={key}
         />
       </div>
       <div className="jk-col gap stretch">
@@ -121,6 +127,7 @@ export const EditMembers = ({ setContest, contest, editing }: EditContestProps) 
               members: { ...prevState.members, administrators: users.map(user => user.nickname) },
             }));
           }}
+          companyKey={key}
         />
       </div>
     </div>

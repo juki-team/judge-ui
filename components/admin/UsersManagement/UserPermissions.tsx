@@ -10,6 +10,7 @@ import {
   USER_ROLE,
 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
+import { useJukiUser } from 'hooks';
 import React, { useState } from 'react';
 import {
   ContentResponseType,
@@ -40,7 +41,7 @@ type Roles = {
 }
 
 export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: ProblemPermissionsProps) => {
-  
+  const { company: { key }, user: { canHandleSettings } } = useJukiUser();
   const [ editing, setEditing ] = useState(false);
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const roles = {
@@ -54,15 +55,17 @@ export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: Pro
   };
   const [ newRoles, setNewRoles ] = useState<Roles>(roles);
   
-  const ROLES = {
-    system: SYSTEM_ROLE,
+  const ROLES: { [key: string]: { [key: string]: { value: string, label: string, level: number } } } = {
     user: USER_ROLE,
     problem: PROBLEM_ROLE,
     contest: CONTEST_ROLE,
-    team: TEAM_ROLE,
-    course: COURSE_ROLE,
-    file: FILE_ROLE,
   };
+  if (canHandleSettings) {
+    ROLES.system = SYSTEM_ROLE;
+    ROLES.team = TEAM_ROLE;
+    ROLES.course = COURSE_ROLE;
+    ROLES.file = FILE_ROLE;
+  }
   
   return (
     <div>

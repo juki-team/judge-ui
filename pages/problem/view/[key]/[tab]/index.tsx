@@ -187,56 +187,59 @@ const ProblemView = (): ReactNode => {
         const pushTab = (tabKey) => setSearchParam({ name: 'tab', value: tabKey });
         
         const extraNodes = [];
-        if (data?.content?.user?.isEditor && data?.content?.judge === Judge.JUKI_JUDGE) {
-          extraNodes.push(<ButtonLoader
-            size="small"
-            icon={<EditIcon />}
-            onClick={async setLoaderStatus => {
-              setLoaderStatus(Status.LOADING);
-              await push(ROUTES.PROBLEMS.EDIT('' + key));
-              setLoaderStatus(Status.SUCCESS);
-            }}
-            responsiveMobile
-          >
-            {<T>edit</T>}
-          </ButtonLoader>, <Popover
-            content={<T className="ws-np tt-se">only submissions that are not in a contest will be
-              judged</T>}
-            placement="left"
-            showPopperArrow
-          >
-            <div>
-              <ButtonLoader
-                size="small"
-                icon={<AutorenewIcon />}
-                onClick={async setLoaderStatus => {
-                  setLoaderStatus(Status.LOADING);
-                  const bodyProblem = { ...problem };
-                  delete bodyProblem.key;
-                  const result = cleanRequest<ContentResponseType<{
-                    listCount: number, status: SubmissionRunStatus.RECEIVED
-                  }>>(await authorizedRequest(JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(
-                    problem.judge,
-                    problem.key,
-                  )), { method: HTTPMethod.POST }));
-                  if (result.success) {
-                    addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
-                      <T>submissions</T></div>);
-                    setLoaderStatus(Status.SUCCESS);
-                  } else {
-                    addErrorNotification(<T
-                      className="tt-se"
-                    >{result.message ||
-                      'something went wrong, please try again later'}</T>);
-                    setLoaderStatus(Status.ERROR);
-                  }
-                }}
-                responsiveMobile
-              >
-                <T>rejudge</T>
-              </ButtonLoader>
-            </div>
-          </Popover>);
+        if (data?.content?.user?.isEditor && (data?.content?.judge === Judge.JUKI_JUDGE || data?.content?.judge === Judge.CUSTOMER)) {
+          extraNodes.push(
+            <ButtonLoader
+              size="small"
+              icon={<EditIcon />}
+              onClick={async setLoaderStatus => {
+                setLoaderStatus(Status.LOADING);
+                await push(ROUTES.PROBLEMS.EDIT('' + key));
+                setLoaderStatus(Status.SUCCESS);
+              }}
+              responsiveMobile
+            >
+              {<T>edit</T>}
+            </ButtonLoader>,
+            <Popover
+              content={<T className="ws-np tt-se">only submissions that are not in a contest will be
+                judged</T>}
+              placement="left"
+              showPopperArrow
+            >
+              <div>
+                <ButtonLoader
+                  size="small"
+                  icon={<AutorenewIcon />}
+                  onClick={async setLoaderStatus => {
+                    setLoaderStatus(Status.LOADING);
+                    const bodyProblem = { ...problem };
+                    delete bodyProblem.key;
+                    const result = cleanRequest<ContentResponseType<{
+                      listCount: number, status: SubmissionRunStatus.RECEIVED
+                    }>>(await authorizedRequest(JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(
+                      problem.judge,
+                      problem.key,
+                    )), { method: HTTPMethod.POST }));
+                    if (result.success) {
+                      addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
+                        <T>submissions</T></div>);
+                      setLoaderStatus(Status.SUCCESS);
+                    } else {
+                      addErrorNotification(<T
+                        className="tt-se"
+                      >{result.message ||
+                        'something went wrong, please try again later'}</T>);
+                      setLoaderStatus(Status.ERROR);
+                    }
+                  }}
+                  responsiveMobile
+                >
+                  <T>rejudge</T>
+                </ButtonLoader>
+              </div>
+            </Popover>,
+          );
         } else if (data?.content?.judge === Judge.CODEFORCES && user.isLogged) {
           extraNodes.push(<ButtonLoader
             size="small"
@@ -270,9 +273,9 @@ const ProblemView = (): ReactNode => {
                 >
                   {problem.name}
                 </h2>
-                {problem.judge ===
-                  Judge.CODEFORCES &&
-                    <div className="jk-tag warning">{JUDGE[Judge.CODEFORCES].label}</div>}
+                {problem.judge === Judge.CODEFORCES && (
+                  <div className="jk-tag warning">{JUDGE[Judge.CODEFORCES].label}</div>
+                )}
                 <Popover
                   content={problem.judge === Judge.JUKI_JUDGE ? <ProblemInfo
                     author={problem.author}

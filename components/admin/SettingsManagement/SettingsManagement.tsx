@@ -1,7 +1,7 @@
 import { ButtonLoader, Image, Input, T, UserChip, UsersSelector } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiUser, useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { KeyedMutator } from 'swr';
 import {
@@ -23,6 +23,7 @@ interface SettingsManagementBodyProps {
 export const SettingsManagement = ({ company, mutate }: SettingsManagementBodyProps) => {
   
   const { notifyResponse } = useNotification();
+  const { user: { canHandleSettings } } = useJukiUser();
   const [ user, setUser ] = useState<UserSummaryResponseDTO>({} as UserSummaryResponseDTO);
   const [ mainEmail, setMainEmail ] = useState(company.mainEmail);
   useEffect(() => {
@@ -65,24 +66,80 @@ export const SettingsManagement = ({ company, mutate }: SettingsManagementBodyPr
           </div>
         </div>
       </div>
-      <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
-        <h3>set email data</h3>
-        <div className="jk-col gap">
-          <div className="jk-row">
-            <T className="tt-se">main email</T>:&nbsp;
-            <span className="fw-bd">{company.mainEmail}</span>
+      {canHandleSettings && (
+        <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
+          <h3>set email data</h3>
+          <div className="jk-col gap">
+            <div className="jk-row">
+              <T className="tt-se">main email</T>:&nbsp;
+              <span className="fw-bd">{company.mainEmail}</span>
+            </div>
+            <div className="jk-row gap">
+              <div><T className="tt-se">set main email</T>:&nbsp;</div>
+              <Input value={mainEmail} onChange={setMainEmail} />
+              <ButtonLoader
+                disabled={!mainEmail}
+                onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
+                  const response = cleanRequest<ContentResponseType<{}>>(
+                    await authorizedRequest(JUDGE_API_V1.COMPANY.CURRENT(), {
+                      method: HTTPMethod.POST,
+                      body: JSON.stringify({ mainEmail }),
+                    }));
+                  notifyResponse(response, setLoaderStatus);
+                  await mutate();
+                }}
+              >
+                <T>set</T>
+              </ButtonLoader>
+            </div>
           </div>
-          <div className="jk-row gap">
-            <div><T className="tt-se">set main email</T>:&nbsp;</div>
-            <Input value={mainEmail} onChange={setMainEmail} />
+          <ModifyEmailTemplateButton
+            emailTemplate={company.emailTemplate}
+            mutate={mutate}
+          />
+          <ModifyContactEmailsButton
+            contactEmails={company.contactEmails}
+            mutate={mutate}
+          />
+        </div>
+      )}
+      {canHandleSettings && (
+        <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
+          <h3>set manager Juki user</h3>
+          <div className="jk-row nowrap extend">
+            <div>
+              <T className="tt-se">manager Juki user</T>:&nbsp;
+              <span className="fw-bd">{company.managerUserNickname}</span>
+            </div>
+          </div>
+          <div className="jk-row nowrap extend">
+            <UsersSelector
+              selectedUsers={user.nickname ? [ user.nickname ] : []}
+              onChangeSelectedUsers={(user) => setUser((user[0] || {}) as UserSummaryResponseDTO)}
+              maxUsersSelection={1}
+              companyKey={company.key}
+            />
+            {user.nickname && (
+              <UserChip
+                imageUrl={user.imageUrl}
+                nickname={user.nickname}
+                givenName={user.givenName}
+                familyName={user.familyName}
+                email={user.email}
+              />
+            )}
             <ButtonLoader
-              disabled={!mainEmail}
+              disabled={!user.id}
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
-                const response = cleanRequest<ContentResponseType<{}>>(
+                const response = cleanRequest<ContentResponseType<{
+                  listCount: number,
+                  status: SubmissionRunStatus.RECEIVED
+                }>>(
                   await authorizedRequest(JUDGE_API_V1.COMPANY.CURRENT(), {
                     method: HTTPMethod.POST,
-                    body: JSON.stringify({ mainEmail }),
+                    body: JSON.stringify({ managerUserId: user.id }),
                   }));
                 notifyResponse(response, setLoaderStatus);
                 await mutate();
@@ -92,58 +149,7 @@ export const SettingsManagement = ({ company, mutate }: SettingsManagementBodyPr
             </ButtonLoader>
           </div>
         </div>
-        <ModifyEmailTemplateButton
-          emailTemplate={company.emailTemplate}
-          mutate={mutate}
-        />
-        <ModifyContactEmailsButton
-          contactEmails={company.contactEmails}
-          mutate={mutate}
-        />
-      </div>
-      <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
-        <h3>set manager Juki user</h3>
-        <div className="jk-row nowrap extend">
-          <div>
-            <T className="tt-se">manager Juki user</T>:&nbsp;
-            <span className="fw-bd">{company.managerUserNickname}</span>
-          </div>
-        </div>
-        <div className="jk-row nowrap extend">
-          <UsersSelector
-            selectedUsers={user.nickname ? [ user.nickname ] : []}
-            onChangeSelectedUsers={(user) => setUser((user[0] || {}) as UserSummaryResponseDTO)}
-            maxUsersSelection={1}
-          />
-          {user.nickname && (
-            <UserChip
-              imageUrl={user.imageUrl}
-              nickname={user.nickname}
-              givenName={user.givenName}
-              familyName={user.familyName}
-              email={user.email}
-            />
-          )}
-          <ButtonLoader
-            disabled={!user.id}
-            onClick={async (setLoaderStatus) => {
-              setLoaderStatus(Status.LOADING);
-              const response = cleanRequest<ContentResponseType<{
-                listCount: number,
-                status: SubmissionRunStatus.RECEIVED
-              }>>(
-                await authorizedRequest(JUDGE_API_V1.COMPANY.CURRENT(), {
-                  method: HTTPMethod.POST,
-                  body: JSON.stringify({ managerUserId: user.id }),
-                }));
-              notifyResponse(response, setLoaderStatus);
-              await mutate();
-            }}
-          >
-            <T>set</T>
-          </ButtonLoader>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
