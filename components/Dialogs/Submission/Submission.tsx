@@ -1,8 +1,8 @@
 import { ContentCopyIcon, CopyToClipboard, Modal, OpenInNewIcon, SubmitView, T } from 'components';
 import { ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
+import { useRouter } from 'hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { QueryParam } from 'types';
 

@@ -15,8 +15,7 @@ import {
 } from 'components';
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpers';
-import { useJukiUI, useJukiUser, useT } from 'hooks';
-import { useRouter } from 'next/router';
+import { useJukiUI, useJukiUser, useRouter, useT } from 'hooks';
 import React, { useState } from 'react';
 import {
   Judge,

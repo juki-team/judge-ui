@@ -1,6 +1,6 @@
 import { MdMathEditor } from 'components';
 import { consoleWarn } from 'helpers';
-import { useRouter } from 'next/router';
+import { useRouter } from 'hooks';
 import React, { useEffect, useState } from 'react';
 
 const defaultMessage = `# Bienvenido a Juki notas!,
@@ -14,7 +14,7 @@ Las notas no se auto-guardan, cada vez que modifiques una nota para guardarlo de
 
 const MarkdownSharedView = () => {
   const { query: { source, sourceUrl, view } } = useRouter();
-  const [sourceContent, setSourceContent] = useState(source as string || defaultMessage);
+  const [ sourceContent, setSourceContent ] = useState(source as string || defaultMessage);
   useEffect(() => {
     if (sourceUrl) {
       setSourceContent('');
@@ -25,7 +25,7 @@ const MarkdownSharedView = () => {
           consoleWarn(error);
         });
     }
-  }, [sourceUrl]);
+  }, [ sourceUrl ]);
   if (view === 'fullscreen') {
     return (
       <div style={{ padding: '48px' }}>

@@ -26,10 +26,17 @@ import {
   PROBLEM_STATUS,
   ROUTES,
 } from 'config/constants';
-import { buttonLoaderLink, classNames, getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import {
+  buttonLoaderLink,
+  classNames,
+  getProblemJudgeKey,
+  getSimpleProblemJudgeKey,
+  toFilterUrl,
+  toSortUrl,
+} from 'helpers';
+import { useFetcher, useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -83,22 +90,39 @@ export const CrawlCodeforcesProblemModal = ({ onClose }: { onClose: () => void }
   );
 };
 
+const JUDGE_C: { [key in Judge]: string } = {
+  [Judge.CUSTOMER]: 'c',
+  [Judge.JUKI_JUDGE]: 'j',
+  [Judge.CODEFORCES]: 'f',
+  [Judge.CODEFORCES_GYM]: 'g',
+  [Judge.UVA_ONLINE_JUDGE]: 'u',
+  [Judge.AT_CODER]: 'a',
+  [Judge.CODECHEF]: 'h',
+  [Judge.TOPCODER]: 't',
+};
+
 function Problems() {
   
   useTrackLastPath(LastLinkKey.PROBLEMS);
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { user: { canCreateProblem }, company: { name, key } } = useJukiUser();
+  const { router: { searchParams, setSearchParams } } = useJukiUI();
+  const { isReady, push } = useRouter();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
-  const [ judge, setJudge ] = useState<Judge>(Judge.CUSTOMER);
+  const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
+  useEffect(() => {
+    if (!judge) {
+      console.log({ judge });
+      setSearchParams({ name: QueryParam.JUDGE, value: Judge.CUSTOMER });
+    }
+  }, [ judge, isReady ]);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: <TextHeadCell text={<T className="tt-ue tx-s">id</T>} />,
       index: 'key',
       field: ({ record: { key }, isCard }) => (
-        <Field className="jk-row fw-bd">
-          <Link href={ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT)} className="link">
-            {key}
-          </Link>
+        <Field className="jk-row fw-bd cr-py">
+          {key}
         </Field>
       ),
       sort: true,
@@ -110,44 +134,36 @@ function Problems() {
       head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} className="left" />,
       index: 'name',
       field: ({ record: { key, judge, name, user }, isCard }) => (
-        <Field className={classNames('jk-row fw-bd jk-pad-sm', { left: !isCard, center: isCard })}>
-          <Link
-            href={judge === Judge.JUKI_JUDGE ? ROUTES.PROBLEMS.VIEW(key, ProblemTab.STATEMENT) : ROUTES.PROBLEMS.VIEW(
-              getProblemJudgeKey(judge, key),
-              ProblemTab.STATEMENT,
+        <Field className={classNames('jk-row fw-bd jk-pad-sm cr-py', { left: !isCard, center: isCard })}>
+          <div className="jk-row gap nowrap">
+            <div className="jk-row">{name}</div>
+            {user.solved ? (
+              <Popover
+                content={<T className="tt-se ws-np">solved</T>}
+                placement="top"
+                showPopperArrow
+              >
+                <div className="jk-row"><CheckIcon size="small" filledCircle className="cr-ss" /></div>
+              </Popover>
+            ) : user.tried && (
+              <Popover
+                content={<T className="tt-se ws-np">tried</T>}
+                placement="top"
+                showPopperArrow
+              >
+                <div className="jk-row"><CloseIcon size="small" filledCircle className="cr-wg" /></div>
+              </Popover>
             )}
-            className="link"
-          >
-            <div className="jk-row gap nowrap">
-              <div className="jk-row">{name}</div>
-              {user.solved ? (
-                <Popover
-                  content={<T className="tt-se ws-np">solved</T>}
-                  placement="top"
-                  showPopperArrow
-                >
-                  <div className="jk-row"><CheckIcon size="small" filledCircle className="cr-ss" /></div>
-                </Popover>
-              ) : user.tried && (
-                <Popover
-                  content={<T className="tt-se ws-np">tried</T>}
-                  placement="top"
-                  showPopperArrow
-                >
-                  <div className="jk-row"><CloseIcon size="small" filledCircle className="cr-wg" /></div>
-                </Popover>
-              )}
-              {user.isEditor && (
-                <Popover
-                  content={<T className="tt-se ws-np">you are editor</T>}
-                  placement="top"
-                  showPopperArrow
-                >
-                  <div className="jk-tag tx-s fw-bd letter-tag">E</div>
-                </Popover>
-              )}
-            </div>
-          </Link>
+            {user.isEditor && (
+              <Popover
+                content={<T className="tt-se ws-np">you are editor</T>}
+                placement="top"
+                showPopperArrow
+              >
+                <div className="jk-tag tx-s fw-bd letter-tag">E</div>
+              </Popover>
+            )}
+          </div>
         </Field>
       ),
       sort: true,
@@ -239,7 +255,6 @@ function Problems() {
       ] : []),
     ] : []),
   ], [ canCreateProblem, tags, judge ]);
-  const { push } = useRouter();
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
@@ -308,30 +323,33 @@ function Problems() {
                 { value: Judge.CODEFORCES, label: <>{JUDGE[Judge.CODEFORCES].label}</> },
               ]}
               selectedOption={{ value: judge }}
-              onChange={({ value }) => setJudge(value)}
+              onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}
               extend
             />
           </div>
         </div>
       </div>
-      <div className="pad-top-bottom pad-left-right">
-        <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
-          headers={columns}
-          getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-            return JUDGE_API_V1.PROBLEM.LIST(judge, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
-          }}
-          name={QueryParam.PROBLEMS_TABLE}
-          refreshInterval={60000}
-          extraNodes={extraNodes}
-          cards={{ height: 256, expanded: true }}
-          onRecordClick={async ({ isCard, data, index }) => {
-            if (isCard) {
-              await push({ pathname: ROUTES.PROBLEMS.VIEW(data[index].key, ProblemTab.STATEMENT) });
-            }
-          }}
-          dependencies={[ judge ]}
-        />
-      </div>
+      {judge && (
+        <div className="pad-top-bottom pad-left-right">
+          <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
+            getRecordStyle={() => ({ cursor: 'pointer' })}
+            headers={columns}
+            getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
+              return JUDGE_API_V1.PROBLEM.LIST(judge, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
+            }}
+            name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judge] || '')}
+            refreshInterval={60000}
+            extraNodes={extraNodes}
+            cards={{ height: 256, expanded: true }}
+            onRecordClick={async ({ data, index }) => {
+              if (window?.getSelection()?.type !== 'Range') {
+                await push({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
+              }
+            }}
+            dependencies={[ judge ]}
+          />
+        </div>
+      )}
     </TwoContentSection>
   );
 }

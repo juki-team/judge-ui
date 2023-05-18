@@ -1,4 +1,3 @@
-import { Judge } from '@juki-team/commons';
 import {
   ButtonLoader,
   CheckIcon,
@@ -12,9 +11,8 @@ import {
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
-import { useJukiUI, useNotification } from 'hooks';
+import { useJukiUI, useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -23,6 +21,7 @@ import {
   ContestTab,
   DataViewerHeadersType,
   HTTPMethod,
+  Judge,
   QueryParam,
   Status,
   SubmissionRunStatus,
@@ -191,17 +190,16 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         rowsView={viewPortSize !== 'sm'}
         name={QueryParam.ALL_USERS_TABLE}
         onRecordClick={async ({ isCard, data, index }) => {
-          if (isCard) {
-            await push({
-              pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
-              query,
-            }, undefined, { shallow: true });
-          }
+          await push({
+            pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
+            query,
+          }, undefined, { shallow: true });
         }}
         getRecordStyle={({ data, index, isCard }) => {
           if (isCard) {
-            return { borderTop: '6px solid ' + data[index]?.color };
+            return { borderTop: '6px solid ' + data[index]?.color, cursor: 'pointer' };
           }
+          return { cursor: 'pointer' };
         }}
         cards={{ height: 200 }}
         {...DEFAULT_DATA_VIEWER_PROPS}

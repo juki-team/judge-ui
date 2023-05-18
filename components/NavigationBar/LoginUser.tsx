@@ -1,8 +1,7 @@
 import { Button, ButtonLoader, Image, LoadingIcon, LoginIcon, LogoutIcon, Popover, T } from 'components';
 import { ROUTES } from 'config/constants';
 import { addParamQuery, classNames } from 'helpers';
-import { useJukiUI, useJukiUser } from 'hooks';
-import { useRouter } from 'next/router';
+import { useJukiUI, useJukiUser, useRouter } from 'hooks';
 import { useState } from 'react';
 import { OpenDialog, ProfileTab, QueryParam } from 'types';
 

@@ -1,6 +1,6 @@
 import { MdMathViewer } from 'components';
 import { consoleWarn } from 'helpers';
-import { useRouter } from 'next/router';
+import { useRouter } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { Theme } from 'types';
 

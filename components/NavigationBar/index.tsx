@@ -21,12 +21,12 @@ import {
 } from 'components';
 import { ROUTES } from 'config/constants';
 import { isOrHas, removeParamQuery } from 'helpers';
-import { useJukiUI, useJukiUser } from 'hooks';
+import { useJukiUI, useJukiUser, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import {
   AdminTab,
+  Judge,
   LastLinkKey,
   LastLinkType,
   MenuType,
@@ -44,7 +44,7 @@ const initialLastLink = {
   [LastLinkKey.SECTION_CONTEST]: { pathname: '/contests', query: {} },
   [LastLinkKey.CONTESTS]: { pathname: '/contests', query: {} },
   [LastLinkKey.SECTION_PROBLEM]: { pathname: '/problems', query: {} },
-  [LastLinkKey.PROBLEMS]: { pathname: '/problems', query: {} },
+  [LastLinkKey.PROBLEMS]: { pathname: `/problems`, query: { [QueryParam.JUDGE]: Judge.CUSTOMER } },
   [LastLinkKey.SECTION_ADMIN]: { pathname: `/admin/${AdminTab.USERS_MANAGEMENT}`, query: {} },
   [LastLinkKey.SHEETS]: { pathname: `/sheets`, query: {} },
   [LastLinkKey.SECTION_SHEET]: { pathname: `/sheets`, query: {} },
@@ -116,7 +116,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T className="tt-se">ranking</T>,
       icon: <LeaderboardIcon />,
       selected: ('/' + pathname).includes('//ranking'),
-      menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
+      menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()} prefetch>{children}</Link>,
     },
   ];
   if (

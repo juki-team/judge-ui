@@ -1,11 +1,11 @@
 import { ROUTES } from 'config/constants';
-import { useRouter } from 'next/router';
+import { useRouter } from 'hooks';
 import { useEffect, useState } from 'react';
 import { ContestTab } from 'types';
 
 export const useContestRouter = () => {
   const { isReady, query: { key: contestKey, index: problemIndex, tab: contestTab, ...query }, push } = useRouter();
-  const [lastProblemVisited, setLastProblemVisited] = useState('');
+  const [ lastProblemVisited, setLastProblemVisited ] = useState('');
   
   useEffect(() => {
     if (isReady && (contestTab === ContestTab.PROBLEMS || (contestTab === ContestTab.PROBLEM && !problemIndex))) {
@@ -19,7 +19,7 @@ export const useContestRouter = () => {
     } else if (isReady && contestTab === ContestTab.PROBLEM && problemIndex) {
       setLastProblemVisited(problemIndex as string);
     }
-  }, [isReady, problemIndex, contestTab, contestKey]);
+  }, [ isReady, problemIndex, contestTab, contestKey ]);
   
   const pushTab = (tab: ContestTab) => push({
     pathname: ROUTES.CONTESTS.VIEW('' + contestKey, tab, lastProblemVisited || undefined),

@@ -8,7 +8,7 @@ import { UsersLogged } from './UsersLogged';
 
 export const UsersManagement = ({ company }: { company: CompanyResponseDTO }) => {
   
-  const { router: { setSearchParam, searchParams } } = useJukiUI();
+  const { router: { setSearchParams, searchParams } } = useJukiUI();
   const { user: { canCreateUser } } = useJukiUser();
   const tabs = {
     [AdminTab.ALL_USERS]: {
@@ -30,7 +30,7 @@ export const UsersManagement = ({ company }: { company: CompanyResponseDTO }) =>
     };
   }
   const selectedTabKey = searchParams.get('userTab') || AdminTab.ALL_USERS;
-  const pushTab = tabKey => setSearchParam({ name: 'userTab', value: tabKey });
+  const pushTab = tabKey => setSearchParams({ name: 'userTab', value: tabKey });
   
   return (
     <div style={{ height: '100%' }}>

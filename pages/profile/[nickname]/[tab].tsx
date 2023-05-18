@@ -15,9 +15,8 @@ import {
   UserProfileSettings,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useJukiUI, useJukiUser } from 'hooks';
+import { useJukiUI, useJukiUser, useRouter } from 'hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { ContentResponseType, ProfileTab, UserProfileResponseDTO } from 'types';
 import Custom404 from '../../404';
@@ -116,7 +115,8 @@ export default function ProfileView() {
           <TwoContentSection>
             <div>
               {openModal === 'UPDATE_PASSWORD' && <ChangePasswordModal onClose={onClose} />}
-              {openModal === 'RESET_PASSWORD' && <ResetPassword onClose={onClose} nickname={data.content?.nickname} companyKey={company.key} />}
+              {openModal === 'RESET_PASSWORD' &&
+                  <ResetPassword onClose={onClose} nickname={data.content?.nickname} companyKey={company.key} />}
               {openModal === 'DATA' && <EditProfileModal onClose={onClose} user={data.content} />}
               <Breadcrumbs breadcrumbs={breadcrumbs} />
               <div className="pad-left-right">

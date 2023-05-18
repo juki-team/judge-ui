@@ -12,9 +12,8 @@ import {
   UsersManagement,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useFetcher, useJukiUser, useTrackLastPath } from 'hooks';
+import { useFetcher, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
 import { AdminTab, CompanyResponseDTO, ContentResponseType, ContentsResponseType, LastLinkKey } from 'types';
 import Custom404 from '../404';

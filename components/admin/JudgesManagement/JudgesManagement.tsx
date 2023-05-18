@@ -25,9 +25,9 @@ export const JudgesManagement = () => {
     },
   };
   
-  const { router: { searchParams, setSearchParam } } = useJukiUI();
+  const { router: { searchParams, setSearchParams } } = useJukiUI();
   const selectedTabKey = searchParams.get('judgeTab') || AdminTab.VIRTUAL_SUBMISSIONS_QUEUE;
-  const pushTab = tabKey => setSearchParam({ name: 'judgeTab', value: tabKey });
+  const pushTab = tabKey => setSearchParams({ name: 'judgeTab', value: tabKey });
   
   return (
     <div style={{ height: '100%' }}>

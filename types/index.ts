@@ -122,4 +122,6 @@ export type {
   OnRecordClickType,
   RefreshType,
   DataViewerRequesterGetUrlType,
+  AppendSearchParamsType,
+  GetRecordStyleType,
 } from '@juki-team/base-ui';

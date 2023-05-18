@@ -10,8 +10,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { addParamQuery, authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useJukiUI, useJukiUser, useNotification, useSWR } from 'hooks';
-import { useRouter } from 'next/router';
+import { useDateFormat, useJukiUI, useJukiUser, useNotification, useRouter, useSWR } from 'hooks';
 import {
   ContentResponseType,
   ContestResponseDTO,

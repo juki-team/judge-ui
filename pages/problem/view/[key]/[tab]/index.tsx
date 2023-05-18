@@ -1,3 +1,4 @@
+import { JUKI_APP_COMPANY_KEY } from '@juki-team/commons';
 import {
   AssignmentIcon,
   AutorenewIcon,
@@ -19,10 +20,9 @@ import {
   TwoContentSection,
 } from 'components';
 import { JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useJukiUI, useJukiUser, useNotification, useTrackLastPath } from 'hooks';
+import { authorizedRequest, cleanRequest, getProblemJudgeKey, getSimpleProblemJudgeKey } from 'helpers';
+import { useJukiUI, useJukiUser, useNotification, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { ReactNode } from 'react';
 import {
   ContentResponseType,
@@ -41,10 +41,9 @@ const ProblemView = (): ReactNode => {
   
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { query: { key, tab: problemTab, ...query }, push, isReady } = useRouter();
-  const { user } = useJukiUser();
+  const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
-  const { viewPortSize, router: { setSearchParam } } = useJukiUI();
-  
+  const { viewPortSize, router: { setSearchParams } } = useJukiUI();
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
@@ -171,8 +170,7 @@ const ProblemView = (): ReactNode => {
           <Link
             href={{
               pathname: ROUTES.PROBLEMS.VIEW(
-                problem.judge ===
-                Judge.JUKI_JUDGE ? problem.key : getProblemJudgeKey(problem.judge, problem.key),
+                getSimpleProblemJudgeKey(problem.judge, problem.key, companyKey === JUKI_APP_COMPANY_KEY),
                 ProblemTab.STATEMENT,
               ),
               query,
@@ -184,7 +182,7 @@ const ProblemView = (): ReactNode => {
           tabs[problemTab as string]?.header,
         ];
         
-        const pushTab = (tabKey) => setSearchParam({ name: 'tab', value: tabKey });
+        const pushTab = (tabKey) => setSearchParams({ name: 'tab', value: tabKey });
         
         const extraNodes = [];
         if (data?.content?.user?.isEditor && (data?.content?.judge === Judge.JUKI_JUDGE || data?.content?.judge === Judge.CUSTOMER)) {

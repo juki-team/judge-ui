@@ -1,4 +1,5 @@
-import { Status } from 'types';
+import { getProblemJudgeKey } from '@juki-team/commons';
+import { Judge, Status } from 'types';
 
 export const isOrHas = (value: string | string[] | undefined, v: string) => {
   return value === v || (Array.isArray(value) && value.includes(v));
@@ -15,6 +16,13 @@ export const roundTimestamp = (timestamp) => {
   const date = new Date(timestamp);
   date.setSeconds(0, 0);
   return date.getTime();
+};
+
+export const getSimpleProblemJudgeKey = (judge: Judge, key: string, force?: boolean) => {
+  if (judge === Judge.CUSTOMER || force) {
+    return key;
+  }
+  return getProblemJudgeKey(judge, key);
 };
 
 export const disableOutOfRange = (date, start, end) => ({

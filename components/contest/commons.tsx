@@ -189,6 +189,7 @@ export const LinkContests = ({ children }) => {
     <Link
       href={{ pathname: lastLink[LastLinkKey.CONTESTS].pathname, query: lastLink[LastLinkKey.CONTESTS].query }}
       className="link"
+      prefetch
     >
       {children}
     </Link>
@@ -204,6 +205,7 @@ export const LinkSectionContest = ({ children }) => {
         query: lastLink[LastLinkKey.SECTION_CONTEST].query,
       }}
       className="link"
+      prefetch
     >
       {children}
     </Link>

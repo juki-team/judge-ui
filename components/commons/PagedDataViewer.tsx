@@ -9,6 +9,7 @@ import {
   GetRecordKeyType,
   OnRecordClickType,
   ReactNodeOrFunctionType,
+  GetRecordStyleType,
 } from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
@@ -22,6 +23,7 @@ interface PagedDataViewerPros<T, V = T> {
   extraNodes?: ReactNodeOrFunctionType[],
   getRowKey?: GetRecordKeyType<T>
   onRecordClick?: OnRecordClickType<T>,
+  getRecordStyle?: GetRecordStyleType<T>;
   dependencies?: any[],
 }
 
@@ -37,6 +39,7 @@ export const PagedDataViewer = <T, V = T>({
   getRowKey,
   onRecordClick,
   dependencies = [],
+  getRecordStyle,
 }: PagedDataViewerPros<T, V>) => {
   
   const { viewPortSize } = useJukiUI();
@@ -66,6 +69,7 @@ export const PagedDataViewer = <T, V = T>({
   
   return (
     <DataViewer<T>
+      getRecordStyle={getRecordStyle}
       cards={cards}
       headers={headers}
       data={toRow ? data.map(toRow) : (data as unknown as T[])}
@@ -80,6 +84,7 @@ export const PagedDataViewer = <T, V = T>({
       getRecordKey={getRowKey}
       onRecordClick={onRecordClick}
       refreshRef={refreshRef}
+      
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

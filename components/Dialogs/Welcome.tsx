@@ -1,8 +1,7 @@
 import { WelcomeModalComponent } from 'components';
 import { ROUTES } from 'config/constants';
 import { removeParamQuery } from 'helpers';
-import { useJukiUser } from 'hooks';
-import { useRouter } from 'next/router';
+import { useJukiUser, useRouter } from 'hooks';
 import { OpenDialog, ProfileTab, QueryParam, Status } from 'types';
 
 export const WelcomeModal = () => {

@@ -14,8 +14,10 @@ export const ContestsUpcomingList = () => {
     contestantsColumn(),
   ], []);
   const { push } = useRouter();
+  
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
+      getRecordStyle={() => ({ cursor: 'pointer' })}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
         JUDGE_API_V1.CONTEST.LIST(page, pageSize, toFilterUrl({ ...filter, state: 'upcoming' }), toSortUrl(sort))
@@ -23,10 +25,8 @@ export const ContestsUpcomingList = () => {
       name={QueryParam.UPCOMING_CONTESTS_TABLE}
       refreshInterval={60000}
       cards={{ width: 320, expanded: true }}
-      onRecordClick={async ({ isCard, data, index }) => {
-        if (isCard) {
-          await push({ pathname: ROUTES.CONTESTS.VIEW(data[index].key, ContestTab.OVERVIEW) });
-        }
+      onRecordClick={async ({ data, index }) => {
+        await push({ pathname: ROUTES.CONTESTS.VIEW(data[index].key, ContestTab.OVERVIEW) });
       }}
     />
   );

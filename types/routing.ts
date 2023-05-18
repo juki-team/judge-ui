@@ -28,6 +28,8 @@ export enum QueryParam {
   SORT_TABLE = 's',
   FILTER_TABLE = 'f',
   VIEW_MODE_TABLE = 'v',
+  // problems
+  JUDGE = 'judge',
 }
 
 export enum OpenDialog {

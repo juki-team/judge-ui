@@ -43,9 +43,9 @@ export const ServicesManagement = ({ company }: { company: CompanyResponseDTO })
     },
   };
   
-  const { router: { searchParams, setSearchParam } } = useJukiUI();
+  const { router: { searchParams, setSearchParams } } = useJukiUI();
   const selectedTabKey = searchParams.get('servicesTab') || AdminTab.ECS_TASKS_MANAGEMENT;
-  const pushTab = tabKey => setSearchParam({ name: 'servicesTab', value: tabKey });
+  const pushTab = tabKey => setSearchParams({ name: 'servicesTab', value: tabKey });
   
   return (
     <div style={{ height: '100%' }}>

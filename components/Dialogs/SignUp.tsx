@@ -1,6 +1,6 @@
 import { SignUpModalComponent } from 'components';
 import { addParamQuery, removeParamQuery } from 'helpers';
-import { useRouter } from 'next/router';
+import { useRouter } from 'hooks';
 import React from 'react';
 import { OpenDialog, QueryParam, Status } from 'types';
 

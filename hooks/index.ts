@@ -1,13 +1,19 @@
-import { useFetcher as useFetcherJk, useJukiUser } from '@juki-team/base-ui';
+import { useJukiUser } from '@juki-team/base-ui';
 import { LastLinkContext } from 'components';
 import { useRouter as useNextRouter } from 'next/router';
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { SWRConfiguration } from 'swr';
-import { ContentResponseType, ContentsResponseType, SetLoaderStatusType, Status } from 'types';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { UrlObject } from 'url';
+
+interface TransitionOptions {
+  shallow?: boolean,
+  locale?: string | false,
+  scroll?: boolean,
+  unstable_skipClientCache?: boolean,
+}
 
 export const useRouter = () => {
-  const { query, ...rest } = useNextRouter();
-  
+  const { query, push: pushRouter, ...rest } = useNextRouter();
+  const [ loaderCounter, setLoaderCounter ] = useState(0);
   const queryObject = useMemo(() => {
     const searchParamsObject: { [key: string]: string[] } = {};
     Object.entries(query).forEach(([ key, value ]) => {
@@ -20,44 +26,14 @@ export const useRouter = () => {
     return searchParamsObject;
   }, [ query ]);
   
-  return { query, queryObject, ...rest };
-};
-
-export const useDataViewerRequester3 = <T extends ContentResponseType<any> | ContentsResponseType<any>, >(url: string, options?: SWRConfiguration) => {
+  const push = useCallback(async (url: UrlObject | string, as?: UrlObject | string, options?: TransitionOptions) => {
+    setLoaderCounter(prevState => prevState + 1);
+    const result = await pushRouter(url, as, options);
+    setLoaderCounter(prevState => prevState - 1);
+    return result;
+  }, [ pushRouter ]);
   
-  const setLoaderStatusRef = useRef<SetLoaderStatusType>();
-  const [ firstRefresh, setFirstRefresh ] = useState(false);
-  const { user: { nickname } } = useJukiUser();
-  const { data, error, isLoading, mutate, isValidating } = useFetcherJk<T>(firstRefresh ? url : null, options);
-  
-  const request = useCallback(async () => {
-    if (!firstRefresh) {
-      setFirstRefresh(true);
-    } else {
-      await mutate();
-    }
-  }, [ mutate, firstRefresh ]);
-  
-  useEffect(() => {
-    void mutate();
-  }, [ nickname ]);
-  
-  useEffect(() => {
-    if (isLoading || isValidating) {
-      setLoaderStatusRef.current?.(Status.LOADING);
-    } else {
-      setLoaderStatusRef.current?.(Status.NONE);
-    }
-  }, [ isLoading, isValidating ]);
-  
-  return {
-    data,
-    error,
-    isLoading: isLoading || isValidating,
-    request,
-    setLoaderStatusRef: useCallback((setLoaderStatus) => setLoaderStatusRef.current = setLoaderStatus, []),
-    // setLoaderStatusRef: useCallback((setLoaderStatus: SetLoaderStatusType) => setLoaderStatusRef.current = setLoaderStatus, []),
-  };
+  return { query, queryObject, push, isLoading: !!loaderCounter, ...rest };
 };
 
 export const useLasLink = () => {

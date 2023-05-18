@@ -1,6 +1,5 @@
 import { AlertModal, T } from 'components';
-import { useFetcher, useJukiUser, usePrevious, useT } from 'hooks';
-import { useRouter } from 'next/router';
+import { useFetcher, useJukiUser, usePrevious, useRouter, useT } from 'hooks';
 import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import { ContentResponseType, FlagsType, Language, ProfileSetting, SetFlagsType, Theme } from 'types';
 

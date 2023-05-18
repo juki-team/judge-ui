@@ -203,7 +203,9 @@ export const ProblemCodeEditor = ({
           return validSubmit;
         }
       }}
-      initialTestCases={problem.judge === Judge.JUKI_JUDGE ? initialTestCases : undefined}
+      initialTestCases={(problem.judge === Judge.JUKI_JUDGE || problem.judge === Judge.CUSTOMER)
+        ? initialTestCases
+        : undefined}
     />
   );
 };
