@@ -123,8 +123,8 @@ export function ContestView() {
           },
         } = contest || {};
         const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
-        let statusLabel = contestStateMap[key].label;
-        let tag = contestStateMap[key].color;
+        const statusLabel = contestStateMap[key].label;
+        const tag = contestStateMap[key].color;
         let timeInterval = 0;
         if (contest.isEndless) {
           timeInterval = -1;

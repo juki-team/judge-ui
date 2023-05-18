@@ -1,8 +1,10 @@
 import {
   BalloonIcon,
   ButtonLoader,
+  contestStateMap,
   DataViewer,
   Field,
+  FullscreenIcon,
   GearsIcon,
   Image,
   Popover,
@@ -10,6 +12,7 @@ import {
   SnowflakeIcon,
   T,
   TextHeadCell,
+  Timer,
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
@@ -101,10 +104,12 @@ const DownloadButton = ({
 
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { user } = useJukiUser();
+  const { user, company: { imageUrl, name } } = useJukiUser();
+  
   const { notifyResponse } = useNotification();
   const { query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
   const { viewPortSize } = useJukiUI();
+  const [ fullscreen, setFullscreen ] = useState(false);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       {
@@ -228,7 +233,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
   
-  return (
+  const score = (
     <DataViewer<ScoreboardResponseDTO>
       headers={columns}
       data={data}
@@ -281,6 +286,14 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         <div className="jk-row">
           <DownloadButton data={data} contest={contest} disabled={isLoading} />
         </div>,
+        <div className="jk-row">
+          <FullscreenIcon
+            className="clickable jk-br-ie"
+            onClick={() => {
+              setFullscreen(!fullscreen);
+            }}
+          />
+        </div>,
       ]}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
@@ -289,4 +302,86 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
+  
+  if (fullscreen) { // TODO: improve:
+    let timeInterval = 0;
+    if (contest.isEndless) {
+      timeInterval = -1;
+    } else if (contest.isPast) {
+      timeInterval = new Date().getTime() - contest.settings.endTimestamp;
+    } else if (contest.isFuture) {
+      timeInterval = contest.settings.startTimestamp - new Date().getTime();
+    } else if (contest.isLive) {
+      timeInterval = contest.settings.endTimestamp - new Date().getTime();
+    }
+    const literal = contest.isEndless ? <T className="ws-np">endless</T> : (
+      <>
+        {contest.isLive ? <T className="ws-np">ends in</T> : contest.isPast ?
+          <T className="ws-np">ends ago</T> : <T className="ws-np">stars in</T>}
+        &nbsp;
+        <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
+      </>
+    );
+    const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
+    const statusLabel = contestStateMap[key].label;
+    const tag = contestStateMap[key].color;
+    const allLiteralLabel = contest.isEndless
+      ? <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+        <T>{statusLabel}</T></div>
+      : <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+        <T>{statusLabel}</T>,&nbsp;{literal}</div>;
+    
+    const logoImageUrl = imageUrl;
+    
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 10000,
+          width: '100vw',
+          height: 'var(--100VH)',
+          background: 'var(--t-color-white-2)',
+        }}
+      >
+        <div className="jk-row bc-pd" style={{ padding: 'var(--pad-xt)' }}>
+          <Image
+            src={logoImageUrl}
+            alt={name}
+            height={viewPortSize === 'md' ? 40 : 46}
+            width={viewPortSize === 'md' ? 80 : 92}
+          />
+        </div>
+        <div className="jk-pad-md">
+          <div className="bc-wea">
+            <div className="jk-row nowrap gap extend">
+              <h2
+                style={{
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  width: 'calc(100vw - var(--pad-border) - var(--pad-border))',
+                  textAlign: 'center',
+                }}
+              >
+                {contest.name}
+              </h2>
+            </div>
+            <div className="jk-row extend">{allLiteralLabel}</div>
+          </div>
+          <div
+            style={{
+              width: '100%',
+              height: 'calc(var(--100VH) - 170px)',
+            }}
+          >
+            {score}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  return score;
 };

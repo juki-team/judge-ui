@@ -7,6 +7,7 @@ export {
   ArrowDownwardIcon,
   InfoIcon,
   ArrowForwardIcon,
+  FullscreenIcon,
   ArrowIcon,
   ArrowLeftIcon,
   ArrowRightIcon,

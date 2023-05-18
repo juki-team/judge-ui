@@ -3,6 +3,7 @@
   "version": "1.2.3",
   "scripts": {
     "dev": "next dev -p 3070",
+    "dev2": "next dev -p 3080",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
     "build": "next build",
     "start": "next start",
