@@ -8,6 +8,7 @@ export {
   InfoIcon,
   ArrowForwardIcon,
   FullscreenIcon,
+  FullscreenExitIcon,
   ArrowIcon,
   ArrowLeftIcon,
   ArrowRightIcon,

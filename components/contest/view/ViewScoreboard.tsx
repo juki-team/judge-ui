@@ -4,6 +4,7 @@ import {
   contestStateMap,
   DataViewer,
   Field,
+  FullscreenExitIcon,
   FullscreenIcon,
   GearsIcon,
   Image,
@@ -233,6 +234,8 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
   
+  const handleFullscreen = () => setFullscreen(!fullscreen);
+  
   const score = (
     <DataViewer<ScoreboardResponseDTO>
       headers={columns}
@@ -287,12 +290,9 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
           <DownloadButton data={data} contest={contest} disabled={isLoading} />
         </div>,
         <div className="jk-row">
-          <FullscreenIcon
-            className="clickable jk-br-ie"
-            onClick={() => {
-              setFullscreen(!fullscreen);
-            }}
-          />
+          {fullscreen
+            ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
+            : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
         </div>,
       ]}
       cardsView={false}
