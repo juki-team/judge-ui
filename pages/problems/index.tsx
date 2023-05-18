@@ -112,7 +112,6 @@ function Problems() {
   const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
   useEffect(() => {
     if (!judge) {
-      console.log({ judge });
       setSearchParams({ name: QueryParam.JUDGE, value: Judge.CUSTOMER });
     }
   }, [ judge, isReady ]);
