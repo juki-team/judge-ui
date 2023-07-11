@@ -1,4 +1,4 @@
-import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
+import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components/index';
 import { ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { useRouter } from 'hooks';

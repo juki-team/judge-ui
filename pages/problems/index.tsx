@@ -3,6 +3,8 @@ import {
   ButtonLoader,
   CheckIcon,
   CloseIcon,
+  CrawlCodeforcesProblemModal,
+  CrawlJvumsaProblemModal,
   Field,
   InfoIcon,
   PagedDataViewer,
@@ -39,8 +41,6 @@ import {
   QueryParam,
   ReactNode,
 } from 'types';
-import { CrawlCodeforcesProblemModal } from './CrawlCodeforcesProblemModal';
-import { CrawlJvumsaProblemModal } from './CrawlJvumsaProblemModal';
 
 
 const JUDGE_C: { [key in Judge]: string } = {

@@ -17,7 +17,6 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   }
   
   const isMobileViewPort = viewPortSize === 'sm';
-  console.log({ contest });
   
   return (
     <SplitPane

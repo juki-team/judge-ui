@@ -110,7 +110,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
   const [ language, setLanguage ] = useState<string>(ProgrammingLanguage.TEXT);
   const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
   const [ sourceCode, setSourceCode ] = useState('');
-  console.log({ languages, contest, problem, language });
+  
   return (
     <UserCodeEditor
       className="br-g6"

@@ -9,7 +9,6 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
     settings: {
       timeLimit: 1000,
       memoryLimit: 256000,
-      languages: [],
       mode: ProblemMode.TOTAL,
       type: ProblemType.STANDARD,
       withPE: true,

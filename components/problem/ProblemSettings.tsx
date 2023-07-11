@@ -132,9 +132,9 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           <div className="jk-row jk-table-inline-header block">
             <div className="jk-row"><T className="tt-se">group</T></div>
             {problem.settings.mode === ProblemMode.SUBTASK && <div className="jk-row"><T className="tt-se">subtask
-              points</T></div>}
+                points</T></div>}
             {problem.settings.mode === ProblemMode.PARTIAL && <div className="jk-row"><T className="tt-se">partial
-              points</T></div>}
+                points</T></div>}
           </div>
           {Object.values(problem.settings.pointsByGroups).map(({ group, points, partial }) => (
             <div key={group} className="jk-row jk-table-inline-row block">
@@ -339,8 +339,8 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
         <div className="fw-bd tt-se nowrap"><T className="ws-np">programming languages</T>:</div>
         <MultiSelect
           options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}
-          selectedOptions={problem.settings?.languages?.map?.(lang => ({
-            value: lang,
+          selectedOptions={Object.values(problem.settings?.byProgrammingLanguage).map?.(({ language }) => ({
+            value: language,
           }))}
           onChange={(values) => {
             const byProgrammingLanguage: ProblemSettingsByProgrammingLanguageType = {};
@@ -357,7 +357,6 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
               ...problem,
               settings: {
                 ...problem.settings,
-                languages: values.map(value => value.value),
                 byProgrammingLanguage,
               },
             });
@@ -371,21 +370,21 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           <div className="jk-row"><T>time limit per test</T></div>
           <div className="jk-row"><T>memory limit per test</T></div>
         </div>
-        {problem.settings?.languages.map((lang) => {
+        {Object.values(problem.settings?.byProgrammingLanguage).map(({ language }) => {
           return (
-            <div className="jk-row block gap extend jk-table-inline-row" key={lang}>
-              <div style={{ maxWidth: 200 }} className="jk-row">{PROGRAMMING_LANGUAGE[lang].label}</div>
+            <div className="jk-row block gap extend jk-table-inline-row" key={language}>
+              <div style={{ maxWidth: 200 }} className="jk-row">{PROGRAMMING_LANGUAGE[language].label}</div>
               <div className="jk-row center gap nowrap">
                 <Input
                   type="number"
-                  value={problem.settings.byProgrammingLanguage[lang]?.timeLimit}
+                  value={problem.settings.byProgrammingLanguage[language]?.timeLimit}
                   onChange={value => setProblem({
                     ...problem,
                     settings: {
                       ...problem.settings,
                       byProgrammingLanguage: {
                         ...problem.settings.byProgrammingLanguage,
-                        [lang]: { ...problem.settings.byProgrammingLanguage[lang], timeLimit: value },
+                        [language]: { ...problem.settings.byProgrammingLanguage[language], timeLimit: value },
                       },
                     },
                   })}
@@ -396,14 +395,14 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
               <div className="jk-row center gap nowrap">
                 <Input
                   type="number"
-                  value={problem.settings.byProgrammingLanguage[lang]?.memoryLimit}
+                  value={problem.settings.byProgrammingLanguage[language]?.memoryLimit}
                   onChange={value => setProblem({
                     ...problem,
                     settings: {
                       ...problem.settings,
                       byProgrammingLanguage: {
                         ...problem.settings.byProgrammingLanguage,
-                        [lang]: { ...problem.settings.byProgrammingLanguage[lang], memoryLimit: value },
+                        [language]: { ...problem.settings.byProgrammingLanguage[language], memoryLimit: value },
                       },
                     },
                   })}
