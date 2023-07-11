@@ -1,6 +1,5 @@
 import { EditCreateContest } from 'components';
 import { useJukiUser } from 'hooks';
-import React from 'react';
 import Custom404 from '../../404';
 
 function ContestCreate() {

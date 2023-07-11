@@ -1,42 +1,26 @@
 import {
-  ButtonLoader,
   CheckIcon,
   DateLiteral,
   EventIcon,
   Field,
   GroupIcon,
-  PlusIcon,
   Popover,
   ScheduleIcon,
   T,
   TextHeadCell,
+  Timer,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { buttonLoaderLink, classNames } from 'helpers';
-import { useLasLink, useRouter } from 'hooks';
+import { classNames } from 'helpers';
 import Link from 'next/link';
 import React from 'react';
 import {
+  ContestResponseDTO,
   ContestSummaryListResponseDTO,
   ContestTab,
   DataViewerHeadersType,
   JkTableHeaderFilterType,
-  LastLinkKey,
 } from 'types';
-
-export const CreateContestButton = () => {
-  const { push } = useRouter();
-  return (
-    <ButtonLoader
-      size="small"
-      icon={<PlusIcon />}
-      onClick={buttonLoaderLink(() => push(ROUTES.CONTESTS.CREATE()))}
-      responsiveMobile
-    >
-      <T>create</T>
-    </ButtonLoader>
-  );
-};
 
 export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: <TextHeadCell text={<T className="tt-ue tx-s">contest name</T>} className="left" />,
@@ -103,61 +87,76 @@ export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestS
   minWidth: 320,
 });
 
-export const contestDateColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
-  head: <TextHeadCell text={<div className="jk-col tt-ue tx-s"><T>start</T><T>end</T></div>} />,
-  index: 'date',
+export const contestStartDateColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
+  head: <TextHeadCell text={<div className="tt-ue tx-s"><T>start</T></div>} />,
+  index: 'startDate',
   field: ({ record: { settings, isEndless }, isCard }) => (
     <Field className="jk-col extend">
       {isEndless ? (
           isCard ? '' : '-'
         ) :
         isCard ? (
-          <>
-            <div className="jk-row block extend nowrap space-between">
-              <div className="jk-row gap nowrap">
-                <EventIcon size="small" />
-                <div className="jk-col">
-                  <div className="jk-row nowrap">{new Date(settings.startTimestamp).toLocaleDateString()}</div>
-                  <T className="cr-g4 tx-s tt-se ws-np">start date</T>
-                </div>
-              </div>
-              <div className="jk-row gap nowrap">
-                <ScheduleIcon size="small" />
-                <div className="jk-col">
-                  <div className="jk-row ws-np">{new Date(settings.startTimestamp).toLocaleTimeString()}</div>
-                  <T className="cr-g4 tx-s tt-se">hour</T>
-                </div>
+          <div className="jk-row block extend nowrap space-between">
+            <div className="jk-row gap nowrap">
+              <EventIcon size="small" />
+              <div className="jk-col">
+                <div className="jk-row nowrap">{new Date(settings.startTimestamp).toLocaleDateString()}</div>
+                <T className="cr-g4 tx-s tt-se ws-np">start date</T>
               </div>
             </div>
-            <div className="jk-row block extend nowrap space-between">
-              <div className="jk-row gap nowrap">
-                <EventIcon size="small" />
-                <div className="jk-col">
-                  <div>{new Date(settings.endTimestamp).toLocaleDateString()}</div>
-                  <T className="cr-g4 tx-s tt-se">end date</T>
-                </div>
-              </div>
-              <div className="jk-row gap nowrap">
-                <ScheduleIcon size="small" />
-                <div className="jk-col">
-                  <div>{new Date(settings.endTimestamp).toLocaleTimeString()}</div>
-                  <T className="cr-g4 tx-s tt-se">hour</T>
-                </div>
+            <div className="jk-row gap nowrap">
+              <ScheduleIcon size="small" />
+              <div className="jk-col">
+                <div className="jk-row ws-np">{new Date(settings.startTimestamp).toLocaleTimeString()}</div>
+                <T className="cr-g4 tx-s tt-se">hour</T>
               </div>
             </div>
-          </>
+          </div>
         ) : (
-          <>
-            <DateLiteral date={new Date(settings.startTimestamp)} show="year-month-day-hours-minutes" />
-            <DateLiteral date={new Date(settings.endTimestamp)} show="year-month-day-hours-minutes" />
-          </>
+          <DateLiteral date={new Date(settings.startTimestamp)} show="year-month-day-hours-minutes" twoLines />
         )}
     </Field>
   ),
   sort: true,
   filter: { type: 'date-range', pickerType: 'year-month-day-hours-minutes' },
   cardPosition: 'center',
-  minWidth: 340,
+  minWidth: 170,
+});
+
+export const contestEndDateColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
+  head: <TextHeadCell text={<div className="tt-ue tx-s"><T>end</T></div>} />,
+  index: 'endDate',
+  field: ({ record: { settings, isEndless }, isCard }) => (
+    <Field className="jk-col extend">
+      {isEndless ? (
+          isCard ? '' : '-'
+        ) :
+        isCard ? (
+          <div className="jk-row block extend nowrap space-between">
+            <div className="jk-row gap nowrap">
+              <EventIcon size="small" />
+              <div className="jk-col">
+                <div>{new Date(settings.endTimestamp).toLocaleDateString()}</div>
+                <T className="cr-g4 tx-s tt-se">end date</T>
+              </div>
+            </div>
+            <div className="jk-row gap nowrap">
+              <ScheduleIcon size="small" />
+              <div className="jk-col">
+                <div>{new Date(settings.endTimestamp).toLocaleTimeString()}</div>
+                <T className="cr-g4 tx-s tt-se">hour</T>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <DateLiteral date={new Date(settings.endTimestamp)} show="year-month-day-hours-minutes" twoLines />
+        )}
+    </Field>
+  ),
+  sort: true,
+  filter: { type: 'date-range', pickerType: 'year-month-day-hours-minutes' },
+  cardPosition: 'center',
+  minWidth: 170,
 });
 
 export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
@@ -183,31 +182,26 @@ export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListRes
   minWidth: 160,
 });
 
-export const LinkContests = ({ children }) => {
-  const { lastLink } = useLasLink();
-  return (
-    <Link
-      href={{ pathname: lastLink[LastLinkKey.CONTESTS].pathname, query: lastLink[LastLinkKey.CONTESTS].query }}
-      className="link"
-      prefetch
-    >
-      {children}
-    </Link>
-  );
-};
-
-export const LinkSectionContest = ({ children }) => {
-  const { lastLink } = useLasLink();
-  return (
-    <Link
-      href={{
-        pathname: lastLink[LastLinkKey.SECTION_CONTEST].pathname,
-        query: lastLink[LastLinkKey.SECTION_CONTEST].query,
-      }}
-      className="link"
-      prefetch
-    >
-      {children}
-    </Link>
-  );
+export const getContestTimeLiteral = (contest: ContestResponseDTO) => {
+  let timeInterval = 0;
+  if (contest.isEndless) {
+    timeInterval = -1;
+  } else if (contest.isPast) {
+    timeInterval = new Date().getTime() - contest.settings.endTimestamp;
+  } else if (contest.isFuture) {
+    timeInterval = contest.settings.startTimestamp - new Date().getTime();
+  } else if (contest.isLive) {
+    timeInterval = contest.settings.endTimestamp - new Date().getTime();
+  }
+  
+  return contest.isEndless
+    ? <T className="ws-np">endless</T>
+    : (
+      <>
+        {contest.isLive ? <T className="ws-np">ends in</T> : contest.isPast ?
+          <T className="ws-np">ends ago</T> : <T className="ws-np">stars in</T>}
+        &nbsp;
+        <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
+      </>
+    );
 };

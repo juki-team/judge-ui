@@ -11,10 +11,10 @@ import {
   TwoContentSection,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { renderReactNodeOrFunctionP1 } from 'helpers';
+import { useEffect, useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { useEffect } from 'react';
-import { ContestsTab, LastLinkKey } from 'types';
+import { ContestsTab, LastLinkKey, TabsType } from 'types';
 
 function Contests() {
   
@@ -43,7 +43,7 @@ function Contests() {
     query,
   }, undefined, { shallow: true });
   
-  const tabs = {
+  const tabs: TabsType<ContestsTab> = {
     [ContestsTab.ALL]: {
       body: (
         <div className="pad-left-right pad-top-bottom">
@@ -111,13 +111,13 @@ function Contests() {
           <TabsInline
             tabs={tabs}
             onChange={pushTab}
-            selectedTabKey={contestsTab}
+            selectedTabKey={contestsTab as ContestsTab}
             extraNodes={extraNodes}
             extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
           />
         </div>
       </div>
-      {tabs[contestsTab as ContestsTab]?.body}
+      {renderReactNodeOrFunctionP1(tabs[contestsTab as ContestsTab]?.body, { selectedTabKey: contestsTab as ContestsTab })}
     </TwoContentSection>
   );
 }

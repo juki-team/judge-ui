@@ -10,7 +10,7 @@ import {
   submissionProblemColumn,
   submissionTimeUsed,
   submissionVerdictColumn,
-} from '../submissions';
+} from '../submissions/helpers';
 
 const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = [
   submissionProblemColumn({ blankTarget: true }),

@@ -15,6 +15,7 @@ export {
   ProfileSetting,
   UserStatus,
   Language,
+  CompanyPlan,
   Theme,
   ScopeData,
   ProgrammingLanguage,
@@ -92,8 +93,9 @@ export type {
   CompanyResourceSpecificationsResponseDTO,
 } from '@juki-team/commons';
 
-export { Period, NotificationType, SearchParamKey } from '@juki-team/base-ui';
+export { Period, NotificationType, QueryParamKey } from '@juki-team/base-ui';
 export type {
+  TabsType,
   MenuType,
   DataViewerHeadersType,
   FilterSelectOfflineType,

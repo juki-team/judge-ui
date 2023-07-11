@@ -2,7 +2,7 @@ import { ButtonLoader, DataViewer, DateLiteral, Field, T, TextHeadCell } from 'c
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, toFilterUrl } from 'helpers';
 import { useDataViewerRequester, useNotification } from 'hooks';
-import React, { useMemo, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -24,12 +24,12 @@ export const VirtualUsersTable = () => {
     refreshRef,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<VirtualUserResponseDTO>>(
-    ({ pagination: { page, pageSize }, filter, sort }) => (
+    ({ filter, sort }) => (
       JUDGE_API_V1.VIRTUAL_USER.LIST(toFilterUrl(filter))
     ),
   );
   
-  const [ modal, setModal ] = useState(null);
+  const [ modal, setModal ] = useState<ReactNode>(null);
   
   const data: VirtualUserResponseDTO[] = (response?.success ? response.contents : []);
   

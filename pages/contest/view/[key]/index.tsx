@@ -1,6 +1,5 @@
 import { ROUTES } from 'config/constants';
-import { useRouter } from 'hooks';
-import { useEffect } from 'react';
+import { useEffect, useRouter } from 'hooks';
 import { ContestTab } from 'types';
 
 function View() {
@@ -9,7 +8,7 @@ function View() {
     if (isReady) {
       void replace(ROUTES.CONTESTS.VIEW(query.key as string, ContestTab.OVERVIEW));
     }
-  }, [replace, query, isReady]);
+  }, [ replace, query, isReady ]);
   return null;
 }
 

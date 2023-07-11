@@ -1,5 +1,5 @@
-import { useJukiUser } from '@juki-team/base-ui';
 import { Breadcrumbs, JukiCompleteLaptopImage, JukiCourtImage, T, TwoContentSection } from 'components';
+import { useJukiUser } from 'hooks';
 
 export default function Home() {
   const breadcrumbs = [

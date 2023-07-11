@@ -1,9 +1,10 @@
-import { PagedDataViewer, submissionActionsColumn } from 'components';
+import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
 import { CompanyResponseDTO, DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
 import {
+  submissionActionsColumn,
   submissionDateColumn,
   submissionLanguage,
   submissionMemoryUsed,
@@ -11,7 +12,7 @@ import {
   submissionProblemColumn,
   submissionTimeUsed,
   submissionVerdictColumn,
-} from '../submissions';
+} from '../submissions/helpers';
 
 export function AllSubmissions({ company }: { company: CompanyResponseDTO }) {
   

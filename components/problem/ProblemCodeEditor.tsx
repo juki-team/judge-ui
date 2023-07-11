@@ -1,7 +1,16 @@
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
-import { JUDGE_API_V1, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
-import { addParamQuery, authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useContestRouter, useFetcher, useJukiUser, useNotification, useRouter, useSWR, useTask } from 'hooks';
+import { JUDGE_API_V1, PAGE_SIZE_OPTIONS, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
+import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
+import {
+  useContestRouter,
+  useFetcher,
+  useJukiUser,
+  useNotification,
+  useRouter,
+  useSearchParams,
+  useSWR,
+  useTask,
+} from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   CodeEditorTestCasesType,
@@ -10,19 +19,16 @@ import {
   HTTPMethod,
   Judge,
   JudgeResponseDTO,
-  OpenDialog,
   ProblemResponseDTO,
   ProblemTab,
   ProgrammingLanguage,
   QueryParam,
+  QueryParamKey,
   Status,
   SubmissionRunStatus,
 } from 'types';
 
-export const ProblemCodeEditor = ({
-  problem,
-  contest,
-}: {
+interface ProblemCodeEditorProps {
   problem: ProblemResponseDTO,
   contest?: {
     isAdmin: boolean,
@@ -32,9 +38,13 @@ export const ProblemCodeEditor = ({
     isSpectator: boolean,
     problemIndex: string,
     key: string,
+    languages: { [key in Judge]: ProgrammingLanguage[] },
   }
-}) => {
+}
+
+export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) => {
   
+  const { appendSearchParams } = useSearchParams();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWR();
   const { listenSubmission } = useTask();
@@ -60,29 +70,47 @@ export const ProblemCodeEditor = ({
     [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`]: filter,
   } = query;
   const { key: problemKey, ...restQuery } = query;
-  const { data: codeforcesData } = useFetcher<ContentResponseType<JudgeResponseDTO>>(
-    problem.judge === Judge.CODEFORCES ? JUDGE_API_V1.JUDGE.GET(Judge.CODEFORCES) : null,
+  const { data: virtualJudgeData } = useFetcher<ContentResponseType<JudgeResponseDTO>>(
+    [ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) ? JUDGE_API_V1.JUDGE.GET(problem.judge) : null,
   );
   const languages = useMemo(
     () => {
-      if (problem.judge === Judge.CODEFORCES) {
-        return ((codeforcesData?.success && codeforcesData.content.languages) || [])
+      let languages = [];
+      if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge)) {
+        languages = ((virtualJudgeData?.success && virtualJudgeData.content.languages) || [])
           .filter(lang => lang.enabled)
           .map(lang => ({
             value: lang.value,
             label: lang.label || lang.value,
           }));
+      } else if (problem.judge === Judge.CUSTOMER || problem.judge === Judge.JUKI_JUDGE) {
+        languages = Object.values(problem?.settings.byProgrammingLanguage || {})
+          .filter(({ language }) => contest?.languages[problem.judge].some(lang => lang === language))
+          .map(({ language }) => ({
+            value: language,
+            label: PROGRAMMING_LANGUAGE[language].label || language,
+          }));
+      } else {
+        languages = Object.values(problem?.settings.byProgrammingLanguage || {}).map(({ language }) => ({
+          value: language,
+          label: PROGRAMMING_LANGUAGE[language].label || language,
+        }));
       }
-      return Object.values(problem?.settings.languages || {}).map(lang => ({
-        value: lang,
-        label: PROGRAMMING_LANGUAGE[lang].label || lang,
-      }));
-    }, [ JSON.stringify(problem?.settings.languages), codeforcesData, problem.judge ],
+      if (!languages.length) {
+        languages = [ {
+          value: ProgrammingLanguage.TEXT,
+          label: PROGRAMMING_LANGUAGE[ProgrammingLanguage.TEXT].label,
+        } ];
+      }
+      return languages;
+    },
+    [ JSON.stringify(problem?.settings.byProgrammingLanguage), virtualJudgeData, problem.judge, JSON.stringify(contest?.languages) ],
   );
+  
   const [ language, setLanguage ] = useState<string>(ProgrammingLanguage.TEXT);
   const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
   const [ sourceCode, setSourceCode ] = useState('');
-  
+  console.log({ languages, contest, problem, language });
   return (
     <UserCodeEditor
       className="br-g6"
@@ -108,7 +136,7 @@ export const ProblemCodeEditor = ({
               size="tiny"
               onClick={async () => {
                 addSuccessNotification(<T className="tt-se">to submit, first login</T>);
-                await push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) });
+                appendSearchParams({ name: QueryParamKey.SIGN_IN, value: '1' });
               }}
             >
               <T>submit</T>
@@ -122,13 +150,12 @@ export const ProblemCodeEditor = ({
             disabled={sourceCode === ''}
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
-              const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
-                contest?.problemIndex
-                  ? JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problemJudgeKey)
-                  : JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problem.key), {
-                  method: HTTPMethod.POST,
-                  body: JSON.stringify({ language, source: sourceCode }),
-                }));
+              const response = cleanRequest<ContentResponseType<any>>(
+                await authorizedRequest(
+                  contest?.problemIndex ? JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problemJudgeKey) : JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problem.key),
+                  { method: HTTPMethod.POST, body: JSON.stringify({ language, source: sourceCode }) },
+                ),
+              );
               if (response.success) {
                 if (response?.content.submitId) {
                   listenSubmission(
@@ -153,7 +180,7 @@ export const ProblemCodeEditor = ({
                   query.key as string,
                   nickname,
                   1,
-                  +myStatusPageSize,
+                  +(myStatusPageSize || PAGE_SIZE_OPTIONS[0]),
                   '',
                   '',
                 ));
@@ -164,7 +191,7 @@ export const ProblemCodeEditor = ({
                   problem.key,
                   nickname,
                   1,
-                  +myStatusPageSize,
+                  +(myStatusPageSize || PAGE_SIZE_OPTIONS[0]),
                   '',
                   '',
                 ));

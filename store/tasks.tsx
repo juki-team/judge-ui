@@ -1,30 +1,29 @@
 import { T } from 'components';
 import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJkSocket, useJukiUser, useNotification } from 'hooks';
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { useEffect, useJkSocket, useJukiUser, useNotification, useState } from 'hooks';
+import { createContext } from 'react';
 import {
   ContentsResponseType,
   HTTPMethod,
   Judge,
   ProblemVerdict,
+  PropsWithChildren,
   SocketEvent,
   SocketEventSubmissionResponseDTO,
   SubmissionRunStatus,
 } from 'types';
 
+type Submissions = { [key: string]: SocketEventSubmissionResponseDTO };
+
 export const TaskContext = createContext<{
-  listenSubmission: (submissionId: string, judge: Judge, key: string) => void,
-  submissions: { [key: string]: SocketEventSubmissionResponseDTO },
-}>({
-  submissions: {},
-  listenSubmission: () => null,
-});
+  listenSubmission: (submissionId: string, judge: Judge, key: string) => void, submissions: Submissions,
+}>({ submissions: {}, listenSubmission: () => null });
 
 export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   const { user: { nickname } } = useJukiUser();
   const { addErrorNotification, addSuccessNotification } = useNotification();
-  const [ submissions, setSubmissions ] = useState({});
+  const [ submissions, setSubmissions ] = useState<Submissions>({});
   const { pop } = useJkSocket(SocketEvent.SUBMISSION);
   useEffect(() => {
     const data = pop();
@@ -130,7 +129,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
                   <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
                   <div>({submission.contestProblemIndex}) {submission.problemName}</div>
                 </>
-                : <div>{submission.problemName}</div>
+                : <div>{submission?.problemName}</div>
               }
               <T className="tt-ce">{PROBLEM_VERDICT[ProblemVerdict.AC].label}</T>
             </div>,
@@ -143,7 +142,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
                   <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
                   <div>({submission.contestProblemIndex}) {submission.problemName}</div>
                 </>
-                : <div>{submission.problemName}</div>
+                : <div>{submission?.problemName}</div>
               }
               <T className="tt-ce">{PROBLEM_VERDICT[ProblemVerdict.PA].label}</T>
               &bnsp;
@@ -158,7 +157,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
                   <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
                   <div>({submission.contestProblemIndex}) {submission.problemName}</div>
                 </>
-                : <div>{submission.problemName}</div>
+                : <div>{submission?.problemName}</div>
               }
               <T className="tt-ce">{PROBLEM_VERDICT[verdict].label}</T>
             </div>,

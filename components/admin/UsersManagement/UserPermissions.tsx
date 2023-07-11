@@ -77,6 +77,7 @@ export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: Pro
               <Select
                 disabled={!editing}
                 options={Object.values(roles).map(role => ({ label: <T>{role.label}</T>, value: role.value }))}
+                // @ts-ignore
                 selectedOption={{ value: newRoles[key + 'Role'] }}
                 onChange={({ value }) => {
                   setNewRoles(prevState => ({ ...prevState, [key + 'Role']: value }));

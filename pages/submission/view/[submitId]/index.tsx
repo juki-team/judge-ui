@@ -1,7 +1,6 @@
 import { Breadcrumbs, SubmitView, T, TwoContentSection } from 'components';
 import { useRouter } from 'hooks';
 import Link from 'next/link';
-import React from 'react';
 
 function Submit() {
   
@@ -29,7 +28,7 @@ function Submit() {
         </div>
       </div>
     </TwoContentSection>
-  )
+  );
   
 }
 

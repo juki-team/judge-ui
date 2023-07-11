@@ -124,32 +124,37 @@
 
 // CODEFORCES STYLES
 .jk-theme-light {
-  .codeforces-statement .header .title {
+  .CODEFORCES-statement .header .title {
     color: var(--t-color-primary-dark);
   }
 }
 
 .jk-theme-dark {
-  .codeforces-statement .header .title {
+  .CODEFORCES-statement .header .title {
     color: var(--t-color-primary);
   }
 }
 
-.h3 {
+.CODEFORCES-h3 {
+  color: var(--t-color-primary-dark);
   font-size: 26px;
   @include sm { font-size: 22px; }
   font-weight: var(--weight-bold);
   line-height: 1.6;
 }
 
-.codeforces-content {
+.CODEFORCES-content {
   @extend .br-g6;
   @extend .bc-we;
   @extend .jk-pad-md;
   @extend .jk-border-radius-inline;
 }
 
-.codeforces-statement {
+.CODEFORCES-statement, .JV_UMSA-statement {
+  width: 100%;
+}
+
+.CODEFORCES-statement {
   &.only-info {
     > div:not(.header) {
       display: none;
@@ -164,7 +169,7 @@
     text-align: center;
     
     .title {
-      @extend .h3;
+      @extend .CODEFORCES-h3;
     }
     
     .time-limit, .memory-limit, .input-file, .output-file {
@@ -181,12 +186,12 @@
   }
   
   > div:nth-child(2) {
-    @extend .codeforces-content;
+    @extend .CODEFORCES-content;
     margin-top: var(--pad-xt);
   }
   
   .input-specification, .output-specification, .note {
-    @extend .codeforces-content;
+    @extend .CODEFORCES-content;
     position: relative;
     margin-top: 42px;
     
@@ -194,18 +199,18 @@
       position: absolute;
       top: -42px;
       left: 0;
-      @extend .h3;
+      @extend .CODEFORCES-h3;
     }
   }
   
   .sample-tests {
     .section-title {
-      @extend .h3;
+      @extend .CODEFORCES-h3;
     }
     
     .input, .output {
       .title {
-        @extend .h3;
+        @extend .CODEFORCES-h3;
         
         .input-output-copier {
           display: none;
@@ -213,8 +218,56 @@
       }
       
       > pre {
-        @extend .codeforces-content;
+        @extend .CODEFORCES-content;
       }
+    }
+  }
+}
+
+.JV_UMSA-statement {
+  &.only-info {
+    > center {
+      > h2 {
+        display: none;
+      }
+      
+      white-space: nowrap;
+    }
+    
+    > *:not(center) {
+      display: none;
+    }
+  }
+  
+  > center {
+    > a {
+      display: none;
+    }
+    
+    > h2 {
+      @extend .CODEFORCES-h3;
+    }
+    
+    > span {
+      @extend .fw-bd;
+    }
+  }
+  
+  > h2 {
+    @extend .CODEFORCES-h3;
+  }
+  
+  > div.content {
+    @extend .CODEFORCES-content;
+  }
+  
+  > table > tbody > tr > td > {
+    h2 {
+      @extend .CODEFORCES-h3;
+    }
+    
+    pre {
+      @extend .CODEFORCES-content;
     }
   }
 }

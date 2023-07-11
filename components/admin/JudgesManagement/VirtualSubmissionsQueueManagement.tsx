@@ -3,12 +3,12 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import Custom404 from 'pages/404';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { ContentResponseType, HTTPMethod, SqsPropertiesType, Status } from 'types';
 
 export const VirtualSubmissionsQueueManagement = () => {
   
-  const [ modal, setModal ] = useState(null);
+  const [ modal, setModal ] = useState<ReactNode>(null);
   const { notifyResponse } = useNotification();
   
   return (

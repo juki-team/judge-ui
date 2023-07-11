@@ -1,3 +1,4 @@
+import { Judge } from '@juki-team/commons';
 import {
   BalloonIcon,
   ColorPicker,
@@ -20,8 +21,13 @@ import {
   lettersToIndex,
   roundTimestamp,
 } from 'helpers';
-import React, { useEffect, useRef, useState } from 'react';
-import { ContestProblemBasicType, RowSortableItem, RowSortableItemContentType } from 'types';
+import { useEffect, useJukiUser, useRef, useState } from 'hooks';
+import {
+  ContestProblemBasicType,
+  EditContestProblemBasicType,
+  RowSortableItem,
+  RowSortableItemContentType,
+} from 'types';
 import { EditContestProps } from '../types';
 
 type Problem = Omit<ContestProblemBasicType, 'index'> & {
@@ -29,6 +35,7 @@ type Problem = Omit<ContestProblemBasicType, 'index'> & {
 }
 
 export const EditProblems = ({ contest, setContest }: EditContestProps) => {
+  
   let withTimeRestriction = false;
   Object.values(contest.problems).forEach(problem => {
     if (problem.startTimestamp !== contest.settings.startTimestamp
@@ -37,6 +44,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     }
   });
   const [ withTime, setWithTime ] = useState(withTimeRestriction ? 1 : 0);
+  const { company: { name: companyName } } = useJukiUser();
   useEffect(() => {
     if (withTimeRestriction && withTime === 0) {
       setWithTime(1);
@@ -44,12 +52,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [ withTimeRestriction, withTime ]);
   const contestStartDate = new Date(contest.settings.startTimestamp);
   const contestEndDate = new Date(contest.settings.endTimestamp);
-  const renderRowProblem = (problem): RowSortableItemContentType => ({
-    previewRef,
-    dragComponent,
-    isDragging,
-    index,
-  }) => {
+  const renderRowProblem = (problem: Problem): RowSortableItemContentType => (props) => {
+    
+    const { previewRef, dragComponent, isDragging, index } = props;
+    
     return (
       <div className="jk-row left jk-table-inline-row" ref={previewRef} style={{ opacity: isDragging ? 0.4 : 1 }}>
         <div className="jk-row" style={{ width: 30 }}>{dragComponent}</div>
@@ -68,7 +74,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             onChange={(props) => {
               setProblems(prevState => prevState.map(p => {
                 if (p.key === problem.key) {
-                  const value = { ...p.value, color: props.hex };
+                  const value: Problem = { ...p.value, color: props.hex };
                   return { ...p, value, content: renderRowProblem(value) };
                 }
                 return p;
@@ -218,7 +224,9 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             />
           </div>
         )}
-        <div className="jk-row" style={{ width: 150 }}>{JUDGE[problem.judge]?.label || problem.judge}</div>
+        <div className="jk-row" style={{ width: 150 }}>
+          {problem.judge === Judge.CUSTOMER ? companyName : JUDGE[problem.judge]?.label || problem.judge}
+        </div>
         <div className="jk-row" style={{ width: 30 }}>
           <DeleteIcon
             className="cursor-pointer"
@@ -254,7 +262,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   
   useEffect(() => {
     setProblems(prevState => prevState.map(problem => {
-      const value = { ...problem.value };
+      const value: Problem = { ...problem.value };
       if (!withTime) {
         value.startTimestamp = contest.settings.startTimestamp;
         value.endTimestamp = contest.settings.endTimestamp;
@@ -271,7 +279,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [ contest ]);
   useEffect(() => {
     setContest(prevState => {
-      const problemsObj = {};
+      const problemsObj: { [key: string]: EditContestProblemBasicType } = {};
       problems.forEach((problem, index) => {
         problemsObj[getProblemJudgeKey(problem.value.judge, problem.value.key)] = {
           key: problem.value.key + '',

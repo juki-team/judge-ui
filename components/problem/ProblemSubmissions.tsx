@@ -1,16 +1,18 @@
-import { PagedDataViewer, submissionActionsColumn, submissionContestColumn } from 'components';
+import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import React, { useMemo } from 'react';
 import { DataViewerHeadersType, ProblemResponseDTO, QueryParam, SubmissionResponseDTO } from 'types';
 import {
+  submissionActionsColumn,
+  submissionContestColumn,
   submissionDateColumn,
   submissionLanguage,
   submissionMemoryUsed,
   submissionNickname,
   submissionTimeUsed,
   submissionVerdictColumn,
-} from '../submissions';
+} from '../submissions/helpers';
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemResponseDTO }) => {
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => {

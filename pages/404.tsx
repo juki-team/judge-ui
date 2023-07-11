@@ -1,6 +1,6 @@
 import { HomeIcon, JukiSurprisedImage, T } from 'components';
 import Link from 'next/link';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'types';
 
 export default function Custom404({ children }: PropsWithChildren<{}>) {
   return (

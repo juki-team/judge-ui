@@ -1,4 +1,4 @@
-import { ContestView } from 'components/contest/view';
+import { ContestView } from 'components';
 
 function View() {
   return <ContestView />;

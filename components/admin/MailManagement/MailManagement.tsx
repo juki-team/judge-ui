@@ -75,11 +75,11 @@ Sigan programando.`;
 export const MailManagement = () => {
   
   const { notifyResponse } = useNotification();
-  const [password, setPassword] = useState('');
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
-  const [subject, setSubject] = useState('');
-  const [content, setContent] = useState(passwordReset);
+  const [ password, setPassword ] = useState('');
+  const [ from, setFrom ] = useState('');
+  const [ to, setTo ] = useState('');
+  const [ subject, setSubject ] = useState('');
+  const [ content, setContent ] = useState(passwordReset);
   
   return (
     <FetcherLayer<ContentResponseType<EmailDataResponseDTO>>
@@ -121,14 +121,20 @@ export const MailManagement = () => {
                 <div><T className="tt-se">template</T>:</div>
                 <Button type="text" size="tiny" onClick={() => setContent(passwordReset)}><T>password reset</T></Button>
                 <Button type="text" size="tiny" onClick={() => setContent(validateEmail)}><T>validate email</T></Button>
-                <Button type="text" size="tiny" onClick={() => setContent(sendCredentials)}><T>send credentials</T></Button>
+                <Button type="text" size="tiny" onClick={() => setContent(sendCredentials)}>
+                  <T>send credentials</T>
+                </Button>
               </div>
               <div className="jk-row stretch extend nowrap" style={{ height: 'calc(100% - 58px)', width: '100%' }}>
                 <div style={{ height: '100%', width: '50%' }} className="flex-1">
                   <CodeEditor
                     sourceCode={content}
                     language={ProgrammingLanguage.HTML}
-                    onChange={({ sourceCode }) => setContent(sourceCode)}
+                    onChange={({ sourceCode }) => {
+                      if (typeof sourceCode === 'string') {
+                        setContent(sourceCode);
+                      }
+                    }}
                   />
                 </div>
                 <iframe style={{ width: '50%' }} srcDoc={html}></iframe>

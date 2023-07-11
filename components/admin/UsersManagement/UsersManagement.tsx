@@ -1,7 +1,8 @@
 import { T, TabsInline } from 'components';
+import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiUI, useJukiUser } from 'hooks';
 import React from 'react';
-import { AdminTab, CompanyResponseDTO } from 'types';
+import { AdminTab, CompanyResponseDTO, TabsType } from 'types';
 import { AllUsers } from './AllUsers';
 import { GenerateUsers } from './GenerateUsers';
 import { UsersLogged } from './UsersLogged';
@@ -10,7 +11,7 @@ export const UsersManagement = ({ company }: { company: CompanyResponseDTO }) =>
   
   const { router: { setSearchParams, searchParams } } = useJukiUI();
   const { user: { canCreateUser } } = useJukiUser();
-  const tabs = {
+  const tabs: TabsType<AdminTab> = {
     [AdminTab.ALL_USERS]: {
       key: AdminTab.ALL_USERS,
       header: <T className="tt-ce ws-np">all users</T>,
@@ -29,8 +30,8 @@ export const UsersManagement = ({ company }: { company: CompanyResponseDTO }) =>
       body: <GenerateUsers company={company} />,
     };
   }
-  const selectedTabKey = searchParams.get('userTab') || AdminTab.ALL_USERS;
-  const pushTab = tabKey => setSearchParams({ name: 'userTab', value: tabKey });
+  const selectedTabKey = searchParams.get('userTab') as AdminTab || AdminTab.ALL_USERS;
+  const pushTab = (tabKey: AdminTab) => setSearchParams({ name: 'userTab', value: tabKey });
   
   return (
     <div style={{ height: '100%' }}>
@@ -40,7 +41,7 @@ export const UsersManagement = ({ company }: { company: CompanyResponseDTO }) =>
         selectedTabKey={selectedTabKey}
       />
       <div style={{ height: 'calc(100% - 40px)' }}>
-        {tabs[selectedTabKey]?.body}
+        {renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.body, { selectedTabKey })}
       </div>
     </div>
   );

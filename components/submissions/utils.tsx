@@ -1,6 +1,7 @@
 import { LoadingIcon, Popover, T } from 'components';
 import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
 import { useTask } from 'hooks';
+import { ReactNode } from 'react';
 import { ProblemVerdict, SocketEventSubmissionResponseDTO, SubmissionRunStatus } from 'types';
 
 export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
@@ -28,11 +29,21 @@ export interface VerdictProps {
 
 export const Verdict = ({ verdict, points, status, submitId, submissionData }: VerdictProps) => {
   
-  const verdictLabel = (verdict) => PROBLEM_VERDICT[verdict]?.label
-    ? <T className="tt-se">{PROBLEM_VERDICT[verdict]?.label}</T>
+  const verdictLabel = (verdict: ProblemVerdict) => PROBLEM_VERDICT[verdict]?.label
+    ? <T className="tt-se ws-np">{PROBLEM_VERDICT[verdict]?.label}</T>
     : verdict;
   
-  const SubmissionLabel = {
+  const SubmissionLabel: { [key in SubmissionRunStatus]: (props: SocketEventSubmissionResponseDTO) => ReactNode } = {
+    [SubmissionRunStatus.NONE]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        {verdictLabel(verdict)}
+      </div>
+    ),
+    [SubmissionRunStatus.FAILED]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        {verdictLabel(verdict)}
+      </div>
+    ),
     [SubmissionRunStatus.RECEIVED]: ({ verdict }) => (
       <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
         <LoadingIcon size="small" />
@@ -51,6 +62,20 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData }: V
         </div>
       </div>
     ),
+    [SubmissionRunStatus.COMPILED]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
+          <T className="tt-se">{SUBMISSION_RUN_STATUS[SubmissionRunStatus.COMPILED].label}</T>
+        </div>
+      </div>
+    ),
+    [SubmissionRunStatus.COMPILATION_ERROR]: ({ verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        {verdictLabel(verdict)}
+      </div>
+    ),
     [SubmissionRunStatus.FETCHING_TEST_CASES]: ({ verdict }) => (
       <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
         <LoadingIcon size="small" />
@@ -60,15 +85,31 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData }: V
         </div>
       </div>
     ),
-    [SubmissionRunStatus.EXECUTED_TEST_CASE]: ({ sampleCase, caseResultsExecuted, caseResultsTotal, verdict }) => (
+    [SubmissionRunStatus.EXECUTED_TEST_CASE]: ({ testInfo, verdict }) => (
       <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
         <LoadingIcon size="small" />
         &nbsp;
-        <div className="jk-row tx-t nowrap" style={{ lineHeight: 1, padding: '4px 0' }}>
-          {sampleCase ? <T className="tt-se">running sample cases</T> :
-            <T className="tt-se">running test cases</T>}&nbsp;
-          <span className="ws-np">{caseResultsExecuted}/{caseResultsTotal}</span>
-        </div>
+        {!!testInfo && (
+          <div className="jk-row tx-t nowrap" style={{ lineHeight: 1, padding: '4px 0' }}>
+            {testInfo.sampleCase
+              ? <T className="tt-se">running sample cases</T>
+              : <T className="tt-se">running test cases</T>}&nbsp;
+            <span className="ws-np">{testInfo.caseResultsExecuted}/{testInfo.caseResultsTotal}</span>
+          </div>
+        )}
+      </div>
+    ),
+    [SubmissionRunStatus.FAILED_TEST_CASE]: ({ testInfo, verdict }) => (
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <LoadingIcon size="small" />
+        &nbsp;
+        {!!testInfo && (
+          <div className="jk-row tx-t nowrap" style={{ lineHeight: 1, padding: '4px 0' }}>
+            {testInfo.sampleCase
+              ? <T className="tt-se">failed sample case</T>
+              : <T className="tt-se">failed test case</T>}
+          </div>
+        )}
       </div>
     ),
     [SubmissionRunStatus.RUNNING_TEST_CASE]: ({ verdict }) => (
@@ -143,7 +184,7 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData }: V
       content={
         <div className="tt-se ws-np">
           {verdict === ProblemVerdict.PENDING ? (
-            SUBMISSION_RUN_STATUS[status]?.label
+            (status && SUBMISSION_RUN_STATUS[status]?.label)
               ? <T className="ws-np">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel(verdict)
           ) : verdictLabel(verdict)}
         </div>

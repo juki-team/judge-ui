@@ -14,10 +14,9 @@ import {
 import { LinkContests } from 'components/contest';
 import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
-import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiUI, useNotification, useRouter } from 'hooks';
+import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
+import { useEffect, useJukiUI, useNotification, useRef, useRouter, useState } from 'hooks';
 import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
@@ -26,7 +25,9 @@ import {
   EditCreateContestType,
   HTTPMethod,
   ProgrammingLanguage,
+  ReactNode,
   Status,
+  TabsType,
 } from 'types';
 import { EditCreateContestProps } from '../types';
 import { EditMembers } from './EditMembers';
@@ -40,11 +41,11 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const { addWarningNotification } = useNotification();
   const { notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
-  const [contest, setContest] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT());
+  const [ contest, setContest ] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT());
   const lastContest = useRef(initialContest);
   useEffect(() => {
     if (editing && JSON.stringify(initialContest) !== JSON.stringify(lastContest.current)) {
-      const text = JSON.stringify(diff(lastContest.current, initialContest), null, 2);
+      const text = JSON.stringify(diff(lastContest.current as object, initialContest), null, 2);
       const height = text.split('\n').length;
       addWarningNotification(
         <div>
@@ -64,7 +65,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       );
       lastContest.current = initialContest;
     }
-  }, [JSON.stringify(initialContest)]);
+  }, [ JSON.stringify(initialContest) ]);
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
@@ -83,7 +84,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   
   const { push, query } = useRouter();
   
-  const tabHeaders = {
+  const tabHeaders: TabsType<ContestTab> = {
     [ContestTab.OVERVIEW]: {
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce">overview</T>,
@@ -129,7 +130,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
     },
   };
   
-  const [contestTab, setContestTab] = useState<ContestTab>(ContestTab.OVERVIEW);
+  const [ contestTab, setContestTab ] = useState<ContestTab>(ContestTab.OVERVIEW);
   const extraNodes = [
     <CheckUnsavedChanges
       onClickContinue={() => push(editing
@@ -156,7 +157,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
     </ButtonLoader>,
   ];
   
-  const breadcrumbs = [
+  const breadcrumbs: ReactNode[] = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <LinkContests><T className="tt-se">contests</T></LinkContests>,
     editing
@@ -165,7 +166,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
           <div>{contest.name}</div>
         </Link>
       ) : <div>{contest.name}</div>,
-    tabHeaders[contestTab]?.header,
+    renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }),
   ];
   
   return (
@@ -196,7 +197,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
           />
         </div>
       </div>
-      {tabHeaders[contestTab]?.body}
+      {renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.body, { selectedTabKey: contestTab })}
     </TwoContentSection>
   );
 };

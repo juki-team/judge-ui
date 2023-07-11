@@ -1,7 +1,6 @@
 import { EditCreateProblem, FetcherLayer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { useRouter } from 'hooks';
-import React from 'react';
 import { ContentResponseType, ProblemResponseDTO } from 'types';
 import Custom404 from '../../../404';
 

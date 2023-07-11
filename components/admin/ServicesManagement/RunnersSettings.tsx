@@ -1,10 +1,10 @@
-import { CompanyPlan } from '@juki-team/commons';
 import { ButtonLoader, Input, LoadingIcon, Popover, SaveIcon, T } from 'components';
 import { COMPANY_PLAN, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useFetcher, useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import {
+  CompanyPlan,
   CompanyResourceSpecificationsResponseDTO,
   CompanyResponseDTO,
   ContentResponseType,

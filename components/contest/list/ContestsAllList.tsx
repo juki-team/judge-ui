@@ -1,10 +1,10 @@
-import { contestDateColumn, Field, PagedDataViewer, T, TextHeadCell } from 'components';
+import { Field, PagedDataViewer, T, TextHeadCell } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useRouter } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, QueryParam } from 'types';
-import { contestantsColumn, contestNameColumn } from '../commons';
+import { contestantsColumn, contestEndDateColumn, contestNameColumn, contestStartDateColumn } from '../commons';
 
 export const contestStateMap = {
   [[ true, false, false, false ].toString()]: { order: 0, label: 'past', color: 'gray-5' },
@@ -48,7 +48,8 @@ export const ContestsAllList = () => {
       minWidth: 130,
     },
     contestNameColumn(false),
-    contestDateColumn(),
+    contestStartDateColumn(),
+    contestEndDateColumn(),
     contestantsColumn(),
   ], []);
   const { push } = useRouter();

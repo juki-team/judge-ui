@@ -6,7 +6,11 @@ import Link from 'next/link';
 import React from 'react';
 import { QueryParam } from 'types';
 
-export const SubmissionModal = ({ submitId }: { submitId: string }) => {
+interface SubmissionModalProps {
+  submitId: string;
+}
+
+export const SubmissionModal = ({ submitId }: SubmissionModalProps) => {
   
   const { push, query } = useRouter();
   const handleClose = () => push({ query: removeParamQuery(query, QueryParam.SUBMISSION_VIEW, null) });

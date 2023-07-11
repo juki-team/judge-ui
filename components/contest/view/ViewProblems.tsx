@@ -119,12 +119,12 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                     listCount: number,
                     status: SubmissionRunStatus.RECEIVED
                   }>>(
-                    await authorizedRequest(JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(
-                      contestKey as string,
-                      getProblemJudgeKey(judge, key),
-                    ), {
-                      method: HTTPMethod.POST,
-                    }));
+                    await authorizedRequest(
+                      JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(
+                        contestKey as string, getProblemJudgeKey(judge, key)),
+                      { method: HTTPMethod.POST },
+                    ),
+                  );
                   if (result.success) {
                     addSuccessNotification(
                       <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,

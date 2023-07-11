@@ -1,4 +1,3 @@
-import { JUKI_APP_COMPANY_KEY } from '@juki-team/commons';
 import {
   AssignmentIcon,
   AutorenewIcon,
@@ -19,11 +18,16 @@ import {
   TabsInline,
   TwoContentSection,
 } from 'components';
-import { JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, getProblemJudgeKey, getSimpleProblemJudgeKey } from 'helpers';
+import { JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
+import {
+  authorizedRequest,
+  cleanRequest,
+  getProblemJudgeKey,
+  getSimpleProblemJudgeKey,
+  renderReactNodeOrFunctionP1,
+} from 'helpers';
 import { useJukiUI, useJukiUser, useNotification, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { ReactNode } from 'react';
 import {
   ContentResponseType,
   HTTPMethod,
@@ -32,8 +36,10 @@ import {
   LastLinkKey,
   ProblemResponseDTO,
   ProblemTab,
+  ReactNode,
   Status,
   SubmissionRunStatus,
+  TabsType,
 } from 'types';
 import Custom404 from '../../../../404';
 
@@ -61,7 +67,7 @@ const ProblemView = (): ReactNode => {
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
-      url={isReady && JUDGE_API_V1.PROBLEM.DATA(key as string)}
+      url={isReady ? JUDGE_API_V1.PROBLEM.DATA(key as string) : null}
       loadingView={
         <TwoContentSection>
           <div>
@@ -119,16 +125,16 @@ const ProblemView = (): ReactNode => {
             <p>
               <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
             </p>
-            <Link href={ROUTES.PROBLEMS.LIST()} className="link tt-ue">
-              <div className="jk-row gap"><AssignmentIcon /><T>go to problems list</T></div>
-            </Link>
+            <LinkProblems>
+              <div className="jk-row"><AssignmentIcon /><T className="tt-se">go to problem list</T></div>
+            </LinkProblems>
           </Custom404>
         </TwoContentSection>
       }
     >
       {({ data }) => {
         const problem = data.content;
-        const tabs = {
+        const tabs: TabsType<ProblemTab> = {
           [ProblemTab.STATEMENT]: {
             key: ProblemTab.STATEMENT,
             header: <T className="ws-np tt-ce">statement</T>,
@@ -164,7 +170,7 @@ const ProblemView = (): ReactNode => {
           header: <T className="ws-np tt-ce">submissions</T>,
           body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} /></div>,
         };
-        const breadcrumbs = [
+        const breadcrumbs: ReactNode[] = [
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
           <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
           <Link
@@ -179,10 +185,10 @@ const ProblemView = (): ReactNode => {
           >
             <div className="ws-np">{problem.name}</div>
           </Link>,
-          tabs[problemTab as string]?.header,
+          renderReactNodeOrFunctionP1(tabs[problemTab as string]?.header, { selectedTabKey: problemTab as ProblemTab }),
         ];
         
-        const pushTab = (tabKey) => setSearchParams({ name: 'tab', value: tabKey });
+        const pushTab = (tabKey: ProblemTab) => setSearchParams({ name: 'tab', value: tabKey });
         
         const extraNodes = [];
         if (data?.content?.user?.isEditor && (data?.content?.judge === Judge.JUKI_JUDGE || data?.content?.judge === Judge.CUSTOMER)) {
@@ -211,14 +217,14 @@ const ProblemView = (): ReactNode => {
                   icon={<AutorenewIcon />}
                   onClick={async setLoaderStatus => {
                     setLoaderStatus(Status.LOADING);
-                    const bodyProblem = { ...problem };
-                    delete bodyProblem.key;
                     const result = cleanRequest<ContentResponseType<{
-                      listCount: number, status: SubmissionRunStatus.RECEIVED
-                    }>>(await authorizedRequest(JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(
-                      problem.judge,
-                      problem.key,
-                    )), { method: HTTPMethod.POST }));
+                      listCount: number,
+                      status: SubmissionRunStatus.RECEIVED
+                    }>>(
+                      await authorizedRequest(
+                        JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge, problem.key)), { method: HTTPMethod.POST },
+                      ),
+                    );
                     if (result.success) {
                       addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
                         <T>submissions</T></div>);
@@ -238,16 +244,18 @@ const ProblemView = (): ReactNode => {
               </div>
             </Popover>,
           );
-        } else if (data?.content?.judge === Judge.CODEFORCES && user.isLogged) {
+        } else if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(data?.content?.judge) && user.isLogged) {
           extraNodes.push(<ButtonLoader
             size="small"
             icon={<AutorenewIcon />}
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
-              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
-                { method: HTTPMethod.POST },
-              ));
+              const response = cleanRequest<ContentResponseType<string>>(
+                await authorizedRequest(
+                  JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
+                  { method: HTTPMethod.POST },
+                ),
+              );
               notifyResponse(response, setLoaderStatus);
             }}
             responsiveMobile
@@ -271,21 +279,26 @@ const ProblemView = (): ReactNode => {
                 >
                   {problem.name}
                 </h2>
-                {problem.judge === Judge.CODEFORCES && (
-                  <div className="jk-tag warning">{JUDGE[Judge.CODEFORCES].label}</div>
+                {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) && (
+                  <div className="jk-tag warning">{JUDGE[problem.judge].label}</div>
                 )}
                 <Popover
-                  content={problem.judge === Judge.JUKI_JUDGE ? <ProblemInfo
-                    author={problem.author}
-                    status={problem.status}
-                    tags={problem.tags}
-                    settings={problem.settings}
-                  /> : problem.judge === Judge.CODEFORCES ? <div className="jk-row extend top">
-                    <div
-                      className="codeforces-statement only-info"
-                      dangerouslySetInnerHTML={{ __html: problem.statement.html[Language.EN] }}
-                    />
-                  </div> : <div></div>}
+                  content={problem.judge === Judge.JUKI_JUDGE
+                    ? (<ProblemInfo
+                        author={problem.author}
+                        status={problem.status}
+                        tags={problem.tags}
+                        settings={problem.settings}
+                      />
+                    ) : [ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge)
+                      ? (
+                        <div className="jk-row extend top">
+                          <div
+                            className={`${problem.judge}-statement only-info`}
+                            dangerouslySetInnerHTML={{ __html: problem.statement.html[Language.EN] || problem.statement.html[Language.ES] }}
+                          />
+                        </div>
+                      ) : <div></div>}
                   triggerOn="click"
                   placement="bottom"
                 >
@@ -299,13 +312,13 @@ const ProblemView = (): ReactNode => {
                 <TabsInline
                   tabs={tabs}
                   onChange={pushTab}
-                  selectedTabKey={problemTab}
+                  selectedTabKey={problemTab as ProblemTab}
                   extraNodes={extraNodes}
                   extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
                 />
               </div>
             </div>
-            {tabs[problemTab as string]?.body}
+            {renderReactNodeOrFunctionP1(tabs[problemTab as ProblemTab]?.body, { selectedTabKey: problemTab as ProblemTab })}
           </TwoContentSection>
         );
       }}

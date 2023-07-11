@@ -1,14 +1,4 @@
 import {
-  ButtonLoaderOnClickType,
-  ContentResponseType,
-  EditCreateProblemType,
-  HTTPMethod,
-  Judge,
-  ProblemResponseDTO,
-  ProblemTab,
-  Status,
-} from 'types';
-import {
   Breadcrumbs,
   ButtonLoader,
   CheckUnsavedChanges,
@@ -21,34 +11,45 @@ import {
   TwoContentSection,
 } from 'components';
 import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest } from 'helpers';
+import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiUI, useNotification, useRouter } from 'hooks';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { mutate } from 'swr';
+import {
+  ButtonLoaderOnClickType,
+  ContentResponseType,
+  EditCreateProblemType,
+  HTTPMethod,
+  Judge,
+  ProblemResponseDTO,
+  ProblemTab,
+  Status,
+  TabsType,
+} from 'types';
 import { Input } from '../index';
 import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemSettings } from './ProblemSettings';
 import { ProblemTestCases } from './ProblemTestCases';
 
-export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditCreateProblemType }) => {
+interface EditCreateProblemProps {
+  problem?: EditCreateProblemType,
+}
+
+export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblemProps) => {
   
   const editing = !!initialProblem;
   const { query, push } = useRouter();
-  const [problem, setProblem] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
+  const [ problem, setProblem ] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
-    const bodyProblem = { ...problem };
-    delete bodyProblem.key;
-    const response = cleanRequest<ContentResponseType<ProblemResponseDTO>>(await authorizedRequest(
-      editing ? JUDGE_API_V1.PROBLEM.PROBLEM(problem.key) : JUDGE_API_V1.PROBLEM.CREATE(),
-      {
-        method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
-        body: JSON.stringify(problem),
-      },
-    ));
+    const response = cleanRequest<ContentResponseType<ProblemResponseDTO>>(
+      await authorizedRequest(
+        editing ? JUDGE_API_V1.PROBLEM.PROBLEM(problem.key) : JUDGE_API_V1.PROBLEM.CREATE(),
+        { method: editing ? HTTPMethod.PUT : HTTPMethod.POST, body: JSON.stringify(problem) },
+      ));
     if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
       await mutate(JUDGE_API_V1.PROBLEM.PROBLEM(response.content.key));
@@ -57,7 +58,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
     }
   };
   
-  const tabs = {
+  const tabs: TabsType<ProblemTab> = {
     [ProblemTab.STATEMENT]: {
       key: ProblemTab.STATEMENT,
       header: <T className="tt-ce ws-np">statement</T>,
@@ -141,9 +142,9 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
     </ButtonLoader>,
   ];
   
-  const [tab, setTab] = useState<ProblemTab>(ProblemTab.STATEMENT);
+  const [ tab, setTab ] = useState<ProblemTab>(ProblemTab.STATEMENT);
   
-  const breadcrumbs = [
+  const breadcrumbs: ReactNode[] = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
     editing
@@ -152,7 +153,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
           <div className="ws-np">{problem.name}</div>
         </Link>
       ) : <div className="ws-np">{problem.name}</div>,
-    tabs[tab as string]?.header,
+    renderReactNodeOrFunctionP1(tabs[tab]?.header, { selectedTabKey: tab }),
   ];
   
   return (
@@ -178,7 +179,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: { problem?: EditC
           />
         </div>
       </div>
-      {tabs[tab].body}
+      {renderReactNodeOrFunctionP1(tabs[tab].body, { selectedTabKey: tab })}
     </TwoContentSection>
   );
 };

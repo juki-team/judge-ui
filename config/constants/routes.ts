@@ -26,6 +26,11 @@ export const ROUTES = {
     SHEETS: 'sheets',
     SHEET: 'sheet',
   },
+  HOME: {
+    PAGE() {
+      return '/';
+    },
+  },
   RESUME: {
     PAGE: '/resume',
   },
@@ -34,7 +39,7 @@ export const ROUTES = {
   },
   CONTESTS: {
     LIST(tab: ContestsTab) {
-      return ['', ROUTES.PARAMS.CONTESTS, tab].join('/');
+      return [ '', ROUTES.PARAMS.CONTESTS, tab ].join('/');
     },
     VIEW(key: string, tab: ContestTab | typeof _TAB, subTab?: string, subSubTab?: ProblemTab | typeof _SUB_SUB_TAB) {
       return [
@@ -44,18 +49,18 @@ export const ROUTES = {
         key,
         tab,
         ...(
-          subTab ? [subTab] : []
+          subTab ? [ subTab ] : []
         ),
         ...(
-          subSubTab ? [subSubTab] : []
+          subSubTab ? [ subSubTab ] : []
         ),
       ].join('/');
     },
     CREATE() {
-      return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE].join('/');
+      return [ '', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE ].join('/');
     },
     EDIT(key: string) {
-      return ['', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key].join('/');
+      return [ '', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key ].join('/');
     },
   },
   PROBLEMS: {
@@ -63,26 +68,26 @@ export const ROUTES = {
       return '/' + ROUTES.PARAMS.PROBLEMS;
     },
     CREATE() {
-      return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.CREATE].join('/');
+      return [ '', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.CREATE ].join('/');
     },
     VIEW(key: string, tab: ProblemTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.VIEW, key, tab].join('/');
+      return [ '', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.VIEW, key, tab ].join('/');
     },
     EDIT(key: string) {
-      return ['', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.EDIT, key].join('/');
+      return [ '', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.EDIT, key ].join('/');
     },
   },
   SUBMISSIONS: {
     VIEW(key: string) {
-      return ['', ROUTES.PARAMS.SUBMISSION, ROUTES.PARAMS.VIEW, key].join('/');
+      return [ '', ROUTES.PARAMS.SUBMISSION, ROUTES.PARAMS.VIEW, key ].join('/');
     },
   },
   COURSES: {
     VIEW(key: string, tab: CourseTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.COURSE, ROUTES.PARAMS.VIEW, key, tab].join('/');
+      return [ '', ROUTES.PARAMS.COURSE, ROUTES.PARAMS.VIEW, key, tab ].join('/');
     },
     CREATE() {
-      return ['', ROUTES.PARAMS.COURSE, ROUTES.PARAMS.CREATE].join('/');
+      return [ '', ROUTES.PARAMS.COURSE, ROUTES.PARAMS.CREATE ].join('/');
     },
   },
   RANKING: {
@@ -92,12 +97,12 @@ export const ROUTES = {
   },
   ADMIN: {
     PAGE(tab: AdminTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.ADMIN, tab].join('/');
+      return [ '', ROUTES.PARAMS.ADMIN, tab ].join('/');
     },
   },
   PROFILE: {
     PAGE(key: string, tab?: ProfileTab | typeof _TAB) {
-      return ['', ROUTES.PARAMS.PROFILE, key, tab].join('/');
+      return [ '', ROUTES.PARAMS.PROFILE, key, tab ].join('/');
     },
   },
   SHEETS: {
@@ -105,7 +110,7 @@ export const ROUTES = {
       return '/' + ROUTES.PARAMS.SHEETS;
     },
     VIEW(key: string) {
-      return ['', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.VIEW, key].join('/');
+      return [ '', ROUTES.PARAMS.SHEET, ROUTES.PARAMS.VIEW, key ].join('/');
     },
   },
 };

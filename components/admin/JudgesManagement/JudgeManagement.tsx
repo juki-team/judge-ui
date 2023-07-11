@@ -1,21 +1,23 @@
-import { ButtonLoader, FetcherLayer, InputToggle, T } from 'components';
+import { ButtonLoader, InputToggle, T } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KeyedMutator } from 'swr';
-import { ContentResponseType, HTTPMethod, Judge, JudgeResponseDTO, Status } from 'types';
-import Custom404 from '../../../pages/404';
+import { ContentResponseType, HTTPMethod, JudgeResponseDTO, Status } from 'types';
 
-interface CodeforcesManagementBodyProps {
+interface JudgeManagementBodyProps {
   judge: JudgeResponseDTO,
   mutate: KeyedMutator<string>
 }
 
-export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagementBodyProps) => {
+export const JudgeManagementBody = ({ judge, mutate }: JudgeManagementBodyProps) => {
   
   const { notifyResponse } = useNotification();
   const [ languages, setLanguages ] = useState(judge.languages);
+  useEffect(() => {
+    setLanguages(judge.languages);
+  }, [ JSON.stringify(judge.languages) ]);
   
   return (
     <div className="jk-col nowrap top gap stretch">
@@ -31,7 +33,7 @@ export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagement
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<{}>>(
                 await authorizedRequest(
-                  JUDGE_API_V1.JUDGE.CRAWL_LANGUAGES(Judge.CODEFORCES),
+                  JUDGE_API_V1.JUDGE.CRAWL_LANGUAGES(judge.key),
                   { method: HTTPMethod.POST },
                 ),
               );
@@ -48,7 +50,7 @@ export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagement
               <div className="jk-row" style={{ width: 120 }}><T>enabled</T></div>
             </div>
             {languages?.map((language, index) => (
-              <div className="jk-row jk-table-inline-row" key={language.value}>
+              <div className="jk-row jk-table-inline-row" key={language.value + language.label}>
                 <div className="jk-row" style={{ width: 120 }}>{language.value}</div>
                 <div className="jk-row ws-np" style={{ width: 300 }}>{language.label}</div>
                 <div className="jk-row" style={{ width: 120 }}>
@@ -71,7 +73,7 @@ export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagement
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<{}>>(
                 await authorizedRequest(
-                  JUDGE_API_V1.JUDGE.LANGUAGES(Judge.CODEFORCES),
+                  JUDGE_API_V1.JUDGE.LANGUAGES(judge.key),
                   { method: HTTPMethod.POST, body: JSON.stringify({ languages }) },
                 ),
               );
@@ -84,20 +86,5 @@ export const CodeforcesManagementBody = ({ judge, mutate }: CodeforcesManagement
         </div>
       </div>
     </div>
-  );
-};
-
-export const CodeforcesManagement = () => {
-  return (
-    <FetcherLayer<ContentResponseType<JudgeResponseDTO>>
-      url={JUDGE_API_V1.JUDGE.GET(Judge.CODEFORCES)}
-      errorView={<Custom404 />}
-    >
-      {({ data, mutate }) => {
-        return (
-          <CodeforcesManagementBody judge={data.content} mutate={mutate} />
-        );
-      }}
-    </FetcherLayer>
   );
 };

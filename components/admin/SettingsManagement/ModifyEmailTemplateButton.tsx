@@ -1,17 +1,25 @@
-import { Button, ButtonLoader, CodeEditor, Modal, T } from 'components/index';
+import { Button, ButtonLoader, CodeEditor, Modal, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
+import { KeyedMutator } from 'swr';
 import { ContentResponseType, HTTPMethod, ProgrammingLanguage, Status } from 'types';
 
-export const ModifyEmailTemplateButton = ({ emailTemplate: initialEmailTemplate, mutate }) => {
-  const [emailTemplate, setEmailTemplate] = useState(initialEmailTemplate);
-  const [open, setOpen] = useState(false);
+interface ModifyEmailTemplateButtonProps {
+  emailTemplate: string,
+  mutate: KeyedMutator<any>,
+}
+
+export const ModifyEmailTemplateButton = (props: ModifyEmailTemplateButtonProps) => {
+  
+  const { emailTemplate: initialEmailTemplate, mutate } = props;
+  const [ emailTemplate, setEmailTemplate ] = useState(initialEmailTemplate);
+  const [ open, setOpen ] = useState(false);
   const { notifyResponse } = useNotification();
   useEffect(() => {
     setEmailTemplate(initialEmailTemplate);
-  }, [initialEmailTemplate, open]);
+  }, [ initialEmailTemplate, open ]);
   
   return (
     <>
@@ -23,7 +31,11 @@ export const ModifyEmailTemplateButton = ({ emailTemplate: initialEmailTemplate,
               <CodeEditor
                 sourceCode={emailTemplate}
                 language={ProgrammingLanguage.HTML}
-                onChange={({ sourceCode }) => setEmailTemplate(sourceCode)}
+                onChange={({ sourceCode }) => {
+                  if (typeof sourceCode === 'string') {
+                    setEmailTemplate(sourceCode);
+                  }
+                }}
                 tabSize={2}
               />
             </div>

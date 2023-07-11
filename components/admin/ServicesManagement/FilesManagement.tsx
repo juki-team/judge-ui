@@ -6,13 +6,13 @@ import { ContentResponseType, ProgrammingLanguage } from 'types';
 import { CodeViewer, Modal } from '../../index';
 
 export function FilesManagement() {
-  const [path, setPath] = useState('/');
-  const [list, setList] = useState([]);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [back, setBack] = useState(['/']);
-  const [filePath, setFilePath] = useState('');
-  const [contentFile, setContentFile] = useState('');
+  const [ path, setPath ] = useState('/');
+  const [ list, setList ] = useState([]);
+  const [ error, setError ] = useState('');
+  const [ loading, setLoading ] = useState(false);
+  const [ back, setBack ] = useState([ '/' ]);
+  const [ filePath, setFilePath ] = useState('');
+  const [ contentFile, setContentFile ] = useState('');
   const loadPath = async () => {
     setLoading(true);
     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.SYS.LS(path)));
@@ -27,11 +27,11 @@ export function FilesManagement() {
   };
   useEffect(() => {
     (() => loadPath())();
-  }, [path]);
+  }, [ path ]);
   useEffect(() => {
     (async () => {
       if (filePath) {
-        setContentFile(null);
+        setContentFile('');
         const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.SYS.CAT(filePath)));
         if (response.success) {
           setContentFile(response.content);
@@ -42,7 +42,7 @@ export function FilesManagement() {
         }
       }
     })();
-  }, [filePath]);
+  }, [ filePath ]);
   return (
     <div className="jk-col extend stretch top jk-pad-md bc-we jk-br-ie">
       {filePath && (
@@ -98,7 +98,7 @@ export function FilesManagement() {
                     <div
                       className="jk-row"
                       onClick={() => {
-                        setBack([...back, path]);
+                        setBack([ ...back, path ]);
                         setPath((path + '/' + item).split('//').join('/'));
                       }}
                     >

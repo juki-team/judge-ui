@@ -22,7 +22,7 @@ export const GenerateUsers = ({ company }: { company: CompanyResponseDTO }) => {
     emailDomain: 'juki.contact',
   });
   useEffect(() => {
-    const users = {};
+    const users: { [key: string]: UserType } = {};
     for (let i = usersGen.initialNumber; i < usersGen.initialNumber + usersGen.total; i++) {
       const nickname = `${usersGen.prefix}${i}`;
       const password = getRandomString(8);
@@ -147,10 +147,10 @@ export const GenerateUsers = ({ company }: { company: CompanyResponseDTO }) => {
         {!!Object.keys(users).length && (
           <div className="jk-row block stretch jk-table-inline-header">
             <div className="jk-row" style={{ maxWidth: 30 }}>#</div>
-            <div className="jk-row">nickname</div>
-            <div className="jk-row">email</div>
-            <div className="jk-row">password</div>
-            <div className="jk-row">message</div>
+            <div className="jk-row"><T>nickname</T></div>
+            <div className="jk-row"><T>email</T></div>
+            <div className="jk-row"><T>password</T></div>
+            <div className="jk-row"><T>message</T></div>
           </div>
         )}
         {Object.values(users).map((user, index) => (

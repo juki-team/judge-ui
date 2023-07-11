@@ -1,6 +1,5 @@
 import { ROUTES } from 'config/constants';
-import { useRouter } from 'hooks';
-import { useEffect } from 'react';
+import { useEffect, useRouter } from 'hooks';
 
 function View() {
   const { query, replace, isReady } = useRouter();
@@ -8,7 +7,7 @@ function View() {
     if (isReady) {
       void replace(ROUTES.PROBLEMS.LIST());
     }
-  }, [replace, query, isReady]);
+  }, [ replace, query, isReady ]);
   return null;
 }
 

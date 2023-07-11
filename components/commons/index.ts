@@ -139,6 +139,7 @@ export {
   StopCircleIcon,
   SupportAgentIcon,
   T,
+  MainMenu,
   Tabs,
   TabsInline,
   TelegramIcon,

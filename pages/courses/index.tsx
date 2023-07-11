@@ -10,9 +10,8 @@ import {
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { useJukiUser, useMemo, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { useMemo } from 'react';
 import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, LastLinkKey, QueryParam } from 'types';
 
 function Problems() {

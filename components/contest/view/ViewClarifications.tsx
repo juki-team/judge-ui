@@ -26,7 +26,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   const { query } = useRouter();
   const { dtf } = useDateFormat();
   const { isAdmin, isContestant, isJudge } = contest.user;
-  const [clarification, setClarification] = useState<null | {
+  const [ clarification, setClarification ] = useState<null | {
     clarificationId: string,
     problemJudgeKey: string,
     question: string,
@@ -187,7 +187,8 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                       .map(problem => ({
                         value: getProblemJudgeKey(problem.judge, problem.key),
                         label: <><span
-                          className="fw-bd">{problem.index}</span> - {problem.name} ({JUDGE[problem.judge]?.label} {problem.key})</>,
+                          className="fw-bd"
+                        >{problem.index}</span> - {problem.name} ({JUDGE[problem.judge]?.label} {problem.key})</>,
                       }))),
                   ]}
                   selectedOption={{ value: clarification.problemJudgeKey }}
@@ -199,7 +200,10 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
             <div className="jk-form-item">
               <label>
                 <div className="jk-row left gap"><T>question</T></div>
-                <Input onChange={question => setClarification({ ...clarification, question })} value={clarification.question} />
+                <Input
+                  onChange={question => setClarification({ ...clarification, question })}
+                  value={clarification.question}
+                />
               </label>
             </div>
             {isJudgeOrAdmin && (

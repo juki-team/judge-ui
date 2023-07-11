@@ -1,6 +1,5 @@
 import { ROUTES } from 'config/constants';
-import { useRouter } from 'hooks';
-import { useEffect } from 'react';
+import { useEffect, useRouter } from 'hooks';
 import { ProblemTab } from 'types';
 
 function View() {
@@ -9,7 +8,7 @@ function View() {
     if (isReady) {
       void replace(ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT));
     }
-  }, [replace, isReady]);
+  }, [ replace, isReady ]);
   return null;
 }
 

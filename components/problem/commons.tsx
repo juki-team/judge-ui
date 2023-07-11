@@ -1,22 +1,27 @@
-import { useLasLink } from 'hooks';
+import { useLasLink, useRouter } from 'hooks';
 import Link from 'next/link';
-import { LastLinkKey } from 'types';
+import { LastLinkKey, PropsWithChildren } from 'types';
+import { ROUTES } from '../../config/constants';
 
-export const LinkProblems = ({ children }) => {
+export const LinkProblems = ({ children }: PropsWithChildren) => {
+  
   const { lastLink } = useLasLink();
+  
   return (
     <Link
       href={{ pathname: lastLink[LastLinkKey.PROBLEMS].pathname, query: lastLink[LastLinkKey.PROBLEMS].query }}
       className="link"
-      prefetch
     >
       {children}
     </Link>
   );
 };
 
-export const LinkSectionProblem = ({ children }) => {
+export const LinkSectionProblem = ({ children }: PropsWithChildren) => {
+  
   const { lastLink } = useLasLink();
+  const { push } = useRouter();
+  
   return (
     <Link
       href={{
@@ -24,7 +29,13 @@ export const LinkSectionProblem = ({ children }) => {
         query: lastLink[LastLinkKey.SECTION_PROBLEM].query,
       }}
       className="link"
-      prefetch
+      onClick={event => {
+        if (event.detail === 2) {
+          void push(ROUTES.PROBLEMS.LIST());
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
     >
       {children}
     </Link>

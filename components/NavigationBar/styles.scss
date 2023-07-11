@@ -1,9 +1,5 @@
 @import "@juki-team/base-ui/dist/styles/abstracts/index";
 
-.settings-popover {
-  width: 200px;
-}
-
 .jk-drawer-body {
   .mobile-left-side-header {
     border-bottom: 1px solid var(--t-color-white);
@@ -27,53 +23,6 @@
   padding-right: var(--pad-t);
 }
 
-.more-apps-popover {
-  width: 240px;
-  
-  > div {
-    text-align: center;
-  }
-  
-  .jk-row {
-    flex-wrap: nowrap;
-    width: 220px;
-    //opacity: 0.4;
-    
-    .jk-icon {
-      min-width: 18px;
-      margin: 0 2px 0 4px;
-    }
-  }
-}
-
-.settings-apps-login-user-content {
-  //margin-right: var(--pad-m);
-  .jk-icon {
-    color: var(--t-color-primary-text);
-  }
-}
-
-.user-logged-head {
-  padding: var(--pad-xt);
-  
-  &:hover {
-    background: var(--t-color-shadow-darkest);
-  }
-  
-  .nickname {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-    display: block;
-    @include sm { display: none; }
-  }
-  
-  > img.jk-user-profile-img {
-    border-color: var(--t-color-primary-text) !important;
-  }
-}
-
 .mobile-left-side-header {
   color: var(--t-color-primary-text);
 }
@@ -82,7 +31,3 @@
   overflow: hidden;
 }
 
-.settings-apps-login-user-content.pad-top-bottom > .jk-row > .flex-1 {
-  text-align: left;
-  padding-left: var(--pad-xt);
-}

@@ -26,5 +26,11 @@ export const useContestRouter = () => {
     query,
   }, undefined, { shallow: true });
   
-  return { lastProblemVisited, pushTab, contestKey: contestKey as string, problemIndex, contestTab, query };
+  return {
+    pushTab,
+    contestKey: contestKey as string,
+    problemIndex: lastProblemVisited,
+    contestTab: contestTab as ContestTab,
+    query,
+  };
 };

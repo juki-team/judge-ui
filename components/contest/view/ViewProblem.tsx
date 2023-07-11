@@ -1,3 +1,4 @@
+import { Judge } from '@juki-team/commons';
 import { ProblemCodeEditor, ProblemStatement, SplitPane, T } from 'components';
 import { useJukiUI, useRouter } from 'hooks';
 import Custom404 from 'pages/404';
@@ -16,6 +17,7 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   }
   
   const isMobileViewPort = viewPortSize === 'sm';
+  console.log({ contest });
   
   return (
     <SplitPane
@@ -51,6 +53,17 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
           isContestant: user.isContestant,
           problemIndex: query?.index as string,
           key: contest.key,
+          languages: {
+            [Judge.CUSTOMER]: contest.settings.languages,
+            [Judge.JUKI_JUDGE]: contest.settings.languages,
+            [Judge.CODEFORCES]: [],
+            [Judge.TOPCODER]: [],
+            [Judge.CODEFORCES_GYM]: [],
+            [Judge.AT_CODER]: [],
+            [Judge.UVA_ONLINE_JUDGE]: [],
+            [Judge.CODECHEF]: [],
+            [Judge.JV_UMSA]: [],
+          },
         }}
         problem={problem}
       />

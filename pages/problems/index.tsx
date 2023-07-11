@@ -5,8 +5,6 @@ import {
   CloseIcon,
   Field,
   InfoIcon,
-  Input,
-  Modal,
   PagedDataViewer,
   PlusIcon,
   Popover,
@@ -26,17 +24,9 @@ import {
   PROBLEM_STATUS,
   ROUTES,
 } from 'config/constants';
-import {
-  buttonLoaderLink,
-  classNames,
-  getProblemJudgeKey,
-  getSimpleProblemJudgeKey,
-  toFilterUrl,
-  toSortUrl,
-} from 'helpers';
-import { useFetcher, useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
+import { useEffect, useFetcher, useJukiUI, useJukiUser, useMemo, useRouter, useState, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { useEffect, useMemo, useState } from 'react';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -47,48 +37,11 @@ import {
   ProblemSummaryListResponseDTO,
   ProblemTab,
   QueryParam,
-  Status,
+  ReactNode,
 } from 'types';
+import { CrawlCodeforcesProblemModal } from './CrawlCodeforcesProblemModal';
+import { CrawlJvumsaProblemModal } from './CrawlJvumsaProblemModal';
 
-export const CrawlCodeforcesProblemModal = ({ onClose }: { onClose: () => void }) => {
-  const [ key, setKey ] = useState('');
-  const { push } = useRouter();
-  
-  return (
-    <Modal isOpen={true} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
-      <div className="jk-col gap jk-pad-md">
-        <label>
-          <T className="tt-se ws-np fw-bd">contest id</T>:&nbsp;
-          <Input
-            size={6}
-            value={key.split('-')[0] || ''}
-            onChange={(value) => setKey(prevState => `${value}-${key.split('-')[1] || ''}`)}
-          />
-        </label>
-        <label className="jk-row nowrap">
-          <T className="tt-se ws-np fw-bd">index</T>:&nbsp;
-          <Input
-            size="auto"
-            value={key.split('-')[1] || ''}
-            onChange={(value) => setKey(prevState => `${key.split('-')[0] || ''}-${value}`)}
-          />
-        </label>
-        <ButtonLoader
-          size="small"
-          icon={<PlusIcon />}
-          responsiveMobile
-          onClick={async (setLoaderStatus) => {
-            setLoaderStatus(Status.LOADING);
-            await push(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(Judge.CODEFORCES, key), ProblemTab.STATEMENT));
-            setLoaderStatus(Status.SUCCESS);
-          }}
-        >
-          <T>crawl</T>
-        </ButtonLoader>
-      </div>
-    </Modal>
-  );
-};
 
 const JUDGE_C: { [key in Judge]: string } = {
   [Judge.CUSTOMER]: 'c',
@@ -99,6 +52,7 @@ const JUDGE_C: { [key in Judge]: string } = {
   [Judge.AT_CODER]: 'a',
   [Judge.CODECHEF]: 'h',
   [Judge.TOPCODER]: 't',
+  [Judge.JV_UMSA]: 'm',
 };
 
 function Problems() {
@@ -170,7 +124,7 @@ function Problems() {
       cardPosition: 'center',
       minWidth: 300,
     },
-    ...(judge === Judge.JUKI_JUDGE ? [
+    ...((judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER) ? [
       {
         head: <TextHeadCell text={<T className="tt-ue tx-s">mode</T>} />,
         index: 'mode',
@@ -187,8 +141,6 @@ function Problems() {
         cardPosition: 'top',
         minWidth: 140,
       },
-    ] as DataViewerHeadersType<ProblemSummaryListResponseDTO>[] : []),
-    ...(judge === Judge.JUKI_JUDGE ? [
       {
         head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} className="left" />,
         index: 'tags',
@@ -231,7 +183,7 @@ function Problems() {
         cardPosition: 'bottomLeft',
         minWidth: 180,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-      ...(judge === Judge.JUKI_JUDGE ? [
+      ...((judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER) ? [
         {
           head: <TextHeadCell text={<T className="tt-ue tx-s">owner</T>} />,
           index: 'ownerUserNickname',
@@ -273,8 +225,8 @@ function Problems() {
       </ButtonLoader>,
     );
   }
-  const [ modal, setModal ] = useState(null);
-  if (judge === Judge.CODEFORCES) {
+  const [ modal, setModal ] = useState<ReactNode>(null);
+  if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge)) {
     extraNodes.push(
       <div className="jk-row gap">
         {modal}
@@ -283,7 +235,12 @@ function Problems() {
           icon={<PlusIcon />}
           responsiveMobile
           onClick={() => {
-            setModal(<CrawlCodeforcesProblemModal onClose={() => setModal(null)} />);
+            if (judge === Judge.CODEFORCES) {
+              setModal(<CrawlCodeforcesProblemModal onClose={() => setModal(null)} />);
+            }
+            if (judge === Judge.JV_UMSA) {
+              setModal(<CrawlJvumsaProblemModal onClose={() => setModal(null)} />);
+            }
           }}
         >
           <T>crawl</T>
@@ -299,7 +256,7 @@ function Problems() {
         <div className="jk-row space-between pad-left-right pad-top-bottom">
           <div className="jk-row gap">
             <h2><T>problems</T></h2>
-            {judge === Judge.CODEFORCES && (
+            {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge) && (
               <Popover
                 content={<div><T className="tt-se">only tracked problems are displayed</T></div>}
                 placement="bottom"
@@ -320,6 +277,7 @@ function Problems() {
                   },
                 ]),
                 { value: Judge.CODEFORCES, label: <>{JUDGE[Judge.CODEFORCES].label}</> },
+                { value: Judge.JV_UMSA, label: <>{JUDGE[Judge.JV_UMSA].label}</> },
               ]}
               selectedOption={{ value: judge }}
               onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}

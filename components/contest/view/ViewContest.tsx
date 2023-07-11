@@ -7,21 +7,24 @@ import {
   FetcherLayer,
   LinkContests,
   LoadingIcon,
+  NavigateBeforeIcon,
+  NavigateNextIcon,
   Popover,
   T,
   TabsInline,
-  Timer,
   TwoContentSection,
   ViewOverview,
   ViewProblemMySubmissions,
   ViewProblems,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useContestRouter, useJukiUI, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React from 'react';
-import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status } from 'types';
+import React, { ReactNode } from 'react';
+import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status, TabsType } from 'types';
 import Custom404 from '../../../pages/404';
+import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
@@ -32,7 +35,7 @@ export function ContestView() {
   
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
   const { push } = useRouter();
-  const { lastProblemVisited, pushTab, contestKey, problemIndex, contestTab, query } = useContestRouter();
+  const { pushTab, contestKey, problemIndex, contestTab, query } = useContestRouter();
   const { viewPortSize } = useJukiUI();
   
   const breadcrumbs = [
@@ -109,9 +112,9 @@ export function ContestView() {
             <p>
               <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
             </p>
-            <Link href="/contests" className="link tt-ue">
-              <div className="jk-row gap"><CupIcon /><T>go to contest list page</T></div>
-            </Link>
+            <LinkContests>
+              <div className="jk-row"><CupIcon /><T className="tt-se">go to contest list</T></div>
+            </LinkContests>
           </Custom404>
         </TwoContentSection>
       }
@@ -125,25 +128,7 @@ export function ContestView() {
         const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
         const statusLabel = contestStateMap[key].label;
         const tag = contestStateMap[key].color;
-        let timeInterval = 0;
-        if (contest.isEndless) {
-          timeInterval = -1;
-        } else if (contest.isPast) {
-          timeInterval = new Date().getTime() - contest.settings.endTimestamp;
-        } else if (contest.isFuture) {
-          timeInterval = contest.settings.startTimestamp - new Date().getTime();
-        } else if (contest.isLive) {
-          timeInterval = contest.settings.endTimestamp - new Date().getTime();
-        }
-        
-        const literal = contest.isEndless ? <T className="ws-np">endless</T> : (
-          <>
-            {contest.isLive ? <T className="ws-np">ends in</T> : contest.isPast ?
-              <T className="ws-np">ends ago</T> : <T className="ws-np">stars in</T>}
-            &nbsp;
-            <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
-          </>
-        );
+        const literal = getContestTimeLiteral(contest);
         
         const allLiteralLabel = contest.isEndless
           ? <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
@@ -151,7 +136,7 @@ export function ContestView() {
           : <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
             <T>{statusLabel}</T>,&nbsp;{literal}</div>;
         
-        const tabHeaders = {
+        const tabHeaders: TabsType<ContestTab> = {
           [ContestTab.OVERVIEW]: {
             key: ContestTab.OVERVIEW,
             header: <T className="tt-ce ws-np">overview</T>,
@@ -159,13 +144,40 @@ export function ContestView() {
           },
         };
         if (isAdmin || isJudge || contest.isLive || contest.isPast || contest.isEndless) {
-          tabHeaders[lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS] = {
-            key: lastProblemVisited ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
+          const problems = Object.values(contest.problems);
+          problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
+          const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
+          tabHeaders[problemIndex ? ContestTab.PROBLEM : ContestTab.PROBLEMS] = {
+            key: problemIndex ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
             header: (
               <div className="jk-row gap nowrap">
-                {lastProblemVisited
-                  ? <T className="tt-ce ws-np">problem</T>
-                  : <T className="tt-ce ws-np">problems</T>} {lastProblemVisited}
+                {problemIndex
+                  ? <>
+                    <NavigateBeforeIcon
+                      style={{ padding: 0 }}
+                      className="clickable jk-br-ie"
+                      onClick={async () => {
+                        const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
+                        await push({
+                          pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, previousProblemIndex),
+                          query,
+                        });
+                      }}
+                    />
+                    <T className="tt-ce ws-np">problem</T> {problemIndex}
+                    <NavigateNextIcon
+                      style={{ padding: 0 }}
+                      className="clickable jk-br-ie"
+                      onClick={async () => {
+                        const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
+                        await push({
+                          pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, nextProblemIndex),
+                          query,
+                        });
+                      }}
+                    />
+                  </>
+                  : <T className="tt-ce ws-np">problems</T>}
               </div>
             ),
             body: problemIndex ? <ViewProblem contest={contest} /> : <ViewProblems contest={contest} />,
@@ -240,7 +252,7 @@ export function ContestView() {
           );
         }
         
-        const breadcrumbs = [
+        const breadcrumbs: ReactNode[] = [
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
           <LinkContests><T className="tt-se">contests</T></LinkContests>,
           <Link
@@ -259,9 +271,9 @@ export function ContestView() {
               <T className="tt-se">problems</T>
             </Link>,
           );
-          breadcrumbs.push(<div>{lastProblemVisited}</div>);
+          breadcrumbs.push(<div>{problemIndex}</div>);
         } else {
-          breadcrumbs.push(tabHeaders[contestTab as ContestTab]?.header);
+          breadcrumbs.push(renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }));
         }
         
         return (
@@ -301,7 +313,7 @@ export function ContestView() {
                 />
               </div>
             </div>
-            {tabHeaders[contestTab as ContestTab]?.body}
+            {renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.body, { selectedTabKey: contestTab })}
           </TwoContentSection>
         );
       }}

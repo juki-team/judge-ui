@@ -34,8 +34,8 @@ import {
   FilterTextOfflineType,
   HTTPMethod,
   QueryParam,
-  Status,
   UserManagementResponseDTO,
+  UserStatus,
 } from 'types';
 import { UserPermissions } from './UserPermissions';
 
@@ -57,8 +57,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
     () => JUDGE_API_V1.USER.MANAGEMENT_LIST(company.key),
   );
   useEffect(reload, [ company.key ]);
-  const changeUserStatus = async (nickname, status, setLoader) => {
-    setLoader?.(Status.LOADING);
+  const changeUserStatus = async (nickname: string, status: UserStatus) => {
     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
       JUDGE_API_V1.USER.STATUS(nickname),
       {
@@ -66,7 +65,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
         body: JSON.stringify({ status }),
       },
     ));
-    notifyResponse(response, setLoader);
+    notifyResponse(response);
     reload();
   };
   
@@ -137,18 +136,16 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
       head: <TextHeadCell text={<T className="tt-ue">operations</T>} />,
       index: 'operations',
       field: ({ record: { status: userStatus, nickname, canResetPassword } }) => {
-        let setLoaderRef = null;
         return (
           <Field className="jk-col center gap">
             <Select
-              className=""
               options={Object.values(USER_STATUS).map(status => ({
                 label: <T className="tt-se">{status.label}</T>,
                 value: status.value,
                 disabled: status.value === userStatus,
               }))}
               selectedOption={{ value: userStatus }}
-              onChange={({ value }) => changeUserStatus(nickname, value, setLoaderRef)}
+              onChange={({ value }) => changeUserStatus(nickname, value)}
             />
             {canResetPassword && (
               <Button

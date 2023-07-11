@@ -3,12 +3,12 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import Custom404 from 'pages/404';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { ContentResponseType, HTTPMethod, SqsPropertiesResponseDTO, Status } from 'types';
 
 export const SQSManagement = () => {
   
-  const [modal, setModal] = useState(null);
+  const [ modal, setModal ] = useState<ReactNode>(null);
   const { notifyResponse } = useNotification();
   
   return (
@@ -34,7 +34,7 @@ export const SQSManagement = () => {
                 </ButtonLoader>
               </div>
               <div className="jk-col stretch">
-                {Object.entries(data.content).map(([key, queue]) => (
+                {Object.entries(data.content).map(([ key, queue ]) => (
                   <>
                     <div className="jk-divider" />
                     <div className="jk-row gap">
@@ -47,7 +47,8 @@ export const SQSManagement = () => {
                         <div><T>approximate number of messages delayed</T>: {queue.ApproximateNumberOfMessagesDelayed}
                         </div>
                         <div>
-                          <T>approximate number of messages not visible</T>: {queue.ApproximateNumberOfMessagesNotVisible}
+                          <T>approximate number of messages not
+                            visible</T>: {queue.ApproximateNumberOfMessagesNotVisible}
                         </div>
                         <div><T>receive message wait time seconds</T>: {queue.ReceiveMessageWaitTimeSeconds}</div>
                       </div>
@@ -83,7 +84,8 @@ export const SQSManagement = () => {
                                 title={<T>purge queue</T>}
                                 content={
                                   <div className="jk-col gap">
-                                    <T>are you sure you want to purge the following queue permanently? This action cannot be
+                                    <T>are you sure you want to purge the following queue permanently? This action
+                                      cannot be
                                       undone.</T>
                                     <div className="fw-bd">- {key}</div>
                                   </div>

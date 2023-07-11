@@ -1,7 +1,16 @@
 import { AlertModal, T } from 'components';
-import { useFetcher, useJukiUser, usePrevious, useRouter, useT } from 'hooks';
-import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
-import { ContentResponseType, FlagsType, Language, ProfileSetting, SetFlagsType, Theme } from 'types';
+import { createContext } from 'helpers';
+import { useEffect, useFetcher, useJukiUser, usePrevious, useRouter, useState, useT } from 'hooks';
+import {
+  ContentResponseType,
+  FlagsType,
+  Language,
+  ProfileSetting,
+  PropsWithChildren,
+  ReactNode,
+  SetFlagsType,
+  Theme,
+} from 'types';
 
 export const UserContext = createContext<{ flags: FlagsType, setFlags: SetFlagsType }>({
   flags: {
@@ -10,7 +19,7 @@ export const UserContext = createContext<{ flags: FlagsType, setFlags: SetFlagsT
   }, setFlags: () => null,
 });
 
-export const _setFlags: { current: SetFlagsType } = { current: null };
+export const _setFlags: { current: SetFlagsType } = { current: () => null };
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
@@ -23,7 +32,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   );
   const version = (data?.success && data.content.version) || '';
   const previousVersion = usePrevious(version);
-  const [ modal, setModal ] = useState(null);
+  const [ modal, setModal ] = useState<ReactNode>(null);
   const router = useRouter();
   useEffect(() => {
     if (previousVersion && version && version !== previousVersion) {

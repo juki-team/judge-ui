@@ -13,8 +13,9 @@ const MarkdownSharedView = () => {
     } else {
       document.querySelector('body')?.classList.add('jk-theme-light');
     }
-    if (document.querySelector('body')) {
-      document.querySelector('body').style.backgroundColor = 'var(--t-color-white)';
+    const body = document.querySelector('body');
+    if (body) {
+      body.style.backgroundColor = 'var(--t-color-white)';
     }
     if (sourceUrl) {
       fetch(sourceUrl as string)

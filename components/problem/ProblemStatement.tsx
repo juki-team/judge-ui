@@ -42,20 +42,10 @@ interface ProblemStatementProps {
   contest?: { index: string, color: string },
 }
 
-export const ProblemStatement = ({
-  judge,
-  problemKey,
-  name,
-  settings,
-  tags,
-  author,
-  status,
-  statement,
-  setStatement,
-  contest,
-}: ProblemStatementProps) => {
+export const ProblemStatement = (props: ProblemStatementProps) => {
+  const { judge, problemKey, name, settings, tags, author, status, statement, setStatement, contest } = props;
   
-  const { index: problemIndex, color: problemColor } = contest || {};
+  //const { index: problemIndex, color: problemColor } = contest || {};
   const { query: { key, index, tab, ...query } } = useRouter();
   const { viewPortSize } = useJukiUI();
   const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
@@ -76,7 +66,7 @@ export const ProblemStatement = ({
   const statementSampleCases = statement?.sampleCases || [];
   
   const languages = Object.values(settings?.byProgrammingLanguage || {});
-  const problemName = problemIndex ? `(${t('problem')} ${problemIndex}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
+  const problemName = contest?.index ? `(${t('problem')} ${contest?.index}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
   const source = `
 # \\textAlign=center ${problemName}
 
@@ -115,21 +105,24 @@ ${sample.output}
 `)).join('')}
 `;
   
-  if (judge === Judge.CODEFORCES) {
+  if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge)) {
     return (
       <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
         <div
           className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom"
           style={{ position: 'relative' }}
         >
-          {problemIndex && (
+          {contest && (
             <ProblemLetter
-              index={problemIndex}
-              color={problemColor}
+              index={contest.index}
+              color={contest.color}
               style={{ position: 'absolute', top: 'var(--pad-m)', left: 'var(--pad-m)' }}
             />
           )}
-          <div className="codeforces-statement" dangerouslySetInnerHTML={{ __html: statement.html[Language.EN] }} />
+          <div
+            className={`${judge}-statement`}
+            dangerouslySetInnerHTML={{ __html: statement.html[Language.EN] || statement.html[Language.ES] }}
+          />
         </div>
       </div>
     );
@@ -186,11 +179,11 @@ ${sample.output}
             />
           )}
           <div className="jk-row center extend gap nowrap fw-bd">
-            {problemIndex && <ProblemLetter index={problemIndex} color={problemColor} />}
+            {contest && <ProblemLetter index={contest.index} color={contest.color} />}
             {!setStatement && (
               <div className="jk-col fw-nl">
                 <h3>{name}</h3>
-                <div className={classNames({ 'screen sm md': !problemIndex })}>
+                <div className={classNames({ 'screen sm md': !contest })}>
                   <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
                     <ProblemTimeLimitInfo settings={settings} />
                     <ProblemMemoryLimitInfo settings={settings} />
@@ -303,7 +296,7 @@ ${sample.output}
             ))}
           </div>
         </div>
-        {!problemIndex && (
+        {!contest && (
           <div className="screen lg hg flex-1">
             <div className="jk-border-radius-inline jk-pad-md bc-we jk-col gap stretch">
               <ProblemTimeLimitInfo settings={settings} expand />

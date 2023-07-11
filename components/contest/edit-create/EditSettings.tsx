@@ -19,7 +19,7 @@ import {
   PROGRAMMING_LANGUAGE,
 } from 'config/constants';
 import { adjustContest, classNames, disableOutOfRange, getContestTemplate, isEndlessContest } from 'helpers';
-import React, { useState } from 'react';
+import { useState } from 'hooks';
 import { ContestTemplate } from 'types';
 import { EditContestProps } from '../types';
 
@@ -31,7 +31,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const endDate = new Date(contest.settings.endTimestamp);
   const frozenDate = new Date(contest.settings.frozenTimestamp);
   const quietDate = new Date(contest.settings.quietTimestamp);
-  const isSelected = (date) => {
+  const isSelected = (date: Date) => {
     return {
       day: date.isWithinInterval({
         start: startDate.startOfDay(),

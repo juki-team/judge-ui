@@ -16,3 +16,7 @@ export enum LastLinkKey {
 }
 
 export type LastLinkType = { [key in LastLinkKey]: { pathname: string, query: {} } };
+
+export type { PropsWithChildren, ReactNode, FC } from 'react';
+export type { AppProps } from 'next/app';
+export type { NextApiRequest, NextApiResponse } from 'next';

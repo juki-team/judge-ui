@@ -1,14 +1,13 @@
 import { ROUTES } from 'config/constants';
-import { useRouter } from 'hooks';
-import { useEffect } from 'react';
+import { useEffect, useRouter } from 'hooks';
 
 function View() {
   const { query, isReady, replace } = useRouter();
   useEffect(() => {
     if (isReady) {
-      void replace(ROUTES.ROOT);
+      void replace(ROUTES.HOME.PAGE());
     }
-  }, [replace, query, isReady]);
+  }, [ replace, query, isReady ]);
   return null;
 }
 

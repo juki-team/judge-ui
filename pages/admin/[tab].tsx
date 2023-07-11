@@ -1,3 +1,4 @@
+import { renderReactNodeOrFunctionP1, TabsType } from '@juki-team/base-ui';
 import {
   AllSubmissions,
   Breadcrumbs,
@@ -12,9 +13,9 @@ import {
   UsersManagement,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useFetcher, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { useFetcher, useJukiUser, useRouter, useState, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import React, { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { AdminTab, CompanyResponseDTO, ContentResponseType, ContentsResponseType, LastLinkKey } from 'types';
 import Custom404 from '../404';
 
@@ -36,7 +37,7 @@ function Admin() {
   const {
     data,
     mutate,
-  } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings && JUDGE_API_V1.COMPANY.LIST());
+  } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings ? JUDGE_API_V1.COMPANY.LIST() : null);
   const { data: myCompany } = useFetcher<ContentResponseType<CompanyResponseDTO>>(JUDGE_API_V1.COMPANY.CURRENT());
   const [ companyKey, setCompanyKey ] = useState('');
   const companies = data?.success ? data.contents : [];
@@ -53,7 +54,7 @@ function Admin() {
     && !canHandleSettings) {
     return <Custom404 />;
   }
-  const tabs: { [key: string]: { key: string, header: ReactNode, body: ReactNode } } = {};
+  const tabs: TabsType<AdminTab> = {};
   if (canCreateUser || canHandleUsers) {
     tabs[AdminTab.USERS_MANAGEMENT] = {
       key: AdminTab.USERS_MANAGEMENT,
@@ -94,13 +95,6 @@ function Admin() {
       body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement /></div>,
     };
   }
-  if (canHandleJudges) {
-    tabs[AdminTab.JUDGES_MANAGEMENT] = {
-      key: AdminTab.JUDGES_MANAGEMENT,
-      header: <T className="tt-ce ws-np">judges</T>,
-      body: <div className="pad-left-right pad-bottom"><JudgesManagement /></div>,
-    };
-  }
   tabs[AdminTab.SETTINGS_MANAGEMENT] = {
     key: AdminTab.SETTINGS_MANAGEMENT,
     header: <T className="tt-ce ws-np">settings</T>,
@@ -110,13 +104,20 @@ function Admin() {
         <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
       </div>,
   };
+  if (canHandleJudges) {
+    tabs[AdminTab.JUDGES_MANAGEMENT] = {
+      key: AdminTab.JUDGES_MANAGEMENT,
+      header: <T className="tt-ce ws-np">judges</T>,
+      body: <div className="pad-left-right pad-bottom"><JudgesManagement /></div>,
+    };
+  }
   
-  const breadcrumbs = [
+  const breadcrumbs: ReactNode[] = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)} className="link"><T className="tt-se">admin</T></Link>,
-    tabs[query.tab as string]?.header,
+    renderReactNodeOrFunctionP1(tabs[query.tab as AdminTab]?.header, { selectedTabKey: query.tab as AdminTab }),
   ];
-  const pushTab = tabKey => push({ pathname: ROUTES.ADMIN.PAGE(tabKey as AdminTab), query });
+  const pushTab = (tabKey: AdminTab) => push({ pathname: ROUTES.ADMIN.PAGE(tabKey), query });
   
   return (
     <TwoContentSection>
@@ -140,10 +141,10 @@ function Admin() {
           )}
         </div>
         <div className="pad-left-right">
-          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={query.tab} />
+          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={query.tab as AdminTab} />
         </div>
       </div>
-      {tabs[query.tab as string]?.body}
+      {renderReactNodeOrFunctionP1(tabs[query.tab as AdminTab]?.body, { selectedTabKey: query.tab as AdminTab })}
     </TwoContentSection>
   );
 }

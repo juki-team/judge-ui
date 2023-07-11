@@ -13,7 +13,6 @@ import {
   SnowflakeIcon,
   T,
   TextHeadCell,
-  Timer,
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
@@ -39,12 +38,15 @@ import {
   ScoreboardResponseDTO,
   Status,
 } from 'types';
+import { getContestTimeLiteral } from '../commons';
 
-const DownloadButton = ({
-  data,
-  contest,
-  disabled,
-}: { data: ScoreboardResponseDTO[], contest: ContestResponseDTO, disabled: boolean }) => {
+interface DownloadButtonProps {
+  data: ScoreboardResponseDTO[],
+  contest: ContestResponseDTO,
+  disabled: boolean
+}
+
+const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
   const { t } = useT();
   
   const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
@@ -161,7 +163,14 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       for (const problem of Object.values(contest?.problems)) {
         base.push({
           head: (
-            <Popover content={<div className="ws-np">{problem.name}</div>}>
+            <Popover
+              content={<div className="jk-row nowrap gap">
+                <div className="fw-bd">{problem.index}</div>
+                <div className="ws-np">{problem.name}</div>
+              </div>}
+              showPopperArrow
+              marginOfChildren={0}
+            >
               <div className="jk-col extend fw-bd">
                 <Link
                   href={{
@@ -223,10 +232,9 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
     setLoaderStatusRef,
     reload,
     refreshRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(
-    contest?.key,
-    unfrozen,
-  ), { refreshInterval: 60000 });
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
+    () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen), { refreshInterval: 60000 },
+  );
   useEffect(() => {
     reload();
   }, [ unfrozen ]);
@@ -289,11 +297,18 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         <div className="jk-row">
           <DownloadButton data={data} contest={contest} disabled={isLoading} />
         </div>,
-        <div className="jk-row">
-          {fullscreen
-            ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
-            : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
-        </div>,
+        <Popover
+          content={fullscreen
+            ? <T className="ws-np">exit full screen</T>
+            : <T className="ws-np">go to fullscreen</T>}
+          showPopperArrow
+        >
+          <div className="jk-row">
+            {fullscreen
+              ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
+              : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
+          </div>
+        </Popover>,
       ]}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
@@ -303,25 +318,8 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
     />
   );
   
-  if (fullscreen) { // TODO: improve:
-    let timeInterval = 0;
-    if (contest.isEndless) {
-      timeInterval = -1;
-    } else if (contest.isPast) {
-      timeInterval = new Date().getTime() - contest.settings.endTimestamp;
-    } else if (contest.isFuture) {
-      timeInterval = contest.settings.startTimestamp - new Date().getTime();
-    } else if (contest.isLive) {
-      timeInterval = contest.settings.endTimestamp - new Date().getTime();
-    }
-    const literal = contest.isEndless ? <T className="ws-np">endless</T> : (
-      <>
-        {contest.isLive ? <T className="ws-np">ends in</T> : contest.isPast ?
-          <T className="ws-np">ends ago</T> : <T className="ws-np">stars in</T>}
-        &nbsp;
-        <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
-      </>
-    );
+  if (fullscreen) {
+    const literal = getContestTimeLiteral(contest);
     const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
     const statusLabel = contestStateMap[key].label;
     const tag = contestStateMap[key].color;
@@ -331,15 +329,13 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       : <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
         <T>{statusLabel}</T>,&nbsp;{literal}</div>;
     
-    const logoImageUrl = imageUrl;
-    
     return (
       <div
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          zIndex: 10000,
+          zIndex: 200,
           width: '100vw',
           height: 'var(--100VH)',
           background: 'var(--t-color-white-2)',
@@ -347,7 +343,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       >
         <div className="jk-row bc-pd" style={{ padding: 'var(--pad-xt)' }}>
           <Image
-            src={logoImageUrl}
+            src={imageUrl}
             alt={name}
             height={viewPortSize === 'md' ? 40 : 46}
             width={viewPortSize === 'md' ? 80 : 92}

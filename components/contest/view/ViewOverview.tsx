@@ -8,15 +8,14 @@ import {
   SpectatorInformation,
   T,
 } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
-import { addParamQuery, authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useJukiUI, useJukiUser, useNotification, useRouter, useSWR } from 'hooks';
+import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
+import { authorizedRequest, classNames, cleanRequest } from 'helpers';
+import { useDateFormat, useJukiUI, useJukiUser, useNotification, useRouter, useSearchParams, useSWR } from 'hooks';
 import {
   ContentResponseType,
   ContestResponseDTO,
   HTTPMethod,
-  OpenDialog,
-  QueryParam,
+  QueryParamKey,
   SetLoaderStatusOnClickType,
   Status,
 } from 'types';
@@ -25,7 +24,8 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { isJudge, isAdmin, isContestant, isGuest, isSpectator } = contest.user;
   const { user: { isLogged } } = useJukiUser();
-  const { push, query } = useRouter();
+  const { query } = useRouter();
+  const { appendSearchParams } = useSearchParams();
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
@@ -69,7 +69,8 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
               </div>
               : (isContestant
                 ? <div className="registered jk-row center gap bc-we br-g6 jk-border-radius-inline fw-br cr-py"><T
-                  className="tt-se">registered</T>
+                  className="tt-se"
+                >registered</T>
                 </div>
                 : (isGuest && new Date().getTime() <= contest.settings.endTimestamp)
                   ? (
@@ -81,7 +82,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                       <ButtonLoader
                         onClick={(setLoader) => isLogged
                           ? registerContest(setLoader, contest?.key)
-                          : push({ query: addParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_IN) })}
+                          : appendSearchParams({ name: QueryParamKey.SIGN_IN, value: '1' })}
                         type="secondary"
                         extend
                       >
@@ -92,7 +93,8 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                   <div className="judge-admin jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py">
                     <T className="tt-se">you are spectator</T> <SpectatorInformation filledCircle />
                   </div>
-                ))}
+                ))
+          }
         </div>
         <div className="contest-content-side-right-bar-bottom jk-col stretch gap">
           <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
@@ -142,6 +144,14 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
             <p className="tx-s fw-bd">
               <T>{contest.settings.clarifications ? 'clarifications available' : 'clarifications not available'}</T>
             </p>
+          </div>
+          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+            <p className="tx-xs cr-g3 fw-bd"><T>languages</T></p>
+            <div className="jk-row gap">
+              {contest.settings.languages.map(language => (
+                <div className="jk-tag">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

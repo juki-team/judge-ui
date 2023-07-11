@@ -1,5 +1,5 @@
 import { DataViewer } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, PAGE_SIZE_OPTIONS } from 'config/constants';
 import { useDataViewerRequester, useJukiUI } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -7,9 +7,9 @@ import {
   DataViewerHeadersType,
   DataViewerRequesterGetUrlType,
   GetRecordKeyType,
+  GetRecordStyleType,
   OnRecordClickType,
   ReactNodeOrFunctionType,
-  GetRecordStyleType,
 } from 'types';
 
 interface PagedDataViewerPros<T, V = T> {
@@ -27,20 +27,21 @@ interface PagedDataViewerPros<T, V = T> {
   dependencies?: any[],
 }
 
-export const PagedDataViewer = <T, V = T>({
-  cards,
-  rows = { height: 68 },
-  headers,
-  name,
-  toRow,
-  getUrl,
-  refreshInterval,
-  extraNodes,
-  getRowKey,
-  onRecordClick,
-  dependencies = [],
-  getRecordStyle,
-}: PagedDataViewerPros<T, V>) => {
+export const PagedDataViewer = <T extends { [key: string]: any }, V = T>(props: PagedDataViewerPros<T, V>) => {
+  const {
+    cards,
+    rows = { height: 68 },
+    headers,
+    name,
+    toRow,
+    getUrl,
+    refreshInterval,
+    extraNodes,
+    getRowKey,
+    onRecordClick,
+    dependencies = [],
+    getRecordStyle,
+  } = props;
   
   const { viewPortSize } = useJukiUI();
   const {
@@ -80,11 +81,10 @@ export const PagedDataViewer = <T, V = T>({
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={extraNodes}
       extraNodesFloating
-      pagination={{ total: lastTotalRef.current, pageSizeOptions: [ 16, 32, 64, 128, 256, 512 ] }}
+      pagination={{ total: lastTotalRef.current, pageSizeOptions: PAGE_SIZE_OPTIONS }}
       getRecordKey={getRowKey}
       onRecordClick={onRecordClick}
       refreshRef={refreshRef}
-      
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

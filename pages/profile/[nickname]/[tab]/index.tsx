@@ -1,3 +1,4 @@
+import { renderReactNodeOrFunctionP1, TabsType } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   Button,
@@ -15,11 +16,11 @@ import {
   UserProfileSettings,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useJukiUI, useJukiUser, useRouter } from 'hooks';
+import { useJukiUI, useJukiUser, useRouter, useState } from 'hooks';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { ReactNode } from 'react';
 import { ContentResponseType, ProfileTab, UserProfileResponseDTO } from 'types';
-import Custom404 from '../../404';
+import Custom404 from '../../../404';
 
 export default function ProfileView() {
   
@@ -32,11 +33,11 @@ export default function ProfileView() {
   
   return (
     <FetcherLayer<ContentResponseType<UserProfileResponseDTO>>
-      url={nickname && JUDGE_API_V1.USER.PROFILE(nickname as string)}
+      url={nickname ? JUDGE_API_V1.USER.PROFILE(nickname as string) : null}
       errorView={<Custom404 />}
     >
       {({ data }) => {
-        const tabHeaders = {
+        const tabHeaders: TabsType<ProfileTab> = {
           [ProfileTab.PROFILE]: {
             key: ProfileTab.PROFILE,
             header: <T className="tt-ce ws-np">profile</T>,
@@ -81,7 +82,10 @@ export default function ProfileView() {
             </div>
           ),
         };
-        const pushTab = tabKey => push({ pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey), query });
+        const pushTab = (tabKey: ProfileTab) => push({
+          pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey),
+          query,
+        });
         const extraNodes = [
           ...(data.content?.canResetPassword ? [
             <Button
@@ -105,10 +109,10 @@ export default function ProfileView() {
           ] : []),
         ];
         
-        const breadcrumbs = [
+        const breadcrumbs: ReactNode[] = [
           <Link href="/" className="link"><T className="tt-se">home</T></Link>,
           <Link href={ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE)} className="link">{nickname}</Link>,
-          tabHeaders[tab as ProfileTab]?.header,
+          renderReactNodeOrFunctionP1(tabHeaders[tab as ProfileTab]?.header, { selectedTabKey: tab as ProfileTab }),
         ];
         
         return (
@@ -125,14 +129,14 @@ export default function ProfileView() {
               <div className="pad-left-right">
                 <TabsInline
                   tabs={tabHeaders}
-                  selectedTabKey={tab}
+                  selectedTabKey={tab as ProfileTab}
                   onChange={pushTab}
                   extraNodes={extraNodes}
                   extraNodesPlacement={(viewPortSize === 'sm') ? 'bottomRight' : undefined}
                 />
               </div>
             </div>
-            {tabHeaders[tab as ProfileTab]?.body}
+            {renderReactNodeOrFunctionP1(tabHeaders[tab as ProfileTab]?.body, { selectedTabKey: tab as ProfileTab })}
           </TwoContentSection>
         );
       }}

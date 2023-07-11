@@ -1,7 +1,8 @@
 import { T, TabsInline } from 'components';
+import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiUI } from 'hooks';
 import React from 'react';
-import { AdminTab, CompanyResponseDTO } from 'types';
+import { AdminTab, CompanyResponseDTO, TabsType } from 'types';
 import { EC2Management } from './EC2Management';
 import { ECSTaskDefinitionsManagement } from './ECSTaskDefinitionsManagement';
 import { ECSTasksManagement } from './ECSTasksManagement';
@@ -10,7 +11,7 @@ import { RunnersSettings } from './RunnersSettings';
 import { SQSManagement } from './SQSManagement';
 
 export const ServicesManagement = ({ company }: { company: CompanyResponseDTO }) => {
-  const tabs = {
+  const tabs: TabsType<AdminTab> = {
     [AdminTab.ECS_TASKS_MANAGEMENT]: {
       key: AdminTab.ECS_TASKS_MANAGEMENT,
       header: <T className="tt-ce ws-np">ecs tasks</T>,
@@ -44,8 +45,8 @@ export const ServicesManagement = ({ company }: { company: CompanyResponseDTO })
   };
   
   const { router: { searchParams, setSearchParams } } = useJukiUI();
-  const selectedTabKey = searchParams.get('servicesTab') || AdminTab.ECS_TASKS_MANAGEMENT;
-  const pushTab = tabKey => setSearchParams({ name: 'servicesTab', value: tabKey });
+  const selectedTabKey = searchParams.get('servicesTab') as AdminTab || AdminTab.ECS_TASKS_MANAGEMENT;
+  const pushTab = (tabKey: AdminTab) => setSearchParams({ name: 'servicesTab', value: tabKey });
   
   return (
     <div style={{ height: '100%' }}>
@@ -55,7 +56,7 @@ export const ServicesManagement = ({ company }: { company: CompanyResponseDTO })
         onChange={pushTab}
       />
       <div style={{ height: 'calc(100% - 40px)' }}>
-        {tabs[selectedTabKey]?.body}
+        {renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.body, { selectedTabKey })}
       </div>
     </div>
   );

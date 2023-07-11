@@ -44,7 +44,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
   const { addWarningNotification } = useNotification();
   const { notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
-  const [course, setCourse] = useState<EditCreateCourseType>(initialCourse || COURSE_DEFAULT());
+  const [ course, setCourse ] = useState<EditCreateCourseType>(initialCourse || COURSE_DEFAULT());
   const lastContest = useRef(initialCourse);
   useEffect(() => {
     if (editing && JSON.stringify(initialCourse) !== JSON.stringify(lastContest.current)) {
@@ -68,15 +68,15 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
       );
       lastContest.current = initialCourse;
     }
-  }, [JSON.stringify(initialCourse)]);
+  }, [ JSON.stringify(initialCourse) ]);
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-      editing ? JUDGE_API_V1.CONTEST.CONTEST(initialCourse.key) : JUDGE_API_V1.CONTEST.CREATE(),
-      {
-        method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
-        body: JSON.stringify(course),
-      }));
+    const response = cleanRequest<ContentResponseType<string>>(
+      await authorizedRequest(
+        editing ? JUDGE_API_V1.CONTEST.CONTEST(initialCourse.key) : JUDGE_API_V1.CONTEST.CREATE(),
+        { method: editing ? HTTPMethod.PUT : HTTPMethod.POST, body: JSON.stringify(course) },
+      ),
+    );
     if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
       await push(ROUTES.CONTESTS.VIEW(course.key, ContestTab.OVERVIEW));
@@ -166,7 +166,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
     },
   };
   
-  const [contestTab, setContestTab] = useState<CourseTab>(CourseTab.OVERVIEW);
+  const [ contestTab, setContestTab ] = useState<CourseTab>(CourseTab.OVERVIEW);
   const extraNodes = [
     <CheckUnsavedChanges
       onClickContinue={() => push(editing ? ROUTES.COURSES.VIEW(course.key, CourseTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}

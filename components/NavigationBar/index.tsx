@@ -1,67 +1,56 @@
 import {
   AssignmentIcon,
   CupIcon,
-  DrawerViewMenuMobile,
-  HorizontalMenu,
-  Image,
   LeaderboardIcon,
   LinkSectionAdmin,
   LinkSectionContest,
   LinkSectionProblem,
-  LoadingIcon,
-  LoginModal,
+  MainMenu,
   SettingsIcon,
-  SettingsSection,
-  SignUpModal,
   SubmissionModal,
   T,
   UserPreviewModal,
-  VerticalMenu,
-  WelcomeModal,
 } from 'components';
-import { ROUTES } from 'config/constants';
-import { isOrHas, removeParamQuery } from 'helpers';
-import { useJukiUI, useJukiUser, useRouter } from 'hooks';
+import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
+import { removeParamQuery } from 'helpers';
+import { useJukiUser, useRouter } from 'hooks';
 import Link from 'next/link';
-import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import React, { createContext, PropsWithChildren, useState } from 'react';
 import {
   AdminTab,
+  ContestsTab,
   Judge,
   LastLinkKey,
   LastLinkType,
   MenuType,
-  MenuViewMode,
-  OpenDialog,
   ProfileSetting,
   ProfileTab,
   QueryParam,
-  SearchParamKey,
-  Theme,
+  QueryParamKey,
 } from 'types';
-import { LoginUser } from './LoginUser';
 
 const initialLastLink = {
-  [LastLinkKey.SECTION_CONTEST]: { pathname: '/contests', query: {} },
-  [LastLinkKey.CONTESTS]: { pathname: '/contests', query: {} },
-  [LastLinkKey.SECTION_PROBLEM]: { pathname: '/problems', query: {} },
-  [LastLinkKey.PROBLEMS]: { pathname: `/problems`, query: { [QueryParam.JUDGE]: Judge.CUSTOMER } },
-  [LastLinkKey.SECTION_ADMIN]: { pathname: `/admin/${AdminTab.USERS_MANAGEMENT}`, query: {} },
+  [LastLinkKey.SECTION_CONTEST]: { pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL), query: {} },
+  [LastLinkKey.CONTESTS]: { pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL), query: {} },
+  [LastLinkKey.SECTION_PROBLEM]: { pathname: ROUTES.PROBLEMS.LIST(), query: {} },
+  [LastLinkKey.PROBLEMS]: { pathname: ROUTES.PROBLEMS.LIST(), query: { [QueryParam.JUDGE]: Judge.CUSTOMER } },
+  [LastLinkKey.SECTION_ADMIN]: { pathname: ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT), query: {} },
   [LastLinkKey.SHEETS]: { pathname: `/sheets`, query: {} },
   [LastLinkKey.SECTION_SHEET]: { pathname: `/sheets`, query: {} },
 };
 
-export const LastLinkContext = createContext<{
-  pushPath: ({
-    key,
-    pathname,
-    query,
-  }: { key: string, pathname: string, query: (NodeJS.Dict<string | string[]>) }) => void, lastLink: LastLinkType
-}>({
+type LastLinkContext = {
+  pushPath: (props: { key: string, pathname: string, query: (NodeJS.Dict<string | string[]>) }) => void,
+  lastLink: LastLinkType
+}
+
+export const LastLinkContext = createContext<LastLinkContext>({
   pushPath: () => null,
   lastLink: initialLastLink,
 });
 
 export const LasLinkProvider = ({ children }: PropsWithChildren<{}>) => {
+  
   const [ lastLink, setLastLink ] = useState<LastLinkType>(initialLastLink);
   
   return (
@@ -82,7 +71,7 @@ export const LasLinkProvider = ({ children }: PropsWithChildren<{}>) => {
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
-  const { viewPortSize } = useJukiUI();
+  
   const {
     user: {
       canViewSubmissionsManagement,
@@ -92,11 +81,9 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       canHandleUsers,
       canHandleServices,
       canHandleSettings,
-      isLogged,
       settings: { [ProfileSetting.THEME]: preferredTheme, [ProfileSetting.MENU_VIEW_MODE]: preferredMenuViewMode },
     },
-    isLoading,
-    company: { imageUrl, name },
+    company: { key },
   } = useJukiUser();
   
   const menu: MenuType[] = [
@@ -112,13 +99,17 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       selected: ('/' + pathname).includes('//problem'),
       menuItemWrapper: ({ children }) => <LinkSectionProblem>{children}</LinkSectionProblem>,
     },
-    {
-      label: <T className="tt-se">ranking</T>,
-      icon: <LeaderboardIcon />,
-      selected: ('/' + pathname).includes('//ranking'),
-      menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()} prefetch>{children}</Link>,
-    },
   ];
+  if (key === JUKI_APP_COMPANY_KEY) {
+    menu.push(
+      {
+        label: <T className="tt-se">ranking</T>,
+        icon: <LeaderboardIcon />,
+        selected: ('/' + pathname).includes('//ranking'),
+        menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
+      },
+    );
+  }
   if (
     canViewSubmissionsManagement
     || canSendEmail
@@ -136,146 +127,20 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     });
   }
   
-  useEffect(() => {
-    if (isLogged && (isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) || isOrHas(
-      query[QueryParam.DIALOG],
-      OpenDialog.SIGN_IN,
-    ))) {
-      void push({
-        query: removeParamQuery(
-          removeParamQuery(query, QueryParam.DIALOG, OpenDialog.SIGN_UP),
-          QueryParam.DIALOG,
-          OpenDialog.SIGN_IN,
-        ),
-      });
-    }
-  }, [ isLogged, query ]);
-  const [ helpOpen, setHelpOpen ] = useState(false);
-  
-  const logoImageUrl = (viewPortSize === 'sm' && preferredTheme !== Theme.DARK) ? imageUrl.replace(
-    'white',
-    'color',
-  ) : imageUrl;
-  
-  const drawerMenuMobile = (props) => <DrawerViewMenuMobile {...props} logoImageUrl={logoImageUrl} />;
-  
-  const rightMobile = {
-    children: <div className="jk-row"><LoginUser collapsed={false} popoverPlacement="bottomRight" /></div>,
-  };
-  
-  const centerMobile = {
-    children: (
-      <div className="jk-row"><Link href="/">
-        <Image
-          src={logoImageUrl}
-          alt={name}
-          height={45}
-          width={90}
-        />
-      </Link></div>
-    ),
-  };
-  
-  const topSection = ({ isOpen }) => (
-    <div className="jk-row" onClick={() => push('/')} style={{ padding: 'calc(var(--pad-lg) + var(--pad-lg)) 0' }}>
-      {isLoading
-        ? <LoadingIcon />
-        : (
-          <Image
-            src={isOpen ? logoImageUrl : logoImageUrl.replace('horizontal', 'vertical')}
-            alt={name}
-            height={isOpen ? 60 : 80}
-            width={isOpen ? 120 : 40}
-          />
-        )}
-    </div>
-  );
-  const bottomSection = ({ isOpen }) => {
-    return (
-      <div className="jk-col stretch gap settings-apps-login-user-content nowrap pad-top-bottom">
-        <SettingsSection
-          isOpen={isOpen}
-          isMobile={false}
-          helpOpen={helpOpen}
-          setHelpOpen={setHelpOpen}
-          popoverPlacement="right"
-        />
-        <LoginUser collapsed={!isOpen} popoverPlacement="rightBottom" />
-      </div>
-    );
-  };
-  
-  const leftSection = () => (
-    <div className="jk-row pad-left-right" onClick={() => push('/')}>
-      {isLoading
-        ? <LoadingIcon />
-        : (
-          <Image
-            src={logoImageUrl}
-            alt={name}
-            height={viewPortSize === 'md' ? 40 : 46}
-            width={viewPortSize === 'md' ? 80 : 92}
-          />
-        )}
-    </div>
-  );
-  const rightSection = () => {
-    return (
-      <div className="jk-row stretch gap settings-apps-login-user-content nowrap pad-left-right">
-        <SettingsSection
-          isOpen={false}
-          isMobile={false}
-          helpOpen={helpOpen}
-          setHelpOpen={setHelpOpen}
-          popoverPlacement="bottom"
-        />
-        <LoginUser collapsed={false} popoverPlacement="bottomRight" />
-      </div>
-    );
-  };
-  
   return (
     <>
-      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_UP) && <SignUpModal />}
-      {isOrHas(query[QueryParam.DIALOG], OpenDialog.SIGN_IN) && <LoginModal />}
-      {isOrHas(query[QueryParam.DIALOG], OpenDialog.WELCOME) && <WelcomeModal />}
-      {query[SearchParamKey.USER_PREVIEW] && (
+      {query[QueryParamKey.USER_PREVIEW] && (
         <UserPreviewModal
-          nickname={query[SearchParamKey.USER_PREVIEW] as string}
-          onClose={() => push({ query: removeParamQuery(query, SearchParamKey.USER_PREVIEW, null) })}
-          userHref={ROUTES.PROFILE.PAGE(query[SearchParamKey.USER_PREVIEW] as string, ProfileTab.PROFILE)}
+          nickname={query[QueryParamKey.USER_PREVIEW] as string}
+          onClose={() => push({ query: removeParamQuery(query, QueryParamKey.USER_PREVIEW, null) })}
+          userHref={ROUTES.PROFILE.PAGE(query[QueryParamKey.USER_PREVIEW] as string, ProfileTab.PROFILE)}
         />
       )}
       {query[QueryParam.SUBMISSION_VIEW] && <SubmissionModal submitId={query[QueryParam.SUBMISSION_VIEW] as string} />}
       <LasLinkProvider>
-        {preferredMenuViewMode === MenuViewMode.HORIZONTAL
-          ? (
-            <HorizontalMenu
-              menu={menu}
-              leftSection={leftSection}
-              rightSection={rightSection}
-              drawerMenuMobile={drawerMenuMobile}
-              rightMobile={rightMobile}
-              centerMobile={centerMobile}
-            >
-              {isLoading ?
-                <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
-            </HorizontalMenu>
-          )
-          : (
-            <VerticalMenu
-              menu={menu}
-              topSection={topSection}
-              bottomSection={bottomSection}
-              drawerMenuMobile={drawerMenuMobile}
-              rightMobile={rightMobile}
-              centerMobile={centerMobile}
-            >
-              {isLoading ?
-                <div className="jk-col extend"><LoadingIcon size="very-huge" className="cr-py" /></div> : children}
-            </VerticalMenu>
-          )
-        }
+        <MainMenu onSeeMyProfile={() => null} menu={menu}>
+          {children}
+        </MainMenu>
       </LasLinkProvider>
     </>
   );

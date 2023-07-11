@@ -3,7 +3,6 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { useContestRouter } from 'hooks';
 import Link from 'next/link';
-import React from 'react';
 import { ContentResponseType, ContestResponseDTO, EditContestProblemBasicType, EditCreateContestType } from 'types';
 import Custom404 from '../../../404';
 

@@ -1,7 +1,6 @@
 import { MdMathEditor } from 'components';
 import { consoleWarn } from 'helpers';
-import { useRouter } from 'hooks';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRouter, useState } from 'hooks';
 
 const defaultMessage = `# Bienvenido a Juki notas!,
 

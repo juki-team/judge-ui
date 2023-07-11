@@ -10,9 +10,8 @@ import {
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { useDataViewerRequester, useJukiUI } from 'hooks';
+import { useDataViewerRequester, useEffect, useJukiUI, useMemo, useState } from 'hooks';
 import Link from 'next/link';
-import React, { useEffect, useMemo, useState } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {

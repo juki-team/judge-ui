@@ -1,18 +1,25 @@
-import { AddIcon, Button, ButtonLoader, DeleteIcon, Input, Modal, T } from 'components/index';
+import { AddIcon, Button, ButtonLoader, DeleteIcon, Input, Modal, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
+import { KeyedMutator } from 'swr';
 import { ContentResponseType, HTTPMethod, Status } from 'types';
 
-export const ModifyContactEmailsButton = ({ contactEmails: initialContactEmails, mutate }) => {
+interface ModifyContactEmailsButtonProps {
+  contactEmails: string [],
+  mutate: KeyedMutator<any>,
+}
+
+export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps) => {
   
-  const [contactEmails, setContactEmails] = useState<string[]>(initialContactEmails);
-  const [open, setOpen] = useState(false);
+  const { contactEmails: initialContactEmails, mutate } = props;
+  const [ contactEmails, setContactEmails ] = useState<string[]>(initialContactEmails);
+  const [ open, setOpen ] = useState(false);
   const { notifyResponse } = useNotification();
   useEffect(() => {
     setContactEmails(initialContactEmails);
-  }, [JSON.stringify(initialContactEmails), open]);
+  }, [ JSON.stringify(initialContactEmails), open ]);
   
   return (
     <>
@@ -37,7 +44,7 @@ export const ModifyContactEmailsButton = ({ contactEmails: initialContactEmails,
                   <Input
                     value={contactEmail}
                     onChange={(newValue) => {
-                      const newContactEmails = [...contactEmails];
+                      const newContactEmails = [ ...contactEmails ];
                       newContactEmails[index] = newValue;
                       setContactEmails(newContactEmails);
                     }}
@@ -55,7 +62,7 @@ export const ModifyContactEmailsButton = ({ contactEmails: initialContactEmails,
             <Button
               size="small"
               className="jk-table-inline-row"
-              onClick={() => setContactEmails([...contactEmails, ''])}
+              onClick={() => setContactEmails([ ...contactEmails, '' ])}
               icon={<AddIcon />}
               extend
             >

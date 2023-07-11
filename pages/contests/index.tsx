@@ -1,6 +1,5 @@
 import { ROUTES } from 'config/constants';
-import { useRouter } from 'hooks';
-import { useEffect } from 'react';
+import { useEffect, useRouter } from 'hooks';
 import { ContestsTab } from 'types';
 
 function Contests() {
@@ -9,7 +8,7 @@ function Contests() {
     if (isReady) {
       void push(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
     }
-  }, [push, query, isReady]);
+  }, [ push, query, isReady ]);
   return null;
 }
 

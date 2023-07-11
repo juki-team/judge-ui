@@ -80,7 +80,7 @@ export const ProblemModeInfo = ({ settings, expand }: { settings: ProblemSetting
           {key === '0'
             ? <span className="label tt-ce fw-bd"><T className="ws-np">sample cases</T>: </span>
             : <span className="label tt-ce fw-bd"><T>subtask</T> {key}: </span>}
-          &nbsp;{settings?.pointsByGroups[key].points}&nbsp;<T>points</T>
+          &nbsp;{settings?.pointsByGroups[+key].points}&nbsp;<T>points</T>
         </div>
       ))}
       <div className="jk-divider tiny" style={{ height: '2px' }} />
@@ -121,10 +121,8 @@ export const ProblemModeInfo = ({ settings, expand }: { settings: ProblemSetting
 
 export const ProblemTimeLimitInfo = ({ settings, expand }: { settings: ProblemSettingsType, expand?: boolean }) => {
   
-  const limitsLanguages = Object.values(settings?.byProgrammingLanguage || {}).filter(({
-    memoryLimit,
-    timeLimit,
-  }) => memoryLimit !== settings.memoryLimit || timeLimit !== settings.timeLimit);
+  const limitsLanguages = Object.values(settings?.byProgrammingLanguage || {})
+    .filter(({ memoryLimit, timeLimit }) => memoryLimit !== settings.memoryLimit || timeLimit !== settings.timeLimit);
   
   if (expand) {
     return (
@@ -173,7 +171,7 @@ export const ProblemTimeLimitInfo = ({ settings, expand }: { settings: ProblemSe
               ))}
             </div>
           }
-          triggerOn={['hover', 'click']}
+          triggerOn={[ 'hover', 'click' ]}
           placement="bottom"
         >
           <div className="jk-row">&nbsp;<ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
@@ -185,10 +183,8 @@ export const ProblemTimeLimitInfo = ({ settings, expand }: { settings: ProblemSe
 
 export const ProblemMemoryLimitInfo = ({ settings, expand }: { settings: ProblemSettingsType, expand?: boolean }) => {
   
-  const limitsLanguages = Object.values(settings?.byProgrammingLanguage || {}).filter(({
-    memoryLimit,
-    timeLimit,
-  }) => memoryLimit !== settings.memoryLimit || timeLimit !== settings.timeLimit);
+  const limitsLanguages = Object.values(settings?.byProgrammingLanguage || {})
+    .filter(({ memoryLimit, timeLimit }) => memoryLimit !== settings.memoryLimit || timeLimit !== settings.timeLimit);
   
   if (expand) {
     return (
@@ -237,7 +233,7 @@ export const ProblemMemoryLimitInfo = ({ settings, expand }: { settings: Problem
               ))}
             </div>
           }
-          triggerOn={['hover', 'click']}
+          triggerOn={[ 'hover', 'click' ]}
           placement="bottom"
         >
           <div className="jk-row">&nbsp;<ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
@@ -252,13 +248,15 @@ export const ProblemInfo = (props: ProblemInfoProps) => {
   const { settings, horizontal = false } = props;
   
   return (
-    <div className={classNames('center problem-info', {
-      gap: horizontal,
-      'jk-row': horizontal,
-      'jk-col': !horizontal,
-      stretch: !horizontal,
-      horizontal,
-    })}>
+    <div
+      className={classNames('center problem-info', {
+        gap: horizontal,
+        'jk-row': horizontal,
+        'jk-col': !horizontal,
+        stretch: !horizontal,
+        horizontal,
+      })}
+    >
       <ProblemTimeLimitInfo settings={settings} expand={!horizontal} />
       <ProblemMemoryLimitInfo settings={settings} expand={!horizontal} />
       <ProblemTypeInfo settings={settings} />

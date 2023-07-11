@@ -18,8 +18,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize } from 'helpers';
-import { useNotification, useSWR } from 'hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useNotification, useState, useSWR } from 'hooks';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
@@ -49,9 +48,9 @@ type NewTestCaseType = {
   outputFileSize: number,
   outputFileLastModified: Date,
   
-  inputNewFile: File,
+  inputNewFile: File | null,
   inputNewFileState: UploadState,
-  outputNewFile: File,
+  outputNewFile: File | null,
   outputNewFileState: UploadState,
 };
 
@@ -75,16 +74,16 @@ const transform = (problemTestCases: ProblemTestCasesResponseDTO) => {
 };
 
 const ProblemTestCasesPage = ({
-  problem,
-  testCases: problemTestCases,
-}: { problem: EditCreateProblemType, testCases: ProblemTestCasesResponseDTO }) => {
+                                problem,
+                                testCases: problemTestCases,
+                              }: { problem: EditCreateProblemType, testCases: ProblemTestCasesResponseDTO }) => {
   
-  const [testCases, setTestCases] = useState<{ [key: string]: NewTestCaseType }>(transform(problemTestCases));
-  const [newGroups, setNewGroups] = useState([1]);
-  const [lock, setLock] = useState(false);
+  const [ testCases, setTestCases ] = useState<{ [key: string]: NewTestCaseType }>(transform(problemTestCases));
+  const [ newGroups, setNewGroups ] = useState([ 1 ]);
+  const [ lock, setLock ] = useState(false);
   useEffect(() => {
     setTestCases(transform(problemTestCases));
-  }, [problemTestCases]);
+  }, [ problemTestCases ]);
   const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
   
@@ -109,23 +108,22 @@ const ProblemTestCasesPage = ({
     setTestCases(newTestCases);
   };
   
-  const handleInputFiles = (keyFile: KeyFileType) => (fileList: FileList) => {
+  const handleInputOutputFiles = (keyFile: KeyFileType) => (fileList: FileList) => {
     const newTestCases: { [key: string]: NewTestCaseType } = { ...testCases };
     for (const file of Array.from(fileList)) {
       const testCaseKey = file.name.replace(/\.[^/.]+$/, '');
       newTestCases[testCaseKey] = {
-        inputNewFileState: UploadState.NO_FILE,
-        outputNewFileState: UploadState.NO_FILE,
-        inputFileSize: -1,
-        outputFileSize: -1,
-        outputNewFile: null,
-        inputNewFile: null,
-        ...newTestCases[testCaseKey],
+        inputNewFileState: newTestCases[testCaseKey]?.inputNewFileState || UploadState.NO_FILE,
+        outputNewFileState: newTestCases[testCaseKey]?.outputNewFileState || UploadState.NO_FILE,
+        inputFileSize: newTestCases[testCaseKey]?.inputFileSize || -1,
+        outputFileSize: newTestCases[testCaseKey]?.outputFileSize || -1,
+        outputNewFile: newTestCases[testCaseKey]?.outputNewFile || null,
+        inputNewFile: newTestCases[testCaseKey]?.inputNewFile || null,
         testCaseKey,
-        groups: problem.settings.mode === ProblemMode.SUBTASK ? newGroups : [1],
-        [keyFile + 'NewFile']: file,
-        [keyFile + 'NewFileState']: UploadState.NO_SAVED,
-      };
+        groups: problem.settings.mode === ProblemMode.SUBTASK ? newGroups : [ 1 ],
+        [(keyFile + 'NewFile') as 'outputNewFile']: file,
+        [(keyFile + 'NewFileState') as 'outputNewFileState']: UploadState.NO_SAVED,
+      } as NewTestCaseType;
     }
     setTestCases(newTestCases);
   };
@@ -151,7 +149,10 @@ const ProblemTestCasesPage = ({
     } else {
       setTestCases(prevState => ({
         ...prevState,
-        [testCase.testCaseKey]: { ...prevState[testCase.testCaseKey], [keyFile + 'NewFIleState']: UploadState.ERROR_ON_UPLOAD },
+        [testCase.testCaseKey]: {
+          ...prevState[testCase.testCaseKey],
+          [keyFile + 'NewFIleState']: UploadState.ERROR_ON_UPLOAD,
+        },
       }));
     }
   };
@@ -200,7 +201,7 @@ const ProblemTestCasesPage = ({
             setLock(true);
             for (const { testCaseKey } of Object.values(testCases)) {
               setLoaderStatus(Status.LOADING);
-              await Promise.all(['input', 'output'].map(async (keyFile: KeyFileType) => {
+              await Promise.all([ 'input' as KeyFileType, 'output' as KeyFileType ].map(async (keyFile: KeyFileType) => {
                 const response = cleanRequest<ContentsResponseType<{}>>(
                   await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, keyFile), {
                     method: HTTPMethod.DELETE,
@@ -273,27 +274,27 @@ const ProblemTestCasesPage = ({
               <div className="jk-row">
                 {testCase.testCaseKey}
               </div>
-              {['input', 'output'].map((keyPut: KeyFileType) => (
+              {[ 'input' as KeyFileType, 'output' as KeyFileType ].map((keyPut: KeyFileType) => (
                 <div className="jk-row center gap" key={keyPut}>
-                  <div className={classNames('jk-row gap nowrap', { 'cr-ss': testCase[keyPut + 'FileSize'] !== -1 })}>
+                  <div className={classNames('jk-row gap nowrap', { 'cr-ss': testCase[(keyPut + 'FileSize') as 'outputFileSize'] !== -1 })}>
                     <div className="jk-row left nowrap" style={{ width: 110 }}>
                       <CloudUploadIcon /><T>on server</T>:
                     </div>
                     <div className="jk-row" style={{ width: 80 }}>
-                      {testCase[keyPut + 'FileSize'] !== -1 ?
+                      {testCase[(keyPut + 'FileSize') as 'outputFileSize'] !== -1 ?
                         <Popover
                           content={<div className="jk-row center nowrap">
                             <T className="ws-np fw-bd tt-se">last updated</T>
-                            <span className="ws-np">: {new Date(testCase[keyPut + 'FileLastModified']).toLocaleString()}</span>
+                            <span className="ws-np">: {new Date(testCase[(keyPut + 'FileLastModified') as 'outputFileLastModified']).toLocaleString()}</span>
                           </div>}
                           showPopperArrow
                         >
-                          <div className="jk-row">{humanFileSize(testCase[keyPut + 'FileSize'])}</div>
+                          <div className="jk-row">{humanFileSize(testCase[(keyPut + 'FileSize') as 'outputFileSize'])}</div>
                         </Popover>
                         : '-'}
                     </div>
                     <div className="jk-row left" style={{ width: 70 }}>
-                      {testCase[keyPut + 'FileSize'] !== -1 && (
+                      {testCase[(keyPut + 'FileSize') as 'inputFileSize'] !== -1 && (
                         <>
                           <Popover
                             content={<T className="ws-np tt-se">the changes will be lost</T>}
@@ -328,15 +329,15 @@ const ProblemTestCasesPage = ({
                       )}
                     </div>
                   </div>
-                  <div className={classNames('jk-row gap nowrap', { 'cr-er': !!testCase[keyPut + 'NewFile'] })}>
+                  <div className={classNames('jk-row gap nowrap', { 'cr-er': !!testCase[(keyPut + 'NewFile') as 'outputNewFile'] })}>
                     <div className="jk-row left nowrap" style={{ width: 110 }}>
                       <FileIcon /><T>on local</T>:
                     </div>
                     <div className="jk-row" style={{ width: 80 }}>
-                      {!!testCase[keyPut + 'NewFile'] ? humanFileSize(testCase[keyPut + 'NewFile']?.size) : '-'}
+                      {testCase[(keyPut + 'NewFile') as 'outputNewFile']?.size ? humanFileSize(testCase[(keyPut + 'NewFile') as 'outputNewFile']?.size || 0) : '-'}
                     </div>
                     <div className="jk-row left gap" style={{ width: 70 }}>
-                      {testCase[keyPut + 'NewFile'] && (
+                      {testCase[(keyPut + 'NewFile') as 'outputNewFile'] && (
                         <Button
                           type="text"
                           size="small"
@@ -345,9 +346,15 @@ const ProblemTestCasesPage = ({
                           disabled={lock}
                         />
                       )}
-                      {testCase[keyPut + 'NewFileState'] === UploadState.ERROR_ON_UPLOAD && <ExclamationIcon />}
-                      {testCase[keyPut + 'NewFileState'] === UploadState.UPLOADING && <LoadingIcon />}
-                      {testCase[keyPut + 'NewFileState'] === UploadState.SAVED && <CheckIcon />}
+                      {testCase[(keyPut + 'NewFileState') as 'outputNewFileState'] === UploadState.ERROR_ON_UPLOAD && (
+                        <ExclamationIcon />
+                      )}
+                      {testCase[(keyPut + 'NewFileState') as 'outputNewFileState'] === UploadState.UPLOADING && (
+                        <LoadingIcon />
+                      )}
+                      {testCase[(keyPut + 'NewFileState') as 'outputNewFileState'] === UploadState.SAVED && (
+                        <CheckIcon />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -365,12 +372,12 @@ const ProblemTestCasesPage = ({
                 setLock(true);
                 setLoaderStatus(Status.LOADING);
                 for (const testCase of Object.values(testCases)) {
-                  await Promise.all((['input', 'output']).map(async (keyFile: KeyFileType) => {
-                    if (testCase[keyFile + 'NewFile']) {
+                  await Promise.all(([ 'input' as KeyFileType, 'output' as KeyFileType ]).map(async (keyFile: KeyFileType) => {
+                    if (testCase[(keyFile + 'NewFile') as 'outputNewFile']) {
                       const formData = new FormData();
                       formData.append('testCaseKey', testCase.testCaseKey);
                       testCase.groups.forEach((group) => formData.append('groups[]', group + ''));
-                      formData.append('file', testCase[keyFile + 'NewFile']);
+                      formData.append('file', testCase[(keyFile + 'NewFile') as 'outputNewFile'] as File);
                       formData.append('type', keyFile);
                       await handleUpload(testCase, formData, keyFile);
                     }
@@ -404,7 +411,7 @@ const ProblemTestCasesPage = ({
               </div>
               <Input
                 type="files"
-                onChange={handleInputFiles('input')}
+                onChange={handleInputOutputFiles('input')}
                 className="screen"
               />
             </label>
@@ -416,7 +423,7 @@ const ProblemTestCasesPage = ({
               </div>
               <Input
                 type="files"
-                onChange={handleInputFiles('output')}
+                onChange={handleInputOutputFiles('output')}
                 className="screen"
               />
             </label>

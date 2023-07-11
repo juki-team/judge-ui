@@ -2,11 +2,13 @@ import { Button, ButtonLoader, Modal, T, UserNicknameLink } from 'components';
 import { useJukiUser } from 'hooks';
 import React from 'react';
 
-export const ResetPassword = ({ onClose, nickname, companyKey }: {
+interface ResetPasswordProps {
   onClose: () => void,
   nickname: string,
   companyKey: string,
-}) => {
+}
+
+export const ResetPassword = ({ onClose, nickname, companyKey }: ResetPasswordProps) => {
   
   const { resetUserPassword } = useJukiUser();
   

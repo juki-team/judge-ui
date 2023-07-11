@@ -1,5 +1,4 @@
 export enum QueryParam {
-  DIALOG = 'dialog',
   SUBMISSION_VIEW = 'sv',
   // tables
   MY_STATUS_TABLE = 'mst',
@@ -32,12 +31,6 @@ export enum QueryParam {
   JUDGE = 'judge',
 }
 
-export enum OpenDialog {
-  WELCOME = 'w',
-  SIGN_IN = 'si',
-  SIGN_UP = 'sup',
-}
-
 export enum AdminTab {
   USERS_MANAGEMENT = 'users-management',
   ALL_USERS = 'all-users',
@@ -60,10 +53,13 @@ export enum AdminTab {
   SETTINGS_MANAGEMENT = 'settings-management',
   
   JUDGES_MANAGEMENT = 'judges-management',
+}
+
+export enum JudgesManagementTab {
   VIRTUAL_SUBMISSIONS_QUEUE = 'virtual-submissions-queue',
   VIRTUAL_USERS = 'virtual-users',
   CODEFORCES_JUDGE = 'codeforces-judge',
-  
+  JV_UMSA_JUDGE = 'jv-umsa-judge',
 }
 
 export enum ProblemTab {
