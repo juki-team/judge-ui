@@ -85,7 +85,10 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
           }));
       } else if (problem.judge === Judge.CUSTOMER || problem.judge === Judge.JUKI_JUDGE) {
         languages = Object.values(problem?.settings.byProgrammingLanguage || {})
-          .filter(({ language }) => contest?.languages[problem.judge].some(lang => lang === language))
+          .filter(
+            contest ? ({ language }) => contest.languages[problem.judge].some(lang => lang === language)
+              : () => true,
+          )
           .map(({ language }) => ({
             value: language,
             label: PROGRAMMING_LANGUAGE[language].label || language,
