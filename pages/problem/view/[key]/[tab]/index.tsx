@@ -3,6 +3,7 @@ import {
   AutorenewIcon,
   Breadcrumbs,
   ButtonLoader,
+  CustomHead,
   EditIcon,
   ExclamationIcon,
   FetcherLayer,
@@ -267,6 +268,7 @@ const ProblemView = (): ReactNode => {
         return (
           <TwoContentSection>
             <div>
+              <CustomHead title={problem.name} />
               <Breadcrumbs breadcrumbs={breadcrumbs} />
               <div className="jk-row gap left pad-left-right">
                 <h2

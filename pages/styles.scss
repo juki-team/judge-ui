@@ -19,6 +19,7 @@ body {
     width: 100vw;
     height: var(--100VH);
   }
+  
   --left-vertical-menu-width: 48px !important;
 }
 
@@ -50,6 +51,8 @@ li > * {
 }
 
 .jk-md-math-editor-style {
+  @extend .bc-we;
+  
   .content-preview {
     min-height: 141px;
   }
@@ -64,6 +67,16 @@ li > * {
 }
 
 .text-edit {
+  &-small {
+    .jk-md-math-editor-layout {
+      @extend .bc-we;
+      
+      .content-preview {
+        min-height: 48px;
+      }
+    }
+  }
+  
   .jk-md-math-editor-layout {
     @extend .jk-md-math-editor-style;
     

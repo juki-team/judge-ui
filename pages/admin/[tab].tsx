@@ -13,10 +13,17 @@ import {
   UsersManagement,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useFetcher, useJukiUser, useRouter, useState, useTrackLastPath } from 'hooks';
+import { useFetcher, useJukiUser, useRouter, useSearchParams, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { AdminTab, CompanyResponseDTO, ContentResponseType, ContentsResponseType, LastLinkKey } from 'types';
+import {
+  AdminTab,
+  CompanyResponseDTO,
+  ContentResponseType,
+  ContentsResponseType,
+  LastLinkKey,
+  QueryParam,
+} from 'types';
 import Custom404 from '../404';
 
 function Admin() {
@@ -39,7 +46,8 @@ function Admin() {
     mutate,
   } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings ? JUDGE_API_V1.COMPANY.LIST() : null);
   const { data: myCompany } = useFetcher<ContentResponseType<CompanyResponseDTO>>(JUDGE_API_V1.COMPANY.CURRENT());
-  const [ companyKey, setCompanyKey ] = useState('');
+  const { searchParams, setSearchParams } = useSearchParams();
+  const companyKey = searchParams.get(QueryParam.COMPANY) as string;
   const companies = data?.success ? data.contents : [];
   const company: CompanyResponseDTO | undefined = canHandleSettings
     ? companies.find((company) => company.key === companyKey)
@@ -133,7 +141,7 @@ function Admin() {
                   label: <span className="ws-np">{company.name}</span>,
                 }))}
                 selectedOption={{ value: companyKey, label: companyKey ? undefined : <T>select</T> }}
-                onChange={({ value }) => setCompanyKey(value)}
+                onChange={({ value }) => setSearchParams({ name: QueryParam.COMPANY, value })}
                 className="jk-br-ie jk-button-secondary"
                 extend
               />

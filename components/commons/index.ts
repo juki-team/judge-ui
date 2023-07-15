@@ -167,6 +167,7 @@ export {
   useNotification,
 } from '@juki-team/base-ui';
 
+export * from './CustomHead';
 export * from './Image';
 export * from './PagedDataViewer';
 export * from './TextLangEdit';

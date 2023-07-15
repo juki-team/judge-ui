@@ -86,4 +86,5 @@ export {
 
 export * from './commons';
 export * from './contest';
+export * from './problem';
 export * from './routes';

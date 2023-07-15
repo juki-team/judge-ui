@@ -1,12 +1,11 @@
 import { JUKI_APP_COMPANY_KEY } from '@juki-team/commons';
 import { Analytics } from '@vercel/analytics/react';
-import { ErrorBoundary, JukiUIProvider, JukiUserProvider, LineLoader, NavigationBar, T } from 'components';
+import { CustomHead, ErrorBoundary, JukiUIProvider, JukiUserProvider, LineLoader, NavigationBar, T } from 'components';
 import { settings } from 'config';
 import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV } from 'config/constants';
 import { consoleWarn } from 'helpers';
 import { useJukiUser, useRouter, useSearchParams } from 'hooks';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
@@ -16,15 +15,6 @@ import '../i18n';
 import './styles.scss';
 
 const MyComponent = dynamic(() => import('./md-print'), { ssr: false });
-
-const CustomHead = () => {
-  const { company } = useJukiUser();
-  return (
-    <Head>
-      <title>{company.name + ' judge'}</title>
-    </Head>
-  );
-};
 
 const SponsoredByTag = () => {
   

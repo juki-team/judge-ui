@@ -1,9 +1,11 @@
-import { MdMathEditor, Tabs } from 'components';
-import { LANGUAGE } from 'config/constants';
+import { FlagEnImage, FlagEsImage, MdMathEditor, Tabs } from 'components';
 import React from 'react';
 import { Language, TextLanguageType } from 'types';
 
-export const TextLangEdit = ({ text, setText }: { text: TextLanguageType, setText: (text: TextLanguageType) => void }) => {
+export const TextLangEdit = ({ text, setText }: {
+  text: TextLanguageType,
+  setText: (text: TextLanguageType) => void
+}) => {
   return (
     <div className="text-lang-edit">
       <Tabs
@@ -18,7 +20,11 @@ export const TextLangEdit = ({ text, setText }: { text: TextLanguageType, setTex
                 onChange={value => setText({ ...text, [Language.EN]: value })}
               />
             ),
-            header: <span className="tt-se">{LANGUAGE[Language.EN].label}</span>,
+            header: (
+              <div className="jk-row nowrap">
+                English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div>
+              </div>
+            ),
           },
           {
             key: Language.ES,
@@ -30,7 +36,11 @@ export const TextLangEdit = ({ text, setText }: { text: TextLanguageType, setTex
                 onChange={value => setText({ ...text, [Language.ES]: value })}
               />
             ),
-            header: <span className="tt-se">{LANGUAGE[Language.ES].label}</span>,
+            header: (
+              <div className="jk-row nowrap">
+                Español <div style={{ width: 50, height: 24 }}><FlagEsImage /></div>
+              </div>
+            ),
           },
         ]}
       />

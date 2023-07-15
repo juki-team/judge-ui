@@ -90,14 +90,16 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       header: <T className="tt-ce">overview</T>,
       body: (
         <div className="pad-top-bottom pad-left-right">
-          <MdMathEditor
-            informationButton
-            uploadImageButton
-            source={contest.description}
-            onChange={value => setContest(prevState => (
-              { ...prevState, description: value }
-            ))}
-          />
+          <div className="bc-we">
+            <MdMathEditor
+              informationButton
+              uploadImageButton
+              source={contest.description}
+              onChange={value => setContest(prevState => (
+                { ...prevState, description: value }
+              ))}
+            />
+          </div>
         </div>
       ),
     },

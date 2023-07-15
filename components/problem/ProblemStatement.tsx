@@ -2,6 +2,8 @@ import {
   ButtonLoader,
   DownloadIcon,
   ExtraProblemInfo,
+  FlagEnImage,
+  FlagEsImage,
   FloatToolbar,
   MdMathEditor,
   MdMathViewer,
@@ -13,13 +15,14 @@ import {
   T,
   TabsInline,
 } from 'components';
-import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
-import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf } from 'helpers';
+import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf, getStatementData } from 'helpers';
 import { useJukiUI, useJukiUser, useRouter, useT } from 'hooks';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
+  EditCreateProblemType,
   Judge,
   Language,
+  ProblemMode,
   ProblemSettingsType,
   ProblemStatementType,
   ProblemStatus,
@@ -38,72 +41,27 @@ interface ProblemStatementProps {
   author: string,
   status: ProblemStatus,
   statement: ProblemStatementType,
-  setStatement?: (statement: ProblemStatementType) => void,
+  setProblem?: Dispatch<SetStateAction<EditCreateProblemType>>,
   contest?: { index: string, color: string },
 }
 
 export const ProblemStatement = (props: ProblemStatementProps) => {
-  const { judge, problemKey, name, settings, tags, author, status, statement, setStatement, contest } = props;
   
-  //const { index: problemIndex, color: problemColor } = contest || {};
+  const { judge, problemKey, name, settings, tags, author, status, statement, setProblem, contest } = props;
+  const editing = !!setProblem;
   const { query: { key, index, tab, ...query } } = useRouter();
   const { viewPortSize } = useJukiUI();
   const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
   const { t } = useT();
-  
-  const statementDescription = (statement?.description?.[preferredLanguage] ||
-    statement?.description?.[Language.EN] ||
-    statement?.description?.[Language.ES] ||
-    '').trim();
-  const statementInput = (statement?.input[preferredLanguage] ||
-    statement?.input[Language.EN] ||
-    statement?.input[Language.ES] ||
-    '').trim();
-  const statementOutput = (statement?.output[preferredLanguage] ||
-    statement?.output[Language.EN] ||
-    statement?.output[Language.ES] ||
-    '').trim();
-  const statementSampleCases = statement?.sampleCases || [];
-  
-  const languages = Object.values(settings?.byProgrammingLanguage || {});
   const problemName = contest?.index ? `(${t('problem')} ${contest?.index}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
-  const source = `
-# \\textAlign=center ${problemName}
-
-\\textAlign=center **${t('type')}:** ${PROBLEM_TYPE[settings?.type]?.label}, **${t('mode')}:** ${PROBLEM_MODE[settings?.mode]?.label}
-
-|${t('language')}|${t('time limit')}|${t('memory limit')}|
-|--|--|--|
-| ${t('general')} | ${(settings?.timeLimit / 1000).toFixed(1)} ${t('seconds')} | ${(settings?.memoryLimit /
-    1000).toFixed(1)} ${t('MB')} |
-${languages.map((language) => (
-    `| ${PROGRAMMING_LANGUAGE[language.language]?.label} | ${(language?.timeLimit /
-      1000).toFixed(1)} ${t('seconds')} | ${(language?.memoryLimit / 1000).toFixed(1)} ${t('MB')}|`
-  )).join('\n')}
-
-# ${t('description')}
-
-${statementDescription}
-
-# ${t('input')}
-
-${statementInput}
-
-# ${t('output')}
-
-${statementOutput}
-  
-${statementSampleCases.map((sample, index) => (
-    `### ${t('input sample')} ${index + 1}
-\`\`\`
-${sample.input}
-\`\`\`
-### ${t('output sample')} ${index + 1}
-\`\`\`
-${sample.output}
-\`\`\`
-`)).join('')}
-`;
+  const {
+    statementDescription,
+    statementInput,
+    statementOutput,
+    statementNote,
+    mdStatement,
+  } = getStatementData(t, { statement, settings }, preferredLanguage, problemName);
+  const [ language, setLanguage ] = useState<Language>(Language.EN);
   
   if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge)) {
     return (
@@ -129,23 +87,25 @@ ${sample.output}
   }
   
   const handleDownloadPdf = async () => {
-    await downloadJukiMarkdownAdPdf(source, `Juki Judge ${problemName}.pdf`);
+    await downloadJukiMarkdownAdPdf(mdStatement, `Juki Judge ${problemName}.pdf`);
   };
   
   const handleDownloadMd = async () => {
-    await downloadBlobAsFile(new Blob([ source ], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
+    await downloadBlobAsFile(new Blob([ mdStatement ], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
   };
-  
-  const [ language, setLanguage ] = useState<Language>(Language.EN);
   
   const tabs = {
     [Language.EN]: {
       key: Language.EN,
-      header: <span>english</span>,
+      header: (
+        <div className="jk-row nowrap">English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div></div>
+      ),
     },
     [Language.ES]: {
       key: Language.ES,
-      header: <span>español</span>,
+      header: (
+        <div className="jk-row nowrap">Español <div style={{ width: 50, height: 24 }}><FlagEsImage /></div></div>
+      ),
     },
   };
   
@@ -153,11 +113,9 @@ ${sample.output}
     <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
       <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
         <div
-          className={classNames('jk-col top gap stretch flex-3', {
-            'editing': !!setStatement,
-          })}
+          className={classNames('jk-col top gap stretch flex-3', { editing })}
         >
-          {!setStatement && viewPortSize !== 'hg' && viewPortSize !== 'lg' && (
+          {!setProblem && viewPortSize !== 'hg' && viewPortSize !== 'lg' && (
             <FloatToolbar
               actionButtons={[
                 {
@@ -180,7 +138,7 @@ ${sample.output}
           )}
           <div className="jk-row center extend gap nowrap fw-bd">
             {contest && <ProblemLetter index={contest.index} color={contest.color} />}
-            {!setStatement && (
+            {!editing && (
               <div className="jk-col fw-nl">
                 <h3>{name}</h3>
                 <div className={classNames({ 'screen sm md': !contest })}>
@@ -196,7 +154,7 @@ ${sample.output}
               </div>
             )}
           </div>
-          {setStatement && (
+          {editing && (
             <div className="jk-col">
               <div className="jk-row">
                 <TabsInline<Language>
@@ -209,16 +167,19 @@ ${sample.output}
           )}
           <div>
             <h3><T>description</T></h3>
-            {setStatement ? (
+            {editing ? (
               <div className="text-edit">
                 <MdMathEditor
                   informationButton
                   uploadImageButton
                   source={statement.description?.[language]}
-                  onChange={value => setStatement({
-                    ...statement,
-                    description: { ...statement.description, [language]: value },
-                  })}
+                  onChange={value => setProblem(prevState => ({
+                    ...prevState,
+                    statement: {
+                      ...prevState.statement,
+                      description: { ...statement.description, [language]: value },
+                    },
+                  }))}
                 />
               </div>
             ) : (
@@ -229,16 +190,19 @@ ${sample.output}
           </div>
           <div>
             <h3><T>input</T></h3>
-            {setStatement ? (
+            {editing ? (
               <div className="text-edit">
                 <MdMathEditor
                   informationButton
                   uploadImageButton
                   source={statement.input?.[language]}
-                  onChange={value => setStatement({
-                    ...statement,
-                    input: { ...statement.input, [language]: value },
-                  })}
+                  onChange={value => setProblem(prevState => ({
+                    ...prevState,
+                    statement: {
+                      ...statement,
+                      input: { ...statement.input, [language]: value },
+                    },
+                  }))}
                 />
               </div>
             ) : statementInput
@@ -249,16 +213,19 @@ ${sample.output}
           </div>
           <div>
             <h3><T>output</T></h3>
-            {setStatement ? (
+            {editing ? (
               <div className="text-edit">
                 <MdMathEditor
                   informationButton
                   uploadImageButton
                   source={statement.output?.[language]}
-                  onChange={value => setStatement({
-                    ...statement,
-                    output: { ...statement.output, [language]: value },
-                  })}
+                  onChange={value => setProblem(prevState => ({
+                    ...prevState,
+                    statement: {
+                      ...statement,
+                      output: { ...statement.output, [language]: value },
+                    },
+                  }))}
                 />
               </div>
             ) : statementOutput
@@ -267,20 +234,83 @@ ${sample.output}
               </div>
               : <em><T className="tt-se fw-bd">no output description</T></em>}
           </div>
+          {settings.mode === ProblemMode.SUBTASK && (
+            <div>
+              <h3><T>subtasks description</T></h3>
+              <div className="jk-col left stretch gap">
+                {Object.values(settings.pointsByGroups).map(pointsByGroup => (
+                  <div className="jk-row extend gap">
+                    {editing && pointsByGroup.group !== 0 ? (
+                      <>
+                        <div className="jk-col fw-bd cr-pd" style={{ width: 100 }}>
+                          <div className="tx-l"><T className="tt-se">group</T> {pointsByGroup.group}</div>
+                          <div>
+                            {pointsByGroup.points}&nbsp;
+                            {pointsByGroup.points === 1 ? <T className="tt-se">point</T> :
+                              <T className="tt-se">points</T>}
+                          </div>
+                        </div>
+                        :
+                        <div className="flex-1 text-edit-small">
+                          <MdMathEditor
+                            informationButton
+                            uploadImageButton
+                            source={pointsByGroup.description?.[language]}
+                            onChange={value => setProblem(prevState => ({
+                              ...prevState,
+                              settings: {
+                                ...prevState.settings,
+                                pointsByGroups: {
+                                  ...prevState.settings.pointsByGroups,
+                                  [pointsByGroup.group]: {
+                                    ...prevState.settings.pointsByGroups[pointsByGroup.group],
+                                    description: {
+                                      ...prevState.settings.pointsByGroups[pointsByGroup.group]?.description,
+                                      [language]: value,
+                                    },
+                                  },
+                                },
+                              },
+                            }))}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex-1 br-g6 bc-we jk-pad-sm jk-border-radius-inline">
+                        <div className="tx-h fw-bd cr-pd">
+                          <T className="tt-se">group</T> {pointsByGroup.group}
+                          &nbsp;(&nbsp;{pointsByGroup.points}&nbsp;
+                          {pointsByGroup.points === 1 ? <T className="tt-se">point</T> :
+                            <T className="tt-se">points</T>} )
+                        </div>
+                        <MdMathViewer
+                          source={pointsByGroup.description?.[preferredLanguage] || pointsByGroup.description?.[Language.EN] || pointsByGroup.description?.[Language.ES]}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+                <div></div>
+              </div>
+            </div>
+          )}
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1">
               <h3><T>input sample</T></h3>
               <h3><T>output sample</T></h3>
             </div>
-            {setStatement && (
+            {editing && (
               <div className="jk-row">
                 <PlusIcon
                   className="cr-py"
                   filledCircle
-                  onClick={() => setStatement({
-                    ...statement,
-                    sampleCases: [ ...statement.sampleCases, { input: '', output: '' } ],
-                  })}
+                  onClick={() => setProblem(prevState => ({
+                    ...prevState,
+                    statement: {
+                      ...statement,
+                      sampleCases: [ ...statement.sampleCases, { input: '', output: '' } ],
+                    },
+                  }))}
                 />
               </div>
             )}
@@ -291,12 +321,38 @@ ${sample.output}
                 index={index}
                 sampleCases={statement.sampleCases}
                 key={index}
-                setSampleCases={setStatement ? (sampleCases) => setStatement({ ...statement, sampleCases }) : undefined}
+                setSampleCases={setProblem ? (sampleCases) => setProblem(prevState => ({
+                  ...prevState,
+                  statement: { ...statement, sampleCases },
+                })) : undefined}
               />
             ))}
           </div>
+          <div>
+            {statementNote || editing && <h3><T>note</T></h3>}
+            {editing ? (
+              <div className="text-edit">
+                <MdMathEditor
+                  informationButton
+                  uploadImageButton
+                  source={statement.note?.[language]}
+                  onChange={value => setProblem(prevState => ({
+                    ...prevState,
+                    statement: {
+                      ...statement,
+                      note: { ...statement.note, [language]: value },
+                    },
+                  }))}
+                />
+              </div>
+            ) : statementNote
+              ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+                <MdMathViewer source={statementNote} />
+              </div>
+              : null}
+          </div>
         </div>
-        {!contest && (
+        {!contest && !editing && (
           <div className="screen lg hg flex-1">
             <div className="jk-border-radius-inline jk-pad-md bc-we jk-col gap stretch">
               <ProblemTimeLimitInfo settings={settings} expand />

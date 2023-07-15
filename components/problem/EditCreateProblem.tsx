@@ -72,9 +72,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
           statement={problem.statement}
           settings={problem.settings}
           tags={problem.tags}
-          setStatement={(statement) => setProblem(prevState => (
-            { ...prevState, statement }
-          ))}
+          setProblem={setProblem}
         />
       ),
     },
@@ -137,6 +135,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       icon={<SaveIcon />}
       onClick={onSave}
       responsiveMobile
+      disabled={JSON.stringify(initialProblem) === JSON.stringify(problem)}
     >
       {editing ? <T>update</T> : <T>create</T>}
     </ButtonLoader>,

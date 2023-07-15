@@ -1,4 +1,3 @@
-import { Judge } from '@juki-team/commons';
 import {
   BalloonIcon,
   ColorPicker,
@@ -25,6 +24,7 @@ import { useEffect, useJukiUser, useRef, useState } from 'hooks';
 import {
   ContestProblemBasicType,
   EditContestProblemBasicType,
+  Judge,
   RowSortableItem,
   RowSortableItemContentType,
 } from 'types';
@@ -300,7 +300,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [ problems ]);
   
   return (
-    <div className="jk-col top nowrap gap stretch">
+    <div className="jk-col top nowrap gap stretch bc-we jk-br-ie jk-pad-sm">
       <div className="jk-col left gap stretch">
         <div className="jk-row left gap">
           <div className="fw-bd tt-se tx-xl cr-py"><T>Problems with period time restriction</T></div>

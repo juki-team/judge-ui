@@ -6,12 +6,12 @@ export const FrozenInformation = () => {
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
-            in this period the scoreboard is not updated but the contestant will still be able to know the verdict of his
-            submissions
+            in this period the scoreboard is not updated but the contestant will still be able to know the verdict of
+            his submissions
           </T>
         </div>
       }
-      triggerOn={['hover', 'click']}
+      triggerOn={[ 'hover', 'click' ]}
       placement="top"
     >
       <div className="jk-row cr-py"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
@@ -30,7 +30,7 @@ export const QuietInformation = () => {
           </T>
         </div>
       }
-      triggerOn={['hover', 'click']}
+      triggerOn={[ 'hover', 'click' ]}
       placement="top"
     >
       <div className="jk-row cr-py"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
@@ -48,7 +48,7 @@ export const SpectatorInformation = ({ filledCircle }: { filledCircle?: boolean,
           </T>
         </div>
       }
-      triggerOn={['hover', 'click']}
+      triggerOn={[ 'hover', 'click' ]}
       placement="top"
     >
       <div className="jk-row">
@@ -66,16 +66,15 @@ export const JudgeInformation = ({ filledCircle }: { filledCircle?: boolean, }) 
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
-            the judge can judge the submissions if necessary and can see the problems, submissions and source codes at any stage
-            of the
-            contest
+            the judge can judge the submissions if necessary and can see the problems,
+            submissions and source codes at any stage of the contest.
           </T>
           <T className="tt-se">
-            the person who creates the contest is judge by default
+            the person who creates the contest is judge by default.
           </T>
         </div>
       }
-      triggerOn={['hover', 'click']}
+      triggerOn={[ 'hover', 'click' ]}
       placement="top"
     >
       <div className="jk-row">
@@ -93,14 +92,14 @@ export const AdminInformation = ({ filledCircle }: { filledCircle?: boolean }) =
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
-            the administrator can change the parameters of the contest and see everything related to the contest
+            the administrator can change the parameters of the contest and see everything related to the contest.
           </T>
           <T className="tt-se">
-            the person who creates the contest is administrator by default
+            the person who creates the contest is administrator by default.
           </T>
         </div>
       }
-      triggerOn={['hover', 'click']}
+      triggerOn={[ 'hover', 'click' ]}
       placement="top"
     >
       <div className="jk-row">

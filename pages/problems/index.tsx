@@ -157,6 +157,33 @@ function Problems() {
         minWidth: 250,
       },
     ] as DataViewerHeadersType<ProblemSummaryListResponseDTO>[] : []),
+    {
+      head: (
+        <TextHeadCell
+          text={
+            <T className="tt-ue tx-s">
+              {judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler'}
+            </T>
+          }
+        />
+      ),
+      index: 'ownerUserNickname',
+      field: ({ record: { ownerUserNickname } }) => (
+        <TextField
+          className="jk-row"
+          text={
+            <UserNicknameLink nickname={ownerUserNickname}>
+              <div className="link">{ownerUserNickname}</div>
+            </UserNicknameLink>
+          }
+          label={<T className="tt-se">nickname</T>}
+        />
+      ),
+      sort: true,
+      filter: { type: 'text-auto' },
+      cardPosition: 'bottomRight',
+      minWidth: 200,
+    } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ...(canCreateProblem ? [
       {
         head: <TextHeadCell text={<T className="tt-ue tx-s">visibility</T>} />,
@@ -183,27 +210,6 @@ function Problems() {
         cardPosition: 'bottomLeft',
         minWidth: 180,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-      ...((judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER) ? [
-        {
-          head: <TextHeadCell text={<T className="tt-ue tx-s">owner</T>} />,
-          index: 'ownerUserNickname',
-          field: ({ record: { ownerUserNickname } }) => (
-            <TextField
-              className="jk-row"
-              text={
-                <UserNicknameLink nickname={ownerUserNickname}>
-                  <div className="link">{ownerUserNickname}</div>
-                </UserNicknameLink>
-              }
-              label={<T className="tt-se">nickname</T>}
-            />
-          ),
-          sort: true,
-          filter: { type: 'text-auto' },
-          cardPosition: 'bottomRight',
-          minWidth: 200,
-        } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-      ] : []),
     ] : []),
   ], [ canCreateProblem, tags, judge ]);
   

@@ -29,6 +29,8 @@ export enum QueryParam {
   VIEW_MODE_TABLE = 'v',
   // problems
   JUDGE = 'judge',
+  // adming
+  COMPANY = 'company',
 }
 
 export enum AdminTab {

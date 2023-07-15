@@ -1,9 +1,10 @@
-import { EditCreateProblemType, Language, ProblemMode, ProblemStatus, ProblemType } from 'types';
+import { EditCreateProblemType, ProblemMode, ProblemStatus, ProblemType } from 'types';
+import { EmptyTextLanguages } from './commons';
 
 export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
   return {
     author: '',
-    editorial: { [Language.ES]: '', [Language.EN]: '' },
+    editorial: EmptyTextLanguages,
     key: '',
     name: '',
     settings: {
@@ -17,23 +18,12 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
       evaluatorSource: '',
     },
     statement: {
-      description: {
-        [Language.EN]: '',
-        [Language.ES]: '',
-      },
-      input: {
-        [Language.EN]: '',
-        [Language.ES]: '',
-      },
-      output: {
-        [Language.EN]: '',
-        [Language.ES]: '',
-      },
-      html: {
-        [Language.EN]: '',
-        [Language.ES]: '',
-      },
+      description: EmptyTextLanguages,
+      input: EmptyTextLanguages,
+      output: EmptyTextLanguages,
       sampleCases: [],
+      note: EmptyTextLanguages,
+      html: EmptyTextLanguages,
     },
     status: ProblemStatus.RESERVED,
     tags: [],
