@@ -290,7 +290,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                           method: HTTPMethod.PUT,
                           body: JSON.stringify({ testCases: { [testCase.testCaseKey]: { groups: testCase.groups } } }),
                         }));
-                      notifyResponse(response);
+                      notifyResponse(response, setLoaderStatus);
                       await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
                       setLock(false);
                     }}
