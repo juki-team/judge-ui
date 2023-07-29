@@ -243,7 +243,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                     {editing && pointsByGroup.group !== 0 ? (
                       <>
                         <div className="jk-col fw-bd cr-pd" style={{ width: 100 }}>
-                          <div className="tx-l"><T className="tt-se">group</T> {pointsByGroup.group}</div>
+                          <div className="tx-l"><T className="tt-se">subtask</T> {pointsByGroup.group}</div>
                           <div>
                             {pointsByGroup.points}&nbsp;
                             {pointsByGroup.points === 1 ? <T className="tt-se">point</T> :
@@ -278,7 +278,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                     ) : (
                       <div className="flex-1 br-g6 bc-we jk-pad-sm jk-border-radius-inline">
                         <div className="tx-h fw-bd cr-pd">
-                          <T className="tt-se">group</T> {pointsByGroup.group}
+                          <T className="tt-se">subtask</T> {pointsByGroup.group}
                           &nbsp;(&nbsp;{pointsByGroup.points}&nbsp;
                           {pointsByGroup.points === 1 ? <T className="tt-se">point</T> :
                             <T className="tt-se">points</T>} )
@@ -329,26 +329,31 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
             ))}
           </div>
           <div>
-            {statementNote || editing && <h3><T>note</T></h3>}
             {editing ? (
-              <div className="text-edit">
-                <MdMathEditor
-                  informationButton
-                  uploadImageButton
-                  source={statement.note?.[language]}
-                  onChange={value => setProblem(prevState => ({
-                    ...prevState,
-                    statement: {
-                      ...statement,
-                      note: { ...statement.note, [language]: value },
-                    },
-                  }))}
-                />
-              </div>
-            ) : statementNote
-              ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
-                <MdMathViewer source={statementNote} />
-              </div>
+              <>
+                <h3><T>note</T></h3>
+                <div className="text-edit">
+                  <MdMathEditor
+                    informationButton
+                    uploadImageButton
+                    source={statement.note?.[language]}
+                    onChange={value => setProblem(prevState => ({
+                      ...prevState,
+                      statement: {
+                        ...statement,
+                        note: { ...statement.note, [language]: value },
+                      },
+                    }))}
+                  />
+                </div>
+              </>
+            ) : !!statementNote
+              ? <>
+                <h3><T>note</T></h3>
+                <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+                  <MdMathViewer source={statementNote} />
+                </div>
+              </>
               : null}
           </div>
         </div>
