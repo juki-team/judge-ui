@@ -149,7 +149,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
             <p className="tx-xs cr-g3 fw-bd"><T>languages</T></p>
             <div className="jk-row gap">
               {contest.settings.languages.map(language => (
-                <div className="jk-tag">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+                <div className="jk-tag" key={language}>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
               ))}
             </div>
           </div>

@@ -6,9 +6,58 @@ const cloneURLSearchParams = (urlSearchParams: URLSearchParams) => {
   return new URLSearchParams(urlSearchParams.toString());
 };
 
+type AppendSearchParamsActions = {
+  action: 'appendSearchParams',
+  props: { name: string, value: string, replace?: boolean }[],
+} | {
+  action: 'deleteSearchParams',
+  props: { name: string, value?: string, replace?: boolean }[],
+} | {
+  action: 'setSearchParams',
+  props: { name: string, value: string | string[], replace?: boolean }[],
+}
+
+const processSearchParams = (searchParams: URLSearchParams, appendSearchParamsActions: AppendSearchParamsActions[]) => {
+  const newSearchParams = cloneURLSearchParams(searchParams);
+  for (const searchParamsActions of appendSearchParamsActions) {
+    if (searchParamsActions.action === 'appendSearchParams') {
+      for (const { name, value } of searchParamsActions.props) {
+        newSearchParams.append(name, value);
+      }
+    } else if (searchParamsActions.action === 'deleteSearchParams') {
+      for (const { name, value } of searchParamsActions.props) {
+        const values = newSearchParams.getAll(name);
+        newSearchParams.delete(name);
+        if (value !== undefined) {
+          for (const v of values) {
+            if (v !== value) {
+              newSearchParams.append(name, v);
+            }
+          }
+        }
+      }
+    } else if (searchParamsActions.action === 'setSearchParams') {
+      for (const { name, value } of searchParamsActions.props) {
+        newSearchParams.delete(name);
+        let values: string[] = [];
+        if (typeof value === 'string') {
+          values.push(value);
+        } else {
+          values = value;
+        }
+        for (const value of values) {
+          newSearchParams.append(name, value);
+        }
+      }
+    }
+  }
+  
+  return newSearchParams;
+}
+
 export const useSearchParams = () => {
   
-  const { query, push } = useRouter();
+  const { query, push, replace } = useRouter();
   
   const searchParams = useMemo(() => {
     const urlSearchParams = new URLSearchParams('');
@@ -27,7 +76,7 @@ export const useSearchParams = () => {
   const [ updateTrigger, setUpdateTrigger ] = useState(Date.now());
   const searchParamsRef = useRef(searchParams);
   searchParamsRef.current = searchParams;
-  const updateSearchParams = useCallback(async (newSearchParams: URLSearchParams) => {
+  const pushSearchParams = useCallback(async (newSearchParams: URLSearchParams) => {
     const newSearchParamsSorted = cloneURLSearchParams(newSearchParams);
     const searchParamsSorted = cloneURLSearchParams(searchParamsRef.current);
     newSearchParamsSorted.sort();
@@ -36,61 +85,55 @@ export const useSearchParams = () => {
       await push({ query: newSearchParams.toString() });
     }
   }, []);
-  type AppendSearchParamsActions = {
-    action: 'appendSearchParams',
-    props: { name: string, value: string }[],
-  } | {
-    action: 'deleteSearchParams',
-    props: { name: string, value?: string }[],
-  } | {
-    action: 'setSearchParams',
-    props: { name: string, value: string | string[] }[],
-  }
+  
+  const replaceSearchParams = useCallback(async (newSearchParams: URLSearchParams) => {
+    const newSearchParamsSorted = cloneURLSearchParams(newSearchParams);
+    const searchParamsSorted = cloneURLSearchParams(searchParamsRef.current);
+    newSearchParamsSorted.sort();
+    searchParamsSorted.sort();
+    if (newSearchParamsSorted.toString() !== searchParamsSorted.toString()) {
+      await replace({ query: newSearchParams.toString() });
+    }
+  }, []);
   
   const appendSearchParamsActionsRef = useRef<AppendSearchParamsActions[]>([]);
   
   useEffect(() => {
     const chunkUpdateSearchParams = async () => {
-      const newSearchParams = cloneURLSearchParams(searchParamsRef.current);
-      for (const searchParamsActions of appendSearchParamsActionsRef.current) {
-        if (searchParamsActions.action === 'appendSearchParams') {
-          for (const { name, value } of searchParamsActions.props) {
-            newSearchParams.append(name, value);
-          }
-        } else if (searchParamsActions.action === 'deleteSearchParams') {
-          for (const { name, value } of searchParamsActions.props) {
-            const values = newSearchParams.getAll(name);
-            newSearchParams.delete(name);
-            if (value !== undefined) {
-              for (const v of values) {
-                if (v !== value) {
-                  newSearchParams.append(name, v);
-                }
-              }
-            }
-          }
-        } else if (searchParamsActions.action === 'setSearchParams') {
-          for (const { name, value } of searchParamsActions.props) {
-            newSearchParams.delete(name);
-            let values: string[] = [];
-            if (typeof value === 'string') {
-              values.push(value);
-            } else {
-              values = value;
-            }
-            for (const value of values) {
-              newSearchParams.append(name, value);
-            }
-          }
+      const pushSearchParamsActions: AppendSearchParamsActions[] = [];
+      const replaceSearchParamsActions: AppendSearchParamsActions[] = [];
+      appendSearchParamsActionsRef.current.forEach((appendSearchParamsActions) => {
+        const toPush = (appendSearchParamsActions.props as { replace?: boolean }[])
+          .filter(appendSearchParamsAction => !appendSearchParamsAction.replace);
+        const toReplace = (appendSearchParamsActions.props as { replace?: boolean }[])
+          .filter(appendSearchParamsAction => appendSearchParamsAction.replace);
+        if (toPush.length) {
+          pushSearchParamsActions.push({
+            action: appendSearchParamsActions.action,
+            props: toPush,
+          } as AppendSearchParamsActions);
         }
-      }
-      if (appendSearchParamsActionsRef.current.length) {
+        if (toReplace.length) {
+          replaceSearchParamsActions.push({
+            action: appendSearchParamsActions.action,
+            props: toReplace,
+          } as AppendSearchParamsActions);
+        }
+      })
+      let newSearchParams = processSearchParams(searchParamsRef.current, replaceSearchParamsActions);
+      if (replaceSearchParamsActions.length) {
         appendSearchParamsActionsRef.current = [];
-        await updateSearchParams(newSearchParams);
+        await replaceSearchParams(newSearchParams);
+      }
+      
+      newSearchParams = processSearchParams(newSearchParams, pushSearchParamsActions);
+      if (pushSearchParamsActions.length) {
+        appendSearchParamsActionsRef.current = [];
+        await pushSearchParams(newSearchParams);
       }
     };
     void chunkUpdateSearchParams();
-  }, [ searchParams, updateTrigger ]);
+  }, [ searchParams, updateTrigger, pushSearchParams, replaceSearchParams ]);
   
   const appendSearchParams: AppendSearchParamsType = useCallback(async (...props) => {
     appendSearchParamsActionsRef.current.push({ action: 'appendSearchParams', props });

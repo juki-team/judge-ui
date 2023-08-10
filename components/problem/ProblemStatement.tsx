@@ -239,7 +239,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
               <h3><T>subtasks description</T></h3>
               <div className="jk-col left stretch gap">
                 {Object.values(settings.pointsByGroups).map(pointsByGroup => (
-                  <div className="jk-row extend gap">
+                  <div className="jk-row extend gap" key={pointsByGroup.group}>
                     {editing && pointsByGroup.group !== 0 ? (
                       <>
                         <div className="jk-col fw-bd cr-pd" style={{ width: 100 }}>
