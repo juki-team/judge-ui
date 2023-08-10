@@ -1,3 +1,5 @@
+const { version } = require('./package.json');
+
 const withPWA = require('next-pwa')({
     dest: 'public',
     // disable: process.env.NODE_ENV === 'development',
@@ -8,6 +10,9 @@ const withPWA = require('next-pwa')({
 });
 
 module.exports = withPWA({
+    publicRuntimeConfig: {
+        version,
+    },
     // output:"standalone",
     i18n: {
         locales: ['en', 'es'],
