@@ -29,7 +29,7 @@ ARG JUKI_TOKEN_NAME
 RUN cp ./.env.sample ./.env \
     && sed -i 's/^NODE_ENV=.*$/NODE_ENV=${NODE_ENV}/g' ./.env \
     && sed -i 's/^NEXT_PUBLIC_NODE_ENV=.*$/NEXT_PUBLIC_NODE_ENV=${NODE_ENV}/g' ./.env \
-    && sed -i 's/^NEXT_PUBLIC_JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL=.*$/NEXT_PUBLIC_JUKI_SUBMISSIONS_RESOLVE_SERVICE_BASE_URL=${JUKI_SERVICE_BASE_URL}/g' ./.env \
+    && sed -i 's/^NEXT_PUBLIC_JUKI_SERVICE_BASE_URL=.*$/NEXT_PUBLIC_JUKI_SERVICE_BASE_URL=${JUKI_SERVICE_BASE_URL}/g' ./.env \
     && sed -i 's/^NEXT_PUBLIC_JUKI_TOKEN_NAME=.*$/NEXT_PUBLIC_JUKI_TOKEN_NAME=${JUKI_TOKEN_NAME}/g' ./.env
 RUN yarn build
 RUN SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --arch=x64 --platform=linux --libc=glibc sharp
