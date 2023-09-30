@@ -4,20 +4,6 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <meta name="keywords" content="Juki Judge" />
-        <meta name="application-name" content="Juki Judge App" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Juki Judge App" />
-        <meta name="description" content="Juki Judge is designed to make people improve their programming skills" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="msapplication-TileImage" content="/icons/ios/144.png" />
-        <meta name="msapplication-TileColor" content="#164066" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#FFFFFF" />
-  
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png" />
@@ -36,20 +22,6 @@ export default function Document() {
         <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#164066" />
         <link rel="shortcut icon" href="/icons/favicon.ico" />
         {/*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />*/}
-  
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" content="https://judge.juki.app" />
-        <meta name="twitter:title" content="Juki Judge App" />
-        <meta name="twitter:description" content="Juki Judge is designed to make people improve their programming skills" />
-        <meta name="twitter:image" content="https://judge.juki.app/icons/ios/192.png" />
-        <meta name="twitter:creator" content="@oscar_gauss" />
-  
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Juki Judge App" />
-        <meta property="og:description" content="Juki Judge is designed to make people improve their programming skills" />
-        <meta property="og:site_name" content="Juki Judge App" />
-        <meta property="og:url" content="https://judge.juki.app" />
-        <meta property="og:image" content="https://judge.juki.app/icons/apple-touch-icon.png" />
       </Head>
       <body>
         <iframe
