@@ -1,7 +1,7 @@
 import { AdminTab, ContestsTab, ContestTab, CourseTab, ProblemTab, ProfileTab } from 'types';
 
 export const _TAB = ':tab';
-export const _SUB_SUB_TAB = ':subSubTab?';
+export const _SUB_SUB_TAB = ':subSubTab';
 
 export const ROUTES = {
   ROOT: '/',

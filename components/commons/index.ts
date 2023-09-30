@@ -149,7 +149,7 @@ export {
   Timer,
   TimerLabeled,
   TwoContentSection,
-  UpIcon_,
+  UpIcon,
   UploadImageButton,
   UserChip,
   UserCodeEditor,

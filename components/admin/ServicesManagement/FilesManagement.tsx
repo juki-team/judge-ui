@@ -1,4 +1,4 @@
-import { Button, CurvedArrowIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon_, VisibilityIcon } from 'components/index';
+import { Button, CurvedArrowIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon, VisibilityIcon } from 'components/index';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useEffect, useState } from 'react';
@@ -102,7 +102,7 @@ export function FilesManagement() {
                         setPath((path + '/' + item).split('//').join('/'));
                       }}
                     >
-                      <UpIcon_ rotate={180} /><T>list</T>
+                      <UpIcon rotate={180} /><T>list</T>
                     </div>
                     <div className="jk-row" onClick={() => setFilePath(path + '/' + item)}>
                       <VisibilityIcon /> <T>view</T>

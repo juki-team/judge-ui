@@ -13,7 +13,7 @@ import {
   T,
   Time,
   Timer,
-  UpIcon_,
+  UpIcon,
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import React from 'react';
@@ -86,7 +86,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                       {verdict !== ProblemVerdict.NONE
                         && verdict !== ProblemVerdict.PENDING
                         && compilationResult?.success === false
-                        && <UpIcon_ onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
+                        && <UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />}
                     </div>
                     <T className="fw-bd tt-se">verdict</T>
                   </div>

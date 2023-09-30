@@ -12,8 +12,7 @@ import {
   UserPreviewModal,
 } from 'components';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
-import { removeParamQuery } from 'helpers';
-import { useJukiUser, useRouter } from 'hooks';
+import { useJukiUI, useJukiUser, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { createContext, PropsWithChildren, useState } from 'react';
 import {
@@ -23,7 +22,6 @@ import {
   LastLinkKey,
   LastLinkType,
   MenuType,
-  ProfileSetting,
   ProfileTab,
   QueryParam,
   QueryParamKey,
@@ -71,9 +69,9 @@ export const LasLinkProvider = ({ children }: PropsWithChildren<{}>) => {
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
-  
   const {
     user: {
+      nickname,
       canViewSubmissionsManagement,
       canSendEmail,
       canHandleJudges,
@@ -81,10 +79,10 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       canHandleUsers,
       canHandleServices,
       canHandleSettings,
-      settings: { [ProfileSetting.THEME]: preferredTheme, [ProfileSetting.MENU_VIEW_MODE]: preferredMenuViewMode },
     },
     company: { key },
   } = useJukiUser();
+  const { router: { deleteSearchParams } } = useJukiUI();
   
   const menu: MenuType[] = [
     {
@@ -132,13 +130,17 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {query[QueryParamKey.USER_PREVIEW] && (
         <UserPreviewModal
           nickname={query[QueryParamKey.USER_PREVIEW] as string}
-          onClose={() => push({ query: removeParamQuery(query, QueryParamKey.USER_PREVIEW, null) })}
+          onClose={() => deleteSearchParams({ name: QueryParamKey.USER_PREVIEW })}
           userHref={ROUTES.PROFILE.PAGE(query[QueryParamKey.USER_PREVIEW] as string, ProfileTab.PROFILE)}
         />
       )}
       {query[QueryParam.SUBMISSION_VIEW] && <SubmissionModal submitId={query[QueryParam.SUBMISSION_VIEW] as string} />}
       <LasLinkProvider>
-        <MainMenu onSeeMyProfile={() => null} menu={menu}>
+        <MainMenu
+          onSeeMyProfile={() => push(ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE))}
+          menu={menu}
+          profileSelected={pathname.includes('/profile/')}
+        >
           {children}
         </MainMenu>
       </LasLinkProvider>

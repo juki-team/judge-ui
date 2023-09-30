@@ -1,20 +1,21 @@
-import { classNames, replaceParamQuery } from 'helpers';
-import { useRouter } from 'hooks';
+import { classNames } from 'helpers';
+import { useJukiUI } from 'hooks';
 import React, { PropsWithChildren } from 'react';
 import { QueryParam } from 'types';
 
-export const SubmissionInfo = ({
-  submitId,
-  canViewSourceCode,
-  children,
-}: PropsWithChildren<{ submitId: string, canViewSourceCode: boolean }>) => {
+interface SubmissionInfoProps {
+  submitId: string,
+  canViewSourceCode: boolean,
+}
+
+export const SubmissionInfo = ({ submitId, canViewSourceCode, children }: PropsWithChildren<SubmissionInfoProps>) => {
   
-  const { query, push } = useRouter();
+  const { router: { setSearchParams } } = useJukiUI();
   
   return (
     <span
       className={classNames({ link: canViewSourceCode })}
-      onClick={() => canViewSourceCode && push({ query: replaceParamQuery(query, QueryParam.SUBMISSION_VIEW, submitId) })}
+      onClick={() => canViewSourceCode && setSearchParams({ name: QueryParam.SUBMISSION_VIEW, value: submitId })}
     >
       {children}
     </span>
