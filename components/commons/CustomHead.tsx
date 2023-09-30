@@ -4,7 +4,7 @@ import Head from 'next/head';
 export const CustomHead = ({ title, description }: { title?: string, description?: string }) => {
   
   const { company } = useJukiUser();
-  const customTitle = `${company.name}  judge${title ? ' - ' + title : ''}`;
+  const customTitle = `${company.name ? company.name : 'Juki'}  judge${title ? ' - ' + title : ''}`;
   const customDescription = `${description ? description : 'Juki Judge is designed to make people improve their programming skills'}`;
   
   return (
