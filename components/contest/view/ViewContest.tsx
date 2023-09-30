@@ -2,7 +2,7 @@ import {
   Breadcrumbs,
   ButtonLoader,
   contestStateMap,
-  CupIcon,
+  CupIcon, CustomHead,
   EditIcon,
   FetcherLayer,
   LinkContests,
@@ -279,6 +279,7 @@ export function ContestView() {
         return (
           <TwoContentSection>
             <div>
+              <CustomHead title={contest.name} />
               <Breadcrumbs breadcrumbs={breadcrumbs} />
               <div className="jk-col pn-re pad-left-right">
                 <div className="jk-row nowrap gap extend">
