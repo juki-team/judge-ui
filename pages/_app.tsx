@@ -48,7 +48,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
     setTimeout(() => _setFlags.current(prevState => ({ ...prevState, isHelpFocused: false })), 2000);
   });
   
-  const { isLoading } = useRouter();
+  const { isLoading, reload } = useRouter();
   const { searchParams, setSearchParams, appendSearchParams, deleteSearchParams } = useSearchParams();
   
   if (router.route === '/md-print') {
@@ -92,5 +92,5 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
     </JukiUIProvider>
   );
   
-  return NODE_ENV === 'development' ? app : <ErrorBoundary>{app}</ErrorBoundary>;
+  return NODE_ENV === 'development' ? app : <ErrorBoundary reload={reload}>{app}</ErrorBoundary>;
 }
