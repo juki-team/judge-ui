@@ -21,4 +21,3 @@ export * from './rejudge';
 export * from './task';
 export * from './useDateFormat';
 export * from './useRouter';
-export * from './useSearchParams';

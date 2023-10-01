@@ -4,10 +4,10 @@ import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
 import {
   useContestRouter,
   useFetcher,
+  useJukiUI,
   useJukiUser,
   useNotification,
   useRouter,
-  useSearchParams,
   useSWR,
   useTask,
 } from 'hooks';
@@ -44,7 +44,7 @@ interface ProblemCodeEditorProps {
 
 export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) => {
   
-  const { appendSearchParams } = useSearchParams();
+  const { router: { appendSearchParams } } = useJukiUI();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWR();
   const { listenSubmission } = useTask();

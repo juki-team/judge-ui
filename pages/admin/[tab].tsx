@@ -13,7 +13,7 @@ import {
   UsersManagement,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useFetcher, useJukiUser, useRouter, useSearchParams, useTrackLastPath } from 'hooks';
+import { useFetcher, useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import {
@@ -46,7 +46,7 @@ function Admin() {
     mutate,
   } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings ? JUDGE_API_V1.COMPANY.LIST() : null);
   const { data: myCompany } = useFetcher<ContentResponseType<CompanyResponseDTO>>(JUDGE_API_V1.COMPANY.CURRENT());
-  const { searchParams, setSearchParams } = useSearchParams();
+  const { router: { searchParams, setSearchParams } } = useJukiUI();
   const companyKey = searchParams.get(QueryParam.COMPANY) as string;
   const companies = data?.success ? data.contents : [];
   const company: CompanyResponseDTO | undefined = canHandleSettings

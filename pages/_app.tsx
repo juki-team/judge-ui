@@ -4,13 +4,14 @@ import { CustomHead, ErrorBoundary, JukiUIProvider, JukiUserProvider, LineLoader
 import { settings } from 'config';
 import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV } from 'config/constants';
 import { consoleWarn } from 'helpers';
-import { useJukiUser, useRouter, useSearchParams } from 'hooks';
+import { useJukiUser, useRouter } from 'hooks';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import { AppProps, FC, ImageCmpProps } from 'types';
+import { useSearchParams } from '../hooks/useSearchParams';
 import '../i18n';
 import './styles.scss';
 

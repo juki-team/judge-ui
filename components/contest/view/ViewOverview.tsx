@@ -10,7 +10,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useJukiUI, useJukiUser, useNotification, useRouter, useSearchParams, useSWR } from 'hooks';
+import { useDateFormat, useJukiUI, useJukiUser, useNotification, useRouter, useSWR } from 'hooks';
 import {
   ContentResponseType,
   ContestResponseDTO,
@@ -25,7 +25,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   const { isJudge, isAdmin, isContestant, isGuest, isSpectator } = contest.user;
   const { user: { isLogged } } = useJukiUser();
   const { query } = useRouter();
-  const { appendSearchParams } = useSearchParams();
+  const { router: { appendSearchParams } } = useJukiUI();
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse } = useNotification();
   const { mutate } = useSWR();
