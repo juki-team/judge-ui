@@ -1154,10 +1154,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.475":
-  version "0.0.475"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.475/422a800240506d2a1644b9da6605ee838734ec99#422a800240506d2a1644b9da6605ee838734ec99"
-  integrity sha512-dYF+frjbn64RHEhKfxhA//FK3h73g3HUdCYpxKVT9dkwQlTsq7+1lxh/v6ILR0VNET73nhpkfFfJNB1dlyHg/Q==
+"@juki-team/base-ui@^0.0.486":
+  version "0.0.486"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.486/468cb2a7a97e17f671f64e1c7f649baa8db2c61a#468cb2a7a97e17f671f64e1c7f649baa8db2c61a"
+  integrity sha512-W+1KnbJbYu1JyANo8MacbYtzKrGaLP6L7OKwt2hTns/iXd+fY3uzzH0n8BKX1AAbaVEU+LaX4cfocpcsm9/udw==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-java" "^6.0.1"
@@ -1174,6 +1174,7 @@
     deep-object-diff "^1.1.9"
     immutability-helper "^3.1.1"
     prismjs "^1.29.0"
+    react-collapse "^5.1.1"
     react-color "^2.19.3"
     react-copy-to-clipboard "^5.1.0"
     react-device-detect "^2.2.3"
@@ -3971,6 +3972,11 @@ randombytes@^2.1.0:
   integrity sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==
   dependencies:
     safe-buffer "^5.1.0"
+
+react-collapse@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/react-collapse/-/react-collapse-5.1.1.tgz#a2fa08ef13f372141b02e6a7d49ef72427bcbc2b"
+  integrity sha512-k6cd7csF1o9LBhQ4AGBIdxB60SUEUMQDAnL2z1YvYNr9KoKr+nDkhN6FK7uGaBd/rYrYfrMpzpmJEIeHRYogBw==
 
 react-color@^2.19.3:
   version "2.19.3"
