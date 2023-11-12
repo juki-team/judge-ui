@@ -71,7 +71,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
   
   const columns: DataViewerHeadersType<UserManagementResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">name</T>} />,
+      head: 'name',
       index: 'name',
       field: ({ record: { givenName, familyName, nickname, imageUrl, email, city, country } }) => (
         <Field className="jk-row center gap">
@@ -100,7 +100,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
       minWidth: 400,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">permissions</T>} />,
+      head: 'permissions',
       index: 'permissions',
       field: ({ record }) => (
         <Field className="jk-col">
@@ -133,7 +133,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
       minWidth: 360,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">operations</T>} />,
+      head: 'operations',
       index: 'operations',
       field: ({ record: { status: userStatus, nickname, canResetPassword } }) => {
         return (

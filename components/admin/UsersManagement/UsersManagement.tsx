@@ -1,6 +1,6 @@
 import { T, TabsInline } from 'components';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useJukiUI, useJukiUser } from 'hooks';
+import { useJukiRouter, useJukiUser } from 'hooks';
 import React from 'react';
 import { AdminTab, CompanyResponseDTO, TabsType } from 'types';
 import { AllUsers } from './AllUsers';
@@ -9,7 +9,7 @@ import { UsersLogged } from './UsersLogged';
 
 export const UsersManagement = ({ company }: { company: CompanyResponseDTO }) => {
   
-  const { router: { setSearchParams, searchParams } } = useJukiUI();
+  const { setSearchParams, searchParams } = useJukiRouter();
   const { user: { canCreateUser } } = useJukiUser();
   const tabs: TabsType<AdminTab> = {
     [AdminTab.ALL_USERS]: {

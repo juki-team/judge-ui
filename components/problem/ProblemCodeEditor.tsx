@@ -4,7 +4,7 @@ import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
 import {
   useContestRouter,
   useFetcher,
-  useJukiUI,
+  useJukiRouter,
   useJukiUser,
   useNotification,
   useRouter,
@@ -44,7 +44,7 @@ interface ProblemCodeEditorProps {
 
 export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) => {
   
-  const { router: { appendSearchParams } } = useJukiUI();
+  const { appendSearchParams } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWR();
   const { listenSubmission } = useTask();

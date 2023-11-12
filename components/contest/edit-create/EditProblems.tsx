@@ -1,8 +1,8 @@
 import {
   BalloonIcon,
-  ColorPicker,
   DeleteIcon,
   Input,
+  InputColor,
   InputDate,
   InputToggle,
   OpenInNewIcon,
@@ -70,7 +70,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           </a>
         </div>
         <div className="jk-row" style={{ width: 40 }}>
-          <ColorPicker
+          <InputColor
             onChange={(props) => {
               setProblems(prevState => prevState.map(p => {
                 if (p.key === problem.key) {
@@ -82,7 +82,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             }}
           >
             <div style={{ color: problem.color }} className="cursor-pointer"><BalloonIcon /></div>
-          </ColorPicker>
+          </InputColor>
         </div>
         <div className="jk-row" style={{ width: 100 }}>
           <Input

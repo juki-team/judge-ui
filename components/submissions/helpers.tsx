@@ -17,7 +17,7 @@ import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time } from './utils';
 
 export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => <TextHeadCell text={<T>user nickname</T>} />,
+  head: 'user nickname',
   index: 'nickname',
   field: ({ record: { userNickname, userImageUrl }, isCard }) => (
     <TextField
@@ -42,11 +42,7 @@ type SubmissionContestColumnProps = {
 }
 
 export const submissionContestColumn = (props?: SubmissionContestColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => (
-    <TextHeadCell
-      text={<T className="tt-se">contest</T>}
-    />
-  ),
+  head: 'contest',
   index: 'contest',
   field: ({ record: { problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
     <TextField
@@ -133,7 +129,7 @@ export const submissionProblemColumn = (props?: SubmissionProblemColumnProps): D
 });
 
 export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => <TextHeadCell text={<T>lang.</T>} />,
+  head: 'language',
   index: 'language',
   field: ({ record: { submitId, canViewSourceCode, language }, isCard }) => (
     isCard ? null :
@@ -158,7 +154,7 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
 });
 
 export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => <TextHeadCell text={<T>verdict</T>} />,
+  head: 'verdict',
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
     <Field>
@@ -185,7 +181,7 @@ export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionRespo
       )),
   },
   cardPosition: 'bottom',
-  minWidth: 180,
+  minWidth: 220,
 });
 
 type SubmissionActionsColumnProps = {
@@ -193,7 +189,7 @@ type SubmissionActionsColumnProps = {
 }
 
 export const submissionActionsColumn = ({ canRejudge }: SubmissionActionsColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => <TextHeadCell text={<T>actions</T>} />,
+  head: 'actions',
   index: 'actions',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
     <Field>
@@ -207,7 +203,7 @@ export const submissionActionsColumn = ({ canRejudge }: SubmissionActionsColumnP
 });
 
 export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => <TextHeadCell text={<T>date</T>} />,
+  head: 'date',
   index: 'timestamp',
   field: ({ record: { timestamp }, isCard }) => (
     <DateField
@@ -226,7 +222,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
 });
 
 export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => <TextHeadCell text={<T>time</T>} />,
+  head: 'time',
   index: 'timeUsed',
   field: ({ record: { timeUsed, submitId, canViewSourceCode, language, verdict, memoryUsed }, isCard }) => (
     isCard ? (
@@ -252,11 +248,10 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDT
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
   cardPosition: 'center',
-  minWidth: 140,
 });
 
 export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
-  head: () => <TextHeadCell text={<T>memory</T>} />,
+  head: 'memory',
   index: 'memoryUsed',
   field: ({ record: { memoryUsed, verdict }, isCard }) => (
     isCard ? null :
@@ -265,5 +260,4 @@ export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponse
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
   cardPosition: 'center',
-  minWidth: 140,
 });

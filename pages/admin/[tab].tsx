@@ -1,4 +1,3 @@
-import { renderReactNodeOrFunctionP1, TabsType } from '@juki-team/base-ui';
 import {
   AllSubmissions,
   Breadcrumbs,
@@ -13,9 +12,10 @@ import {
   UsersManagement,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { useFetcher, useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { renderReactNodeOrFunctionP1 } from 'helpers';
+import { useFetcher, useJukiRouter, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import {
   AdminTab,
   CompanyResponseDTO,
@@ -23,6 +23,7 @@ import {
   ContentsResponseType,
   LastLinkKey,
   QueryParam,
+  TabsType,
 } from 'types';
 import Custom404 from '../404';
 
@@ -46,12 +47,18 @@ function Admin() {
     mutate,
   } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings ? JUDGE_API_V1.COMPANY.LIST() : null);
   const { data: myCompany } = useFetcher<ContentResponseType<CompanyResponseDTO>>(JUDGE_API_V1.COMPANY.CURRENT());
-  const { router: { searchParams, setSearchParams } } = useJukiUI();
+  const { searchParams, setSearchParams } = useJukiRouter();
   const companyKey = searchParams.get(QueryParam.COMPANY) as string;
   const companies = data?.success ? data.contents : [];
   const company: CompanyResponseDTO | undefined = canHandleSettings
     ? companies.find((company) => company.key === companyKey)
     : (myCompany?.success ? myCompany.content : undefined);
+  
+  useEffect(() => {
+    if (!companyKey) {
+      setSearchParams({ name: QueryParam.COMPANY, value: companies[0]?.key });
+    }
+  }, [ companyKey, companies ]);
   
   if (!canViewSubmissionsManagement
     && !canSendEmail

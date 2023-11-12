@@ -1,6 +1,6 @@
 import { T, TabsInline } from 'components';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useJukiUI } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import React from 'react';
 import { AdminTab, CompanyResponseDTO, TabsType } from 'types';
 import { EC2Management } from './EC2Management';
@@ -44,7 +44,7 @@ export const ServicesManagement = ({ company }: { company: CompanyResponseDTO })
     },
   };
   
-  const { router: { searchParams, setSearchParams } } = useJukiUI();
+  const { searchParams, setSearchParams } = useJukiRouter();
   const selectedTabKey = searchParams.get('servicesTab') as AdminTab || AdminTab.ECS_TASKS_MANAGEMENT;
   const pushTab = (tabKey: AdminTab) => setSearchParams({ name: 'servicesTab', value: tabKey });
   

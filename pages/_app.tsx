@@ -1,6 +1,6 @@
 import { JUKI_APP_COMPANY_KEY } from '@juki-team/commons';
 import { Analytics } from '@vercel/analytics/react';
-import { CustomHead, ErrorBoundary, JukiUIProvider, JukiUserProvider, LineLoader, NavigationBar, T } from 'components';
+import { CustomHead, ErrorBoundary, JukiProviders, LineLoader, NavigationBar, T } from 'components';
 import { settings } from 'config';
 import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV } from 'config/constants';
 import { consoleWarn } from 'helpers';
@@ -8,6 +8,7 @@ import { useJukiUser, useRouter } from 'hooks';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import { AppProps, FC, ImageCmpProps } from 'types';
@@ -36,8 +37,7 @@ const SponsoredByTag = () => {
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   
   settings.setSetting(
-    JUKI_SERVICE_BASE_URL,
-    'api/v1',
+    JUKI_SERVICE_BASE_URL + '/api/v1',
     JUKI_SERVICE_BASE_URL,
     'https://utils.juki.app',
     JUKI_TOKEN_NAME,
@@ -56,40 +56,34 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   }
   
   const app = (
-    <JukiUIProvider
+    <JukiProviders
       components={{ Image: Image as FC<ImageCmpProps>, Link: Link }}
       router={{ searchParams, setSearchParams, deleteSearchParams, appendSearchParams }}
+      serviceApiUrl={JUKI_SERVICE_BASE_URL + '/api/v1'}
+      utilsUiUrl="https://utils.juki.app"
+      tokenName={JUKI_TOKEN_NAME}
+      socketServiceUrl={JUKI_SERVICE_BASE_URL}
     >
-      <JukiUserProvider
-        utilsServiceUrl={JUKI_SERVICE_BASE_URL}
-        utilsServiceApiVersion="api/v1"
-        utilsUiUrl="https://utils.juki.app"
-        tokenName={JUKI_TOKEN_NAME}
-        utilsSocketServiceUrl={JUKI_SERVICE_BASE_URL}
-      >
-        <div className="jk-app">
-          {isLoading && <div className="page-line-loader"><LineLoader delay={3} /></div>}
-          <CustomHead />
-          <UserProvider>
-            <TaskProvider>
-              <SWRConfig
-                value={{
-                  revalidateIfStale: true, // when back to pages
-                  revalidateOnFocus: false,
-                  revalidateOnReconnect: false,
-                }}
-              >
-                <NavigationBar>
-                  <Analytics />
-                  <Component {...pageProps} />
-                </NavigationBar>
-              </SWRConfig>
-            </TaskProvider>
-          </UserProvider>
-          <SponsoredByTag />
-        </div>
-      </JukiUserProvider>
-    </JukiUIProvider>
+      {isLoading && <div className="page-line-loader"><LineLoader delay={3} /></div>}
+      <CustomHead />
+      <UserProvider>
+        <TaskProvider>
+          <SWRConfig
+            value={{
+              revalidateIfStale: true, // when back to pages
+              revalidateOnFocus: false,
+              revalidateOnReconnect: false,
+            }}
+          >
+            <NavigationBar>
+              <Analytics />
+              <Component {...pageProps} />
+            </NavigationBar>
+          </SWRConfig>
+        </TaskProvider>
+      </UserProvider>
+      <SponsoredByTag />
+    </JukiProviders>
   );
   
   return NODE_ENV === 'development' ? app : <ErrorBoundary reload={reload}>{app}</ErrorBoundary>;

@@ -137,7 +137,7 @@ export const ECSTaskDefinitionsManagement = ({ company }: { company: CompanyResp
   
   const columns: DataViewerHeadersType<AwsEcsTaskDefinitionList>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">task definition</T>} />,
+      head: 'task definition',
       index: 'taskDefinition',
       field: ({ record }) => (
         <Field className="jk-row center gap">

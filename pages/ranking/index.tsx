@@ -19,7 +19,7 @@ function Ranking() {
   const { viewPortSize } = useJukiUI();
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">position</T>} />,
+      head: 'position',
       index: 'key',
       field: ({ record: {}, isCard, recordIndex }) => (
         isCard ? null : (
@@ -33,7 +33,7 @@ function Ranking() {
       sticky: true,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">nickname</T>} className="left" />,
+      head: <TextHeadCell text={<T className="tt-se">nickname</T>} className="left" />,
       index: 'nickname',
       field: ({ record: { nickname, imageUrl }, isCard, recordIndex }) => (
         <Field className="jk-row link fw-bd gap">
@@ -58,7 +58,7 @@ function Ranking() {
       sticky: viewPortSize !== 'sm',
     },
     {
-      head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by problems</T>} />,
+      head: <TextHeadCell text={<T className="wb-bw tt-se">points by problems</T>} />,
       index: 'problem-points',
       field: ({ record: { problemPoints }, isCard }) => (
         <TextField
@@ -74,7 +74,7 @@ function Ranking() {
       minWidth: 150,
     },
     {
-      head: <TextHeadCell text={<T className="wb-bw tt-ue tx-s">points by competitions</T>} />,
+      head: <TextHeadCell text={<T className="wb-bw tt-se">points by competitions</T>} />,
       index: 'contest-points',
       field: ({ record: { competitionPoints }, isCard }) => (
         <TextField
@@ -90,7 +90,7 @@ function Ranking() {
       minWidth: 150,
     },
     {
-      head: <TextHeadCell text={<><T className="tt-ue tx-s">country</T>, <T className="tt-ue tx-s">city</T></>} />,
+      head: <TextHeadCell text={<><T className="tt-se">country</T>, <T className="tt-se">city</T></>} />,
       index: 'country-city',
       field: ({ record: { country, city } }) => (
         <Field className="jk-row center">
@@ -102,7 +102,7 @@ function Ranking() {
       minWidth: 200,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">institution</T>} />,
+      head: 'institution',
       index: 'institution',
       field: ({ record: { institution } }) => (
         <Field className="jk-row center">

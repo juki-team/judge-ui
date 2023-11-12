@@ -1,5 +1,5 @@
 import { classNames } from 'helpers';
-import { useJukiUI } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import React, { PropsWithChildren } from 'react';
 import { QueryParam } from 'types';
 
@@ -10,7 +10,7 @@ interface SubmissionInfoProps {
 
 export const SubmissionInfo = ({ submitId, canViewSourceCode, children }: PropsWithChildren<SubmissionInfoProps>) => {
   
-  const { router: { setSearchParams } } = useJukiUI();
+  const { setSearchParams } = useJukiRouter();
   
   return (
     <span

@@ -38,11 +38,12 @@ const processSearchParams = (searchParams: URLSearchParams, appendSearchParamsAc
       }
     } else if (searchParamsActions.action === 'setSearchParams') {
       for (const { name, value } of searchParamsActions.props) {
+        console.log({ value });
         newSearchParams.delete(name);
         let values: string[] = [];
         if (typeof value === 'string') {
           values.push(value);
-        } else {
+        } else if (Array.isArray(value)) {
           values = value;
         }
         for (const value of values) {

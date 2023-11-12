@@ -116,12 +116,12 @@ export const MailManagement = () => {
                 <Input value={subject} onChange={(newValue) => setSubject(newValue)} extend />
               </div>
             </div>
-            <div className="jk-col stretch extend top nowrap">
+            <div className="jk-col gap stretch extend top nowrap">
               <div className="jk-row center gap">
                 <div><T className="tt-se">template</T>:</div>
-                <Button type="text" size="tiny" onClick={() => setContent(passwordReset)}><T>password reset</T></Button>
-                <Button type="text" size="tiny" onClick={() => setContent(validateEmail)}><T>validate email</T></Button>
-                <Button type="text" size="tiny" onClick={() => setContent(sendCredentials)}>
+                <Button type="light" size="tiny" onClick={() => setContent(passwordReset)}><T>password reset</T></Button>
+                <Button type="light" size="tiny" onClick={() => setContent(validateEmail)}><T>validate email</T></Button>
+                <Button type="light" size="tiny" onClick={() => setContent(sendCredentials)}>
                   <T>send credentials</T>
                 </Button>
               </div>

@@ -1,4 +1,4 @@
-import { AlertModal, Button, ButtonLoader, FetcherLayer, ReloadIcon, T } from 'components';
+import { Button, ButtonLoader, FetcherLayer, ReloadIcon, T, TwoActionModal } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
@@ -57,15 +57,16 @@ export const SQSManagement = () => {
                           className="bc-er"
                           onClick={() => {
                             setModal(
-                              <AlertModal
+                              <TwoActionModal
+                                isOpen
                                 onClose={() => setModal(null)}
-                                decline={{
+                                secondary={{
                                   onClick: () => {
                                     setModal(null);
                                   },
                                   label: <T>cancel</T>,
                                 }}
-                                accept={{
+                                primary={{
                                   onClick: async (setLoaderStatus) => {
                                     setLoaderStatus(Status.LOADING);
                                     const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
@@ -82,15 +83,14 @@ export const SQSManagement = () => {
                                   label: <T>purge</T>,
                                 }}
                                 title={<T>purge queue</T>}
-                                content={
-                                  <div className="jk-col gap">
-                                    <T>are you sure you want to purge the following queue permanently? This action
-                                      cannot be
-                                      undone.</T>
-                                    <div className="fw-bd">- {key}</div>
-                                  </div>
-                                }
-                              />,
+                              >
+                                <div className="jk-col gap">
+                                  <T>are you sure you want to purge the following queue permanently? This action
+                                    cannot be
+                                    undone.</T>
+                                  <div className="fw-bd">- {key}</div>
+                                </div>
+                              </TwoActionModal>,
                             );
                           }}
                         >

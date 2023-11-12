@@ -429,7 +429,8 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                     })}
                     extend
                   />
-                  {problem.settings.timeLimit > 1 ? <T>milliseconds</T> : <T>millisecond</T>}
+                  {/*{problem.settings.timeLimit > 1 ? <T>milliseconds</T> : <T>millisecond</T>}*/}
+                  ms
                 </div>
                 <div className="jk-row center gap nowrap">
                   <Input

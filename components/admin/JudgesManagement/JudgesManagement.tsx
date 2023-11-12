@@ -1,6 +1,6 @@
 import { FetcherLayer, T, TabsInline } from 'components';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useJukiUI } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import React from 'react';
 import { ContentResponseType, Judge, JudgeResponseDTO, JudgesManagementTab, TabsType } from 'types';
 import { JUDGE_API_V1 } from '../../../config/constants';
@@ -55,7 +55,7 @@ export const JudgesManagement = () => {
     },
   };
   
-  const { router: { searchParams, setSearchParams } } = useJukiUI();
+  const { searchParams, setSearchParams } = useJukiRouter();
   const selectedTabKey = searchParams.get('judgeTab') as JudgesManagementTab || JudgesManagementTab.VIRTUAL_SUBMISSIONS_QUEUE;
   const pushTab = (tabKey: JudgesManagementTab) => setSearchParams({ name: 'judgeTab', value: tabKey });
   

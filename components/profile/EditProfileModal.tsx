@@ -19,21 +19,28 @@ import { useEffect, useState } from 'react';
 import { ProfileTab, Status, UserProfileResponseDTO } from 'types';
 import { ImageProfileModal } from './ImageProfileModal';
 
-export function EditProfileModal({ user, onClose }: { user: UserProfileResponseDTO, onClose: () => void }) {
+interface EditProfileModalProps {
+  isOpen: boolean,
+  user: UserProfileResponseDTO,
+  onClose: () => void
+}
+
+export function EditProfileModal({ isOpen, user, onClose }: EditProfileModalProps) {
   
-  const [userState, setUserState] = useState(user);
+  const [ userState, setUserState ] = useState(user);
   const { updateUserProfileData, mutatePing } = useJukiUser();
   const { mutate } = useSWR();
-  useEffect(() => setUserState(user), [JSON.stringify(user)]);
-  const [modalImageProfile, setModalImageProfile] = useState(false);
+  useEffect(() => setUserState(user), [ JSON.stringify(user) ]);
+  const [ modalImageProfile, setModalImageProfile ] = useState(false);
   const validLengthNickname = userState.nickname.length >= 3;
   const validCharNickname = ALPHANUMERIC_DASH_UNDERSCORE_REGEX.test(userState.nickname);
   const { push, query } = useRouter();
   
   return (
-    <Modal isOpen={true} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <div className="user-profile jk-row stretch center gap jk-pad-md pn-re">
-        {modalImageProfile && <ImageProfileModal onClose={() => setModalImageProfile(false)} nickname={user.nickname} />}
+        {modalImageProfile &&
+          <ImageProfileModal onClose={() => setModalImageProfile(false)} nickname={user.nickname} />}
         <div className="jk-col top jk-pad-md">
           <img src={user?.imageUrl} className="jk-user-profile-img huge elevation-1" alt={user?.nickname as string} />
           <EditIcon onClick={() => setModalImageProfile(true)} />
@@ -60,7 +67,10 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
             <div className="jk-form-item">
               <label>
                 <div className="jk-row left gap"><PersonIcon size="small" /><T>family name</T></div>
-                <Input onChange={familyName => setUserState({ ...userState, familyName })} value={userState.familyName} />
+                <Input
+                  onChange={familyName => setUserState({ ...userState, familyName })}
+                  value={userState.familyName}
+                />
               </label>
             </div>
           </div>
@@ -87,7 +97,10 @@ export function EditProfileModal({ user, onClose }: { user: UserProfileResponseD
           <div className="jk-form-item">
             <label>
               <div className="jk-row left gap"><SchoolIcon size="small" /><T>institution</T></div>
-              <Input onChange={institution => setUserState({ ...userState, institution })} value={userState.institution} />
+              <Input
+                onChange={institution => setUserState({ ...userState, institution })}
+                value={userState.institution}
+              />
             </label>
           </div>
           {Object.values(JUDGE)

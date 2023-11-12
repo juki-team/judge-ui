@@ -173,7 +173,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
       value={course}
     >
       <ButtonLoader
-        type="outline"
+        type="light"
         icon={<CloseIcon />}
         responsiveMobile
         size="small"

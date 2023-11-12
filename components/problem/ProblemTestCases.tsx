@@ -11,10 +11,10 @@ import {
   Input,
   LoadingIcon,
   MultiSelect,
-  Popover,
   ReloadIcon,
   SaveIcon,
   T,
+  Tooltip,
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize } from 'helpers';
@@ -32,7 +32,7 @@ import {
   Status,
 } from 'types';
 import Custom404 from '../../pages/404';
-import { AlertModal } from '../index';
+import { TwoActionModal } from '../index';
 
 enum UploadState {
   NO_FILE = 'NO_FILE',
@@ -168,7 +168,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="outline"
+          type="light"
           icon={<ReloadIcon />}
           onClick={async (setLoaderStatus) => {
             setLock(true);
@@ -183,7 +183,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="outline"
+          type="light"
           icon={<CloudDownloadIcon />}
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
@@ -201,16 +201,17 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="outline"
+          type="light"
           icon={<DeleteIcon className="cr-er" />}
           onClick={() => setModal(
-            <AlertModal
+            <TwoActionModal
+              isOpen
               onClose={() => setModal(null)}
-              decline={{
+              secondary={{
                 onClick: () => setModal(null),
                 label: <T>cancel</T>,
               }}
-              accept={{
+              primary={{
                 onClick: async (setLoaderStatus) => {
                   setLock(true);
                   for (const { testCaseKey } of Object.values(testCases)) {
@@ -230,14 +231,13 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                 label: <T>delete</T>,
               }}
               title={<T>delete all test cases</T>}
-              content={
-                <div className="jk-col gap">
-                  <T className="tt-se">
-                    are you sure you want to delete all test cases permanently? This action cannot be undone.
-                  </T>
-                </div>
-              }
-            />,
+            >
+              <div className="jk-col gap">
+                <T className="tt-se">
+                  are you sure you want to delete all test cases permanently? This action cannot be undone.
+                </T>
+              </div>
+            </TwoActionModal>,
           )}
         >
           <T className="cr-er">delete all test cases</T>
@@ -308,24 +308,22 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                     </div>
                     <div className="jk-row" style={{ width: 80 }}>
                       {testCase[(keyPut + 'FileSize') as 'outputFileSize'] !== -1 ?
-                        <Popover
-                          content={<div className="jk-row center nowrap">
-                            <T className="ws-np fw-bd tt-se">last updated</T>
-                            <span className="ws-np">: {new Date(testCase[(keyPut + 'FileLastModified') as 'outputFileLastModified']).toLocaleString()}</span>
-                          </div>}
-                          showPopperArrow
+                        <Tooltip
+                          content={
+                            <div className="jk-row center nowrap">
+                              <T className="ws-np fw-bd tt-se">last updated</T>
+                              <span className="ws-np">: {new Date(testCase[(keyPut + 'FileLastModified') as 'outputFileLastModified']).toLocaleString()}</span>
+                            </div>
+                          }
                         >
                           <div className="jk-row">{humanFileSize(testCase[(keyPut + 'FileSize') as 'outputFileSize'])}</div>
-                        </Popover>
+                        </Tooltip>
                         : '-'}
                     </div>
                     <div className="jk-row left" style={{ width: 70 }}>
                       {testCase[(keyPut + 'FileSize') as 'inputFileSize'] !== -1 && (
                         <>
-                          <Popover
-                            content={<T className="ws-np tt-se">the changes will be lost</T>}
-                            showPopperArrow
-                          >
+                          <Tooltip content={<T className="ws-np tt-se">the changes will be lost</T>}>
                             <div className="jk-row">
                               <ButtonLoader
                                 type="text"
@@ -335,7 +333,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                                 disabled={lock}
                               />
                             </div>
-                          </Popover>
+                          </Tooltip>
                           <ButtonLoader
                             type="text"
                             size="small"

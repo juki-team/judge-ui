@@ -27,7 +27,16 @@ import {
   ROUTES,
 } from 'config/constants';
 import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
-import { useEffect, useFetcher, useJukiUI, useJukiUser, useMemo, useRouter, useState, useTrackLastPath } from 'hooks';
+import {
+  useEffect,
+  useFetcher,
+  useJukiRouter,
+  useJukiUser,
+  useMemo,
+  useRouter,
+  useState,
+  useTrackLastPath,
+} from 'hooks';
 import Link from 'next/link';
 import {
   ContentsResponseType,
@@ -60,7 +69,7 @@ function Problems() {
   useTrackLastPath(LastLinkKey.PROBLEMS);
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { user: { canCreateProblem }, company: { name, key } } = useJukiUser();
-  const { router: { searchParams, setSearchParams } } = useJukiUI();
+  const { searchParams, setSearchParams } = useJukiRouter();
   const { isReady, push } = useRouter();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
@@ -71,7 +80,7 @@ function Problems() {
   }, [ judge, isReady ]);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">id</T>} />,
+      head: 'id',
       index: 'key',
       field: ({ record: { key }, isCard }) => (
         <Field className="jk-row fw-bd cr-py">
@@ -81,10 +90,10 @@ function Problems() {
       sort: true,
       filter: { type: 'text' },
       cardPosition: 'top',
-      minWidth: 120,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">problem name</T>} className="left" />,
+      // head:'problem name',
+      head: <TextHeadCell text={<T className="tt-se">problem name</T>} className="left" />,
       index: 'name',
       field: ({ record: { key, judge, name, user }, isCard }) => (
         <Field className={classNames('jk-row fw-bd jk-pad-sm cr-py', { left: !isCard, center: isCard })}>
@@ -126,7 +135,7 @@ function Problems() {
     },
     ...((judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER) ? [
       {
-        head: <TextHeadCell text={<T className="tt-ue tx-s">mode</T>} />,
+        head: 'mode',
         index: 'mode',
         field: ({ record: { key, settings: { mode } }, isCard }) => (
           <Field className="jk-row">
@@ -139,10 +148,9 @@ function Problems() {
           options: PROBLEM_MODES.map((problemMode) => ({ value: problemMode, label: PROBLEM_MODE[problemMode].label })),
         },
         cardPosition: 'top',
-        minWidth: 140,
       },
       {
-        head: <TextHeadCell text={<T className="tt-ue tx-s">tags</T>} className="left" />,
+        head: 'tags',
         index: 'tags',
         field: ({ record: { tags }, isCard }) => (
           <Field className={classNames('jk-row gap', { center: isCard, left: !isCard })}>
@@ -158,15 +166,7 @@ function Problems() {
       },
     ] as DataViewerHeadersType<ProblemSummaryListResponseDTO>[] : []),
     {
-      head: (
-        <TextHeadCell
-          text={
-            <T className="tt-ue tx-s">
-              {judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler'}
-            </T>
-          }
-        />
-      ),
+      head: judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler',
       index: 'ownerUserNickname',
       field: ({ record: { ownerUserNickname } }) => (
         <TextField
@@ -186,7 +186,7 @@ function Problems() {
     } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ...(canCreateProblem ? [
       {
-        head: <TextHeadCell text={<T className="tt-ue tx-s">visibility</T>} />,
+        head: 'visibility',
         index: 'status',
         field: ({ record: { status } }) => (
           <TextField

@@ -12,7 +12,7 @@ import {
   UserPreviewModal,
 } from 'components';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
-import { useJukiUI, useJukiUser, useRouter } from 'hooks';
+import { useJukiRouter, useJukiUser, useRouter } from 'hooks';
 import Link from 'next/link';
 import React, { createContext, PropsWithChildren, useState } from 'react';
 import {
@@ -69,6 +69,7 @@ export const LasLinkProvider = ({ children }: PropsWithChildren<{}>) => {
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, push, query } = useRouter();
+  
   const {
     user: {
       nickname,
@@ -82,7 +83,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     },
     company: { key },
   } = useJukiUser();
-  const { router: { deleteSearchParams } } = useJukiUI();
+  
+  const { deleteSearchParams } = useJukiRouter();
   
   const menu: MenuType[] = [
     {
@@ -127,13 +129,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   return (
     <>
-      {query[QueryParamKey.USER_PREVIEW] && (
-        <UserPreviewModal
-          nickname={query[QueryParamKey.USER_PREVIEW] as string}
-          onClose={() => deleteSearchParams({ name: QueryParamKey.USER_PREVIEW })}
-          userHref={ROUTES.PROFILE.PAGE(query[QueryParamKey.USER_PREVIEW] as string, ProfileTab.PROFILE)}
-        />
-      )}
+      <UserPreviewModal
+        isOpen={!!query[QueryParamKey.USER_PREVIEW]}
+        nickname={query[QueryParamKey.USER_PREVIEW] as string}
+        onClose={() => deleteSearchParams({ name: QueryParamKey.USER_PREVIEW })}
+        userHref={ROUTES.PROFILE.PAGE(query[QueryParamKey.USER_PREVIEW] as string, ProfileTab.PROFILE)}
+      />
       {query[QueryParam.SUBMISSION_VIEW] && <SubmissionModal submitId={query[QueryParam.SUBMISSION_VIEW] as string} />}
       <LasLinkProvider>
         <MainMenu

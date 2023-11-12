@@ -27,7 +27,7 @@ import {
   getSimpleProblemJudgeKey,
   renderReactNodeOrFunctionP1,
 } from 'helpers';
-import { useJukiUI, useJukiUser, useNotification, useRouter, useTrackLastPath } from 'hooks';
+import { useJukiRouter, useJukiUI, useJukiUser, useNotification, useRouter, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import {
   ContentResponseType,
@@ -50,7 +50,8 @@ const ProblemView = (): ReactNode => {
   const { query: { key, tab: problemTab, ...query }, push, isReady } = useRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
-  const { viewPortSize, router: { setSearchParams } } = useJukiUI();
+  const { viewPortSize } = useJukiUI();
+  const { setSearchParams } = useJukiRouter();
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <LinkProblems><T className="tt-se">problems</T></LinkProblems>,

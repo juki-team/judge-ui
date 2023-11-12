@@ -36,7 +36,7 @@ export const VirtualUsersTable = () => {
   const headers = useMemo(() => {
     return [
       {
-        head: <TextHeadCell text={<T className="tt-ue">judge</T>} />,
+        head: 'judge',
         index: 'judge',
         field: ({ record: { judge } }) => (
           <Field className="jk-col center">
@@ -54,7 +54,7 @@ export const VirtualUsersTable = () => {
         },
       },
       {
-        head: <TextHeadCell text={<T className="tt-ue">user data</T>} />,
+        head: 'user data',
         index: 'user-data',
         field: ({ record: { email, username, password } }) => (
           <Field className="jk-col center">
@@ -67,7 +67,7 @@ export const VirtualUsersTable = () => {
         cardPosition: 'top',
       },
       {
-        head: <TextHeadCell text={<T className="tt-ue">working in</T>} />,
+        head: 'working in',
         index: 'workingIn',
         field: ({ record: { workingIn, attempts, updatedAt, submitId, judgeSubmissionId } }) => (
           <Field className="jk-col center">
@@ -83,7 +83,7 @@ export const VirtualUsersTable = () => {
         cardPosition: 'center',
       },
       {
-        head: <TextHeadCell text={<T className="tt-ue">actions</T>} />,
+        head: 'actions',
         index: 'actions',
         field: ({ record }) => (
           <Field className="jk-col gap center">

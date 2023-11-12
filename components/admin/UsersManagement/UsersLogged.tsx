@@ -43,7 +43,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
   useEffect(reload, [ withGuests, reload, company.key ]);
   const columns: DataViewerHeadersType<SessionResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<><T className="tt-ue">id</T>/<T className="tt-ue">user</T></>} />,
+      head: 'user',
       index: 'id',
       field: ({ record: { id, user: { imageUrl, nickname, givenName, familyName, email } } }) => (
         <Field className="jk-col center">
@@ -71,7 +71,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
       minWidth: 400,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">created at</T>} />,
+      head: 'created at',
       index: 'createdAt',
       field: ({ record: { createdAt } }) => (
         <DateField date={new Date(createdAt)} label={<T>created at</T>} />
@@ -84,7 +84,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
       },
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">updated at</T>} />,
+      head: 'updated at',
       index: 'updatedAt',
       field: ({ record: { updatedAt } }) => (
         <DateField date={new Date(updatedAt)} label={<T>updated at</T>} />
@@ -98,7 +98,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
       },
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">valid until</T>} />,
+      head: 'valid until',
       index: 'validUntil',
       field: ({ record: { validUntil } }) => (
         <DateField date={new Date(validUntil)} label={<T>valid until</T>} />
@@ -112,7 +112,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
       },
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">device</T>} />,
+      head: 'device',
       index: 'device',
       field: ({ record: { deviceName } }) => (
         <TextField text={deviceName} label={<T>device</T>} />
@@ -126,7 +126,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
       },
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">os</T>} />,
+      head: 'os',
       index: 'os',
       field: ({ record: { osName } }) => (
         <TextField text={osName} label={<T>os</T>} />
@@ -140,7 +140,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
       },
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">operations</T>} />,
+      head: 'operations',
       index: 'operations',
       field: ({ record: { id } }) => {
         return (

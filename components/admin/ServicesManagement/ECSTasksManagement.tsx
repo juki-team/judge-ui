@@ -1,4 +1,4 @@
-import { ButtonLoader, DataViewer, Field, SettingsSuggestIcon, StopCircleIcon, T, TextHeadCell } from 'components';
+import { ButtonLoader, DataViewer, Field, SettingsSuggestIcon, StopCircleIcon, T } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification } from 'hooks';
@@ -25,7 +25,7 @@ export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO })
   const { addSuccessNotification, notifyResponse } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">task definition</T>} />,
+      head: 'task definition',
       index: 'group',
       field: ({ record: { group, isHighRunnerGroup, isLowRunnerGroup, memory, cpu, taskDefinitionArn } }) => (
         <Field className="jk-row center gap">
@@ -45,7 +45,7 @@ export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO })
       minWidth: 400,
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">task</T>} />,
+      head: 'task',
       index: 'task',
       field: ({
                 record: {

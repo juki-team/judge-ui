@@ -1,4 +1,4 @@
-import { LoadingIcon, Popover, T } from 'components';
+import { LoadingIcon, T, Tooltip } from 'components';
 import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
 import { useTask } from 'hooks';
 import { ReactNode } from 'react';
@@ -171,16 +171,17 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData }: V
       <>
         {SubmissionLabel[submissionData.status]?.(submissionData) || submissionData.status}
       </> : (
-        <div className="jk-row jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <div className="jk-row center jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
           {verdict === ProblemVerdict.PENDING
             ? <><LoadingIcon size="small" />&nbsp;{verdictLabel(verdict)}</> : verdictLabel(verdict)}
-          {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
+          {verdict === ProblemVerdict.PA && points && <>&nbsp;
+            <span className="ws-np">({(+points || 0).toFixed(2)})</span></>}
         </div>
       )
   );
   
   return (
-    <Popover
+    <Tooltip
       content={
         <div className="tt-se ws-np">
           {verdict === ProblemVerdict.PENDING ? (
@@ -189,12 +190,10 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData }: V
           ) : verdictLabel(verdict)}
         </div>
       }
-      triggerOn="hover"
       placement="top"
-      showPopperArrow
     >
       {content}
-    </Popover>
+    </Tooltip>
   );
 };
 

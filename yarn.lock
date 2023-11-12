@@ -1154,10 +1154,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@juki-team/base-ui@^0.0.486":
-  version "0.0.486"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.486/468cb2a7a97e17f671f64e1c7f649baa8db2c61a#468cb2a7a97e17f671f64e1c7f649baa8db2c61a"
-  integrity sha512-W+1KnbJbYu1JyANo8MacbYtzKrGaLP6L7OKwt2hTns/iXd+fY3uzzH0n8BKX1AAbaVEU+LaX4cfocpcsm9/udw==
+"@juki-team/base-ui@^0.0.503":
+  version "0.0.503"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.0.503/36aabddd04182094945f24adc12515c4c8fdb39e#36aabddd04182094945f24adc12515c4c8fdb39e"
+  integrity sha512-9IOrvLSU7YFPmFIyRqnYMeELQJuIOGh95p2OnebUnm88c3ka5IoI0uuFZSTDAGOochKAuJ29bklNjdnC0rk1nw==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-java" "^6.0.1"
@@ -1186,6 +1186,7 @@
     react-markdown "^8.0.3"
     react-modal "^3.15.1"
     react-resize-detector "^7.1.2"
+    react-tiny-popover "^7.2.4"
     react-tooltip "^5.21.5"
     rehype-katex "^6.0.2"
     remark-gfm "^3.0.1"
@@ -4104,6 +4105,11 @@ react-resize-detector@^7.1.2:
   integrity sha512-zXnPJ2m8+6oq9Nn8zsep/orts9vQv3elrpA+R8XTcW7DVVUJ9vwDwMXaBtykAYjMnkCIaOoK9vObyR7ZgFNlOw==
   dependencies:
     lodash "^4.17.21"
+
+react-tiny-popover@^7.2.4:
+  version "7.2.4"
+  resolved "https://registry.yarnpkg.com/react-tiny-popover/-/react-tiny-popover-7.2.4.tgz#b11fe9b43d1fc8ac46e760419346afd41d6111ee"
+  integrity sha512-T7ZSwXcUtPXCog3Bux9+TjoTvUeMi/+zI0Yv/TkIznZCWUg0XTt2797G0IiT5mTVeJeLivUzdOmKA1hOQdMfOQ==
 
 react-tooltip@^5.21.5:
   version "5.21.5"

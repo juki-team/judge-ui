@@ -1,4 +1,3 @@
-import { renderReactNodeOrFunctionP1, TabsType } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   Button,
@@ -16,10 +15,11 @@ import {
   UserProfileSettings,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiUI, useJukiUser, useRouter, useState } from 'hooks';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { ContentResponseType, ProfileTab, UserProfileResponseDTO } from 'types';
+import { ContentResponseType, ProfileTab, TabsType, UserProfileResponseDTO } from 'types';
 import Custom404 from '../../../404';
 
 export default function ProfileView() {
@@ -118,10 +118,11 @@ export default function ProfileView() {
         return (
           <TwoContentSection>
             <div>
-              {openModal === 'UPDATE_PASSWORD' && <ChangePasswordModal onClose={onClose} />}
-              {openModal === 'RESET_PASSWORD' &&
-                  <ResetPassword onClose={onClose} nickname={data.content?.nickname} companyKey={company.key} />}
-              {openModal === 'DATA' && <EditProfileModal onClose={onClose} user={data.content} />}
+              <ChangePasswordModal isOpen={openModal === 'UPDATE_PASSWORD'} onClose={onClose} />
+              {openModal === 'RESET_PASSWORD' && (
+                <ResetPassword onClose={onClose} nickname={data.content?.nickname} companyKey={company.key} />
+              )}
+              <EditProfileModal isOpen={openModal === 'DATA'} onClose={onClose} user={data.content} />
               <Breadcrumbs breadcrumbs={breadcrumbs} />
               <div className="pad-left-right">
                 <h1>{nickname}</h1>

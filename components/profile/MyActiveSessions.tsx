@@ -15,7 +15,7 @@ export function MyActiveSessions() {
   
   const columns: DataViewerHeadersType<SessionBasicResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue">session</T>} />,
+      head: 'session',
       index: 'session',
       field: ({ record: { updatedAt, deviceName, osName } }) => (
         <Field className="jk-col center">
@@ -32,7 +32,7 @@ export function MyActiveSessions() {
       },
     },
     {
-      head: <TextHeadCell text={<T className="tt-ue">operations</T>} />,
+      head: 'operations',
       index: 'operations',
       field: ({ record: { id } }) => {
         return (

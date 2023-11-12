@@ -1,15 +1,4 @@
-import {
-  CheckIcon,
-  DateLiteral,
-  EventIcon,
-  Field,
-  GroupIcon,
-  Popover,
-  ScheduleIcon,
-  T,
-  TextHeadCell,
-  Timer,
-} from 'components';
+import { CheckIcon, DateLiteral, EventIcon, Field, GroupIcon, Popover, ScheduleIcon, T, Timer } from 'components';
 import { ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
 import Link from 'next/link';
@@ -23,7 +12,7 @@ import {
 } from 'types';
 
 export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
-  head: <TextHeadCell text={<T className="tt-ue tx-s">contest name</T>} className="left" />,
+  head: 'contest name',
   index: 'name',
   field: ({ record: { name, key, user }, isCard }) => (
     <Field className="jk-row left block">
@@ -88,7 +77,7 @@ export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestS
 });
 
 export const contestStartDateColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
-  head: <TextHeadCell text={<div className="tt-ue tx-s"><T>start</T></div>} />,
+  head: 'start date',
   index: 'startDate',
   field: ({ record: { settings, isEndless }, isCard }) => (
     <Field className="jk-col extend">
@@ -124,7 +113,7 @@ export const contestStartDateColumn = (): DataViewerHeadersType<ContestSummaryLi
 });
 
 export const contestEndDateColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
-  head: <TextHeadCell text={<div className="tt-ue tx-s"><T>end</T></div>} />,
+  head: 'end date',
   index: 'endDate',
   field: ({ record: { settings, isEndless }, isCard }) => (
     <Field className="jk-col extend">
@@ -160,7 +149,7 @@ export const contestEndDateColumn = (): DataViewerHeadersType<ContestSummaryList
 });
 
 export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
-  head: <TextHeadCell text={<T className="tt-ue tx-s">contestants</T>} />,
+  head: 'contestants',
   index: 'totalContestants',
   field: ({ record: { totalContestants }, isCard }) => (
     <Field className="jk-row">
@@ -179,7 +168,6 @@ export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListRes
   ),
   sort: true,
   cardPosition: 'bottom',
-  minWidth: 160,
 });
 
 export const getContestTimeLiteral = (contest: ContestResponseDTO) => {

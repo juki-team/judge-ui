@@ -1,4 +1,4 @@
-import { AlertModal, T } from 'components';
+import { T, TwoActionModal } from 'components';
 import { createContext } from 'helpers';
 import { useEffect, useFetcher, useJukiUser, usePrevious, useRouter, useState, useT } from 'hooks';
 import {
@@ -37,33 +37,33 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   useEffect(() => {
     if (previousVersion && version && version !== previousVersion) {
       setModal(
-        <AlertModal
-          decline={{ label: <T>cancel</T>, onClick: () => setModal(null) }}
-          accept={{ label: <T>reload</T>, onClick: () => router.reload() }}
+        <TwoActionModal
+          isOpen={true}
+          secondary={{ label: <T>cancel</T>, onClick: () => setModal(null) }}
+          primary={{ label: <T>reload</T>, onClick: () => router.reload() }}
           title={<div><T>attention</T></div>}
-          content={
-            <div className="jk-col gap left stretch">
-              <div>
-                <T className="tt-se">an interface update is available, to use the new interface it is necessary to
-                  reload the application.</T>
-              </div>
-              <div>
-                <T className="tt-se">your UI version is</T>&nbsp;
-                <span className="jk-tag gray-6">{previousVersion}</span>&nbsp;
-                <T>and the new UI version available is</T>&nbsp;
-                <span className="jk-tag gray-6">{version}</span>.
-              </div>
-              <div>
-                <T className="tt-se">an interface update may mean improvements in the user experience and/or bug
-                  fixes.</T>
-              </div>
-              <div>
-                <T className="tt-se fw-bd">if you reload the page the changes that are not saved will be lost.</T>
-              </div>
-            </div>
-          }
           onClose={() => setModal(null)}
-        />,
+        >
+          <div className="jk-col gap left stretch">
+            <div>
+              <T className="tt-se">an interface update is available, to use the new interface it is necessary to
+                reload the application.</T>
+            </div>
+            <div>
+              <T className="tt-se">your UI version is</T>&nbsp;
+              <span className="jk-tag gray-6">{previousVersion}</span>&nbsp;
+              <T>and the new UI version available is</T>&nbsp;
+              <span className="jk-tag gray-6">{version}</span>.
+            </div>
+            <div>
+              <T className="tt-se">an interface update may mean improvements in the user experience and/or bug
+                fixes.</T>
+            </div>
+            <div>
+              <T className="tt-se fw-bd">if you reload the page the changes that are not saved will be lost.</T>
+            </div>
+          </div>
+        </TwoActionModal>,
       );
     }
   }, [ version, previousVersion ]);

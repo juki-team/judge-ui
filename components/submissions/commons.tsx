@@ -3,14 +3,17 @@ import { settings } from 'config';
 import { useMatchMutate, useRejudgeServices } from 'hooks';
 
 export const RejudgeButton = ({ submissionId }: { submissionId: string }) => {
+  
   const { rejudgeSubmission } = useRejudgeServices();
+  
   const { matchMutate } = useMatchMutate();
+  
   return (
     <ButtonLoader
       onClick={async (...props) => {
         await rejudgeSubmission(submissionId)(...props);
         // TODO Fix the next
-        await matchMutate(new RegExp(`^${settings.UTILS_SERVICE_API_URL}/submissions`, 'g'));
+        await matchMutate(new RegExp(`^${settings.SERVICE_API_URL}/submissions`, 'g'));
       }}
       size="tiny"
       icon={<ReloadIcon />}

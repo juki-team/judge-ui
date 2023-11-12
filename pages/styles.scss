@@ -1,5 +1,4 @@
 @import "@juki-team/base-ui/dist/styles/base";
-@import "components/NavigationBar/styles";
 @import "components/problem/styles";
 @import "components/profile/styles";
 @import "components/contest/styles";
@@ -13,12 +12,6 @@ body {
   }
   
   margin: 0;
-  
-  .jk-app {
-    overflow: hidden;
-    width: 100vw;
-    height: var(--100VH);
-  }
   
   --left-vertical-menu-width: 48px !important;
 }

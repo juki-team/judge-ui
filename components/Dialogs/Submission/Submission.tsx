@@ -1,6 +1,6 @@
 import { ContentCopyIcon, CopyToClipboard, Modal, OpenInNewIcon, SubmitView, T } from 'components';
 import { ROUTES } from 'config/constants';
-import { useJukiUI } from 'hooks';
+import { useJukiRouter, useJukiUI } from 'hooks';
 import Link from 'next/link';
 import React from 'react';
 import { QueryParam } from 'types';
@@ -11,9 +11,11 @@ interface SubmissionModalProps {
 
 export const SubmissionModal = ({ submitId }: SubmissionModalProps) => {
   
-  const { router: { deleteSearchParams }, viewPortSize } = useJukiUI();
-  const handleClose = () => deleteSearchParams({ name: QueryParam.SUBMISSION_VIEW });
+  const { viewPortSize } = useJukiUI();
   
+  const { deleteSearchParams } = useJukiRouter();
+  
+  const handleClose = () => deleteSearchParams({ name: QueryParam.SUBMISSION_VIEW });
   
   return (
     <Modal isOpen={true} onClose={handleClose} closeIcon closeWhenClickOutside expand={viewPortSize === 'sm'}>
@@ -24,10 +26,10 @@ export const SubmissionModal = ({ submitId }: SubmissionModalProps) => {
             <div className="tx-s fw-nl">{submitId}</div>
           </div>
           <Link href={ROUTES.SUBMISSIONS.VIEW(submitId)} target="_blank">
-            <div className="jk-row link"><OpenInNewIcon size="small" /></div>
+            <div className="jk-button-light only-icon small link"><OpenInNewIcon /></div>
           </Link>
           <CopyToClipboard text={submitId}>
-            <div className="jk-row link"><ContentCopyIcon size="small" /></div>
+            <div className="jk-button-light only-icon small"><ContentCopyIcon /></div>
           </CopyToClipboard>
         </div>
         <SubmitView submitId={submitId} />

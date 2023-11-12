@@ -13,6 +13,7 @@ import {
   SnowflakeIcon,
   T,
   TextHeadCell,
+  Tooltip,
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
@@ -253,14 +254,14 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       name={QueryParam.SCOREBOARD_TABLE}
       extraNodes={[
         !unfrozen && contest?.isFrozenTime && (
-          <Popover content={<T className="ws-np">scoreboard frozen</T>} showPopperArrow>
+          <Tooltip content={<T className="ws-np">scoreboard frozen</T>}>
             <div className="cr-io"><SnowflakeIcon /></div>
-          </Popover>
+          </Tooltip>
         ),
         !unfrozen && contest?.isQuietTime && (
-          <Popover content={<T className="ws-np">scoreboard on quiet time</T>} showPopperArrow>
+          <Tooltip content={<T className="ws-np">scoreboard on quiet time</T>}>
             <div className="cr-er"><GearsIcon /></div>
-          </Popover>
+          </Tooltip>
         ),
         ((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
           <div className="jk-row">
@@ -297,18 +298,17 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         <div className="jk-row">
           <DownloadButton data={data} contest={contest} disabled={isLoading} />
         </div>,
-        <Popover
+        <Tooltip
           content={fullscreen
             ? <T className="ws-np">exit full screen</T>
             : <T className="ws-np">go to fullscreen</T>}
-          showPopperArrow
         >
           <div className="jk-row">
             {fullscreen
               ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
               : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
           </div>
-        </Popover>,
+        </Tooltip>,
       ]}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}

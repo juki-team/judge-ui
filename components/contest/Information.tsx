@@ -1,8 +1,8 @@
-import { ExclamationIcon, Popover, T } from '../index';
+import { ExclamationIcon, T, Tooltip } from '../';
 
 export const FrozenInformation = () => {
   return (
-    <Popover
+    <Tooltip
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
@@ -11,17 +11,15 @@ export const FrozenInformation = () => {
           </T>
         </div>
       }
-      triggerOn={[ 'hover', 'click' ]}
-      placement="top"
     >
       <div className="jk-row cr-py"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
-    </Popover>
+    </Tooltip>
   );
 };
 
 export const QuietInformation = () => {
   return (
-    <Popover
+    <Tooltip
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
@@ -30,17 +28,15 @@ export const QuietInformation = () => {
           </T>
         </div>
       }
-      triggerOn={[ 'hover', 'click' ]}
-      placement="top"
     >
       <div className="jk-row cr-py"><ExclamationIcon rotate={180} filledCircle size="small" /></div>
-    </Popover>
+    </Tooltip>
   );
 };
 
 export const SpectatorInformation = ({ filledCircle }: { filledCircle?: boolean, }) => {
   return (
-    <Popover
+    <Tooltip
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
@@ -48,21 +44,19 @@ export const SpectatorInformation = ({ filledCircle }: { filledCircle?: boolean,
           </T>
         </div>
       }
-      triggerOn={[ 'hover', 'click' ]}
-      placement="top"
     >
       <div className="jk-row">
         {filledCircle
           ? <ExclamationIcon rotate={180} filledCircle size="small" />
           : <ExclamationIcon rotate={180} circle size="small" />}
       </div>
-    </Popover>
+    </Tooltip>
   );
 };
 
 export const JudgeInformation = ({ filledCircle }: { filledCircle?: boolean, }) => {
   return (
-    <Popover
+    <Tooltip
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
@@ -74,21 +68,19 @@ export const JudgeInformation = ({ filledCircle }: { filledCircle?: boolean, }) 
           </T>
         </div>
       }
-      triggerOn={[ 'hover', 'click' ]}
-      placement="top"
     >
       <div className="jk-row">
         {filledCircle
           ? <ExclamationIcon rotate={180} filledCircle size="small" />
           : <ExclamationIcon rotate={180} circle size="small" />}
       </div>
-    </Popover>
+    </Tooltip>
   );
 };
 
 export const AdminInformation = ({ filledCircle }: { filledCircle?: boolean }) => {
   return (
-    <Popover
+    <Tooltip
       content={
         <div style={{ width: '200px' }}>
           <T className="tt-se">
@@ -99,14 +91,12 @@ export const AdminInformation = ({ filledCircle }: { filledCircle?: boolean }) =
           </T>
         </div>
       }
-      triggerOn={[ 'hover', 'click' ]}
-      placement="top"
     >
       <div className="jk-row">
         {filledCircle
           ? <ExclamationIcon rotate={180} filledCircle size="small" />
           : <ExclamationIcon rotate={180} circle size="small" />}
       </div>
-    </Popover>
+    </Tooltip>
   );
 };

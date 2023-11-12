@@ -17,7 +17,7 @@ export const ContestsAllList = () => {
   
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     {
-      head: <TextHeadCell text={<T className="tt-ue tx-s">state</T>} />,
+      head: 'state',
       index: 'state',
       field: ({ record: contest }) => (
         <Field className="jk-row pad">

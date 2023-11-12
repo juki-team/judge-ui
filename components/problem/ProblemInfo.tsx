@@ -1,4 +1,4 @@
-import { ExclamationIcon, Popover, T } from 'components';
+import { ExclamationIcon, T, Tooltip } from 'components';
 import { PROBLEM_MODE, PROBLEM_STATUS, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames } from 'helpers';
 import React, { Children } from 'react';
@@ -30,7 +30,7 @@ export const ExtraProblemInfo = ({ settings, tags, author, status, horizontal = 
         <div>
           <T className="fw-bd tt-ce">tags</T>:&nbsp;
           {horizontal ? (
-            <Popover
+            <Tooltip
               content={
                 <div className="jk-row gap">
                   {tags.map(tag => <span className="jk-tag gray-6" key={tag}>{tag}</span>)}
@@ -39,7 +39,7 @@ export const ExtraProblemInfo = ({ settings, tags, author, status, horizontal = 
               placement="bottom"
             >
               <div><span className="count-tags">{tags.length}</span></div>
-            </Popover>
+            </Tooltip>
           ) : (
             Children.toArray(tags.filter(tag => !!tag.trim()).map(tag => (
               <><span className="jk-tag gray-6">{tag}</span>&nbsp;</>
@@ -97,12 +97,12 @@ export const ProblemModeInfo = ({ settings, expand }: { settings: ProblemSetting
       <div className="jk-row nowrap">
         <T className="fw-bd tt-ce">mode</T>:&nbsp;<T className="tt-ce">{PROBLEM_MODE[settings?.mode]?.label}</T>
         {settings?.mode === ProblemMode.SUBTASK && (
-          <Popover
+          <Tooltip
             content={<div className="">{subTasks}</div>}
             placement="bottom"
           >
             <div className="jk-row">&nbsp;<ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
-          </Popover>
+          </Tooltip>
         )}
       </div>
     );
@@ -156,7 +156,7 @@ export const ProblemTimeLimitInfo = ({ settings, expand }: { settings: ProblemSe
       &nbsp;{(settings?.timeLimit / 1000).toFixed(1)}
       &nbsp;<T>seconds</T>
       {!!limitsLanguages.length && (
-        <Popover
+        <Tooltip
           content={
             <div>
               <div className="jk-row nowrap left">
@@ -171,11 +171,10 @@ export const ProblemTimeLimitInfo = ({ settings, expand }: { settings: ProblemSe
               ))}
             </div>
           }
-          triggerOn={[ 'hover', 'click' ]}
           placement="bottom"
         >
           <div className="jk-row">&nbsp;<ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
-        </Popover>
+        </Tooltip>
       )}
     </div>
   );
@@ -218,7 +217,7 @@ export const ProblemMemoryLimitInfo = ({ settings, expand }: { settings: Problem
       &nbsp;{(settings?.memoryLimit / 1000).toFixed(1)}
       &nbsp;<T>MB</T>
       {!!limitsLanguages.length && (
-        <Popover
+        <Tooltip
           content={
             <div>
               <div className="jk-row nowrap left">
@@ -233,11 +232,10 @@ export const ProblemMemoryLimitInfo = ({ settings, expand }: { settings: Problem
               ))}
             </div>
           }
-          triggerOn={[ 'hover', 'click' ]}
           placement="bottom"
         >
           <div className="jk-row">&nbsp;<ExclamationIcon filledCircle className="cr-py" rotate={180} /></div>
-        </Popover>
+        </Tooltip>
       )}
     </div>
   );
