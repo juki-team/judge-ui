@@ -55,7 +55,7 @@ function Admin() {
     : (myCompany?.success ? myCompany.content : undefined);
   
   useEffect(() => {
-    if (!companyKey) {
+    if (!companyKey && canHandleSettings && companies[0]) {
       setSearchParams({ name: QueryParam.COMPANY, value: companies[0]?.key });
     }
   }, [ companyKey, companies ]);
@@ -69,6 +69,7 @@ function Admin() {
     && !canHandleSettings) {
     return <Custom404 />;
   }
+  
   const tabs: TabsType<AdminTab> = {};
   if (canCreateUser || canHandleUsers) {
     tabs[AdminTab.USERS_MANAGEMENT] = {

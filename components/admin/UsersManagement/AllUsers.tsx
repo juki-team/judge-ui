@@ -8,7 +8,6 @@ import {
   ResetPassword,
   Select,
   T,
-  TextHeadCell,
   useNotification,
   UserChip,
 } from 'components';
@@ -88,7 +87,8 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
       ),
       sort: { compareFn: () => (rowA, rowB) => rowA.nickname.localeCompare(rowB.nickname) },
       filter: {
-        type: 'text', callbackFn: ({ text }) => ({ givenName, familyName, nickname, email }) => {
+        type: 'text',
+        callbackFn: ({ text }) => ({ givenName, familyName, nickname, email }) => {
           const regExp = new RegExp(text, 'gi');
           return !!(nickname?.match?.(regExp))
             || !!(givenName?.match?.(regExp))

@@ -38,7 +38,6 @@ const processSearchParams = (searchParams: URLSearchParams, appendSearchParamsAc
       }
     } else if (searchParamsActions.action === 'setSearchParams') {
       for (const { name, value } of searchParamsActions.props) {
-        console.log({ value });
         newSearchParams.delete(name);
         let values: string[] = [];
         if (typeof value === 'string') {
