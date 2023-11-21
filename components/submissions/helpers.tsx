@@ -1,3 +1,5 @@
+'use client'
+
 import {
   DateField,
   Field,
@@ -27,7 +29,7 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
           <div className="link">{userNickname}</div>
         </UserNicknameLink>
       </>}
-      label={<T className="tt-se">user nickname</T>}
+      label="user nickname"
     />
   ),
   sort: true,
@@ -56,7 +58,7 @@ export const submissionContestColumn = (props?: SubmissionContestColumnProps): D
           </div>
         </Link>
       ) : <div className="jk-row">-</div>}
-      label={<T className="tt-se">contest</T>}
+      label="contest"
     />
   ),
   sort: true,
@@ -73,7 +75,7 @@ type SubmissionProblemColumnProps = {
 export const submissionProblemColumn = (props?: SubmissionProblemColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: () => (
     <TextHeadCell
-      text={props?.onlyProblem ? <T>problem</T> : <><T>problem</T> / <T className="tt-se">contest</T></>}
+      text={props?.onlyProblem ? 'problem' : 'problem / contest'}
     />
   ),
   index: 'problemJudgeKeys',
@@ -117,9 +119,7 @@ export const submissionProblemColumn = (props?: SubmissionProblemColumnProps): D
           </div>
         </Link>
       )}
-      label={props?.onlyProblem
-        ? <T className="tt-se">problem</T>
-        : <><T className="tt-se">problem</T> / <T className="tt-se">contest</T></>}
+      label={props?.onlyProblem ? 'problem' : 'problem / contest'}
     />
   ),
   sort: true,
@@ -153,6 +153,16 @@ export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDT
   minWidth: 140,
 });
 
+const TT = ({ children }: { children: string }) => <T className="tt-se">{children}</T>;
+
+const options = Object.values(PROBLEM_VERDICT)
+  .map(({ value, label }) => {
+    return {
+      label: <TT>{label}</TT>,
+      value,
+    }
+  });
+
 export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: 'verdict',
   index: 'verdict',
@@ -165,9 +175,7 @@ export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionRespo
               <ListenerVerdict verdict={verdict} points={points} status={status} submitId={submitId} />
             </SubmissionInfo>
           }
-          label={
-            <T className="tt-se">verdict</T>
-          }
+          label="verdict"
         />
       </div>
     </Field>
@@ -175,10 +183,12 @@ export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionRespo
   sort: true,
   filter: {
     type: 'select',
-    options: Object.values(PROBLEM_VERDICT)
-      .map(({ value, label }) => (
-        { label: <T className="tt-se">{label}</T>, value }
-      )),
+    options,
+    // options: [],
+    // options: Object.values(PROBLEM_VERDICT)
+    //   .map(({ value, label }) => (
+    //     { label: <T className="tt-se">{label}</T>, value }
+    //   )),
   },
   cardPosition: 'bottom',
   minWidth: 220,
@@ -206,10 +216,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
   head: 'date',
   index: 'timestamp',
   field: ({ record: { timestamp }, isCard }) => (
-    <DateField
-      className="jk-row" date={new Date(timestamp)} label={<T className="tt-se">date</T>}
-      twoLines={!isCard}
-    />
+    <DateField className="jk-row" date={new Date(timestamp)} label="date" twoLines={!isCard} />
   ),
   sort: true,
   filter: {
@@ -230,20 +237,20 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDT
           <Field className="jk-row gap nowrap cr-g1">
             <TextField
               text={<div className="jk-col extend">{PROGRAMMING_LANGUAGE[language]?.label || language}</div>}
-              label={<T className="tt-se">language</T>}
+              label="language"
             />
             <TextField
               text={<Time timeUsed={timeUsed} verdict={verdict} />}
-              label={<T className="tt-se">time used</T>}
+              label="time used"
             />
             <TextField
               text={<Memory memoryUsed={memoryUsed} verdict={verdict} />}
-              label={<T className="tt-se">memory used</T>}
+              label="memory used"
             />
           </Field>
         </SubmissionInfo>
       ) :
-      <TextField text={<Time timeUsed={timeUsed} verdict={verdict} />} label={<T>time used</T>} />
+      <TextField text={<Time timeUsed={timeUsed} verdict={verdict} />} label="time used" />
   ),
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer
@@ -255,7 +262,7 @@ export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponse
   index: 'memoryUsed',
   field: ({ record: { memoryUsed, verdict }, isCard }) => (
     isCard ? null :
-      <TextField text={<Memory memoryUsed={memoryUsed} verdict={verdict} />} label={<T>memory used</T>} />
+      <TextField text={<Memory memoryUsed={memoryUsed} verdict={verdict} />} label="memory used" />
   ),
   sort: true,
   // filter: { type: 'text-auto' }, // TODO filter by integer

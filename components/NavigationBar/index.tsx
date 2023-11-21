@@ -1,6 +1,8 @@
 import {
   AssignmentIcon,
   CupIcon,
+  JukiCouchLogoHorImage,
+  JukiUtilsLogoHorImage,
   LeaderboardIcon,
   LinkSectionAdmin,
   LinkSectionContest,
@@ -141,6 +143,23 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           onSeeMyProfile={() => push(ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE))}
           menu={menu}
           profileSelected={pathname.includes('/profile/')}
+          moreApps={
+            <>
+              <a href="https://utils.juki.app" target="_blank">
+                <div className="jk-row space-between">
+                  <div style={{ width: 95 }}><JukiUtilsLogoHorImage /></div>
+                  <div className="lnik">utils.juki.app</div>
+                </div>
+              </a>
+              <div className="jk-row gap">
+                <div style={{ width: 95 }}><JukiCouchLogoHorImage /></div>
+                <div className="jk-row nowrap" style={{ alignItems: 'baseline' }}>
+                  <T className="tt-se">developing</T>&nbsp;
+                  <div className="dot-flashing" />
+                </div>
+              </div>
+            </>
+          }
         >
           {children}
         </MainMenu>

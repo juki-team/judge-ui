@@ -9,13 +9,14 @@
     "pull": "yarn add @juki-team/commons @juki-team/base-ui"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.0.503",
+    "@juki-team/base-ui": "^0.1.4",
     "@juki-team/commons": "^0.0.357",
     "@vercel/analytics": "^0.1.6",
     "deep-object-diff": "^1.1.7",
     "i18next": "^22.4.5",
     "net": "^1.0.2",
     "next": "^13.2.1",
+    "next-compose-plugins": "^2.2.1",
     "next-pwa": "^5.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

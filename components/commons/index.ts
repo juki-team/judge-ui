@@ -163,7 +163,6 @@ export {
   ViewHeadlineIcon,
   ViewModuleIcon,
   VisibilityIcon,
-  WelcomeModal as WelcomeModalComponent,
   useNotification,
 } from '@juki-team/base-ui';
 
