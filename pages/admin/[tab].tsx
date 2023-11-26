@@ -128,8 +128,14 @@ function Admin() {
   }
   
   const breadcrumbs: ReactNode[] = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)} className="link"><T className="tt-se">admin</T></Link>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <Link
+      href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)}
+      className="link"
+      key="admin"
+    >
+      <T className="tt-se">admin</T>
+    </Link>,
     renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.header, { selectedTabKey: routeParams.tab as AdminTab }),
   ];
   

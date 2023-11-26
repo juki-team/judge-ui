@@ -1,4 +1,4 @@
-import { ButtonLoader, DataViewer, DateLiteral, Field, T, TextHeadCell } from 'components';
+import { ButtonLoader, DataViewer, DateLiteral, Field, T } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, toFilterUrl } from 'helpers';
 import { useDataViewerRequester, useNotification } from 'hooks';
@@ -121,7 +121,7 @@ export const VirtualUsersTable = () => {
         cardPosition: 'bottom',
       },
     ] as DataViewerHeadersType<VirtualUserResponseDTO>[];
-  }, [ reload ]);
+  }, [ notifyResponse, reload ]);
   
   return (
     <>

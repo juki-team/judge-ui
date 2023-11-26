@@ -27,7 +27,7 @@ export function FilesManagement() {
   };
   useEffect(() => {
     (() => loadPath())();
-  }, [ path ]);
+  }, [ loadPath, path ]);
   useEffect(() => {
     (async () => {
       if (filePath) {

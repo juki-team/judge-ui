@@ -1,13 +1,4 @@
-import {
-  ButtonLoader,
-  DataViewer,
-  Field,
-  PlayCircleIcon,
-  Select,
-  SettingsAlertIcon,
-  T,
-  TextHeadCell,
-} from 'components';
+import { ButtonLoader, DataViewer, Field, PlayCircleIcon, Select, SettingsAlertIcon, T } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
@@ -146,7 +137,7 @@ export const ECSTaskDefinitionsManagement = ({ company }: { company: CompanyResp
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.family.localeCompare(rowA.family) },
     },
-  ], []);
+  ], [ company.key ]);
   
   const responseData: TaskDefinitionResponseDTO[] = (response?.success ? response?.contents : []);
   

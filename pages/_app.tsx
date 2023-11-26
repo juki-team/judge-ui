@@ -15,7 +15,7 @@ import { SWRConfig } from 'swr';
 import { AppProps, FC, ImageCmpProps } from 'types';
 import { useRouter } from '../hooks/useRouter';
 import { useSearchParams } from '../hooks/useSearchParams';
-import i18n from '../i18n';
+import i18nInstance from '../i18n';
 import './styles.scss';
 
 const MyComponent = dynamic(() => import('./md-print'), { ssr: false });
@@ -85,7 +85,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
         isLoadingRoute,
       }}
       socketServiceUrl={JUKI_SERVICE_BASE_URL}
-      i18n={i18n}
+      i18n={i18nInstance}
     >
       <CustomHead />
       <UserProvider>

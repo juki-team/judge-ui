@@ -24,7 +24,7 @@ const MarkdownSharedView = () => {
         .then(data => setSourceContent(data))
         .catch(error => consoleWarn(error));
     }
-  }, [ sourceUrl ]);
+  }, [ sourceUrl, theme ]);
   
   return (
     <div className="jk-pad-md bc-we">

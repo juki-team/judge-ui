@@ -89,7 +89,7 @@ export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO })
       cardPosition: 'center',
       minWidth: 400,
     },
-  ], []);
+  ], [ notifyResponse, reload ]);
   
   const data: TaskResponseDTO[] = (response?.success ? response?.contents : []);
   
@@ -119,6 +119,7 @@ export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO })
             reload();
           }}
           style={{ marginLeft: 'var(--pad-xt)' }}
+          key="adjust tasks"
         >
           <T>adjust tasks</T>
         </ButtonLoader>,

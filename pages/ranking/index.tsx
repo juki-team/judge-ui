@@ -133,8 +133,8 @@ function Ranking() {
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <T className="tt-se">ranking</T>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <T className="tt-se" key="ranking">ranking</T>,
   ];
   
   return (

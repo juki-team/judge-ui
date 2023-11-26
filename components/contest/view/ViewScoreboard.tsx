@@ -290,13 +290,14 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
             </ButtonLoader>
           </div>
         ),
-        <div className="jk-row">
+        <div className="jk-row" key="download">
           <DownloadButton data={data} contest={contest} disabled={isLoading} />
         </div>,
         <Tooltip
           content={fullscreen
             ? <T className="ws-np">exit full screen</T>
             : <T className="ws-np">go to fullscreen</T>}
+          key="fullscreen"
         >
           <div className="jk-row">
             {fullscreen

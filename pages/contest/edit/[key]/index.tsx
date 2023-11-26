@@ -52,8 +52,8 @@ function ContestEdit() {
   const { contestKey } = useContestRouter();
   
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LastLink lastLinkKey={LastLinkKey.CONTESTS}><T className="tt-se">contests</T></LastLink>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
   ];
   
   return (

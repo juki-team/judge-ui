@@ -205,8 +205,8 @@ function Problems() {
   ], [ canCreateProblem, tags, judge ]);
   
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <T className="tt-se">problems</T>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <T className="tt-se" key="problems">problems</T>,
   ];
   
   const extraNodes = [];

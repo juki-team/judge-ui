@@ -52,6 +52,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [ withTimeRestriction, withTime ]);
   const contestStartDate = new Date(contest.settings.startTimestamp);
   const contestEndDate = new Date(contest.settings.endTimestamp);
+  // eslint-disable-next-line react/display-name
   const renderRowProblem = (problem: Problem): RowSortableItemContentType => (props) => {
     
     const { previewRef, dragComponent, isDragging, index } = props;

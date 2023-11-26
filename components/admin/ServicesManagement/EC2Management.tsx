@@ -53,7 +53,7 @@ export const EC2Management = () => {
                   <div className="jk-row"><T>launch time</T></div>
                 </div>
                 {data.content.Reservations?.map((reservation) => reservation.Instances).flat().map((instance) => (
-                  <div className="jk-row block extend jk-table-inline-row">
+                  <div className="jk-row block extend jk-table-inline-row" key={instance.InstanceId}>
                     <div className="jk-row fw-bd">
                       {instance.Tags.find((tag) => tag.Key === 'Name')?.Value}
                     </div>

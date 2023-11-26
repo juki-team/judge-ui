@@ -3,10 +3,10 @@ import { useEffect, useJukiRouter } from 'hooks';
 import { ContestsTab } from 'types';
 
 function View() {
-  const { routerReplace } = useJukiRouter();
+  const { replaceRoute } = useJukiRouter();
   useEffect(() => {
-    void routerReplace(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
-  }, [ routerReplace ]);
+    void replaceRoute(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
+  }, [ replaceRoute ]);
   return null;
 }
 

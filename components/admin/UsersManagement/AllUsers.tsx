@@ -186,6 +186,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
           <Link
             href="https://oscargauss.notion.site/Permissions-V2-6487a360cea1482c963d281f6f6317d4"
             target="_blank"
+            key="user roles"
           >
             <Button icon={<DemographyIcon />} size="small">
               <div className="jk-row gap"><T>user roles</T><OpenInNewIcon size="small" /></div>

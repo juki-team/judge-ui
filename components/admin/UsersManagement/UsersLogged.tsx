@@ -8,7 +8,6 @@ import {
   InputToggle,
   T,
   TextField,
-  TextHeadCell,
   UserChip,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
@@ -183,7 +182,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
         refreshRef={refreshRef}
         extraNodes={
           [
-            <div className="jk-row gap">
+            <div className="jk-row gap" key="actions">
               <ButtonLoader
                 size="small"
                 icon={<CloseIcon circle />}
