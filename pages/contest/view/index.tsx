@@ -1,14 +1,12 @@
 import { ROUTES } from 'config/constants';
-import { useEffect, useRouter } from 'hooks';
+import { useEffect, useJukiRouter } from 'hooks';
 import { ContestsTab } from 'types';
 
 function View() {
-  const { query, replace, isReady } = useRouter();
+  const { routeParams, routerReplace } = useJukiRouter();
   useEffect(() => {
-    if (isReady) {
-      void replace(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
-    }
-  }, [ replace, query, isReady ]);
+    void routerReplace(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
+  }, [ routerReplace, routeParams ]);
   return null;
 }
 

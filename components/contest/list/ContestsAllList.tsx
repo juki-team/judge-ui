@@ -1,7 +1,7 @@
-import { Field, PagedDataViewer, T, TextHeadCell } from 'components';
+import { Field, PagedDataViewer, T } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useRouter } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, QueryParam } from 'types';
 import { contestantsColumn, contestEndDateColumn, contestNameColumn, contestStartDateColumn } from '../commons';
@@ -52,7 +52,8 @@ export const ContestsAllList = () => {
     contestEndDateColumn(),
     contestantsColumn(),
   ], []);
-  const { push } = useRouter();
+  
+  const { pushRoute } = useJukiRouter();
   
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
@@ -65,7 +66,7 @@ export const ContestsAllList = () => {
       refreshInterval={60000}
       cards={{ width: 320, expanded: true }}
       onRecordClick={async ({ data, index }) => {
-        await push({ pathname: ROUTES.CONTESTS.VIEW(data[index].key, ContestTab.OVERVIEW) });
+        await pushRoute({ pathname: ROUTES.CONTESTS.VIEW(data[index].key, ContestTab.OVERVIEW) });
       }}
     />
   );

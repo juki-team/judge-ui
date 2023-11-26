@@ -8,11 +8,9 @@ import {
   FullscreenIcon,
   GearsIcon,
   Image,
-  Popover,
   Select,
   SnowflakeIcon,
   T,
-  TextHeadCell,
   Tooltip,
   UserNicknameLink,
 } from 'components';
@@ -25,7 +23,7 @@ import {
   downloadXlsxAsFile,
   getProblemJudgeKey,
 } from 'helpers';
-import { useDataViewerRequester, useJukiUI, useJukiUser, useNotification, useRouter, useT } from 'hooks';
+import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification, useT } from 'hooks';
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -109,15 +107,14 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
 export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { user, company: { imageUrl, name } } = useJukiUser();
-  
   const { notifyResponse } = useNotification();
-  const { query: { key: contestKey, tab: contestTab, index: problemIndex, ...query }, push } = useRouter();
+  const { searchParams, routeParams: { key: contestKey, tab: contestTab, index: problemIndex } } = useJukiRouter();
   const { viewPortSize } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       {
-        head: <TextHeadCell text={<T>#</T>} />,
+        head: '#',
         index: 'position',
         field: ({ record: { position } }) => (
           <Field className="jk-row">{position}</Field>
@@ -126,7 +123,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         sticky: true,
       },
       {
-        head: <TextHeadCell text={<T>nickname</T>} />,
+        head: 'nickname',
         index: 'nickname',
         field: ({ record: { userNickname, userImageUrl } }) => (
           <Field className={classNames('jk-row center gap', { 'own': userNickname === user.nickname })}>
@@ -147,7 +144,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
         sticky: viewPortSize !== 'sm',
       },
       {
-        head: <TextHeadCell text={<T>points</T>} />,
+        head: 'points',
         index: 'points',
         field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
@@ -164,25 +161,25 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       for (const problem of Object.values(contest?.problems)) {
         base.push({
           head: (
-            <Popover
-              content={<div className="jk-row nowrap gap">
-                <div className="fw-bd">{problem.index}</div>
-                <div className="ws-np">{problem.name}</div>
-              </div>}
-              showPopperArrow
-              marginOfChildren={0}
+            <Tooltip
+              content={
+                <div className="jk-row nowrap gap">
+                  <div className="fw-bd">{problem.index}</div>
+                  <div className="ws-np">{problem.name}</div>
+                </div>
+              }
             >
               <div className="jk-col extend fw-bd">
                 <Link
                   href={{
                     pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index),
-                    query,
+                    query: searchParams.toString(),
                   }}
                 >
                   {problem.index}
                 </Link>
               </div>
-            </Popover>
+            </Tooltip>
           ),
           index: problem.index,
           field: ({ record: { problems }, isCard }) => {
@@ -190,7 +187,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
             return (
               <Field className="jk-row center nowrap">
                 {(problemData?.success || !!problemData?.points) && (
-                  <Popover
+                  <Tooltip
                     content={
                       <div className="ws-np">
                         {problemData?.success ? problemData.points : <>{problemData.points}/{problem.points}</>}
@@ -198,13 +195,11 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
                         <T>{problem?.points === 1 ? 'point' : 'points'}</T>
                       </div>
                     }
-                    popoverClassName="popover-padding-xt"
-                    showPopperArrow
                   >
                     <div style={{ color: problem.color }}>
                       <BalloonIcon percent={(problemData.points / problem.points) * 100} />
                     </div>
-                  </Popover>
+                  </Tooltip>
                 )}
                 <div className="jk-row nowrap">
                   <div className="tx-xs">{problemData?.attempts || '-'}</div>
@@ -223,7 +218,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       }
     }
     return base;
-  }, [ query, user.nickname, contest, viewPortSize ]);
+  }, [ searchParams, user.nickname, contest, viewPortSize ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {

@@ -7,7 +7,7 @@ import {
   EditIcon,
   ExclamationIcon,
   FetcherLayer,
-  LinkProblems,
+  LastLink,
   LoadingIcon,
   Popover,
   ProblemCodeEditor,
@@ -27,7 +27,7 @@ import {
   getSimpleProblemJudgeKey,
   renderReactNodeOrFunctionP1,
 } from 'helpers';
-import { useJukiRouter, useJukiUI, useJukiUser, useNotification, useRouter, useTrackLastPath } from 'hooks';
+import { useJukiRouter, useJukiUI, useJukiUser, useNotification, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import {
   ContentResponseType,
@@ -47,29 +47,29 @@ import Custom404 from '../../../../404';
 const ProblemView = (): ReactNode => {
   
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
-  const { query: { key, tab: problemTab, ...query }, push, isReady } = useRouter();
+  const { searchParams, routeParams: { key: problemKey, tab: problemTab }, pushRoute } = useJukiRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
-  const { setSearchParams } = useJukiRouter();
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
     <Link
       href={{
-        pathname: ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT),
-        query,
+        pathname: ROUTES.PROBLEMS.VIEW(problemKey as string, ProblemTab.STATEMENT),
+        search: searchParams.toString(),
       }}
       className="link"
+      key="key"
     >
-      <div className="ws-np">{key}</div>
+      <div className="ws-np">{problemKey}</div>
     </Link>,
-    <T className="ws-np tt-ce">statement</T>,
+    <T className="ws-np tt-ce" key="statement">statement</T>,
   ];
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
-      url={isReady ? JUDGE_API_V1.PROBLEM.DATA(key as string) : null}
+      url={JUDGE_API_V1.PROBLEM.DATA(problemKey as string)}
       loadingView={
         <TwoContentSection>
           <div>
@@ -83,7 +83,7 @@ const ProblemView = (): ReactNode => {
                   maxWidth: 'calc(100vw - var(--pad-border) - var(--pad-border) - 64px - var(--left-vertical-menu-width))',
                 }}
               >
-                {key}
+                {problemKey}
               </h2>
             </div>
             <div className="pad-left-right">
@@ -127,9 +127,9 @@ const ProblemView = (): ReactNode => {
             <p>
               <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
             </p>
-            <LinkProblems>
+            <LastLink lastLinkKey={LastLinkKey.PROBLEMS}>
               <div className="jk-row"><AssignmentIcon /><T className="tt-se">go to problem list</T></div>
-            </LinkProblems>
+            </LastLink>
           </Custom404>
         </TwoContentSection>
       }
@@ -173,24 +173,28 @@ const ProblemView = (): ReactNode => {
           body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} /></div>,
         };
         const breadcrumbs: ReactNode[] = [
-          <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-          <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
+          <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+          <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
           <Link
             href={{
               pathname: ROUTES.PROBLEMS.VIEW(
                 getSimpleProblemJudgeKey(problem.judge, problem.key, companyKey === JUKI_APP_COMPANY_KEY),
                 ProblemTab.STATEMENT,
               ),
-              query,
+              search: searchParams.toString(),
             }}
             className="link"
+            key="problem.name"
           >
             <div className="ws-np">{problem.name}</div>
           </Link>,
           renderReactNodeOrFunctionP1(tabs[problemTab as string]?.header, { selectedTabKey: problemTab as ProblemTab }),
         ];
         
-        const pushTab = (tabKey: ProblemTab) => setSearchParams({ name: 'tab', value: tabKey });
+        const pushTab = (tabKey: ProblemTab) => pushRoute({
+          pathname: ROUTES.PROBLEMS.VIEW(problemKey as string, tabKey),
+          searchParams,
+        });
         
         const extraNodes = [];
         if (data?.content?.user?.isEditor && (data?.content?.judge === Judge.JUKI_JUDGE || data?.content?.judge === Judge.CUSTOMER)) {
@@ -200,7 +204,7 @@ const ProblemView = (): ReactNode => {
               icon={<EditIcon />}
               onClick={async setLoaderStatus => {
                 setLoaderStatus(Status.LOADING);
-                await push(ROUTES.PROBLEMS.EDIT('' + key));
+                await pushRoute(ROUTES.PROBLEMS.EDIT(problemKey as string));
                 setLoaderStatus(Status.SUCCESS);
               }}
               responsiveMobile

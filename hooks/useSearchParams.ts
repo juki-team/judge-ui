@@ -1,6 +1,6 @@
 import { AppendSearchParamsType, DeleteSearchParamsType, SetSearchParamsType } from '@juki-team/base-ui';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from './useRouter';
 
 const cloneURLSearchParams = (urlSearchParams: URLSearchParams) => {
   return new URLSearchParams(urlSearchParams.toString());
@@ -57,11 +57,17 @@ const processSearchParams = (searchParams: URLSearchParams, appendSearchParamsAc
 
 export const useSearchParams = () => {
   
-  const { query, push, replace } = useRouter();
+  const { asPath, query, push, replace, route, isReady, ...rest } = useRouter();
+  const pathnameRef = useRef(asPath);
+  pathnameRef.current = asPath.split('?')[0];
   
   const searchParams = useMemo(() => {
+    const routeParamsKeys = route.split('/').filter(route => route === `[${route.substring(1, route.length - 1)}]`).map(route => route.substring(1, route.length - 1));
     const urlSearchParams = new URLSearchParams('');
     for (const [ key, values ] of Object.entries(query)) {
+      if (routeParamsKeys.includes(key)) {
+        continue;
+      }
       if (typeof values === 'string') {
         urlSearchParams.append(key, values);
       } else if (Array.isArray(values)) {
@@ -71,7 +77,7 @@ export const useSearchParams = () => {
       }
     }
     return urlSearchParams;
-  }, [ query ]);
+  }, [ query, route ]);
   
   const [ updateTrigger, setUpdateTrigger ] = useState(Date.now());
   const searchParamsRef = useRef(searchParams);
@@ -82,9 +88,9 @@ export const useSearchParams = () => {
     newSearchParamsSorted.sort();
     searchParamsSorted.sort();
     if (newSearchParamsSorted.toString() !== searchParamsSorted.toString()) {
-      await push({ query: newSearchParams.toString() });
+      await push({ pathname: pathnameRef.current, query: newSearchParams.toString() });
     }
-  }, []);
+  }, [ push ]);
   
   const replaceSearchParams = useCallback(async (newSearchParams: URLSearchParams) => {
     const newSearchParamsSorted = cloneURLSearchParams(newSearchParams);
@@ -92,9 +98,9 @@ export const useSearchParams = () => {
     newSearchParamsSorted.sort();
     searchParamsSorted.sort();
     if (newSearchParamsSorted.toString() !== searchParamsSorted.toString()) {
-      await replace({ query: newSearchParams.toString() });
+      await replace({ pathname: pathnameRef.current, query: newSearchParams.toString() });
     }
-  }, []);
+  }, [ replace ]);
   
   const appendSearchParamsActionsRef = useRef<AppendSearchParamsActions[]>([]);
   

@@ -5,7 +5,7 @@ import {
   CloseIcon,
   CodeEditor,
   Input,
-  LinkContests,
+  LastLink,
   SaveIcon,
   Select,
   T,
@@ -17,7 +17,7 @@ import {
 import { COURSE_DEFAULT, COURSE_STATUS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiUI, useNotification, useRouter } from 'hooks';
+import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -29,6 +29,7 @@ import {
   CourseTab,
   EditCreateCourseType,
   HTTPMethod,
+  LastLinkKey,
   ProgrammingLanguage,
   Status,
 } from 'types';
@@ -68,7 +69,10 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
       );
       lastContest.current = initialCourse;
     }
-  }, [ JSON.stringify(initialCourse) ]);
+  }, [ addWarningNotification, editing, JSON.stringify(initialCourse) ]);
+  
+  const { pushRoute, searchParams } = useJukiRouter();
+  
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const response = cleanRequest<ContentResponseType<string>>(
@@ -79,12 +83,10 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
     );
     if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
-      await push(ROUTES.CONTESTS.VIEW(course.key, ContestTab.OVERVIEW));
+      await pushRoute(ROUTES.CONTESTS.VIEW(course.key, ContestTab.OVERVIEW));
       setLoaderStatus(Status.SUCCESS);
     }
   };
-  
-  const { push, query } = useRouter();
   
   const tabHeaders = {
     [CourseTab.OVERVIEW]: {
@@ -167,10 +169,12 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
   };
   
   const [ contestTab, setContestTab ] = useState<CourseTab>(CourseTab.OVERVIEW);
+  
   const extraNodes = [
     <CheckUnsavedChanges
-      onClickContinue={() => push(editing ? ROUTES.COURSES.VIEW(course.key, CourseTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
+      onClickContinue={() => pushRoute(editing ? ROUTES.COURSES.VIEW(course.key, CourseTab.OVERVIEW) : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
       value={course}
+      key="cancel"
     >
       <ButtonLoader
         type="light"
@@ -187,23 +191,29 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
       size="small"
       onClick={onSave}
       icon={<SaveIcon />}
+      key="update/create"
     >
       {viewPortSize !== 'sm' && (editing ? <T>update</T> : <T>create</T>)}
     </ButtonLoader>,
   ];
   
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LinkContests><T className="tt-se">courses</T></LinkContests>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="courses"><T className="tt-se">courses</T></LastLink>,
   ];
   
   if (editing) {
     breadcrumbs.push(
-      <Link href={{ pathname: ROUTES.CONTESTS.VIEW(course.key, ContestTab.OVERVIEW), query }} className="link">
+      <Link
+        href={{ pathname: ROUTES.CONTESTS.VIEW(course.key, ContestTab.OVERVIEW), search: searchParams.toString() }}
+        className="link"
+        key="course.title"
+      >
         <div>{course.title}</div>
       </Link>,
     );
   }
+  
   breadcrumbs.push(tabHeaders[contestTab]?.header);
   
   return (

@@ -2,10 +2,11 @@ import {
   Breadcrumbs,
   ButtonLoader,
   contestStateMap,
-  CupIcon, CustomHead,
+  CupIcon,
+  CustomHead,
   EditIcon,
   FetcherLayer,
-  LinkContests,
+  LastLink,
   LoadingIcon,
   NavigateBeforeIcon,
   NavigateNextIcon,
@@ -19,7 +20,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useContestRouter, useJukiUI, useRouter, useTrackLastPath } from 'hooks';
+import { useContestRouter, useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status, TabsType } from 'types';
@@ -34,16 +35,17 @@ import { ViewScoreboard } from './ViewScoreboard';
 export function ContestView() {
   
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
-  const { push } = useRouter();
-  const { pushTab, contestKey, problemIndex, contestTab, query } = useContestRouter();
+  const { pushRoute, searchParams } = useJukiRouter();
+  const { pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
   const { viewPortSize } = useJukiUI();
   
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LinkContests><T className="tt-se">contests</T></LinkContests>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
     <Link
-      href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.OVERVIEW), query }}
+      href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.OVERVIEW), query: searchParams.toString() }}
       className="link"
+      key="contestKey"
     >
       <div className="ws-np">{contestKey}</div>
     </Link>,
@@ -51,7 +53,7 @@ export function ContestView() {
   
   const breadcrumbsLoading = [
     ...breadcrumbs,
-    <T className="tt-ce ws-np">overview</T>,
+    <T className="tt-ce ws-np" key="overview">overview</T>,
   ];
   
   return (
@@ -112,9 +114,9 @@ export function ContestView() {
             <p>
               <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
             </p>
-            <LinkContests>
+            <LastLink lastLinkKey={LastLinkKey.CONTESTS}>
               <div className="jk-row"><CupIcon /><T className="tt-se">go to contest list</T></div>
-            </LinkContests>
+            </LastLink>
           </Custom404>
         </TwoContentSection>
       }
@@ -158,9 +160,9 @@ export function ContestView() {
                       className="clickable jk-br-ie"
                       onClick={async () => {
                         const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
-                        await push({
+                        await pushRoute({
                           pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, previousProblemIndex),
-                          query,
+                          searchParams,
                         });
                       }}
                     />
@@ -170,9 +172,9 @@ export function ContestView() {
                       className="clickable jk-br-ie"
                       onClick={async () => {
                         const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
-                        await push({
+                        await pushRoute({
                           pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, nextProblemIndex),
-                          query,
+                          searchParams,
                         });
                       }}
                     />
@@ -241,7 +243,7 @@ export function ContestView() {
               size="small"
               onClick={async setLoaderStatus => {
                 setLoaderStatus(Status.LOADING);
-                await push(ROUTES.CONTESTS.EDIT(contestKey));
+                await pushRoute(ROUTES.CONTESTS.EDIT(contestKey));
                 setLoaderStatus(Status.SUCCESS);
               }}
               icon={<EditIcon />}
@@ -253,11 +255,12 @@ export function ContestView() {
         }
         
         const breadcrumbs: ReactNode[] = [
-          <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-          <LinkContests><T className="tt-se">contests</T></LinkContests>,
+          <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+          <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
           <Link
-            href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }}
+            href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query: searchParams.toString() }}
             className="link"
+            key="contest.name"
           >
             <div className="ws-np">{contest.name}</div>
           </Link>,
@@ -265,7 +268,10 @@ export function ContestView() {
         if (contestTab === ContestTab.PROBLEM) {
           breadcrumbs.push(
             <Link
-              href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.PROBLEMS), query }}
+              href={{
+                pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.PROBLEMS),
+                query: searchParams.toString(),
+              }}
               className="link"
             >
               <T className="tt-se">problems</T>

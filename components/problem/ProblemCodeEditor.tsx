@@ -1,16 +1,7 @@
 import { ButtonLoader, SpectatorInformation, T, UserCodeEditor } from 'components';
 import { JUDGE_API_V1, PAGE_SIZE_OPTIONS, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey } from 'helpers';
-import {
-  useContestRouter,
-  useFetcher,
-  useJukiRouter,
-  useJukiUser,
-  useNotification,
-  useRouter,
-  useSWR,
-  useTask,
-} from 'hooks';
+import { useContestRouter, useFetcher, useJukiRouter, useJukiUser, useNotification, useSWR, useTask } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   CodeEditorTestCasesType,
@@ -44,7 +35,7 @@ interface ProblemCodeEditorProps {
 
 export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) => {
   
-  const { appendSearchParams } = useJukiRouter();
+  const { appendSearchParams, searchParams, routeParams, pushRoute } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { mutate } = useSWR();
   const { listenSubmission } = useTask();
@@ -63,13 +54,10 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
     };
   });
   const { user: { nickname, isLogged } } = useJukiUser();
-  const { query, push } = useRouter();
   const { pushTab } = useContestRouter();
-  const {
-    [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.PAGE_SIZE_TABLE}`]: myStatusPageSize,
-    [`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`]: filter,
-  } = query;
-  const { key: problemKey, ...restQuery } = query;
+  const myStatusPageSize = searchParams.get(`${QueryParam.MY_STATUS_TABLE}.${QueryParam.PAGE_SIZE_TABLE}`);
+  const filter = searchParams.get(`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`);
+  const { key: problemKey, ...restQuery } = routeParams;
   const { data: virtualJudgeData } = useFetcher<ContentResponseType<JudgeResponseDTO>>(
     [ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) ? JUDGE_API_V1.JUDGE.GET(problem.judge) : null,
   );
@@ -180,7 +168,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
                 await pushTab(ContestTab.MY_SUBMISSIONS);
                 // TODO fix the filter Url param
                 await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(
-                  query.key as string,
+                  routeParams.key as string,
                   nickname,
                   1,
                   +(myStatusPageSize || PAGE_SIZE_OPTIONS[0]),
@@ -198,9 +186,9 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
                   '',
                   '',
                 ));
-                await push({
+                await pushRoute({
                   pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS),
-                  query: restQuery,
+                  searchParams,
                 });
               }
             }}

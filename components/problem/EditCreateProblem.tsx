@@ -3,7 +3,7 @@ import {
   ButtonLoader,
   CheckUnsavedChanges,
   CloseIcon,
-  LinkProblems,
+  LastLink,
   ProblemStatement,
   SaveIcon,
   T,
@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useJukiUI, useNotification, useRouter } from 'hooks';
+import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
 import Link from 'next/link';
 import React, { ReactNode, useState } from 'react';
 import { mutate } from 'swr';
@@ -22,6 +22,7 @@ import {
   EditCreateProblemType,
   HTTPMethod,
   Judge,
+  LastLinkKey,
   ProblemResponseDTO,
   ProblemTab,
   Status,
@@ -39,7 +40,7 @@ interface EditCreateProblemProps {
 export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblemProps) => {
   
   const editing = !!initialProblem;
-  const { query, push } = useRouter();
+  const { routeParams, pushRoute } = useJukiRouter();
   const [ problem, setProblem ] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
@@ -53,7 +54,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
     if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
       await mutate(JUDGE_API_V1.PROBLEM.PROBLEM(response.content.key));
-      await push(ROUTES.PROBLEMS.VIEW(response.content?.key, ProblemTab.STATEMENT));
+      await pushRoute(ROUTES.PROBLEMS.VIEW(response.content?.key, ProblemTab.STATEMENT));
       setLoaderStatus(Status.SUCCESS);
     }
   };
@@ -116,10 +117,11 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
   
   const extraNodes = [
     <CheckUnsavedChanges
-      onClickContinue={() => push(editing
+      onClickContinue={() => pushRoute(editing
         ? ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT)
         : ROUTES.PROBLEMS.LIST())}
       value={problem}
+      key="cancel"
     >
       <ButtonLoader
         size="small"
@@ -136,6 +138,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       onClick={onSave}
       responsiveMobile
       disabled={JSON.stringify(initialProblem) === JSON.stringify(problem)}
+      key="update/create"
     >
       {editing ? <T>update</T> : <T>create</T>}
     </ButtonLoader>,
@@ -144,11 +147,11 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
   const [ tab, setTab ] = useState<ProblemTab>(ProblemTab.STATEMENT);
   
   const breadcrumbs: ReactNode[] = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LinkProblems><T className="tt-se">problems</T></LinkProblems>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
     editing
       ? (
-        <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT), query }} className="link">
+        <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT) }} className="link">
           <div className="ws-np">{problem.name}</div>
         </Link>
       ) : <div className="ws-np">{problem.name}</div>,

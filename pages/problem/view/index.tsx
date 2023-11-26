@@ -1,13 +1,14 @@
 import { ROUTES } from 'config/constants';
-import { useEffect, useRouter } from 'hooks';
+import { useEffect, useJukiRouter } from 'hooks';
 
 function View() {
-  const { query, replace, isReady } = useRouter();
+  
+  const { replaceRoute } = useJukiRouter();
+  
   useEffect(() => {
-    if (isReady) {
-      void replace(ROUTES.PROBLEMS.LIST());
-    }
-  }, [ replace, query, isReady ]);
+    void replaceRoute(ROUTES.PROBLEMS.LIST());
+  }, [ replaceRoute ]);
+  
   return null;
 }
 

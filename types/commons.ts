@@ -15,7 +15,7 @@ export enum LastLinkKey {
   SECTION_SHEET = 'SECTION_SHEET',
 }
 
-export type LastLinkType = { [key in LastLinkKey]: { pathname: string, query: {} } };
+export type LastLinkType = { [key in LastLinkKey]: { pathname: string, searchParams: URLSearchParams } };
 
 export type { PropsWithChildren, ReactNode, FC } from 'react';
 export type { AppProps } from 'next/app';

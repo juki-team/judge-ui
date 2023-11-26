@@ -17,13 +17,13 @@ import {
 } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useDateFormat, useFetcher, useNotification, useRouter } from 'hooks';
+import { useDateFormat, useFetcher, useJukiRouter, useNotification } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
 
 export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { query } = useRouter();
+  const { routeParams } = useJukiRouter();
   const { dtf } = useDateFormat();
   const { isAdmin, isContestant, isJudge } = contest.user;
   const [ clarification, setClarification ] = useState<null | {
@@ -34,7 +34,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
     public: boolean,
   }>(null);
   const { notifyResponse } = useNotification();
-  const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
+  const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(routeParams.key as string));
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
@@ -144,7 +144,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                           <T className="tt-se">problem</T>&nbsp;
                           <span className="fw-bd">
                             {contest?.problems?.[clarification.problemJudgeKey]?.index || <><T>problem
-                                deleted</T> ({clarification.problemJudgeKey})</>}
+                              deleted</T> ({clarification.problemJudgeKey})</>}
                           </span>
                         </div>}
                     </div>
@@ -255,7 +255,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                     };
                   }
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    clarification.clarificationId ? JUDGE_API_V1.CONTEST.ANSWER_CLARIFICATION(query.key + '', clarification.clarificationId) : JUDGE_API_V1.CONTEST.CLARIFICATION(query.key as string),
+                    clarification.clarificationId ? JUDGE_API_V1.CONTEST.ANSWER_CLARIFICATION(routeParams.key + '', clarification.clarificationId) : JUDGE_API_V1.CONTEST.CLARIFICATION(routeParams.key as string),
                     {
                       method: clarification.clarificationId ? HTTPMethod.PUT : HTTPMethod.POST,
                       body: JSON.stringify(payload),

@@ -1,12 +1,12 @@
 import { EditCreateProblem, FetcherLayer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { useRouter } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import { ContentResponseType, ProblemResponseDTO } from 'types';
 import Custom404 from '../../../404';
 
 function ProblemEdit() {
   
-  const { query: { key } } = useRouter();
+  const { routeParams: { key } } = useJukiRouter();
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>

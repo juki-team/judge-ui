@@ -27,16 +27,7 @@ import {
   ROUTES,
 } from 'config/constants';
 import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
-import {
-  useEffect,
-  useFetcher,
-  useJukiRouter,
-  useJukiUser,
-  useMemo,
-  useRouter,
-  useState,
-  useTrackLastPath,
-} from 'hooks';
+import { useEffect, useFetcher, useJukiRouter, useJukiUser, useMemo, useState, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import {
   ContentsResponseType,
@@ -70,14 +61,14 @@ function Problems() {
   useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
   const { user: { canCreateProblem }, company: { name, key } } = useJukiUser();
   const { searchParams, setSearchParams } = useJukiRouter();
-  const { isReady, push } = useRouter();
+  const { pushRoute } = useJukiRouter();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
   useEffect(() => {
     if (!judge) {
       setSearchParams({ name: QueryParam.JUDGE, value: Judge.CUSTOMER });
     }
-  }, [ judge, isReady ]);
+  }, [ judge ]);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: 'id',
@@ -225,7 +216,7 @@ function Problems() {
         size="small"
         icon={<PlusIcon />}
         responsiveMobile
-        onClick={buttonLoaderLink(() => push(ROUTES.PROBLEMS.CREATE()))}
+        onClick={buttonLoaderLink(() => pushRoute(ROUTES.PROBLEMS.CREATE()))}
       >
         <T>create</T>
       </ButtonLoader>,
@@ -306,7 +297,7 @@ function Problems() {
             cards={{ height: 256, expanded: true }}
             onRecordClick={async ({ data, index }) => {
               if (window?.getSelection()?.type !== 'Range') {
-                await push({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
+                await pushRoute({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
               }
             }}
             dependencies={[ judge ]}

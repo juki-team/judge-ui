@@ -5,4 +5,3 @@ export * from './ServicesManagement';
 export * from './SettingsManagement';
 export * from './Submissions';
 export * from './UsersManagement';
-export * from './commons';

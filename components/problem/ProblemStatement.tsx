@@ -16,7 +16,7 @@ import {
   TabsInline,
 } from 'components';
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf, getStatementData } from 'helpers';
-import { useJukiUI, useJukiUser, useRouter, useT } from 'hooks';
+import { useJukiUI, useJukiUser, useT } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   EditCreateProblemType,
@@ -49,7 +49,6 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
   
   const { judge, problemKey, name, settings, tags, author, status, statement, setProblem, contest } = props;
   const editing = !!setProblem;
-  const { query: { key, index, tab, ...query } } = useRouter();
   const { viewPortSize } = useJukiUI();
   const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
   const { t } = useT();

@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiUI, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { useEffect, useJukiRouter, useJukiUI, useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { ContestsTab, LastLinkKey, TabsType } from 'types';
 
@@ -20,28 +20,24 @@ function Contests() {
   
   useTrackLastPath(LastLinkKey.CONTESTS);
   useTrackLastPath(LastLinkKey.SECTION_CONTEST);
-  const { isReady, query: { tab: contestsTab, ...query }, push } = useRouter();
+  const { routeParams: { tab: contestsTab }, pushRoute, replaceRoute } = useJukiRouter();
   const { user: { canCreateContest } } = useJukiUser();
   const { viewPortSize } = useJukiUI();
   useEffect(() => {
-    if (isReady && (![
+    if (![
       ContestsTab.ALL,
       ContestsTab.ENDLESS,
       ContestsTab.LIVE,
       ContestsTab.UPCOMING,
       ContestsTab.PAST,
-    ].includes(contestsTab as ContestsTab))) {
-      void push({
+    ].includes(contestsTab as ContestsTab)) {
+      void replaceRoute({
         pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
-        query,
-      }, undefined, { shallow: true });
+      });
     }
-  }, [ isReady, contestsTab ]);
+  }, [ contestsTab, replaceRoute ]);
   
-  const pushTab = (tab: ContestsTab) => push({
-    pathname: ROUTES.CONTESTS.LIST(tab),
-    query,
-  }, undefined, { shallow: true });
+  const pushTab = (tab: ContestsTab) => pushRoute({ pathname: ROUTES.CONTESTS.LIST(tab) });
   
   const tabs: TabsType<ContestsTab> = {
     [ContestsTab.ALL]: {
@@ -90,10 +86,12 @@ function Contests() {
       header: <T className="tt-se ws-np">past</T>,
     },
   };
+  
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <T className="tt-se">contests</T>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <T className="tt-se" key="contests">contests</T>,
   ];
+  
   const extraNodes = [];
   
   if (canCreateContest) {

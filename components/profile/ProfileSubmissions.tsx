@@ -1,7 +1,7 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useRouter } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import { DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
 import {
   submissionDateColumn,
@@ -23,7 +23,7 @@ const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = [
 
 export function ProfileSubmissions() {
   
-  const { query: { nickname } } = useRouter();
+  const { routeParams: { nickname } } = useJukiRouter();
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>

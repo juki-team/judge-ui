@@ -1,6 +1,6 @@
 import { MdMathEditor } from 'components';
 import { consoleWarn } from 'helpers';
-import { useEffect, useRouter, useState } from 'hooks';
+import { useEffect, useJukiRouter, useState } from 'hooks';
 
 const defaultMessage = `# Bienvenido a Juki notas!,
 
@@ -12,7 +12,8 @@ Si deseas guardar las notas puedes hacerlo con el botón compartir que te genera
 Las notas no se auto-guardan, cada vez que modifiques una nota para guardarlo debes generar un nuevo enlace con el botón compartir.`;
 
 const MarkdownSharedView = () => {
-  const { query: { source, sourceUrl, view } } = useRouter();
+  
+  const { routeParams: { source, sourceUrl, view } } = useJukiRouter();
   const [ sourceContent, setSourceContent ] = useState(source as string || defaultMessage);
   useEffect(() => {
     if (sourceUrl) {
@@ -25,6 +26,7 @@ const MarkdownSharedView = () => {
         });
     }
   }, [ sourceUrl ]);
+  
   if (view === 'fullscreen') {
     return (
       <div style={{ padding: '48px' }}>
@@ -39,6 +41,7 @@ const MarkdownSharedView = () => {
       </div>
     );
   }
+  
   return (
     <div>
       <h1>

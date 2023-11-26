@@ -10,7 +10,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useJukiRouter, useJukiUI, useJukiUser, useNotification, useRouter, useSWR } from 'hooks';
+import { useDateFormat, useJukiRouter, useJukiUI, useJukiUser, useNotification, useSWR } from 'hooks';
 import {
   ContentResponseType,
   ContestResponseDTO,
@@ -24,7 +24,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { isJudge, isAdmin, isContestant, isGuest, isSpectator } = contest.user;
   const { user: { isLogged } } = useJukiUser();
-  const { query } = useRouter();
+  const { routeParams } = useJukiRouter();
   const { appendSearchParams } = useJukiRouter();
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse } = useNotification();
@@ -33,12 +33,12 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
     setLoader(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(query.key as string), {
+    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(routeParams.key as string), {
       method: HTTPMethod.POST,
     }));
     if (notifyResponse(response)) {
       setLoader(Status.LOADING);
-      await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(query.key as string));
+      await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(routeParams.key as string));
       setLoader(Status.SUCCESS);
     }
   };

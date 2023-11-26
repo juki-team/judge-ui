@@ -1,5 +1,6 @@
 const { version } = require('./package.json');
 const { withPlugins, optional } = require('next-compose-plugins');
+const { Language } = require('@juki-team/commons');
 const PWA = require('next-pwa');
 
 module.exports = withPlugins([
@@ -39,8 +40,8 @@ module.exports = withPlugins([
   },
   // output:"standalone",
   i18n: {
-    locales: [ 'en', 'es' ],
-    defaultLocale: 'en',
+    locales: [ Language.EN.toLowerCase(), Language.ES.toLowerCase() ],
+    defaultLocale: Language.EN.toLowerCase(),
   },
   images: {
     remotePatterns: [

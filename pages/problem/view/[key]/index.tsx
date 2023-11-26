@@ -1,14 +1,15 @@
 import { ROUTES } from 'config/constants';
-import { useEffect, useRouter } from 'hooks';
+import { useEffect, useJukiRouter } from 'hooks';
 import { ProblemTab } from 'types';
 
 function View() {
-  const { query: { key }, replace, isReady } = useRouter();
+  
+  const { routeParams: { key }, replaceRoute } = useJukiRouter();
+  
   useEffect(() => {
-    if (isReady) {
-      void replace(ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT));
-    }
-  }, [ replace, isReady ]);
+    void replaceRoute(ROUTES.PROBLEMS.VIEW(key as string, ProblemTab.STATEMENT));
+  }, [ key, replaceRoute ]);
+  
   return null;
 }
 

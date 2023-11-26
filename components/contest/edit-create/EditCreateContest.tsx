@@ -5,17 +5,17 @@ import {
   CloseIcon,
   CodeEditor,
   Input,
+  LastLink,
   MdMathEditor,
   SaveIcon,
   T,
   TabsInline,
   TwoContentSection,
 } from 'components';
-import { LinkContests } from 'components/contest';
 import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiUI, useNotification, useRef, useRouter, useState } from 'hooks';
+import { useEffect, useJukiRouter, useJukiUI, useNotification, useRef, useState } from 'hooks';
 import Link from 'next/link';
 import {
   ButtonLoaderOnClickType,
@@ -24,6 +24,7 @@ import {
   ContestTab,
   EditCreateContestType,
   HTTPMethod,
+  LastLinkKey,
   ProgrammingLanguage,
   ReactNode,
   Status,
@@ -66,6 +67,9 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       lastContest.current = initialContest;
     }
   }, [ JSON.stringify(initialContest) ]);
+  
+  const { searchParams, pushRoute, routeParams } = useJukiRouter();
+  
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
@@ -77,12 +81,10 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
     ));
     if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
-      await push(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
+      await pushRoute(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
       setLoaderStatus(Status.SUCCESS);
     }
   };
-  
-  const { push, query } = useRouter();
   
   const tabHeaders: TabsType<ContestTab> = {
     [ContestTab.OVERVIEW]: {
@@ -135,10 +137,11 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const [ contestTab, setContestTab ] = useState<ContestTab>(ContestTab.OVERVIEW);
   const extraNodes = [
     <CheckUnsavedChanges
-      onClickContinue={() => push(editing
+      onClickContinue={() => pushRoute(editing
         ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW)
         : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
       value={contest}
+      key="key"
     >
       <ButtonLoader
         size="small"
@@ -154,17 +157,21 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       onClick={onSave}
       icon={<SaveIcon />}
       responsiveMobile
+      key="update/create"
     >
       {editing ? <T>update</T> : <T>create</T>}
     </ButtonLoader>,
   ];
   
   const breadcrumbs: ReactNode[] = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LinkContests><T className="tt-se">contests</T></LinkContests>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
     editing
       ? (
-        <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query }} className="link">
+        <Link
+          href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query: searchParams.toString() }}
+          className="link"
+        >
           <div>{contest.name}</div>
         </Link>
       ) : <div>{contest.name}</div>,

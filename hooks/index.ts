@@ -1,6 +1,6 @@
 import { LastLinkContext } from 'components';
 import { useContext, useEffect } from 'react';
-import { useRouter } from './useRouter';
+import { useJukiRouter } from './commons';
 
 export const useLasLink = () => {
   const { lastLink, pushPath } = useContext(LastLinkContext);
@@ -9,10 +9,10 @@ export const useLasLink = () => {
 
 export const useTrackLastPath = (key: string) => {
   const { pushPath } = useContext(LastLinkContext);
-  const { query, pathname } = useRouter();
+  const { pathname, searchParams } = useJukiRouter();
   useEffect(() => {
-    pushPath({ key, pathname, query });
-  }, [ key, query, pathname ]);
+    pushPath({ key, pathname, searchParams });
+  }, [ key, searchParams, pathname ]);
 };
 
 export * from './commons';
@@ -20,4 +20,3 @@ export * from './contest';
 export * from './rejudge';
 export * from './task';
 export * from './useDateFormat';
-export * from './useRouter';

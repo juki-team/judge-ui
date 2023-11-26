@@ -7,4 +7,3 @@ export * from './ProblemLetter';
 export * from './ProblemMySubmissions';
 export * from './ProblemStatement';
 export * from './ProblemSubmissions';
-export * from './commons';

@@ -1,14 +1,15 @@
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components/index';
 import { ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
-import { useRouter } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
 import { Judge, ProblemTab, Status } from 'types';
 
 export const CrawlJvumsaProblemModal = ({ onClose }: { onClose: () => void }) => {
   
   const [ key, setKey ] = useState('');
-  const { push } = useRouter();
+  
+  const { pushRoute } = useJukiRouter();
   
   return (
     <Modal isOpen={true} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
@@ -27,7 +28,7 @@ export const CrawlJvumsaProblemModal = ({ onClose }: { onClose: () => void }) =>
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            await push(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(Judge.JV_UMSA, key), ProblemTab.STATEMENT));
+            await pushRoute(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(Judge.JV_UMSA, key), ProblemTab.STATEMENT));
             setLoaderStatus(Status.SUCCESS);
           }}
         >

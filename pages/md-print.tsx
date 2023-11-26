@@ -1,11 +1,12 @@
 import { MdMathViewer } from 'components';
 import { consoleWarn } from 'helpers';
-import { useRouter } from 'hooks';
+import { useJukiRouter } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { Theme } from 'types';
 
 const MarkdownSharedView = () => {
-  const { query: { source, sourceUrl, theme } } = useRouter();
+  
+  const { routeParams: { source, sourceUrl, theme } } = useJukiRouter();
   const [ sourceContent, setSourceContent ] = useState(source as string || '');
   useEffect(() => {
     if (theme === Theme.DARK) {
@@ -24,6 +25,7 @@ const MarkdownSharedView = () => {
         .catch(error => consoleWarn(error));
     }
   }, [ sourceUrl ]);
+  
   return (
     <div className="jk-pad-md bc-we">
       <MdMathViewer source={sourceContent} />

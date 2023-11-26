@@ -1,9 +1,15 @@
-import { Breadcrumbs, EditCreateContest, FetcherLayer, LinkContests, T, TwoContentSection } from 'components';
+import { Breadcrumbs, EditCreateContest, FetcherLayer, LastLink, T, TwoContentSection } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { useContestRouter } from 'hooks';
 import Link from 'next/link';
-import { ContentResponseType, ContestResponseDTO, EditContestProblemBasicType, EditCreateContestType } from 'types';
+import {
+  ContentResponseType,
+  ContestResponseDTO,
+  EditContestProblemBasicType,
+  EditCreateContestType,
+  LastLinkKey,
+} from 'types';
 import Custom404 from '../../../404';
 
 const parseContest = (data: ContentResponseType<ContestResponseDTO>): EditCreateContestType => {
@@ -47,7 +53,7 @@ function ContestEdit() {
   
   const breadcrumbs = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <LinkContests><T className="tt-se">contests</T></LinkContests>,
+    <LastLink lastLinkKey={LastLinkKey.CONTESTS}><T className="tt-se">contests</T></LastLink>,
   ];
   
   return (

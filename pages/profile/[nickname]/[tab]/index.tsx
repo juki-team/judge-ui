@@ -16,7 +16,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useJukiUI, useJukiUser, useRouter, useState } from 'hooks';
+import { useJukiRouter, useJukiUI, useJukiUser, useState } from 'hooks';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { ContentResponseType, ProfileTab, TabsType, UserProfileResponseDTO } from 'types';
@@ -24,8 +24,7 @@ import Custom404 from '../../../404';
 
 export default function ProfileView() {
   
-  const { query, push } = useRouter();
-  const { nickname, tab } = query;
+  const { searchParams, routeParams: { nickname, tab }, pushRoute } = useJukiRouter();
   const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
   const { viewPortSize } = useJukiUI();
@@ -74,18 +73,21 @@ export default function ProfileView() {
         }
         tabHeaders[ProfileTab.SUBMISSIONS] = {
           key: ProfileTab.SUBMISSIONS,
-          header: userNickname === nickname ? <T className="tt-ce ws-np">my submissions</T> :
-            <T className="tt-ce ws-np">submissions</T>,
+          header: userNickname === nickname
+            ? <T className="tt-ce ws-np">my submissions</T>
+            : <T className="tt-ce ws-np">submissions</T>,
           body: (
             <div className="pad-top-bottom pad-left-right">
               <ProfileSubmissions />
             </div>
           ),
         };
-        const pushTab = (tabKey: ProfileTab) => push({
+        
+        const pushTab = (tabKey: ProfileTab) => pushRoute({
           pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey),
-          query,
+          searchParams,
         });
+        
         const extraNodes = [
           ...(data.content?.canResetPassword ? [
             <Button
@@ -93,6 +95,7 @@ export default function ProfileView() {
               icon={<LockIcon />}
               onClick={() => setOpenModal('RESET_PASSWORD')}
               extend={viewPortSize === 'sm'}
+              key="reset password"
             >
               <T className="ws-np">reset password</T>
             </Button>,
@@ -103,6 +106,7 @@ export default function ProfileView() {
               icon={<LockIcon />}
               onClick={() => setOpenModal('DATA')}
               extend={viewPortSize === 'sm'}
+              key="update profile"
             >
               <T className="ws-np">update profile</T>
             </Button>,
@@ -110,8 +114,14 @@ export default function ProfileView() {
         ];
         
         const breadcrumbs: ReactNode[] = [
-          <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-          <Link href={ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE)} className="link">{nickname}</Link>,
+          <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+          <Link
+            href={ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE)}
+            className="link"
+            key="nickname"
+          >
+            {nickname}
+          </Link>,
           renderReactNodeOrFunctionP1(tabHeaders[tab as ProfileTab]?.header, { selectedTabKey: tab as ProfileTab }),
         ];
         

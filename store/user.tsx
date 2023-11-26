@@ -1,6 +1,7 @@
 import { T, TwoActionModal } from 'components';
 import { createContext } from 'helpers';
-import { useEffect, useFetcher, useJukiUser, usePrevious, useRouter, useState, useT } from 'hooks';
+import { useEffect, useFetcher, useJukiRouter, useJukiUser, usePrevious, useState } from 'hooks';
+import { useRouter } from 'next/router';
 import {
   ContentResponseType,
   FlagsType,
@@ -11,6 +12,7 @@ import {
   SetFlagsType,
   Theme,
 } from 'types';
+import i18n from '../i18n';
 
 export const UserContext = createContext<{ flags: FlagsType, setFlags: SetFlagsType }>({
   flags: {
@@ -23,8 +25,9 @@ export const _setFlags: { current: SetFlagsType } = { current: () => null };
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
-  const { i18n } = useT();
-  const { locale, pathname, asPath, query, isReady, replace } = useRouter();
+  // const { i18n } = useT();
+  const { locale, pathname, asPath, query, replace, isReady } = useRouter();
+  const { pathname: pathname2 } = useJukiRouter();
   const { user } = useJukiUser();
   const { data, isLoading } = useFetcher<ContentResponseType<{ version: string }>>(
     '/api/version',
@@ -66,34 +69,36 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
         </TwoActionModal>,
       );
     }
-  }, [ version, previousVersion ]);
+  }, [ version, previousVersion, router ]);
+  
   const [ flags, setFlags ] = useState<FlagsType>({ isHelpOpen: false, isHelpFocused: false });
   _setFlags.current = setFlags;
+  
+  const userLanguage = user.settings?.[ProfileSetting.LANGUAGE] === Language.ES ? Language.ES : Language.EN;
+  
   useEffect(() => {
-    if (isReady) {
-      const newLocale = user.settings?.[ProfileSetting.LANGUAGE] === Language.ES ? 'es' : 'en';
-      void i18n?.changeLanguage?.(newLocale);
-    }
-  }, [ user.settings?.[ProfileSetting.LANGUAGE], isReady ]);
+    void i18n?.changeLanguage?.(userLanguage);
+  }, [ userLanguage ]);
   
   useEffect(() => {
     if (isReady) {
-      const newLocale = user.settings?.[ProfileSetting.LANGUAGE] === Language.ES ? 'es' : 'en';
-      if (locale !== newLocale) {
-        void replace({ pathname, query }, asPath, { locale: newLocale });
+      if (locale?.toLowerCase() !== userLanguage.toLowerCase()) {
+        void replace({ pathname, query }, asPath, { locale: userLanguage.toLowerCase() });
       }
     }
-  }, [ user.settings?.[ProfileSetting.LANGUAGE], user.nickname, locale, pathname, /*query,*/ asPath, isReady ]);
+  }, [ userLanguage, user.nickname, locale, pathname, asPath, replace, query, isReady ]);
+  
+  const userTheme = user.settings?.[ProfileSetting.THEME];
   
   useEffect(() => {
     document.querySelector('body')?.classList.remove('jk-theme-dark');
     document.querySelector('body')?.classList.remove('jk-theme-light');
-    if (user.settings?.[ProfileSetting.THEME] === Theme.DARK) {
+    if (userTheme === Theme.DARK) {
       document.querySelector('body')?.classList.add('jk-theme-dark');
     } else {
       document.querySelector('body')?.classList.add('jk-theme-light');
     }
-  }, [ user.settings?.[ProfileSetting.THEME] ]);
+  }, [ userTheme ]);
   
   return (
     <UserContext.Provider value={{ flags, setFlags }}>

@@ -14,7 +14,7 @@ import {
 } from 'components';
 import { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
-import { useJukiUser, useRouter, useSWR } from 'hooks';
+import { useJukiRouter, useJukiUser, useSWR } from 'hooks';
 import { useEffect, useState } from 'react';
 import { ProfileTab, Status, UserProfileResponseDTO } from 'types';
 import { ImageProfileModal } from './ImageProfileModal';
@@ -34,7 +34,7 @@ export function EditProfileModal({ isOpen, user, onClose }: EditProfileModalProp
   const [ modalImageProfile, setModalImageProfile ] = useState(false);
   const validLengthNickname = userState.nickname.length >= 3;
   const validCharNickname = ALPHANUMERIC_DASH_UNDERSCORE_REGEX.test(userState.nickname);
-  const { push, query } = useRouter();
+  const { pushRoute, routeParams } = useJukiRouter();
   
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -147,10 +147,10 @@ export function EditProfileModal({ isOpen, user, onClose }: EditProfileModalProp
                 onSuccess: async () => {
                   setLoader?.(Status.LOADING);
                   let tab = ProfileTab.PROFILE;
-                  if (query.tab === ProfileTab.SUBMISSIONS) {
+                  if (routeParams.tab === ProfileTab.SUBMISSIONS) {
                     tab = ProfileTab.SUBMISSIONS;
                   }
-                  await push({ pathname: ROUTES.PROFILE.PAGE(userState.nickname, tab), query });
+                  await pushRoute({ pathname: ROUTES.PROFILE.PAGE(userState.nickname, tab) });
                   await mutatePing();
                   await mutate(JUDGE_API_V1.USER.PROFILE(user.nickname));
                   setLoader?.(Status.SUCCESS);

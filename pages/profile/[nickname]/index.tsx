@@ -1,15 +1,15 @@
 import { ROUTES } from 'config/constants';
-import { useEffect, useRouter } from 'hooks';
+import { useEffect, useJukiRouter } from 'hooks';
 import { ProfileTab } from 'types';
 
 function Profile() {
-  const { query, isReady, replace } = useRouter();
-  const { nickname } = query;
+  
+  const { routeParams: { nickname }, replaceRoute } = useJukiRouter();
+  
   useEffect(() => {
-    if (isReady) {
-      void replace(ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE));
-    }
-  }, [ replace, query, isReady ]);
+    void replaceRoute(ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE));
+  }, [ replaceRoute, nickname ]);
+  
   return null;
 }
 

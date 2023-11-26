@@ -1,15 +1,15 @@
 import { Judge } from '@juki-team/commons';
 import { ProblemCodeEditor, ProblemStatement, SplitPane, T } from 'components';
-import { useJukiUI, useRouter } from 'hooks';
+import { useJukiRouter, useJukiUI } from 'hooks';
 import Custom404 from 'pages/404';
 import React from 'react';
 import { ContestResponseDTO } from 'types';
 
 export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { query } = useRouter();
+  const { routeParams } = useJukiRouter();
   const { viewPortSize } = useJukiUI();
-  const problem = Object.values(contest?.problems).find(problem => problem.index === query.index as string);
+  const problem = Object.values(contest?.problems).find(problem => problem.index === routeParams.index as string);
   
   const { user } = contest;
   if (!problem) {
@@ -36,7 +36,7 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
         judge={problem.judge}
         problemKey={problem.key}
         author={problem.author}
-        contest={{ index: query?.index as string, color: problem.color }}
+        contest={{ index: routeParams?.index as string, color: problem.color }}
         name={problem.name}
         status={problem.status}
         statement={problem.statement}
@@ -50,7 +50,7 @@ export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
           isGuest: user.isGuest,
           isSpectator: user.isSpectator,
           isContestant: user.isContestant,
-          problemIndex: query?.index as string,
+          problemIndex: routeParams?.index as string,
           key: contest.key,
           languages: {
             [Judge.CUSTOMER]: contest.settings.languages,

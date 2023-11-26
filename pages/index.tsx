@@ -2,8 +2,9 @@ import { Breadcrumbs, JukiCompleteLaptopImage, JukiCourtImage, T, TwoContentSect
 import { useJukiUser } from 'hooks';
 
 export default function Home() {
+  
   const breadcrumbs = [
-    <T className="tt-se">home</T>,
+    <T className="tt-se" key="home">home</T>,
   ];
   
   const { company: { name } } = useJukiUser();

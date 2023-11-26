@@ -6,7 +6,7 @@ export const isOrHas = (value: string | string[] | undefined, v: string) => {
   return value === v || (Array.isArray(value) && value.includes(v));
 };
 
-export const buttonLoaderLink = (fun: () => Promise<any>): ButtonLoaderOnClickType => async (setLoader) => {
+export const buttonLoaderLink = (fun: (() => Promise<any>) | (() => any)): ButtonLoaderOnClickType => async (setLoader) => {
   setLoader(Status.LOADING);
   await fun();
   setLoader(Status.SUCCESS);
@@ -51,38 +51,6 @@ export const disableOutOfRange = (date: Date, start: Date, end: Date) => ({
     end: end.endOfSecond(),
   }, '[]'),
 });
-
-export {
-  consoleWarn,
-  isStringJson,
-  isObjectJson,
-  splitTime,
-  indexToLetters,
-  getProblemJudgeKey,
-  lettersToIndex,
-  humanFileSize,
-  stringToArrayBuffer,
-  getRandomString,
-  mex,
-  contentResponse,
-} from '@juki-team/commons';
-
-export {
-  classNames,
-  downloadBlobAsFile,
-  renderReactNodeOrFunction,
-  renderReactNodeOrFunctionP1,
-  authorizedRequest,
-  toBlob,
-  handleShareMdPdf,
-  downloadDataTableAsCsvFile,
-  downloadJukiMarkdownAdPdf,
-  downloadXlsxAsFile,
-  downloadLink,
-  cleanRequest,
-  toFilterUrl,
-  toSortUrl,
-} from '@juki-team/base-ui';
 
 export * from './commons';
 export * from './contest';

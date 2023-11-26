@@ -10,7 +10,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUser, useMemo, useRouter, useTrackLastPath } from 'hooks';
+import { useJukiRouter, useJukiUser, useMemo, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, LastLinkKey, QueryParam } from 'types';
 
@@ -47,13 +47,13 @@ function Problems() {
       cardPosition: 'center',
       minWidth: 120,
     },
-  ], [ canCreateProblem ]);
+  ], []);
   
-  const { push } = useRouter();
+  const { pushRoute } = useJukiRouter();
   
   const breadcrumbs = [
-    <Link href="/" className="link"><T className="tt-se">home</T></Link>,
-    <T className="tt-se">courses</T>,
+    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <T className="tt-se" key="courses">courses</T>,
   ];
   
   return (
@@ -77,7 +77,8 @@ function Problems() {
                 size="small"
                 icon={<PlusIcon />}
                 responsiveMobile
-                onClick={buttonLoaderLink(() => push(ROUTES.COURSES.CREATE()))}
+                onClick={buttonLoaderLink(() => pushRoute(ROUTES.COURSES.CREATE()))}
+                key="create"
               >
                 <T>create</T>
               </ButtonLoader>,

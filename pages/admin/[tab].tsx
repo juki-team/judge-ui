@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useFetcher, useJukiRouter, useJukiUser, useRouter, useTrackLastPath } from 'hooks';
+import { useFetcher, useJukiRouter, useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import { ReactNode, useEffect } from 'react';
 import {
@@ -30,7 +30,6 @@ import Custom404 from '../404';
 function Admin() {
   
   useTrackLastPath(LastLinkKey.SECTION_ADMIN);
-  const { query, push } = useRouter();
   const {
     user: {
       canViewSubmissionsManagement,
@@ -47,7 +46,7 @@ function Admin() {
     mutate,
   } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings ? JUDGE_API_V1.COMPANY.LIST() : null);
   const { data: myCompany } = useFetcher<ContentResponseType<CompanyResponseDTO>>(JUDGE_API_V1.COMPANY.CURRENT());
-  const { searchParams, setSearchParams } = useJukiRouter();
+  const { searchParams, setSearchParams, pushRoute, routeParams } = useJukiRouter();
   const companyKey = searchParams.get(QueryParam.COMPANY) as string;
   const companies = data?.success ? data.contents : [];
   const company: CompanyResponseDTO | undefined = canHandleSettings
@@ -131,9 +130,10 @@ function Admin() {
   const breadcrumbs: ReactNode[] = [
     <Link href="/" className="link"><T className="tt-se">home</T></Link>,
     <Link href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)} className="link"><T className="tt-se">admin</T></Link>,
-    renderReactNodeOrFunctionP1(tabs[query.tab as AdminTab]?.header, { selectedTabKey: query.tab as AdminTab }),
+    renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.header, { selectedTabKey: routeParams.tab as AdminTab }),
   ];
-  const pushTab = (tabKey: AdminTab) => push({ pathname: ROUTES.ADMIN.PAGE(tabKey), query });
+  
+  const pushTab = (tabKey: AdminTab) => pushRoute({ pathname: ROUTES.ADMIN.PAGE(tabKey) });
   
   return (
     <TwoContentSection>
@@ -157,10 +157,10 @@ function Admin() {
           )}
         </div>
         <div className="pad-left-right">
-          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={query.tab as AdminTab} />
+          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={routeParams.tab as AdminTab} />
         </div>
       </div>
-      {renderReactNodeOrFunctionP1(tabs[query.tab as AdminTab]?.body, { selectedTabKey: query.tab as AdminTab })}
+      {renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.body, { selectedTabKey: routeParams.tab as AdminTab })}
     </TwoContentSection>
   );
 }

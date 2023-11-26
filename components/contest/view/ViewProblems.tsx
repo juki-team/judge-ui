@@ -11,7 +11,7 @@ import {
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
-import { useJukiUI, useNotification, useRouter } from 'hooks';
+import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import {
@@ -31,7 +31,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
   const { problems = {}, user, key } = contest;
   const { isJudge, isAdmin } = user || {};
-  const { push, query: { key: contestKey, index, tab, ...query } } = useRouter();
+  const { searchParams, pushRoute, routeParams: { key: contestKey, index, tab } } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { viewPortSize } = useJukiUI();
   const isJudgeOrAdmin = isJudge || isAdmin;
@@ -79,7 +79,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                     >
                       <div className="jk-row gap">
                         <div className="fw-bd cr-g3 jk-col">
-                          {JUDGE[judge]?.label || judge}
+                          {JUDGE[judge]?.label || (judge === Judge.CUSTOMER ? '' : judge)}
                           <div>{key}</div>
                         </div>
                         <OpenInNewIcon size="tiny" />
@@ -108,7 +108,12 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         index: 'name',
         field: ({ record: { name, index, judge, key }, isCard }) => (
           <Field className="jk-col">
-            <Link href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, index), query }}>
+            <Link
+              href={{
+                pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, index),
+                search: searchParams.toString(),
+              }}
+            >
               <div className="link fw-bd">{name}</div>
             </Link>
             {isJudgeOrAdmin && (
@@ -178,7 +183,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         minWidth: 64,
       } as DataViewerHeadersType<ContestProblemType>,
     ];
-  }, [ isJudgeOrAdmin, contestKey, query ]);
+  }, [ isJudgeOrAdmin, contestKey, searchParams ]);
   const data = Object.values(problems);
   
   return (
@@ -190,10 +195,10 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         rowsView={viewPortSize !== 'sm'}
         name={QueryParam.ALL_USERS_TABLE}
         onRecordClick={async ({ isCard, data, index }) => {
-          await push({
+          await pushRoute({
             pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
-            query,
-          }, undefined, { shallow: true });
+            searchParams,
+          });
         }}
         getRecordStyle={({ data, index, isCard }) => {
           if (isCard) {
