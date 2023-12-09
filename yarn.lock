@@ -1243,10 +1243,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.34":
-  version "0.1.34"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.34/44ee1d26233e1f56f8fc758bcc1719ca29b17f06#44ee1d26233e1f56f8fc758bcc1719ca29b17f06"
-  integrity sha512-DLqAQp4Hv4GyPpCbaJ1/FEOGOujBHaJJ7R1LFZvNaoWl6V156ZJfY7aJyUX886PAlF7j/V3ts2boNqLhkMECXw==
+"@juki-team/base-ui@^0.1.36":
+  version "0.1.36"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.36/d77b955feeb94afb2536479d15f00e40c05bba3c#d77b955feeb94afb2536479d15f00e40c05bba3c"
+  integrity sha512-/UGz8Uw8bF9X11MsfSEFXbqbiMQZH1vIH8vTuG0N5SY62bdaBM1ogyLvxOOQEfU7612SPsEpO+wRzPCudziIyw==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-html" "^6.4.6"
@@ -1256,7 +1256,7 @@
     "@codemirror/lang-markdown" "^6.0.5"
     "@codemirror/lang-python" "^6.1.0"
     "@hookform/resolvers" "^3.3.2"
-    "@juki-team/commons" "^0.0.359"
+    "@juki-team/commons" "^0.0.360"
     "@monaco-editor/react" "^4.4.2"
     "@tanstack/react-virtual" "^3.0.0-beta.30"
     "@uiw/react-codemirror" "^4.19.3"
@@ -1293,10 +1293,15 @@
     xlsx "^0.18.5"
     yup "^1.3.2"
 
-"@juki-team/commons@^0.0.359":
-  version "0.0.359"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.359/0499f54928dbd168a87a7ef42f36429112ad4b14#0499f54928dbd168a87a7ef42f36429112ad4b14"
-  integrity sha512-O4tufY5aykbZ243Cbg8mr/BgvkPkIWZ5Hm9k5elx4EOHrlhbZ6wJsuZ9yugB+nTeffAcQR+3kFVCQBJrldkc3w==
+"@juki-team/commons@^0.0.360":
+  version "0.0.360"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.360/8cf816401becce020546f743846569e401e24ee0#8cf816401becce020546f743846569e401e24ee0"
+  integrity sha512-IMIsURMbhhc32mEUpzkGqdjwbIhMyqfz4Te/IH/F7M28mDBpQKawsmLq5xP/CufnzKWXYicBnTIkUcPa8Olz3w==
+
+"@juki-team/commons@^0.0.367":
+  version "0.0.367"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.367/bdfa27b5fd6676b2c8ef59ea74956a88d4975184#bdfa27b5fd6676b2c8ef59ea74956a88d4975184"
+  integrity sha512-JMD6rsBlL7j74nPdLoBO3VB4PBSIYx9cUYOuBbU6xSjN+hqrUmzOpJn0HOQF1zi882VLTgPJa8u55KqEaTiCgQ==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0":
   version "1.1.1"

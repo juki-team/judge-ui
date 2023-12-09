@@ -1,6 +1,12 @@
-import { getProblemJudgeKey } from '@juki-team/commons';
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
-import { ContestProblemBasicType, ContestTemplate, EditCreateContestType } from 'types';
+import {
+  ContestProblemBasicType,
+  ContestResponseDTO,
+  ContestTemplate,
+  EditContestProblemBasicType,
+  EditCreateContestType,
+} from 'types';
+import { getProblemJudgeKey } from './commons';
 import { roundTimestamp } from './index';
 
 export const adjustContest = (contest: EditCreateContestType, prevContest: EditCreateContestType): EditCreateContestType => {
@@ -80,4 +86,39 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
     return ContestTemplate.CLASSIC;
   }
   return ContestTemplate.CUSTOM;
+};
+
+export const parseContest = (contest: ContestResponseDTO): EditCreateContestType => {
+  const problems: { [key: string]: EditContestProblemBasicType } = {};
+  Object.values(contest.problems).forEach(problem => {
+    problems[getProblemJudgeKey(problem.judge, problem.key)] = {
+      key: problem.key,
+      index: problem.index,
+      judge: problem.judge,
+      name: problem.name,
+      points: problem.points,
+      color: problem.color,
+      startTimestamp: problem.startTimestamp,
+      endTimestamp: problem.endTimestamp,
+    };
+  });
+  
+  const members = {
+    administrators: Object.keys(contest.members.administrators),
+    judges: Object.keys(contest.members.judges),
+    contestants: Object.keys(contest.members.contestants),
+    guests: Object.keys(contest.members.guests),
+    spectators: Object.keys(contest.members.spectators),
+  };
+  
+  return {
+    description: contest.description,
+    key: contest.key,
+    members,
+    name: contest.name,
+    problems,
+    settings: contest.settings,
+    tags: contest.tags,
+    status: contest.status,
+  };
 };

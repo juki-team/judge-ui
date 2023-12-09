@@ -49,9 +49,6 @@ export const JUDGE_API_V1 = {
     MAIL_SEND: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/send`;
     },
-    EMAIL_DATA: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/data`;
-    },
   },
   USER: {
     MANAGEMENT_LIST: (companyKey: string) => {
@@ -218,22 +215,31 @@ export const JUDGE_API_V1 = {
     },
   },
   COMPANY: {
-    LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/list`;
+    PERMISSION_LIST: () => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/permission-list`;
     },
     CURRENT: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company`;
     },
+    COMPANY: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}`;
+    },
     RESOURCE_SPECIFICATIONS: (companyKey: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}/resource-specifications`;
     },
+    EMAIL_DATA: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}/email-data`;
+    },
+    IMAGE: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}/image`;
+    },
   },
   JUDGE: {
-    GET: (judge: Judge) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}`;
+    GET: (judge: Judge, companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/company/${companyKey}`;
     },
-    CRAWL_LANGUAGES: (judge: Judge) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/re-crawl-languages`;
+    CRAWL_LANGUAGES: (judge: Judge, companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/company/${companyKey}/re-crawl-languages`;
     },
     LANGUAGES: (judge: Judge) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/languages`;

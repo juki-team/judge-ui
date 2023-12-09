@@ -64,11 +64,11 @@ module.exports = withPlugins([
   },
   async redirects() {
     return [
-      {
-        source: '/admin',
-        destination: '/admin/users-management',
-        permanent: true,
-      },
+      // {
+      //   source: '/admin',
+      //   destination: '/admin/users-management',
+      //   permanent: true,
+      // },
     ];
   },
 });

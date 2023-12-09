@@ -20,3 +20,4 @@ export type LastLinkType = { [key in LastLinkKey]: { pathname: string, searchPar
 export type { PropsWithChildren, ReactNode, FC } from 'react';
 export type { AppProps } from 'next/app';
 export type { NextApiRequest, NextApiResponse } from 'next';
+export type { KeyedMutator } from 'swr';

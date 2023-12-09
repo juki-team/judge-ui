@@ -1,4 +1,4 @@
-import { Button, ButtonLoader, FetcherLayer, ReloadIcon, T, TwoActionModal } from 'components';
+import { Button, ButtonLoader, FetcherLayer, ReloadIcon, T, TwoActionModal } from 'components/index';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';

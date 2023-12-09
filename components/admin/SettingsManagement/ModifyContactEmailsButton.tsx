@@ -7,13 +7,14 @@ import { KeyedMutator } from 'swr';
 import { ContentResponseType, HTTPMethod, Status } from 'types';
 
 interface ModifyContactEmailsButtonProps {
+  companyKey: string,
   contactEmails: string [],
   mutate: KeyedMutator<any>,
 }
 
 export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps) => {
   
-  const { contactEmails: initialContactEmails, mutate } = props;
+  const { companyKey, contactEmails: initialContactEmails, mutate } = props;
   const [ contactEmails, setContactEmails ] = useState<string[]>(initialContactEmails);
   const [ open, setOpen ] = useState(false);
   const { notifyResponse } = useNotification();
@@ -76,8 +77,8 @@ export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps)
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
                 const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.SYS.EMAIL_DATA(),
-                  { method: HTTPMethod.PUT, body: JSON.stringify({ contactEmails }) },
+                  JUDGE_API_V1.COMPANY.COMPANY(companyKey),
+                  { method: HTTPMethod.PATCH, body: JSON.stringify({ contactEmails }) },
                 ));
                 await mutate();
                 if (notifyResponse(response, setLoaderStatus)) {

@@ -34,6 +34,7 @@ export {
   FileType,
   CourseType,
   SocketEvent,
+  CompanyLogoType,
 } from '@juki-team/commons';
 
 export type {
@@ -91,10 +92,13 @@ export type {
   CreateFileDTO,
   SqsPropertiesType,
   CompanyResourceSpecificationsResponseDTO,
+  CompanyUserPermissionsResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType, QueryParamKey } from '@juki-team/base-ui';
+
 export type {
+  ModalProps,
   TabsType,
   MenuType,
   DataViewerHeadersType,

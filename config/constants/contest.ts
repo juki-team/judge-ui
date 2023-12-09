@@ -4,7 +4,10 @@ export const FIVE_HOURS = 1000 * 60 * 60 * 5;
 export const ONE_HOUR = 1000 * 60 * 60;
 export const FIFTEEN_MINUTES = 1000 * 60 * 15;
 
-export const CONTEST_DEFAULT = (): EditCreateContestType => {
+export const LS_INITIAL_CONTEST_KEY = 'jk-initial-contest';
+
+
+export const CONTEST_DEFAULT = (initialContest?: Partial<EditCreateContestType>): EditCreateContestType => {
   const now = (new Date(Date.now() + 1000 * 60 * 5));
   now.setSeconds(0, 0);
   
@@ -58,6 +61,7 @@ Oscar Arias | Problem Setter`,
     members: { administrators: [], judges: [], contestants: [], guests: [ '*' ], spectators: [ '*' ] },
     tags: [],
     status: ContestStatus.PUBLIC,
+    ...initialContest,
   };
 };
 

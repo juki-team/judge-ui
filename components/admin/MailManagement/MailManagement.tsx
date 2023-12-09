@@ -3,7 +3,14 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useState } from 'react';
-import { ContentResponseType, EmailDataResponseDTO, HTTPMethod, ProgrammingLanguage, Status } from 'types';
+import {
+  CompanyResponseDTO,
+  ContentResponseType,
+  EmailDataResponseDTO,
+  HTTPMethod,
+  ProgrammingLanguage,
+  Status,
+} from 'types';
 
 const passwordReset = `Hola, <span id="nombre-completo">{{nombre completo}}</span>.
 <br />
@@ -72,7 +79,7 @@ Exitos a todos.
 <br />
 Sigan programando.`;
 
-export const MailManagement = () => {
+export const MailManagement = ({ company }: { company: CompanyResponseDTO }) => {
   
   const { notifyResponse } = useNotification();
   const [ password, setPassword ] = useState('');
@@ -83,7 +90,7 @@ export const MailManagement = () => {
   
   return (
     <FetcherLayer<ContentResponseType<EmailDataResponseDTO>>
-      url={JUDGE_API_V1.SYS.EMAIL_DATA()}
+      url={JUDGE_API_V1.COMPANY.EMAIL_DATA(company.key)}
       options={{ revalidateOnFocus: true }}
     >
       {({ data, mutate }) => {
@@ -119,8 +126,10 @@ export const MailManagement = () => {
             <div className="jk-col gap stretch extend top nowrap">
               <div className="jk-row center gap">
                 <div><T className="tt-se">template</T>:</div>
-                <Button type="light" size="tiny" onClick={() => setContent(passwordReset)}><T>password reset</T></Button>
-                <Button type="light" size="tiny" onClick={() => setContent(validateEmail)}><T>validate email</T></Button>
+                <Button type="light" size="tiny" onClick={() => setContent(passwordReset)}><T>password
+                  reset</T></Button>
+                <Button type="light" size="tiny" onClick={() => setContent(validateEmail)}><T>validate
+                  email</T></Button>
                 <Button type="light" size="tiny" onClick={() => setContent(sendCredentials)}>
                   <T>send credentials</T>
                 </Button>

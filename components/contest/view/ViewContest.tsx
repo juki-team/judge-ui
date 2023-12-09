@@ -1,3 +1,4 @@
+import { CopyIcon, useT } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -10,17 +11,17 @@ import {
   LoadingIcon,
   NavigateBeforeIcon,
   NavigateNextIcon,
-  Popover,
   T,
   TabsInline,
+  Tooltip,
   TwoContentSection,
   ViewOverview,
   ViewProblemMySubmissions,
   ViewProblems,
 } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
-import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useContestRouter, useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
+import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
+import { parseContest, renderReactNodeOrFunctionP1 } from 'helpers';
+import { useContestRouter, useJukiRouter, useJukiUI, useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status, TabsType } from 'types';
@@ -38,6 +39,8 @@ export function ContestView() {
   const { pushRoute, searchParams } = useJukiRouter();
   const { pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
   const { viewPortSize } = useJukiUI();
+  const { user: { canCreateContest } } = useJukiUser();
+  const { t } = useT();
   
   const breadcrumbs = [
     <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
@@ -237,6 +240,30 @@ export function ContestView() {
           );
         }
         
+        if (canCreateContest) {
+          extraNodes.push(
+            <ButtonLoader
+              size="small"
+              onClick={async setLoaderStatus => {
+                setLoaderStatus(Status.LOADING);
+                const { key, name, ...parsedContest } = parseContest(contest);
+                localStorage.setItem(LS_INITIAL_CONTEST_KEY, JSON.stringify({
+                  ...parsedContest,
+                  key: `${key}-${t('copy')}`,
+                  name: `${name} (${t('COPY')})`,
+                }));
+                await pushRoute(ROUTES.CONTESTS.CREATE());
+                setLoaderStatus(Status.SUCCESS);
+              }}
+              icon={<CopyIcon />}
+              responsiveMobile
+              type="light"
+            >
+              <T className="ws-np">copy</T>
+            </ButtonLoader>,
+          );
+        }
+        
         if (isAdmin) {
           extraNodes.push(
             <ButtonLoader
@@ -299,14 +326,12 @@ export function ContestView() {
                   >
                     {contest.name}
                   </h2>
-                  <Popover
+                  <Tooltip
                     content={literal}
-                    triggerOn="hover"
                     placement="bottom"
-                    popoverContentClassName={`color-white bg-color-${tag} jk-row nowrap`}
                   >
                     <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T className="ws-np">{statusLabel}</T></div>
-                  </Popover>
+                  </Tooltip>
                 </div>
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>
               </div>

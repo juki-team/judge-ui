@@ -53,13 +53,13 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
       in: sample.input,
     };
   });
-  const { user: { nickname, isLogged } } = useJukiUser();
+  const { user: { nickname, isLogged }, company: { key: companyKey } } = useJukiUser();
   const { pushTab } = useContestRouter();
   const myStatusPageSize = searchParams.get(`${QueryParam.MY_STATUS_TABLE}.${QueryParam.PAGE_SIZE_TABLE}`);
   const filter = searchParams.get(`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`);
   const { key: problemKey, ...restQuery } = routeParams;
   const { data: virtualJudgeData } = useFetcher<ContentResponseType<JudgeResponseDTO>>(
-    [ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) ? JUDGE_API_V1.JUDGE.GET(problem.judge) : null,
+    [ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) ? JUDGE_API_V1.JUDGE.GET(problem.judge, companyKey) : null,
   );
   const languages = useMemo(
     () => {

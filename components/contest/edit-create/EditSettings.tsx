@@ -110,15 +110,20 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
         </div>
         <div className="jk-row left gap nowrap">
           <div className="fw-bd tt-se tx-xl cr-py"><T>key</T>:</div>
-          <Input
-            value={contest.key}
-            onChange={value => {
-              setContest(prevState => ({
-                ...prevState,
-                key: value.trim().split(' ').join('-').replace(/[^0-9a-z_-]/gi, ''),
-              }));
-            }}
-          />
+          <div className="link">
+            {window.location.host}/contest/view/
+            <Input
+              value={contest.key}
+              onChange={value => {
+                setContest(prevState => ({
+                  ...prevState,
+                  key: value.trim().split(' ').join('-').replace(/[^0-9a-z_-]/gi, ''),
+                }));
+              }}
+              size="auto"
+            />
+            /overview
+          </div>
         </div>
       </div>
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">

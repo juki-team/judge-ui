@@ -12,9 +12,9 @@ import {
   TabsInline,
   TwoContentSection,
 } from 'components';
-import { CONTEST_DEFAULT, JUDGE_API_V1, ROUTES } from 'config/constants';
+import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
-import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
+import { authorizedRequest, cleanRequest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEffect, useJukiRouter, useJukiUI, useNotification, useRef, useState } from 'hooks';
 import Link from 'next/link';
 import {
@@ -42,7 +42,11 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const { addWarningNotification } = useNotification();
   const { notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
-  const [ contest, setContest ] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT());
+  const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
+  const [ contest, setContest ] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT(isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
+  useEffect(() => {
+    localStorage.removeItem(LS_INITIAL_CONTEST_KEY);
+  }, []);
   const lastContest = useRef(initialContest);
   useEffect(() => {
     if (editing && JSON.stringify(initialContest) !== JSON.stringify(lastContest.current)) {

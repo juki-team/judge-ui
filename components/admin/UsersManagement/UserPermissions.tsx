@@ -41,7 +41,7 @@ type Roles = {
 }
 
 export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: ProblemPermissionsProps) => {
-  const { company: { key }, user: { canHandleSettings } } = useJukiUser();
+  const { company: { key }, user: { canHandleSettings, canManageSettings } } = useJukiUser();
   const [ editing, setEditing ] = useState(false);
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const roles = {
@@ -60,7 +60,8 @@ export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: Pro
     problem: PROBLEM_ROLE,
     contest: CONTEST_ROLE,
   };
-  if (canHandleSettings) {
+  
+  if (canManageSettings) {
     ROLES.system = SYSTEM_ROLE;
     ROLES.team = TEAM_ROLE;
     ROLES.course = COURSE_ROLE;
@@ -87,46 +88,45 @@ export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: Pro
             </div>
           ))}
         </div>
-        {userToUpdate.canEditPermissionsData && (
-          <div style={{ width: 40 }}>
-            {editing ? (
-              <>
-                <ButtonLoader
-                  size="small"
-                  icon={<SaveIcon />}
-                  onClick={async setLoaderStatus => {
-                    if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
-                      setLoaderStatus?.(Status.LOADING);
-                      const response = cleanRequest<ContentResponseType<any>>(
-                        await authorizedRequest(
-                          JUDGE_API_V1.USER.ROLES(companyKey, userToUpdate.nickname),
-                          { method: HTTPMethod.PUT, body: JSON.stringify(newRoles) },
-                        ),
-                      );
-                      if (response.success) {
-                        addSuccessNotification(<T>success</T>);
-                        setLoaderStatus?.(Status.SUCCESS);
-                      } else {
-                        addErrorNotification(<T>error</T>);
-                        setLoaderStatus?.(Status.ERROR);
-                      }
-                      refresh();
+        
+        <div style={{ width: 40 }}>
+          {editing ? (
+            <>
+              <ButtonLoader
+                size="small"
+                icon={<SaveIcon />}
+                onClick={async setLoaderStatus => {
+                  if (JSON.stringify(newRoles) !== JSON.stringify(roles)) {
+                    setLoaderStatus?.(Status.LOADING);
+                    const response = cleanRequest<ContentResponseType<any>>(
+                      await authorizedRequest(
+                        JUDGE_API_V1.USER.ROLES(companyKey, userToUpdate.nickname),
+                        { method: HTTPMethod.PUT, body: JSON.stringify(newRoles) },
+                      ),
+                    );
+                    if (response.success) {
+                      addSuccessNotification(<T>success</T>);
+                      setLoaderStatus?.(Status.SUCCESS);
+                    } else {
+                      addErrorNotification(<T>error</T>);
+                      setLoaderStatus?.(Status.ERROR);
                     }
-                    setEditing(false);
-                  }}
-                />
-                <Button
-                  size="small"
-                  icon={<CloseIcon />}
-                  onClick={() => {
-                    setNewRoles(roles);
-                    setEditing(false);
-                  }}
-                />
-              </>
-            ) : <Button size="small" icon={<EditIcon />} onClick={() => setEditing(true)} />}
-          </div>
-        )}
+                    refresh();
+                  }
+                  setEditing(false);
+                }}
+              />
+              <Button
+                size="small"
+                icon={<CloseIcon />}
+                onClick={() => {
+                  setNewRoles(roles);
+                  setEditing(false);
+                }}
+              />
+            </>
+          ) : <Button size="small" icon={<EditIcon />} onClick={() => setEditing(true)} />}
+        </div>
       </div>
     </div>
   );

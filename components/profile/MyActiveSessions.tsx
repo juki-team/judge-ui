@@ -1,4 +1,4 @@
-import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T, TextHeadCell } from 'components';
+import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { useDataViewerRequester, useJukiUser, useSWR } from 'hooks';
 import { useMemo } from 'react';
@@ -7,11 +7,14 @@ import { ContentsResponseType, DataViewerHeadersType, QueryParam, SessionBasicRe
 export function MyActiveSessions() {
   
   const { deleteUserSession } = useJukiUser();
+  
   const {
     data: response,
     request,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<SessionBasicResponseDTO>>(() => JUDGE_API_V1.USER.MY_SESSIONS());
+  
+  const { mutate } = useSWR();
   
   const columns: DataViewerHeadersType<SessionBasicResponseDTO>[] = useMemo(() => [
     {
@@ -58,9 +61,8 @@ export function MyActiveSessions() {
       cardPosition: 'bottom',
       minWidth: 190,
     },
-  ], []);
+  ], [ deleteUserSession, mutate ]);
   
-  const { mutate } = useSWR();
   const data: SessionBasicResponseDTO[] = (response?.success ? response?.contents : []);
   
   return (

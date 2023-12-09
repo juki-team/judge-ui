@@ -15,11 +15,10 @@ import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useFetcher, useJukiRouter, useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
 import {
   AdminTab,
-  CompanyResponseDTO,
-  ContentResponseType,
+  CompanyUserPermissionsResponseDTO,
   ContentsResponseType,
   LastLinkKey,
   QueryParam,
@@ -31,36 +30,50 @@ function Admin() {
   
   useTrackLastPath(LastLinkKey.SECTION_ADMIN);
   const {
-    user: {
-      canViewSubmissionsManagement,
-      canSendEmail,
-      canHandleJudges,
-      canCreateUser,
-      canHandleUsers,
-      canHandleServices,
-      canHandleSettings,
-    },
+    user: {},
   } = useJukiUser();
+  const { searchParams, setSearchParams, pushRoute, routeParams } = useJukiRouter();
+  const selectedTabKey = routeParams.tab as AdminTab || AdminTab.SETTINGS_MANAGEMENT;
+  
   const {
     data,
-    mutate,
-  } = useFetcher<ContentsResponseType<CompanyResponseDTO>>(canHandleSettings ? JUDGE_API_V1.COMPANY.LIST() : null);
-  const { data: myCompany } = useFetcher<ContentResponseType<CompanyResponseDTO>>(JUDGE_API_V1.COMPANY.CURRENT());
-  const { searchParams, setSearchParams, pushRoute, routeParams } = useJukiRouter();
+    mutate: companyListMutate,
+  } = useFetcher<ContentsResponseType<CompanyUserPermissionsResponseDTO>>(JUDGE_API_V1.COMPANY.PERMISSION_LIST());
+  
   const companyKey = searchParams.get(QueryParam.COMPANY) as string;
-  const companies = data?.success ? data.contents : [];
-  const company: CompanyResponseDTO | undefined = canHandleSettings
-    ? companies.find((company) => company.key === companyKey)
-    : (myCompany?.success ? myCompany.content : undefined);
+  const companies = useMemo(() => data?.success ? data.contents : [], [ data ]);
+  const company = companies.find((company) => company.key === companyKey);
+  const {
+    canViewSubmissionsManagement,
+    canHandleEmail,
+    canHandleJudges,
+    canCreateUser,
+    canHandleUsers,
+    canHandleServices,
+    canHandleSettings,
+  } = company?.userPermissions || {
+    canViewSubmissionsManagement: false,
+    canHandleEmail: false,
+    canHandleJudges: false,
+    canCreateUser: false,
+    canHandleUsers: false,
+    canHandleServices: false,
+    canHandleSettings: false,
+  }
+  
+  
+  const mutate = async () => {
+    await companyListMutate();
+  }
   
   useEffect(() => {
-    if (!companyKey && canHandleSettings && companies[0]) {
+    if (!companyKey && companies[0]) {
       setSearchParams({ name: QueryParam.COMPANY, value: companies[0]?.key });
     }
-  }, [ companyKey, companies ]);
+  }, [ companyKey, companies, setSearchParams ]);
   
   if (!canViewSubmissionsManagement
-    && !canSendEmail
+    && !canHandleEmail
     && !canHandleJudges
     && !canCreateUser
     && !canHandleUsers
@@ -69,7 +82,22 @@ function Admin() {
     return <Custom404 />;
   }
   
+  if (!company) {
+    return <Custom404 />;
+  }
+  
   const tabs: TabsType<AdminTab> = {};
+  if (canHandleSettings) {
+    tabs[AdminTab.SETTINGS_MANAGEMENT] = {
+      key: AdminTab.SETTINGS_MANAGEMENT,
+      header: <T className="tt-ce ws-np">settings</T>,
+      body: company
+        ? <div className="pad-left-right pad-top-bottom"><SettingsManagement company={company} mutate={mutate} /></div>
+        : <div className="pad-left-right pad-top-bottom">
+          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
+        </div>,
+    };
+  }
   if (canCreateUser || canHandleUsers) {
     tabs[AdminTab.USERS_MANAGEMENT] = {
       key: AdminTab.USERS_MANAGEMENT,
@@ -103,27 +131,18 @@ function Admin() {
         </div>,
     };
   }
-  if (canSendEmail) {
+  if (canHandleEmail) {
     tabs[AdminTab.EMAIL_SENDER] = {
       key: AdminTab.EMAIL_SENDER,
       header: <T className="tt-ce ws-np">email sender</T>,
-      body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement /></div>,
+      body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement company={company} /></div>,
     };
   }
-  tabs[AdminTab.SETTINGS_MANAGEMENT] = {
-    key: AdminTab.SETTINGS_MANAGEMENT,
-    header: <T className="tt-ce ws-np">settings</T>,
-    body: company
-      ? <div className="pad-left-right pad-top-bottom"><SettingsManagement company={company} mutate={mutate} /></div>
-      : <div className="pad-left-right pad-top-bottom">
-        <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
-      </div>,
-  };
   if (canHandleJudges) {
     tabs[AdminTab.JUDGES_MANAGEMENT] = {
       key: AdminTab.JUDGES_MANAGEMENT,
       header: <T className="tt-ce ws-np">judges</T>,
-      body: <div className="pad-left-right pad-bottom"><JudgesManagement /></div>,
+      body: <div className="pad-left-right pad-bottom"><JudgesManagement company={company} /></div>,
     };
   }
   
@@ -147,7 +166,7 @@ function Admin() {
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         <div className="jk-row-col extend pad-left-right">
           <h3 className="flex-1" style={{ padding: 'var(--pad-sm) 0' }}><T>administration</T></h3>
-          {canHandleSettings && (
+          {companies?.length > 1 && (
             <div style={{ width: 200 }}>
               <Select
                 options={companies.map(company => ({
@@ -163,10 +182,10 @@ function Admin() {
           )}
         </div>
         <div className="pad-left-right">
-          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={routeParams.tab as AdminTab} />
+          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={selectedTabKey} />
         </div>
       </div>
-      {renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.body, { selectedTabKey: routeParams.tab as AdminTab })}
+      {renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.body, { selectedTabKey })}
     </TwoContentSection>
   );
 }

@@ -9,7 +9,7 @@ export const ImageProfileModal = ({ onClose, nickname }: { onClose: () => void, 
   
   const { updateUserProfileImage, mutatePing } = useJukiUser();
   const { mutate } = useSWR();
-  const [cropImage, setCropImage] = useState<CropImageType>();
+  const [ cropImage, setCropImage ] = useState<CropImageType>();
   
   return (
     <Modal onClose={onClose} isOpen={true}>

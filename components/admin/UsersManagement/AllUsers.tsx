@@ -55,7 +55,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
   } = useDataViewerRequester<ContentsResponseType<UserManagementResponseDTO>>(
     () => JUDGE_API_V1.USER.MANAGEMENT_LIST(company.key),
   );
-  useEffect(reload, [ company.key ]);
+  useEffect(reload, [ company.key, reload ]);
   const changeUserStatus = async (nickname: string, status: UserStatus) => {
     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
       JUDGE_API_V1.USER.STATUS(nickname),

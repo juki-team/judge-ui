@@ -1,4 +1,4 @@
-import { ButtonLoader, DataViewer, DateLiteral, Field, T } from 'components';
+import { ButtonLoader, DataViewer, DateLiteral, Field, T } from 'components/index';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, toFilterUrl } from 'helpers';
 import { useDataViewerRequester, useNotification } from 'hooks';
@@ -11,7 +11,7 @@ import {
   Status,
   VirtualUserResponseDTO,
 } from 'types';
-import { SetVirtualUserDataModal } from './SetVirtualUserDataModal';
+import { SetVirtualUserDataModal } from '../JudgesManagement/SetVirtualUserDataModal';
 
 export const VirtualUsersTable = () => {
   

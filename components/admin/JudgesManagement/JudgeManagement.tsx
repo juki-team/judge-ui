@@ -1,17 +1,19 @@
-import { ButtonLoader, InputToggle, T } from 'components';
+import { ButtonLoader, InputToggle, T } from 'components/index';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { KeyedMutator } from 'swr';
-import { ContentResponseType, HTTPMethod, JudgeResponseDTO, Status } from 'types';
+import { CompanyResponseDTO, ContentResponseType, HTTPMethod, JudgeResponseDTO, Status } from 'types';
 
 interface JudgeManagementBodyProps {
+  company: CompanyResponseDTO,
   judge: JudgeResponseDTO,
-  mutate: KeyedMutator<string>
+  mutate: KeyedMutator<string>,
+  withError?: boolean,
 }
 
-export const JudgeManagementBody = ({ judge, mutate }: JudgeManagementBodyProps) => {
+export const JudgeManagementBody = ({ company, judge, mutate, withError }: JudgeManagementBodyProps) => {
   
   const { notifyResponse } = useNotification();
   const [ languages, setLanguages ] = useState(judge.languages);
@@ -22,6 +24,11 @@ export const JudgeManagementBody = ({ judge, mutate }: JudgeManagementBodyProps)
   return (
     <div className="jk-col nowrap top gap stretch">
       <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
+        {withError && (
+          <div className="jk-tag error">
+            <T className="tt-se">{'not initialized, to initialize click on the "crawl languages" button'}</T>
+          </div>
+        )}
         <h3>{JUDGE[judge.key]?.label || judge.key}</h3>
         <div><T className="fw-bd tt-se">key</T>:&nbsp;{judge.key}</div>
         <div className="jk-divider tiny" />
@@ -33,7 +40,7 @@ export const JudgeManagementBody = ({ judge, mutate }: JudgeManagementBodyProps)
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<{}>>(
                 await authorizedRequest(
-                  JUDGE_API_V1.JUDGE.CRAWL_LANGUAGES(judge.key),
+                  JUDGE_API_V1.JUDGE.CRAWL_LANGUAGES(judge.key, company.key),
                   { method: HTTPMethod.POST },
                 ),
               );

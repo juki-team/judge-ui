@@ -2,36 +2,30 @@ import { FetcherLayer, T, TabsInline } from 'components';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import React from 'react';
-import { ContentResponseType, Judge, JudgeResponseDTO, JudgesManagementTab, TabsType } from 'types';
+import { CompanyResponseDTO, ContentResponseType, Judge, JudgeResponseDTO, JudgesManagementTab, TabsType } from 'types';
 import { JUDGE_API_V1 } from '../../../config/constants';
-import Custom404 from '../../../pages/404';
 import { JudgeManagementBody } from './JudgeManagement';
-import { VirtualSubmissionsQueueManagement } from './VirtualSubmissionsQueueManagement';
-import { VirtualUsersTable } from './VirtualUsersTable';
 
-export const JudgesManagement = () => {
+export const JudgesManagement = ({ company }: { company: CompanyResponseDTO }) => {
   const tabs: TabsType<JudgesManagementTab> = {
-    [JudgesManagementTab.VIRTUAL_SUBMISSIONS_QUEUE]: {
-      key: JudgesManagementTab.VIRTUAL_SUBMISSIONS_QUEUE,
-      header: <T className="tt-ce ws-np">virtual submissions queue</T>,
-      body: <VirtualSubmissionsQueueManagement />,
-    },
-    [JudgesManagementTab.VIRTUAL_USERS]: {
-      key: JudgesManagementTab.VIRTUAL_USERS,
-      header: <T className="tt-ce ws-np">virtual users</T>,
-      body: <VirtualUsersTable />,
-    },
     [JudgesManagementTab.CODEFORCES_JUDGE]: {
       key: JudgesManagementTab.CODEFORCES_JUDGE,
       header: <T className="tt-ce ws-np">codeforces</T>,
       body: (
         <FetcherLayer<ContentResponseType<JudgeResponseDTO>>
-          url={JUDGE_API_V1.JUDGE.GET(Judge.CODEFORCES)}
-          errorView={<Custom404 />}
+          url={JUDGE_API_V1.JUDGE.GET(Judge.CODEFORCES, company.key)}
+          errorView={
+            <JudgeManagementBody
+              company={company}
+              judge={{ key: Judge.CODEFORCES, languages: [] }}
+              mutate={async () => undefined}
+              withError
+            />
+          }
         >
           {({ data, mutate }) => {
             return (
-              <JudgeManagementBody judge={data.content} mutate={mutate} />
+              <JudgeManagementBody company={company} judge={data.content} mutate={mutate} />
             );
           }}
         </FetcherLayer>
@@ -42,12 +36,19 @@ export const JudgesManagement = () => {
       header: <T className="tt-ce ws-np">JV UMSA</T>,
       body: (
         <FetcherLayer<ContentResponseType<JudgeResponseDTO>>
-          url={JUDGE_API_V1.JUDGE.GET(Judge.JV_UMSA)}
-          errorView={<Custom404 />}
+          url={JUDGE_API_V1.JUDGE.GET(Judge.JV_UMSA, company.key)}
+          errorView={
+            <JudgeManagementBody
+              company={company}
+              judge={{ key: Judge.JUKI_JUDGE, languages: [] }}
+              mutate={async () => undefined}
+              withError
+            />
+          }
         >
           {({ data, mutate }) => {
             return (
-              <JudgeManagementBody judge={data.content} mutate={mutate} />
+              <JudgeManagementBody company={company} judge={data.content} mutate={mutate} />
             );
           }}
         </FetcherLayer>
@@ -56,7 +57,7 @@ export const JudgesManagement = () => {
   };
   
   const { searchParams, setSearchParams } = useJukiRouter();
-  const selectedTabKey = searchParams.get('judgeTab') as JudgesManagementTab || JudgesManagementTab.VIRTUAL_SUBMISSIONS_QUEUE;
+  const selectedTabKey = searchParams.get('judgeTab') as JudgesManagementTab || JudgesManagementTab.CODEFORCES_JUDGE;
   const pushTab = (tabKey: JudgesManagementTab) => setSearchParams({ name: 'judgeTab', value: tabKey });
   
   return (

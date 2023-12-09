@@ -42,15 +42,8 @@ export enum AdminTab {
   SUBMISSIONS = 'submissions',
   
   SERVICES_MANAGEMENT = 'services-management',
-  ECS_TASKS_MANAGEMENT = 'ecs-task-management',
-  ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitions-management',
-  SQS_MANAGEMENT = 'sqs-management',
-  RUNNERS_SETTINGS = 'runners-settings',
-  EC2_MANAGEMENT = 'ec2-management',
   
   EMAIL_SENDER = 'mail-sender',
-  
-  FILES_MANAGEMENT = 'files-management',
   
   SETTINGS_MANAGEMENT = 'settings-management',
   
@@ -58,10 +51,19 @@ export enum AdminTab {
 }
 
 export enum JudgesManagementTab {
-  VIRTUAL_SUBMISSIONS_QUEUE = 'virtual-submissions-queue',
-  VIRTUAL_USERS = 'virtual-users',
   CODEFORCES_JUDGE = 'codeforces-judge',
   JV_UMSA_JUDGE = 'jv-umsa-judge',
+}
+
+export enum ServicesManagementTab {
+  ECS_TASKS_MANAGEMENT = 'ecs-task-management',
+  ECS_DEFINITIONS_TASK_MANAGEMENT = 'ecs-definitions-management',
+  SQS_MANAGEMENT = 'sqs-management',
+  RUNNERS_SETTINGS = 'runners-settings',
+  EC2_MANAGEMENT = 'ec2-management',
+  FILES_MANAGEMENT = 'files-management',
+  VIRTUAL_SUBMISSIONS_QUEUE = 'virtual-submissions-queue',
+  VIRTUAL_USERS = 'virtual-users',
 }
 
 export enum ProblemTab {
