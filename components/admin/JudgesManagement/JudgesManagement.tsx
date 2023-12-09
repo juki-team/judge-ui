@@ -40,7 +40,7 @@ export const JudgesManagement = ({ company }: { company: CompanyResponseDTO }) =
           errorView={
             <JudgeManagementBody
               company={company}
-              judge={{ key: Judge.JUKI_JUDGE, languages: [] }}
+              judge={{ key: Judge.JV_UMSA, languages: [] }}
               mutate={async () => undefined}
               withError
             />
