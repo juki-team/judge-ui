@@ -61,7 +61,6 @@ function Admin() {
     canHandleSettings: false,
   }
   
-  
   const mutate = async () => {
     await companyListMutate();
   }
@@ -158,7 +157,7 @@ function Admin() {
     renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.header, { selectedTabKey: routeParams.tab as AdminTab }),
   ];
   
-  const pushTab = (tabKey: AdminTab) => pushRoute({ pathname: ROUTES.ADMIN.PAGE(tabKey) });
+  const pushTab = (tabKey: AdminTab) => pushRoute({ pathname: ROUTES.ADMIN.PAGE(tabKey), searchParams });
   
   return (
     <TwoContentSection>

@@ -80,7 +80,7 @@ export const JudgeManagementBody = ({ company, judge, mutate, withError }: Judge
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<{}>>(
                 await authorizedRequest(
-                  JUDGE_API_V1.JUDGE.LANGUAGES(judge.key),
+                  JUDGE_API_V1.JUDGE.LANGUAGES(judge.key, company.key),
                   { method: HTTPMethod.POST, body: JSON.stringify({ languages }) },
                 ),
               );
