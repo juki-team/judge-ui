@@ -35,6 +35,7 @@ export {
   CourseType,
   SocketEvent,
   CompanyLogoType,
+  Status,
 } from '@juki-team/commons';
 
 export type {

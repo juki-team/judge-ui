@@ -1,14 +1,5 @@
 import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components';
-import {
-  CONTEST_ROLE,
-  COURSE_ROLE,
-  FILE_ROLE,
-  JUDGE_API_V1,
-  PROBLEM_ROLE,
-  SYSTEM_ROLE,
-  TEAM_ROLE,
-  USER_ROLE,
-} from 'config/constants';
+import { CONTEST_ROLE, JUDGE_API_V1, PROBLEM_ROLE, USER_ROLE } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiUser } from 'hooks';
 import React, { useState } from 'react';
@@ -41,7 +32,7 @@ type Roles = {
 }
 
 export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: ProblemPermissionsProps) => {
-  const { company: { key }, user: { canHandleSettings, canManageSettings } } = useJukiUser();
+  const { company: { key } } = useJukiUser();
   const [ editing, setEditing ] = useState(false);
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const roles = {
@@ -61,12 +52,12 @@ export const UserPermissions = ({ user: userToUpdate, companyKey, refresh }: Pro
     contest: CONTEST_ROLE,
   };
   
-  if (canManageSettings) {
-    ROLES.system = SYSTEM_ROLE;
-    ROLES.team = TEAM_ROLE;
-    ROLES.course = COURSE_ROLE;
-    ROLES.file = FILE_ROLE;
-  }
+  // if (canManageSettings) {
+  //   ROLES.system = SYSTEM_ROLE;
+  //   ROLES.team = TEAM_ROLE;
+  //   ROLES.course = COURSE_ROLE;
+  //   ROLES.file = FILE_ROLE;
+  // }
   
   return (
     <div>

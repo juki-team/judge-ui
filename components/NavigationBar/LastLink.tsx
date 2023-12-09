@@ -1,4 +1,4 @@
-import { useJukiRouter, useLasLink } from 'hooks';
+import { useJukiRouter, useLastLink } from 'hooks';
 import Link from 'next/link';
 import { LastLinkKey, PropsWithChildren } from 'types';
 
@@ -9,7 +9,7 @@ interface LastLinkProps {
 
 export const LastLink = ({ children, lastLinkKey, onDoubleClickRoute }: PropsWithChildren<LastLinkProps>) => {
   
-  const { lastLink } = useLasLink();
+  const { lastLink } = useLastLink();
   const { pushRoute } = useJukiRouter();
   
   return (

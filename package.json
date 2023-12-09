@@ -11,7 +11,7 @@
     "pull": "yarn add @juki-team/commons @juki-team/base-ui"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.1.36",
+    "@juki-team/base-ui": "^0.1.43",
     "@juki-team/commons": "^0.0.367",
     "@vercel/analytics": "^0.1.6",
     "deep-object-diff": "^1.1.7",
@@ -26,6 +26,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
+    "socket.io-client": "^4.7.2",
     "swr": "^2.0.0",
     "xlsx": "^0.18.5"
   },

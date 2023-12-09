@@ -1243,10 +1243,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.36":
-  version "0.1.36"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.36/d77b955feeb94afb2536479d15f00e40c05bba3c#d77b955feeb94afb2536479d15f00e40c05bba3c"
-  integrity sha512-/UGz8Uw8bF9X11MsfSEFXbqbiMQZH1vIH8vTuG0N5SY62bdaBM1ogyLvxOOQEfU7612SPsEpO+wRzPCudziIyw==
+"@juki-team/base-ui@^0.1.43":
+  version "0.1.43"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.43/37b97bd71f5f353017303968ded7f2f434fabb28#37b97bd71f5f353017303968ded7f2f434fabb28"
+  integrity sha512-kbxiBksu/kqETWzmrbOJM23iDWwqU1sKS/TGe5kqf+O8jC3bLwKOEd5cd/R5xUmGM61MR2E5fgifCnOY0Z/b0A==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-html" "^6.4.6"
@@ -1256,26 +1256,21 @@
     "@codemirror/lang-markdown" "^6.0.5"
     "@codemirror/lang-python" "^6.1.0"
     "@hookform/resolvers" "^3.3.2"
-    "@juki-team/commons" "^0.0.360"
     "@monaco-editor/react" "^4.4.2"
     "@tanstack/react-virtual" "^3.0.0-beta.30"
     "@uiw/react-codemirror" "^4.19.3"
     codemirror "^5.65.2"
     copy-to-clipboard "^3.3.3"
     deep-object-diff "^1.1.9"
-    i18next "^23.7.6"
     immutability-helper "^3.1.1"
     prismjs "^1.29.0"
-    react "^18.2.0"
     react-collapse "^5.1.1"
     react-color "^2.19.3"
     react-copy-to-clipboard "^5.1.0"
     react-device-detect "^2.2.3"
     react-dnd "^16.0.1"
     react-dnd-html5-backend "^16.0.1"
-    react-dom "^18.2.0"
     react-hook-form "^7.43.2"
-    react-i18next "^13.5.0"
     react-image-crop "^10.0.7"
     react-markdown "^9.0.1"
     react-modal "^3.15.1"
@@ -1287,16 +1282,9 @@
     remark-gfm "^4.0.0"
     remark-math "^6.0.0"
     sass "^1.69.5"
-    socket.io-client "^4.5.2"
-    swr "^2.0.0"
     uuid "^9.0.0"
     xlsx "^0.18.5"
     yup "^1.3.2"
-
-"@juki-team/commons@^0.0.360":
-  version "0.0.360"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.360/8cf816401becce020546f743846569e401e24ee0#8cf816401becce020546f743846569e401e24ee0"
-  integrity sha512-IMIsURMbhhc32mEUpzkGqdjwbIhMyqfz4Te/IH/F7M28mDBpQKawsmLq5xP/CufnzKWXYicBnTIkUcPa8Olz3w==
 
 "@juki-team/commons@^0.0.367":
   version "0.0.367"
@@ -5445,7 +5433,7 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
-socket.io-client@^4.5.2:
+socket.io-client@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.2.tgz#f2f13f68058bd4e40f94f2a1541f275157ff2c08"
   integrity sha512-vtA0uD4ibrYD793SOIAwlo8cj6haOeMHrGvwPxJsxH7CeIksqJ+3Zc06RvWTIFgiSqx4A3sOnTXpfAEE2Zyz6w==

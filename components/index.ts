@@ -1,4 +1,4 @@
-export * from './Dialogs';
+export * from './dialogs';
 export * from './NavigationBar';
 export * from './admin';
 export * from './commons';

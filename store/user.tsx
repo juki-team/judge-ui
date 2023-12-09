@@ -25,7 +25,6 @@ export const _setFlags: { current: SetFlagsType } = { current: () => null };
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
-  // const { i18n } = useT();
   const { locale, pathname, asPath, query, replace, isReady } = useRouter();
   const { pathname: pathname2 } = useJukiRouter();
   const { user } = useJukiUser();

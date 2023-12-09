@@ -1,10 +1,3 @@
-export enum Status {
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR',
-  LOADING = 'LOADING',
-  NONE = 'NONE'
-}
-
 export enum LastLinkKey {
   SECTION_CONTEST = 'SECTION_CONTESTS',
   CONTESTS = 'CONTESTS',

@@ -83,7 +83,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     user: {
       nickname,
       canViewSubmissionsManagement,
-      canSendEmail,
+      canHandleEmail,
       canHandleJudges,
       canCreateUser,
       canHandleUsers,
@@ -135,7 +135,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   }
   if (
     canViewSubmissionsManagement
-    || canSendEmail
+    || canHandleEmail
     || canHandleJudges
     || canCreateUser
     || canHandleUsers
