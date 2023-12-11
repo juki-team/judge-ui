@@ -1,34 +1,32 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.4.3",
+  "version": "1.4.4",
   "scripts": {
     "dev": "next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pull": "yarn add @juki-team/commons @juki-team/base-ui"
+    "pull": "yarn add @juki-team/commons @juki-team/base-ui && rm -rf ./styles && cp -r './node_modules/@juki-team/base-ui/dist/styles' ./styles"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.1.43",
-    "@juki-team/commons": "^0.0.367",
-    "@vercel/analytics": "^0.1.6",
+    "@juki-team/base-ui": "^0.1.78",
+    "@juki-team/commons": "^0.0.370",
+    "@vercel/analytics": "^1.1.1",
     "deep-object-diff": "^1.1.7",
     "i18next": "^23.7.6",
     "i18next-chained-backend": "^4.6.2",
     "i18next-http-backend": "^2.4.2",
     "i18next-resources-to-backend": "^1.2.0",
-    "net": "^1.0.2",
-    "next": "^13.2.1",
+    "next": "^14.0.4",
     "next-compose-plugins": "^2.2.1",
     "next-pwa": "^5.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
-    "socket.io-client": "^4.7.2",
-    "swr": "^2.0.0",
-    "xlsx": "^0.18.5"
+    "sass": "^1.69.5",
+    "socket.io-client": "^4.7.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
@@ -36,7 +34,7 @@
     "eslint": "^8.54.0",
     "eslint-config-next": "^14.0.3",
     "local-ssl-proxy": "^1.3.0",
-    "typescript": "^4.9.5",
-    "webpack": "^5.74.0"
+    "sass-loader": "^13.3.2",
+    "typescript": "^5.3.3"
   }
 }

@@ -126,9 +126,9 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
         inputNewFile: newTestCases[testCaseKey]?.inputNewFile || null,
         testCaseKey,
         groups: problem.settings.mode === ProblemMode.SUBTASK ? newGroups : [ 1 ],
-        [(keyFile + 'NewFile') as 'outputNewFile']: file,
-        [(keyFile + 'NewFileState') as 'outputNewFileState']: UploadState.NO_SAVED,
       } as NewTestCaseType;
+      newTestCases[testCaseKey][(keyFile + 'NewFile') as 'outputNewFile'] = file;
+      newTestCases[testCaseKey][(keyFile + 'NewFileState') as 'outputNewFileState'] = UploadState.NO_SAVED;
     }
     setTestCases(newTestCases);
   };

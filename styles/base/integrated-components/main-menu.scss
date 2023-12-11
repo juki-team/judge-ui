@@ -1,0 +1,55 @@
+@import "../../abstracts/index";
+
+.settings-apps-login-user-content {
+  .jk-icon {
+    color: var(--t-color-primary-text);
+  }
+}
+
+.user-logged-head {
+  
+  .selected.vertical {
+    width: 6px;
+    height: calc(var(--pad-m) + var(--pad-xt) * 4);
+    background: var(--t-color-primary-text);
+    position: absolute;
+    right: 0;
+    border-bottom-left-radius: var(--pad-xt);
+    border-top-left-radius: var(--pad-xt);
+  }
+  
+  .selected.horizontal {
+    content: "";
+    height: 6px;
+    width: calc(var(--pad-m) + var(--pad-xt) * 4);
+    background: var(--t-color-secondary);
+    position: absolute;
+    bottom: 0;
+    border-top-left-radius: var(--pad-xt);
+    border-top-right-radius: var(--pad-xt);
+  }
+  
+  padding: var(--pad-xt);
+  
+  &:hover {
+    background: var(--t-color-shadow-darkest);
+  }
+  
+  .nickname {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    display: block;
+    @include sm { display: none; }
+  }
+  
+  > img.jk-user-profile-img {
+    border-color: var(--t-color-primary-text) !important;
+  }
+}
+
+.settings-apps-login-user-content.pad-top-bottom > .jk-row > .flex-1 {
+  text-align: left;
+  padding-left: var(--pad-xt);
+}

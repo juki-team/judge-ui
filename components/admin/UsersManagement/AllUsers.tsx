@@ -8,7 +8,6 @@ import {
   ResetPassword,
   Select,
   T,
-  useNotification,
   UserChip,
 } from 'components';
 import {
@@ -22,7 +21,7 @@ import {
   USER_STATUS,
 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useDataViewerRequester } from 'hooks';
+import { useDataViewerRequester, useNotification } from 'hooks';
 import Link from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
 import {

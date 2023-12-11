@@ -40,7 +40,7 @@ export const GenerateUsers = ({ company }: { company: CompanyResponseDTO }) => {
     user.email,
     user.password,
     user.message,
-  ]));
+  ] as string[]));
   const dataCsv = [ head, ...body ];
   
   return (

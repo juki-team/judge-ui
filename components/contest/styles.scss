@@ -1,4 +1,4 @@
-@import "@juki-team/base-ui/dist/styles/abstracts/index";
+@use "styles/abstracts" as utils;
 
 .contest-content-side-right-bar-bottom {
   padding: var(--pad-md) 0;
@@ -56,18 +56,18 @@
 
 .contest-overview {
   height: auto;
-  @include sm {
+  @include utils.sm {
     flex-direction: column-reverse !important;
   }
   
   > div:first-child {
-    @include sm {
+    @include utils.sm {
       padding-top: 0;
     }
   }
   
   > div:last-child {
-    @include sm {
+    @include utils.sm {
       padding-bottom: 0;
     }
   }

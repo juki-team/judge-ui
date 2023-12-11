@@ -1,7 +1,7 @@
-import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T, useNotification } from 'components';
+import { Button, ButtonLoader, CloseIcon, EditIcon, SaveIcon, Select, T } from 'components';
 import { CONTEST_ROLE, JUDGE_API_V1, PROBLEM_ROLE, USER_ROLE } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiUser } from 'hooks';
+import { useJukiUser, useNotification } from 'hooks';
 import React, { useState } from 'react';
 import {
   ContentResponseType,

@@ -1,7 +1,6 @@
-import { SpinIcon } from '@juki-team/base-ui';
 import { JUKI_APP_COMPANY_KEY } from '@juki-team/commons';
 import { Analytics } from '@vercel/analytics/react';
-import { CustomHead, ErrorBoundary, JukiProviders, LasLinkProvider, NavigationBar, T } from 'components';
+import { CustomHead, ErrorBoundary, JukiProviders, LasLinkProvider, NavigationBar, SpinIcon, T } from 'components';
 import { settings } from 'config';
 import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV } from 'config/constants';
 import { consoleWarn } from 'helpers';
@@ -18,6 +17,7 @@ import { useSearchParams } from '../hooks/useSearchParams';
 import i18nInstance from '../i18n';
 import './styles.scss';
 
+// @ts-ignore
 const MyComponent = dynamic(() => import('./md-print'), { ssr: false });
 
 const SponsoredByTag = () => {
@@ -38,12 +38,6 @@ const SponsoredByTag = () => {
 
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   
-  settings.setSetting(
-    JUKI_SERVICE_BASE_URL + '/api/v1',
-    JUKI_SERVICE_BASE_URL,
-    'https://utils.juki.app',
-    JUKI_TOKEN_NAME,
-  );
   settings.setOnError((error) => {
     consoleWarn(error);
     _setFlags.current(prevState => ({ ...prevState, isHelpOpen: true, isHelpFocused: true }));

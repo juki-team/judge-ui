@@ -1,0 +1,263 @@
+@import "../../abstracts/index";
+
+.jk-theme-light {
+  --menu-color: var(--t-color-primary-dark);
+}
+
+.jk-theme-dark {
+  --menu-color: var(--t-color-accent);
+}
+
+.jk-vertical-menu-layout-container, .jk-horizontal-menu-layout-container {
+  --border-radius-width: 24px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: relative;
+  
+  > .jk-menu {
+    z-index: var(--z-index-menu);
+  }
+  
+  > .jk-menu-main-layout {
+    height: calc(100% - var(--top-horizontal-menu-height));
+  }
+}
+
+.jk-vertical-menu-layout-container {
+  --top-horizontal-menu-height: 0px;
+  --left-vertical-menu-width: calc(64px * 4);
+  @include md {
+    --left-vertical-menu-width: calc(64px * 3);
+  }
+  @include sm {
+    --left-vertical-menu-width: calc(64px * 2);
+  }
+  
+  --height-jk-menu-item: var(--left-vertical-collapsed-menu-width);
+  //--height-jk-menu-item: 56px;
+  
+  &.collapsed {
+    --left-vertical-menu-width: var(--left-vertical-collapsed-menu-width);
+    
+    > .jk-menu {
+      .jk-menu-items {
+        .jk-menu-item-icon {
+          margin: 0 auto !important;
+        }
+        
+        .jk-menu-item-label {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  > .jk-menu {
+    height: 100%;
+    width: var(--left-vertical-menu-width);
+    @include transition(width);
+    
+    .jk-menu-content {
+      width: inherit;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      
+      .jk-menu-top-section, .jk-menu-item, .jk-menu-bottom-section {
+        background-color: var(--menu-color);
+        color: var(--t-color-primary-text);
+      }
+      
+      .jk-menu-items {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        
+        .jk-menu-item {
+          display: flex;
+          position: relative;
+          height: var(--height-jk-menu-item);
+          align-items: center;
+          cursor: pointer;
+          
+          &.selected {
+            background-color: transparent;
+            font-weight: var(--weight-bold);
+            color: var(--color-primary);
+            
+            &:after {
+              position: absolute;
+              top: 0;
+              left: -18px;
+              content: " ";
+              background: radial-gradient(circle at right, transparent calc(var(--height-jk-menu-item) / 2), var(--menu-color) calc(var(--height-jk-menu-item) / 2)), transparent center/cover;
+              width: var(--height-jk-menu-item);
+              height: var(--height-jk-menu-item);
+            }
+          }
+          
+          &.selected-down {
+            border-radius: 0 0 var(--border-radius-width) 0;
+          }
+          
+          &.selected-up {
+            border-radius: 0 var(--border-radius-width) 0 0;
+          }
+          
+          &.extra:last-child {
+            flex: 1;
+          }
+          
+          .jk-menu-item-icon {
+            height: var(--pad-m);
+            @include transition(margin);
+            margin: 0 var(--pad-m) 0 var(--pad-s);
+            @include md {
+              margin: 0 var(--pad-xs) 0 var(--pad-s);
+            }
+            @include sm {
+              margin: 0 var(--pad-xt) 0 var(--pad-s);
+            }
+          }
+          
+          .jk-menu-item-label {
+            text-transform: capitalize;
+          }
+        }
+      }
+      
+      .jk-menu-collapse {
+        cursor: pointer;
+        position: absolute;
+        right: -12px;
+        background: var(--t-color-white);
+        z-index: 1;
+        border-radius: 50%;
+        top: var(--pad-md);
+      }
+    }
+  }
+  
+  > .jk-menu-main-layout {
+    width: calc(100vw - var(--left-vertical-menu-width));
+    overflow: hidden auto;
+  }
+}
+
+.jk-horizontal-menu-layout-container {
+  --left-vertical-menu-width: 0px;
+  --top-horizontal-menu-height: 64px;
+  @include sm {
+    --top-horizontal-menu-height: 56px;
+  }
+  
+  height: 100%;
+  width: 100%;
+  --height-jk-menu-item: var(--top-horizontal-menu-height);
+  flex-direction: column;
+  overflow: hidden;
+  
+  > .jk-menu {
+    height: var(--top-horizontal-menu-height);
+    width: 100%;
+    
+    .jk-menu-content {
+      width: 100%;
+      height: inherit;
+      background-color: var(--menu-color);
+      @include sm {
+        background-color: var(--t-color-white);
+      }
+      position: relative;
+      
+      .jk-menu-left-section, .jk-menu-items, .jk-menu-right-section,
+      .jk-horizontal-menu-mobile-left, .jk-horizontal-menu-mobile-center, .jk-horizontal-menu-mobile-right {
+        height: inherit;
+        color: var(--t-color-primary-text);
+      }
+      
+      .jk-menu-items {
+        flex: 1;
+        color: var(--t-color-primary-text);
+        
+        .jk-menu-item {
+          position: relative;
+          height: var(--height-jk-menu-item);
+          align-items: center;
+          cursor: pointer;
+          @include md {
+            padding: 0 var(--pad-xt);
+          }
+          @include lg {
+            padding: 0 var(--pad-xs);
+          }
+          @include hg {
+            padding: 0 var(--pad-m);
+          }
+          @include sm {
+            flex-direction: column;
+          }
+          
+          &:not(.selected):hover {
+            background: var(--t-color-shadow-light) !important;
+          }
+          
+          &.selected {
+            font-weight: var(--weight-bold);
+            @include sm {
+              background-color: var(--t-color-secondary);
+            }
+            
+            &:after {
+              position: absolute;
+              bottom: 0;
+              content: "";
+              width: 100%;
+              height: var(--pad-xt);
+              background-color: var(--t-color-secondary);
+              border-radius: 4px 4px 0 0;
+              
+              @include sm {
+                content: none;
+              }
+            }
+          }
+          
+          &.extra:last-child {
+            flex: 1;
+          }
+          
+          .jk-menu-item-icon {
+            margin: 0;
+            
+            @include sm {
+              height: var(--pad-s);
+              width: var(--pad-s);
+              .jk-icon {
+                min-height: var(--pad-s);
+                min-width: var(--pad-s);
+                height: var(--pad-s);
+                width: var(--pad-s);
+              }
+            }
+          }
+          
+          .jk-menu-item-label {
+            text-transform: uppercase;
+          }
+        }
+      }
+      
+      .jk-horizontal-menu-mobile-right {
+        display: flex;
+      }
+    }
+  }
+  
+  > .jk-top-horizontal-menu {
+    position: sticky;
+    top: 0;
+  }
+}

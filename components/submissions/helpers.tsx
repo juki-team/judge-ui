@@ -221,7 +221,6 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
   sort: true,
   filter: {
     type: 'date-range',
-    getValue: ({ record: { timestamp } }) => new Date(timestamp),
     pickerType: 'year-month-day-hours-minutes',
   },
   cardPosition: 'center',

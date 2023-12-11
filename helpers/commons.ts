@@ -30,4 +30,4 @@ export {
   cleanRequest,
   toFilterUrl,
   toSortUrl,
-} from '@juki-team/base-ui';
+} from '@juki-team/base-ui/utils';

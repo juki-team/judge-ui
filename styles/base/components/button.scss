@@ -1,0 +1,208 @@
+@import "../../abstracts/index";
+
+:not(*[class*=" jk-button-"], *[class^="jk-button-"]).clickable {
+  cursor: initial;
+  
+  &:not(.disabled):not(.loading) {
+    cursor: pointer;
+    
+    &:hover {
+      @extend .elevation-1;
+    }
+  }
+}
+
+button[class*=" jk-button-"], button[class^="jk-button-"],
+input[class*=" jk-button-"], input[class^="jk-button-"],
+div[class*=" jk-button-"], div[class^="jk-button-"],
+span[class*=" jk-button-"], span[class^="jk-button-"] {
+  --button-border-width: 3px;
+  --button-border-color: transparent;
+  --button-padding: var(--pad-xs); // 16px
+  --size-button-loader-icon: var(--size-regular-icon);
+  --button-border-padding: var(--button-padding);
+  --icon-margin-right: 0;
+  background-color: var(--button-background-color, var(--t-color-primary));
+  height: auto;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: var(--button-border-width) solid var(--button-border-color);
+  outline-offset: -1px;
+  font-weight: var(--weight-bold);
+  cursor: initial;
+  //padding: calc(var(--gap) - 2px) var(--button-border-padding);
+  padding: 6px var(--button-border-padding);
+  opacity: 1;
+  @include transition(opacity, padding);
+  
+  &:not(.disabled) {
+    cursor: pointer;
+    
+    &:hover {
+      --button-border-color: var(--button-background-color);
+    }
+  }
+  
+  &.tiny {
+    line-height: var(--size-tiny-icon); // 12px;
+    font-size: var(--text-t-size); // 12px
+    --button-padding: var(--pad-xt); // 8px
+    --size-button-loader-icon: var(--size-tiny-icon);
+    
+    .jk-icon { @extend .tiny; }
+  }
+  
+  &.small {
+    line-height: var(--size-small-icon); // 18px
+    font-size: var(--text-s-size); // 14px
+    --button-padding: var(--pad-t); // 12px
+    --size-button-loader-icon: var(--size-small-icon);
+    
+    .jk-icon { @extend .small; }
+  }
+  
+  &.regular {
+    line-height: var(--size-regular-icon); // 24px
+    font-size: var(--text-m-size);
+    --button-padding: var(--pad-xs); // 16px
+    --size-button-loader-icon: var(--size-regular-icon);
+    
+    .jk-icon { @extend .regular; }
+  }
+  
+  &.large {
+    line-height: var(--size-large-icon); // 36px
+    font-size: var(--text-l-size);
+    --button-padding: var(--pad-s); // 20px
+    --size-button-loader-icon: var(--size-large-icon);
+    
+    .jk-icon { @extend .large; }
+  }
+  
+  &.huge {
+    line-height: var(--size-huge-icon); // 48px
+    font-size: var(--text-h-size);
+    --button-padding: var(--pad-m); // 24px
+    --size-button-loader-icon: var(--size-huge-icon);
+    
+    .jk-icon { @extend .huge; }
+  }
+  
+  &.jk-button-loader {
+    
+    .button-loader-icon {
+      overflow: hidden;
+      @include transition(width, min-width, height, min-height, margin-left);
+      
+      .jk-icon {
+        width: inherit;
+        min-width: inherit;
+        height: inherit;
+        min-height: inherit;
+      }
+    }
+    
+    &.with-loader-icon {
+      --button-border-color: var(--button-background-color);
+      
+      .button-loader-icon {
+        @include box-size(var(--size-button-loader-icon));
+      }
+    }
+    
+    &.with-loader-icon:not(.only-icon) .button-loader-icon {
+      margin-left: var(--gap);
+    }
+  }
+  
+  &:not(.jk-button-loader) {
+    --size-button-loader-icon: 0px;
+  }
+  
+  &.only-icon {
+    border-radius: 50%;
+    padding: calc(var(--button-padding) / 2);
+    
+    .jk-icon {
+      margin: auto;
+    }
+  }
+  
+  &.disabled:not(.with-loader-icon) { opacity: 0.8; cursor: not-allowed; }
+  
+  &.extend { width: 100%; }
+  
+  &.error {
+    --button-background-color: var(--t-color-error);
+    pointer-events: none;
+  }
+  
+  &.success {
+    --button-background-color: var(--t-color-success);
+    pointer-events: none;
+  }
+  
+  overflow: hidden;
+  
+  &.icon:not(.only-icon) {
+    > :first-child {
+      --icon-margin-right: var(--gap);
+      margin-right: var(--icon-margin-right);
+    }
+  }
+}
+
+.jk-button-primary {
+  --button-background-color: var(--t-color-primary);
+  color: var(--t-color-primary-text);
+}
+
+.jk-button-secondary {
+  --button-background-color: var(--t-color-secondary);
+  color: var(--t-color-secondary-text);
+}
+
+.jk-button-text {
+  --button-background-color: transparent;
+  color: inherit;
+  
+  * {
+    color: inherit;
+  }
+}
+
+*.jk-row:not(.block), *.jk-col:not(.block), *.jk-row-col:not(.block), *:not(.jk-row):not(.jk-col):not(.jk-row-col) {
+  > button[class*=" jk-button-"], > button[class^="jk-button-"],
+  > input[class*=" jk-button-"], > input[class^="jk-button-"],
+  > div[class*=" jk-button-"], > div[class^="jk-button-"],
+  > span[class*=" jk-button-"], > span[class^="jk-button-"] {
+    &:not(.with-loader-icon):not(.only-icon) {
+      --button-border-padding: calc((var(--size-button-loader-icon) / 2) + var(--button-padding) + var(--gap) / 2);
+      
+      .button-loader-icon {
+        width: 0;
+        min-width: 0;
+        height: 0;
+        min-height: 0;
+      }
+    }
+  }
+}
+
+.jk-button-outline {
+  --button-background-color: transparent;
+  outline: 1px solid var(--t-color-primary) !important;
+  color: var(--t-color-primary);
+  font-weight: var(--weight-bolder) !important;
+}
+
+.jk-button-light {
+  --button-background-color: rgba(var(--t-color-black-rgb), 0.06);
+  --button-border-width: 2px !important;
+  outline-offset: 0 !important;
+  color: inherit;
+}

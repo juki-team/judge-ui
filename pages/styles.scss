@@ -1,13 +1,14 @@
-@import "@juki-team/base-ui/dist/styles/base";
+@use "styles/abstracts" as utils;
+@import "styles/base";
 @import "components/problem/styles";
 @import "components/profile/styles";
 @import "components/contest/styles";
 
 body {
-  @include md {
+  @include utils.md {
     --top-horizontal-menu-height: 56px;
   }
-  @include lg {
+  @include utils.lg {
     --top-horizontal-menu-height: 56px;
   }
   

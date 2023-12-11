@@ -1,4 +1,5 @@
 export {
+  SpinIcon,
   JukiProviders,
   RefreshIcon,
   AddIcon,
@@ -163,7 +164,7 @@ export {
   ViewHeadlineIcon,
   ViewModuleIcon,
   VisibilityIcon,
-  useNotification,
+  NewVersionAvailableModal,
 } from '@juki-team/base-ui';
 
 export * from './CustomHead';
