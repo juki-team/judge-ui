@@ -11,7 +11,7 @@
     "pull": "yarn add @juki-team/commons @juki-team/base-ui && rm -rf ./styles && cp -r './node_modules/@juki-team/base-ui/dist/styles' ./styles"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.1.78",
+    "@juki-team/base-ui": "^0.1.79",
     "@juki-team/commons": "^0.0.370",
     "@vercel/analytics": "^1.1.1",
     "deep-object-diff": "^1.1.7",
