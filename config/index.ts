@@ -1,1 +1,1 @@
-export { settings } from '@juki-team/base-ui';
+export { jukiSettings } from '@juki-team/base-ui';

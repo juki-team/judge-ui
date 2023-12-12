@@ -1,5 +1,5 @@
-@use "styles/abstracts" as utils;
-@import "styles/base";
+@use "@juki-team/base-ui/dist/styles/abstracts" as utils;
+@import "@juki-team/base-ui/dist/styles/base";
 
 .groups-popover {
   width: 150px;

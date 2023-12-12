@@ -1,7 +1,7 @@
 import { JUKI_APP_COMPANY_KEY } from '@juki-team/commons';
 import { Analytics } from '@vercel/analytics/react';
 import { CustomHead, ErrorBoundary, JukiProviders, LasLinkProvider, NavigationBar, SpinIcon, T } from 'components';
-import { settings } from 'config';
+import { jukiSettings } from 'config';
 import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV } from 'config/constants';
 import { consoleWarn } from 'helpers';
 import { useJukiUser } from 'hooks';
@@ -38,7 +38,7 @@ const SponsoredByTag = () => {
 
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   
-  settings.setOnError((error) => {
+  jukiSettings.setOnError((error: any) => {
     consoleWarn(error);
     _setFlags.current(prevState => ({ ...prevState, isHelpOpen: true, isHelpFocused: true }));
     setTimeout(() => _setFlags.current(prevState => ({ ...prevState, isHelpFocused: false })), 2000);

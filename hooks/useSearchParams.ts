@@ -1,6 +1,6 @@
-import { AppendSearchParamsType, DeleteSearchParamsType, SetSearchParamsType } from '@juki-team/base-ui';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppendSearchParamsType, DeleteSearchParamsType, SetSearchParamsType } from 'types';
 
 const cloneURLSearchParams = (urlSearchParams: URLSearchParams) => {
   return new URLSearchParams(urlSearchParams.toString());

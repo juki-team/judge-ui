@@ -131,4 +131,6 @@ export type {
   DataViewerRequesterGetUrlType,
   AppendSearchParamsType,
   GetRecordStyleType,
+  DeleteSearchParamsType,
+  SetSearchParamsType,
 } from '@juki-team/base-ui';

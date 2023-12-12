@@ -1,5 +1,3 @@
-import { Popover, WarningIcon } from '@juki-team/base-ui';
-import { Language } from '@juki-team/commons';
 import {
   Button,
   CloseIcon,
@@ -9,9 +7,11 @@ import {
   Modal,
   MultiSelect,
   PlusIcon,
+  Popover,
   Select,
   T,
   UserCodeEditor,
+  WarningIcon,
 } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
@@ -27,6 +27,7 @@ import { classNames } from 'helpers';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   EditCreateProblemType,
+  Language,
   ProblemMode,
   ProblemSettingsByProgrammingLanguageType,
   ProblemSettingsPointsByGroupsType,

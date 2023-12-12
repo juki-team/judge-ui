@@ -158,6 +158,8 @@ export {
   UserPreviewModal,
   UserProfile,
   UserProfileSettings,
+  PageNotFound,
+  CopyIcon,
   UsersSelector,
   VerticalMenu,
   VerticalSplitIcon,

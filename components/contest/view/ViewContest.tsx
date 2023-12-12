@@ -1,8 +1,8 @@
-import { CopyIcon, useT } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   ButtonLoader,
   contestStateMap,
+  CopyIcon,
   CupIcon,
   CustomHead,
   EditIcon,
@@ -21,7 +21,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { parseContest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useContestRouter, useJukiRouter, useJukiUI, useJukiUser, useTrackLastPath } from 'hooks';
+import { useContestRouter, useJukiRouter, useJukiUI, useJukiUser, useT, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status, TabsType } from 'types';

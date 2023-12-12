@@ -1,6 +1,5 @@
-import { ButtonLoaderOnClickType } from '@juki-team/base-ui';
-import { getProblemJudgeKey } from '@juki-team/commons';
-import { Judge, Status } from 'types';
+import { ButtonLoaderOnClickType, Judge, Status } from 'types';
+import { getProblemJudgeKey } from './commons';
 
 export const isOrHas = (value: string | string[] | undefined, v: string) => {
   return value === v || (Array.isArray(value) && value.includes(v));
