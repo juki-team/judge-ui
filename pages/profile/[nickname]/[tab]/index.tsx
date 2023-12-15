@@ -4,6 +4,7 @@ import {
   ChangePasswordModal,
   EditProfileModal,
   FetcherLayer,
+  HomeLink,
   LockIcon,
   MyActiveSessions,
   ProfileSubmissions,
@@ -114,7 +115,7 @@ export default function ProfileView() {
         ];
         
         const breadcrumbs: ReactNode[] = [
-          <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+          <HomeLink key="home" />,
           <Link
             href={ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE)}
             className="link"

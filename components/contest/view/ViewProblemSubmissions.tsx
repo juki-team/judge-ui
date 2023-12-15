@@ -37,7 +37,7 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
-  ], [ contest.problems ]);
+  ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge ]);
   
   return (
     <div className="pad-left-right pad-top-bottom">

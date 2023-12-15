@@ -183,7 +183,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         minWidth: 64,
       } as DataViewerHeadersType<ContestProblemType>,
     ];
-  }, [ isJudgeOrAdmin, contestKey, searchParams ]);
+  }, [ isJudgeOrAdmin, contestKey, searchParams, addSuccessNotification, addErrorNotification ]);
   const data = Object.values(problems);
   
   return (

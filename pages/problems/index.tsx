@@ -42,7 +42,6 @@ import {
   ReactNode,
 } from 'types';
 
-
 const JUDGE_C: { [key in Judge]: string } = {
   [Judge.CUSTOMER]: 'c',
   [Judge.JUKI_JUDGE]: 'j',
@@ -68,7 +67,7 @@ function Problems() {
     if (!judge) {
       setSearchParams({ name: QueryParam.JUDGE, value: Judge.CUSTOMER });
     }
-  }, [ judge ]);
+  }, [ judge, setSearchParams ]);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     {
       head: 'id',
@@ -223,7 +222,7 @@ function Problems() {
     );
   }
   const [ modal, setModal ] = useState<ReactNode>(null);
-  if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge)) {
+  if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judge)) {
     extraNodes.push(
       <div className="jk-row gap">
         {modal}
@@ -233,10 +232,19 @@ function Problems() {
           responsiveMobile
           onClick={() => {
             if (judge === Judge.CODEFORCES) {
-              setModal(<CrawlCodeforcesProblemModal onClose={() => setModal(null)} />);
+              setModal(<CrawlCodeforcesProblemModal isOpen judge={Judge.CODEFORCES} onClose={() => setModal(null)} />);
             }
             if (judge === Judge.JV_UMSA) {
-              setModal(<CrawlJvumsaProblemModal onClose={() => setModal(null)} />);
+              setModal(<CrawlJvumsaProblemModal isOpen onClose={() => setModal(null)} />);
+            }
+            if (judge === Judge.CODEFORCES_GYM) {
+              setModal(
+                <CrawlCodeforcesProblemModal
+                  isOpen
+                  judge={Judge.CODEFORCES_GYM}
+                  onClose={() => setModal(null)}
+                />,
+              );
             }
           }}
         >
@@ -274,6 +282,7 @@ function Problems() {
                   },
                 ]),
                 { value: Judge.CODEFORCES, label: <>{JUDGE[Judge.CODEFORCES].label}</> },
+                { value: Judge.CODEFORCES_GYM, label: <>{JUDGE[Judge.CODEFORCES_GYM].label}</> },
                 { value: Judge.JV_UMSA, label: <>{JUDGE[Judge.JV_UMSA].label}</> },
               ]}
               selectedOption={{ value: judge }}

@@ -7,6 +7,7 @@ import {
   CustomHead,
   EditIcon,
   FetcherLayer,
+  HomeLink,
   LastLink,
   LoadingIcon,
   NavigateBeforeIcon,
@@ -43,7 +44,7 @@ export function ContestView() {
   const { t } = useT();
   
   const breadcrumbs = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
     <Link
       href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.OVERVIEW), query: searchParams.toString() }}
@@ -282,7 +283,7 @@ export function ContestView() {
         }
         
         const breadcrumbs: ReactNode[] = [
-          <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+          <HomeLink key="home" />,
           <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
           <Link
             href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query: searchParams.toString() }}

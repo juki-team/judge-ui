@@ -1,3 +1,4 @@
+import { BasicModalProps } from '@juki-team/base-ui';
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components/index';
 import { ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
@@ -5,14 +6,14 @@ import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
 import { Judge, ProblemTab, Status } from 'types';
 
-export const CrawlJvumsaProblemModal = ({ onClose }: { onClose: () => void }) => {
+export const CrawlJvumsaProblemModal = ({ onClose, isOpen }: BasicModalProps) => {
   
   const [ key, setKey ] = useState('');
   
   const { pushRoute } = useJukiRouter();
   
   return (
-    <Modal isOpen={true} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
+    <Modal isOpen={isOpen} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
       <div className="jk-col gap jk-pad-md">
         <label className="jk-row nowrap">
           <T className="tt-se ws-np fw-bd">index</T>:&nbsp;
@@ -28,7 +29,7 @@ export const CrawlJvumsaProblemModal = ({ onClose }: { onClose: () => void }) =>
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            await pushRoute(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(Judge.JV_UMSA, key), ProblemTab.STATEMENT));
+            await pushRoute(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(Judge.JV_UMSA, key.trim()), ProblemTab.STATEMENT));
             setLoaderStatus(Status.SUCCESS);
           }}
         >

@@ -59,12 +59,12 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
   const filter = searchParams.get(`${QueryParam.MY_STATUS_TABLE}.${QueryParam.FILTER_TABLE}`);
   const { key: problemKey, ...restQuery } = routeParams;
   const { data: virtualJudgeData } = useFetcher<ContentResponseType<JudgeResponseDTO>>(
-    [ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) ? JUDGE_API_V1.JUDGE.GET(problem.judge, companyKey) : null,
+    [ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judge) ? JUDGE_API_V1.JUDGE.GET(problem.judge, companyKey) : null,
   );
   const languages = useMemo(
     () => {
       let languages = [];
-      if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge)) {
+      if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judge)) {
         languages = ((virtualJudgeData?.success && virtualJudgeData.content.languages) || [])
           .filter(lang => lang.enabled)
           .map(lang => ({
@@ -95,6 +95,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
       }
       return languages;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [ JSON.stringify(problem?.settings.byProgrammingLanguage), virtualJudgeData, problem.judge, JSON.stringify(contest?.languages) ],
   );
   

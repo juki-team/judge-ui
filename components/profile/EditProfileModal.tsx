@@ -30,6 +30,7 @@ export function EditProfileModal({ isOpen, user, onClose }: EditProfileModalProp
   const [ userState, setUserState ] = useState(user);
   const { updateUserProfileData, mutatePing } = useJukiUser();
   const { mutate } = useSWR();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setUserState(user), [ JSON.stringify(user) ]);
   const [ modalImageProfile, setModalImageProfile ] = useState(false);
   const validLengthNickname = userState.nickname.length >= 3;

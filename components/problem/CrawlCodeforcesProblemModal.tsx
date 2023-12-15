@@ -1,3 +1,4 @@
+import { BasicModalProps } from '@juki-team/base-ui';
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components/index';
 import { ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
@@ -5,21 +6,25 @@ import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
 import { Judge, ProblemTab, Status } from 'types';
 
-export const CrawlCodeforcesProblemModal = ({ onClose }: { onClose: () => void }) => {
+interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
+  judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
+}
+
+export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCodeforcesProblemModalProps) => {
   
   const [ key, setKey ] = useState('');
   
   const { pushRoute } = useJukiRouter();
   
   return (
-    <Modal isOpen={true} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
+    <Modal isOpen={isOpen} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
       <div className="jk-col gap jk-pad-md">
         <label>
           <T className="tt-se ws-np fw-bd">contest id</T>:&nbsp;
           <Input
             size={6}
             value={key.split('-')[0] || ''}
-            onChange={(value) => setKey(prevState => `${value}-${key.split('-')[1] || ''}`)}
+            onChange={(value) => setKey(prevState => `${value.trim()}-${key.split('-')[1] || ''}`)}
           />
         </label>
         <label className="jk-row nowrap">
@@ -27,7 +32,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose }: { onClose: () => void }
           <Input
             size="auto"
             value={key.split('-')[1] || ''}
-            onChange={(value) => setKey(prevState => `${key.split('-')[0] || ''}-${value}`)}
+            onChange={(value) => setKey(prevState => `${key.split('-')[0] || ''}-${value.trim()}`)}
           />
         </label>
         <ButtonLoader
@@ -36,7 +41,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose }: { onClose: () => void }
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            await pushRoute(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(Judge.CODEFORCES, key), ProblemTab.STATEMENT));
+            await pushRoute(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(judge, key), ProblemTab.STATEMENT));
             setLoaderStatus(Status.SUCCESS);
           }}
         >

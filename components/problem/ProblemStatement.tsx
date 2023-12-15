@@ -62,7 +62,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
   } = getStatementData(t, { statement, settings }, preferredLanguage, problemName);
   const [ language, setLanguage ] = useState<Language>(Language.EN);
   
-  if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge)) {
+  if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judge)) {
     return (
       <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
         <div

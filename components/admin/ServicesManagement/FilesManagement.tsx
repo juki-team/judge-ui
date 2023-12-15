@@ -1,7 +1,7 @@
 import { Button, CurvedArrowIcon, Input, LoadingIcon, ReloadIcon, T, UpIcon, VisibilityIcon } from 'components/index';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ContentResponseType, ProgrammingLanguage } from 'types';
 import { CodeViewer, Modal } from '../../index';
 
@@ -13,7 +13,7 @@ export function FilesManagement() {
   const [ back, setBack ] = useState([ '/' ]);
   const [ filePath, setFilePath ] = useState('');
   const [ contentFile, setContentFile ] = useState('');
-  const loadPath = async () => {
+  const loadPath = useCallback(async () => {
     setLoading(true);
     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(JUDGE_API_V1.SYS.LS(path)));
     if (response.success) {
@@ -24,9 +24,9 @@ export function FilesManagement() {
       setError(response.message);
     }
     setLoading(false);
-  };
+  }, [ path ]);
   useEffect(() => {
-    (() => loadPath())();
+    void loadPath();
   }, [ loadPath, path ]);
   useEffect(() => {
     (async () => {

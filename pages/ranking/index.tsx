@@ -2,6 +2,7 @@ import {
   Breadcrumbs,
   DataViewer,
   Field,
+  HomeLink,
   Image,
   T,
   TextField,
@@ -11,7 +12,6 @@ import {
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { useDataViewerRequester, useEffect, useJukiUI, useMemo, useState } from 'hooks';
-import Link from 'next/link';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {
@@ -133,7 +133,7 @@ function Ranking() {
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   
   const breadcrumbs = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <T className="tt-se" key="ranking">ranking</T>,
   ];
   

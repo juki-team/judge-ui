@@ -20,6 +20,7 @@ export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps)
   const { notifyResponse } = useNotification();
   useEffect(() => {
     setContactEmails(initialContactEmails);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ JSON.stringify(initialContactEmails), open ]);
   
   return (

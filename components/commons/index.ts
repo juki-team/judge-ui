@@ -173,3 +173,4 @@ export * from './CustomHead';
 export * from './Image';
 export * from './PagedDataViewer';
 export * from './TextLangEdit';
+export * from './HomeLink';

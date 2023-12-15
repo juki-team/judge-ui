@@ -4,6 +4,7 @@ import {
   CheckUnsavedChanges,
   CloseIcon,
   CodeEditor,
+  HomeLink,
   Input,
   LastLink,
   SaveIcon,
@@ -69,6 +70,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
       );
       lastContest.current = initialCourse;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ addWarningNotification, editing, JSON.stringify(initialCourse) ]);
   
   const { pushRoute, searchParams } = useJukiRouter();
@@ -198,7 +200,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
   ];
   
   const breadcrumbs = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="courses"><T className="tt-se">courses</T></LastLink>,
   ];
   

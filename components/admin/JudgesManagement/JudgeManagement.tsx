@@ -19,6 +19,7 @@ export const JudgeManagementBody = ({ company, judge, mutate, withError }: Judge
   const [ languages, setLanguages ] = useState(judge.languages);
   useEffect(() => {
     setLanguages(judge.languages);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ JSON.stringify(judge.languages) ]);
   
   return (

@@ -218,7 +218,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
       }
     }
     return base;
-  }, [ searchParams, user.nickname, contest, viewPortSize ]);
+  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, contestKey, searchParams ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
@@ -233,7 +233,7 @@ export const ViewScoreboard = ({ contest }: { contest: ContestResponseDTO }) => 
   );
   useEffect(() => {
     reload();
-  }, [ unfrozen ]);
+  }, [ reload, unfrozen ]);
   const lastTotalRef = useRef(0);
   lastTotalRef.current = response?.success ? response.meta.totalElements : lastTotalRef.current;
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);

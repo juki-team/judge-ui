@@ -1,6 +1,7 @@
 import {
   AllSubmissions,
   Breadcrumbs,
+  HomeLink,
   JudgesManagement,
   MailManagement,
   Select,
@@ -146,7 +147,7 @@ function Admin() {
   }
   
   const breadcrumbs: ReactNode[] = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <Link
       href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)}
       className="link"

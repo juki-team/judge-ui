@@ -21,6 +21,7 @@ import {
   roundTimestamp,
 } from 'helpers';
 import { useEffect, useJukiUser, useRef, useState } from 'hooks';
+import { useCallback, useMemo } from 'react';
 import {
   ContestProblemBasicType,
   EditContestProblemBasicType,
@@ -50,10 +51,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       setWithTime(1);
     }
   }, [ withTimeRestriction, withTime ]);
-  const contestStartDate = new Date(contest.settings.startTimestamp);
-  const contestEndDate = new Date(contest.settings.endTimestamp);
+  const contestStartDate = useMemo(() => new Date(contest.settings.startTimestamp), [ contest.settings.startTimestamp ]);
+  const contestEndDate = useMemo(() => new Date(contest.settings.endTimestamp), [ contest.settings.endTimestamp ]);
   // eslint-disable-next-line react/display-name
-  const renderRowProblem = (problem: Problem): RowSortableItemContentType => (props) => {
+  const renderRowProblem = useCallback((problem: Problem): RowSortableItemContentType => (props) => {
     
     const { previewRef, dragComponent, isDragging, index } = props;
     
@@ -238,8 +239,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         </div>
       </div>
     );
-  };
-  const parseProblems = (problems: { [key: string]: ContestProblemBasicType & { name: string } }) => {
+  }, [ companyName, contest.settings.endTimestamp, contest.settings.startTimestamp, contestEndDate, contestStartDate, withTime ]);
+  const parseProblems = useCallback((problems: { [key: string]: ContestProblemBasicType & { name: string } }) => {
     return Object.values(problems)
       .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
       .map((problem, index) => {
@@ -258,7 +259,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           value,
         };
       });
-  };
+  }, [ renderRowProblem ]);
   const [ problems, setProblems ] = useState<RowSortableItem<Problem>[]>(parseProblems(contest.problems));
   
   useEffect(() => {
@@ -270,14 +271,14 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       }
       return { ...problem, content: renderRowProblem(value), value };
     }));
-  }, [ withTime ]);
+  }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, renderRowProblem, withTime ]);
   const lastContest = useRef(contest);
   useEffect(() => {
     if (JSON.stringify(contest) !== JSON.stringify(lastContest.current)) {
       setProblems(parseProblems(contest.problems));
       lastContest.current = contest;
     }
-  }, [ contest ]);
+  }, [ contest, parseProblems ]);
   useEffect(() => {
     setContest(prevState => {
       const problemsObj: { [key: string]: EditContestProblemBasicType } = {};
@@ -298,7 +299,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         problems: problemsObj,
       };
     });
-  }, [ problems ]);
+  }, [problems, setContest]);
   
   return (
     <div className="jk-col top nowrap gap stretch bc-we jk-br-ie jk-pad-sm">

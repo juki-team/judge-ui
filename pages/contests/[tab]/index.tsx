@@ -6,6 +6,7 @@ import {
   ContestsPastList,
   ContestsUpcomingList,
   CreateContestButton,
+  HomeLink,
   T,
   TabsInline,
   TwoContentSection,
@@ -13,7 +14,6 @@ import {
 import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEffect, useJukiRouter, useJukiUI, useJukiUser, useTrackLastPath } from 'hooks';
-import Link from 'next/link';
 import { ContestsTab, LastLinkKey, TabsType } from 'types';
 
 function Contests() {
@@ -88,7 +88,7 @@ function Contests() {
   };
   
   const breadcrumbs = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <T className="tt-se" key="contests">contests</T>,
   ];
   

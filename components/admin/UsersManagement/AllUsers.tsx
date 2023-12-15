@@ -23,7 +23,7 @@ import {
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification } from 'hooks';
 import Link from 'next/link';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   CompanyResponseDTO,
   ContentResponseType,
@@ -40,10 +40,10 @@ import { UserPermissions } from './UserPermissions';
 export function AllUsers({ company }: { company: CompanyResponseDTO }) {
   
   const [ nickname, setNickname ] = useState('');
-  const optionsFilterStatus = Object.values(USER_STATUS).map(status => ({
+  const optionsFilterStatus = useMemo(() => Object.values(USER_STATUS).map(status => ({
     value: status.value,
     label: <T className="tt-ce">{status.label}</T>,
-  }));
+  })), []);
   const { notifyResponse } = useNotification();
   const {
     data: response,
@@ -55,7 +55,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
     () => JUDGE_API_V1.USER.MANAGEMENT_LIST(company.key),
   );
   useEffect(reload, [ company.key, reload ]);
-  const changeUserStatus = async (nickname: string, status: UserStatus) => {
+  const changeUserStatus = useCallback(async (nickname: string, status: UserStatus) => {
     const response = cleanRequest<ContentResponseType<any>>(await authorizedRequest(
       JUDGE_API_V1.USER.STATUS(nickname),
       {
@@ -65,7 +65,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
     ));
     notifyResponse(response);
     reload();
-  };
+  }, [ notifyResponse, reload ]);
   
   const columns: DataViewerHeadersType<UserManagementResponseDTO>[] = useMemo(() => [
     {
@@ -165,7 +165,7 @@ export function AllUsers({ company }: { company: CompanyResponseDTO }) {
       cardPosition: 'center',
       minWidth: 190,
     },
-  ], [ reload, company.key ]);
+  ], [ optionsFilterStatus, company.key, reload, changeUserStatus ]);
   
   const data: UserManagementResponseDTO[] = (response?.success ? response?.contents : []);
   

@@ -7,6 +7,7 @@ import {
   EditIcon,
   ExclamationIcon,
   FetcherLayer,
+  HomeLink,
   LastLink,
   LoadingIcon,
   Popover,
@@ -52,7 +53,7 @@ const ProblemView = (): ReactNode => {
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
   const breadcrumbs = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
     <Link
       href={{
@@ -134,7 +135,7 @@ const ProblemView = (): ReactNode => {
         </TwoContentSection>
       }
     >
-      {({ data }) => {
+      {({ data, mutate }) => {
         const problem = data.content;
         const tabs: TabsType<ProblemTab> = {
           [ProblemTab.STATEMENT]: {
@@ -173,7 +174,7 @@ const ProblemView = (): ReactNode => {
           body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} /></div>,
         };
         const breadcrumbs: ReactNode[] = [
-          <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+          <HomeLink key="home" />,
           <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
           <Link
             href={{
@@ -250,24 +251,28 @@ const ProblemView = (): ReactNode => {
               </div>
             </Popover>,
           );
-        } else if ([ Judge.CODEFORCES, Judge.JV_UMSA ].includes(data?.content?.judge) && user.isLogged) {
-          extraNodes.push(<ButtonLoader
-            size="small"
-            icon={<AutorenewIcon />}
-            onClick={async setLoaderStatus => {
-              setLoaderStatus(Status.LOADING);
-              const response = cleanRequest<ContentResponseType<string>>(
-                await authorizedRequest(
-                  JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
-                  { method: HTTPMethod.POST },
-                ),
-              );
-              notifyResponse(response, setLoaderStatus);
-            }}
-            responsiveMobile
-          >
-            <T className="tt-se ws-np">re crawl</T>
-          </ButtonLoader>);
+        } else if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(data?.content?.judge) && user.isLogged) {
+          extraNodes.push(
+            <ButtonLoader
+              size="small"
+              type="light"
+              icon={<AutorenewIcon />}
+              onClick={async setLoaderStatus => {
+                setLoaderStatus(Status.LOADING);
+                const response = cleanRequest<ContentResponseType<string>>(
+                  await authorizedRequest(
+                    JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
+                    { method: HTTPMethod.POST },
+                  ),
+                );
+                await mutate();
+                notifyResponse(response, setLoaderStatus);
+              }}
+              responsiveMobile
+            >
+              <T className="tt-se ws-np">re crawl</T>
+            </ButtonLoader>,
+          );
         }
         
         return (
@@ -297,7 +302,7 @@ const ProblemView = (): ReactNode => {
                         tags={problem.tags}
                         settings={problem.settings}
                       />
-                    ) : [ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge)
+                    ) : [ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judge)
                       ? (
                         <div className="jk-row extend top">
                           <div

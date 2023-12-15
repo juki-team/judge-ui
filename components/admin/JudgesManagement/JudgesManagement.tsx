@@ -54,6 +54,29 @@ export const JudgesManagement = ({ company }: { company: CompanyResponseDTO }) =
         </FetcherLayer>
       ),
     },
+    [JudgesManagementTab.CODEFORCES_GYM_JUDGE]: {
+      key: JudgesManagementTab.CODEFORCES_GYM_JUDGE,
+      header: <T className="tt-ce ws-np">codeforces gym</T>,
+      body: (
+        <FetcherLayer<ContentResponseType<JudgeResponseDTO>>
+          url={JUDGE_API_V1.JUDGE.GET(Judge.CODEFORCES_GYM, company.key)}
+          errorView={
+            <JudgeManagementBody
+              company={company}
+              judge={{ key: Judge.CODEFORCES_GYM, languages: [] }}
+              mutate={async () => undefined}
+              withError
+            />
+          }
+        >
+          {({ data, mutate }) => {
+            return (
+              <JudgeManagementBody company={company} judge={data.content} mutate={mutate} />
+            );
+          }}
+        </FetcherLayer>
+      ),
+    },
   };
   
   const { searchParams, setSearchParams } = useJukiRouter();

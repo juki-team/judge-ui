@@ -2,6 +2,7 @@ import {
   Breadcrumbs,
   ButtonLoader,
   Field,
+  HomeLink,
   PagedDataViewer,
   PlusIcon,
   T,
@@ -52,7 +53,7 @@ function Problems() {
   const { pushRoute } = useJukiRouter();
   
   const breadcrumbs = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <T className="tt-se" key="courses">courses</T>,
   ];
   

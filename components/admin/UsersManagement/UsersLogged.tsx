@@ -165,7 +165,7 @@ export function UsersLogged({ company }: { company: CompanyResponseDTO }) {
       cardPosition: 'center',
       minWidth: 190,
     },
-  ], [ reload ]);
+  ], [ deleteUserSession, reload ]);
   
   const { notifyResponse } = useNotification();
   const data: SessionResponseDTO[] = (response?.success ? response?.contents : []);

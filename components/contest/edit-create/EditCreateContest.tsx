@@ -4,6 +4,7 @@ import {
   CheckUnsavedChanges,
   CloseIcon,
   CodeEditor,
+  HomeLink,
   Input,
   LastLink,
   MdMathEditor,
@@ -70,6 +71,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       );
       lastContest.current = initialContest;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ JSON.stringify(initialContest) ]);
   
   const { searchParams, pushRoute, routeParams } = useJukiRouter();
@@ -168,7 +170,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   ];
   
   const breadcrumbs: ReactNode[] = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
     editing
       ? (

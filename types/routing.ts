@@ -53,6 +53,7 @@ export enum AdminTab {
 export enum JudgesManagementTab {
   CODEFORCES_JUDGE = 'codeforces-judge',
   JV_UMSA_JUDGE = 'jv-umsa-judge',
+  CODEFORCES_GYM_JUDGE = 'codeforces-gym-judge',
 }
 
 export enum ServicesManagementTab {

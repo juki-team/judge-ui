@@ -126,14 +126,18 @@
 
 // CODEFORCES STYLES
 .jk-theme-light {
-  .CODEFORCES-statement .header .title {
-    color: var(--t-color-primary-dark);
+  .CODEFORCES-statement, .CODEFORCES_GYM-statement {
+    .header .title {
+      color: var(--t-color-primary-dark);
+    }
   }
 }
 
 .jk-theme-dark {
-  .CODEFORCES-statement .header .title {
-    color: var(--t-color-primary);
+  .CODEFORCES-statement, .CODEFORCES_GYM-statement {
+    .header .title {
+      color: var(--t-color-primary);
+    }
   }
 }
 
@@ -152,11 +156,11 @@
   @extend .jk-border-radius-inline;
 }
 
-.CODEFORCES-statement, .JV_UMSA-statement {
+.CODEFORCES-statement, .CODEFORCES_GYM-statement, .JV_UMSA-statement {
   width: 100%;
 }
 
-.CODEFORCES-statement {
+.CODEFORCES-statement, .CODEFORCES_GYM-statement {
   &.only-info {
     > div:not(.header) {
       display: none;
@@ -187,7 +191,7 @@
     }
   }
   
-  > div:nth-child(2) {
+  > div:not(.header):not(.input-specification):not(.output-specification):not(.sample-tests):not(.note) {
     @extend .CODEFORCES-content;
     margin-top: var(--pad-xt);
   }
