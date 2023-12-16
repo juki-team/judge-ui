@@ -203,7 +203,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       setTimestamp(response.content[index].timestamp);
     }
   }, [ index, response ]);
-  const max = (response?.success ? response.content : []).length;
+  const max = (response?.success ? response.content : []).length - 1;
   
   const handleFullscreen = useCallback(() => setFullscreen(prevState => !prevState), []);
   
