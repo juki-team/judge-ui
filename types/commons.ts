@@ -6,6 +6,7 @@ export enum LastLinkKey {
   SECTION_ADMIN = 'SECTION_ADMINS',
   SHEETS = 'SHEETS',
   SECTION_SHEET = 'SECTION_SHEET',
+  SECTION_HELP = 'SECTION_HELP',
 }
 
 export type LastLinkType = { [key in LastLinkKey]: { pathname: string, searchParams: URLSearchParams } };

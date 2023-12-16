@@ -6,6 +6,7 @@ import {
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
   Field,
+  HomeLink,
   InfoIcon,
   PagedDataViewer,
   PlusIcon,
@@ -28,7 +29,6 @@ import {
 } from 'config/constants';
 import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
 import { useEffect, useFetcher, useJukiRouter, useJukiUser, useMemo, useState, useTrackLastPath } from 'hooks';
-import Link from 'next/link';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -204,7 +204,7 @@ function Problems() {
   ], [ canCreateProblem, tags, judge ]);
   
   const breadcrumbs = [
-    <Link href="/" className="link" key="home"><T className="tt-se">home</T></Link>,
+    <HomeLink key="home" />,
     <T className="tt-se" key="problems">problems</T>,
   ];
   

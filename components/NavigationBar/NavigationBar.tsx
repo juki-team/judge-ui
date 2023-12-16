@@ -1,3 +1,4 @@
+import { HelpIcon } from '@juki-team/base-ui';
 import {
   AssignmentIcon,
   CupIcon,
@@ -44,6 +45,7 @@ const initialLastLink: LastLinkType = {
   },
   [LastLinkKey.SHEETS]: { pathname: `/sheets`, searchParams: new URLSearchParams() },
   [LastLinkKey.SECTION_SHEET]: { pathname: `/sheets`, searchParams: new URLSearchParams() },
+  [LastLinkKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
 };
 
 type LastLinkContext = {
@@ -149,6 +151,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: ({ children }) => <LastLink lastLinkKey={LastLinkKey.SECTION_ADMIN}>{children}</LastLink>,
     });
   }
+  // menu.push({
+  //   label: <T className="tt-se">help</T>,
+  //   icon: <HelpIcon />,
+  //   selected: ('/' + pathname).includes('//help'),
+  //   menuItemWrapper: ({ children }) => <LastLink lastLinkKey={LastLinkKey.SECTION_HELP}>{children}</LastLink>,
+  // });
   
   return (
     <>
