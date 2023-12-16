@@ -30,9 +30,9 @@ export default function Home() {
             line arguments for the respective language:
           </T>
           {/*</div>*/}
-          {ACCEPTED_PROGRAMMING_LANGUAGES.map((value, index, array) => {
+          {ACCEPTED_PROGRAMMING_LANGUAGES.map((value) => {
             return (
-              <div>
+              <div key={value}>
                 <ul>
                   <li>
                     <div className="jk-row left fw-bd">
