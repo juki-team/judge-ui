@@ -84,6 +84,7 @@ export enum ContestTab {
   PROBLEMS = 'problems',
   PROBLEM = 'problem',
   SCOREBOARD = 'scoreboard',
+  DYNAMIC_SCOREBOARD = 'dynamic-scoreboard',
   MY_SUBMISSIONS = 'my-submissions',
   CLARIFICATIONS = 'clarifications',
   SUBMISSIONS = 'submissions',

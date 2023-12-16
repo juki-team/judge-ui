@@ -10,7 +10,6 @@ import {
   DataViewerHeadersType,
   HTTPMethod,
   QueryParam,
-  RunnerType,
   Status,
   TaskDefinitionResponseDTO,
 } from 'types';
@@ -78,11 +77,11 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(
-                    RunnerType.HIGH_PERFORMANCE,
-                    revision.taskDefinitionArn,
-                  ),
-                  { method: HTTPMethod.POST },
+                  JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(companyKey),
+                  {
+                    method: HTTPMethod.POST,
+                    body: JSON.stringify({ highPerformanceRunnerTaskDefinition: revision.taskDefinitionArn }),
+                  },
                 ),
               );
               notifyResponse(response, setLoaderStatus);
@@ -100,11 +99,11 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.SYS.AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION(
-                    RunnerType.LOW_PERFORMANCE,
-                    revision.taskDefinitionArn,
-                  ),
-                  { method: HTTPMethod.POST },
+                  JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(companyKey),
+                  {
+                    method: HTTPMethod.POST,
+                    body: JSON.stringify({ lowPerformanceRunnerTaskDefinition: revision.taskDefinitionArn }),
+                  },
                 ),
               );
               notifyResponse(response, setLoaderStatus);

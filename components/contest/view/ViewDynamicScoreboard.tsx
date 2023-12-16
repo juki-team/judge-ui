@@ -1,125 +1,54 @@
+import { Timer } from '@juki-team/base-ui';
+import { ContentResponseType } from '@juki-team/commons';
 import {
   BalloonIcon,
   Button,
-  ButtonLoader,
   contestStateMap,
   DataViewer,
   Field,
   FullscreenExitIcon,
   FullscreenIcon,
-  GearsIcon,
   Image,
-  Select,
-  SnowflakeIcon,
   T,
   Tooltip,
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
-import {
-  authorizedRequest,
-  classNames,
-  cleanRequest,
-  downloadDataTableAsCsvFile,
-  downloadXlsxAsFile,
-  getProblemJudgeKey,
-} from 'helpers';
-import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification, useT } from 'hooks';
+import { classNames, getProblemJudgeKey } from 'helpers';
+import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification } from 'hooks';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  ContentResponseType,
-  ContentsResponseType,
   ContestResponseDTO,
   ContestTab,
   DataViewerHeadersType,
-  HTTPMethod,
   KeyedMutator,
   QueryParam,
   ScoreboardResponseDTO,
-  Status,
 } from 'types';
 import { getContestTimeLiteral } from '../commons';
 
-interface DownloadButtonProps {
-  data: ScoreboardResponseDTO[],
-  contest: ContestResponseDTO,
-  disabled: boolean
+interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTO {
+  focus: string[];
 }
 
-const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
-  const { t } = useT();
-  
-  const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
-  for (const problem of Object.values(contest?.problems)) {
-    head.push(problem.index);
-  }
-  
-  const body = data.map(user => {
-    const base = [
-      user.position,
-      user.userNickname,
-      user.userGivenName,
-      user.userFamilyName,
-      (user.totalPoints).toFixed(2),
-      Math.round(user.totalPenalty),
-    ];
-    
-    if (contest?.problems) {
-      for (const problem of Object.values(contest?.problems)) {
-        const problemData = user.problems[getProblemJudgeKey(problem.judge, problem.key)];
-        let text = '';
-        if (problemData?.success || !!problemData?.points) {
-          text = problemData?.points + ' ' + (problemData?.points === 1 ? t('point') : t('points'));
-        }
-        if (text) {
-          text += ' ';
-        }
-        text += `${problemData?.attempts || '-'}/${problemData?.penalty ? Math.round(problemData?.penalty) : '-'}`;
-        base.push(text);
-      }
-    }
-    return base;
-  });
-  const dataCsv = [ head, ...body ];
-  
-  return (
-    <Select
-      disabled={disabled}
-      options={[ { value: 'csv', label: 'as csv' }, { value: 'xlsx', label: 'as xlsx' } ]}
-      selectedOption={{ value: 'x', label: 'download' }}
-      onChange={async ({ value }) => {
-        switch (value) {
-          case 'csv':
-            downloadDataTableAsCsvFile(dataCsv, `${contest?.name} (${t('scoreboard')}).csv`);
-            break;
-          case 'xlsx':
-            await downloadXlsxAsFile(dataCsv, `${contest?.name} (${t('scoreboard')}).xlsx`, t('scoreboard'));
-            break;
-          case 'pdf':
-            break;
-          default:
-        }
-      }}
-      className="bc-sy jk-border-radius-inline jk-button-secondary tiny"
-    />
-  );
-};
-
-export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDTO, mutate: KeyedMutator<any> }) => {
+export const ViewDynamicScoreboard = ({ contest, mutate }: {
+  contest: ContestResponseDTO,
+  mutate: KeyedMutator<any>
+}) => {
   
   const { user, company: { imageUrl, name } } = useJukiUser();
   const { notifyResponse } = useNotification();
   const { searchParams, routeParams: { key: contestKey, tab: contestTab, index: problemIndex } } = useJukiRouter();
   const { viewPortSize } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
-  const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
+  const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       {
         head: '#',
         index: 'position',
-        field: ({ record: { position } }) => (
-          <Field className="jk-row">{position}</Field>
+        field: ({ record: { position, focus } }) => (
+          <Field className={classNames('jk-row', { highlight: !!focus?.length })}>{position}</Field>
         ),
         minWidth: 64,
         sticky: true,
@@ -127,8 +56,13 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       {
         head: 'nickname',
         index: 'nickname',
-        field: ({ record: { userNickname, userImageUrl } }) => (
-          <Field className={classNames('jk-row center gap', { 'own': userNickname === user.nickname })}>
+        field: ({ record: { userNickname, userImageUrl, focus } }) => (
+          <Field
+            className={classNames('jk-row center gap', {
+              'own': userNickname === user.nickname,
+              highlight: !!focus?.length,
+            })}
+          >
             <Image src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} height={38} width={38} />
             <UserNicknameLink nickname={userNickname}>
               <div
@@ -148,8 +82,8 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       {
         head: 'points',
         index: 'points',
-        field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
-          <Field className="jk-col center">
+        field: ({ record: { focus, totalPenalty, totalPoints }, isCard }) => (
+          <Field className={classNames('jk-col center', { highlight: !!focus?.length })}>
             <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
             {!contest.isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
           </Field>
@@ -184,10 +118,11 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
             </Tooltip>
           ),
           index: problem.index,
-          field: ({ record: { problems }, isCard }) => {
-            const problemData = problems[getProblemJudgeKey(problem.judge, problem.key)];
+          field: ({ record: { problems, focus }, isCard }) => {
+            const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
+            const problemData = problems[problemJudgeKey];
             return (
-              <Field className="jk-row center nowrap">
+              <Field className={classNames('jk-row center nowrap', { highlight: focus?.includes(problemJudgeKey) })}>
                 {(problemData?.success || !!problemData?.points) && (
                   <Tooltip
                     content={
@@ -226,94 +161,62 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
   const {
     data: response,
     request,
-    isLoading,
     setLoaderStatusRef,
     reload,
     refreshRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
-    () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen), { refreshInterval: 60000 },
+  } = useDataViewerRequester<ContentResponseType<{ content: ScoreboardResponseDTO[], timestamp: number }[]>>(
+    () => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key),
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+      refreshWhenHidden: false,
+      revalidateOnMount: false,
+    },
   );
   useEffect(() => {
     reload();
   }, [ reload, unfrozen ]);
-  const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
+  const [ index, setIndex ] = useState(0);
   
-  const handleFullscreen = () => setFullscreen(!fullscreen);
+  const [ data, setData ] = useState<ScoreboardResponseDTOFocus[]>([]);
+  const [ timestamp, setTimestamp ] = useState(0);
   
-  const score = (
-    <DataViewer<ScoreboardResponseDTO>
+  useEffect(() => {
+    if (response?.success && response.content[index]) {
+      setData(prevState => {
+        const prevByUsers: { [key: string]: ScoreboardResponseDTO } = {};
+        prevState.forEach(user => prevByUsers[user.userNickname] = user);
+        return response.content[index].content.map(user => {
+          const focus: string[] = [];
+          for (const problemKey in user.problems) {
+            if (JSON.stringify(user.problems[problemKey]) !== JSON.stringify(prevByUsers[user.userNickname]?.problems[problemKey])) {
+              focus.push(problemKey);
+            }
+          }
+          return {
+            ...user,
+            focus,
+          }
+        });
+      });
+      setTimestamp(response.content[index].timestamp);
+    }
+  }, [ index, response ]);
+  const max = (response?.success ? response.content : []).length;
+  
+  const handleFullscreen = useCallback(() => setFullscreen(prevState => !prevState), []);
+  
+  const currentTimestamp = timestamp - contest.settings.startTimestamp;
+  
+  const score = useMemo(() => (
+    <DataViewer<ScoreboardResponseDTOFocus>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
       extraNodes={[
-        !unfrozen && contest?.isFrozenTime && (
-          <Tooltip content={<T className="ws-np">scoreboard frozen</T>}>
-            <div className="cr-io"><SnowflakeIcon /></div>
-          </Tooltip>
-        ),
-        !unfrozen && contest?.isQuietTime && (
-          <Tooltip content={<T className="ws-np">scoreboard on quiet time</T>}>
-            <div className="cr-er"><GearsIcon /></div>
-          </Tooltip>
-        ),
-        ((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
-          <div className="jk-row">
-            <Button
-              size="tiny"
-              type="secondary"
-              disabled={isLoading}
-              onClick={() => setUnfrozen(!unfrozen)}
-            >
-              <T>{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
-            </Button>
-          </div>
-        ),
-        (contest?.user?.isAdmin) && (
-          <div className="jk-row">
-            <ButtonLoader
-              size="tiny"
-              type="secondary"
-              disabled={isLoading}
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    contest?.settings.scoreboardLocked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contestKey as string) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contestKey as string),
-                    { method: HTTPMethod.POST },
-                  ),
-                );
-                await mutate();
-                notifyResponse(response, setLoaderStatus);
-              }}
-            >
-              <T>{contest?.settings.scoreboardLocked ? 'unlock' : 'lock'}</T>
-            </ButtonLoader>
-          </div>
-        ),
-        (contest?.user?.isAdmin || contest?.user?.isJudge) && (
-          <div className="jk-row">
-            <ButtonLoader
-              size="tiny"
-              type="secondary"
-              disabled={isLoading}
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
-                    { method: HTTPMethod.POST },
-                  ),
-                );
-                notifyResponse(response, setLoaderStatus);
-              }}
-            >
-              <T>recalculate</T>
-            </ButtonLoader>
-          </div>
-        ),
-        <div className="jk-row" key="download">
-          <DownloadButton data={data} contest={contest} disabled={isLoading} />
-        </div>,
         <Tooltip
           content={fullscreen
             ? <T className="ws-np">exit full screen</T>
@@ -326,6 +229,28 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
               : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
           </div>
         </Tooltip>,
+        <div className="jk-row gap" key="buttons">
+          <Button size="small" type="light" onClick={() => setIndex(prevState => 0)}>
+            <T>begin</T>
+          </Button>
+          <Button size="small" onClick={() => setIndex(prevState => Math.max(prevState - 1, 0))}>
+            <T>back</T>
+          </Button>
+          <Button size="small" onClick={() => setIndex(prevState => Math.min(prevState + 1, max))}>
+            <T>next</T>
+          </Button>
+          <Button type="light" onClick={() => setIndex(prevState => max)}>
+            <T>end</T>
+          </Button>
+        </div>,
+        <div key="date">
+          <Timer
+            currentTimestamp={currentTimestamp}
+            interval={0}
+            laps={2}
+            literal
+          />
+        </div>,
       ]}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
@@ -333,7 +258,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       refreshRef={refreshRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  );
+  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, refreshRef, request, setLoaderStatusRef ]);
   
   if (fullscreen) {
     const literal = getContestTimeLiteral(contest);

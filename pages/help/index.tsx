@@ -20,17 +20,51 @@ export default function Home() {
           </h1>
         </div>
       </div>
+      
       <div className="pad-left-right pad-top-bottom">
-        {ACCEPTED_PROGRAMMING_LANGUAGES.map((value, index, array) => {
-          return (
-            <div>
-              <h3>{PROGRAMMING_LANGUAGE[value].label}</h3>
+        <div className="jk-pad-md bc-we">
+          <h3><T>compilation of submissions</T></h3>
+          {/*<div className="jk-row left nowrap">*/}
+          <T className="tt-se">
+            source files submitted to the Juki Judge will be compiled using the following command
+            line arguments for the respective language:
+          </T>
+          {/*</div>*/}
+          {ACCEPTED_PROGRAMMING_LANGUAGES.map((value, index, array) => {
+            return (
               <div>
-              
+                <ul>
+                  <li>
+                    <div className="jk-row left fw-bd">
+                      {PROGRAMMING_LANGUAGE[value].label}&nbsp;
+                      <div className="cr-g5 tx-s">[{PROGRAMMING_LANGUAGE[value].value}]</div>
+                    </div>
+                    <div>
+                      {!PROGRAMMING_LANGUAGE[value].hasBuildFile && (
+                        <>
+                          <div className="cr-ss"><T className="tt-se">no compilation required</T></div>
+                        </>
+                      )}
+                      <div className="cr-g4">
+                        {!PROGRAMMING_LANGUAGE[value].hasBuildFile && PROGRAMMING_LANGUAGE[value].compilePattern && (
+                          <T className="tt-se">the following command is only to verify the integrity of the code</T>
+                        )}
+                      </div>
+                      {PROGRAMMING_LANGUAGE[value].compilePattern && (
+                        <pre className="ws-bs bc-w2 jk-pad-sm">
+                        {PROGRAMMING_LANGUAGE[value].compilePattern
+                          .replace('{{folder_path}}/{{compiled_file_name}}', '{file}')
+                          .replace('{{folder_path}}/{{source_file_name}}', '{file_compiled}')
+                        }
+                      </pre>
+                      )}
+                    </div>
+                  </li>
+                </ul>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </TwoContentSection>
   );

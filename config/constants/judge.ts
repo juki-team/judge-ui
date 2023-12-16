@@ -1,5 +1,5 @@
 import { getProblemJudgeKey } from 'helpers';
-import { Judge, KeyFileType, RunnerType } from 'types';
+import { Judge, KeyFileType } from 'types';
 import { API_VERSION, JUKI_SERVICE_BASE_URL } from './settings';
 
 const withSort = (path: string, sortUrl?: string) => {
@@ -30,10 +30,10 @@ export const JUDGE_API_V1 = {
     AWS_ECS_RUN_TASK_TASK_DEFINITION: (taskDefinition: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
     },
-    AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION: (runnerType: RunnerType, taskDefinition: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/task-definition/${encodeURIComponent(
-        taskDefinition)}`;
-    },
+    // AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION: (runnerType: RunnerType, taskDefinition: string) => {
+    //   return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/task-definition/${encodeURIComponent(
+    //     taskDefinition)}`;
+    // },
     AWS_SQS_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/list`;
     },
@@ -182,6 +182,9 @@ export const JUDGE_API_V1 = {
     SCOREBOARD: (key: string, unfrozen: boolean) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen' : ''}`;
     },
+    SCOREBOARD_HISTORY: (key: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard-history`;
+    },
     RECALCULATE_SCOREBOARD: (key: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/recalculate-scoreboard`;
     },
@@ -190,6 +193,12 @@ export const JUDGE_API_V1 = {
     },
     ANSWER_CLARIFICATION: (key: string, clarificationId: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification/${clarificationId}`;
+    },
+    LOCK_SCOREBOARD: (key: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/lock-scoreboard`;
+    },
+    UNLOCK_SCOREBOARD: (key: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/unlock-scoreboard`;
     },
   },
   COURSE: {

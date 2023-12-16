@@ -151,12 +151,13 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: ({ children }) => <LastLink lastLinkKey={LastLinkKey.SECTION_ADMIN}>{children}</LastLink>,
     });
   }
-  // menu.push({
-  //   label: <T className="tt-se">help</T>,
-  //   icon: <HelpIcon />,
-  //   selected: ('/' + pathname).includes('//help'),
-  //   menuItemWrapper: ({ children }) => <LastLink lastLinkKey={LastLinkKey.SECTION_HELP}>{children}</LastLink>,
-  // });
+  
+  menu.push({
+    label: <T className="tt-se">info</T>,
+    icon: <HelpIcon />,
+    selected: ('/' + pathname).includes('//help'),
+    menuItemWrapper: ({ children }) => <LastLink lastLinkKey={LastLinkKey.SECTION_HELP}>{children}</LastLink>,
+  });
   
   return (
     <>

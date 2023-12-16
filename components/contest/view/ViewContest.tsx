@@ -29,6 +29,7 @@ import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Statu
 import Custom404 from '../../../pages/404';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
+import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
 import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
 import { ViewProblemSubmissions } from './ViewProblemSubmissions';
@@ -125,7 +126,7 @@ export function ContestView() {
         </TwoContentSection>
       }
     >
-      {({ data: { content: contest } }) => {
+      {({ data: { content: contest }, mutate }) => {
         const {
           user: { isAdmin, isJudge, isContestant } = {
             isAdmin: false, isJudge: false, isContestant: false,
@@ -162,7 +163,8 @@ export function ContestView() {
                     <NavigateBeforeIcon
                       style={{ padding: 0 }}
                       className="clickable jk-br-ie"
-                      onClick={async () => {
+                      onClick={async (event) => {
+                        event.stopPropagation();
                         const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
                         await pushRoute({
                           pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, previousProblemIndex),
@@ -174,7 +176,8 @@ export function ContestView() {
                     <NavigateNextIcon
                       style={{ padding: 0 }}
                       className="clickable jk-br-ie"
-                      onClick={async () => {
+                      onClick={async (event) => {
+                        event.stopPropagation();
                         const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
                         await pushRoute({
                           pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, nextProblemIndex),
@@ -191,9 +194,14 @@ export function ContestView() {
           tabHeaders[ContestTab.SCOREBOARD] = {
             key: ContestTab.SCOREBOARD,
             header: <T className="tt-ce ws-np">scoreboard</T>,
-            body: <div className="pad-left-right pad-bottom"><ViewScoreboard contest={contest} /></div>,
+            body: (
+              <div className="pad-left-right pad-top-bottom">
+                <ViewScoreboard contest={contest} mutate={mutate} />
+              </div>
+            ),
           };
         }
+        
         if (isAdmin ||
           isJudge ||
           (
@@ -206,7 +214,17 @@ export function ContestView() {
             header: <T className="tt-ce ws-np">my submissions</T>,
             body: <ViewProblemMySubmissions contest={contest} />,
           };
+          tabHeaders[ContestTab.DYNAMIC_SCOREBOARD] = {
+            key: ContestTab.DYNAMIC_SCOREBOARD,
+            header: <T className="tt-ce ws-np">dynamic scoreboard</T>,
+            body: (
+              <div className="pad-left-right pad-top-bottom">
+                <ViewDynamicScoreboard contest={contest} mutate={mutate} />
+              </div>
+            ),
+          };
         }
+        
         if (isAdmin || isJudge || contest.isLive || contest.isPast || contest.isEndless) {
           tabHeaders[ContestTab.SUBMISSIONS] = {
             key: ContestTab.SUBMISSIONS,
@@ -214,6 +232,7 @@ export function ContestView() {
             body: <ViewProblemSubmissions contest={contest} />,
           };
         }
+        
         if (contest.settings.clarifications) {
           tabHeaders[ContestTab.CLARIFICATIONS] = {
             key: ContestTab.CLARIFICATIONS,

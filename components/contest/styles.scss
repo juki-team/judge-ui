@@ -72,3 +72,15 @@
     }
   }
 }
+
+.highlight {
+  background-color: white;
+  animation-name: test;
+  animation-duration: 3s;
+}
+
+@keyframes test {
+  0% {background-color: var(--t-color-white);}
+  50% {background-color: var(--t-color-secondary);}
+  100% {background-color: var(--t-color-white);}
+}
