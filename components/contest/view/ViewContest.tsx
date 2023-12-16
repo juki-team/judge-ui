@@ -214,6 +214,9 @@ export function ContestView() {
             header: <T className="tt-ce ws-np">my submissions</T>,
             body: <ViewProblemMySubmissions contest={contest} />,
           };
+        }
+        
+        if (isAdmin || isJudge || !contest.settings.scoreboardLocked) {
           tabHeaders[ContestTab.DYNAMIC_SCOREBOARD] = {
             key: ContestTab.DYNAMIC_SCOREBOARD,
             header: <T className="tt-ce ws-np">dynamic scoreboard</T>,
