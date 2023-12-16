@@ -230,7 +230,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
           </div>
         </Tooltip>,
         <div className="jk-row gap" key="buttons">
-          <Button size="small" type="light" onClick={() => setIndex(prevState => 0)}>
+          <Button size="small" type="light" onClick={() => setIndex(0)}>
             <T>begin</T>
           </Button>
           <Button size="small" onClick={() => setIndex(prevState => Math.max(prevState - 1, 0))}>
@@ -239,7 +239,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
           <Button size="small" onClick={() => setIndex(prevState => Math.min(prevState + 1, max))}>
             <T>next</T>
           </Button>
-          <Button type="light" onClick={() => setIndex(prevState => max)}>
+          <Button size="small" type="light" onClick={() => setIndex(max)}>
             <T>end</T>
           </Button>
         </div>,
