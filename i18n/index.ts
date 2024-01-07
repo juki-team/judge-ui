@@ -2,7 +2,6 @@ import { Language } from '@juki-team/commons';
 import type { i18n } from 'i18next';
 import i18next from 'i18next';
 import ChainedBackend from 'i18next-chained-backend';
-import Backend from 'i18next-http-backend';
 import resourcesToBackend from 'i18next-resources-to-backend';
 
 // the translations
@@ -31,11 +30,9 @@ const initI18next = (cb: (error: Error) => void) => {
       },
       backend: {
         backends: [
-          Backend, // if a namespace can't be loaded via normal http-backend loadPath, then the inMemoryLocalBackend will try to return the correct resources
           resourcesToBackend(localResources),
         ],
         backendOptions: [
-          { loadPath: `${process.env.NEXT_PUBLIC_JUKI_SERVICE_BASE_URL}/api/v1/locale/{{lng}}/{{ns}}` },
         ],
       },
     }, cb)

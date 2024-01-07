@@ -10,7 +10,6 @@ import {
   T,
   TabsInline,
   TwoContentSection,
-  UsersManagement,
 } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
@@ -93,17 +92,6 @@ function Admin() {
       header: <T className="tt-ce ws-np">settings</T>,
       body: company
         ? <div className="pad-left-right pad-top-bottom"><SettingsManagement company={company} mutate={mutate} /></div>
-        : <div className="pad-left-right pad-top-bottom">
-          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
-        </div>,
-    };
-  }
-  if (canCreateUser || canHandleUsers) {
-    tabs[AdminTab.USERS_MANAGEMENT] = {
-      key: AdminTab.USERS_MANAGEMENT,
-      header: <T className="tt-ce ws-np">users</T>,
-      body: company
-        ? <div className="pad-left-right pad-bottom"><UsersManagement company={company} /></div>
         : <div className="pad-left-right pad-top-bottom">
           <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
         </div>,

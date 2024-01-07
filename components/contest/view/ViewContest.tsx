@@ -202,6 +202,18 @@ export function ContestView() {
           };
         }
         
+        if (isAdmin || isJudge || !contest.settings.scoreboardLocked) {
+          tabHeaders[ContestTab.DYNAMIC_SCOREBOARD] = {
+            key: ContestTab.DYNAMIC_SCOREBOARD,
+            header: <T className="tt-ce ws-np">dynamic scoreboard</T>,
+            body: (
+              <div className="pad-left-right pad-top-bottom">
+                <ViewDynamicScoreboard contest={contest} mutate={mutate} />
+              </div>
+            ),
+          };
+        }
+        
         if (isAdmin ||
           isJudge ||
           (
@@ -213,18 +225,6 @@ export function ContestView() {
             key: ContestTab.MY_SUBMISSIONS,
             header: <T className="tt-ce ws-np">my submissions</T>,
             body: <ViewProblemMySubmissions contest={contest} />,
-          };
-        }
-        
-        if (isAdmin || isJudge || !contest.settings.scoreboardLocked) {
-          tabHeaders[ContestTab.DYNAMIC_SCOREBOARD] = {
-            key: ContestTab.DYNAMIC_SCOREBOARD,
-            header: <T className="tt-ce ws-np">dynamic scoreboard</T>,
-            body: (
-              <div className="pad-left-right pad-top-bottom">
-                <ViewDynamicScoreboard contest={contest} mutate={mutate} />
-              </div>
-            ),
           };
         }
         

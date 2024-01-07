@@ -1,3 +1,4 @@
+import { InputSelect, useJukiUI } from '@juki-team/base-ui';
 import {
   Button,
   ButtonLoader,
@@ -9,10 +10,9 @@ import {
   MdMathViewer,
   Modal,
   NotificationsActiveIcon,
-  Popover,
   QuestionAnswerIcon,
-  Select,
   T,
+  Tooltip,
   UserNicknameLink,
 } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
@@ -35,6 +35,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   }>(null);
   const { notifyResponse } = useNotification();
   const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(routeParams.key as string));
+  const { components: { Image } } = useJukiUI();
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
@@ -113,28 +114,29 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                 <div className="jk-row left gap">
                   <div className="tx-h fw-bd cr-py">{clarification.question}</div>
                   <div className="jk-row gap">
-                    <Popover
+                    <Tooltip
                       content={<div className="ws-np">{dtf(clarification.questionTimestamp)}</div>}
-                      triggerOn="hover"
                     >
                       <div className="jk-row"><ClockIcon className="cr-py" size="small" /></div>
-                    </Popover>
-                    <Popover
-                      content={<UserNicknameLink nickname={clarification.questionUserNickname}>
-                        <div className="link tx-s ws-np">{clarification.questionUserNickname}</div>
-                      </UserNicknameLink>}
-                      triggerOn="hover"
+                    </Tooltip>
+                    <Tooltip
+                      content={
+                        <UserNicknameLink nickname={clarification.questionUserNickname}>
+                          <div className="link tx-s ws-np">{clarification.questionUserNickname}</div>
+                        </UserNicknameLink>
+                      }
                     >
                       <div className="jk-row">
                         <UserNicknameLink nickname={clarification.questionUserNickname}>
-                          <img
+                          <Image
                             src={clarification.questionUserImageUrl}
-                            className="jk-user-profile-img elevation-1"
                             alt={clarification.questionUserNickname}
+                            width={24}
+                            height={24}
                           />
                         </UserNicknameLink>
                       </div>
-                    </Popover>
+                    </Tooltip>
                   </div>
                   <div className="jk-row nowrap gap">
                     <div className="jk-tag primary-light">
@@ -143,8 +145,8 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                         : <div>
                           <T className="tt-se">problem</T>&nbsp;
                           <span className="fw-bd">
-                            {contest?.problems?.[clarification.problemJudgeKey]?.index || <><T>problem
-                              deleted</T> ({clarification.problemJudgeKey})</>}
+                            {contest?.problems?.[clarification.problemJudgeKey]?.index
+                              || <><T>problem deleted</T> ({clarification.problemJudgeKey})</>}
                           </span>
                         </div>}
                     </div>
@@ -156,12 +158,11 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                 </div>
                 {!!clarification.answerTimestamp && (
                   <div className="jk-row gap left top stretch nowrap">
-                    <Popover
+                    <Tooltip
                       content={<div className="ws-np">{dtf(clarification.answerTimestamp)}</div>}
-                      triggerOn="hover"
                     >
-                      <div style={{ marginTop: 16 }} className="tx-m"><ClockIcon size="small" /></div>
-                    </Popover>
+                      <div className="jk-row"><ClockIcon size="small" /></div>
+                    </Tooltip>
                     <div className="flex-1" style={{ overflow: 'auto', maxWidth: 'calc(100vw - 300px)' }}>
                       <MdMathViewer source={clarification.answer} />
                     </div>
@@ -174,42 +175,43 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
       {clarification && (
         <Modal isOpen={true} onClose={() => setClarification(null)} closeIcon>
           <div className="jk-pad-md jk-col gap stretch">
-            <div>
-              <T className="fw-bd tt-se">clarification</T>
+            <h3><T>clarification</T></h3>
+            <div className="jk-form-item">
+              <InputSelect
+                label={<T className="tt-se">problem</T>}
+                labelPlacement="top"
+                options={[
+                  { value: '', label: <T className="tt-se">general</T> },
+                  ...(Object.values(contest.problems)
+                    .map(problem => ({
+                      value: getProblemJudgeKey(problem.judge, problem.key),
+                      label: <><span
+                        className="fw-bd"
+                      >{problem.index}</span> - {problem.name} ({JUDGE[problem.judge]?.label} {problem.key})</>,
+                    }))),
+                ]}
+                selectedOption={{
+                  value: clarification.problemJudgeKey,
+                  label: clarification.problemJudgeKey === '' || Object.values(contest.problems).map(problem => getProblemJudgeKey(problem.judge, problem.key)).includes(clarification.problemJudgeKey)
+                    ? undefined
+                    : <T className="tt-se">problem not found</T>,
+                }}
+                onChange={({ value }) => setClarification({ ...clarification, problemJudgeKey: value })}
+                extend
+              />
             </div>
             <div className="jk-form-item">
-              <label>
-                <T>problem</T>
-                <Select
-                  options={[
-                    { value: '', label: <T className="tt-se">general</T> },
-                    ...(Object.values(contest.problems)
-                      .map(problem => ({
-                        value: getProblemJudgeKey(problem.judge, problem.key),
-                        label: <><span
-                          className="fw-bd"
-                        >{problem.index}</span> - {problem.name} ({JUDGE[problem.judge]?.label} {problem.key})</>,
-                      }))),
-                  ]}
-                  selectedOption={{ value: clarification.problemJudgeKey }}
-                  onChange={({ value }) => setClarification({ ...clarification, problemJudgeKey: value })}
-                  extend
-                />
-              </label>
-            </div>
-            <div className="jk-form-item">
-              <label>
-                <div className="jk-row left gap"><T>question</T></div>
-                <Input
-                  onChange={question => setClarification({ ...clarification, question })}
-                  value={clarification.question}
-                />
-              </label>
+              <Input
+                label={<T className="tt-se">question</T>}
+                labelPlacement="top"
+                onChange={question => setClarification({ ...clarification, question })}
+                value={clarification.question}
+              />
             </div>
             {isJudgeOrAdmin && (
               <div className="jk-form-item">
                 <label>
-                  <div className="jk-row left gap"><T>answer</T></div>
+                  <div className="jk-row left gap"><T className="fw-bd tt-se">answer</T></div>
                 </label>
                 <MdMathEditor
                   onChange={answer => setClarification({ ...clarification, answer })}
@@ -221,22 +223,22 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
               </div>
             )}
             {isJudgeOrAdmin && (
-              <div className="jk-form-item">
-                <label>
-                  <T className="tt-se fw-bd tx-s">visible for</T>
-                  <InputToggle
-                    checked={clarification.public}
-                    onChange={(value) => setClarification({ ...clarification, public: value })}
-                    leftLabel={<T className={classNames('tt-se', { 'fw-bd': clarification.public })}>contestant who
-                      asked</T>}
-                    rightLabel={<T className={classNames('tt-se', { 'fw-bd': !clarification.public })}>all
-                      contestants</T>}
-                  />
-                </label>
+              <div>
+                <T className="tt-se fw-bd">visible for</T>
+                <InputToggle
+                  checked={clarification.public}
+                  onChange={(value) => setClarification({ ...clarification, public: value })}
+                  leftLabel={
+                    <T className={classNames('tt-se', { 'fw-bd': clarification.public })}>contestant who asked</T>
+                  }
+                  rightLabel={
+                    <T className={classNames('tt-se', { 'fw-bd': !clarification.public })}>all contestants</T>
+                  }
+                />
               </div>
             )}
             <div className="jk-row right gap">
-              <Button type="text" onClick={() => setClarification(null)}><T>cancel</T></Button>
+              <Button type="light" onClick={() => setClarification(null)}><T>cancel</T></Button>
               <ButtonLoader
                 onClick={async (setLoaderStatus, loaderStatus, event) => {
                   setLoaderStatus(Status.LOADING);

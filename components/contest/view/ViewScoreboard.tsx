@@ -21,7 +21,7 @@ import {
   classNames,
   cleanRequest,
   downloadDataTableAsCsvFile,
-  downloadXlsxAsFile,
+  downloadDataTablesAsXlsxFile,
   getProblemJudgeKey,
 } from 'helpers';
 import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification, useT } from 'hooks';
@@ -88,13 +88,16 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
       disabled={disabled}
       options={[ { value: 'csv', label: 'as csv' }, { value: 'xlsx', label: 'as xlsx' } ]}
       selectedOption={{ value: 'x', label: 'download' }}
-      onChange={async ({ value }) => {
+      onChange={({ value }) => {
         switch (value) {
           case 'csv':
             downloadDataTableAsCsvFile(dataCsv, `${contest?.name} (${t('scoreboard')}).csv`);
             break;
           case 'xlsx':
-            await downloadXlsxAsFile(dataCsv, `${contest?.name} (${t('scoreboard')}).xlsx`, t('scoreboard'));
+            void downloadDataTablesAsXlsxFile(
+              `${contest?.name} (${t('scoreboard')}).xlsx`,
+              [ { sheetName: t('scoreboard'), data: dataCsv } ],
+            );
             break;
           case 'pdf':
             break;
