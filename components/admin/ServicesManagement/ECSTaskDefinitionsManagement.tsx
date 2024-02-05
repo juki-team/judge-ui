@@ -2,7 +2,7 @@ import { ButtonLoader, DataViewer, Field, PlayCircleIcon, Select, SettingsAlertI
 import { jukiSettings } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
+import { useDataViewerRequester, useEffect, useNotification } from 'hooks';
 import { useMemo, useState } from 'react';
 import {
   CompanyResponseDTO,
@@ -25,26 +25,53 @@ type RevisionType = {
   isLowRunner: boolean
 };
 
-type AwsEcsTaskDefinitionList = { family: string, revisions: RevisionType[], companyKey: string };
+type AwsEcsTaskDefinitionList = {
+  family: string,
+  revisions: RevisionType[],
+  companyKey: string,
+};
 
-const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefinitionList) => {
+const FieldTaskDefinition = ({ family, revisions, companyKey, reload }: AwsEcsTaskDefinitionList & {
+  reload: () => void
+}) => {
   
   const { notifyResponse } = useNotification();
   const [ revision, setRevision ] = useState<RevisionType>(revisions[0]);
-  const { mutate } = useSWR();
+  const { isHighRunner, isLowRunner, ...restRevision } = revision;
+  
+  const firstRevisionString = JSON.stringify(revisions[0]);
+  useEffect(() => {
+    setRevision(JSON.parse(firstRevisionString))
+  }, [ firstRevisionString ]);
   
   return (
     <div className="jk-row gap nowrap">
-      <div className="jk-row">
-        <div className="fw-bd">
+      <div className="jk-col gap">
+        <div className="jk-col gap fw-bd">
           {family}
-          {revision.isLowRunner && <>&nbsp;<T className="tt-ue jk-tag info">low</T></>}
-          {revision.isHighRunner && <>&nbsp;<T className="tt-ue jk-tag info">high</T></>}
+          {revisions.map((revision, index) => (
+            revision.isHighRunner || revision.isLowRunner ? (
+              <div key={revision.revision} className="jk-row center gap">
+                {revision.isLowRunner && (
+                  <div className="jk-tag info">
+                    &nbsp;<T className="tt-ue">low</T>{` (v${revision.revision})`}
+                  </div>
+                )}
+                {revision.isHighRunner && (
+                  <div className="jk-tag info">
+                    <T className="tt-ue">high</T>{` (v${revision.revision})`}
+                  </div>
+                )}
+              </div>
+            ) : null))}
         </div>
         <Select
-          options={revisions.map((definition) => ({ value: definition, label: definition.revision }))}
-          selectedOption={{ value: revision }}
-          onChange={({ value }) => setRevision(value)}
+          options={revisions.map(({ isLowRunner, isHighRunner, ...definition }) => ({
+            value: definition,
+            label: definition.revision,
+          }))}
+          selectedOption={{ value: restRevision }}
+          onChange={({ value }) => setRevision({ ...value, isLowRunner, isHighRunner })}
         />
       </div>
       <div className="jk-col gap">
@@ -65,7 +92,7 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
               ),
             );
             notifyResponse(response, setLoaderStatus);
-            await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(companyKey));
+            reload();
           }}
         >
           <T>run task</T>
@@ -86,7 +113,7 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
                 ),
               );
               notifyResponse(response, setLoaderStatus);
-              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(companyKey));
+              reload();
             }}
           >
             <T>set high runner</T>
@@ -108,7 +135,7 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
                 ),
               );
               notifyResponse(response, setLoaderStatus);
-              await mutate(JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(companyKey));
+              reload();
             }}
           >
             <T>set low runner</T>
@@ -120,11 +147,18 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
 };
 
 export const ECSTaskDefinitionsManagement = ({ company }: { company: CompanyResponseDTO }) => {
+  
   const {
     data: response,
     request,
+    reload,
+    reloadRef,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<TaskDefinitionResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_DEFINITION_LIST(company.key));
+  
+  useEffect(() => {
+    reload();
+  }, [ company.key, reload ]);
   
   const columns: DataViewerHeadersType<AwsEcsTaskDefinitionList>[] = useMemo(() => [
     {
@@ -132,12 +166,12 @@ export const ECSTaskDefinitionsManagement = ({ company }: { company: CompanyResp
       index: 'taskDefinition',
       field: ({ record }) => (
         <Field className="jk-row center gap">
-          <FieldTaskDefinition {...record} companyKey={company.key} />
+          <FieldTaskDefinition {...record} companyKey={company.key} reload={reload} />
         </Field>
       ),
       sort: { compareFn: () => (rowA, rowB) => rowB.family.localeCompare(rowA.family) },
     },
-  ], [ company.key ]);
+  ], [ company.key, reload ]);
   
   const responseData: TaskDefinitionResponseDTO[] = (response?.success ? response?.contents : []);
   
@@ -162,6 +196,7 @@ export const ECSTaskDefinitionsManagement = ({ company }: { company: CompanyResp
       };
     },
   );
+  
   const data: AwsEcsTaskDefinitionList[] = Object.values(definitions).map(({ revisions, ...rest }) => ({
     ...rest,
     revisions: revisions.sort((a, b) => b.revision - a.revision),
@@ -174,6 +209,7 @@ export const ECSTaskDefinitionsManagement = ({ company }: { company: CompanyResp
       rows={{ height: 180 }}
       request={request}
       name={QueryParam.ECS_DEFINITIONS_TASK_TABLE}
+      reloadRef={reloadRef}
       setLoaderStatusRef={setLoaderStatusRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />

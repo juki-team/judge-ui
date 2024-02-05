@@ -7,7 +7,6 @@ import {
   MailManagement,
   Select,
   ServicesManagement,
-  SettingsManagement,
   T,
   TabsInline,
   TwoContentSection,
@@ -87,17 +86,6 @@ function Admin() {
   }
   
   const tabs: TabsType<AdminTab> = {};
-  if (canHandleSettings) {
-    tabs[AdminTab.SETTINGS_MANAGEMENT] = {
-      key: AdminTab.SETTINGS_MANAGEMENT,
-      header: <T className="tt-ce ws-np">settings</T>,
-      body: company
-        ? <div className="pad-left-right pad-top-bottom"><SettingsManagement company={company} mutate={mutate} /></div>
-        : <div className="pad-left-right pad-top-bottom">
-          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
-        </div>,
-    };
-  }
   if (canViewSubmissionsManagement) {
     tabs[AdminTab.SUBMISSIONS] = {
       key: AdminTab.SUBMISSIONS,

@@ -24,8 +24,8 @@ export const JUDGE_API_V1 = {
     AWS_ECS_RUN_TASK_TASK_DEFINITION: (taskDefinition: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
     },
-    AWS_ECS_ADJUST_TASKS: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/adjust-tasks`;
+    AWS_ECS_ADJUST_TASKS: (companyKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/adjust-tasks?companyKey${companyKey}`;
     },
     MAIL_SEND: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/send`;

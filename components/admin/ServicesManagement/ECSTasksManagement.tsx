@@ -1,3 +1,4 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import { ButtonLoader, DataViewer, Field, SettingsSuggestIcon, StopCircleIcon, T } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
@@ -109,7 +110,7 @@ export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO })
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
             const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                JUDGE_API_V1.SYS.AWS_ECS_ADJUST_TASKS(),
+                JUDGE_API_V1.SYS.AWS_ECS_ADJUST_TASKS(company.key),
                 { method: HTTPMethod.POST },
               ),
             );
