@@ -13,12 +13,12 @@ import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { buttonLoaderLink, toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiRouter, useJukiUser, useMemo, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
-import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, LastLinkKey, QueryParam } from 'types';
+import { CourseSummaryListResponseDTO, CourseTab, DataViewerHeadersType, LastPathKey, QueryParam } from 'types';
 
 function Problems() {
   
-  useTrackLastPath(LastLinkKey.PROBLEMS);
-  useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
+  useTrackLastPath(LastPathKey.PROBLEMS);
+  useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { user: { canCreateProblem } } = useJukiUser();
   const columns: DataViewerHeadersType<CourseSummaryListResponseDTO>[] = useMemo(() => [
     {

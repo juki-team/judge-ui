@@ -4,7 +4,7 @@ import {
   CheckUnsavedChanges,
   CloseIcon,
   HomeLink,
-  LastLink,
+  LinkLastPath,
   ProblemStatement,
   SaveIcon,
   T,
@@ -23,7 +23,7 @@ import {
   EditCreateProblemType,
   HTTPMethod,
   Judge,
-  LastLinkKey,
+  LastPathKey,
   ProblemResponseDTO,
   ProblemTab,
   Status,
@@ -149,7 +149,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
   
   const breadcrumbs: ReactNode[] = [
     <HomeLink key="home" />,
-    <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
+    <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     editing
       ? (
         <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT) }} className="link">

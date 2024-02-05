@@ -8,7 +8,7 @@ import {
   EditIcon,
   FetcherLayer,
   HomeLink,
-  LastLink,
+  LinkLastPath,
   LoadingIcon,
   NavigateBeforeIcon,
   NavigateNextIcon,
@@ -25,7 +25,7 @@ import { parseContest, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useContestRouter, useJukiRouter, useJukiUI, useJukiUser, useT, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
-import { ContentResponseType, ContestResponseDTO, ContestTab, LastLinkKey, Status, TabsType } from 'types';
+import { ContentResponseType, ContestResponseDTO, ContestTab, LastPathKey, Status, TabsType } from 'types';
 import Custom404 from '../../../pages/404';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
@@ -37,7 +37,7 @@ import { ViewScoreboard } from './ViewScoreboard';
 
 export function ContestView() {
   
-  useTrackLastPath(LastLinkKey.SECTION_CONTEST);
+  useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const { pushRoute, searchParams } = useJukiRouter();
   const { pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
   const { viewPortSize } = useJukiUI();
@@ -46,7 +46,7 @@ export function ContestView() {
   
   const breadcrumbs = [
     <HomeLink key="home" />,
-    <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
+    <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,
     <Link
       href={{ pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.OVERVIEW), query: searchParams.toString() }}
       className="link"
@@ -119,9 +119,9 @@ export function ContestView() {
             <p>
               <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
             </p>
-            <LastLink lastLinkKey={LastLinkKey.CONTESTS}>
+            <LinkLastPath lastPathKey={LastPathKey.CONTESTS}>
               <div className="jk-row"><CupIcon /><T className="tt-se">go to contest list</T></div>
-            </LastLink>
+            </LinkLastPath>
           </Custom404>
         </TwoContentSection>
       }
@@ -306,7 +306,12 @@ export function ContestView() {
         
         const breadcrumbs: ReactNode[] = [
           <HomeLink key="home" />,
-          <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LastLink>,
+          <LinkLastPath
+            lastPathKey={LastPathKey.CONTESTS}
+            key="contests"
+          >
+            <T className="tt-se">contests</T>
+          </LinkLastPath>,
           <Link
             href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query: searchParams.toString() }}
             className="link"

@@ -1,5 +1,5 @@
 import { Button, ButtonLoader, Input, Modal, T } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -33,10 +33,12 @@ export const NameModal = ({ name: initialName, mutate, companyKey, ...modalProps
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<{}>>(
-                await authorizedRequest(JUDGE_API_V1.COMPANY.COMPANY(companyKey), {
-                  method: HTTPMethod.PATCH,
-                  body: JSON.stringify({ name }),
-                }));
+                await authorizedRequest(
+                  jukiSettings.API.company.get({ params: { companyKey } }).url,
+                  {
+                    method: HTTPMethod.PATCH,
+                    body: JSON.stringify({ name }),
+                  }));
               await mutate();
               if (notifyResponse(response, setLoaderStatus)) {
                 modalProps.onClose();

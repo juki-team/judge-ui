@@ -23,12 +23,14 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
   index: 'nickname',
   field: ({ record: { userNickname, userImageUrl }, isCard }) => (
     <TextField
-      text={<>
-        <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
-        <UserNicknameLink nickname={userNickname}>
-          <div className="link">{userNickname}</div>
-        </UserNicknameLink>
-      </>}
+      text={
+        <>
+          <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
+          <UserNicknameLink nickname={userNickname}>
+            <div className="link">{userNickname}</div>
+          </UserNicknameLink>
+        </>
+      }
       label="user nickname"
     />
   ),

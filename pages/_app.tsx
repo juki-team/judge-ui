@@ -1,8 +1,7 @@
-import { JUKI_APP_COMPANY_KEY } from '@juki-team/commons';
 import { Analytics } from '@vercel/analytics/react';
-import { CustomHead, ErrorBoundary, JukiProviders, LasLinkProvider, NavigationBar, SpinIcon, T } from 'components';
+import { CustomHead, ErrorBoundary, JukiProviders, NavigationBar, SpinIcon, T } from 'components';
 import { jukiSettings } from 'config';
-import { JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV } from 'config/constants';
+import { JUKI_APP_COMPANY_KEY, JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV, ROUTES } from 'config/constants';
 import { consoleWarn } from 'helpers';
 import { useJukiUser } from 'hooks';
 import dynamic from 'next/dynamic';
@@ -11,7 +10,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
-import { AppProps, FC, ImageCmpProps } from 'types';
+import { AdminTab, AppProps, ContestsTab, FC, ImageCmpProps, Judge, LastPathKey, QueryParam } from 'types';
 import { useRouter } from '../hooks/useRouter';
 import { useSearchParams } from '../hooks/useSearchParams';
 import i18nInstance from '../i18n';
@@ -80,6 +79,26 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       }}
       socketServiceUrl={JUKI_SERVICE_BASE_URL}
       i18n={i18nInstance}
+      initialLastPath={{
+        [LastPathKey.SECTION_CONTEST]: {
+          pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
+          searchParams: new URLSearchParams(''),
+        },
+        [LastPathKey.CONTESTS]: {
+          pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
+          searchParams: new URLSearchParams(),
+        },
+        [LastPathKey.SECTION_PROBLEM]: { pathname: ROUTES.PROBLEMS.LIST(), searchParams: new URLSearchParams() },
+        [LastPathKey.PROBLEMS]: {
+          pathname: ROUTES.PROBLEMS.LIST(),
+          searchParams: new URLSearchParams({ [QueryParam.JUDGE]: Judge.CUSTOMER }),
+        },
+        [LastPathKey.SECTION_ADMIN]: {
+          pathname: ROUTES.ADMIN.PAGE(AdminTab.SUBMISSIONS),
+          searchParams: new URLSearchParams(),
+        },
+        [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
+      }}
     >
       <CustomHead />
       <UserProvider>
@@ -91,12 +110,10 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
               revalidateOnReconnect: false,
             }}
           >
-            <LasLinkProvider>
-              <NavigationBar>
-                <Analytics />
-                <Component {...pageProps} />
-              </NavigationBar>
-            </LasLinkProvider>
+            <NavigationBar>
+              <Analytics />
+              <Component {...pageProps} />
+            </NavigationBar>
           </SWRConfig>
         </TaskProvider>
       </UserProvider>

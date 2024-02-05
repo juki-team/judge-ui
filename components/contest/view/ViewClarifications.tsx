@@ -1,10 +1,10 @@
-import { InputSelect, useJukiUI } from '@juki-team/base-ui';
 import {
   Button,
   ButtonLoader,
   ClockIcon,
   EditIcon,
   Input,
+  InputSelect,
   InputToggle,
   MdMathEditor,
   MdMathViewer,
@@ -17,7 +17,7 @@ import {
 } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useDateFormat, useFetcher, useJukiRouter, useNotification } from 'hooks';
+import { useDateFormat, useFetcher, useJukiRouter, useJukiUI, useNotification } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
 

@@ -99,6 +99,7 @@ export type {
 export { Period, NotificationType, QueryParamKey } from '@juki-team/base-ui';
 
 export type {
+  BasicModalProps,
   ModalProps,
   TabsType,
   MenuType,
@@ -127,7 +128,6 @@ export type {
   TabType,
   ImageCmpProps,
   OnRecordClickType,
-  RefreshType,
   DataViewerRequesterGetUrlType,
   AppendSearchParamsType,
   GetRecordStyleType,

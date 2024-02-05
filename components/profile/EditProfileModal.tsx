@@ -12,7 +12,8 @@ import {
   T,
   TextArea,
 } from 'components';
-import { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
+import { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, JUDGE, ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
 import { useJukiRouter, useJukiUser, useSWR } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -153,7 +154,7 @@ export function EditProfileModal({ isOpen, user, onClose }: EditProfileModalProp
                   }
                   await pushRoute({ pathname: ROUTES.PROFILE.PAGE(userState.nickname, tab) });
                   await mutatePing();
-                  await mutate(JUDGE_API_V1.USER.PROFILE(user.nickname));
+                  await mutate(jukiSettings.API.user.getProfile({ params: { nickname: user.nickname } }).url);
                   setLoader?.(Status.SUCCESS);
                   onClose();
                 },

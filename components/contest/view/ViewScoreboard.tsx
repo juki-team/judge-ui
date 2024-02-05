@@ -21,7 +21,7 @@ import {
   classNames,
   cleanRequest,
   downloadDataTableAsCsvFile,
-  downloadDataTablesAsXlsxFile,
+  downloadSheetDataAsXlsxFile,
   getProblemJudgeKey,
 } from 'helpers';
 import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification, useT } from 'hooks';
@@ -94,9 +94,12 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
             downloadDataTableAsCsvFile(dataCsv, `${contest?.name} (${t('scoreboard')}).csv`);
             break;
           case 'xlsx':
-            void downloadDataTablesAsXlsxFile(
+            void downloadSheetDataAsXlsxFile(
+              [ {
+                name: t('scoreboard'),
+                rows: { ...dataCsv.map(row => ({ cells: { ...row.map(cell => ({ text: cell })) } })) },
+              } ],
               `${contest?.name} (${t('scoreboard')}).xlsx`,
-              [ { sheetName: t('scoreboard'), data: dataCsv } ],
             );
             break;
           case 'pdf':
@@ -232,7 +235,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
     isLoading,
     setLoaderStatusRef,
     reload,
-    refreshRef,
+    reloadRef,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen), { refreshInterval: 60000 },
   );
@@ -333,7 +336,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
       className="contest-scoreboard"
-      refreshRef={refreshRef}
+      reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

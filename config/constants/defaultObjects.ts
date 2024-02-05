@@ -1,4 +1,5 @@
 import { QueryParam } from 'types';
+import { PAGE_SIZE_OPTIONS } from './commons';
 
 export const DEFAULT_DATA_VIEWER_PROPS = {
   getPageQueryParam: (name: string) => (name ? name + '.' : name) + QueryParam.PAGE_TABLE,

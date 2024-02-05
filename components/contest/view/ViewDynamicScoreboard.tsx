@@ -1,5 +1,3 @@
-import { Timer } from '@juki-team/base-ui';
-import { ContentResponseType } from '@juki-team/commons';
 import {
   BalloonIcon,
   Button,
@@ -10,15 +8,16 @@ import {
   FullscreenIcon,
   Image,
   T,
+  Timer,
   Tooltip,
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { classNames, getProblemJudgeKey } from 'helpers';
-import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification } from 'hooks';
-import Link from 'next/link';
+import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  ContentResponseType,
   ContestResponseDTO,
   ContestTab,
   DataViewerHeadersType,
@@ -38,9 +37,8 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
 }) => {
   
   const { user, company: { imageUrl, name } } = useJukiUser();
-  const { notifyResponse } = useNotification();
   const { searchParams, routeParams: { key: contestKey, tab: contestTab, index: problemIndex } } = useJukiRouter();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
@@ -163,7 +161,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
     request,
     setLoaderStatusRef,
     reload,
-    refreshRef,
+    reloadRef,
   } = useDataViewerRequester<ContentResponseType<{ content: ScoreboardResponseDTO[], timestamp: number }[]>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key),
     {
@@ -255,10 +253,10 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
       className="contest-scoreboard"
-      refreshRef={refreshRef}
+      reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, refreshRef, request, setLoaderStatusRef ]);
+  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, reloadRef, request, setLoaderStatusRef ]);
   
   if (fullscreen) {
     const literal = getContestTimeLiteral(contest);

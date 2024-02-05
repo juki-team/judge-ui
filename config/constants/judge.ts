@@ -12,17 +12,11 @@ const withFilter = (path: string, filterUrl?: string) => {
 
 export const JUDGE_API_V1 = {
   SYS: {
-    LS: (folderPath: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/ls/${encodeURIComponent(folderPath)}`;
-    },
-    CAT: (filePath: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/cat/${encodeURIComponent(filePath)}`;
-    },
     AWS_ECS_TASK_LIST: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/company/${companyKey}/aws/ecs/task-list`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-list?companyKey=${companyKey}`;
     },
     AWS_ECS_TASK_DEFINITION_LIST: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/company/${companyKey}/aws/ecs/task-definition-list`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-definition-list?companyKey=${companyKey}`;
     },
     AWS_ECS_STOP_TASK_TASK_ARN: (taskArn: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/stop-task/${encodeURIComponent(taskArn)}`;
@@ -30,50 +24,11 @@ export const JUDGE_API_V1 = {
     AWS_ECS_RUN_TASK_TASK_DEFINITION: (taskDefinition: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
     },
-    // AWS_ECS_SET_RUNNER_TYPE_TASK_DEFINITION: (runnerType: RunnerType, taskDefinition: string) => {
-    //   return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/runner/type/${runnerType}/task-definition/${encodeURIComponent(
-    //     taskDefinition)}`;
-    // },
-    AWS_SQS_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/list`;
-    },
-    AWS_SQS_QUEUE: (queueType: 'high' | 'low' | 'out') => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/sqs/purge/${queueType}`;
-    },
     AWS_ECS_ADJUST_TASKS: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/adjust-tasks`;
     },
-    AWS_EC2_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ec2/list`;
-    },
     MAIL_SEND: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/send`;
-    },
-  },
-  USER: {
-    MANAGEMENT_LIST: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/management-list?companyKey=${companyKey}`;
-    },
-    ALL_ONLINE_USERS: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/all-online-users?companyKey=${companyKey}`;
-    },
-    ONLINE_USERS: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/online-users?companyKey=${companyKey}`;
-    },
-    PROFILE: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/profile`;
-    },
-    ROLES: (companyKey: string, nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/company/${companyKey}/nickname/${nickname}/roles`;
-    },
-    STATUS: (nickname: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/nickname/${nickname}/status`;
-    },
-    DELETE_OLD_SESSIONS: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/delete-old-sessions`;
-    },
-    MY_SESSIONS: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/user/my-sessions`;
     },
   },
   SUBMIT: {
@@ -223,26 +178,6 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rank/list`;
     },
   },
-  COMPANY: {
-    PERMISSION_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/permission-list`;
-    },
-    CURRENT: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company`;
-    },
-    COMPANY: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}`;
-    },
-    RESOURCE_SPECIFICATIONS: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}/resource-specifications`;
-    },
-    EMAIL_DATA: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}/email-data`;
-    },
-    IMAGE: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/company/${companyKey}/image`;
-    },
-  },
   JUDGE: {
     GET: (judge: Judge, companyKey: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/company/${companyKey}`;
@@ -252,23 +187,6 @@ export const JUDGE_API_V1 = {
     },
     LANGUAGES: (judge: Judge, companyKey: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/company/${companyKey}/languages`;
-    },
-    SQS_STATUS: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/sqs/status`;
-    },
-    SQS_DELETE: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/sqs/purge`;
-    },
-  },
-  VIRTUAL_USER: {
-    LIST: (filterUrl: string) => {
-      return withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/list?`, filterUrl);
-    },
-    UPDATE_DATA: (virtualUserId: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/${virtualUserId}/update-data`;
-    },
-    SET_FREE: (virtualUserId: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/virtual-user/${virtualUserId}/set-free`;
     },
   },
 };

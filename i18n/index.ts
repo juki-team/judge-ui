@@ -1,4 +1,4 @@
-import { Language } from '@juki-team/commons';
+import { Language } from '@juki-team/commons'; // required
 import type { i18n } from 'i18next';
 import i18next from 'i18next';
 import ChainedBackend from 'i18next-chained-backend';

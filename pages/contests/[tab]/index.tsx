@@ -14,12 +14,12 @@ import {
 import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEffect, useJukiRouter, useJukiUI, useJukiUser, useTrackLastPath } from 'hooks';
-import { ContestsTab, LastLinkKey, TabsType } from 'types';
+import { ContestsTab, LastPathKey, TabsType } from 'types';
 
 function Contests() {
   
-  useTrackLastPath(LastLinkKey.CONTESTS);
-  useTrackLastPath(LastLinkKey.SECTION_CONTEST);
+  useTrackLastPath(LastPathKey.CONTESTS);
+  useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const { routeParams: { tab: contestsTab }, pushRoute, replaceRoute } = useJukiRouter();
   const { user: { canCreateContest } } = useJukiUser();
   const { viewPortSize } = useJukiUI();

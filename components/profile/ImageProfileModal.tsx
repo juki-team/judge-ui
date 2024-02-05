@@ -1,5 +1,5 @@
 import { Button, ButtonLoader, ImageLoaderCropper, Modal, T } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
 import { toBlob } from 'helpers';
 import { useJukiUser, useSWR } from 'hooks';
 import { useState } from 'react';
@@ -38,7 +38,7 @@ export const ImageProfileModal = ({ onClose, nickname }: { onClose: () => void, 
                     onSuccess: async () => {
                       setLoader?.(Status.LOADING);
                       await mutatePing();
-                      await mutate(JUDGE_API_V1.USER.PROFILE(nickname as string));
+                      await mutate(jukiSettings.API.user.getProfile({ params: { nickname } }).url);
                       setLoader?.(Status.SUCCESS);
                       onClose();
                     },

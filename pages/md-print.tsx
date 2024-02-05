@@ -4,7 +4,8 @@ import { useJukiRouter } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { Theme } from 'types';
 
-const MarkdownSharedView = () => {
+function MarkdownSharedView() {
+  console.log('MarkdownSharedView');
   
   const { routeParams: { source, sourceUrl, theme } } = useJukiRouter();
   const [ sourceContent, setSourceContent ] = useState(source as string || '');
@@ -18,6 +19,7 @@ const MarkdownSharedView = () => {
     if (body) {
       body.style.backgroundColor = 'var(--t-color-white)';
     }
+    console.log({ body, theme, sourceUrl });
     if (sourceUrl) {
       fetch(sourceUrl as string)
         .then(result => result.text())
@@ -31,6 +33,6 @@ const MarkdownSharedView = () => {
       <MdMathViewer source={sourceContent} />
     </div>
   );
-};
+}
 
 export default MarkdownSharedView;

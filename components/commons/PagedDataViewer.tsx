@@ -49,7 +49,7 @@ export const PagedDataViewer = <T extends { [key: string]: any }, V = T>(props: 
     request,
     setLoaderStatusRef,
     reload,
-    refreshRef,
+    reloadRef,
   } = useDataViewerRequester<ContentsResponseType<V>>(getUrl, { refreshInterval });
   
   useEffect(() => {
@@ -82,10 +82,11 @@ export const PagedDataViewer = <T extends { [key: string]: any }, V = T>(props: 
       setLoaderStatusRef={setLoaderStatusRef}
       extraNodes={extraNodes}
       extraNodesFloating
-      pagination={{ total: lastTotalRef.current, pageSizeOptions: PAGE_SIZE_OPTIONS }}
+      totalData={lastTotalRef.current}
       getRecordKey={getRowKey}
       onRecordClick={onRecordClick}
-      refreshRef={refreshRef}
+      reloadRef={reloadRef}
+      pageSizeOptions={PAGE_SIZE_OPTIONS}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

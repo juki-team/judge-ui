@@ -6,7 +6,7 @@ import {
   CodeEditor,
   HomeLink,
   Input,
-  LastLink,
+  LinkLastPath,
   SaveIcon,
   Select,
   T,
@@ -30,7 +30,7 @@ import {
   CourseTab,
   EditCreateCourseType,
   HTTPMethod,
-  LastLinkKey,
+  LastPathKey,
   ProgrammingLanguage,
   Status,
 } from 'types';
@@ -201,7 +201,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
   
   const breadcrumbs = [
     <HomeLink key="home" />,
-    <LastLink lastLinkKey={LastLinkKey.CONTESTS} key="courses"><T className="tt-se">courses</T></LastLink>,
+    <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="courses"><T className="tt-se">courses</T></LinkLastPath>,
   ];
   
   if (editing) {

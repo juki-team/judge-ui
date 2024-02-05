@@ -1,3 +1,4 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   Button,
@@ -15,7 +16,7 @@ import {
   UserProfile,
   UserProfileSettings,
 } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiRouter, useJukiUI, useJukiUser, useState } from 'hooks';
 import Link from 'next/link';
@@ -33,7 +34,7 @@ export default function ProfileView() {
   
   return (
     <FetcherLayer<ContentResponseType<UserProfileResponseDTO>>
-      url={nickname ? JUDGE_API_V1.USER.PROFILE(nickname as string) : null}
+      url={nickname ? jukiSettings.API.user.getProfile({ params: { nickname: nickname as string } }).url : null}
       errorView={<Custom404 />}
     >
       {({ data }) => {

@@ -1,5 +1,5 @@
 import { AddIcon, Button, ButtonLoader, DeleteIcon, Input, Modal, T } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
@@ -78,7 +78,7 @@ export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps)
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
                 const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.COMPANY.COMPANY(companyKey),
+                  jukiSettings.API.company.get({ params: { companyKey } }).url,
                   { method: HTTPMethod.PATCH, body: JSON.stringify({ contactEmails }) },
                 ));
                 await mutate();

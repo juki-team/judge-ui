@@ -1,4 +1,5 @@
 import { Button, ButtonLoader, CodeEditor, FetcherLayer, Input, Select, SendIcon, T } from 'components';
+import { jukiSettings } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
@@ -90,7 +91,7 @@ export const MailManagement = ({ company }: { company: CompanyResponseDTO }) => 
   
   return (
     <FetcherLayer<ContentResponseType<EmailDataResponseDTO>>
-      url={JUDGE_API_V1.COMPANY.EMAIL_DATA(company.key)}
+      url={jukiSettings.API.company.getEmailData({ params: { companyKey: company.key } }).url}
       options={{ revalidateOnFocus: true }}
     >
       {({ data, mutate }) => {

@@ -1,10 +1,9 @@
-import { BasicModalProps } from '@juki-team/base-ui';
-import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components/index';
+import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
 import { ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
-import { Judge, ProblemTab, Status } from 'types';
+import { BasicModalProps, Judge, ProblemTab, Status } from 'types';
 
 export const CrawlJvumsaProblemModal = ({ onClose, isOpen }: BasicModalProps) => {
   

@@ -8,7 +8,7 @@ import {
   ExclamationIcon,
   FetcherLayer,
   HomeLink,
-  LastLink,
+  LinkLastPath,
   LoadingIcon,
   Popover,
   ProblemCodeEditor,
@@ -35,7 +35,7 @@ import {
   HTTPMethod,
   Judge,
   Language,
-  LastLinkKey,
+  LastPathKey,
   ProblemResponseDTO,
   ProblemTab,
   ReactNode,
@@ -47,14 +47,14 @@ import Custom404 from '../../../../404';
 
 const ProblemView = (): ReactNode => {
   
-  useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
+  useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { searchParams, routeParams: { key: problemKey, tab: problemTab }, pushRoute } = useJukiRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
   const { viewPortSize } = useJukiUI();
   const breadcrumbs = [
     <HomeLink key="home" />,
-    <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
+    <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     <Link
       href={{
         pathname: ROUTES.PROBLEMS.VIEW(problemKey as string, ProblemTab.STATEMENT),
@@ -128,9 +128,9 @@ const ProblemView = (): ReactNode => {
             <p>
               <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
             </p>
-            <LastLink lastLinkKey={LastLinkKey.PROBLEMS}>
+            <LinkLastPath lastPathKey={LastPathKey.PROBLEMS}>
               <div className="jk-row"><AssignmentIcon /><T className="tt-se">go to problem list</T></div>
-            </LastLink>
+            </LinkLastPath>
           </Custom404>
         </TwoContentSection>
       }
@@ -175,7 +175,7 @@ const ProblemView = (): ReactNode => {
         };
         const breadcrumbs: ReactNode[] = [
           <HomeLink key="home" />,
-          <LastLink lastLinkKey={LastLinkKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LastLink>,
+          <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
           <Link
             href={{
               pathname: ROUTES.PROBLEMS.VIEW(

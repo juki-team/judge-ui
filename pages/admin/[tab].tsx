@@ -1,3 +1,4 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import {
   AllSubmissions,
   Breadcrumbs,
@@ -11,7 +12,7 @@ import {
   TabsInline,
   TwoContentSection,
 } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useFetcher, useJukiRouter, useJukiUser, useTrackLastPath } from 'hooks';
 import Link from 'next/link';
@@ -20,7 +21,7 @@ import {
   AdminTab,
   CompanyUserPermissionsResponseDTO,
   ContentsResponseType,
-  LastLinkKey,
+  LastPathKey,
   QueryParam,
   TabsType,
 } from 'types';
@@ -28,7 +29,7 @@ import Custom404 from '../404';
 
 function Admin() {
   
-  useTrackLastPath(LastLinkKey.SECTION_ADMIN);
+  useTrackLastPath(LastPathKey.SECTION_ADMIN);
   const {
     user: {},
   } = useJukiUser();
@@ -38,7 +39,7 @@ function Admin() {
   const {
     data,
     mutate: companyListMutate,
-  } = useFetcher<ContentsResponseType<CompanyUserPermissionsResponseDTO>>(JUDGE_API_V1.COMPANY.PERMISSION_LIST());
+  } = useFetcher<ContentsResponseType<CompanyUserPermissionsResponseDTO>>(jukiSettings.API.company.getPermissionList().url);
   
   const companyKey = searchParams.get(QueryParam.COMPANY) as string;
   const companies = useMemo(() => data?.success ? data.contents : [], [ data ]);

@@ -1,6 +1,6 @@
 const { version } = require('./package.json');
 const { withPlugins, optional } = require('next-compose-plugins');
-const { Language } = require('@juki-team/commons');
+const { Language } = require('@juki-team/commons'); // required
 const PWA = require('next-pwa');
 
 module.exports = withPlugins([

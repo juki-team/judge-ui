@@ -1,5 +1,5 @@
 import { Button, ButtonLoader, EditIcon, Image, Input, T, UserChip, UsersSelector } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
@@ -138,10 +138,12 @@ export const SettingsManagement = ({ company, mutate }: SettingsManagementBodyPr
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<{}>>(
-                    await authorizedRequest(JUDGE_API_V1.COMPANY.COMPANY(company.key), {
-                      method: HTTPMethod.PATCH,
-                      body: JSON.stringify({ mainEmail }),
-                    }));
+                    await authorizedRequest(
+                      jukiSettings.API.company.get({ params: { companyKey: company.key } }).url,
+                      {
+                        method: HTTPMethod.PATCH,
+                        body: JSON.stringify({ mainEmail }),
+                      }));
                   await mutate();
                   notifyResponse(response, setLoaderStatus);
                 }}
@@ -195,10 +197,12 @@ export const SettingsManagement = ({ company, mutate }: SettingsManagementBodyPr
                   listCount: number,
                   status: SubmissionRunStatus.RECEIVED
                 }>>(
-                  await authorizedRequest(JUDGE_API_V1.COMPANY.COMPANY(company.key), {
-                    method: HTTPMethod.PATCH,
-                    body: JSON.stringify({ managerUserId: user.id }),
-                  }));
+                  await authorizedRequest(
+                    jukiSettings.API.company.get({ params: { companyKey: company.key } }).url,
+                    {
+                      method: HTTPMethod.PATCH,
+                      body: JSON.stringify({ managerUserId: user.id }),
+                    }));
                 await mutate();
                 notifyResponse(response, setLoaderStatus);
               }}

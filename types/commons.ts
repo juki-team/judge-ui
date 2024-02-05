@@ -1,15 +1,13 @@
-export enum LastLinkKey {
+export enum LastPathKey {
   SECTION_CONTEST = 'SECTION_CONTESTS',
   CONTESTS = 'CONTESTS',
   SECTION_PROBLEM = 'SECTION_PROBLEMS',
   PROBLEMS = 'PROBLEMS',
   SECTION_ADMIN = 'SECTION_ADMINS',
-  SHEETS = 'SHEETS',
-  SECTION_SHEET = 'SECTION_SHEET',
   SECTION_HELP = 'SECTION_HELP',
 }
 
-export type LastLinkType = { [key in LastLinkKey]: { pathname: string, searchParams: URLSearchParams } };
+export type LastLinkType = { [key in LastPathKey]: { pathname: string, searchParams: URLSearchParams } };
 
 export type { PropsWithChildren, ReactNode, FC } from 'react';
 export type { AppProps } from 'next/app';

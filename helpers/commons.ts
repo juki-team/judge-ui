@@ -25,7 +25,7 @@ export {
   handleShareMdPdf,
   downloadDataTableAsCsvFile,
   downloadJukiMarkdownAdPdf,
-  downloadDataTablesAsXlsxFile,
+  downloadSheetDataAsXlsxFile,
   downloadLink,
   cleanRequest,
   toFilterUrl,

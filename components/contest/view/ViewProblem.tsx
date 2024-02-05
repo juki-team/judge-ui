@@ -1,9 +1,8 @@
-import { Judge } from '@juki-team/commons';
 import { ProblemCodeEditor, ProblemStatement, SplitPane, T } from 'components';
 import { useJukiRouter, useJukiUI } from 'hooks';
 import Custom404 from 'pages/404';
 import React from 'react';
-import { ContestResponseDTO } from 'types';
+import { ContestResponseDTO, Judge } from 'types';
 
 export const ViewProblem = ({ contest }: { contest: ContestResponseDTO }) => {
   

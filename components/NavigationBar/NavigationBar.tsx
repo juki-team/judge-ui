@@ -1,11 +1,11 @@
-import { HelpIcon } from '@juki-team/base-ui';
 import {
   AssignmentIcon,
   CupIcon,
+  HelpIcon,
   JukiCouchLogoHorImage,
   JukiUtilsLogoHorImage,
-  LastLink,
   LeaderboardIcon,
+  LinkLastPath,
   MainMenu,
   SettingsIcon,
   SubmissionModal,
@@ -15,67 +15,9 @@ import {
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUser } from 'hooks';
 import Link from 'next/link';
-import React, { createContext, PropsWithChildren, useState } from 'react';
-import {
-  AdminTab,
-  ContestsTab,
-  Judge,
-  LastLinkKey,
-  LastLinkType,
-  MenuType,
-  ProfileTab,
-  QueryParam,
-  QueryParamKey,
-} from 'types';
+import React, { PropsWithChildren } from 'react';
+import { ContestsTab, LastPathKey, MenuType, ProfileTab, QueryParam, QueryParamKey } from 'types';
 
-const initialLastLink: LastLinkType = {
-  [LastLinkKey.SECTION_CONTEST]: {
-    pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
-    searchParams: new URLSearchParams(''),
-  },
-  [LastLinkKey.CONTESTS]: { pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL), searchParams: new URLSearchParams() },
-  [LastLinkKey.SECTION_PROBLEM]: { pathname: ROUTES.PROBLEMS.LIST(), searchParams: new URLSearchParams() },
-  [LastLinkKey.PROBLEMS]: {
-    pathname: ROUTES.PROBLEMS.LIST(),
-    searchParams: new URLSearchParams({ [QueryParam.JUDGE]: Judge.CUSTOMER }),
-  },
-  [LastLinkKey.SECTION_ADMIN]: {
-    pathname: ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT),
-    searchParams: new URLSearchParams(),
-  },
-  [LastLinkKey.SHEETS]: { pathname: `/sheets`, searchParams: new URLSearchParams() },
-  [LastLinkKey.SECTION_SHEET]: { pathname: `/sheets`, searchParams: new URLSearchParams() },
-  [LastLinkKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
-};
-
-type LastLinkContext = {
-  pushPath: (props: { key: string, pathname: string, searchParams: URLSearchParams }) => void,
-  lastLink: LastLinkType
-}
-
-export const LastLinkContext = createContext<LastLinkContext>({
-  pushPath: () => null,
-  lastLink: initialLastLink,
-});
-
-export const LasLinkProvider = ({ children }: PropsWithChildren<{}>) => {
-  
-  const [ lastLink, setLastLink ] = useState<LastLinkType>(initialLastLink);
-  
-  return (
-    <LastLinkContext.Provider
-      value={{
-        pushPath: ({ key, pathname, searchParams }) => setLastLink(prevState => ({
-          ...prevState,
-          [key]: { pathname, searchParams },
-        })),
-        lastLink,
-      }}
-    >
-      {children}
-    </LastLinkContext.Provider>
-  );
-};
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
@@ -103,12 +45,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       icon: <CupIcon />,
       selected: ('/' + pathname).includes('//contest'),
       menuItemWrapper: ({ children }) => (
-        <LastLink
-          lastLinkKey={LastLinkKey.SECTION_CONTEST}
+        <LinkLastPath
+          lastPathKey={LastPathKey.SECTION_CONTEST}
           onDoubleClickRoute={ROUTES.CONTESTS.LIST(ContestsTab.ALL)}
         >
           {children}
-        </LastLink>
+        </LinkLastPath>
       ),
     },
     {
@@ -116,12 +58,12 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       icon: <AssignmentIcon />,
       selected: ('/' + pathname).includes('//problem'),
       menuItemWrapper: ({ children }) => (
-        <LastLink
-          lastLinkKey={LastLinkKey.SECTION_PROBLEM}
+        <LinkLastPath
+          lastPathKey={LastPathKey.SECTION_PROBLEM}
           onDoubleClickRoute={ROUTES.PROBLEMS.LIST()}
         >
           {children}
-        </LastLink>
+        </LinkLastPath>
       ),
     },
   ];
@@ -148,7 +90,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T className="tt-se">admin</T>,
       icon: <SettingsIcon />,
       selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: ({ children }) => <LastLink lastLinkKey={LastLinkKey.SECTION_ADMIN}>{children}</LastLink>,
+      menuItemWrapper: ({ children }) =>
+        <LinkLastPath lastPathKey={LastPathKey.SECTION_ADMIN}>{children}</LinkLastPath>,
     });
   }
   
@@ -156,7 +99,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     label: <T className="tt-se">info</T>,
     icon: <HelpIcon />,
     selected: ('/' + pathname).includes('//help'),
-    menuItemWrapper: ({ children }) => <LastLink lastLinkKey={LastLinkKey.SECTION_HELP}>{children}</LastLink>,
+    menuItemWrapper: ({ children }) => <LinkLastPath lastPathKey={LastPathKey.SECTION_HELP}>{children}</LinkLastPath>,
   });
   
   return (
@@ -167,9 +110,9 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         onClose={() => deleteSearchParams({ name: QueryParamKey.USER_PREVIEW })}
         userHref={ROUTES.PROFILE.PAGE(searchParams.get(QueryParamKey.USER_PREVIEW) as string, ProfileTab.PROFILE)}
       />
-      {searchParams.get(QueryParam.SUBMISSION_VIEW) &&
-        <SubmissionModal submitId={searchParams.get(QueryParam.SUBMISSION_VIEW) as string} />}
-      
+      {searchParams.get(QueryParam.SUBMISSION_VIEW) && (
+        <SubmissionModal submitId={searchParams.get(QueryParam.SUBMISSION_VIEW) as string} />
+      )}
       <MainMenu
         onSeeMyProfile={() => pushRoute(ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE))}
         menu={menu}

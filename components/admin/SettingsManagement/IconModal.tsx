@@ -1,9 +1,8 @@
-import { ContentResponseType, HTTPMethod } from '@juki-team/commons';
 import { Button, ButtonLoader, ImageLoaderCropper, Modal, T } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
 import { useNotification } from 'hooks';
 import { useState } from 'react';
-import { CompanyLogoType, CropImageType, ModalProps, Status } from 'types';
+import { CompanyLogoType, ContentResponseType, CropImageType, ModalProps, Status } from 'types';
 import { authorizedRequest, cleanRequest, toBlob } from '../../../helpers';
 
 interface IconModalProps extends ModalProps {
@@ -66,11 +65,13 @@ export const IconModal = ({ name: initialName, mutate, companyKey, logoType, ...
                   formData.append('image', blob);
                   formData.append('logoType', logoType);
                   setLoaderStatus(Status.LOADING);
+                  const { url, ...options } = jukiSettings.API.company.updateImage({
+                    params: { companyKey },
+                    body: formData,
+                  })
                   const response = cleanRequest<ContentResponseType<{}>>(
-                    await authorizedRequest(JUDGE_API_V1.COMPANY.IMAGE(companyKey), {
-                      method: HTTPMethod.PUT,
-                      body: formData,
-                    }));
+                    await authorizedRequest(url, options),
+                  );
                   await mutate();
                   if (notifyResponse(response, setLoaderStatus)) {
                     modalProps.onClose();

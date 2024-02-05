@@ -20,7 +20,7 @@ export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO })
     request,
     setLoaderStatusRef,
     reload,
-    refreshRef,
+    reloadRef,
   } = useDataViewerRequester<ContentsResponseType<TaskResponseDTO>>(() => JUDGE_API_V1.SYS.AWS_ECS_TASK_LIST(company.key));
   const { addSuccessNotification, notifyResponse } = useNotification();
   const columns: DataViewerHeadersType<TaskResponseDTO>[] = useMemo(() => [
@@ -101,7 +101,7 @@ export const ECSTasksManagement = ({ company }: { company: CompanyResponseDTO })
       request={request}
       name={QueryParam.ECS_TASKS_TABLE}
       setLoaderStatusRef={setLoaderStatusRef}
-      refreshRef={refreshRef}
+      reloadRef={reloadRef}
       extraNodes={[
         <ButtonLoader
           icon={<SettingsSuggestIcon />}

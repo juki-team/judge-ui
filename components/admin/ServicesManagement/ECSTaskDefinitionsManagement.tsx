@@ -1,4 +1,5 @@
 import { ButtonLoader, DataViewer, Field, PlayCircleIcon, Select, SettingsAlertIcon, T } from 'components';
+import { jukiSettings } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useDataViewerRequester, useNotification, useSWR } from 'hooks';
@@ -77,7 +78,7 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(companyKey),
+                  jukiSettings.API.company.getResourceSpecifications({ params: { companyKey } }).url,
                   {
                     method: HTTPMethod.POST,
                     body: JSON.stringify({ highPerformanceRunnerTaskDefinition: revision.taskDefinitionArn }),
@@ -99,7 +100,7 @@ const FieldTaskDefinition = ({ family, revisions, companyKey }: AwsEcsTaskDefini
             onClick={async (setLoaderStatus) => {
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(companyKey),
+                  jukiSettings.API.company.getResourceSpecifications({ params: { companyKey } }).url,
                   {
                     method: HTTPMethod.POST,
                     body: JSON.stringify({ lowPerformanceRunnerTaskDefinition: revision.taskDefinitionArn }),

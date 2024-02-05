@@ -34,7 +34,7 @@ import {
   DataViewerHeadersType,
   FilterSelectOnlineType,
   Judge,
-  LastLinkKey,
+  LastPathKey,
   ProblemStatus,
   ProblemSummaryListResponseDTO,
   ProblemTab,
@@ -56,8 +56,8 @@ const JUDGE_C: { [key in Judge]: string } = {
 
 function Problems() {
   
-  useTrackLastPath(LastLinkKey.PROBLEMS);
-  useTrackLastPath(LastLinkKey.SECTION_PROBLEM);
+  useTrackLastPath(LastPathKey.PROBLEMS);
+  useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { user: { canCreateProblem }, company: { name, key } } = useJukiUser();
   const { searchParams, setSearchParams } = useJukiRouter();
   const { pushRoute } = useJukiRouter();

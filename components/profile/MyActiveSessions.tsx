@@ -1,5 +1,6 @@
 import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
+import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { useDataViewerRequester, useJukiUser, useSWR } from 'hooks';
 import { useMemo } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, SessionBasicResponseDTO, Status } from 'types';
@@ -12,7 +13,7 @@ export function MyActiveSessions() {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<SessionBasicResponseDTO>>(() => JUDGE_API_V1.USER.MY_SESSIONS());
+  } = useDataViewerRequester<ContentsResponseType<SessionBasicResponseDTO>>(() => jukiSettings.API.user.getMySessions().url);
   
   const { mutate } = useSWR();
   
@@ -47,7 +48,7 @@ export function MyActiveSessions() {
                 setLoader,
                 onSuccess: async () => {
                   setLoader(Status.LOADING);
-                  await mutate(JUDGE_API_V1.USER.MY_SESSIONS());
+                  await mutate(jukiSettings.API.user.getMySessions().url);
                   setLoader(Status.SUCCESS);
                 },
               })}

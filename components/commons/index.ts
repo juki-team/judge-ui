@@ -163,10 +163,12 @@ export {
   UsersSelector,
   VerticalMenu,
   VerticalSplitIcon,
+  InputSelect,
   ViewHeadlineIcon,
   ViewModuleIcon,
   VisibilityIcon,
   NewVersionAvailableModal,
+  LinkLastPath,
 } from '@juki-team/base-ui';
 
 export * from './CustomHead';

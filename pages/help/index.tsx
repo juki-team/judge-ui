@@ -1,5 +1,5 @@
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from '@juki-team/commons';
 import { Breadcrumbs, HomeLink, T, TwoContentSection } from 'components';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { useJukiUser } from 'hooks';
 
 export default function Home() {

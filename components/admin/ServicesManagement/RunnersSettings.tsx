@@ -1,5 +1,6 @@
 import { ButtonLoader, Input, LoadingIcon, Popover, SaveIcon, T } from 'components';
-import { COMPANY_PLAN, JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
+import { COMPANY_PLAN } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useFetcher, useNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
@@ -28,7 +29,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
     isLoading,
     mutate,
     isValidating,
-  } = useFetcher<ContentResponseType<CompanyResourceSpecificationsResponseDTO>>(JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(company.key));
+  } = useFetcher<ContentResponseType<CompanyResourceSpecificationsResponseDTO>>(jukiSettings.API.company.getResourceSpecifications({ params: { companyKey: company.key } }).url);
   useEffect(() => {
     if (data?.success) {
       setResource({
@@ -131,10 +132,8 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               setLoading(true);
               setLoaderStatus(Status.LOADING);
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                JUDGE_API_V1.COMPANY.RESOURCE_SPECIFICATIONS(company.key),
-                {
-                  method: HTTPMethod.POST, body: JSON.stringify(resource),
-                }),
+                jukiSettings.API.company.getResourceSpecifications({ params: { companyKey: company.key } }).url,
+                { method: HTTPMethod.POST, body: JSON.stringify(resource) }),
               );
               notifyResponse(response, setLoaderStatus);
               setLoading(false);
