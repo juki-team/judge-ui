@@ -263,7 +263,7 @@ export function ContestView() {
           );
         }
         
-        if (canCreateContest) {
+        if (canCreateContest && contest.isPast) {
           extraNodes.push(
             <ButtonLoader
               size="small"
