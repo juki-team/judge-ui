@@ -55,7 +55,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
     );
   }
   
-  const canEdit = loading || isValidating; // || company.plan !== CompanyPlan.CUSTOM;
+  const disable = loading || isValidating; // || company.plan !== CompanyPlan.CUSTOM;
   
   return (
     <div className="jk-col nowrap top gap jk-pad-md stretch bc-we jk-br-ie">
@@ -78,7 +78,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               highPerformanceRunnerMinimum,
             }))}
-            disabled={canEdit}
+            disabled={disable}
           />
         </label>
       </div>
@@ -92,7 +92,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               highPerformanceRunnerMaximum,
             }))}
-            disabled={canEdit}
+            disabled={disable}
           />
         </label>
       </div>
@@ -106,7 +106,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               lowPerformanceRunnerMinimum,
             }))}
-            disabled={canEdit}
+            disabled={disable}
           />
         </label>
       </div>
@@ -120,11 +120,11 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               lowPerformanceRunnerMaximum,
             }))}
-            disabled={canEdit}
+            disabled={disable}
           />
         </label>
       </div>
-      {company.plan === CompanyPlan.CUSTOM && (
+      {true && (
         <div className="jk-row gap">
           <ButtonLoader
             size="small"
