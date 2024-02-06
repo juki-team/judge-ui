@@ -55,6 +55,8 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
     );
   }
   
+  const canEdit = loading || isValidating; // || company.plan !== CompanyPlan.CUSTOM;
+  
   return (
     <div className="jk-col nowrap top gap jk-pad-md stretch bc-we jk-br-ie">
       <Popover
@@ -76,7 +78,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               highPerformanceRunnerMinimum,
             }))}
-            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+            disabled={canEdit}
           />
         </label>
       </div>
@@ -90,7 +92,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               highPerformanceRunnerMaximum,
             }))}
-            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+            disabled={canEdit}
           />
         </label>
       </div>
@@ -104,7 +106,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               lowPerformanceRunnerMinimum,
             }))}
-            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+            disabled={canEdit}
           />
         </label>
       </div>
@@ -118,7 +120,7 @@ export const RunnersSettings = ({ company }: { company: CompanyResponseDTO }) =>
               ...prevState,
               lowPerformanceRunnerMaximum,
             }))}
-            disabled={loading || isValidating || company.plan !== CompanyPlan.CUSTOM}
+            disabled={canEdit}
           />
         </label>
       </div>
