@@ -6,7 +6,6 @@ import {
   JudgesManagement,
   MailManagement,
   Select,
-  ServicesManagement,
   T,
   TabsInline,
   TwoContentSection,
@@ -92,17 +91,6 @@ function Admin() {
       header: <T className="tt-ce ws-np">submissions</T>,
       body: company
         ? <div className="pad-left-right pad-top-bottom"><AllSubmissions company={company} /></div>
-        : <div className="pad-left-right pad-top-bottom">
-          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
-        </div>,
-    };
-  }
-  if (canHandleServices) {
-    tabs[AdminTab.SERVICES_MANAGEMENT] = {
-      key: AdminTab.SERVICES_MANAGEMENT,
-      header: <T className="tt-ce ws-np">services</T>,
-      body: company
-        ? <div className="pad-left-right pad-bottom"><ServicesManagement company={company} /></div>
         : <div className="pad-left-right pad-top-bottom">
           <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
         </div>,
