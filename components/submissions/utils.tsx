@@ -2,7 +2,7 @@ import { LoadingIcon, T, Tooltip } from 'components';
 import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
 import { useTask } from 'hooks';
 import { ReactNode } from 'react';
-import { ProblemVerdict, SocketEventSubmissionResponseDTO, SubmissionRunStatus } from 'types';
+import { ProblemVerdict, SocketEventSubmissionResponseDTO, SubmissionResponseDTO, SubmissionRunStatus } from 'types';
 
 export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
   return !(verdict === ProblemVerdict.CE
@@ -25,12 +25,20 @@ export interface VerdictProps {
   status?: SubmissionRunStatus,
   submitId: string,
   submissionData?: SocketEventSubmissionResponseDTO,
+  processedCases?: SubmissionResponseDTO['processedCases'],
 }
 
-export const Verdict = ({ verdict, points, status, submitId, submissionData }: VerdictProps) => {
+export const Verdict = ({ verdict, points, status, submitId, submissionData, processedCases }: VerdictProps) => {
   
   const verdictLabel = (verdict: ProblemVerdict) => PROBLEM_VERDICT[verdict]?.label
-    ? <T className="tt-se ws-np">{PROBLEM_VERDICT[verdict]?.label}</T>
+    ? (
+      (verdict === ProblemVerdict.PENDING && processedCases)
+        ? <>
+          <T className="tt-se ws-np">{PROBLEM_VERDICT[verdict]?.label}</T>
+          &nbsp;{processedCases.samples.processed + processedCases.tests.processed}&nbsp;/&nbsp;{processedCases.samples.total + processedCases.tests.total}
+        </>
+        : <T className="tt-se ws-np">{PROBLEM_VERDICT[verdict]?.label}</T>
+    )
     : verdict;
   
   const SubmissionLabel: { [key in SubmissionRunStatus]: (props: SocketEventSubmissionResponseDTO) => ReactNode } = {
@@ -197,7 +205,12 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData }: V
   );
 };
 
-export const ListenerVerdict = ({ verdict, points, status, submitId }: Omit<VerdictProps, 'submissionData'>) => {
+
+type ListenerVerdict = Omit<VerdictProps, 'submissionData'> & {
+  processedCases?: SubmissionResponseDTO['processedCases'],
+};
+
+export const ListenerVerdict = ({ verdict, points, status, submitId, processedCases }: ListenerVerdict) => {
   const { submissions } = useTask();
   
   const submissionData = submissions[submitId];
@@ -209,6 +222,7 @@ export const ListenerVerdict = ({ verdict, points, status, submitId }: Omit<Verd
       status={status}
       submitId={submitId}
       submissionData={submissionData}
+      processedCases={processedCases}
     />
   );
 };

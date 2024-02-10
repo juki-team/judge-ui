@@ -168,13 +168,19 @@ const options = Object.values(PROBLEM_VERDICT)
 export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: 'verdict',
   index: 'verdict',
-  field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
+  field: ({ record: { submitId, points, status, verdict, canViewSourceCode, processedCases }, isCard }) => (
     <Field>
       <div className="jk-col nowrap extend" style={{ padding: '4px 0', boxSizing: 'border-box' }}>
         <TextField
           text={
             <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
-              <ListenerVerdict verdict={verdict} points={points} status={status} submitId={submitId} />
+              <ListenerVerdict
+                verdict={verdict}
+                points={points}
+                status={status}
+                submitId={submitId}
+                processedCases={processedCases}
+              />
             </SubmissionInfo>
           }
           label="verdict"
