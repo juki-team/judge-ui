@@ -155,7 +155,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                 <div className="jk-col gap">
                   <div className="jk-row extend block gap jk-table-inline-header">
                     <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
-                    <div className="jk-row" style={{ flex: 4 }}><T>verdict</T></div>
+                    <div className="jk-row" style={{ flex: 3 }}><T>verdict</T></div>
                     {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && (
                       <div className="jk-row"><T>points</T></div>
                     )}
