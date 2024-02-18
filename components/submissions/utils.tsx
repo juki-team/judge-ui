@@ -190,9 +190,12 @@ export const Verdict = ({
       </> : (
         <div className="jk-row center jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
           {verdict === ProblemVerdict.PENDING
-            ? <><LoadingIcon size="small" />&nbsp;{verdictLabel(verdict)}</> : verdictLabel(verdict)}
-          {verdict === ProblemVerdict.PA && points && <>&nbsp;
-            <span className="ws-np">({(+points || 0).toFixed(2)})</span></>}
+            ? <><LoadingIcon size="small" />&nbsp;{verdictLabel(verdict, true)}</> : verdictLabel(verdict, true)}
+          {verdict === ProblemVerdict.PA && points && (
+            <>
+              &nbsp;<span className="ws-np">({(+points || 0).toFixed(2)})</span>
+            </>
+          )}
         </div>
       )
   );
@@ -205,10 +208,17 @@ export const Verdict = ({
     <Tooltip
       content={
         <div className="tt-se ws-np">
-          {verdict === ProblemVerdict.PENDING ? (
-            (status && SUBMISSION_RUN_STATUS[status]?.label)
-              ? <T className="ws-np">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel(verdict)
-          ) : verdictLabel(verdict, false)}
+          {verdict === ProblemVerdict.PENDING
+            ? (
+              (status && SUBMISSION_RUN_STATUS[status]?.label)
+                ? <T className="ws-np">{SUBMISSION_RUN_STATUS[status]?.label}</T>
+                : status || verdictLabel(verdict)
+            ) : verdictLabel(verdict)}
+          {verdict === ProblemVerdict.PA && points && (
+            <>
+              &nbsp;<span className="ws-np">({(+points || 0).toFixed(2)} <T>points</T>)</span>
+            </>
+          )}
         </div>
       }
       placement="top"

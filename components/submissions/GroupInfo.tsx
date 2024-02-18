@@ -63,7 +63,7 @@ export const GroupInfo = ({
             {index + 1}
           </div>
         )}
-        <div className="jk-row"><Verdict verdict={testCase.verdict} submitId={submitId} shortLabel /></div>
+        <div className="jk-row"><Verdict verdict={testCase.verdict} submitId={submitId} /></div>
         {problemMode === ProblemMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
         <div className="jk-row center ws-np nowrap">
           <Time verdict={testCase.verdict} timeUsed={testCase.timeUsed} />
@@ -97,7 +97,7 @@ export const GroupInfo = ({
                     : <T className="tt-se">test cases</T>) :
               <T className="tt-se">sample cases</T>}
           </div>
-          <div className="jk-row center gap nowrap" style={{ flex: 4 }}>
+          <div className="jk-row center gap nowrap" style={{ flex: 3 }}>
             <Verdict verdict={verdict} points={points} submitId={submitId} />
           </div>
           {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && (
