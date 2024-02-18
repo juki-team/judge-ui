@@ -87,7 +87,7 @@ export const GroupInfo = ({
             { 'fw-br': isOpen },
           )}
         >
-          <div className="jk-row center nowrap">
+          <div className="jk-row left nowrap">
             {!!testCases.length && <><UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />&nbsp;</>}
             {+groupKey ? (
                 problemMode === ProblemMode.SUBTASK
