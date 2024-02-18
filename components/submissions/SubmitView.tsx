@@ -103,7 +103,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                     </div>
                   )}
                   <div className="jk-col">
-                    <DateLiteral date={date} twoLines={false} />
+                    <DateLiteral date={date} />
                     <T className="fw-bd tt-se">date</T>
                   </div>
                   {isProblemEditor && (
@@ -111,13 +111,18 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                       <div>
                         {judgmentTime > 0
                           ? <Timer currentTimestamp={judgmentTime} interval={0} literal laps={2} />
-                          : <T>judging</T>}
+                          : (
+                            <>
+                              <Timer currentTimestamp={Date.now() - -judgmentTime} interval={1000} literal laps={2} />
+                            </>
+                          )}
                       </div>
-                      <T className="fw-bd tt-se">judgment time</T>
+                      <T className="fw-bd tt-se">{judgmentTime > 0 ? 'judgment time' : 'judging'}</T>
                     </div>
                   )}
                   <div>
                     <ButtonLoader
+                      size="small"
                       icon={<RefreshIcon />}
                       onClick={async (setLoaderStatus) => {
                         setLoaderStatus(Status.LOADING);
@@ -150,7 +155,7 @@ export const SubmitView = ({ submitId }: { submitId: string }) => {
                 <div className="jk-col gap">
                   <div className="jk-row extend block gap jk-table-inline-header">
                     <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
-                    <div className="jk-row"><T>verdict</T></div>
+                    <div className="jk-row" style={{ flex: 4 }}><T>verdict</T></div>
                     {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && (
                       <div className="jk-row"><T>points</T></div>
                     )}

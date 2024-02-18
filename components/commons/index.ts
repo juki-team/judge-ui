@@ -164,6 +164,7 @@ export {
   VerticalMenu,
   VerticalSplitIcon,
   InputSelect,
+  VirtualizedRowsFixed,
   ViewHeadlineIcon,
   ViewModuleIcon,
   VisibilityIcon,

@@ -26,18 +26,27 @@ export interface VerdictProps {
   submitId: string,
   submissionData?: SocketEventSubmissionResponseDTO,
   processedCases?: SubmissionResponseDTO['processedCases'],
+  shortLabel?: boolean,
 }
 
-export const Verdict = ({ verdict, points, status, submitId, submissionData, processedCases }: VerdictProps) => {
+export const Verdict = ({
+                          verdict,
+                          points,
+                          status,
+                          submitId,
+                          submissionData,
+                          processedCases,
+                          shortLabel: _shortLabel,
+                        }: VerdictProps) => {
   
-  const verdictLabel = (verdict: ProblemVerdict) => PROBLEM_VERDICT[verdict]?.label
+  const verdictLabel = (verdict: ProblemVerdict, shortLabel = _shortLabel) => PROBLEM_VERDICT[verdict]?.label
     ? (
       (verdict === ProblemVerdict.PENDING && processedCases)
         ? <>
           <T className="tt-se ws-np">{PROBLEM_VERDICT[verdict]?.label}</T>
           &nbsp;{processedCases.samples.processed + processedCases.tests.processed}&nbsp;/&nbsp;{processedCases.samples.total + processedCases.tests.total}
         </>
-        : <T className="tt-se ws-np">{PROBLEM_VERDICT[verdict]?.label}</T>
+        : <T className="tt-se ws-np">{shortLabel ? verdict : PROBLEM_VERDICT[verdict]?.label}</T>
     )
     : verdict;
   
@@ -188,6 +197,10 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData, pro
       )
   );
   
+  if (_shortLabel) {
+    return content;
+  }
+  
   return (
     <Tooltip
       content={
@@ -195,7 +208,7 @@ export const Verdict = ({ verdict, points, status, submitId, submissionData, pro
           {verdict === ProblemVerdict.PENDING ? (
             (status && SUBMISSION_RUN_STATUS[status]?.label)
               ? <T className="ws-np">{SUBMISSION_RUN_STATUS[status]?.label}</T> : status || verdictLabel(verdict)
-          ) : verdictLabel(verdict)}
+          ) : verdictLabel(verdict, false)}
         </div>
       }
       placement="top"
