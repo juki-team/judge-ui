@@ -1,7 +1,9 @@
 import {
   AdminInformation,
   ButtonLoader,
+  ContestantInformation,
   FrozenInformation,
+  GuestInformation,
   JudgeInformation,
   MdMathViewer,
   QuietInformation,
@@ -57,28 +59,34 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
           className="jk-pad-md bc-we br-g6 jk-border-radius-inline"
         />
       </div>
-      <div className="flex-3 contest-overview-information">
+      <div className="jk-col stretch gap flex-3 contest-overview-information">
         <div className="content-side-right-bar-top">
           {isAdmin
-            ? <div className="judge-admin jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py">
-              <T className="tt-se">you are admin</T> <AdminInformation filledCircle />
+            ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pad-sm">
+              <T className="tt-se ta-cr">you are admin</T> <AdminInformation filledCircle />
             </div>
             : isJudge
-              ? <div className="judge-admin jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py">
-                <T className="tt-se">you are judge</T> <JudgeInformation filledCircle />
+              ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pad-sm">
+                <T className="tt-se ta-cr">you are judge</T> <JudgeInformation filledCircle />
               </div>
               : (isContestant
-                ? <div className="registered jk-row center gap bc-we br-g6 jk-border-radius-inline fw-br cr-py"><T
-                  className="tt-se"
-                >registered</T>
+                ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-br cr-py jk-pad-sm">
+                  <T className="tt-se ta-cr">you are contestant</T> <ContestantInformation filledCircle />
                 </div>
                 : (isGuest && new Date().getTime() <= contest.settings.endTimestamp)
                   ? (
-                    <>
+                    <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline jk-pad-sm">
                       <div className="jk-row center">
-                        <T className="tt-se">you are guest</T>,&nbsp;
-                        {isLogged ? <T>enroll to participate</T> : <T>sign in to register</T>}
+                        <div className="jk-row left fw-bd cr-py">
+                          <T className="tt-se ta-cr ">you are guest</T>&nbsp;
+                          <GuestInformation filledCircle />,
+                        </div>
+                        &nbsp;
+                        {isLogged
+                          ? <T className="ta-cr">enroll to participate</T>
+                          : <T className="ta-cr">sign in to register</T>}
                       </div>
+                      
                       <ButtonLoader
                         onClick={(setLoader) => isLogged
                           ? registerContest(setLoader, contest?.key)
@@ -88,68 +96,69 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                       >
                         <T>{isLogged ? 'enroll' : 'sign in'}</T>
                       </ButtonLoader>
-                    </>
+                    </div>
                   ) : isSpectator && (
-                  <div className="judge-admin jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py">
-                    <T className="tt-se">you are spectator</T> <SpectatorInformation filledCircle />
+                  <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pad-sm">
+                    <T className="tt-se ta-cr">you are spectator</T> <SpectatorInformation filledCircle />
                   </div>
                 ))
           }
         </div>
-        <div className="contest-content-side-right-bar-bottom jk-col stretch gap">
+        <div className="flex-1 contest-content-side-right-bar-bottom jk-col top stretch gap">
           <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
-            <p className="tx-xs cr-g3 text-semi-bold"><T>start date</T></p>
-            <p className="tx-s fw-bd">{dtf(contest.settings.startTimestamp)}</p>
+            <T className="tt-se fw-bd ta-cr">start date</T>
+            <div className="ta-cr">{dtf(contest.settings.startTimestamp)}</div>
           </div>
           {contest.settings.endTimestamp !== contest.settings.frozenTimestamp && (
             <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
-              <div className="jk-row gap nowrap tx-xs cr-g3 fw-bd">
-                <T>frozen date</T>
+              <div className="jk-row gap nowrap">
+                <T className="tt-se fw-bd ta-cr">frozen date</T>
                 <FrozenInformation />
               </div>
-              <p className="tx-s fw-bd">{dtf(contest.settings.frozenTimestamp)}</p>
-              <p className="tx-xs fw-bd">
-                {rlt(Math.floor((contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;
-                <T>from the start of the contest</T>
-              </p>
+              <div className="ta-cr">{dtf(contest.settings.frozenTimestamp)}</div>
+              <div className="jk-row center">
+                <div className="ta-cr">{rlt(Math.floor((contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;</div>
+                <T className="ta-cr">from the start of the contest</T>
+              </div>
+            
             </div>
           )}
           {contest.settings.endTimestamp !== contest.settings.quietTimestamp && (
             <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
-              <div className="jk-row gap tx-xs cr-g3 fw-bd">
-                <T>quiet date</T>
+              <div className="jk-row gap nowrap">
+                <T className="tt-se fw-bd ta-cr">quiet date</T>
                 <QuietInformation />
               </div>
-              <p className="tx-s fw-bd">{dtf(contest.settings.quietTimestamp)}</p>
-              <p className="tx-xs fw-bd">
-                {rlt(Math.floor((contest.settings.quietTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;
-                <T>from the start of the contest</T>
-              </p>
+              <div className="ta-cr">{dtf(contest.settings.quietTimestamp)}</div>
+              <div className="jk-row center">
+                <div className="ta-cr">{rlt(Math.floor((contest.settings.quietTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;</div>
+                <T className="ta-cr">from the start of the contest</T>
+              </div>
             </div>
           )}
           {(contest.settings.endTimestamp - contest.settings.startTimestamp) !== contest.settings.timeToSolve && (
             <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
-              <p className="tx-s semi-bold">{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</p>
-              <p className="tx-xs semi-bold"><T>time for solve</T></p>
+              <T className="tt-se fw-bd ta-cr">time for solve</T>
+              <div>{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</div>
             </div>
           )}
           {!!contest.settings.penalty && (
             <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
-              <p className="tx-xs cr-g3 fw-bd"><T>penalty by incorrect answer</T></p>
-              <p className="tx-s fw-bd">{contest.settings.penalty} min</p>
+              <T className="tt-se fw-bd ta-cr">penalty by incorrect answer</T>
+              <div>{contest.settings.penalty} min</div>
             </div>
           )}
           <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
-            <p className="tx-xs cr-g3 fw-bd"><T>clarifications</T></p>
-            <p className="tx-s fw-bd">
-              <T>{contest.settings.clarifications ? 'clarifications available' : 'clarifications not available'}</T>
-            </p>
+            <T className="tt-se fw-bd ta-cr">clarifications</T>
+            <div>
+              <T className="tt-se">{contest.settings.clarifications ? 'clarifications available' : 'clarifications not available'}</T>
+            </div>
           </div>
           <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
-            <p className="tx-xs cr-g3 fw-bd"><T>languages</T></p>
+            <T className="tt-se fw-bd ta-cr">languages</T>
             <div className="jk-row gap">
               {contest.settings.languages.map(language => (
-                <div className="jk-tag" key={language}>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+                <div className="jk-tag gray-5" key={language}>{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
               ))}
             </div>
           </div>

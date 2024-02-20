@@ -25,7 +25,6 @@ import {
   getProblemJudgeKey,
 } from 'helpers';
 import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification, useT } from 'hooks';
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -117,7 +116,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
   const { user, company: { imageUrl, name } } = useJukiUser();
   const { notifyResponse } = useNotification();
   const { searchParams, routeParams: { key: contestKey, tab: contestTab, index: problemIndex } } = useJukiRouter();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
@@ -226,7 +225,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       }
     }
     return base;
-  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, contestKey, searchParams ]);
+  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, Link, contestKey, searchParams ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {

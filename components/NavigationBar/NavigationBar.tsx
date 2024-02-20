@@ -13,8 +13,7 @@ import {
   UserPreviewModal,
 } from 'components';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
-import { useJukiRouter, useJukiUser } from 'hooks';
-import Link from 'next/link';
+import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { PropsWithChildren } from 'react';
 import { ContestsTab, LastPathKey, MenuType, ProfileTab, QueryParam, QueryParamKey } from 'types';
 
@@ -22,6 +21,7 @@ import { ContestsTab, LastPathKey, MenuType, ProfileTab, QueryParam, QueryParamK
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, pushRoute, searchParams } = useJukiRouter();
+  const { components: { Link } } = useJukiUI();
   
   const {
     user: {

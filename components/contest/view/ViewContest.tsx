@@ -6,6 +6,7 @@ import {
   CupIcon,
   CustomHead,
   EditIcon,
+  EditViewMembers,
   FetcherLayer,
   HomeLink,
   LinkLastPath,
@@ -23,14 +24,20 @@ import {
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { parseContest, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useContestRouter, useJukiRouter, useJukiUI, useJukiUser, useT, useTrackLastPath } from 'hooks';
-import Link from 'next/link';
 import React, { ReactNode } from 'react';
-import { ContentResponseType, ContestResponseDTO, ContestTab, LastPathKey, Status, TabsType } from 'types';
+import {
+  ContentResponseType,
+  ContestResponseDTO,
+  ContestTab,
+  EditCreateContestType,
+  LastPathKey,
+  Status,
+  TabsType,
+} from 'types';
 import Custom404 from '../../../pages/404';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
-import { ViewMembers } from './ViewMembers';
 import { ViewProblem } from './ViewProblem';
 import { ViewProblemSubmissions } from './ViewProblemSubmissions';
 import { ViewScoreboard } from './ViewScoreboard';
@@ -40,7 +47,7 @@ export function ContestView() {
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const { pushRoute, searchParams } = useJukiRouter();
   const { pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const { user: { canCreateContest } } = useJukiUser();
   const { t } = useT();
   
@@ -244,16 +251,23 @@ export function ContestView() {
           };
         }
         
-        if (isAdmin || isJudge) {
+        if (isAdmin || isJudge || contest.isPast || contest.isEndless) {
           tabHeaders[ContestTab.MEMBERS] = {
             key: ContestTab.MEMBERS,
             header: <T className="tt-ce">members</T>,
-            body: <ViewMembers contest={contest} />,
+            body: (
+              <div className="pad-top-bottom pad-left-right">
+                <EditViewMembers
+                  contest={contest as unknown as EditCreateContestType}
+                  membersToView={contest.members}
+                />
+              </div>
+            ),
           };
         }
         
         const extraNodes = [];
-        if (viewPortSize === 'lg' || viewPortSize === 'hg') {
+        if (viewPortSize === 'hg') {
           extraNodes.push(
             <div className={`jk-row nowrap jk-tag ${tag}`}>
               {contest.isEndless
@@ -358,7 +372,9 @@ export function ContestView() {
                     content={literal}
                     placement="bottom"
                   >
-                    <div className={`jk-tag tt-ue tx-s ${tag} screen md`}><T className="ws-np">{statusLabel}</T></div>
+                    <div className={`jk-tag tt-ue tx-s ${tag} screen md lg`}>
+                      <T className="ws-np">{statusLabel}</T>
+                    </div>
                   </Tooltip>
                 </div>
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>

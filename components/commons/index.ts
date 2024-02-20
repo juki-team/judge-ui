@@ -177,3 +177,4 @@ export * from './Image';
 export * from './PagedDataViewer';
 export * from './TextLangEdit';
 export * from './HomeLink';
+export * from './Information';

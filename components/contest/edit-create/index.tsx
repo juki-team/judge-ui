@@ -1,4 +1,4 @@
 export * from './EditCreateContest';
-export * from './EditMembers';
+export * from './EditViewMembers';
 export * from './EditProblems';
 export * from './EditSettings';

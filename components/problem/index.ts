@@ -1,6 +1,7 @@
 export * from './CrawlCodeforcesProblemModal';
 export * from './CrawlJvumsaProblemModal';
 export * from './EditCreateProblem';
+export * from './Informations';
 export * from './ProblemCodeEditor';
 export * from './ProblemInfo';
 export * from './ProblemLetter';

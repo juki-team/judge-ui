@@ -1,8 +1,8 @@
+import { LinkCmpProps } from '@juki-team/base-ui';
 import { CheckIcon, DateLiteral, EventIcon, Field, GroupIcon, Popover, ScheduleIcon, T, Timer } from 'components';
 import { ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
-import Link from 'next/link';
-import React from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 import {
   ContestResponseDTO,
   ContestSummaryListResponseDTO,
@@ -11,7 +11,7 @@ import {
   JkTableHeaderFilterType,
 } from 'types';
 
-export const contestNameColumn = (auto: boolean): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
+export const contestNameColumn = (auto: boolean, Link: FC<PropsWithChildren<LinkCmpProps>>): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: 'contest name',
   index: 'name',
   field: ({ record: { name, key, user }, isCard }) => (
@@ -186,8 +186,11 @@ export const getContestTimeLiteral = (contest: ContestResponseDTO) => {
     ? <T className="ws-np">endless</T>
     : (
       <>
-        {contest.isLive ? <T className="ws-np">ends in</T> : contest.isPast ?
-          <T className="ws-np">ends ago</T> : <T className="ws-np">stars in</T>}
+        {contest.isLive
+          ? <T className="ws-np">ends in</T>
+          : contest.isPast
+            ? <T className="ws-np">ends ago</T>
+            : <T className="ws-np">stars in</T>}
         &nbsp;
         <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
       </>

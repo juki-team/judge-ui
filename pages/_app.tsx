@@ -4,7 +4,6 @@ import { jukiSettings } from 'config';
 import { JUKI_APP_COMPANY_KEY, JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV, ROUTES } from 'config/constants';
 import { consoleWarn } from 'helpers';
 import { useJukiUser } from 'hooks';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -15,9 +14,6 @@ import { useRouter } from '../hooks/useRouter';
 import { useSearchParams } from '../hooks/useSearchParams';
 import i18nInstance from '../i18n';
 import './styles.scss';
-
-// @ts-ignore
-const MyComponent = dynamic(() => import('./md-print'), { ssr: false });
 
 const SponsoredByTag = () => {
   
@@ -50,10 +46,6 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   useEffect(() => {
     setMounted(true);
   }, [])
-  
-  if (router.route === '/md-print') {
-    return <div><MyComponent {...pageProps} /></div>;
-  }
   
   if (!isReady || !mounted) {
     return <div className="jk-col" style={{ height: 'var(--100VH)' }}><SpinIcon size="very-huge" /></div>;

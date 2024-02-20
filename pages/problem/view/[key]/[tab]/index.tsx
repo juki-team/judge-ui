@@ -29,7 +29,6 @@ import {
   renderReactNodeOrFunctionP1,
 } from 'helpers';
 import { useJukiRouter, useJukiUI, useJukiUser, useNotification, useTrackLastPath } from 'hooks';
-import Link from 'next/link';
 import {
   ContentResponseType,
   HTTPMethod,
@@ -51,7 +50,7 @@ const ProblemView = (): ReactNode => {
   const { searchParams, routeParams: { key: problemKey, tab: problemTab }, pushRoute } = useJukiRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const breadcrumbs = [
     <HomeLink key="home" />,
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
@@ -175,7 +174,10 @@ const ProblemView = (): ReactNode => {
         };
         const breadcrumbs: ReactNode[] = [
           <HomeLink key="home" />,
-          <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
+          <LinkLastPath
+            lastPathKey={LastPathKey.PROBLEMS}
+            key="problems"
+          ><T className="tt-se">problems</T></LinkLastPath>,
           <Link
             href={{
               pathname: ROUTES.PROBLEMS.VIEW(

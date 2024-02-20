@@ -19,7 +19,6 @@ import { COURSE_DEFAULT, COURSE_STATUS, JUDGE_API_V1, ROUTES } from 'config/cons
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
-import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ButtonLoaderOnClickType,
@@ -45,7 +44,7 @@ export const EditCreateCourse = ({ course: initialCourse }: EditCreateContestPro
   
   const { addWarningNotification } = useNotification();
   const { notifyResponse } = useNotification();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const [ course, setCourse ] = useState<EditCreateCourseType>(initialCourse || COURSE_DEFAULT());
   const lastContest = useRef(initialCourse);
   useEffect(() => {

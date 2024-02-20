@@ -1,6 +1,7 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
+import { useJukiUI } from 'hooks';
 import React, { useMemo } from 'react';
 import { DataViewerHeadersType, ProblemResponseDTO, QueryParam, SubmissionResponseDTO } from 'types';
 import {
@@ -15,10 +16,12 @@ import {
 } from '../submissions/helpers';
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemResponseDTO }) => {
+  
+  const { components: { Link } } = useJukiUI();
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => {
     return [
       submissionNickname(),
-      submissionContestColumn(),
+      submissionContestColumn(Link),
       submissionDateColumn(),
       submissionVerdictColumn(),
       ...(problem.user.isEditor ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
@@ -26,7 +29,7 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemResponseDTO })
       submissionTimeUsed(),
       submissionMemoryUsed(),
     ];
-  }, [ problem.user.isEditor ]);
+  }, [ problem.user.isEditor, Link ]);
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>

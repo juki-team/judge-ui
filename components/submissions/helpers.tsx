@@ -1,5 +1,6 @@
 'use client'
 
+import { LinkCmpProps } from '@juki-team/base-ui';
 import {
   DateField,
   Field,
@@ -13,7 +14,7 @@ import {
 } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
-import Link from 'next/link';
+import { FC, PropsWithChildren } from 'react';
 import { ContestTab, DataViewerHeadersType, Judge, ProblemTab, SubmissionResponseDTO } from 'types';
 import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time } from './utils';
@@ -45,7 +46,7 @@ type SubmissionContestColumnProps = {
   blankTarget?: boolean,
 }
 
-export const submissionContestColumn = (props?: SubmissionContestColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionContestColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, props?: SubmissionContestColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: 'contest',
   index: 'contest',
   field: ({ record: { problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
@@ -74,7 +75,7 @@ type SubmissionProblemColumnProps = {
   blankTarget?: boolean,
 }
 
-export const submissionProblemColumn = (props?: SubmissionProblemColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, props?: SubmissionProblemColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: () => (
     <TextHeadCell
       text={props?.onlyProblem ? 'problem' : 'problem / contest'}

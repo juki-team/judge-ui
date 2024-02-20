@@ -1,4 +1,3 @@
-import { jukiSettings } from '@juki-team/base-ui';
 import {
   AllSubmissions,
   Breadcrumbs,
@@ -10,10 +9,10 @@ import {
   TabsInline,
   TwoContentSection,
 } from 'components';
+import { jukiSettings } from 'config';
 import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useFetcher, useJukiRouter, useJukiUser, useTrackLastPath } from 'hooks';
-import Link from 'next/link';
+import { useFetcher, useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
 import { ReactNode, useEffect, useMemo } from 'react';
 import {
   AdminTab,
@@ -28,12 +27,9 @@ import Custom404 from '../404';
 function Admin() {
   
   useTrackLastPath(LastPathKey.SECTION_ADMIN);
-  const {
-    user: {},
-  } = useJukiUser();
   const { searchParams, setSearchParams, pushRoute, routeParams } = useJukiRouter();
   const selectedTabKey = routeParams.tab as AdminTab || AdminTab.SETTINGS_MANAGEMENT;
-  
+  const { components: { Link } } = useJukiUI();
   const {
     data,
     mutate: companyListMutate,
@@ -58,10 +54,6 @@ function Admin() {
     canHandleUsers: false,
     canHandleServices: false,
     canHandleSettings: false,
-  }
-  
-  const mutate = async () => {
-    await companyListMutate();
   }
   
   useEffect(() => {

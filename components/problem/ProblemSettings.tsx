@@ -126,24 +126,32 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
             value: status.value,
             label: (
               <div className="jk-col left">
-                <T className="fw-bd tt-se">{status.label}</T>
-                <T className="tt-se">{status.description}</T>
+                <div className="jk-row extend"><T className="fw-bd tt-se">{status.label}</T></div>
+                <div className="jk-row extend"><T className="tt-se">{status.description}</T></div>
               </div>
             ),
           }))}
           selectedOption={{ value: problem.status }}
           onChange={({ value }) => setProblem(prevState => ({ ...prevState, status: value }))}
-          popoverClassName="max-popover-select-size"
           extend
         />
       </div>
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
-        <div className="jk-row left gap">
+        <div className="jk-row left nowrap gap">
           <div className="fw-bd tt-se"><T>problem mode</T>:</div>
           <Select
-            options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({ value: mode, label: PROBLEM_MODE[mode]?.label }))}
+            options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({
+              value: mode,
+              label: (
+                <div className="jk-col left">
+                  <div className="jk-row extend"><T className="fw-bd tt-se">{PROBLEM_MODE[mode].label}</T></div>
+                  <div className="jk-row extend"><T className="tt-se">{PROBLEM_MODE[mode].description}</T></div>
+                </div>
+              ),
+            }))}
             selectedOption={{ value: problem.settings?.mode }}
             onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, mode: value } })}
+            extend
           />
         </div>
         {(problem.settings.mode === ProblemMode.SUBTASK || problem.settings.mode === ProblemMode.PARTIAL) && (
@@ -255,12 +263,21 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
             </div>
           </div>
         )}
-        <div className="jk-row left gap">
+        <div className="jk-row left nowrap gap">
           <div className="fw-bd tt-se"><T>problem type</T>:</div>
           <Select
-            options={RUNNER_ACCEPTED_PROBLEM_TYPES.map(type => ({ value: type, label: PROBLEM_TYPE[type]?.label }))}
+            options={RUNNER_ACCEPTED_PROBLEM_TYPES.map(type => ({
+              value: type,
+              label: (
+                <div className="jk-col left">
+                  <div className="jk-row extend"><T className="fw-bd tt-se">{PROBLEM_TYPE[type].label}</T></div>
+                  <div className="jk-row extend"><T className="tt-se">{PROBLEM_TYPE[type].description}</T></div>
+                </div>
+              ),
+            }))}
             selectedOption={{ value: problem.settings?.type }}
             onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, type: value } })}
+            extend
           />
         </div>
         {problem.settings.type === ProblemType.DYNAMIC && (

@@ -1,7 +1,6 @@
 import { ContentCopyIcon, CopyToClipboard, Modal, OpenInNewIcon, SubmitView, T } from 'components';
 import { ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI } from 'hooks';
-import Link from 'next/link';
 import React from 'react';
 import { QueryParam } from 'types';
 
@@ -11,7 +10,7 @@ interface SubmissionModalProps {
 
 export const SubmissionModal = ({ submitId }: SubmissionModalProps) => {
   
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   
   const { deleteSearchParams } = useJukiRouter();
   

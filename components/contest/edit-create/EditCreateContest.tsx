@@ -17,7 +17,6 @@ import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'c
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEffect, useJukiRouter, useJukiUI, useNotification, useRef, useState } from 'hooks';
-import Link from 'next/link';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
@@ -32,9 +31,9 @@ import {
   TabsType,
 } from 'types';
 import { EditCreateContestProps } from '../types';
-import { EditMembers } from './EditMembers';
 import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';
+import { EditViewMembers } from './EditViewMembers';
 
 export const EditCreateContest = ({ contest: initialContest }: EditCreateContestProps) => {
   
@@ -42,7 +41,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   
   const { addWarningNotification } = useNotification();
   const { notifyResponse } = useNotification();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
   const [ contest, setContest ] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT(isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
   useEffect(() => {
@@ -125,7 +124,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       header: <T className="tt-ce">members</T>,
       body: (
         <div className="pad-top-bottom pad-left-right">
-          <EditMembers contest={contest} setContest={setContest} editing={editing} />
+          <EditViewMembers contest={contest} setContest={setContest} editing={editing} />
         </div>
       ),
     },

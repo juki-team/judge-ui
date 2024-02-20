@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { EditCreateContestType } from 'types';
+import { ContestResponseDTO, EditCreateContestType } from 'types';
 
 export interface EditContestProps {
   contest: EditCreateContestType,
@@ -9,4 +9,11 @@ export interface EditContestProps {
 
 export interface EditCreateContestProps {
   contest?: EditCreateContestType;
+}
+
+export interface EditViewMembersContestProps {
+  contest: EditCreateContestType,
+  membersToView?: ContestResponseDTO['members'],
+  setContest?: Dispatch<SetStateAction<EditCreateContestType>>,
+  editing?: boolean
 }

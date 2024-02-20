@@ -29,6 +29,7 @@ export {
   RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES,
   JUKI_APP_COMPANY_KEY,
   COMPANY_PLAN,
+  PROBLEM_TYPES,
 } from '@juki-team/commons';
 
 export { ALPHANUMERIC_DASH_UNDERSCORE_REGEX } from '@juki-team/base-ui';

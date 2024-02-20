@@ -1,4 +1,3 @@
-import { jukiSettings } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   Button,
@@ -16,10 +15,10 @@ import {
   UserProfile,
   UserProfileSettings,
 } from 'components';
+import { jukiSettings } from 'config';
 import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiRouter, useJukiUI, useJukiUser, useState } from 'hooks';
-import Link from 'next/link';
 import { ReactNode } from 'react';
 import { ContentResponseType, ProfileTab, TabsType, UserProfileResponseDTO } from 'types';
 import Custom404 from '../../../404';
@@ -29,7 +28,7 @@ export default function ProfileView() {
   const { searchParams, routeParams: { nickname, tab }, pushRoute } = useJukiRouter();
   const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const onClose = () => setOpenModal('');
   
   return (

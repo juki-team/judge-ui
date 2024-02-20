@@ -153,7 +153,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       }
     }
     return base;
-  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, contestKey, searchParams ]);
+  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, Link, contestKey, searchParams ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {

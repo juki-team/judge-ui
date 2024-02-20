@@ -1,19 +1,21 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiRouter } from 'hooks';
+import { useJukiRouter, useJukiUI } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, ContestTab, DataViewerHeadersType, QueryParam } from 'types';
 import { contestantsColumn, contestEndDateColumn, contestNameColumn, contestStartDateColumn } from '../commons';
 
 export const ContestsUpcomingList = () => {
   
+  const { components: { Link } } = useJukiUI();
+  
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
-    contestNameColumn(false),
+    contestNameColumn(false, Link),
     contestStartDateColumn(),
     contestEndDateColumn(),
     contestantsColumn(),
-  ], []);
+  ], [ Link ]);
   
   const { pushRoute } = useJukiRouter();
   

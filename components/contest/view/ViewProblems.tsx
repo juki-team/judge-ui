@@ -12,7 +12,6 @@ import {
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
 import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
-import Link from 'next/link';
 import React, { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -33,7 +32,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const { isJudge, isAdmin } = user || {};
   const { searchParams, pushRoute, routeParams: { key: contestKey, index, tab } } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   const columns = useMemo(() => {
@@ -183,7 +182,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         minWidth: 64,
       } as DataViewerHeadersType<ContestProblemType>,
     ];
-  }, [ isJudgeOrAdmin, contestKey, searchParams, addSuccessNotification, addErrorNotification ]);
+  }, [ isJudgeOrAdmin, contestKey, searchParams, addSuccessNotification, addErrorNotification, Link ]);
   const data = Object.values(problems);
   
   return (

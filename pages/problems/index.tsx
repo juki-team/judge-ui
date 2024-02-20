@@ -25,6 +25,7 @@ import {
   PROBLEM_MODE,
   PROBLEM_MODES,
   PROBLEM_STATUS,
+  PROBLEM_TYPE,
   ROUTES,
 } from 'config/constants';
 import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
@@ -38,6 +39,7 @@ import {
   ProblemStatus,
   ProblemSummaryListResponseDTO,
   ProblemTab,
+  ProblemType,
   QueryParam,
   ReactNode,
 } from 'types';
@@ -138,6 +140,25 @@ function Problems() {
           options: PROBLEM_MODES.map((problemMode) => ({ value: problemMode, label: PROBLEM_MODE[problemMode].label })),
         },
         cardPosition: 'top',
+      },
+      {
+        head: 'type',
+        index: 'type',
+        field: ({ record: { key, settings: { type } }, isCard }) => (
+          <Field className="jk-row">
+            <T className="tt-se">{PROBLEM_TYPE[type].label}</T>
+          </Field>
+        ),
+        sort: true,
+        filter: {
+          type: 'select',
+          options: [ ProblemType.STANDARD, ProblemType.DYNAMIC ].map((problemType) => ({
+            value: problemType,
+            label: PROBLEM_TYPE[problemType].label,
+          })),
+        },
+        cardPosition: 'top',
+        minWidth: 100,
       },
       {
         head: 'tags',

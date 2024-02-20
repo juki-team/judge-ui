@@ -1,6 +1,7 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
+import { useJukiUI } from 'hooks';
 import { useMemo } from 'react';
 import { ContestResponseDTO, DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
 import {
@@ -16,9 +17,11 @@ import {
 
 export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDTO }) => {
   
+  const { components: { Link } } = useJukiUI();
+  
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
     submissionNickname(),
-    submissionProblemColumn({
+    submissionProblemColumn(Link, {
       header: {
         filter: {
           type: 'select',
@@ -37,7 +40,7 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
-  ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge ]);
+  ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge, Link ]);
   
   return (
     <div className="pad-left-right pad-top-bottom">

@@ -20,7 +20,7 @@ function Contests() {
   
   useTrackLastPath(LastPathKey.CONTESTS);
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  const { routeParams: { tab: contestsTab }, pushRoute, replaceRoute } = useJukiRouter();
+  const { routeParams: { tab: contestsTab }, pushRoute, replaceRoute, searchParams } = useJukiRouter();
   const { user: { canCreateContest } } = useJukiUser();
   const { viewPortSize } = useJukiUI();
   useEffect(() => {
@@ -37,7 +37,7 @@ function Contests() {
     }
   }, [ contestsTab, replaceRoute ]);
   
-  const pushTab = (tab: ContestsTab) => pushRoute({ pathname: ROUTES.CONTESTS.LIST(tab) });
+  const pushTab = (tab: ContestsTab) => pushRoute({ pathname: ROUTES.CONTESTS.LIST(tab), searchParams });
   
   const tabs: TabsType<ContestsTab> = {
     [ContestsTab.ALL]: {

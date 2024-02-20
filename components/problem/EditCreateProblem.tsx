@@ -14,7 +14,6 @@ import {
 import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
-import Link from 'next/link';
 import React, { ReactNode, useState } from 'react';
 import { mutate } from 'swr';
 import {
@@ -41,10 +40,10 @@ interface EditCreateProblemProps {
 export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblemProps) => {
   
   const editing = !!initialProblem;
-  const { routeParams, pushRoute } = useJukiRouter();
+  const { pushRoute } = useJukiRouter();
   const [ problem, setProblem ] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
   const { notifyResponse } = useNotification();
-  const { viewPortSize } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const response = cleanRequest<ContentResponseType<ProblemResponseDTO>>(

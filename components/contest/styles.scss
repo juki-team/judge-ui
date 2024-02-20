@@ -1,13 +1,5 @@
 @use "@juki-team/base-ui/dist/styles/abstracts" as utils;
 
-.contest-content-side-right-bar-bottom {
-  padding: var(--pad-md) 0;
-  
-  p {
-    text-align: center;
-  }
-}
-
 .content-side-right-bar-top {
   .judge-admin, .registered {
     height: var(--pad-xl);
