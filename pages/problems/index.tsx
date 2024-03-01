@@ -293,7 +293,7 @@ function Problems() {
           </div>
           <div style={{ width: 200 }}>
             <Select
-              className="jk-border-radius-inline jk-button-secondary"
+              className="jk-border-radius-inline jk-button secondary"
               options={[
                 { value: Judge.CUSTOMER, label: <span className="ws-np">{name + ' judge'}</span> },
                 ...(key === JUKI_APP_COMPANY_KEY ? [] : [

@@ -106,7 +106,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
           default:
         }
       }}
-      className="bc-sy jk-border-radius-inline jk-button-secondary tiny"
+      className="bc-sy jk-border-radius-inline jk-button secondary tiny"
     />
   );
 };

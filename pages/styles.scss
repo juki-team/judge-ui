@@ -84,12 +84,6 @@ li > * {
   line-height: 16px;
 }
 
-.only-icon.jk-button-text { // used on base-ui
-  &:hover {
-    background: var(--t-color-shadow-light) !important;
-  }
-}
-
 .jk-menu-collapse {
   top: 56px !important;
 }

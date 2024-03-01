@@ -132,7 +132,7 @@ function Admin() {
                 }))}
                 selectedOption={{ value: companyKey, label: companyKey ? undefined : <T>select</T> }}
                 onChange={({ value }) => setSearchParams({ name: QueryParam.COMPANY, value })}
-                className="jk-br-ie jk-button-secondary"
+                className="jk-br-ie jk-button secondary"
                 extend
               />
             </div>

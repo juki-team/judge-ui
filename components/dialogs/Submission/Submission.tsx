@@ -25,10 +25,10 @@ export const SubmissionModal = ({ submitId }: SubmissionModalProps) => {
             <div className="tx-s fw-nl">{submitId}</div>
           </div>
           <Link href={ROUTES.SUBMISSIONS.VIEW(submitId)} target="_blank">
-            <div className="jk-button-light only-icon small link"><OpenInNewIcon /></div>
+            <div className="jk-button light only-icon small link"><OpenInNewIcon /></div>
           </Link>
           <CopyToClipboard text={submitId}>
-            <div className="jk-button-light only-icon small"><ContentCopyIcon /></div>
+            <div className="jk-button light only-icon small"><ContentCopyIcon /></div>
           </CopyToClipboard>
         </div>
         <SubmitView submitId={submitId} />

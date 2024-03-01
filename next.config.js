@@ -62,6 +62,9 @@ module.exports = withPlugins([
       },
     ],
   },
+  sassLoaderOptions: {
+    outputStyle: 'compressed',
+  },
   async redirects() {
     return [
       // {

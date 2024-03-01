@@ -432,7 +432,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
           )}
           <div className="jk-row">
             <label>
-              <div className="jk-button-primary jk-border-radius-inline">
+              <div className="jk-button primary jk-border-radius-inline">
                 <T className="fw-bd tt-ue ">load input files</T>
               </div>
               <Input
@@ -444,7 +444,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
           </div>
           <div className="jk-row">
             <label>
-              <div className="jk-button-primary jk-border-radius-inline">
+              <div className="jk-button primary jk-border-radius-inline">
                 <T className="fw-bd tt-ue">load output files</T>
               </div>
               <Input
