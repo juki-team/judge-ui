@@ -32,7 +32,6 @@ const MarkdownSharedView = () => {
       <div style={{ padding: '48px' }}>
         <MdMathEditor
           source={sourceContent}
-          sharedButton
           downloadButton
           informationButton
           uploadImageButton
@@ -50,7 +49,6 @@ const MarkdownSharedView = () => {
       <div>
         <MdMathEditor
           source={sourceContent}
-          sharedButton
           downloadButton
           informationButton
           uploadImageButton
