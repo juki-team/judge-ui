@@ -10,6 +10,7 @@ import {
   Popover,
   Select,
   T,
+  TotalProblemInformation,
   UserCodeEditor,
   WarningIcon,
 } from 'components';
@@ -138,16 +139,12 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
       </div>
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
         <div className="jk-row left nowrap gap">
-          <div className="fw-bd tt-se"><T>problem mode</T>:</div>
+          <div className="fw-bd tt-se"><T>problem scoring mode</T>:</div>
+          <div><TotalProblemInformation /></div>
           <Select
             options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({
               value: mode,
-              label: (
-                <div className="jk-col left">
-                  <div className="jk-row extend"><T className="fw-bd tt-se">{PROBLEM_MODE[mode].label}</T></div>
-                  <div className="jk-row extend"><T className="tt-se">{PROBLEM_MODE[mode].description}</T></div>
-                </div>
-              ),
+              label: <T className="tt-se">{PROBLEM_MODE[mode].label}</T>,
             }))}
             selectedOption={{ value: problem.settings?.mode }}
             onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, mode: value } })}

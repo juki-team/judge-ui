@@ -70,7 +70,6 @@ export default function ProfileView() {
               </div>
             ),
           };
-          
         }
         tabHeaders[ProfileTab.SUBMISSIONS] = {
           key: ProfileTab.SUBMISSIONS,

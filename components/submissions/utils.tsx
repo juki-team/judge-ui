@@ -29,15 +29,9 @@ export interface VerdictProps {
   shortLabel?: boolean,
 }
 
-export const Verdict = ({
-                          verdict,
-                          points,
-                          status,
-                          submitId,
-                          submissionData,
-                          processedCases,
-                          shortLabel: _shortLabel,
-                        }: VerdictProps) => {
+export const Verdict = (props: VerdictProps) => {
+  
+  const { verdict, points, status, submitId, submissionData, processedCases, shortLabel: _shortLabel } = props;
   
   const verdictLabel = (verdict: ProblemVerdict, shortLabel = _shortLabel) => PROBLEM_VERDICT[verdict]?.label
     ? (

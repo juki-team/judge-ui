@@ -1,31 +1,79 @@
-import { Information, InformationProps, T } from '../';
+import { ExclamationIcon, InformationProps, Modal, T, Tooltip } from 'components';
+import { PROBLEM_VERDICT } from 'config/constants';
+import { useState } from 'hooks';
+import { ProblemVerdict } from 'types';
 
-export const TotalProblemInformation = (props: InformationProps) => {
+const Verdict = ({ verdict }: { verdict: ProblemVerdict }) => {
   return (
-    <Information {...props}>
-      <T className="tt-se">
-        total
-      </T>
-    </Information>
+    <Tooltip content={<div>{PROBLEM_VERDICT[verdict].label}</div>}>
+      <div className="jk-row center jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        {verdict}
+      </div>
+    </Tooltip>
   );
-};
+}
 
-export const SubtaskProblemInformation = (props: InformationProps) => {
+export const TotalProblemInformation = ({ filledCircle }: InformationProps) => {
+  const [ isOpen, setIsOpen ] = useState(false);
   return (
-    <Information {...props}>
-      <T className="tt-se">
-        subtask
-      </T>
-    </Information>
-  );
-};
-
-export const PartialProblemInformation = (props: InformationProps) => {
-  return (
-    <Information {...props}>
-      <T className="tt-se">
-        partial
-      </T>
-    </Information>
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={(setLoaderStatus, loaderStatus, event) => {
+          event.onRequestCloseModalEvent?.stopPropagation();
+          setIsOpen(false);
+        }}
+        closeWhenClickOutside
+        closeWhenKeyEscape
+      >
+        <div className="jk-col left stretch gap jk-pad-sm">
+          <h3><T>problem scoring mode</T></h3>
+          <div><T className="tx-l cr-py fw-bd tt-se">total</T></div>
+          <div className="jk-row left">
+            <T className="tt-se">if all test cases are</T>&nbsp;<Verdict verdict={ProblemVerdict.AC} />&nbsp;
+            <T>the result is</T>&nbsp;<Verdict verdict={ProblemVerdict.AC} />&nbsp;
+            <T>otherwise it will be</T>&nbsp;
+            <Verdict verdict={ProblemVerdict.RE} />,&nbsp;
+            <Verdict verdict={ProblemVerdict.TLE} />,&nbsp;
+            <Verdict verdict={ProblemVerdict.MLE} />,&nbsp;
+            <Verdict verdict={ProblemVerdict.WA} />&nbsp;
+            <T>or</T>&nbsp;
+            <Verdict verdict={ProblemVerdict.PE} />&nbsp;
+            <T>in that order</T>.
+          </div>
+          <div><T className="tx-l cr-py fw-bd tt-se">subtask</T></div>
+          <div className="jk-row left">
+            <T className="tt-se">the test cases are grouped and each group is assigned a score</T>,&nbsp;
+            <T>if all test cases in a group are</T>&nbsp;<Verdict verdict={ProblemVerdict.AC} />&nbsp;
+            <T>then the score assigned to that group is added to the total score</T>,&nbsp;
+            <T>if total score is equal to the sum of the assigned scores of all groups then the result is</T>&nbsp;
+            <Verdict verdict={ProblemVerdict.AC} />,&nbsp;
+            <T>otherwise if the total score is greater than zero the result is</T>&nbsp;
+            <Verdict verdict={ProblemVerdict.PA} />&nbsp;<T>with the total accumulated score</T>,&nbsp;
+            <T>otherwise it will be</T>&nbsp;
+            <Verdict verdict={ProblemVerdict.RE} />,&nbsp;
+            <Verdict verdict={ProblemVerdict.TLE} />,&nbsp;
+            <Verdict verdict={ProblemVerdict.MLE} />,&nbsp;
+            <Verdict verdict={ProblemVerdict.WA} />&nbsp;
+            <T>or</T>&nbsp;
+            <Verdict verdict={ProblemVerdict.PE} />&nbsp;
+            <T>in that order</T>.
+          </div>
+          <div><T className="tx-l cr-py fw-bd tt-se">partial</T></div>
+          <div className="jk-row left" />
+        </div>
+      </Modal>
+      <div
+        onClick={(event) => {
+          event.stopPropagation();
+          setIsOpen(true)
+        }}
+        className="jk-row clickable br-50-pc"
+      >
+        {filledCircle
+          ? <ExclamationIcon rotate={180} filledCircle size="small" />
+          : <ExclamationIcon rotate={180} circle size="small" />}
+      </div>
+    </>
   );
 };

@@ -298,12 +298,15 @@ const ProblemView = (): ReactNode => {
                 )}
                 <Popover
                   content={problem.judge === Judge.JUKI_JUDGE
-                    ? (<ProblemInfo
-                        author={problem.author}
-                        status={problem.status}
-                        tags={problem.tags}
-                        settings={problem.settings}
-                      />
+                    ? (
+                      <div className="jk-pad-sm">
+                        <ProblemInfo
+                          author={problem.author}
+                          status={problem.status}
+                          tags={problem.tags}
+                          settings={problem.settings}
+                        />
+                      </div>
                     ) : [ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judge)
                       ? (
                         <div className="jk-row extend top">
