@@ -124,6 +124,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       key="cancel"
     >
       <ButtonLoader
+        type="light"
         size="small"
         icon={<CloseIcon />}
         responsiveMobile
@@ -132,7 +133,6 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       </ButtonLoader>
     </CheckUnsavedChanges>,
     <ButtonLoader
-      type="secondary"
       size="small"
       icon={<SaveIcon />}
       onClick={onSave}

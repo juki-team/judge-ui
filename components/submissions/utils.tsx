@@ -1,8 +1,16 @@
+import { useJukiUser } from '@juki-team/base-ui';
+import { Theme } from '@juki-team/commons';
 import { LoadingIcon, T, Tooltip } from 'components';
 import { PROBLEM_VERDICT, SUBMISSION_RUN_STATUS } from 'config/constants';
 import { useTask } from 'hooks';
 import { ReactNode } from 'react';
-import { ProblemVerdict, SocketEventSubmissionResponseDTO, SubmissionResponseDTO, SubmissionRunStatus } from 'types';
+import {
+  ProblemVerdict,
+  ProfileSetting,
+  SocketEventSubmissionResponseDTO,
+  SubmissionResponseDTO,
+  SubmissionRunStatus,
+} from 'types';
 
 export const hasTimeHasMemory = (verdict: ProblemVerdict) => {
   return !(verdict === ProblemVerdict.CE
@@ -32,6 +40,8 @@ export interface VerdictProps {
 export const Verdict = (props: VerdictProps) => {
   
   const { verdict, points, status, submitId, submissionData, processedCases, shortLabel: _shortLabel } = props;
+  const { user: { settings: { [ProfileSetting.THEME]: userTheme } } } = useJukiUser();
+  const addDark = userTheme === Theme.DARK ? 'CC' : '';
   
   const verdictLabel = (verdict: ProblemVerdict, shortLabel = _shortLabel) => PROBLEM_VERDICT[verdict]?.label
     ? (
@@ -46,17 +56,17 @@ export const Verdict = (props: VerdictProps) => {
   
   const SubmissionLabel: { [key in SubmissionRunStatus]: (props: SocketEventSubmissionResponseDTO) => ReactNode } = {
     [SubmissionRunStatus.NONE]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         {verdictLabel(verdict)}
       </div>
     ),
     [SubmissionRunStatus.FAILED]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         {verdictLabel(verdict)}
       </div>
     ),
     [SubmissionRunStatus.RECEIVED]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -65,7 +75,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.COMPILING]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -74,7 +84,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.COMPILED]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -83,12 +93,12 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.COMPILATION_ERROR]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         {verdictLabel(verdict)}
       </div>
     ),
     [SubmissionRunStatus.FETCHING_TEST_CASES]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -97,7 +107,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.EXECUTED_TEST_CASE]: ({ testInfo, verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         {!!testInfo && (
@@ -111,7 +121,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.FAILED_TEST_CASE]: ({ testInfo, verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         {!!testInfo && (
@@ -124,7 +134,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.RUNNING_TEST_CASE]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -133,7 +143,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.RUNNING_SAMPLE_TEST_CASES]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -142,7 +152,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.RUNNING_TEST_CASES]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -151,7 +161,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.JUDGING_TEST_CASE]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -160,7 +170,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.GRADING]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         <LoadingIcon size="small" />
         &nbsp;
         <div className="jk-row tx-t" style={{ lineHeight: 1, padding: '4px 0' }}>
@@ -169,7 +179,7 @@ export const Verdict = (props: VerdictProps) => {
       </div>
     ),
     [SubmissionRunStatus.COMPLETED]: ({ verdict }) => (
-      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+      <div className="jk-row nowrap jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
         {verdict === ProblemVerdict.PENDING ? <>
           <LoadingIcon size="small" />&nbsp;{verdictLabel(verdict)}</> : verdictLabel(verdict)}
         {verdict === ProblemVerdict.PA && points && <>&nbsp;({(+points || 0).toFixed(2)})</>}
@@ -182,7 +192,7 @@ export const Verdict = (props: VerdictProps) => {
       <>
         {SubmissionLabel[submissionData.status]?.(submissionData) || submissionData.status}
       </> : (
-        <div className="jk-row center jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
+        <div className="jk-row center jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color + addDark }}>
           {verdict === ProblemVerdict.PENDING
             ? <><LoadingIcon size="small" />&nbsp;{verdictLabel(verdict, true)}</> : verdictLabel(verdict, true)}
           {verdict === ProblemVerdict.PA && points && (
