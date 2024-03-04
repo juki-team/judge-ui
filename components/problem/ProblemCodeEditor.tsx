@@ -79,18 +79,18 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
           )
           .map(({ language }) => ({
             value: language,
-            label: PROGRAMMING_LANGUAGE[language].label || language,
+            label: PROGRAMMING_LANGUAGE[language]?.label || language,
           }));
       } else {
         languages = Object.values(problem?.settings.byProgrammingLanguage || {}).map(({ language }) => ({
           value: language,
-          label: PROGRAMMING_LANGUAGE[language].label || language,
+          label: PROGRAMMING_LANGUAGE[language]?.label || language,
         }));
       }
       if (!languages.length) {
         languages = [ {
           value: ProgrammingLanguage.TEXT,
-          label: PROGRAMMING_LANGUAGE[ProgrammingLanguage.TEXT].label,
+          label: PROGRAMMING_LANGUAGE[ProgrammingLanguage.TEXT]?.label,
         } ];
       }
       return languages;
