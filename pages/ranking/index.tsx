@@ -73,22 +73,22 @@ function Ranking() {
       cardPosition: 'centerLeft',
       minWidth: 150,
     },
-    {
-      head: <TextHeadCell text={<T className="wb-bw tt-se">points by competitions</T>} />,
-      index: 'contest-points',
-      field: ({ record: { competitionPoints }, isCard }) => (
-        <TextField
-          text={<>
-            <div className="fw-bd">{competitionPoints?.toFixed(2)}</div>
-            &nbsp;<T>pts.</T>
-          </>}
-          label={<T className="tt-se">on contests</T>}
-        />
-      ),
-      sort: { compareFn: () => (rowA, rowB) => rowB.competitionPoints - rowA.competitionPoints },
-      cardPosition: 'centerRight',
-      minWidth: 150,
-    },
+    // {
+    //   head: <TextHeadCell text={<T className="wb-bw tt-se">points by competitions</T>} />,
+    //   index: 'contest-points',
+    //   field: ({ record: { competitionPoints }, isCard }) => (
+    //     <TextField
+    //       text={<>
+    //         <div className="fw-bd">{competitionPoints?.toFixed(2)}</div>
+    //         &nbsp;<T>pts.</T>
+    //       </>}
+    //       label={<T className="tt-se">on contests</T>}
+    //     />
+    //   ),
+    //   sort: { compareFn: () => (rowA, rowB) => rowB.competitionPoints - rowA.competitionPoints },
+    //   cardPosition: 'centerRight',
+    //   minWidth: 150,
+    // },
     {
       head: <TextHeadCell text={<><T className="tt-se">country</T>, <T className="tt-se">city</T></>} />,
       index: 'country-city',

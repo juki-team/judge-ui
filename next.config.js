@@ -2,6 +2,7 @@ const { version } = require('./package.json');
 const { withPlugins, optional } = require('next-compose-plugins');
 const { Language } = require('@juki-team/commons'); // required
 const PWA = require('next-pwa');
+const BundleAnalyzer = require('@next/bundle-analyzer');
 
 module.exports = withPlugins([
   PWA({
@@ -11,6 +12,9 @@ module.exports = withPlugins([
     // scope: '/app',
     sw: 'service-worker.js',
     importScripts: [ '/worker.js' ],
+  }),
+  BundleAnalyzer({
+    enabled: process.env.ANALYZE === 'true',
   }),
 ], {
   webpack: config => {

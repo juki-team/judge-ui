@@ -6,13 +6,15 @@
     "dev": "next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
     "build": "next build",
+    "build:analyze": "ANALYZE=true yarn build",
     "start": "next start",
     "lint": "next lint",
     "pull": "yarn add @juki-team/commons @juki-team/base-ui"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.1.222",
-    "@juki-team/commons": "^0.0.393",
+    "@juki-team/base-ui": "^0.1.241",
+    "@juki-team/commons": "^0.0.396",
+    "@next/bundle-analyzer": "^14.1.2",
     "@vercel/analytics": "^1.2.2",
     "deep-object-diff": "^1.1.7",
     "i18next": "^23.10.0",
