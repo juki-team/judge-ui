@@ -170,6 +170,7 @@ export {
   LinkLastPath,
 } from '@juki-team/base-ui';
 
+export * from './ColorsModal';
 export * from './CustomHead';
 export * from './Image';
 export * from './PagedDataViewer';

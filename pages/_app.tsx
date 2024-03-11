@@ -92,6 +92,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
         [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
       }}
     >
+      {/*<ColorsModal />*/}
       <CustomHead />
       <UserProvider>
         <TaskProvider>

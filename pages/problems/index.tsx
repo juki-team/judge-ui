@@ -15,6 +15,7 @@ import {
   T,
   TextField,
   TextHeadCell,
+  Tooltip,
   TwoContentSection,
   UserNicknameLink,
 } from 'components';
@@ -92,30 +93,27 @@ function Problems() {
           <div className="jk-row gap nowrap">
             <div className="jk-row">{name}</div>
             {user.solved ? (
-              <Popover
+              <Tooltip
                 content={<T className="tt-se ws-np">solved</T>}
                 placement="top"
-                showPopperArrow
               >
                 <div className="jk-row"><CheckIcon size="small" filledCircle className="cr-ss" /></div>
-              </Popover>
+              </Tooltip>
             ) : user.tried && (
-              <Popover
+              <Tooltip
                 content={<T className="tt-se ws-np">tried</T>}
                 placement="top"
-                showPopperArrow
               >
                 <div className="jk-row"><CloseIcon size="small" filledCircle className="cr-wg" /></div>
-              </Popover>
+              </Tooltip>
             )}
             {user.isEditor && (
-              <Popover
+              <Tooltip
                 content={<T className="tt-se ws-np">you are editor</T>}
                 placement="top"
-                showPopperArrow
               >
                 <div className="jk-tag tx-s fw-bd letter-tag">E</div>
-              </Popover>
+              </Tooltip>
             )}
           </div>
         </Field>
