@@ -1,5 +1,6 @@
 import {
   ButtonLoader,
+  Collapse,
   DownloadIcon,
   ExtraProblemInfo,
   FlagEnImage,
@@ -14,8 +15,9 @@ import {
   ProblemTypeInfo,
   T,
   TabsInline,
+  UpIcon,
 } from 'components';
-import { classNames, downloadBlobAsFile, downloadJukiMarkdownAdPdf, getStatementData } from 'helpers';
+import { classNames, downloadBlobAsFile, downloadJukiMarkdownAsPdf, getStatementData } from 'helpers';
 import { useJukiUI, useJukiUser, useT } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
@@ -50,7 +52,14 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
   const { judge, problemKey, name, settings, tags, author, status, statement, setProblem, contest } = props;
   const editing = !!setProblem;
   const { viewPortSize } = useJukiUI();
-  const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
+  const {
+    user: {
+      settings: {
+        [ProfileSetting.LANGUAGE]: preferredLanguage,
+        [ProfileSetting.THEME]: preferredTheme,
+      },
+    },
+  } = useJukiUser();
   const { t } = useT();
   const problemName = contest?.index ? `(${t('problem')} ${contest?.index}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
   const {
@@ -85,12 +94,12 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
     );
   }
   
-  const handleDownloadPdf = async () => {
-    await downloadJukiMarkdownAdPdf(mdStatement, `Juki Judge ${problemName}.pdf`);
+  const handleDownloadPdf = () => {
+    return downloadJukiMarkdownAsPdf(mdStatement, preferredTheme, `Juki Judge ${problemName}.pdf`);
   };
   
   const handleDownloadMd = async () => {
-    await downloadBlobAsFile(new Blob([ mdStatement ], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
+    downloadBlobAsFile(new Blob([ mdStatement ], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
   };
   
   const tabs = {
@@ -108,13 +117,15 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
     },
   };
   
+  const isSmallMedium = viewPortSize === 'sm' || viewPortSize === 'md';
+  
   return (
     <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
       <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
         <div
           className={classNames('jk-col top gap stretch flex-3', { editing })}
         >
-          {!setProblem && viewPortSize !== 'hg' && viewPortSize !== 'lg' && (
+          {!editing && isSmallMedium && (
             <FloatToolbar
               actionButtons={[
                 {
@@ -135,24 +146,41 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
               ]}
             />
           )}
-          <div className="jk-row center extend gap nowrap fw-bd">
-            {contest && <ProblemLetter index={contest.index} color={contest.color} />}
-            {!editing && (
+          {!editing && (isSmallMedium || contest) && (
+            <div className="jk-row center extend gap nowrap fw-bd">
               <div className="jk-col fw-nl">
-                <h3>{name}</h3>
-                <div className={classNames({ 'screen sm md': !contest })}>
-                  <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
-                    <ProblemTimeLimitInfo settings={settings} />
-                    <ProblemMemoryLimitInfo settings={settings} />
+                {contest && (
+                  <div className="jk-row gap">
+                    <ProblemLetter index={contest.index} color={contest.color} />
+                    <h3>{name}</h3>
                   </div>
-                  <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
-                    <ProblemTypeInfo settings={settings} />
-                    <ProblemModeInfo settings={settings} expand={false} />
-                  </div>
+                )}
+                <div className="bc-we jk-br-ie">
+                  <Collapse
+                    header={({ toggle, isOpen }) => (
+                      <div className="jk-pad-sm" style={{ paddingBottom: isOpen ? 0 : 4 }}>
+                        <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
+                          <ProblemTimeLimitInfo settings={settings} />
+                          <ProblemMemoryLimitInfo settings={settings} />
+                        </div>
+                        <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
+                          <ProblemTypeInfo settings={settings} />
+                          <ProblemModeInfo settings={settings} expand={false} />
+                        </div>
+                        <div className="jk-row">
+                          <UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link br-50-pc bc-g6" />
+                        </div>
+                      </div>
+                    )}
+                  >
+                    <div className="jk-col gap jk-pad-sm">
+                      <ExtraProblemInfo author={author} status={status} tags={tags} settings={settings} />
+                    </div>
+                  </Collapse>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
           {editing && (
             <div className="jk-col">
               <div className="jk-row">
@@ -182,7 +210,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : (
-              <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+              <div className="bc-we jk-pad-md jk-br-ie">
                 <MdMathViewer source={statementDescription} />
               </div>
             )}
@@ -205,7 +233,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : statementInput
-              ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+              ? <div className="bc-we jk-pad-md jk-border-radius-inline">
                 <MdMathViewer source={statementInput} />
               </div>
               : <em><T className="tt-se fw-bd">no input description</T></em>}
@@ -228,7 +256,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : statementOutput
-              ? <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+              ? <div className="bc-we jk-pad-md jk-border-radius-inline">
                 <MdMathViewer source={statementOutput} />
               </div>
               : <em><T className="tt-se fw-bd">no output description</T></em>}
@@ -275,7 +303,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                         </div>
                       </>
                     ) : (
-                      <div className="flex-1 br-g6 bc-we jk-pad-sm jk-border-radius-inline">
+                      <div className="flex-1 bc-we jk-pad-sm jk-border-radius-inline">
                         <div className="tx-h fw-bd cr-pd">
                           <T className="tt-se">subtask</T> {pointsByGroup.group}
                           &nbsp;(&nbsp;{pointsByGroup.points}&nbsp;

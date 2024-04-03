@@ -80,7 +80,7 @@ const ProblemView = (): ReactNode => {
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  maxWidth: 'calc(100vw - var(--pad-border) - var(--pad-border) - 64px - var(--left-vertical-menu-width))',
+                  maxWidth: 'calc(100vw - var(--pad-md) - var(--pad-md) - 64px - var(--left-vertical-menu-width))',
                 }}
               >
                 {problemKey}
@@ -288,7 +288,7 @@ const ProblemView = (): ReactNode => {
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    maxWidth: 'calc(100vw - var(--pad-border) - var(--pad-border) - 24px - var(--gap) - var(--left-vertical-menu-width, 0px))',
+                    maxWidth: 'calc(100vw - var(--pad-md) - var(--pad-md) - 24px - var(--gap) - var(--left-vertical-menu-width, 0px))',
                   }}
                 >
                   {problem.name}

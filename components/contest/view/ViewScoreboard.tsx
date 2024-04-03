@@ -379,7 +379,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  width: 'calc(100vw - var(--pad-border) - var(--pad-border))',
+                  width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
                   textAlign: 'center',
                 }}
               >

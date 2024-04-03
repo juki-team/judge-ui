@@ -105,7 +105,6 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
   
   return (
     <UserCodeEditor
-      className="br-g6"
       expandPosition={{
         // width: 'var(--screen-content-width)',
         // height: 'calc(var(--content-height) - var(--pad-md) - var(--pad-md))',

@@ -83,7 +83,7 @@ export function ContestView() {
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    width: 'calc(100vw - var(--pad-border) - var(--pad-border))',
+                    width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
                   }}
                 >
                   {contestKey}
@@ -363,7 +363,7 @@ export function ContestView() {
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
-                      width: 'calc(100vw - var(--pad-border) - var(--pad-border))',
+                      width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
                     }}
                   >
                     {contest.name}

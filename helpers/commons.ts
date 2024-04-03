@@ -24,7 +24,7 @@ export {
   toBlob,
   handleShareMdPdf,
   downloadDataTableAsCsvFile,
-  downloadJukiMarkdownAdPdf,
+  downloadJukiMarkdownAsPdf,
   downloadSheetDataAsXlsxFile,
   downloadLink,
   cleanRequest,
