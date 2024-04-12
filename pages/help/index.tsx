@@ -26,8 +26,8 @@ export default function Home() {
           <h3><T>compilation of submissions</T></h3>
           {/*<div className="jk-row left nowrap">*/}
           <T className="tt-se">
-            source files submitted to the Juki Judge will be compiled using the following command
-            line arguments for the respective language:
+            source files submitted to the Juki Judge will be compiled and running using the following command
+            line arguments for the respective language.
           </T>
           {/*</div>*/}
           {ACCEPTED_PROGRAMMING_LANGUAGES.map((value) => {
@@ -40,6 +40,7 @@ export default function Home() {
                       <div className="cr-g5 tx-s">[{PROGRAMMING_LANGUAGE[value].value}]</div>
                     </div>
                     <div>
+                      <div><T className="tt-se">compilation command</T>:</div>
                       {!PROGRAMMING_LANGUAGE[value].hasBuildFile && (
                         <>
                           <div className="cr-ss"><T className="tt-se">no compilation required</T></div>
@@ -52,17 +53,42 @@ export default function Home() {
                       </div>
                       {PROGRAMMING_LANGUAGE[value].compilePattern && (
                         <pre className="ws-bs bc-w2 jk-pad-sm">
-                        {PROGRAMMING_LANGUAGE[value].compilePattern
-                          .replace('{{folder_path}}/{{compiled_file_name}}', '{file}')
-                          .replace('{{folder_path}}/{{source_file_name}}', '{file_compiled}')
-                        }
-                      </pre>
+                          {PROGRAMMING_LANGUAGE[value].compilePattern
+                            .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
+                            .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
+                          }
+                        </pre>
+                      )}
+                      <div><T className="tt-se">run command</T>:</div>
+                      {PROGRAMMING_LANGUAGE[value].runPattern && (
+                        <pre className="ws-bs bc-w2 jk-pad-sm">
+                          {PROGRAMMING_LANGUAGE[value].runPattern
+                            .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
+                            .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
+                          }
+                        </pre>
+                      )}
+                      {PROGRAMMING_LANGUAGE[value].executable && (
+                        <div>
+                          <T className="tt-se">executable</T>: <div className="jk-tag gray-3">{PROGRAMMING_LANGUAGE[value].executable}</div>
+                        </div>
+                      )}
+                      {PROGRAMMING_LANGUAGE[value].executableVersion && (
+                        <>
+                          <div><T className="tt-se">executable version</T>:</div>
+                          <pre className="ws-bs bc-w2 jk-pad-sm">
+                          {PROGRAMMING_LANGUAGE[value].executableVersion
+                            .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
+                            .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
+                          }
+                        </pre>
+                        </>
                       )}
                     </div>
                   </li>
                 </ul>
               </div>
-            )
+            );
           })}
         </div>
       </div>

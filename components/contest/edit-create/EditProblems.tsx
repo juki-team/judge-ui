@@ -21,7 +21,7 @@ import {
   roundTimestamp,
 } from 'helpers';
 import { useEffect, useJukiUser, useRef, useState } from 'hooks';
-import { useCallback, useMemo } from 'react';
+import { RefObject, useCallback, useMemo } from 'react';
 import {
   ContestProblemBasicType,
   EditContestProblemBasicType,
@@ -59,7 +59,11 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     const { previewRef, dragComponent, isDragging, index } = props;
     
     return (
-      <div className="jk-row left jk-table-inline-row" ref={previewRef} style={{ opacity: isDragging ? 0.4 : 1 }}>
+      <div
+        className="jk-row left jk-table-inline-row"
+        ref={previewRef as RefObject<HTMLDivElement>}
+        style={{ opacity: isDragging ? 0.4 : 1 }}
+      >
         <div className="jk-row" style={{ width: 30 }}>{dragComponent}</div>
         <div className="jk-row" style={{ width: 40 }}>
           {indexToLetters(index + 1)}
@@ -243,7 +247,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   const parseProblems = useCallback((problems: { [key: string]: ContestProblemBasicType & { name: string } }) => {
     return Object.values(problems)
       .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
-      .map((problem, index) => {
+      .map((problem) => {
         const value: Problem = {
           key: problem.key,
           judge: problem.judge,
@@ -261,7 +265,6 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       });
   }, [ renderRowProblem ]);
   const [ problems, setProblems ] = useState<RowSortableItem<Problem>[]>(parseProblems(contest.problems));
-  
   useEffect(() => {
     setProblems(prevState => prevState.map(problem => {
       const value: Problem = { ...problem.value };
@@ -299,7 +302,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         problems: problemsObj,
       };
     });
-  }, [problems, setContest]);
+  }, [ problems, setContest ]);
   
   return (
     <div className="jk-col top nowrap gap stretch bc-we jk-br-ie jk-pad-sm">
