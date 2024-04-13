@@ -34,9 +34,8 @@ interface ProblemCodeEditorProps {
 }
 
 export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) => {
-  
   const { appendSearchParams, searchParams, routeParams, pushRoute } = useJukiRouter();
-  const { addSuccessNotification, addErrorNotification } = useNotification();
+  const { addSuccessNotification, addErrorNotification, addWarningNotification } = useNotification();
   const { mutate } = useSWR();
   const { listenSubmission } = useTask();
   const initialTestCases: CodeEditorTestCasesType = {};
@@ -51,6 +50,9 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
       out: '',
       index,
       in: sample.input,
+      withPE: problem.settings.withPE,
+      testOut: sample.output,
+      hidden: false,
     };
   });
   const { user: { nickname, isLogged }, company: { key: companyKey } } = useJukiUser();
@@ -126,7 +128,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
               type="secondary"
               size="tiny"
               onClick={async () => {
-                addSuccessNotification(<T className="tt-se">to submit, first login</T>);
+                addWarningNotification(<T className="tt-se">to submit, first login</T>);
                 appendSearchParams({ name: QueryParamKey.SIGN_IN, value: '1' });
               }}
             >
@@ -196,7 +198,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
             {contest?.isAdmin || contest?.isJudge ? <T>submit as judge</T> : <T>submit</T>}
           </ButtonLoader>
         );
-        if (contest?.isJudge || contest?.isAdmin || contest?.isContestant) {
+        if (contest?.isAdmin || contest?.isJudge || contest?.isContestant) {
           return validSubmit;
         }
         if (contest?.isGuest) {

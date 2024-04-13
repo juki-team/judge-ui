@@ -156,7 +156,7 @@ const ProblemView = (): ReactNode => {
           [ProblemTab.EDITOR]: {
             key: ProblemTab.EDITOR,
             header: <T className="ws-np tt-ce">code editor</T>,
-            body: <div className="pad-top-bottom pad-left-right"><ProblemCodeEditor problem={problem} /></div>,
+            body: <div className="pad-top-bottom pad-left-right" key={'asdfa'}><ProblemCodeEditor problem={problem} /></div>,
           },
         };
         
