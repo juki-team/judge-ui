@@ -123,7 +123,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
       if (verdict !== null && verdict !== ProblemVerdict.PENDING) {
         if (verdict === ProblemVerdict.AC) {
           addSuccessNotification(
-            <div className="jk-pad-md">
+            <div>
               {(submission?.contestName && submission.contestProblemIndex) ?
                 <>
                   <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
@@ -136,7 +136,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
           );
         } else if (verdict === ProblemVerdict.PA) {
           addSuccessNotification(
-            <div className="jk-pad-md">
+            <div>
               {(submission?.contestName && submission.contestProblemIndex) ?
                 <>
                   <div><T className="tt-se">contest</T>: {submission?.contestName}</div>
@@ -151,7 +151,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
           );
         } else if (Object.keys(PROBLEM_VERDICT).includes(verdict)) {
           addErrorNotification(
-            <div className="jk-pad-md">
+            <div>
               {(submission?.contestName && submission.contestProblemIndex) ?
                 <>
                   <div><T className="tt-se">contest</T>: {submission?.contestName}</div>

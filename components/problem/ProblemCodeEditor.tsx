@@ -35,7 +35,7 @@ interface ProblemCodeEditorProps {
 
 export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) => {
   const { appendSearchParams, searchParams, routeParams, pushRoute } = useJukiRouter();
-  const { addSuccessNotification, addErrorNotification, addWarningNotification } = useNotification();
+  const { addErrorNotification, addInfoNotification, addWarningNotification } = useNotification();
   const { mutate } = useSWR();
   const { listenSubmission } = useTask();
   const initialTestCases: CodeEditorTestCasesType = {};
@@ -102,8 +102,9 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
   );
   
   const [ language, setLanguage ] = useState<string>(ProgrammingLanguage.TEXT);
-  const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
   const [ sourceCode, setSourceCode ] = useState('');
+  
+  const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
   
   return (
     <UserCodeEditor
@@ -117,7 +118,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
         left: '0',
         // left: 'calc((100vw - var(--screen-content-width)) / 2)',
       }}
-      sourceStoreKey={problemJudgeKey}
+      sourceStoreKey={(contest ? contest.key + '/' : '') + problemJudgeKey}
       languages={languages}
       onSourceChange={setSourceCode}
       onLanguageChange={setLanguage}
@@ -156,7 +157,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
                     problem.judge,
                     problem.key,
                   );
-                  addSuccessNotification(<T className="tt-se">submission received</T>);
+                  addInfoNotification(<T className="tt-se">submission received</T>);
                 }
                 setLoaderStatus(Status.SUCCESS);
               } else {
@@ -188,7 +189,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
                   '',
                   '',
                 ));
-                await pushRoute({
+                pushRoute({
                   pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS),
                   searchParams,
                 });
@@ -206,9 +207,9 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
             <ButtonLoader
               type="secondary"
               size="tiny"
-              onClick={async () => {
-                addSuccessNotification(<T className="tt-se">to submit, first register</T>);
-                await pushTab(ContestTab.OVERVIEW);
+              onClick={() => {
+                addWarningNotification(<T className="tt-se">to submit, first register</T>);
+                pushTab(ContestTab.OVERVIEW);
               }}
             >
               <T>submit</T>
@@ -226,6 +227,7 @@ export const ProblemCodeEditor = ({ problem, contest }: ProblemCodeEditorProps) 
       initialTestCases={(problem.judge === Judge.JUKI_JUDGE || problem.judge === Judge.CUSTOMER)
         ? initialTestCases
         : undefined}
+      enableAddCustomSampleCases
     />
   );
 };

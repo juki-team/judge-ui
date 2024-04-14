@@ -35,7 +35,6 @@ export {
   CodeEditorKeyMap,
   CodeEditorTheme,
   CodeIcon,
-  CodeRunnerEditor,
   CodeViewer,
   Collapse,
   InputColor,

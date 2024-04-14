@@ -24,10 +24,11 @@ import {
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
 } from 'config/constants';
-import { classNames } from 'helpers';
+import { classNames, getProblemJudgeKey } from 'helpers';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   EditCreateProblemType,
+  Judge,
   Language,
   ProblemMode,
   ProblemSettingsByProgrammingLanguageType,
@@ -81,7 +82,10 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
   
   const [ open, setOpen ] = useState(false);
   const [ source, setSource ] = useState('');
+  
   const onCloseModal = () => setOpen(false);
+  // TODO: check if the problem is custom or juki judge
+  const problemJudgeKey = getProblemJudgeKey(/*problem.judge*/ Judge.JUKI_JUDGE, problem.key);
   
   const fixPointsByGroups = (_pointsByGroups: ProblemSettingsPointsByGroupsType, toFilter?: number): ProblemSettingsPointsByGroupsType => {
     const pointsByGroups: ProblemSettingsPointsByGroupsType = {};
@@ -292,6 +296,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                   }}
                 >
                   <UserCodeEditor
+                    sourceStoreKey={problemJudgeKey + '/evaluator'}
                     expandPosition={{
                       // width: 'var(--screen-content-width)',
                       // height: 'calc(var(--content-height) - var(--pad-md) - var(--pad-md))',
@@ -325,6 +330,8 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                       },
                     }}
                     initialSource={{ [PROGRAMMING_LANGUAGE[ProgrammingLanguage.CPP17].mime]: problem.settings.evaluatorSource }}
+                    enableAddSampleCases
+                    enableAddCustomSampleCases
                   />
                 </div>
                 <div className="jk-row extend gap right">
