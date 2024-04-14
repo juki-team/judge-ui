@@ -134,3 +134,5 @@ export type {
   DeleteSearchParamsType,
   SetSearchParamsType,
 } from '@juki-team/base-ui';
+
+export type { VirtualItem } from '@tanstack/virtual-core';

@@ -1,9 +1,10 @@
-import { VirtualItem } from '@tanstack/virtual-core';
-import { Collapse, T, Tooltip, UpIcon, VirtualizedRowsFixed } from 'components';
+import { Button, Collapse, Modal, T, Tooltip, UpIcon, VirtualizedRowsFixed, VisibilityIcon } from 'components';
+import * as Diff2Html from 'diff2html';
+import { ColorSchemeType } from 'diff2html/lib/types';
 import { classNames } from 'helpers';
+import { useEffect, useJukiUI, useJukiUser, useState } from 'hooks';
 import React, { useCallback } from 'react';
-import { ProblemMode, ProblemVerdict, TestCaseResultType } from 'types';
-import { useJukiUI } from '../../hooks';
+import { ProblemMode, ProblemVerdict, ProfileSetting, TestCaseResultType, Theme, VirtualItem } from 'types';
 import { Memory, Time, Verdict } from './index';
 
 export interface GroupInfoProps {
@@ -18,17 +19,54 @@ export interface GroupInfoProps {
   submitId: string,
 }
 
-export const GroupInfo = ({
-                            groupKey,
-                            problemMode,
-                            timeUsed,
-                            memoryUsed,
-                            verdict,
-                            points,
-                            testCases,
-                            submitId,
-                            isProblemEditor,
-                          }: GroupInfoProps) => {
+const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
+  
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ diff, setDiff ] = useState('');
+  const { user: { settings: { [ProfileSetting.THEME]: userTheme } } } = useJukiUser();
+  
+  useEffect(() => {
+    const diffHtml = Diff2Html.html(diffInput,
+      {
+        drawFileList: false,
+        matching: 'lines',
+        renderNothingWhenEmpty: false,
+        colorScheme: userTheme === Theme.DARK ? ColorSchemeType.DARK : ColorSchemeType.LIGHT,
+      },
+    );
+    
+    setDiff(diffHtml);
+  }, [ diffInput, userTheme ]);
+  
+  return (
+    <>
+      <Button icon={<VisibilityIcon />} className="" size="tiny" type="light" onClick={() => setIsOpen(true)}>
+        view diff
+      </Button>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} closeWhenKeyEscape closeWhenClickOutside>
+        <div className="jk-col stretch gap jk-pad-lg diff-body-modal">
+          <div>
+          </div>
+          <div dangerouslySetInnerHTML={{ __html: diff }} />
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+export const GroupInfo = (props: GroupInfoProps) => {
+  
+  const {
+    groupKey,
+    problemMode,
+    timeUsed,
+    memoryUsed,
+    verdict,
+    points,
+    testCases,
+    submitId,
+    isProblemEditor,
+  } = props;
   const { viewPortSize } = useJukiUI();
   const isSmall = viewPortSize === 'sm';
   const rowHeight = isSmall ? 54 + 8 + 8 : 24 + 8 + 8;
@@ -63,7 +101,10 @@ export const GroupInfo = ({
             {index + 1}
           </div>
         )}
-        <div className="jk-row"><Verdict verdict={testCase.verdict} submitId={submitId} /></div>
+        <div className="jk-row">
+          <Verdict verdict={testCase.verdict} submitId={submitId} />
+          {testCase.diff && <DiffViewButton diffInput={testCase.diff} />}
+        </div>
         {problemMode === ProblemMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
         <div className="jk-row center ws-np nowrap">
           <Time verdict={testCase.verdict} timeUsed={testCase.timeUsed} />
