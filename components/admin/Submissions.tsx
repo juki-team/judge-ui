@@ -17,10 +17,10 @@ import {
 
 export function AllSubmissions({ company }: { company: CompanyResponseDTO }) {
   
-  const { components: { Link } } = useJukiUI();
+  const { components: { Link, Image } } = useJukiUI();
   
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
-    submissionNickname(),
+    submissionNickname(Image),
     submissionProblemColumn(Link),
     submissionDateColumn(),
     submissionVerdictColumn(),
@@ -28,7 +28,7 @@ export function AllSubmissions({ company }: { company: CompanyResponseDTO }) {
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
-  ], [ Link ]);
+  ], [ Link, Image ]);
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>

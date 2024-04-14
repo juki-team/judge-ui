@@ -15,7 +15,7 @@ import {
 import { jukiSettings } from 'config';
 import { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, JUDGE, ROUTES } from 'config/constants';
 import { classNames } from 'helpers';
-import { useJukiRouter, useJukiUser, useSWR } from 'hooks';
+import { useJukiRouter, useJukiUI, useJukiUser, useSWR } from 'hooks';
 import { useEffect, useState } from 'react';
 import { ProfileTab, Status, UserProfileResponseDTO } from 'types';
 import { ImageProfileModal } from './ImageProfileModal';
@@ -37,6 +37,7 @@ export function EditProfileModal({ isOpen, user, onClose }: EditProfileModalProp
   const validLengthNickname = userState.nickname.length >= 3;
   const validCharNickname = ALPHANUMERIC_DASH_UNDERSCORE_REGEX.test(userState.nickname);
   const { pushRoute, routeParams } = useJukiRouter();
+  const { components: { Image } } = useJukiUI();
   
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -44,7 +45,13 @@ export function EditProfileModal({ isOpen, user, onClose }: EditProfileModalProp
         {modalImageProfile &&
           <ImageProfileModal onClose={() => setModalImageProfile(false)} nickname={user.nickname} />}
         <div className="jk-col top jk-pad-md">
-          <img src={user?.imageUrl} className="jk-user-profile-img huge elevation-1" alt={user?.nickname as string} />
+          <Image
+            src={user?.imageUrl}
+            className="jk-user-profile-img huge elevation-1"
+            alt={user?.nickname as string}
+            height={100}
+            width={100}
+          />
           <EditIcon onClick={() => setModalImageProfile(true)} />
         </div>
         <div className={classNames('jk-col top stretch left jk-pad-md gap')}>

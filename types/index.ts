@@ -133,6 +133,7 @@ export type {
   GetRecordStyleType,
   DeleteSearchParamsType,
   SetSearchParamsType,
+  LinkCmpProps,
 } from '@juki-team/base-ui';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

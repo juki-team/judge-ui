@@ -17,10 +17,10 @@ import {
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemResponseDTO }) => {
   
-  const { components: { Link } } = useJukiUI();
+  const { components: { Link, Image } } = useJukiUI();
   const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => {
     return [
-      submissionNickname(),
+      submissionNickname(Image),
       submissionContestColumn(Link),
       submissionDateColumn(),
       submissionVerdictColumn(),
@@ -29,7 +29,7 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemResponseDTO })
       submissionTimeUsed(),
       submissionMemoryUsed(),
     ];
-  }, [ problem.user.isEditor, Link ]);
+  }, [ problem.user.isEditor, Link, Image ]);
   
   return (
     <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>

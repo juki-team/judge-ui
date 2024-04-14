@@ -1,6 +1,5 @@
 'use client'
 
-import { LinkCmpProps } from '@juki-team/base-ui';
 import {
   DateField,
   Field,
@@ -15,11 +14,19 @@ import {
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { FC, PropsWithChildren } from 'react';
-import { ContestTab, DataViewerHeadersType, Judge, ProblemTab, SubmissionResponseDTO } from 'types';
+import {
+  ContestTab,
+  DataViewerHeadersType,
+  ImageCmpProps,
+  Judge,
+  LinkCmpProps,
+  ProblemTab,
+  SubmissionResponseDTO,
+} from 'types';
 import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time } from './utils';
 
-export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionNickname = (Image: FC<ImageCmpProps>): DataViewerHeadersType<SubmissionResponseDTO> => ({
   head: 'user nickname',
   index: 'nickname',
   field: ({ record: { userNickname, userImageUrl }, isCard }) => (
@@ -27,7 +34,7 @@ export const submissionNickname = (): DataViewerHeadersType<SubmissionResponseDT
       className="gap"
       text={
         <>
-          <img src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} />
+          <Image src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} height={36} width={36} />
           <UserNicknameLink nickname={userNickname}>
             <div className="link">{userNickname}</div>
           </UserNicknameLink>
