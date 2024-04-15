@@ -1,5 +1,6 @@
 import { Button, Collapse, Modal, T, Tooltip, UpIcon, VirtualizedRowsFixed, VisibilityIcon } from 'components';
 import * as Diff2Html from 'diff2html';
+import { LineMatchingType } from 'diff2html/lib-esm/types';
 import { ColorSchemeType } from 'diff2html/lib/types';
 import { classNames } from 'helpers';
 import { useEffect, useJukiUI, useJukiUser, useState } from 'hooks';
@@ -29,14 +30,17 @@ const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
     const diffHtml = Diff2Html.html(diffInput,
       {
         drawFileList: false,
-        matching: 'lines',
+        matching: 'words' as LineMatchingType,
         renderNothingWhenEmpty: false,
         colorScheme: userTheme === Theme.DARK ? ColorSchemeType.DARK : ColorSchemeType.LIGHT,
+        outputFormat: 'side-by-side',
       },
     );
     
     setDiff(diffHtml);
   }, [ diffInput, userTheme ]);
+  
+  const left = diffInput.length - diffInput.indexOf('No newline at end of file') > 26;
   
   return (
     <>
@@ -48,6 +52,12 @@ const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
           <div>
           </div>
           <div dangerouslySetInnerHTML={{ __html: diff }} />
+          {diffInput.includes('No newline at end of file') && (
+            <div className="jk-row block center">
+              <div className="appearance-error">{left && <T>no newline at end of file</T>}</div>
+              <div className="appearance-error">{!left && <T>no newline at end of file</T>}</div>
+            </div>
+          )}
         </div>
       </Modal>
     </>
@@ -103,7 +113,9 @@ export const GroupInfo = (props: GroupInfoProps) => {
         )}
         <div className="jk-row">
           <Verdict verdict={testCase.verdict} submitId={submitId} />
-          {testCase.diff && <DiffViewButton diffInput={testCase.diff} />}
+          {testCase.diff && (
+            <DiffViewButton diffInput={testCase.diff.replaceAll(testCase.testCaseKey + '.judge.out', 'A').replaceAll(testCase.testCaseKey + '.out', 'B')} />
+          )}
         </div>
         {problemMode === ProblemMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
         <div className="jk-row center ws-np nowrap">
