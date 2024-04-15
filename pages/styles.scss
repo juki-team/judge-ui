@@ -144,3 +144,10 @@ li > * {
     position: relative;
   }
 }
+
+.newline-eof {
+  position: absolute;
+  right: calc(var(--pad-xt) + var(--size-small-icon) + 4px);
+  display: inline-block;
+  user-select: none;
+}
