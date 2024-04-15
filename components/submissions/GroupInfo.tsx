@@ -45,7 +45,7 @@ const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
   return (
     <>
       <Button icon={<VisibilityIcon />} className="" size="tiny" type="light" onClick={() => setIsOpen(true)}>
-        view diff
+        <T>view diff</T>
       </Button>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} closeWhenKeyEscape closeWhenClickOutside>
         <div className="jk-col stretch gap jk-pad-lg diff-body-modal">
