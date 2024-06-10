@@ -24,7 +24,7 @@ import {
   EditCreateProblemType,
   Judge,
   Language,
-  ProblemMode,
+  ProblemScoringMode,
   ProblemSettingsType,
   ProblemStatementType,
   ProblemStatus,
@@ -75,7 +75,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
     return (
       <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
         <div
-          className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom"
+          className="jk-row extend top gap nowrap stretch left jk-pg-rl jk-pg-tb"
           style={{ position: 'relative' }}
         >
           {contest && (
@@ -121,7 +121,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
   
   return (
     <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-      <div className="jk-row extend top gap nowrap stretch left pad-left-right pad-top-bottom">
+      <div className="jk-row extend top gap nowrap stretch left jk-pg-rl jk-pg-tb">
         <div
           className={classNames('jk-col top gap stretch flex-3', { editing })}
         >
@@ -261,7 +261,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
               </div>
               : <em><T className="tt-se fw-bd">no output description</T></em>}
           </div>
-          {settings.mode === ProblemMode.SUBTASK && (
+          {settings.mode === ProblemScoringMode.SUBTASK && (
             <div>
               <h3><T>subtasks description</T></h3>
               <div className="jk-col left stretch gap">

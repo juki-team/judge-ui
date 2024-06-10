@@ -5,13 +5,13 @@ import { ColorSchemeType } from 'diff2html/lib/types';
 import { classNames } from 'helpers';
 import { useEffect, useJukiUI, useJukiUser, useState } from 'hooks';
 import React, { useCallback } from 'react';
-import { ProblemMode, ProblemVerdict, ProfileSetting, TestCaseResultType, Theme, VirtualItem } from 'types';
+import { ProblemScoringMode, ProblemVerdict, ProfileSetting, TestCaseResultType, Theme, VirtualItem } from 'types';
 import { Memory, Time, Verdict } from './index';
 
 export interface GroupInfoProps {
   isProblemEditor: boolean,
   groupKey: number,
-  problemMode: ProblemMode,
+  problemMode: ProblemScoringMode,
   timeUsed: number,
   memoryUsed: number,
   verdict: ProblemVerdict,
@@ -117,7 +117,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
             <DiffViewButton diffInput={testCase.diff.replaceAll(testCase.testCaseKey + '.judge.out', 'A').replaceAll(testCase.testCaseKey + '.out', 'B')} />
           )}
         </div>
-        {problemMode === ProblemMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
+        {problemMode === ProblemScoringMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
         <div className="jk-row center ws-np nowrap">
           <Time verdict={testCase.verdict} timeUsed={testCase.timeUsed} />
         </div>
@@ -143,9 +143,9 @@ export const GroupInfo = (props: GroupInfoProps) => {
           <div className="jk-row left nowrap">
             {!!testCases.length && <><UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />&nbsp;</>}
             {+groupKey ? (
-                problemMode === ProblemMode.SUBTASK
+                problemMode === ProblemScoringMode.SUBTASK
                   ? <><T className="tt-se ws-np">subtask</T>&nbsp;{groupKey}</>
-                  : problemMode === ProblemMode.PARTIAL
+                  : problemMode === ProblemScoringMode.PARTIAL
                     ? <><T className="tt-se ws-np">group</T>&nbsp;{groupKey}</>
                     : <T className="tt-se">test cases</T>) :
               <T className="tt-se">sample cases</T>}
@@ -153,7 +153,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
           <div className="jk-row center gap nowrap" style={{ flex: 3 }}>
             <Verdict verdict={verdict} points={points} submitId={submitId} />
           </div>
-          {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && (
+          {(problemMode === ProblemScoringMode.SUBTASK || problemMode === ProblemScoringMode.PARTIAL) && (
             <div className="jk-row">{+points.toFixed(4)}</div>
           )}
           <div className="jk-row center gap">
@@ -170,7 +170,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
         <div className={classNames('jk-row extend block gap jk-table-inline-row fw-bd')}>
           <div className="jk-row" style={{ flex: 0.4 }}><T>#</T></div>
           <div className="jk-row center gap"><T className="tt-se">verdict</T></div>
-          {problemMode === ProblemMode.PARTIAL && <div className="jk-row center gap"><T className="tt-se">points</T>
+          {problemMode === ProblemScoringMode.PARTIAL && <div className="jk-row center gap"><T className="tt-se">points</T>
           </div>}
           <div className="jk-row center gap"><T className="tt-se">time</T></div>
           <div className="jk-row center gap"><T className="tt-se">memory</T></div>

@@ -74,7 +74,7 @@ const ProblemView = (): ReactNode => {
         <TwoContentSection>
           <div>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <div className="jk-row gap left pad-left-right">
+            <div className="jk-row gap left jk-pg-rl">
               <h2
                 style={{
                   whiteSpace: 'nowrap',
@@ -86,7 +86,7 @@ const ProblemView = (): ReactNode => {
                 {problemKey}
               </h2>
             </div>
-            <div className="pad-left-right">
+            <div className="jk-pg-rl">
               <TabsInline
                 tabs={{
                   [ProblemTab.STATEMENT]: {
@@ -156,7 +156,7 @@ const ProblemView = (): ReactNode => {
           [ProblemTab.EDITOR]: {
             key: ProblemTab.EDITOR,
             header: <T className="ws-np tt-ce">code editor</T>,
-            body: <div className="pad-top-bottom pad-left-right" key={'asdfa'}><ProblemCodeEditor problem={problem} /></div>,
+            body: <div className="jk-pg-tb jk-pg-rl" key={'asdfa'}><ProblemCodeEditor problem={problem} /></div>,
           },
         };
         
@@ -164,13 +164,13 @@ const ProblemView = (): ReactNode => {
           tabs[ProblemTab.MY_SUBMISSIONS] = {
             key: ProblemTab.MY_SUBMISSIONS,
             header: <T className="ws-np tt-ce">my submissions</T>,
-            body: <div className="pad-top-bottom pad-left-right"><ProblemMySubmissions problem={problem} /></div>,
+            body: <div className="jk-pg-tb jk-pg-rl"><ProblemMySubmissions problem={problem} /></div>,
           };
         }
         tabs[ProblemTab.SUBMISSIONS] = {
           key: ProblemTab.SUBMISSIONS,
           header: <T className="ws-np tt-ce">submissions</T>,
-          body: <div className="pad-top-bottom pad-left-right"><ProblemSubmissions problem={problem} /></div>,
+          body: <div className="jk-pg-tb jk-pg-rl"><ProblemSubmissions problem={problem} /></div>,
         };
         const breadcrumbs: ReactNode[] = [
           <HomeLink key="home" />,
@@ -282,7 +282,7 @@ const ProblemView = (): ReactNode => {
             <div>
               <CustomHead title={problem.name} />
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="jk-row gap left pad-left-right">
+              <div className="jk-row gap left jk-pg-rl">
                 <h2
                   style={{
                     whiteSpace: 'nowrap',
@@ -324,7 +324,7 @@ const ProblemView = (): ReactNode => {
                   </div>
                 </Popover>
               </div>
-              <div className="pad-left-right">
+              <div className="jk-pg-rl">
                 <TabsInline
                   tabs={tabs}
                   onChange={pushTab}

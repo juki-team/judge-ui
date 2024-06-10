@@ -83,10 +83,11 @@ function Problems() {
       sort: true,
       filter: { type: 'text' },
       cardPosition: 'top',
+      sticky: true,
     },
     {
-      // head:'problem name',
-      head: <TextHeadCell text={<T className="tt-se">problem name</T>} className="left" />,
+      head: 'problem name',
+      headClassName: 'left',
       index: 'name',
       field: ({ record: { key, judge, name, user }, isCard }) => (
         <Field className={classNames('jk-row fw-bd jk-pad-sm cr-py', { left: !isCard, center: isCard })}>
@@ -277,7 +278,7 @@ function Problems() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row space-between pad-left-right pad-top-bottom">
+        <div className="jk-row space-between jk-pg-rl jk-pg-tb">
           <div className="jk-row gap">
             <h2><T>problems</T></h2>
             {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge) && (
@@ -312,7 +313,7 @@ function Problems() {
         </div>
       </div>
       {judge && (
-        <div className="pad-top-bottom pad-left-right">
+        <div className="jk-pg-tb jk-pg-rl">
           <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
             getRecordStyle={() => ({ cursor: 'pointer' })}
             headers={columns}

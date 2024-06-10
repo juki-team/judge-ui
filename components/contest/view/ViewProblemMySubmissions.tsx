@@ -42,7 +42,7 @@ export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponse
   ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge, Link ]);
   
   return (
-    <div className="pad-left-right pad-top-bottom">
+    <div className="jk-pg-rl jk-pg-tb">
       <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
         rows={{ height: 80 }}
         cards={{ expanded: true }}

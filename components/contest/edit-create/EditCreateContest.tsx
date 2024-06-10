@@ -96,7 +96,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce">overview</T>,
       body: (
-        <div className="pad-top-bottom pad-left-right">
+        <div className="jk-pg-tb jk-pg-rl">
           <div className="bc-we">
             <MdMathEditor
               informationButton
@@ -114,7 +114,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       key: ContestTab.SETUP,
       header: <T className="tt-ce">settings</T>,
       body: (
-        <div className="pad-top-bottom pad-left-right">
+        <div className="jk-pg-tb jk-pg-rl">
           <EditSettings contest={contest} setContest={setContest} />
         </div>
       ),
@@ -123,7 +123,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,
       body: (
-        <div className="pad-top-bottom pad-left-right">
+        <div className="jk-pg-tb jk-pg-rl">
           <EditViewMembers contest={contest} setContest={setContest} editing={editing} />
         </div>
       ),
@@ -132,7 +132,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       key: ContestTab.PROBLEMS,
       header: <T className="tt-ce">problems</T>,
       body: (
-        <div className="pad-top-bottom pad-left-right">
+        <div className="jk-pg-tb jk-pg-rl">
           <EditProblems contest={contest} setContest={setContest} />
         </div>
       ),
@@ -201,7 +201,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
             size="auto"
           />
         </div>
-        <div className="pad-left-right" style={{ overflow: 'hidden' }}>
+        <div className="jk-pg-rl" style={{ overflow: 'hidden' }}>
           <TabsInline
             tabs={tabHeaders}
             selectedTabKey={contestTab}

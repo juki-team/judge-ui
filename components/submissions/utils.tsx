@@ -45,7 +45,7 @@ export const Verdict = (props: VerdictProps) => {
   
   const verdictLabel = (verdict: ProblemVerdict, shortLabel = _shortLabel) => PROBLEM_VERDICT[verdict]?.label
     ? (
-      (verdict === ProblemVerdict.PENDING && processedCases)
+      (verdict === ProblemVerdict.PENDING && processedCases && !!(processedCases.samples.total + processedCases.tests.total))
         ? <>
           <T className="tt-se ws-np">{PROBLEM_VERDICT[verdict]?.label}</T>
           &nbsp;{processedCases.samples.processed + processedCases.tests.processed}&nbsp;/&nbsp;{processedCases.samples.total + processedCases.tests.total}

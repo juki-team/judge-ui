@@ -141,11 +141,11 @@ function Ranking() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right pad-top-bottom">
+        <div className="jk-pg-rl jk-pg-tb">
           <h1><T>ranking</T></h1>
         </div>
       </div>
-      <div className="pad-left-right pad-top-bottom">
+      <div className="jk-pg-rl jk-pg-tb">
         <DataViewer<UserRankResponseDTO>
           headers={columns}
           data={data}

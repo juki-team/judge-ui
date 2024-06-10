@@ -167,6 +167,9 @@ export {
   VisibilityIcon,
   NewVersionAvailableModal,
   LinkLastPath,
+  ResetPasswordModal,
+  EditProfileModal,
+  HomeLink,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';
@@ -174,5 +177,4 @@ export * from './CustomHead';
 export * from './Image';
 export * from './PagedDataViewer';
 export * from './TextLangEdit';
-export * from './HomeLink';
 export * from './Information';

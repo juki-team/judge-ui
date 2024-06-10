@@ -81,7 +81,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       key: ProblemTab.SETUP,
       header: <T className="tt-ce ws-np">settings</T>,
       body: (
-        <div className="pad-top-bottom pad-left-right">
+        <div className="jk-pg-tb jk-pg-rl">
           <ProblemSettings problem={problem} setProblem={setProblem} />
         </div>
       ),
@@ -92,7 +92,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
           key: ProblemTab.TESTS,
           header: <T className="tt-se ws-np">test cases</T>,
           body: (
-            <div className="pad-top-bottom pad-left-right">
+            <div className="jk-pg-tb jk-pg-rl">
               <ProblemTestCases problem={problem} />
             </div>
           ),
@@ -103,7 +103,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       key: ProblemTab.EDITORIAL,
       header: <T className="tt-se ws-np">editorial</T>,
       body: (
-        <div className="pad-top-bottom pad-left-right">
+        <div className="jk-pg-tb jk-pg-rl">
           <ProblemEditorial
             editorial={problem.editorial}
             setEditorial={(editorial) => setProblem(prevState => (
@@ -171,7 +171,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
             size="auto"
           />
         </div>
-        <div className="pad-left-right" style={{ overflow: 'hidden' }}>
+        <div className="jk-pg-rl" style={{ overflow: 'hidden' }}>
           <TabsInline<ProblemTab>
             tabs={tabs}
             onChange={(tab) => setTab(tab)}

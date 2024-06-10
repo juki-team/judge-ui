@@ -8,7 +8,7 @@ export * from './routing';
 export {
   ErrorCode,
   Judge,
-  ProblemMode,
+  ProblemScoringMode,
   ProblemStatus,
   ProblemType,
   ProblemVerdict,
@@ -84,7 +84,6 @@ export type {
   ContestProblemType,
   EmailDataResponseDTO,
   CourseSummaryListResponseDTO,
-  CreateCourseDTO,
   CodeEditorTestCasesType,
   CodeEditorTestCaseType,
   CodeEditorSheetType,

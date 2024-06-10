@@ -13,7 +13,7 @@ export default function Home() {
     <TwoContentSection>
       <div className="jk-col extend stretch">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
+        <div className="jk-pg-rl jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
           <div className="jk-row">
             <h1 style={{ padding: 'var(--pad-md) 0' }}>
               <T>welcome to</T>&nbsp;<span className="fw-br cr-sy ws-np">{name}</span>&nbsp;
@@ -22,7 +22,7 @@ export default function Home() {
           <div className=""><JukiCourtImage /></div>
         </div>
       </div>
-      <div className="pad-left-right pad-top-bottom">
+      <div className="jk-pg-rl jk-pg-tb">
         <div className="jk-row nowrap center top extend gap">
           <div className="jk-pad-md"><JukiCompleteLaptopImage /></div>
           <div className="jk-col gap ta-cr">

@@ -42,7 +42,7 @@ function Contests() {
   const tabs: TabsType<ContestsTab> = {
     [ContestsTab.ALL]: {
       body: (
-        <div className="pad-left-right pad-top-bottom">
+        <div className="jk-pg-rl jk-pg-tb">
           <ContestsAllList />
         </div>
       ),
@@ -51,7 +51,7 @@ function Contests() {
     },
     [ContestsTab.ENDLESS]: {
       body: (
-        <div className="pad-left-right pad-top-bottom">
+        <div className="jk-pg-rl jk-pg-tb">
           <ContestsEndlessList />
         </div>
       ),
@@ -60,7 +60,7 @@ function Contests() {
     },
     [ContestsTab.LIVE]: {
       body: (
-        <div className="pad-left-right pad-top-bottom">
+        <div className="jk-pg-rl jk-pg-tb">
           <ContestsLiveList />
         </div>
       ),
@@ -69,7 +69,7 @@ function Contests() {
     },
     [ContestsTab.UPCOMING]: {
       body: (
-        <div className="pad-left-right pad-top-bottom">
+        <div className="jk-pg-rl jk-pg-tb">
           <ContestsUpcomingList />
         </div>
       ),
@@ -78,7 +78,7 @@ function Contests() {
     },
     [ContestsTab.PAST]: {
       body: (
-        <div className="pad-left-right pad-top-bottom">
+        <div className="jk-pg-rl jk-pg-tb">
           <ContestsPastList />
         </div>
       ),
@@ -102,10 +102,10 @@ function Contests() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right">
+        <div className="jk-pg-rl">
           <h2><T>contests</T></h2>
         </div>
-        <div className="pad-left-right">
+        <div className="jk-pg-rl">
           <TabsInline
             tabs={tabs}
             onChange={pushTab}

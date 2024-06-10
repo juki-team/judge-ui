@@ -2,7 +2,7 @@ import { ExclamationIcon, T, Tooltip } from 'components';
 import { PROBLEM_MODE, PROBLEM_STATUS, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { classNames } from 'helpers';
 import React, { Children } from 'react';
-import { ProblemMode, ProblemSettingsType, ProblemStatus } from 'types';
+import { ProblemScoringMode, ProblemSettingsType, ProblemStatus } from 'types';
 
 export interface ProblemInfoProps {
   settings: ProblemSettingsType,
@@ -96,7 +96,7 @@ export const ProblemModeInfo = ({ settings, expand }: { settings: ProblemSetting
     return (
       <div className="jk-row nowrap">
         <T className="fw-bd tt-ce">mode</T>:&nbsp;<T className="tt-ce">{PROBLEM_MODE[settings?.mode]?.label}</T>
-        {settings?.mode === ProblemMode.SUBTASK && (
+        {settings?.mode === ProblemScoringMode.SUBTASK && (
           <Tooltip
             content={<div className="">{subTasks}</div>}
             placement="bottom"
@@ -114,7 +114,7 @@ export const ProblemModeInfo = ({ settings, expand }: { settings: ProblemSetting
         <T className="fw-bd tt-ce">mode</T>:&nbsp;
         <T className="tt-ce">{PROBLEM_MODE[settings?.mode]?.label}</T>
       </div>
-      {settings?.mode === ProblemMode.SUBTASK && <div className="problem-sub-info">{subTasks}</div>}
+      {settings?.mode === ProblemScoringMode.SUBTASK && <div className="problem-sub-info">{subTasks}</div>}
     </div>
   );
 };

@@ -30,7 +30,7 @@ import {
   EditCreateProblemType,
   Judge,
   Language,
-  ProblemMode,
+  ProblemScoringMode,
   ProblemSettingsByProgrammingLanguageType,
   ProblemSettingsPointsByGroupsType,
   ProblemType,
@@ -155,16 +155,16 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
             extend
           />
         </div>
-        {(problem.settings.mode === ProblemMode.SUBTASK || problem.settings.mode === ProblemMode.PARTIAL) && (
+        {(problem.settings.mode === ProblemScoringMode.SUBTASK || problem.settings.mode === ProblemScoringMode.PARTIAL) && (
           <div className="jk-row left gap">
             <div className="fw-bd tt-se nowrap"><T className="ws-np">points by groups</T>:</div>
             <div>
               <div className="jk-row jk-table-inline-header block">
                 <div className="jk-row"><T className="tt-se">group</T></div>
-                {problem.settings.mode === ProblemMode.SUBTASK && (
+                {problem.settings.mode === ProblemScoringMode.SUBTASK && (
                   <div className="jk-row"><T className="tt-se">subtask points</T></div>
                 )}
-                {problem.settings.mode === ProblemMode.PARTIAL && (
+                {problem.settings.mode === ProblemScoringMode.PARTIAL && (
                   <div className="jk-row"><T className="tt-se">partial points</T></div>
                 )}
               </div>
@@ -186,7 +186,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                       />
                     )}
                   </div>
-                  {problem.settings.mode === ProblemMode.SUBTASK && (
+                  {problem.settings.mode === ProblemScoringMode.SUBTASK && (
                     <div className="jk-row">
                       <Input
                         disabled={group === 0}
@@ -206,7 +206,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                       />
                     </div>
                   )}
-                  {problem.settings.mode === ProblemMode.PARTIAL && (
+                  {problem.settings.mode === ProblemScoringMode.PARTIAL && (
                     <div className="jk-row">
                       <Input
                         disabled={group === 0}
@@ -230,12 +230,12 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
               ))}
               <div className="jk-row jk-table-inline-row block">
                 <div className="jk-row"><T className="tt-se">total</T></div>
-                {problem.settings.mode === ProblemMode.SUBTASK && (
+                {problem.settings.mode === ProblemScoringMode.SUBTASK && (
                   <div className="jk-row">
                     {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.points, 0)}
                   </div>
                 )}
-                {problem.settings.mode === ProblemMode.PARTIAL && (
+                {problem.settings.mode === ProblemScoringMode.PARTIAL && (
                   <div className="jk-row">
                     {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.partial, 0)}
                   </div>

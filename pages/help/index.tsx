@@ -14,14 +14,14 @@ export default function Home() {
     <TwoContentSection>
       <div className="jk-col extend stretch">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="pad-left-right jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
+        <div className="jk-pg-rl jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
           <h1 style={{ padding: 'var(--pad-md) 0' }}>
             <T>help</T>
           </h1>
         </div>
       </div>
       
-      <div className="pad-left-right pad-top-bottom">
+      <div className="jk-pg-rl jk-pg-tb">
         <div className="jk-pad-md bc-we">
           <h3><T>compilation of submissions</T></h3>
           {/*<div className="jk-row left nowrap">*/}

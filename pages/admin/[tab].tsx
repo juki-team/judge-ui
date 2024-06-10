@@ -54,7 +54,7 @@ function Admin() {
     canHandleUsers: false,
     canHandleServices: false,
     canHandleSettings: false,
-  }
+  };
   
   useEffect(() => {
     if (!companyKey && companies[0]) {
@@ -82,8 +82,8 @@ function Admin() {
       key: AdminTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,
       body: company
-        ? <div className="pad-left-right pad-top-bottom"><AllSubmissions company={company} /></div>
-        : <div className="pad-left-right pad-top-bottom">
+        ? <div className="jk-pg-rl jk-pg-tb"><AllSubmissions company={company} /></div>
+        : <div className="jk-pg-rl jk-pg-tb">
           <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
         </div>,
     };
@@ -92,14 +92,14 @@ function Admin() {
     tabs[AdminTab.EMAIL_SENDER] = {
       key: AdminTab.EMAIL_SENDER,
       header: <T className="tt-ce ws-np">email sender</T>,
-      body: <div className="pad-left-right pad-top-bottom pad-bottom"><MailManagement company={company} /></div>,
+      body: <div className="jk-pg-rl jk-pg-tb"><MailManagement company={company} /></div>,
     };
   }
   if (canHandleJudges) {
     tabs[AdminTab.JUDGES_MANAGEMENT] = {
       key: AdminTab.JUDGES_MANAGEMENT,
       header: <T className="tt-ce ws-np">judges</T>,
-      body: <div className="pad-left-right pad-bottom"><JudgesManagement company={company} /></div>,
+      body: <div className="jk-pg-rl jk-pg-b"><JudgesManagement company={company} /></div>,
     };
   }
   
@@ -121,7 +121,7 @@ function Admin() {
     <TwoContentSection>
       <div>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row-col extend pad-left-right">
+        <div className="jk-row-col extend jk-pg-rl">
           <h3 className="flex-1" style={{ padding: 'var(--pad-sm) 0' }}><T>administration</T></h3>
           {companies?.length > 1 && (
             <div style={{ width: 200 }}>
@@ -138,7 +138,7 @@ function Admin() {
             </div>
           )}
         </div>
-        <div className="pad-left-right">
+        <div className="jk-pg-rl">
           <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={selectedTabKey} />
         </div>
       </div>

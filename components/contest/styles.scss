@@ -40,12 +40,6 @@
   }
 }
 
-.jk-data-viewer-toolbar {
-  > div { // extra-buttons
-    margin-left: var(--pad-t);
-  }
-}
-
 .contest-overview {
   height: auto;
   @include utils.sm {

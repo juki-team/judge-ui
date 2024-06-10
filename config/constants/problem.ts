@@ -1,4 +1,4 @@
-import { EditCreateProblemType, ProblemMode, ProblemStatus, ProblemType } from 'types';
+import { EditCreateProblemType, ProblemScoringMode, ProblemStatus, ProblemType } from 'types';
 import { EmptyTextLanguages } from './commons';
 
 export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
@@ -10,7 +10,7 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
     settings: {
       timeLimit: 1000,
       memoryLimit: 256000,
-      mode: ProblemMode.TOTAL,
+      mode: ProblemScoringMode.TOTAL,
       type: ProblemType.STANDARD,
       withPE: true,
       pointsByGroups: {},

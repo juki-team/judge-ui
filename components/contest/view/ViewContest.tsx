@@ -76,7 +76,7 @@ export function ContestView() {
         <TwoContentSection>
           <div className="jk-col stretch extend nowrap">
             <Breadcrumbs breadcrumbs={breadcrumbsLoading} />
-            <div className="jk-col pn-re pad-left-right">
+            <div className="jk-col pn-re jk-pg-rl">
               <div className="jk-row nowrap gap extend">
                 <h2
                   style={{
@@ -90,7 +90,7 @@ export function ContestView() {
                 </h2>
               </div>
             </div>
-            <div className="pad-left-right">
+            <div className="jk-pg-rl">
               <TabsInline
                 tabs={{
                   [ContestTab.OVERVIEW]: {
@@ -202,7 +202,7 @@ export function ContestView() {
             key: ContestTab.SCOREBOARD,
             header: <T className="tt-ce ws-np">scoreboard</T>,
             body: (
-              <div className="pad-left-right pad-top-bottom">
+              <div className="jk-pg-rl jk-pg-tb">
                 <ViewScoreboard contest={contest} mutate={mutate} />
               </div>
             ),
@@ -214,7 +214,7 @@ export function ContestView() {
             key: ContestTab.DYNAMIC_SCOREBOARD,
             header: <T className="tt-ce ws-np">dynamic scoreboard</T>,
             body: (
-              <div className="pad-left-right pad-top-bottom">
+              <div className="jk-pg-rl jk-pg-tb">
                 <ViewDynamicScoreboard contest={contest} mutate={mutate} />
               </div>
             ),
@@ -256,7 +256,7 @@ export function ContestView() {
             key: ContestTab.MEMBERS,
             header: <T className="tt-ce">members</T>,
             body: (
-              <div className="pad-top-bottom pad-left-right">
+              <div className="jk-pg-tb jk-pg-rl">
                 <EditViewMembers
                   contest={contest as unknown as EditCreateContestType}
                   membersToView={contest.members}
@@ -356,7 +356,7 @@ export function ContestView() {
             <div>
               <CustomHead title={contest.name} />
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="jk-col pn-re pad-left-right">
+              <div className="jk-col pn-re jk-pg-rl">
                 <div className="jk-row nowrap gap extend">
                   <h2
                     style={{
@@ -379,7 +379,7 @@ export function ContestView() {
                 </div>
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>
               </div>
-              <div className="pad-left-right">
+              <div className="jk-pg-rl">
                 <TabsInline
                   tabs={tabHeaders}
                   selectedTabKey={contestTab}

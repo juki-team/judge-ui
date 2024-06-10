@@ -1,6 +1,6 @@
 import { PROBLEM_MODE, PROBLEM_TYPE, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { TFunction } from 'i18next';
-import { Language, ProblemMode, ProblemSettingsType, ProblemStatementType } from 'types';
+import { Language, ProblemScoringMode, ProblemSettingsType, ProblemStatementType } from 'types';
 
 export const getStatementData = (t: TFunction,
                   { statement, settings }: {
@@ -56,7 +56,7 @@ ${statementOutput}
 
 # ${t('subtasks description')}
 
-${settings.mode === ProblemMode.SUBTASK
+${settings.mode === ProblemScoringMode.SUBTASK
     ? Object.values(settings.pointsByGroups).map((pointsByGroup, index) => (
       `### ${t('group')} ${pointsByGroup.group} (${pointsByGroup.points} ${t('points')})
 

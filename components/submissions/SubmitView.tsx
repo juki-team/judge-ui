@@ -14,7 +14,7 @@ import {
   UpIcon,
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
-import { ContentResponseType, ProblemMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
+import { ContentResponseType, ProblemScoringMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
 
 const SubmitViewLayout = ({ submit }: { submit: SubmitResponseDTO }) => {
   
@@ -43,7 +43,7 @@ const SubmitViewLayout = ({ submit }: { submit: SubmitResponseDTO }) => {
     testCaseResults || []
   ).forEach((testCase) => {
     const group = testCase.group ? (
-      problemMode === ProblemMode.SUBTASK ? testCase.group : 1
+      problemMode === ProblemScoringMode.SUBTASK ? testCase.group : 1
     ) : 0;
     if (testCasesByGroup[group]) {
       testCasesByGroup[group].push(testCase);
@@ -116,18 +116,18 @@ const SubmitViewLayout = ({ submit }: { submit: SubmitResponseDTO }) => {
         <div>
           <h3>
             <T>
-              {problemMode === ProblemMode.SUBTASK
+              {problemMode === ProblemScoringMode.SUBTASK
                 ? 'information by subtasks'
-                : problemMode === ProblemMode.PARTIAL
+                : problemMode === ProblemScoringMode.PARTIAL
                   ? 'information by groups'
                   : 'sample and test case information'}
             </T>
           </h3>
           <div className="jk-col gap">
             <div className="jk-row extend block gap jk-table-inline-header">
-              <div className="jk-row"><T>{problemMode === ProblemMode.SUBTASK ? 'groups' : ''}</T></div>
+              <div className="jk-row"><T>{problemMode === ProblemScoringMode.SUBTASK ? 'groups' : ''}</T></div>
               <div className="jk-row" style={{ flex: 3 }}><T>verdict</T></div>
-              {(problemMode === ProblemMode.SUBTASK || problemMode === ProblemMode.PARTIAL) && (
+              {(problemMode === ProblemScoringMode.SUBTASK || problemMode === ProblemScoringMode.PARTIAL) && (
                 <div className="jk-row"><T>points</T></div>
               )}
               <div className="jk-row"><T>time</T></div>
@@ -164,7 +164,7 @@ const SubmitViewLayout = ({ submit }: { submit: SubmitResponseDTO }) => {
                   memoryUsed={0}
                   verdict={ProblemVerdict.PENDING}
                   timeUsed={0}
-                  points={problemMode === ProblemMode.PARTIAL
+                  points={problemMode === ProblemScoringMode.PARTIAL
                     ? +result.reduce((sum, testCase) => sum + testCase.points, 0).toFixed(3)
                     : 0}
                   testCases={result}

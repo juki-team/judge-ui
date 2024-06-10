@@ -47,7 +47,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   
   return (
     <div
-      className={classNames('contest-overview gap nowrap left stretch pad-left-right pad-top-bottom', {
+      className={classNames('contest-overview gap nowrap left stretch jk-pg-rl jk-pg-tb', {
         'jk-row': viewPortSize !== 'sm',
         'jk-col': viewPortSize === 'sm',
       })}

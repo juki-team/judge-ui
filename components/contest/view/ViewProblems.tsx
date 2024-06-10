@@ -186,7 +186,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const data = Object.values(problems);
   
   return (
-    <div className="pad-left-right pad-top-bottom">
+    <div className="jk-pg-rl jk-pg-tb">
       <DataViewer<ContestProblemType>
         headers={columns}
         data={data}

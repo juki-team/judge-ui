@@ -8,7 +8,7 @@ import {
   LockIcon,
   MyActiveSessions,
   ProfileSubmissions,
-  ResetPassword,
+  ResetPasswordModal,
   T,
   TabsInline,
   TwoContentSection,
@@ -42,7 +42,7 @@ export default function ProfileView() {
             key: ProfileTab.PROFILE,
             header: <T className="tt-ce ws-np">profile</T>,
             body: (
-              <div className="pad-top-bottom pad-left-right">
+              <div className="jk-pg-tb jk-pg-rl">
                 <UserProfile user={data?.content} />
               </div>
             ),
@@ -53,7 +53,7 @@ export default function ProfileView() {
             key: ProfileTab.SETTINGS,
             header: <T className="tt-ce ws-np">settings</T>,
             body: (
-              <div className="pad-top-bottom pad-left-right">
+              <div className="jk-pg-tb jk-pg-rl">
                 <UserProfileSettings
                   user={data?.content}
                   onClickUpdatePassword={() => setOpenModal('UPDATE_PASSWORD')}
@@ -65,7 +65,7 @@ export default function ProfileView() {
             key: ProfileTab.MY_SESSIONS,
             header: <T className="tt-ce ws-np">my sessions</T>,
             body: (
-              <div className="pad-top-bottom pad-left-right">
+              <div className="jk-pg-tb jk-pg-rl">
                 <MyActiveSessions />
               </div>
             ),
@@ -77,7 +77,7 @@ export default function ProfileView() {
             ? <T className="tt-ce ws-np">my submissions</T>
             : <T className="tt-ce ws-np">submissions</T>,
           body: (
-            <div className="pad-top-bottom pad-left-right">
+            <div className="jk-pg-tb jk-pg-rl">
               <ProfileSubmissions />
             </div>
           ),
@@ -129,15 +129,18 @@ export default function ProfileView() {
           <TwoContentSection>
             <div>
               <ChangePasswordModal isOpen={openModal === 'UPDATE_PASSWORD'} onClose={onClose} />
-              {openModal === 'RESET_PASSWORD' && (
-                <ResetPassword onClose={onClose} nickname={data.content?.nickname} companyKey={company.key} />
-              )}
+              <ResetPasswordModal
+                isOpen={openModal === 'RESET_PASSWORD'}
+                onClose={onClose}
+                nickname={data.content?.nickname}
+                companyKey={company.key}
+              />
               <EditProfileModal isOpen={openModal === 'DATA'} onClose={onClose} user={data.content} />
               <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="pad-left-right">
+              <div className="jk-pg-rl">
                 <h1>{nickname}</h1>
               </div>
-              <div className="pad-left-right">
+              <div className="jk-pg-rl">
                 <TabsInline
                   tabs={tabHeaders}
                   selectedTabKey={tab as ProfileTab}

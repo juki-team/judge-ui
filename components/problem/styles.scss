@@ -226,6 +226,9 @@
 }
 
 .JV_UMSA-statement {
+ .text-center > .flex.justify-center.gap-4, .text-center > .text-xl.font-bold.tracking-tight.text-black.mb-1 {
+    display: none;
+  }
   &.only-info {
     > center {
       > h2 {
