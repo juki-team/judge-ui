@@ -158,7 +158,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 <div className="bc-we jk-br-ie">
                   <Collapse
                     header={({ toggle, isOpen }) => (
-                      <div className="jk-pad-sm" style={{ paddingBottom: isOpen ? 0 : 4 }}>
+                      <div className="jk-pg-sm" style={{ paddingBottom: isOpen ? 0 : 4 }}>
                         <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
                           <ProblemTimeLimitInfo settings={settings} />
                           <ProblemMemoryLimitInfo settings={settings} />
@@ -173,7 +173,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                       </div>
                     )}
                   >
-                    <div className="jk-col gap jk-pad-sm">
+                    <div className="jk-col gap jk-pg-sm">
                       <ExtraProblemInfo author={author} status={status} tags={tags} settings={settings} />
                     </div>
                   </Collapse>
@@ -210,7 +210,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : (
-              <div className="bc-we jk-pad-md jk-br-ie">
+              <div className="bc-we jk-pg-md jk-br-ie">
                 <MdMathViewer source={statementDescription} />
               </div>
             )}
@@ -233,7 +233,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : statementInput
-              ? <div className="bc-we jk-pad-md jk-border-radius-inline">
+              ? <div className="bc-we jk-pg-md jk-border-radius-inline">
                 <MdMathViewer source={statementInput} />
               </div>
               : <em><T className="tt-se fw-bd">no input description</T></em>}
@@ -256,7 +256,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : statementOutput
-              ? <div className="bc-we jk-pad-md jk-border-radius-inline">
+              ? <div className="bc-we jk-pg-md jk-border-radius-inline">
                 <MdMathViewer source={statementOutput} />
               </div>
               : <em><T className="tt-se fw-bd">no output description</T></em>}
@@ -303,7 +303,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                         </div>
                       </>
                     ) : (
-                      <div className="flex-1 bc-we jk-pad-sm jk-border-radius-inline">
+                      <div className="flex-1 bc-we jk-pg-sm jk-border-radius-inline">
                         <div className="tx-h fw-bd cr-pd">
                           <T className="tt-se">subtask</T> {pointsByGroup.group}
                           &nbsp;(&nbsp;{pointsByGroup.points}&nbsp;
@@ -377,7 +377,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
             ) : !!statementNote
               ? <>
                 <h3><T>note</T></h3>
-                <div className="br-g6 bc-we jk-pad-md jk-border-radius-inline">
+                <div className="br-g6 bc-we jk-pg-md jk-border-radius-inline">
                   <MdMathViewer source={statementNote} />
                 </div>
               </>
@@ -386,7 +386,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
         </div>
         {!contest && !editing && (
           <div className="screen lg hg flex-1">
-            <div className="jk-border-radius-inline jk-pad-md bc-we jk-col gap stretch">
+            <div className="jk-border-radius-inline jk-pg-md bc-we jk-col gap stretch">
               <ProblemTimeLimitInfo settings={settings} expand />
               <ProblemMemoryLimitInfo settings={settings} expand />
               <ProblemTypeInfo settings={settings} />

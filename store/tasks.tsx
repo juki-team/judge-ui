@@ -163,7 +163,7 @@ export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
             </div>,
           );
         } else {
-          addErrorNotification(<div className="jk-pad-md">{verdict}</div>);
+          addErrorNotification(<div className="jk-pg-md">{verdict}</div>);
         }
       } else {
         setTimeout(() => listenSubmission(listenSubmissionId, problemJudge, problemKey), 10000);

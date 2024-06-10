@@ -6,7 +6,6 @@ import {
   ContestsPastList,
   ContestsUpcomingList,
   CreateContestButton,
-  HomeLink,
   T,
   TabsInline,
   TwoContentSection,
@@ -88,7 +87,6 @@ function Contests() {
   };
   
   const breadcrumbs = [
-    <HomeLink key="home" />,
     <T className="tt-se" key="contests">contests</T>,
   ];
   

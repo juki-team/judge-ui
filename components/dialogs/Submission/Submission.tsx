@@ -28,7 +28,7 @@ export const SubmissionModal = ({ submitId }: SubmissionModalProps) => {
   
   return (
     <Modal isOpen={true} onClose={handleClose} closeIcon closeWhenClickOutside>
-      <section className="jk-pad-md">
+      <section className="jk-pg-md">
         <div className="fw-bd tx-l jk-row-col left gap">
           <h3><T>submission</T></h3>
           <div className="jk-row gap">

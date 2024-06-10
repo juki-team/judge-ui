@@ -47,7 +47,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
   return (
     <div className="jk-col left top stretch gap nowrap">
-      <div className="jk-col left top stretch gap bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col left top stretch gap bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row center gap nowrap">
           <T className="fw-bd tt-se tx-xl cr-py">template</T>:&nbsp;
           <Select
@@ -126,7 +126,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
           </div>
         </div>
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         {!competition && (
           <div className="jk-row left gap nowrap">
             <div className="fw-bd tt-se tx-xl cr-py"><T>start date</T>:</div>
@@ -378,7 +378,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
           </div>
         )}
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left gap nowrap">
           <div className="jk-row nowrap fw-bd tx-xl cr-py"><T className="tt-se">languages</T>
             {!Object.keys(contest.settings.languages).length && (

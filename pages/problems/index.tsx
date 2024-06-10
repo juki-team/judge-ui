@@ -6,7 +6,6 @@ import {
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
   Field,
-  HomeLink,
   InfoIcon,
   PagedDataViewer,
   PlusIcon,
@@ -14,7 +13,6 @@ import {
   Select,
   T,
   TextField,
-  TextHeadCell,
   Tooltip,
   TwoContentSection,
   UserNicknameLink,
@@ -90,7 +88,7 @@ function Problems() {
       headClassName: 'left',
       index: 'name',
       field: ({ record: { key, judge, name, user }, isCard }) => (
-        <Field className={classNames('jk-row fw-bd jk-pad-sm cr-py', { left: !isCard, center: isCard })}>
+        <Field className={classNames('jk-row fw-bd jk-pg-sm cr-py', { left: !isCard, center: isCard })}>
           <div className="jk-row gap nowrap">
             <div className="jk-row">{name}</div>
             {user.solved ? (
@@ -224,7 +222,6 @@ function Problems() {
   ], [ canCreateProblem, tags, judge ]);
   
   const breadcrumbs = [
-    <HomeLink key="home" />,
     <T className="tt-se" key="problems">problems</T>,
   ];
   

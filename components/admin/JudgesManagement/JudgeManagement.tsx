@@ -24,7 +24,7 @@ export const JudgeManagementBody = ({ company, judge, mutate, withError }: Judge
   
   return (
     <div className="jk-col nowrap top gap stretch">
-      <div className="jk-col gap nowrap bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap nowrap bc-we jk-br-ie jk-pg-sm">
         {withError && (
           <div className="jk-tag error">
             <T className="tt-se">{'not initialized, to initialize click on the "crawl languages" button'}</T>

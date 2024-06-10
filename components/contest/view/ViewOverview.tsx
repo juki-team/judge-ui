@@ -56,26 +56,26 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
       <div className="flex-5">
         <MdMathViewer
           source={contest?.description}
-          className="jk-pad-md bc-we br-g6 jk-border-radius-inline"
+          className="jk-pg-md bc-we br-g6 jk-border-radius-inline"
         />
       </div>
       <div className="jk-col stretch gap flex-3 contest-overview-information">
         <div className="content-side-right-bar-top">
           {isAdmin
-            ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pad-sm">
+            ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pg-sm">
               <T className="tt-se ta-cr">you are admin</T> <AdminInformation filledCircle />
             </div>
             : isJudge
-              ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pad-sm">
+              ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pg-sm">
                 <T className="tt-se ta-cr">you are judge</T> <JudgeInformation filledCircle />
               </div>
               : (isContestant
-                ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-br cr-py jk-pad-sm">
+                ? <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-br cr-py jk-pg-sm">
                   <T className="tt-se ta-cr">you are contestant</T> <ContestantInformation filledCircle />
                 </div>
                 : (isGuest && new Date().getTime() <= contest.settings.endTimestamp)
                   ? (
-                    <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+                    <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline jk-pg-sm">
                       <div className="jk-row center">
                         <div className="jk-row left fw-bd cr-py">
                           <T className="tt-se ta-cr ">you are guest</T>&nbsp;
@@ -98,19 +98,19 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
                       </ButtonLoader>
                     </div>
                   ) : isSpectator && (
-                  <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pad-sm">
+                  <div className="jk-row center gap bc-we br-g6 jk-border-radius-inline fw-bd cr-py jk-pg-sm">
                     <T className="tt-se ta-cr">you are spectator</T> <SpectatorInformation filledCircle />
                   </div>
                 ))
           }
         </div>
         <div className="flex-1 contest-content-side-right-bar-bottom jk-col top stretch gap">
-          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pg-sm">
             <T className="tt-se fw-bd ta-cr">start date</T>
             <div className="ta-cr">{dtf(contest.settings.startTimestamp)}</div>
           </div>
           {contest.settings.endTimestamp !== contest.settings.frozenTimestamp && (
-            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pg-sm">
               <div className="jk-row gap nowrap">
                 <T className="tt-se fw-bd ta-cr">frozen date</T>
                 <FrozenInformation />
@@ -124,7 +124,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
             </div>
           )}
           {contest.settings.endTimestamp !== contest.settings.quietTimestamp && (
-            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pg-sm">
               <div className="jk-row gap nowrap">
                 <T className="tt-se fw-bd ta-cr">quiet date</T>
                 <QuietInformation />
@@ -137,24 +137,24 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
             </div>
           )}
           {(contest.settings.endTimestamp - contest.settings.startTimestamp) !== contest.settings.timeToSolve && (
-            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pg-sm">
               <T className="tt-se fw-bd ta-cr">time for solve</T>
               <div>{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</div>
             </div>
           )}
           {!!contest.settings.penalty && (
-            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+            <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pg-sm">
               <T className="tt-se fw-bd ta-cr">penalty by incorrect answer</T>
               <div>{contest.settings.penalty} min</div>
             </div>
           )}
-          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pg-sm">
             <T className="tt-se fw-bd ta-cr">clarifications</T>
             <div>
               <T className="tt-se">{contest.settings.clarifications ? 'clarifications available' : 'clarifications not available'}</T>
             </div>
           </div>
-          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pad-sm">
+          <div className="jk-col bc-we br-g6 jk-border-radius-inline jk-pg-sm">
             <T className="tt-se fw-bd ta-cr">languages</T>
             <div className="jk-row gap">
               {contest.settings.languages.map(language => (

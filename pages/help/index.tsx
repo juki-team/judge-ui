@@ -1,19 +1,15 @@
-import { Breadcrumbs, HomeLink, T, TwoContentSection } from 'components';
+import { Breadcrumbs, T, TwoContentSection } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { useJukiUser } from 'hooks';
 
 export default function Home() {
-  
-  const breadcrumbs = [
-    <HomeLink key="home" />,
-  ];
   
   const { company: { name } } = useJukiUser();
   
   return (
     <TwoContentSection>
       <div className="jk-col extend stretch">
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <Breadcrumbs breadcrumbs={[]} />
         <div className="jk-pg-rl jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
           <h1 style={{ padding: 'var(--pad-md) 0' }}>
             <T>help</T>
@@ -22,7 +18,7 @@ export default function Home() {
       </div>
       
       <div className="jk-pg-rl jk-pg-tb">
-        <div className="jk-pad-md bc-we">
+        <div className="jk-pg-md bc-we">
           <h3><T>compilation of submissions</T></h3>
           {/*<div className="jk-row left nowrap">*/}
           <T className="tt-se">
@@ -52,7 +48,7 @@ export default function Home() {
                         )}
                       </div>
                       {PROGRAMMING_LANGUAGE[value].compilePattern && (
-                        <pre className="ws-bs bc-w2 jk-pad-sm">
+                        <pre className="ws-bs bc-w2 jk-pg-sm">
                           {PROGRAMMING_LANGUAGE[value].compilePattern
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
@@ -61,7 +57,7 @@ export default function Home() {
                       )}
                       <div><T className="tt-se">run command</T>:</div>
                       {PROGRAMMING_LANGUAGE[value].runPattern && (
-                        <pre className="ws-bs bc-w2 jk-pad-sm">
+                        <pre className="ws-bs bc-w2 jk-pg-sm">
                           {PROGRAMMING_LANGUAGE[value].runPattern
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
@@ -76,7 +72,7 @@ export default function Home() {
                       {PROGRAMMING_LANGUAGE[value].executableVersion && (
                         <>
                           <div><T className="tt-se">executable version</T>:</div>
-                          <pre className="ws-bs bc-w2 jk-pad-sm">
+                          <pre className="ws-bs bc-w2 jk-pg-sm">
                           {PROGRAMMING_LANGUAGE[value].executableVersion
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')

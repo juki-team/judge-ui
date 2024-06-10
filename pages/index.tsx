@@ -1,18 +1,14 @@
-import { Breadcrumbs, HomeLink, JukiCompleteLaptopImage, JukiCourtImage, T, TwoContentSection } from 'components';
+import { Breadcrumbs, JukiCompleteLaptopImage, JukiCourtImage, T, TwoContentSection } from 'components';
 import { useJukiUser } from 'hooks';
 
 export default function Home() {
-  
-  const breadcrumbs = [
-    <HomeLink key="home" />,
-  ];
   
   const { company: { name } } = useJukiUser();
   
   return (
     <TwoContentSection>
       <div className="jk-col extend stretch">
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <Breadcrumbs breadcrumbs={[]} />
         <div className="jk-pg-rl jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
           <div className="jk-row">
             <h1 style={{ padding: 'var(--pad-md) 0' }}>
@@ -24,7 +20,7 @@ export default function Home() {
       </div>
       <div className="jk-pg-rl jk-pg-tb">
         <div className="jk-row nowrap center top extend gap">
-          <div className="jk-pad-md"><JukiCompleteLaptopImage /></div>
+          <div className="jk-pg-md"><JukiCompleteLaptopImage /></div>
           <div className="jk-col gap ta-cr">
             <h3><T>competitive programmers home</T></h3>
             <p>{name} judge <T>is designed to make people improve their programming skills</T></p>

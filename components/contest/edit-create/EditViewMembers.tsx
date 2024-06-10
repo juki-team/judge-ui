@@ -51,7 +51,7 @@ export const EditViewMembers = ({ setContest, contest, editing, membersToView }:
   
   return (
     <div className="jk-col gap left top stretch gap nowrap">
-      <div className="jk-col gap stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left fw-bd tx-l cr-py">
           <T className="tt-se">spectators</T>&nbsp;<SpectatorInformation filledCircle />
         </div>
@@ -90,7 +90,7 @@ export const EditViewMembers = ({ setContest, contest, editing, membersToView }:
             )}
         </div>
       </div>
-      <div className="jk-col gap stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left fw-bd tx-l cr-py">
           <T className="tt-se">guests</T>&nbsp;<GuestInformation filledCircle />
         </div>
@@ -130,7 +130,7 @@ export const EditViewMembers = ({ setContest, contest, editing, membersToView }:
         </div>
       </div>
       {(editing || !isEditing) && (
-        <div className="jk-col gap stretch bc-we jk-br-ie jk-pad-sm">
+        <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
           <div className="jk-row left fw-bd tx-l cr-py">
             <T className="tt-se">contestants</T>&nbsp;<ContestantInformation filledCircle />
           </div>
@@ -151,7 +151,7 @@ export const EditViewMembers = ({ setContest, contest, editing, membersToView }:
           </div>
         </div>
       )}
-      <div className="jk-col gap stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left cr-py fw-bd tx-xl">
           <T className="tt-se">judges</T>&nbsp;<JudgeInformation filledCircle />
         </div>
@@ -169,7 +169,7 @@ export const EditViewMembers = ({ setContest, contest, editing, membersToView }:
           />
         ) : <PrintUsers members={membersToView?.judges} />}
       </div>
-      <div className="jk-col gap stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left cr-py fw-bd tx-l">
           <T className="tt-se">administrators</T>&nbsp;<AdminInformation filledCircle />
         </div>

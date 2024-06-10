@@ -7,7 +7,6 @@ import {
   EditIcon,
   ExclamationIcon,
   FetcherLayer,
-  HomeLink,
   LinkLastPath,
   LoadingIcon,
   Popover,
@@ -52,7 +51,6 @@ const ProblemView = (): ReactNode => {
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const breadcrumbs = [
-    <HomeLink key="home" />,
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     <Link
       href={{
@@ -173,7 +171,6 @@ const ProblemView = (): ReactNode => {
           body: <div className="jk-pg-tb jk-pg-rl"><ProblemSubmissions problem={problem} /></div>,
         };
         const breadcrumbs: ReactNode[] = [
-          <HomeLink key="home" />,
           <LinkLastPath
             lastPathKey={LastPathKey.PROBLEMS}
             key="problems"
@@ -299,7 +296,7 @@ const ProblemView = (): ReactNode => {
                 <Popover
                   content={problem.judge === Judge.JUKI_JUDGE
                     ? (
-                      <div className="jk-pad-sm">
+                      <div className="jk-pg-sm">
                         <ProblemInfo
                           author={problem.author}
                           status={problem.status}

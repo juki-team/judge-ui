@@ -26,7 +26,7 @@ export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps)
   return (
     <>
       <Modal onClose={() => setOpen(false)} isOpen={open} closeIcon>
-        <div className="jk-col gap stretch jk-pad-lg">
+        <div className="jk-col gap stretch jk-pg-lg">
           <h2><T>modify contact emails</T></h2>
           <div className="jk-col stretch">
             <div className="jk-row block jk-table-inline-header">

@@ -192,7 +192,7 @@ export const SubmitView = ({ submitId, triggerFetch }: { submitId: string, trigg
     url={JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId)}
     errorView={() => {
       return (
-        <div className="jk-col extend jk-pad-md">
+        <div className="jk-col extend jk-pg-md">
           <div className="jk-col gap center">
             <div className="image-404"><JukiSurprisedImage /></div>
             <h3><T className="tt-ue">submission not found</T></h3>

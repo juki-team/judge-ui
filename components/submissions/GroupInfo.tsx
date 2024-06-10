@@ -48,7 +48,7 @@ const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
         <T>view diff</T>
       </Button>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} closeWhenKeyEscape closeWhenClickOutside>
-        <div className="jk-col stretch gap jk-pad-lg diff-body-modal">
+        <div className="jk-col stretch gap jk-pg-lg diff-body-modal">
           <div>
           </div>
           <div dangerouslySetInnerHTML={{ __html: diff }} />
@@ -136,7 +136,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
       header={({ isOpen, toggle }) => (
         <div
           className={classNames(
-            'jk-row extend block gap jk-table-inline-row jk-pad-md group-info',
+            'jk-row extend block gap jk-table-inline-row jk-pg-md group-info',
             { 'fw-br': isOpen },
           )}
         >

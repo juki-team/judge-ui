@@ -4,7 +4,6 @@ import {
   CheckUnsavedChanges,
   CloseIcon,
   CodeEditor,
-  HomeLink,
   Input,
   LinkLastPath,
   MdMathEditor,
@@ -169,7 +168,6 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   ];
   
   const breadcrumbs: ReactNode[] = [
-    <HomeLink key="home" />,
     <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,
     editing
       ? (

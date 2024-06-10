@@ -1279,10 +1279,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.335":
-  version "0.1.335"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.335/a27d4ba1250e2314e830616836b7a4de5297f1d5#a27d4ba1250e2314e830616836b7a4de5297f1d5"
-  integrity sha512-w3VmcD82oulFblNmwFCFU6JpZu+jLLKolZQsA5zRMVu6jAxdEJQ/RAksVmF7iIePY10gaNIpQ9xv8FWqFQqBgw==
+"@juki-team/base-ui@^0.1.339":
+  version "0.1.339"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.339/c6eb8cf3b445380fde9af092ac0ccd386cfc9c53#c6eb8cf3b445380fde9af092ac0ccd386cfc9c53"
+  integrity sha512-TdL225yWSeLotB2X+WjyqjwffKU71qArtqXHdC6w03CTmFvFK1BUvV+mMlcFSpZutNMkMcoijvSZzbQkZa9ugg==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-html" "^6.4.6"
@@ -1325,10 +1325,10 @@
     uuid "^9.0.0"
     yup "^1.3.2"
 
-"@juki-team/commons@^0.0.475":
-  version "0.0.475"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.475/acc3cb7ea4c9341cad784bef485bbcfc48197f98#acc3cb7ea4c9341cad784bef485bbcfc48197f98"
-  integrity sha512-lSyBY8uzMdv86nDkWpSRCsQzCC/p7PaBUak3aM/MDWaVTf9UE4adt6dIhEscpzom99ww9ZMys3a5bDBeYLMaBg==
+"@juki-team/commons@^0.0.478":
+  version "0.0.478"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.478/451c88b1291155deafb9350a417adcfe73780425#451c88b1291155deafb9350a417adcfe73780425"
+  integrity sha512-LfjgaWSoL76CJnl95g50n2MW/GMWrt80s610lmVbT224ezxdrPI+MJa8Vv+4HpKajYwG0OQEQqD2KfDDNJssWQ==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0":
   version "1.1.2"

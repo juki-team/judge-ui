@@ -3,7 +3,6 @@ import {
   ButtonLoader,
   CheckUnsavedChanges,
   CloseIcon,
-  HomeLink,
   LinkLastPath,
   ProblemStatement,
   SaveIcon,
@@ -147,7 +146,6 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
   const [ tab, setTab ] = useState<ProblemTab>(ProblemTab.STATEMENT);
   
   const breadcrumbs: ReactNode[] = [
-    <HomeLink key="home" />,
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     editing
       ? (

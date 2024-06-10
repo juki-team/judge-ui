@@ -13,7 +13,7 @@ export const CrawlJvumsaProblemModal = ({ onClose, isOpen }: BasicModalProps) =>
   
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
-      <div className="jk-col gap jk-pad-md">
+      <div className="jk-col gap jk-pg-md">
         <label className="jk-row nowrap">
           <T className="tt-se ws-np fw-bd">index</T>:&nbsp;
           <Input

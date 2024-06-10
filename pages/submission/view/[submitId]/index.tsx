@@ -1,4 +1,4 @@
-import { Breadcrumbs, HomeLink, SubmitView, T, TwoContentSection } from 'components';
+import { Breadcrumbs, SubmitView, T, TwoContentSection } from 'components';
 import { useJukiRouter } from 'hooks';
 
 function Submit() {
@@ -6,7 +6,6 @@ function Submit() {
   const { routeParams: { submitId } } = useJukiRouter();
   
   const breadcrumbs = [
-    <HomeLink key="home" />,
     <T className="tt-se" key="submission">submission</T>,
     <div key="submitId">{submitId}</div>,
   ];
@@ -22,7 +21,7 @@ function Submit() {
         </div>
       </div>
       <div className="jk-pg-rl jk-pg-tb">
-        <div className="bc-we jk-pad-md jk-br-ie">
+        <div className="bc-we jk-pg-md jk-br-ie">
           <SubmitView submitId={submitId as string} />
         </div>
       </div>

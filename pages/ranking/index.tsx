@@ -2,7 +2,6 @@ import {
   Breadcrumbs,
   DataViewer,
   Field,
-  HomeLink,
   Image,
   T,
   TextField,
@@ -37,7 +36,7 @@ function Ranking() {
       index: 'nickname',
       field: ({ record: { nickname, imageUrl }, isCard, recordIndex }) => (
         <Field className="jk-row link fw-bd gap">
-          {isCard && <div className="fw-br jk-pad-sm">{recordIndex + 1}</div>}
+          {isCard && <div className="fw-br jk-pg-sm">{recordIndex + 1}</div>}
           <UserNicknameLink nickname={nickname}>
             <div className="jk-row flex-1 gap left">
               <Image
@@ -133,7 +132,6 @@ function Ranking() {
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   
   const breadcrumbs = [
-    <HomeLink key="home" />,
     <T className="tt-se" key="ranking">ranking</T>,
   ];
   

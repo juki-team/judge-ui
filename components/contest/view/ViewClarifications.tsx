@@ -39,7 +39,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
-    <div className="jk-col top jk-pad-md nowrap jk-pg-rl jk-pg-tb">
+    <div className="jk-col top jk-pg-md nowrap jk-pg-rl jk-pg-tb">
       <div className="jk-row">
         {(isJudgeOrAdmin || isContestant) && (
           isJudgeOrAdmin ? (
@@ -73,7 +73,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
           )
         )}
       </div>
-      <div className="jk-pad-md jk-col stretch gap">
+      <div className="jk-pg-md jk-col stretch gap">
         {contest?.clarifications
           ?.sort((c1, c2) => {
             if (c2?.answerTimestamp === c1?.answerTimestamp) {
@@ -90,7 +90,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
           ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
             return (
-              <div className="elevation-1 jk-pad-md jk-border-radius-inline pn-re bc-we" key={clarification.key}>
+              <div className="elevation-1 jk-pg-md jk-border-radius-inline pn-re bc-we" key={clarification.key}>
                 {isJudgeOrAdmin && (
                   <div style={{ position: 'absolute', top: 0, right: 0 }}>
                     <Button
@@ -174,7 +174,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
       </div>
       {clarification && (
         <Modal isOpen={true} onClose={() => setClarification(null)} closeIcon>
-          <div className="jk-pad-md jk-col gap stretch">
+          <div className="jk-pg-md jk-col gap stretch">
             <h3><T>clarification</T></h3>
             <div className="jk-form-item">
               <InputSelect

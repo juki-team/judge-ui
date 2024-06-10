@@ -1,7 +1,6 @@
 import {
   AllSubmissions,
   Breadcrumbs,
-  HomeLink,
   JudgesManagement,
   MailManagement,
   Select,
@@ -84,7 +83,7 @@ function Admin() {
       body: company
         ? <div className="jk-pg-rl jk-pg-tb"><AllSubmissions company={company} /></div>
         : <div className="jk-pg-rl jk-pg-tb">
-          <div className="bc-we jk-pad-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
+          <div className="bc-we jk-pg-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
         </div>,
     };
   }
@@ -104,7 +103,6 @@ function Admin() {
   }
   
   const breadcrumbs: ReactNode[] = [
-    <HomeLink key="home" />,
     <Link
       href={ROUTES.ADMIN.PAGE(AdminTab.USERS_MANAGEMENT)}
       className="link"

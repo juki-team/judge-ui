@@ -289,7 +289,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
             width={viewPortSize === 'md' ? 80 : 92}
           />
         </div>
-        <div className="jk-pad-md">
+        <div className="jk-pg-md">
           <div className="bc-wea">
             <div className="jk-row nowrap gap extend">
               <h2

@@ -124,7 +124,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
   
   return (
     <div className="jk-col left stretch gap nowrap">
-      <div className="jk-row left nowrap gap bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-row left nowrap gap bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row nowrap fw-bd tx-xl cr-er"><T className="tt-se ws-np">problem status</T>:</div>
         <Select
           options={Object.values(PROBLEM_STATUS).map(status => ({
@@ -141,7 +141,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           extend
         />
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left nowrap gap">
           <div className="fw-bd tt-se"><T>problem scoring mode</T>:</div>
           <div><TotalProblemInformation /></div>
@@ -286,7 +286,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
             <div className="fw-bd tt-se"><T>evaluator source</T>:</div>
             <Button size="small" onClick={() => setOpen(true)}><T>save / view evaluator source</T></Button>
             <Modal isOpen={open} onClose={onCloseModal}>
-              <div className="jk-pad-md jk-col gap nowrap">
+              <div className="jk-pg-md jk-col gap nowrap">
                 <div
                   className="jk-border-radius-inline"
                   style={{
@@ -350,7 +350,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           </div>
         )}
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left nowrap gap">
           <div className="fw-bd tt-se"><T>time limit per test</T>:</div>
           <Input
@@ -370,7 +370,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           <T>KB</T>
         </div>
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left gap">
           <div className="fw-bd tt-se"><T>presentation error</T>:</div>
           <InputToggle
@@ -389,7 +389,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           />
         </div>
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left nowrap gap">
           <div className="jk-row fw-bd tt-se nowrap">
             <T className="ws-np tt-se">programming languages</T>
@@ -479,7 +479,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
           })}
         </div>
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pad-sm">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left gap nowrap">
           <div className="fw-bd tt-se"><T>autor</T>:</div>
           <Input

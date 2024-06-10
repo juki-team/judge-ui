@@ -164,7 +164,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
   
   return (
     <div className="jk-col gap nowrap stretch">
-      <div className="jk-row gap block bc-we jk-pad-sm jk-br-ie">
+      <div className="jk-row gap block bc-we jk-pg-sm jk-br-ie">
         <ButtonLoader
           size="small"
           disabled={lock}

@@ -97,7 +97,7 @@ export const MailManagement = ({ company }: { company: CompanyResponseDTO }) => 
       {({ data, mutate }) => {
         const html = data?.success ? data.content.emailTemplate.replace('{{content}}', content) : '';
         return (
-          <div className="jk-col extend gap nowrap stretch jk-pad-md bc-we jk-br-ie">
+          <div className="jk-col extend gap nowrap stretch jk-pg-md bc-we jk-br-ie">
             <div className="jk-col gap stretch">
               <h3><T>send email</T></h3>
               <div className="jk-row nowrap">

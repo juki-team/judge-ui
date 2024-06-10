@@ -26,7 +26,7 @@ export const TotalProblemInformation = ({ filledCircle }: InformationProps) => {
         closeWhenClickOutside
         closeWhenKeyEscape
       >
-        <div className="jk-col left stretch gap jk-pad-sm">
+        <div className="jk-col left stretch gap jk-pg-sm">
           <h3><T>problem scoring mode</T></h3>
           <div><T className="tx-l cr-py fw-bd tt-se">total</T></div>
           <div className="jk-row left">
