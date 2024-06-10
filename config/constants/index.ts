@@ -25,7 +25,6 @@ export {
   USER_GUEST,
   MAX_DATE,
   MIN_DATE,
-  COURSE_STATUS,
   RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES,
   JUKI_APP_COMPANY_KEY,
   COMPANY_PLAN,
@@ -36,7 +35,6 @@ export { ALPHANUMERIC_DASH_UNDERSCORE_REGEX } from '@juki-team/base-ui';
 
 export * from './commons';
 export * from './contest';
-export * from './course';
 export * from './defaultObjects';
 export * from './judge';
 export * from './problem';
