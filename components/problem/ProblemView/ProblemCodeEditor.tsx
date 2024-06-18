@@ -24,6 +24,7 @@ export const ProblemCodeEditor = <T, >({
                                          problem,
                                          codeEditorCenterButtons,
                                          codeEditorRightButtons,
+                                         codeEditorSourceStoreKey,
                                        }: ProblemCodeEditorProps<T>) => {
   
   const initialTestCases: CodeEditorTestCasesType = {};
@@ -84,6 +85,7 @@ export const ProblemCodeEditor = <T, >({
   return (
     <UserCodeEditor<T>
       languages={languages}
+      sourceStoreKey={codeEditorSourceStoreKey}
       centerButtons={codeEditorCenterButtons}
       rightButtons={codeEditorRightButtons}
       initialTestCases={(problem.judge === Judge.JUKI_JUDGE || problem.judge === Judge.CUSTOMER)
