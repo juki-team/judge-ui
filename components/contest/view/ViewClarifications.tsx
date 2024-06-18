@@ -39,7 +39,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   const isJudgeOrAdmin = isJudge || isAdmin;
   
   return (
-    <div className="jk-col top jk-pg-md nowrap jk-pg-rl jk-pg-tb">
+    <div className="jk-col top jk-pg-md nowrap">
       <div className="jk-row">
         {(isJudgeOrAdmin || isContestant) && (
           isJudgeOrAdmin ? (

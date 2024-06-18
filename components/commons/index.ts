@@ -170,6 +170,8 @@ export {
   ResetPasswordModal,
   EditProfileModal,
   HomeLink,
+  TwoContentLayout,
+  FirstLoginWrapper,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

@@ -3,7 +3,7 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUI } from 'hooks';
 import { useMemo } from 'react';
-import { ContestResponseDTO, DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
+import { ContestResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
   submissionActionsColumn,
   submissionDateColumn,
@@ -19,7 +19,7 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
   
   const { components: { Link, Image } } = useJukiUI();
   
-  const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<SubmissionDataResponseDTO>[] = useMemo(() => [
     submissionNickname(Image),
     submissionProblemColumn(Link, {
       header: {
@@ -43,19 +43,17 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
   ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge, Link, Image ]);
   
   return (
-    <div className="jk-pg-rl jk-pg-tb">
-      <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
-        rows={{ height: 80 }}
-        cards={{ width: 272, expanded: true }}
-        headers={columns}
-        getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-          JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, toFilterUrl(filter), toSortUrl(sort))
-        )}
-        name={QueryParam.STATUS_TABLE}
-        toRow={submission => submission}
-        refreshInterval={60000}
-        getRowKey={({ data, index }) => data[index].submitId}
-      />
-    </div>
+    <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>
+      rows={{ height: 80 }}
+      cards={{ width: 272, expanded: true }}
+      headers={columns}
+      getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
+        JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, toFilterUrl(filter), toSortUrl(sort))
+      )}
+      name={QueryParam.STATUS_TABLE}
+      toRow={submission => submission}
+      refreshInterval={60000}
+      getRowKey={({ data, index }) => data[index].submitId}
+    />
   );
 };

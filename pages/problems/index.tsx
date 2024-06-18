@@ -1,5 +1,5 @@
+import { oneTab, TwoContentLayout } from '@juki-team/base-ui';
 import {
-  Breadcrumbs,
   ButtonLoader,
   CheckIcon,
   CloseIcon,
@@ -14,7 +14,6 @@ import {
   T,
   TextField,
   Tooltip,
-  TwoContentSection,
   UserNicknameLink,
 } from 'components';
 import {
@@ -272,65 +271,62 @@ function Problems() {
   }
   
   return (
-    <TwoContentSection>
-      <div>
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row space-between jk-pg-rl jk-pg-tb">
-          <div className="jk-row gap">
-            <h2><T>problems</T></h2>
-            {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge) && (
-              <Popover
-                content={<div><T className="tt-se">only tracked problems are displayed</T></div>}
-                placement="bottom"
-              >
-                <div><InfoIcon /></div>
-              </Popover>
-            )}
-          </div>
-          <div style={{ width: 200 }}>
-            <Select
-              className="jk-border-radius-inline jk-button secondary"
-              options={[
-                { value: Judge.CUSTOMER, label: <span className="ws-np">{name + ' judge'}</span> },
-                ...(key === JUKI_APP_COMPANY_KEY ? [] : [
-                  {
-                    value: Judge.JUKI_JUDGE,
-                    label: <span className="ws-np">{JUDGE[Judge.JUKI_JUDGE].label}</span>,
-                  },
-                ]),
-                { value: Judge.CODEFORCES, label: <>{JUDGE[Judge.CODEFORCES].label}</> },
-                { value: Judge.CODEFORCES_GYM, label: <>{JUDGE[Judge.CODEFORCES_GYM].label}</> },
-                { value: Judge.JV_UMSA, label: <>{JUDGE[Judge.JV_UMSA].label}</> },
-              ]}
-              selectedOption={{ value: judge }}
-              onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}
-              extend
-            />
-          </div>
+    <TwoContentLayout
+      breadcrumbs={breadcrumbs}
+      tabs={oneTab(judge && (
+        <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
+          getRecordStyle={() => ({ cursor: 'pointer' })}
+          headers={columns}
+          getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
+            return JUDGE_API_V1.PROBLEM.LIST(judge, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
+          }}
+          name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judge] || '')}
+          refreshInterval={60000}
+          extraNodes={extraNodes}
+          cards={{ height: 256, expanded: true }}
+          onRecordClick={async ({ data, index }) => {
+            if (window?.getSelection()?.type !== 'Range') {
+              await pushRoute({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
+            }
+          }}
+          dependencies={[ judge ]}
+        />
+      ))}
+    >
+      <div className="jk-row space-between extend pn-re">
+        <div className="jk-row gap">
+          <h2><T>problems</T></h2>
+          {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge) && (
+            <Popover
+              content={<div><T className="tt-se">only tracked problems are displayed</T></div>}
+              placement="bottom"
+            >
+              <div><InfoIcon /></div>
+            </Popover>
+          )}
         </div>
-      </div>
-      {judge && (
-        <div className="jk-pg-tb jk-pg-rl">
-          <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
-            getRecordStyle={() => ({ cursor: 'pointer' })}
-            headers={columns}
-            getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-              return JUDGE_API_V1.PROBLEM.LIST(judge, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
-            }}
-            name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judge] || '')}
-            refreshInterval={60000}
-            extraNodes={extraNodes}
-            cards={{ height: 256, expanded: true }}
-            onRecordClick={async ({ data, index }) => {
-              if (window?.getSelection()?.type !== 'Range') {
-                await pushRoute({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
-              }
-            }}
-            dependencies={[ judge ]}
+        <div style={{ width: 200 }}>
+          <Select
+            className="jk-border-radius-inline jk-button secondary"
+            options={[
+              { value: Judge.CUSTOMER, label: <span className="ws-np">{name + ' judge'}</span> },
+              ...(key === JUKI_APP_COMPANY_KEY ? [] : [
+                {
+                  value: Judge.JUKI_JUDGE,
+                  label: <span className="ws-np">{JUDGE[Judge.JUKI_JUDGE].label}</span>,
+                },
+              ]),
+              { value: Judge.CODEFORCES, label: <>{JUDGE[Judge.CODEFORCES].label}</> },
+              { value: Judge.CODEFORCES_GYM, label: <>{JUDGE[Judge.CODEFORCES_GYM].label}</> },
+              { value: Judge.JV_UMSA, label: <>{JUDGE[Judge.JV_UMSA].label}</> },
+            ]}
+            selectedOption={{ value: judge }}
+            onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}
+            extend
           />
         </div>
-      )}
-    </TwoContentSection>
+      </div>
+    </TwoContentLayout>
   );
 }
 

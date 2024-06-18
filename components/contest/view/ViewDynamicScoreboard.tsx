@@ -195,7 +195,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
           return {
             ...user,
             focus,
-          }
+          };
         });
       });
       setTimestamp(response.content[index].timestamp);
@@ -270,17 +270,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
         <T>{statusLabel}</T>,&nbsp;{literal}</div>;
     
     return (
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          zIndex: 200,
-          width: '100vw',
-          height: 'var(--100VH)',
-          background: 'var(--t-color-white-2)',
-        }}
-      >
+      <div className="jk-full-screen-overlay">
         <div className="jk-row bc-pd" style={{ padding: 'var(--pad-xt)' }}>
           <Image
             src={imageUrl}

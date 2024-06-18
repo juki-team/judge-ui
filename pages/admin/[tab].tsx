@@ -1,13 +1,4 @@
-import {
-  AllSubmissions,
-  Breadcrumbs,
-  JudgesManagement,
-  MailManagement,
-  Select,
-  T,
-  TabsInline,
-  TwoContentSection,
-} from 'components';
+import { AllSubmissions, JudgesManagement, MailManagement, Select, T, TwoContentLayout } from 'components';
 import { jukiSettings } from 'config';
 import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
@@ -81,24 +72,22 @@ function Admin() {
       key: AdminTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,
       body: company
-        ? <div className="jk-pg-rl jk-pg-tb"><AllSubmissions company={company} /></div>
-        : <div className="jk-pg-rl jk-pg-tb">
-          <div className="bc-we jk-pg-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>
-        </div>,
+        ? <AllSubmissions company={company} />
+        : <div className="bc-we jk-pg-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>,
     };
   }
   if (canHandleEmail) {
     tabs[AdminTab.EMAIL_SENDER] = {
       key: AdminTab.EMAIL_SENDER,
       header: <T className="tt-ce ws-np">email sender</T>,
-      body: <div className="jk-pg-rl jk-pg-tb"><MailManagement company={company} /></div>,
+      body: <MailManagement company={company} />,
     };
   }
   if (canHandleJudges) {
     tabs[AdminTab.JUDGES_MANAGEMENT] = {
       key: AdminTab.JUDGES_MANAGEMENT,
       header: <T className="tt-ce ws-np">judges</T>,
-      body: <div className="jk-pg-rl jk-pg-b"><JudgesManagement company={company} /></div>,
+      body: <JudgesManagement company={company} />,
     };
   }
   
@@ -113,35 +102,31 @@ function Admin() {
     renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.header, { selectedTabKey: routeParams.tab as AdminTab }),
   ];
   
-  const pushTab = (tabKey: AdminTab) => pushRoute({ pathname: ROUTES.ADMIN.PAGE(tabKey), searchParams });
-  
   return (
-    <TwoContentSection>
-      <div>
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row-col extend jk-pg-rl">
-          <h3 className="flex-1" style={{ padding: 'var(--pad-sm) 0' }}><T>administration</T></h3>
-          {companies?.length > 1 && (
-            <div style={{ width: 200 }}>
-              <Select
-                options={companies.map(company => ({
-                  value: company.key,
-                  label: <span className="ws-np">{company.name}</span>,
-                }))}
-                selectedOption={{ value: companyKey, label: companyKey ? undefined : <T>select</T> }}
-                onChange={({ value }) => setSearchParams({ name: QueryParam.COMPANY, value })}
-                className="jk-br-ie jk-button secondary"
-                extend
-              />
-            </div>
-          )}
-        </div>
-        <div className="jk-pg-rl">
-          <TabsInline tabs={tabs} onChange={pushTab} selectedTabKey={selectedTabKey} />
-        </div>
+    <TwoContentLayout
+      breadcrumbs={breadcrumbs}
+      tabs={tabs}
+      selectedTabKey={selectedTabKey}
+      getPathname={tabKey => ROUTES.ADMIN.PAGE(tabKey)}
+    >
+      <div className="jk-row-col extend">
+        <h3 className="flex-1"><T>administration</T></h3>
+        {companies?.length > 1 && (
+          <div style={{ width: 200 }}>
+            <Select
+              options={companies.map(company => ({
+                value: company.key,
+                label: <span className="ws-np">{company.name}</span>,
+              }))}
+              selectedOption={{ value: companyKey, label: companyKey ? undefined : <T>select</T> }}
+              onChange={({ value }) => setSearchParams({ name: QueryParam.COMPANY, value })}
+              className="jk-br-ie jk-button secondary"
+              extend
+            />
+          </div>
+        )}
       </div>
-      {renderReactNodeOrFunctionP1(tabs[routeParams.tab as AdminTab]?.body, { selectedTabKey })}
-    </TwoContentSection>
+    </TwoContentLayout>
   );
 }
 

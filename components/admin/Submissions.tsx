@@ -3,7 +3,7 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUI } from 'hooks';
 import { useMemo } from 'react';
-import { CompanyResponseDTO, DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
+import { CompanyResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
   submissionActionsColumn,
   submissionDateColumn,
@@ -19,7 +19,7 @@ export function AllSubmissions({ company }: { company: CompanyResponseDTO }) {
   
   const { components: { Link, Image } } = useJukiUI();
   
-  const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<SubmissionDataResponseDTO>[] = useMemo(() => [
     submissionNickname(Image),
     submissionProblemColumn(Link),
     submissionDateColumn(),
@@ -31,7 +31,7 @@ export function AllSubmissions({ company }: { company: CompanyResponseDTO }) {
   ], [ Link, Image ]);
   
   return (
-    <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+    <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}

@@ -1,5 +1,6 @@
+import { oneTab } from '@juki-team/base-ui';
 import {
-  Breadcrumbs,
+  Button,
   ButtonLoader,
   contestStateMap,
   CopyIcon,
@@ -12,17 +13,27 @@ import {
   LoadingIcon,
   NavigateBeforeIcon,
   NavigateNextIcon,
+  ProblemView,
+  SpectatorInformation,
   T,
-  TabsInline,
   Tooltip,
-  TwoContentSection,
+  TwoContentLayout,
   ViewOverview,
   ViewProblemMySubmissions,
   ViewProblems,
 } from 'components';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { parseContest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useContestRouter, useJukiRouter, useJukiUI, useJukiUser, useT, useTrackLastPath } from 'hooks';
+import {
+  useContestRouter,
+  useJukiRouter,
+  useJukiUI,
+  useJukiUser,
+  useNotification,
+  useT,
+  useTask,
+  useTrackLastPath,
+} from 'hooks';
 import React, { ReactNode } from 'react';
 import {
   ContentResponseType,
@@ -33,11 +44,13 @@ import {
   Status,
   TabsType,
 } from 'types';
+import { authorizedRequest, cleanRequest, getProblemJudgeKey } from '../../../helpers';
 import Custom404 from '../../../pages/404';
+import { HTTPMethod } from '../../../types';
+import { FirstLoginWrapper } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
-import { ViewProblem } from './ViewProblem';
 import { ViewProblemSubmissions } from './ViewProblemSubmissions';
 import { ViewScoreboard } from './ViewScoreboard';
 
@@ -49,6 +62,8 @@ export function ContestView() {
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { user: { canCreateContest } } = useJukiUser();
   const { t } = useT();
+  const { listenSubmission } = useTask();
+  const { addWarningNotification, notifyResponse } = useNotification();
   
   const breadcrumbs = [
     <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,
@@ -66,77 +81,56 @@ export function ContestView() {
     <T className="tt-ce ws-np" key="overview">overview</T>,
   ];
   
+  const loaderBody = (
+    <div className="jk-row jk-col extend">
+      <LoadingIcon size="very-huge" className="cr-py" />
+    </div>
+  );
+  
   return (
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
       url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
       options={{ refreshInterval: 60000 }}
       loadingView={
-        <TwoContentSection>
-          <div className="jk-col stretch extend nowrap">
-            <Breadcrumbs breadcrumbs={breadcrumbsLoading} />
-            <div className="jk-col pn-re jk-pg-rl">
-              <div className="jk-row nowrap gap extend">
-                <h2
-                  style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
-                  }}
-                >
-                  {contestKey}
-                </h2>
-              </div>
-            </div>
-            <div className="jk-pg-rl">
-              <TabsInline
-                tabs={{
-                  [ContestTab.OVERVIEW]: {
-                    key: ContestTab.OVERVIEW,
-                    header: <T className="tt-ce ws-np">overview</T>,
-                    body: '',
-                  },
-                  'loading': {
-                    key: 'loading',
-                    header: <div className="jk-row">
-                      <div className="dot-flashing" />
-                    </div>,
-                    body: '',
-                  },
-                }}
-                selectedTabKey={ContestTab.OVERVIEW}
-                onChange={() => null}
-              />
-            </div>
-          </div>
-          <div className="jk-row jk-col extend">
-            <LoadingIcon size="very-huge" className="cr-py" />
-          </div>
-        </TwoContentSection>
+        <TwoContentLayout
+          breadcrumbs={breadcrumbsLoading}
+          selectedTabKey={ContestTab.OVERVIEW}
+          loading
+        >
+          <h2
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
+            }}
+          >
+            {contestKey}
+          </h2>
+        </TwoContentLayout>
       }
       errorView={
-        <TwoContentSection>
-          <div>
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
-          </div>
-          <Custom404>
-            <h3><T className="tt-ue">contest not found</T></h3>
-            <p>
-              <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
-            </p>
-            <LinkLastPath lastPathKey={LastPathKey.CONTESTS}>
-              <div className="jk-row"><CupIcon /><T className="tt-se">go to contest list</T></div>
-            </LinkLastPath>
-          </Custom404>
-        </TwoContentSection>
+        <TwoContentLayout
+          breadcrumbs={breadcrumbs}
+          tabs={oneTab(
+            <Custom404>
+              <p>
+                <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
+              </p>
+              <LinkLastPath lastPathKey={LastPathKey.CONTESTS}>
+                <Button icon={<CupIcon />} type="light"><T className="tt-se">go to contest list</T></Button>
+              </LinkLastPath>
+            </Custom404>,
+          )}
+        >
+          <h3><T className="tt-ue">contest not found</T></h3>
+        </TwoContentLayout>
       }
     >
       {({ data: { content: contest }, mutate }) => {
         const {
-          user: { isAdmin, isJudge, isContestant } = {
-            isAdmin: false, isJudge: false, isContestant: false,
-          },
-        } = contest || {};
+          user: { isAdmin, isJudge, isContestant, isGuest, isSpectator },
+        } = contest;
         const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
         const statusLabel = contestStateMap[key].label;
         const tag = contestStateMap[key].color;
@@ -155,55 +149,127 @@ export function ContestView() {
             body: <ViewOverview contest={contest} />,
           },
         };
+        
         if (isAdmin || isJudge || contest.isLive || contest.isPast || contest.isEndless) {
           const problems = Object.values(contest.problems);
           problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
           const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
-          tabHeaders[problemIndex ? ContestTab.PROBLEM : ContestTab.PROBLEMS] = {
-            key: problemIndex ? ContestTab.PROBLEM : ContestTab.PROBLEMS,
-            header: (
-              <div className="jk-row gap nowrap">
-                {problemIndex
-                  ? <>
-                    <NavigateBeforeIcon
-                      style={{ padding: 0 }}
-                      className="clickable jk-br-ie"
-                      onClick={async (event) => {
-                        event.stopPropagation();
-                        const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
-                        await pushRoute({
-                          pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, previousProblemIndex),
-                          searchParams,
-                        });
-                      }}
-                    />
-                    <T className="tt-ce ws-np">problem</T> {problemIndex}
-                    <NavigateNextIcon
-                      style={{ padding: 0 }}
-                      className="clickable jk-br-ie"
-                      onClick={async (event) => {
-                        event.stopPropagation();
-                        const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
-                        await pushRoute({
-                          pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, nextProblemIndex),
-                          searchParams,
-                        });
-                      }}
-                    />
-                  </>
-                  : <T className="tt-ce ws-np">problems</T>}
-              </div>
-            ),
-            body: problemIndex ? <ViewProblem contest={contest} /> : <ViewProblems contest={contest} />,
-          };
+          if (problemArrayIndex !== -1) {
+            const problem = problems[problemArrayIndex];
+            const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
+            tabHeaders[ContestTab.PROBLEM] = {
+              key: ContestTab.PROBLEM,
+              header: (
+                <div className="jk-row gap nowrap">
+                  <NavigateBeforeIcon
+                    style={{ padding: 0 }}
+                    className="clickable jk-br-ie"
+                    onClick={async (event) => {
+                      event.stopPropagation();
+                      const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
+                      await pushRoute({
+                        pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, previousProblemIndex),
+                        searchParams,
+                      });
+                    }}
+                  />
+                  <T className="tt-ce ws-np">problem</T> {problemIndex}
+                  <NavigateNextIcon
+                    style={{ padding: 0 }}
+                    className="clickable jk-br-ie"
+                    onClick={async (event) => {
+                      event.stopPropagation();
+                      const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
+                      await pushRoute({
+                        pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, nextProblemIndex),
+                        searchParams,
+                      });
+                    }}
+                  />
+                </div>
+              ),
+              body: (
+                <ProblemView
+                  problem={problem}
+                  infoPlacement="name"
+                  codeEditorSourceStoreKey={contest.key + '/' + problemJudgeKey}
+                  codeEditorCenterButtons={({ sourceCode, language }) => {
+                    const validSubmit = (
+                      <ButtonLoader
+                        type="secondary"
+                        size="tiny"
+                        disabled={sourceCode === ''}
+                        onClick={async setLoaderStatus => {
+                          setLoaderStatus(Status.LOADING);
+                          const response = cleanRequest<ContentResponseType<any>>(
+                            await authorizedRequest(
+                              JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problemJudgeKey),
+                              { method: HTTPMethod.POST, body: JSON.stringify({ language, source: sourceCode }) },
+                            ),
+                          );
+                          if (notifyResponse(response, setLoaderStatus)) {
+                            listenSubmission(response.content.submitId, problem.judge, problem.key);
+                            pushTab(ContestTab.MY_SUBMISSIONS);
+                            // TODO fix the filter Url param
+                            // await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(
+                            //   contestKey,
+                            //   nickname,
+                            //   1,
+                            //   +(myStatusPageSize || PAGE_SIZE_OPTIONS[0]),
+                            //   '',
+                            //   '',
+                            // ));
+                          }
+                        }}
+                      >
+                        {isAdmin || isJudge ? <T>submit as judge</T> : <T>submit</T>}
+                      </ButtonLoader>
+                    );
+                    if (isAdmin || isJudge || isContestant) {
+                      return (
+                        <FirstLoginWrapper>
+                          {validSubmit}
+                        </FirstLoginWrapper>
+                      );
+                    }
+                    if (isGuest) {
+                      return (
+                        <ButtonLoader
+                          type="secondary"
+                          size="tiny"
+                          onClick={() => {
+                            addWarningNotification(<T className="tt-se">to submit, first register</T>);
+                            pushTab(ContestTab.OVERVIEW);
+                          }}
+                        >
+                          <T>submit</T>
+                        </ButtonLoader>
+                      );
+                    }
+                    if (isSpectator) {
+                      return <SpectatorInformation />;
+                    }
+                    
+                    return null;
+                  }}
+                />
+              ),
+            };
+          } else {
+            tabHeaders[ContestTab.PROBLEMS] = {
+              key: ContestTab.PROBLEMS,
+              header: (
+                <div className="jk-row gap nowrap">
+                  <T className="tt-ce ws-np">problems</T>
+                </div>
+              ),
+              body: <ViewProblems contest={contest} />,
+            };
+          }
           tabHeaders[ContestTab.SCOREBOARD] = {
             key: ContestTab.SCOREBOARD,
             header: <T className="tt-ce ws-np">scoreboard</T>,
-            body: (
-              <div className="jk-pg-rl jk-pg-tb">
-                <ViewScoreboard contest={contest} mutate={mutate} />
-              </div>
-            ),
+            body: <ViewScoreboard contest={contest} mutate={mutate} />,
           };
         }
         
@@ -211,11 +277,7 @@ export function ContestView() {
           tabHeaders[ContestTab.DYNAMIC_SCOREBOARD] = {
             key: ContestTab.DYNAMIC_SCOREBOARD,
             header: <T className="tt-ce ws-np">dynamic scoreboard</T>,
-            body: (
-              <div className="jk-pg-rl jk-pg-tb">
-                <ViewDynamicScoreboard contest={contest} mutate={mutate} />
-              </div>
-            ),
+            body: <ViewDynamicScoreboard contest={contest} mutate={mutate} />,
           };
         }
         
@@ -254,12 +316,10 @@ export function ContestView() {
             key: ContestTab.MEMBERS,
             header: <T className="tt-ce">members</T>,
             body: (
-              <div className="jk-pg-tb jk-pg-rl">
-                <EditViewMembers
-                  contest={contest as unknown as EditCreateContestType}
-                  membersToView={contest.members}
-                />
-              </div>
+              <EditViewMembers
+                contest={contest as unknown as EditCreateContestType}
+                membersToView={contest.members}
+              />
             ),
           };
         }
@@ -349,11 +409,16 @@ export function ContestView() {
         }
         
         return (
-          <TwoContentSection>
+          <TwoContentLayout
+            breadcrumbs={breadcrumbs}
+            tabs={tabHeaders}
+            selectedTabKey={contestTab}
+            getPathname={tab => ROUTES.CONTESTS.VIEW('' + contestKey, tab, problemIndex || undefined)}
+            tabButtons={extraNodes}
+          >
             <div>
               <CustomHead title={contest.name} />
-              <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="jk-col pn-re jk-pg-rl">
+              <div className="jk-col pn-re">
                 <div className="jk-row nowrap gap extend">
                   <h2
                     style={{
@@ -376,18 +441,8 @@ export function ContestView() {
                 </div>
                 <div className="screen sm jk-row extend">{allLiteralLabel}</div>
               </div>
-              <div className="jk-pg-rl">
-                <TabsInline
-                  tabs={tabHeaders}
-                  selectedTabKey={contestTab}
-                  onChange={pushTab}
-                  extraNodes={extraNodes}
-                  extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
-                />
-              </div>
             </div>
-            {renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.body, { selectedTabKey: contestTab })}
-          </TwoContentSection>
+          </TwoContentLayout>
         );
       }}
     </FetcherLayer>

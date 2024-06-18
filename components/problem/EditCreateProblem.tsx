@@ -1,3 +1,4 @@
+import { TwoContentLayout } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   ButtonLoader,
@@ -64,14 +65,13 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       header: <T className="tt-ce ws-np">statement</T>,
       body: (
         <ProblemStatement
-          judge={Judge.JUKI_JUDGE}
-          problemKey={problem.key}
-          author={problem.author}
-          name={problem.name}
-          status={problem.status}
-          statement={problem.statement}
-          settings={problem.settings}
-          tags={problem.tags}
+          problem={{
+            ...problem,
+            judge: Judge.JUKI_JUDGE,
+            ownerNickname: '',
+            user: { isEditor: false, solved: false, tried: false },
+            ownerUserNickname: '',
+          }}
           setProblem={setProblem}
         />
       ),
@@ -80,9 +80,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       key: ProblemTab.SETUP,
       header: <T className="tt-ce ws-np">settings</T>,
       body: (
-        <div className="jk-pg-tb jk-pg-rl">
-          <ProblemSettings problem={problem} setProblem={setProblem} />
-        </div>
+        <ProblemSettings problem={problem} setProblem={setProblem} />
       ),
     },
     ...(
@@ -91,9 +89,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
           key: ProblemTab.TESTS,
           header: <T className="tt-se ws-np">test cases</T>,
           body: (
-            <div className="jk-pg-tb jk-pg-rl">
-              <ProblemTestCases problem={problem} />
-            </div>
+            <ProblemTestCases problem={problem} />
           ),
         },
       } : {}
@@ -102,14 +98,12 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       key: ProblemTab.EDITORIAL,
       header: <T className="tt-se ws-np">editorial</T>,
       body: (
-        <div className="jk-pg-tb jk-pg-rl">
-          <ProblemEditorial
-            editorial={problem.editorial}
-            setEditorial={(editorial) => setProblem(prevState => (
-              { ...prevState, editorial }
-            ))}
-          />
-        </div>
+        <ProblemEditorial
+          editorial={problem.editorial}
+          setEditorial={(editorial) => setProblem(prevState => (
+            { ...prevState, editorial }
+          ))}
+        />
       ),
     },
   };
@@ -157,29 +151,20 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
   ];
   
   return (
-    <TwoContentSection>
-      <div>
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row extend center tx-h">
-          <div style={{ padding: 'var(--pad-sm) 0' }}><T className="tt-se fw-bd">name</T></div>
-          :&nbsp;
-          <Input
-            value={problem.name}
-            onChange={value => setProblem({ ...problem, name: value })}
-            size="auto"
-          />
-        </div>
-        <div className="jk-pg-rl" style={{ overflow: 'hidden' }}>
-          <TabsInline<ProblemTab>
-            tabs={tabs}
-            onChange={(tab) => setTab(tab)}
-            selectedTabKey={tab}
-            extraNodes={extraNodes}
-            extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
-          />
-        </div>
+    <TwoContentLayout
+      breadcrumbs={breadcrumbs}
+      tabs={tabs}
+      tabButtons={extraNodes}
+    >
+      <div className="jk-row extend center tx-h">
+        <Input
+          label={<T className="tt-se">name</T>}
+          labelPlacement="left"
+          value={problem.name}
+          onChange={value => setProblem({ ...problem, name: value })}
+          size="auto"
+        />
       </div>
-      {renderReactNodeOrFunctionP1(tabs[tab].body, { selectedTabKey: tab })}
-    </TwoContentSection>
+    </TwoContentLayout>
   );
 };

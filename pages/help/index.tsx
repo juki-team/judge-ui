@@ -1,5 +1,6 @@
-import { Breadcrumbs, T, TwoContentSection } from 'components';
+import { T, TwoContentLayout } from 'components';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
+import { oneTab } from 'helpers';
 import { useJukiUser } from 'hooks';
 
 export default function Home() {
@@ -7,18 +8,10 @@ export default function Home() {
   const { company: { name } } = useJukiUser();
   
   return (
-    <TwoContentSection>
-      <div className="jk-col extend stretch">
-        <Breadcrumbs breadcrumbs={[]} />
-        <div className="jk-pg-rl jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
-          <h1 style={{ padding: 'var(--pad-md) 0' }}>
-            <T>help</T>
-          </h1>
-        </div>
-      </div>
-      
-      <div className="jk-pg-rl jk-pg-tb">
-        <div className="jk-pg-md bc-we">
+    <TwoContentLayout
+      breadcrumbs={[]}
+      tabs={oneTab(
+        <div className="jk-pg bc-we">
           <h3><T>compilation of submissions</T></h3>
           {/*<div className="jk-row left nowrap">*/}
           <T className="tt-se">
@@ -86,8 +79,14 @@ export default function Home() {
               </div>
             );
           })}
+        </div>,
+      )}
+    >
+      <div className="jk-col extend stretch">
+        <div className="jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
+          <h1><T>help</T></h1>
         </div>
       </div>
-    </TwoContentSection>
+    </TwoContentLayout>
   );
 }

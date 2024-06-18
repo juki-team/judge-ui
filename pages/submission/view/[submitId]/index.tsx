@@ -1,4 +1,5 @@
-import { Breadcrumbs, SubmitView, T, TwoContentSection } from 'components';
+import { SubmitView, T, TwoContentLayout } from 'components';
+import { oneTab } from 'helpers';
 import { useJukiRouter } from 'hooks';
 
 function Submit() {
@@ -11,21 +12,12 @@ function Submit() {
   ];
   
   return (
-    <TwoContentSection>
-      <div className="jk-col stretch extend nowrap">
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-pg-rl">
-          <h3>
-            <T>submission</T>&nbsp;{submitId}
-          </h3>
-        </div>
-      </div>
-      <div className="jk-pg-rl jk-pg-tb">
-        <div className="bc-we jk-pg-md jk-br-ie">
-          <SubmitView submitId={submitId as string} />
-        </div>
-      </div>
-    </TwoContentSection>
+    <TwoContentLayout
+      breadcrumbs={breadcrumbs}
+      tabs={oneTab(<SubmitView submitId={submitId as string} />)}
+    >
+      <h3><T>submission</T>&nbsp;{submitId}</h3>
+    </TwoContentLayout>
   );
   
 }

@@ -14,9 +14,15 @@ import {
   UpIcon,
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
-import { ContentResponseType, ProblemScoringMode, ProblemVerdict, SubmitResponseDTO, TestCaseResultType } from 'types';
+import {
+  ContentResponseType,
+  ProblemScoringMode,
+  ProblemVerdict,
+  SubmissionDataResponseDTO,
+  TestCaseResultType,
+} from 'types';
 
-const SubmitViewLayout = ({ submit }: { submit: SubmitResponseDTO }) => {
+const SubmitViewLayout = ({ submit }: { submit: SubmissionDataResponseDTO }) => {
   
   const {
     submitId,
@@ -53,7 +59,7 @@ const SubmitViewLayout = ({ submit }: { submit: SubmitResponseDTO }) => {
   });
   
   return (
-    <>
+    <div className="jk-pg bc-we jk-br-ie">
       <Collapse
         header={({ isOpen, toggle }) => (
           <div className="jk-row-col gap">
@@ -183,12 +189,12 @@ const SubmitViewLayout = ({ submit }: { submit: SubmitResponseDTO }) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
-}
+};
 
 export const SubmitView = ({ submitId, triggerFetch }: { submitId: string, triggerFetch?: number }) => (
-  <FetcherLayer<ContentResponseType<SubmitResponseDTO>>
+  <FetcherLayer<ContentResponseType<SubmissionDataResponseDTO>>
     url={JUDGE_API_V1.SUBMIT.SUBMIT_ID(submitId)}
     errorView={() => {
       return (

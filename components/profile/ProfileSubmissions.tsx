@@ -2,7 +2,7 @@ import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiRouter, useJukiUI, useMemo } from 'hooks';
-import { DataViewerHeadersType, QueryParam, SubmissionResponseDTO } from 'types';
+import { DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
   submissionDateColumn,
   submissionLanguage,
@@ -17,7 +17,7 @@ export function ProfileSubmissions() {
   const { routeParams: { nickname } } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   
-  const columns: DataViewerHeadersType<SubmissionResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<SubmissionDataResponseDTO>[] = useMemo(() => [
     submissionProblemColumn(Link, { blankTarget: true }),
     submissionDateColumn(),
     submissionVerdictColumn(),
@@ -27,7 +27,7 @@ export function ProfileSubmissions() {
   ], [ Link ]);
   
   return (
-    <PagedDataViewer<SubmissionResponseDTO, SubmissionResponseDTO>
+    <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}

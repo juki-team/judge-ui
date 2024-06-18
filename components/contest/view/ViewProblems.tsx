@@ -186,28 +186,26 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const data = Object.values(problems);
   
   return (
-    <div className="jk-pg-rl jk-pg-tb">
-      <DataViewer<ContestProblemType>
-        headers={columns}
-        data={data}
-        rows={{ height: 70 }}
-        rowsView={viewPortSize !== 'sm'}
-        name={QueryParam.ALL_USERS_TABLE}
-        onRecordClick={async ({ isCard, data, index }) => {
-          await pushRoute({
-            pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
-            searchParams,
-          });
-        }}
-        getRecordStyle={({ data, index, isCard }) => {
-          if (isCard) {
-            return { borderTop: '6px solid ' + data[index]?.color, cursor: 'pointer' };
-          }
-          return { cursor: 'pointer' };
-        }}
-        cards={{ height: 200 }}
-        {...DEFAULT_DATA_VIEWER_PROPS}
-      />
-    </div>
+    <DataViewer<ContestProblemType>
+      headers={columns}
+      data={data}
+      rows={{ height: 70 }}
+      rowsView={viewPortSize !== 'sm'}
+      name={QueryParam.ALL_USERS_TABLE}
+      onRecordClick={async ({ isCard, data, index }) => {
+        await pushRoute({
+          pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
+          searchParams,
+        });
+      }}
+      getRecordStyle={({ data, index, isCard }) => {
+        if (isCard) {
+          return { borderTop: '6px solid ' + data[index]?.color, cursor: 'pointer' };
+        }
+        return { cursor: 'pointer' };
+      }}
+      cards={{ height: 200 }}
+      {...DEFAULT_DATA_VIEWER_PROPS}
+    />
   );
 };

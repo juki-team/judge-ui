@@ -1,3 +1,4 @@
+import { TwoContentLayout } from '@juki-team/base-ui';
 import {
   Breadcrumbs,
   Button,
@@ -24,7 +25,7 @@ import Custom404 from '../../../404';
 
 export default function ProfileView() {
   
-  const { searchParams, routeParams: { nickname, tab }, pushRoute } = useJukiRouter();
+  const { routeParams: { nickname, tab } } = useJukiRouter();
   const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
   const { viewPortSize, components: { Link } } = useJukiUI();
@@ -40,52 +41,35 @@ export default function ProfileView() {
           [ProfileTab.PROFILE]: {
             key: ProfileTab.PROFILE,
             header: <T className="tt-ce ws-np">profile</T>,
-            body: (
-              <div className="jk-pg-tb jk-pg-rl">
-                <UserProfile user={data?.content} />
-              </div>
-            ),
+            body: <UserProfile user={data?.content} />,
           },
         };
+        
         if (data?.content?.nickname === userNickname) {
           tabHeaders[ProfileTab.SETTINGS] = {
             key: ProfileTab.SETTINGS,
             header: <T className="tt-ce ws-np">settings</T>,
             body: (
-              <div className="jk-pg-tb jk-pg-rl">
-                <UserProfileSettings
-                  user={data?.content}
-                  onClickUpdatePassword={() => setOpenModal('UPDATE_PASSWORD')}
-                />
-              </div>
+              <UserProfileSettings
+                user={data?.content}
+                onClickUpdatePassword={() => setOpenModal('UPDATE_PASSWORD')}
+              />
             ),
           };
           tabHeaders[ProfileTab.MY_SESSIONS] = {
             key: ProfileTab.MY_SESSIONS,
             header: <T className="tt-ce ws-np">my sessions</T>,
-            body: (
-              <div className="jk-pg-tb jk-pg-rl">
-                <MyActiveSessions />
-              </div>
-            ),
+            body: <MyActiveSessions />,
           };
         }
+        
         tabHeaders[ProfileTab.SUBMISSIONS] = {
           key: ProfileTab.SUBMISSIONS,
           header: userNickname === nickname
             ? <T className="tt-ce ws-np">my submissions</T>
             : <T className="tt-ce ws-np">submissions</T>,
-          body: (
-            <div className="jk-pg-tb jk-pg-rl">
-              <ProfileSubmissions />
-            </div>
-          ),
+          body: <ProfileSubmissions />,
         };
-        
-        const pushTab = (tabKey: ProfileTab) => pushRoute({
-          pathname: ROUTES.PROFILE.PAGE(nickname as string, tabKey),
-          searchParams,
-        });
         
         const extraNodes = [
           ...(data.content?.canResetPassword ? [
@@ -124,7 +108,13 @@ export default function ProfileView() {
         ];
         
         return (
-          <TwoContentSection>
+          <TwoContentLayout
+            breadcrumbs={breadcrumbs}
+            tabs={tabHeaders}
+            selectedTabKey={tab as ProfileTab}
+            getPathname={(tabKey) => ROUTES.PROFILE.PAGE(nickname as string, tabKey)}
+            tabButtons={extraNodes}
+          >
             <div>
               <ChangePasswordModal isOpen={openModal === 'UPDATE_PASSWORD'} onClose={onClose} />
               <ResetPasswordModal
@@ -134,22 +124,11 @@ export default function ProfileView() {
                 companyKey={company.key}
               />
               <EditProfileModal isOpen={openModal === 'DATA'} onClose={onClose} user={data.content} />
-              <Breadcrumbs breadcrumbs={breadcrumbs} />
               <div className="jk-pg-rl">
                 <h1>{nickname}</h1>
               </div>
-              <div className="jk-pg-rl">
-                <TabsInline
-                  tabs={tabHeaders}
-                  selectedTabKey={tab as ProfileTab}
-                  onChange={pushTab}
-                  extraNodes={extraNodes}
-                  extraNodesPlacement={(viewPortSize === 'sm') ? 'bottomRight' : undefined}
-                />
-              </div>
             </div>
-            {renderReactNodeOrFunctionP1(tabHeaders[tab as ProfileTab]?.body, { selectedTabKey: tab as ProfileTab })}
-          </TwoContentSection>
+          </TwoContentLayout>
         );
       }}
     </FetcherLayer>

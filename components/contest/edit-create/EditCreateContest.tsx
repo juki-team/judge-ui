@@ -1,5 +1,4 @@
 import {
-  Breadcrumbs,
   ButtonLoader,
   CheckUnsavedChanges,
   CloseIcon,
@@ -9,8 +8,7 @@ import {
   MdMathEditor,
   SaveIcon,
   T,
-  TabsInline,
-  TwoContentSection,
+  TwoContentLayout,
 } from 'components';
 import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
@@ -95,17 +93,15 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce">overview</T>,
       body: (
-        <div className="jk-pg-tb jk-pg-rl">
-          <div className="bc-we">
-            <MdMathEditor
-              informationButton
-              uploadImageButton
-              source={contest.description}
-              onChange={value => setContest(prevState => (
-                { ...prevState, description: value }
-              ))}
-            />
-          </div>
+        <div className="bc-we">
+          <MdMathEditor
+            informationButton
+            uploadImageButton
+            source={contest.description}
+            onChange={value => setContest(prevState => (
+              { ...prevState, description: value }
+            ))}
+          />
         </div>
       ),
     },
@@ -113,27 +109,21 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
       key: ContestTab.SETUP,
       header: <T className="tt-ce">settings</T>,
       body: (
-        <div className="jk-pg-tb jk-pg-rl">
-          <EditSettings contest={contest} setContest={setContest} />
-        </div>
+        <EditSettings contest={contest} setContest={setContest} />
       ),
     },
     [ContestTab.MEMBERS]: {
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,
       body: (
-        <div className="jk-pg-tb jk-pg-rl">
-          <EditViewMembers contest={contest} setContest={setContest} editing={editing} />
-        </div>
+        <EditViewMembers contest={contest} setContest={setContest} editing={editing} />
       ),
     },
     [ContestTab.PROBLEMS]: {
       key: ContestTab.PROBLEMS,
       header: <T className="tt-ce">problems</T>,
       body: (
-        <div className="jk-pg-tb jk-pg-rl">
-          <EditProblems contest={contest} setContest={setContest} />
-        </div>
+        <EditProblems contest={contest} setContest={setContest} />
       ),
     },
   };
@@ -182,34 +172,23 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   ];
   
   return (
-    <TwoContentSection>
-      <div>
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-row extend center tx-h">
-          <div style={{ padding: 'var(--pad-sm) 0' }}><T className="tt-se fw-bd">name</T></div>
-          :&nbsp;
-          <Input
-            value={contest.name}
-            onChange={value => setContest(prevState => (
-              {
-                ...prevState,
-                name: value,
-              }
-            ))}
-            size="auto"
-          />
-        </div>
-        <div className="jk-pg-rl" style={{ overflow: 'hidden' }}>
-          <TabsInline
-            tabs={tabHeaders}
-            selectedTabKey={contestTab}
-            onChange={(tab) => setContestTab(tab)}
-            extraNodes={extraNodes}
-            extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
-          />
-        </div>
+    <TwoContentLayout
+      breadcrumbs={breadcrumbs}
+      tabs={tabHeaders}
+      tabButtons={extraNodes}
+    >
+      <div className="jk-row extend center tx-h">
+        <Input
+          label={<T className="tt-se">name</T>}
+          labelPlacement="left"
+          value={contest.name}
+          onChange={value => setContest(prevState => ({
+            ...prevState,
+            name: value,
+          }))}
+          size="auto"
+        />
       </div>
-      {renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.body, { selectedTabKey: contestTab })}
-    </TwoContentSection>
+    </TwoContentLayout>
   );
 };

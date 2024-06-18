@@ -8,7 +8,7 @@ import {
   ProblemVerdict,
   ProfileSetting,
   SocketEventSubmissionResponseDTO,
-  SubmissionResponseDTO,
+  SubmissionDataResponseDTO,
   SubmissionRunStatus,
 } from 'types';
 
@@ -33,7 +33,7 @@ export interface VerdictProps {
   status?: SubmissionRunStatus,
   submitId: string,
   submissionData?: SocketEventSubmissionResponseDTO,
-  processedCases?: SubmissionResponseDTO['processedCases'],
+  processedCases?: SubmissionDataResponseDTO['processedCases'],
   shortLabel?: boolean,
 }
 
@@ -234,7 +234,7 @@ export const Verdict = (props: VerdictProps) => {
 
 
 type ListenerVerdict = Omit<VerdictProps, 'submissionData'> & {
-  processedCases?: SubmissionResponseDTO['processedCases'],
+  processedCases?: SubmissionDataResponseDTO['processedCases'],
 };
 
 export const ListenerVerdict = ({ verdict, points, status, submitId, processedCases }: ListenerVerdict) => {

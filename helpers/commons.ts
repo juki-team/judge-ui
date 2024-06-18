@@ -30,4 +30,5 @@ export {
   cleanRequest,
   toFilterUrl,
   toSortUrl,
+  oneTab,
 } from '@juki-team/base-ui';

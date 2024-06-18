@@ -1,5 +1,4 @@
 import {
-  Breadcrumbs,
   ContestsAllList,
   ContestsEndlessList,
   ContestsLiveList,
@@ -7,11 +6,9 @@ import {
   ContestsUpcomingList,
   CreateContestButton,
   T,
-  TabsInline,
-  TwoContentSection,
+  TwoContentLayout,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEffect, useJukiRouter, useJukiUI, useJukiUser, useTrackLastPath } from 'hooks';
 import { ContestsTab, LastPathKey, TabsType } from 'types';
 
@@ -36,51 +33,29 @@ function Contests() {
     }
   }, [ contestsTab, replaceRoute ]);
   
-  const pushTab = (tab: ContestsTab) => pushRoute({ pathname: ROUTES.CONTESTS.LIST(tab), searchParams });
-  
   const tabs: TabsType<ContestsTab> = {
     [ContestsTab.ALL]: {
-      body: (
-        <div className="jk-pg-rl jk-pg-tb">
-          <ContestsAllList />
-        </div>
-      ),
+      body: <ContestsAllList />,
       key: ContestsTab.ALL,
       header: <T className="tt-se ws-np">all</T>,
     },
     [ContestsTab.ENDLESS]: {
-      body: (
-        <div className="jk-pg-rl jk-pg-tb">
-          <ContestsEndlessList />
-        </div>
-      ),
+      body: <ContestsEndlessList />,
       key: ContestsTab.ENDLESS,
       header: <T className="tt-se ws-np">endless</T>,
     },
     [ContestsTab.LIVE]: {
-      body: (
-        <div className="jk-pg-rl jk-pg-tb">
-          <ContestsLiveList />
-        </div>
-      ),
+      body: <ContestsLiveList />,
       key: ContestsTab.LIVE,
       header: <T className="tt-se ws-np">live</T>,
     },
     [ContestsTab.UPCOMING]: {
-      body: (
-        <div className="jk-pg-rl jk-pg-tb">
-          <ContestsUpcomingList />
-        </div>
-      ),
+      body: <ContestsUpcomingList />,
       key: ContestsTab.UPCOMING,
       header: <T className="tt-se ws-np">upcoming</T>,
     },
     [ContestsTab.PAST]: {
-      body: (
-        <div className="jk-pg-rl jk-pg-tb">
-          <ContestsPastList />
-        </div>
-      ),
+      body: <ContestsPastList />,
       key: ContestsTab.PAST,
       header: <T className="tt-se ws-np">past</T>,
     },
@@ -97,24 +72,15 @@ function Contests() {
   }
   
   return (
-    <TwoContentSection>
-      <div>
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-pg-rl">
-          <h2><T>contests</T></h2>
-        </div>
-        <div className="jk-pg-rl">
-          <TabsInline
-            tabs={tabs}
-            onChange={pushTab}
-            selectedTabKey={contestsTab as ContestsTab}
-            extraNodes={extraNodes}
-            extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
-          />
-        </div>
-      </div>
-      {renderReactNodeOrFunctionP1(tabs[contestsTab as ContestsTab]?.body, { selectedTabKey: contestsTab as ContestsTab })}
-    </TwoContentSection>
+    <TwoContentLayout
+      breadcrumbs={breadcrumbs}
+      tabs={tabs}
+      tabButtons={extraNodes}
+      selectedTabKey={contestsTab as ContestsTab}
+      getPathname={(tab) => ROUTES.CONTESTS.LIST(tab)}
+    >
+      <h2><T>contests</T></h2>
+    </TwoContentLayout>
   );
 }
 

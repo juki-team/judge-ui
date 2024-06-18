@@ -1,23 +1,20 @@
 import {
   AssignmentIcon,
   AutorenewIcon,
-  Breadcrumbs,
+  Button,
   ButtonLoader,
   CustomHead,
   EditIcon,
-  ExclamationIcon,
   FetcherLayer,
+  FirstLoginWrapper,
   LinkLastPath,
-  LoadingIcon,
   Popover,
-  ProblemCodeEditor,
   ProblemInfo,
   ProblemMySubmissions,
-  ProblemStatement,
   ProblemSubmissions,
+  ProblemView,
   T,
-  TabsInline,
-  TwoContentSection,
+  TwoContentLayout,
 } from 'components';
 import { JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import {
@@ -25,14 +22,14 @@ import {
   cleanRequest,
   getProblemJudgeKey,
   getSimpleProblemJudgeKey,
+  oneTab,
   renderReactNodeOrFunctionP1,
 } from 'helpers';
-import { useJukiRouter, useJukiUI, useJukiUser, useNotification, useTrackLastPath } from 'hooks';
+import { useJukiRouter, useJukiUI, useJukiUser, useNotification, useTask, useTrackLastPath } from 'hooks';
 import {
   ContentResponseType,
   HTTPMethod,
   Judge,
-  Language,
   LastPathKey,
   ProblemResponseDTO,
   ProblemTab,
@@ -43,13 +40,14 @@ import {
 } from 'types';
 import Custom404 from '../../../../404';
 
-const ProblemView = (): ReactNode => {
+const ProblemViewPage = (): ReactNode => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { searchParams, routeParams: { key: problemKey, tab: problemTab }, pushRoute } = useJukiRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { listenSubmission } = useTask();
+  const { components: { Link } } = useJukiUI();
   const breadcrumbs = [
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     <Link
@@ -69,67 +67,37 @@ const ProblemView = (): ReactNode => {
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
       url={JUDGE_API_V1.PROBLEM.DATA(problemKey as string)}
       loadingView={
-        <TwoContentSection>
-          <div>
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <div className="jk-row gap left jk-pg-rl">
-              <h2
-                style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  maxWidth: 'calc(100vw - var(--pad-md) - var(--pad-md) - 64px - var(--left-vertical-menu-width))',
-                }}
-              >
-                {problemKey}
-              </h2>
-            </div>
-            <div className="jk-pg-rl">
-              <TabsInline
-                tabs={{
-                  [ProblemTab.STATEMENT]: {
-                    key: ProblemTab.STATEMENT,
-                    header: <T className="ws-np tt-ce">statement</T>,
-                    body: '',
-                  },
-                  [ProblemTab.EDITOR]: {
-                    key: ProblemTab.EDITOR,
-                    header: <T className="ws-np tt-ce">code editor</T>,
-                    body: '',
-                  },
-                  'loading': {
-                    key: 'loading',
-                    header: <div className="jk-row">
-                      <div className="dot-flashing" />
-                    </div>,
-                    body: '',
-                  },
-                }}
-                selectedTabKey={ProblemTab.STATEMENT}
-                onChange={() => null}
-              />
-            </div>
-          </div>
-          <div className="jk-row jk-col extend">
-            <LoadingIcon size="very-huge" className="cr-py" />
-          </div>
-        </TwoContentSection>
+        <TwoContentLayout breadcrumbs={breadcrumbs} loading>
+          <h2
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: 'calc(100vw - var(--pad-md) - var(--pad-md) - 64px - var(--left-vertical-menu-width))',
+            }}
+          >
+            {problemKey}
+          </h2>
+        </TwoContentLayout>
       }
       errorView={
-        <TwoContentSection>
-          <div>
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
-          </div>
-          <Custom404>
-            <h3><T className="tt-ue">problem not found</T></h3>
-            <p>
-              <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
-            </p>
-            <LinkLastPath lastPathKey={LastPathKey.PROBLEMS}>
-              <div className="jk-row"><AssignmentIcon /><T className="tt-se">go to problem list</T></div>
-            </LinkLastPath>
-          </Custom404>
-        </TwoContentSection>
+        <TwoContentLayout
+          breadcrumbs={breadcrumbs}
+          tabs={oneTab(
+            <Custom404>
+              <p>
+                <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
+              </p>
+              <LinkLastPath lastPathKey={LastPathKey.PROBLEMS}>
+                <Button icon={<AssignmentIcon />} type="light">
+                  <T className="tt-se">go to problem list</T>
+                </Button>
+              </LinkLastPath>
+            </Custom404>,
+          )}
+        >
+          <h2><T>problem not found</T></h2>
+        </TwoContentLayout>
       }
     >
       {({ data, mutate }) => {
@@ -139,22 +107,57 @@ const ProblemView = (): ReactNode => {
             key: ProblemTab.STATEMENT,
             header: <T className="ws-np tt-ce">statement</T>,
             body: (
-              <ProblemStatement
-                judge={problem.judge}
-                problemKey={problem.key}
-                author={problem.author}
-                name={problem.name}
-                status={problem.status}
-                statement={problem.statement}
-                settings={problem.settings}
-                tags={problem.tags}
+              <ProblemView
+                problem={problem}
+                withoutName
+                infoPlacement="name"
+                codeEditorSourceStoreKey={getProblemJudgeKey(problem.judge, problem.key)}
+                codeEditorCenterButtons={({ sourceCode, language }) => {
+                  return (
+                    <FirstLoginWrapper>
+                      <ButtonLoader
+                        type="secondary"
+                        size="tiny"
+                        disabled={sourceCode === ''}
+                        onClick={async setLoaderStatus => {
+                          setLoaderStatus(Status.LOADING);
+                          const response = cleanRequest<ContentResponseType<any>>(
+                            await authorizedRequest(
+                              JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problem.key),
+                              { method: HTTPMethod.POST, body: JSON.stringify({ language, source: sourceCode }) },
+                            ),
+                          );
+                          
+                          if (notifyResponse(response, setLoaderStatus)) {
+                            listenSubmission(
+                              response.content.submitId,
+                              problem.judge,
+                              problem.key,
+                            );
+                            // TODO fix the filter Url param
+                            // await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(
+                            //   problem.judge,
+                            //   problem.key,
+                            //   nickname,
+                            //   1,
+                            //   +(myStatusPageSize || PAGE_SIZE_OPTIONS[0]),
+                            //   '',
+                            //   '',
+                            // ));
+                            pushRoute({
+                              pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS),
+                              searchParams,
+                            });
+                          }
+                        }}
+                      >
+                        <T>submit</T>
+                      </ButtonLoader>
+                    </FirstLoginWrapper>
+                  );
+                }}
               />
             ),
-          },
-          [ProblemTab.EDITOR]: {
-            key: ProblemTab.EDITOR,
-            header: <T className="ws-np tt-ce">code editor</T>,
-            body: <div className="jk-pg-tb jk-pg-rl" key={'asdfa'}><ProblemCodeEditor problem={problem} /></div>,
           },
         };
         
@@ -162,19 +165,21 @@ const ProblemView = (): ReactNode => {
           tabs[ProblemTab.MY_SUBMISSIONS] = {
             key: ProblemTab.MY_SUBMISSIONS,
             header: <T className="ws-np tt-ce">my submissions</T>,
-            body: <div className="jk-pg-tb jk-pg-rl"><ProblemMySubmissions problem={problem} /></div>,
+            body: <ProblemMySubmissions problem={problem} />,
           };
         }
         tabs[ProblemTab.SUBMISSIONS] = {
           key: ProblemTab.SUBMISSIONS,
           header: <T className="ws-np tt-ce">submissions</T>,
-          body: <div className="jk-pg-tb jk-pg-rl"><ProblemSubmissions problem={problem} /></div>,
+          body: <ProblemSubmissions problem={problem} />,
         };
         const breadcrumbs: ReactNode[] = [
           <LinkLastPath
             lastPathKey={LastPathKey.PROBLEMS}
             key="problems"
-          ><T className="tt-se">problems</T></LinkLastPath>,
+          >
+            <T className="tt-se">problems</T>
+          </LinkLastPath>,
           <Link
             href={{
               pathname: ROUTES.PROBLEMS.VIEW(
@@ -191,26 +196,9 @@ const ProblemView = (): ReactNode => {
           renderReactNodeOrFunctionP1(tabs[problemTab as string]?.header, { selectedTabKey: problemTab as ProblemTab }),
         ];
         
-        const pushTab = (tabKey: ProblemTab) => pushRoute({
-          pathname: ROUTES.PROBLEMS.VIEW(problemKey as string, tabKey),
-          searchParams,
-        });
-        
         const extraNodes = [];
         if (data?.content?.user?.isEditor && (data?.content?.judge === Judge.JUKI_JUDGE || data?.content?.judge === Judge.CUSTOMER)) {
           extraNodes.push(
-            <ButtonLoader
-              size="small"
-              icon={<EditIcon />}
-              onClick={async setLoaderStatus => {
-                setLoaderStatus(Status.LOADING);
-                await pushRoute(ROUTES.PROBLEMS.EDIT(problemKey as string));
-                setLoaderStatus(Status.SUCCESS);
-              }}
-              responsiveMobile
-            >
-              {<T>edit</T>}
-            </ButtonLoader>,
             <Popover
               content={<T className="ws-np tt-se">only submissions that are not in a contest will be
                 judged</T>}
@@ -244,11 +232,24 @@ const ProblemView = (): ReactNode => {
                     }
                   }}
                   responsiveMobile
+                  type="light"
                 >
                   <T>rejudge</T>
                 </ButtonLoader>
               </div>
             </Popover>,
+            <ButtonLoader
+              size="small"
+              icon={<EditIcon />}
+              onClick={async setLoaderStatus => {
+                setLoaderStatus(Status.LOADING);
+                await pushRoute(ROUTES.PROBLEMS.EDIT(problemKey as string));
+                setLoaderStatus(Status.SUCCESS);
+              }}
+              responsiveMobile
+            >
+              {<T>edit</T>}
+            </ButtonLoader>,
           );
         } else if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(data?.content?.judge) && user.isLogged) {
           extraNodes.push(
@@ -275,11 +276,16 @@ const ProblemView = (): ReactNode => {
         }
         
         return (
-          <TwoContentSection>
+          <TwoContentLayout
+            tabs={tabs}
+            breadcrumbs={breadcrumbs}
+            selectedTabKey={problemTab as ProblemTab}
+            getPathname={tabKey => ROUTES.PROBLEMS.VIEW(problemKey as string, tabKey)}
+            tabButtons={extraNodes}
+          >
             <div>
               <CustomHead title={problem.name} />
-              <Breadcrumbs breadcrumbs={breadcrumbs} />
-              <div className="jk-row gap left jk-pg-rl">
+              <div className="jk-row gap left">
                 <h2
                   style={{
                     whiteSpace: 'nowrap',
@@ -293,50 +299,14 @@ const ProblemView = (): ReactNode => {
                 {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) && (
                   <div className="jk-tag warning">{JUDGE[problem.judge].label}</div>
                 )}
-                <Popover
-                  content={problem.judge === Judge.JUKI_JUDGE
-                    ? (
-                      <div className="jk-pg-sm">
-                        <ProblemInfo
-                          author={problem.author}
-                          status={problem.status}
-                          tags={problem.tags}
-                          settings={problem.settings}
-                        />
-                      </div>
-                    ) : [ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judge)
-                      ? (
-                        <div className="jk-row extend top">
-                          <div
-                            className={`${problem.judge}-statement only-info`}
-                            dangerouslySetInnerHTML={{ __html: problem.statement.html[Language.EN] || problem.statement.html[Language.ES] }}
-                          />
-                        </div>
-                      ) : <div></div>}
-                  triggerOn="click"
-                  placement="bottom"
-                >
-                  <div className="jk-row link">
-                    <ExclamationIcon filledCircle className="cr-py" rotate={180} />
-                  </div>
-                </Popover>
-              </div>
-              <div className="jk-pg-rl">
-                <TabsInline
-                  tabs={tabs}
-                  onChange={pushTab}
-                  selectedTabKey={problemTab as ProblemTab}
-                  extraNodes={extraNodes}
-                  extraNodesPlacement={viewPortSize === 'sm' ? 'bottomRight' : undefined}
-                />
+                <ProblemInfo problem={problem} />
               </div>
             </div>
-            {renderReactNodeOrFunctionP1(tabs[problemTab as ProblemTab]?.body, { selectedTabKey: problemTab as ProblemTab })}
-          </TwoContentSection>
+          </TwoContentLayout>
         );
       }}
     </FetcherLayer>
   );
 };
 
-export default ProblemView;
+export default ProblemViewPage;

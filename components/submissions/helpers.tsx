@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   DateField,
@@ -21,12 +21,12 @@ import {
   Judge,
   LinkCmpProps,
   ProblemTab,
-  SubmissionResponseDTO,
+  SubmissionDataResponseDTO,
 } from 'types';
 import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time } from './utils';
 
-export const submissionNickname = (Image: FC<ImageCmpProps>): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionNickname = (Image: FC<ImageCmpProps>): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'user nickname',
   index: 'nickname',
   field: ({ record: { userNickname, userImageUrl }, isCard }) => (
@@ -50,11 +50,11 @@ export const submissionNickname = (Image: FC<ImageCmpProps>): DataViewerHeadersT
 });
 
 type SubmissionContestColumnProps = {
-  header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>,
+  header?: Pick<DataViewerHeadersType<SubmissionDataResponseDTO>, 'filter'>,
   blankTarget?: boolean,
 }
 
-export const submissionContestColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, props?: SubmissionContestColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionContestColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, props?: SubmissionContestColumnProps): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'contest',
   index: 'contest',
   field: ({ record: { problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
@@ -78,12 +78,12 @@ export const submissionContestColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
 });
 
 type SubmissionProblemColumnProps = {
-  header?: Pick<DataViewerHeadersType<SubmissionResponseDTO>, 'filter'>,
+  header?: Pick<DataViewerHeadersType<SubmissionDataResponseDTO>, 'filter'>,
   onlyProblem?: boolean,
   blankTarget?: boolean,
 }
 
-export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, props?: SubmissionProblemColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, props?: SubmissionProblemColumnProps): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: () => (
     <TextHeadCell
       text={props?.onlyProblem ? 'problem' : 'problem / contest'}
@@ -139,7 +139,7 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
   minWidth: 280,
 });
 
-export const submissionLanguage = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionLanguage = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'language',
   index: 'language',
   field: ({ record: { submitId, canViewSourceCode, language }, isCard }) => (
@@ -171,10 +171,10 @@ const options = Object.values(PROBLEM_VERDICT)
     return {
       label: <TT>{label}</TT>,
       value,
-    }
+    };
   });
 
-export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'verdict',
   index: 'verdict',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode, processedCases }, isCard }) => (
@@ -215,7 +215,7 @@ type SubmissionActionsColumnProps = {
   canRejudge: boolean
 }
 
-export const submissionActionsColumn = ({ canRejudge }: SubmissionActionsColumnProps): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionActionsColumn = ({ canRejudge }: SubmissionActionsColumnProps): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'actions',
   index: 'actions',
   field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
@@ -229,7 +229,7 @@ export const submissionActionsColumn = ({ canRejudge }: SubmissionActionsColumnP
   minWidth: 160,
 });
 
-export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionDateColumn = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'date',
   index: 'timestamp',
   field: ({ record: { timestamp }, isCard }) => (
@@ -244,7 +244,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionResponse
   minWidth: 180,
 });
 
-export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'time',
   index: 'timeUsed',
   field: ({ record: { timeUsed, submitId, canViewSourceCode, language, verdict, memoryUsed }, isCard }) => (
@@ -273,7 +273,7 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionResponseDT
   cardPosition: 'center',
 });
 
-export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionResponseDTO> => ({
+export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'memory',
   index: 'memoryUsed',
   field: ({ record: { memoryUsed, verdict }, isCard }) => (

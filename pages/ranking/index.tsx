@@ -1,15 +1,6 @@
-import {
-  Breadcrumbs,
-  DataViewer,
-  Field,
-  Image,
-  T,
-  TextField,
-  TextHeadCell,
-  TwoContentSection,
-  UserNicknameLink,
-} from 'components';
+import { DataViewer, Field, Image, T, TextField, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
+import { oneTab } from 'helpers';
 import { useDataViewerRequester, useEffect, useJukiUI, useMemo, useState } from 'hooks';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
@@ -136,14 +127,9 @@ function Ranking() {
   ];
   
   return (
-    <TwoContentSection>
-      <div>
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
-        <div className="jk-pg-rl jk-pg-tb">
-          <h1><T>ranking</T></h1>
-        </div>
-      </div>
-      <div className="jk-pg-rl jk-pg-tb">
+    <TwoContentLayout
+      breadcrumbs={breadcrumbs}
+      tabs={oneTab(
         <DataViewer<UserRankResponseDTO>
           headers={columns}
           data={data}
@@ -154,9 +140,11 @@ function Ranking() {
           setLoaderStatusRef={setLoaderStatusRef}
           cards={{ height: 240, expanded: true }}
           {...DEFAULT_DATA_VIEWER_PROPS}
-        />
-      </div>
-    </TwoContentSection>
+        />,
+      )}
+    >
+      <h1><T>ranking</T></h1>
+    </TwoContentLayout>
   );
 }
 

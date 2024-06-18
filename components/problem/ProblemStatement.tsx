@@ -1,21 +1,14 @@
 import {
   ButtonLoader,
-  Collapse,
   DownloadIcon,
-  ExtraProblemInfo,
   FlagEnImage,
   FlagEsImage,
   FloatToolbar,
   MdMathEditor,
   MdMathViewer,
   PlusIcon,
-  ProblemMemoryLimitInfo,
-  ProblemModeInfo,
-  ProblemTimeLimitInfo,
-  ProblemTypeInfo,
   T,
   TabsInline,
-  UpIcon,
 } from 'components';
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAsPdf, getStatementData } from 'helpers';
 import { useJukiUI, useJukiUser, useT } from 'hooks';
@@ -24,32 +17,24 @@ import {
   EditCreateProblemType,
   Judge,
   Language,
+  ProblemResponseDTO,
   ProblemScoringMode,
-  ProblemSettingsType,
-  ProblemStatementType,
-  ProblemStatus,
   ProfileSetting,
   Status,
 } from 'types';
 import { ProblemLetter } from './ProblemLetter';
+import { JukiProblemInfo } from './ProblemView/ProblemInfo';
 import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
-  judge: Judge,
-  problemKey: string,
-  settings: ProblemSettingsType,
-  name: string,
-  tags: string[],
-  author: string,
-  status: ProblemStatus,
-  statement: ProblemStatementType,
+  problem: ProblemResponseDTO,
   setProblem?: Dispatch<SetStateAction<EditCreateProblemType>>,
   contest?: { index: string, color: string },
 }
 
-export const ProblemStatement = (props: ProblemStatementProps) => {
+export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatementProps) => {
   
-  const { judge, problemKey, name, settings, tags, author, status, statement, setProblem, contest } = props;
+  const { judge, key: problemKey, name, settings, tags, author, status, statement } = problem;
   const editing = !!setProblem;
   const { viewPortSize } = useJukiUI();
   const {
@@ -75,7 +60,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
     return (
       <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
         <div
-          className="jk-row extend top gap nowrap stretch left jk-pg-rl jk-pg-tb"
+          className="jk-row extend top gap nowrap stretch left"
           style={{ position: 'relative' }}
         >
           {contest && (
@@ -117,15 +102,13 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
     },
   };
   
-  const isSmallMedium = viewPortSize === 'sm' || viewPortSize === 'md';
+  const isSmall = viewPortSize === 'sm';
   
   return (
-    <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-      <div className="jk-row extend top gap nowrap stretch left jk-pg-rl jk-pg-tb">
-        <div
-          className={classNames('jk-col top gap stretch flex-3', { editing })}
-        >
-          {!editing && isSmallMedium && (
+    <div className="jk-row extend top">
+      <div className="jk-row extend top gap nowrap stretch left">
+        <div className={classNames('jk-col top stretch flex-3', { editing })}>
+          {!editing && isSmall && (
             <FloatToolbar
               actionButtons={[
                 {
@@ -145,41 +128,6 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 },
               ]}
             />
-          )}
-          {!editing && (isSmallMedium || contest) && (
-            <div className="jk-row center extend gap nowrap fw-bd">
-              <div className="jk-col fw-nl">
-                {contest && (
-                  <div className="jk-row gap">
-                    <ProblemLetter index={contest.index} color={contest.color} />
-                    <h3>{name}</h3>
-                  </div>
-                )}
-                <div className="bc-we jk-br-ie">
-                  <Collapse
-                    header={({ toggle, isOpen }) => (
-                      <div className="jk-pg-sm" style={{ paddingBottom: isOpen ? 0 : 4 }}>
-                        <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
-                          <ProblemTimeLimitInfo settings={settings} />
-                          <ProblemMemoryLimitInfo settings={settings} />
-                        </div>
-                        <div className={classNames('jk-row-col', { gap: viewPortSize !== 'sm' })}>
-                          <ProblemTypeInfo settings={settings} />
-                          <ProblemModeInfo settings={settings} expand={false} />
-                        </div>
-                        <div className="jk-row">
-                          <UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link br-50-pc bc-g6" />
-                        </div>
-                      </div>
-                    )}
-                  >
-                    <div className="jk-col gap jk-pg-sm">
-                      <ExtraProblemInfo author={author} status={status} tags={tags} settings={settings} />
-                    </div>
-                  </Collapse>
-                </div>
-              </div>
-            </div>
           )}
           {editing && (
             <div className="jk-col">
@@ -210,13 +158,13 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : (
-              <div className="bc-we jk-pg-md jk-br-ie">
+              <div className="bc-we jk-pg-sm jk-br-ie">
                 <MdMathViewer source={statementDescription} />
               </div>
             )}
           </div>
           <div>
-            <h3><T>input</T></h3>
+            {(editing || !!statementInput) && <h3><T>input</T></h3>}
             {editing ? (
               <div className="text-edit">
                 <MdMathEditor
@@ -232,14 +180,14 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                   }))}
                 />
               </div>
-            ) : statementInput
-              ? <div className="bc-we jk-pg-md jk-border-radius-inline">
+            ) : !!statementInput
+              ? <div className="bc-we jk-pg-sm jk-br-ie">
                 <MdMathViewer source={statementInput} />
               </div>
-              : <em><T className="tt-se fw-bd">no input description</T></em>}
+              : null}
           </div>
           <div>
-            <h3><T>output</T></h3>
+            {(editing || !!statementOutput) && <h3><T>output</T></h3>}
             {editing ? (
               <div className="text-edit">
                 <MdMathEditor
@@ -256,10 +204,10 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                 />
               </div>
             ) : statementOutput
-              ? <div className="bc-we jk-pg-md jk-border-radius-inline">
+              ? <div className="bc-we jk-pg-sm jk-br-ie">
                 <MdMathViewer source={statementOutput} />
               </div>
-              : <em><T className="tt-se fw-bd">no output description</T></em>}
+              : null}
           </div>
           {settings.mode === ProblemScoringMode.SUBTASK && (
             <div>
@@ -303,12 +251,13 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
                         </div>
                       </>
                     ) : (
-                      <div className="flex-1 bc-we jk-pg-sm jk-border-radius-inline">
-                        <div className="tx-h fw-bd cr-pd">
+                      <div className="flex-1 bc-we jk-pg-sm jk-br-ie">
+                        <div className="fw-bd cr-pd">
                           <T className="tt-se">subtask</T> {pointsByGroup.group}
-                          &nbsp;(&nbsp;{pointsByGroup.points}&nbsp;
-                          {pointsByGroup.points === 1 ? <T className="tt-se">point</T> :
-                            <T className="tt-se">points</T>} )
+                          &nbsp;({pointsByGroup.points}&nbsp;
+                          {pointsByGroup.points === 1
+                            ? <T className="tt-se">point</T>
+                            : <T className="tt-se">points</T>})
                         </div>
                         <MdMathViewer
                           source={pointsByGroup.description?.[preferredLanguage] || pointsByGroup.description?.[Language.EN] || pointsByGroup.description?.[Language.ES]}
@@ -322,9 +271,10 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
             </div>
           )}
           <div className="jk-row stretch gap">
-            <div className="jk-row stretch gap nowrap flex-1">
-              <h3><T>input sample</T></h3>
-              <h3><T>output sample</T></h3>
+            <div className="jk-row stretch gap nowrap flex-1 jk-pg-sm-tb">
+              {/*<h3><T>output sample</T></h3>*/}
+              <div className="jk-row"><T className="tt-se tx-h cr-pd fw-bd">input sample</T></div>
+              <div className="jk-row"><T className="tt-se tx-h cr-pd fw-bd">output sample</T></div>
             </div>
             {editing && (
               <div className="jk-row">
@@ -385,13 +335,14 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
           </div>
         </div>
         {!contest && !editing && (
-          <div className="screen lg hg flex-1">
-            <div className="jk-border-radius-inline jk-pg-md bc-we jk-col gap stretch">
-              <ProblemTimeLimitInfo settings={settings} expand />
-              <ProblemMemoryLimitInfo settings={settings} expand />
-              <ProblemTypeInfo settings={settings} />
-              <ProblemModeInfo settings={settings} expand />
-              <ExtraProblemInfo author={author} status={status} tags={tags} settings={settings} />
+          <div className="screen md lg hg flex-1">
+            <JukiProblemInfo
+              settings={settings}
+              status={status}
+              tags={tags}
+              author={author}
+              expand
+            >
               <ButtonLoader
                 size="small"
                 icon={<DownloadIcon />}
@@ -422,7 +373,7 @@ export const ProblemStatement = (props: ProblemStatementProps) => {
               >
                 <T>download as md</T>
               </ButtonLoader>
-            </div>
+            </JukiProblemInfo>
           </div>
         )}
       </div>

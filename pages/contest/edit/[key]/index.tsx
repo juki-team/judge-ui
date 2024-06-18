@@ -1,4 +1,5 @@
-import { Breadcrumbs, EditCreateContest, FetcherLayer, LinkLastPath, T, TwoContentSection } from 'components';
+import { oneTab, TwoContentLayout } from '@juki-team/base-ui';
+import { EditCreateContest, FetcherLayer, LinkLastPath, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { parseContest } from 'helpers';
 import { useContestRouter } from 'hooks';
@@ -17,12 +18,9 @@ function ContestEdit() {
     <FetcherLayer<ContentResponseType<ContestResponseDTO>>
       url={JUDGE_API_V1.CONTEST.CONTEST_DATA(contestKey)}
       errorView={
-        <TwoContentSection>
-          <div className="jk-col stretch extend nowrap">
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
-          </div>
-          <Custom404 />
-        </TwoContentSection>
+        <TwoContentLayout breadcrumbs={breadcrumbs} tabs={oneTab(<Custom404 />)}>
+          <h2><T>contest not found</T></h2>
+        </TwoContentLayout>
       }
     >
       {({ data, isLoading, error }) => {

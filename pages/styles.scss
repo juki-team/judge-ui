@@ -151,3 +151,9 @@ li > * {
   display: inline-block;
   user-select: none;
 }
+
+.hover-able {
+  &:hover {
+    background: var(--t-color-highlight-light);
+  }
+}
