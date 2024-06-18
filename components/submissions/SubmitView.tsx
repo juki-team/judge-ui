@@ -59,7 +59,7 @@ const SubmitViewLayout = ({ submit }: { submit: SubmissionDataResponseDTO }) => 
   });
   
   return (
-    <div className="jk-pg bc-we jk-br-ie">
+    <div>
       <Collapse
         header={({ isOpen, toggle }) => (
           <div className="jk-row-col gap">

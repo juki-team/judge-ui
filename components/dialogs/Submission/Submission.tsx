@@ -32,16 +32,16 @@ export const SubmissionModal = ({ submitId }: SubmissionModalProps) => {
         <div className="fw-bd tx-l jk-row-col left gap">
           <h3><T>submission</T></h3>
           <div className="jk-row gap">
-            <Link href={ROUTES.SUBMISSIONS.VIEW(submitId)} target="_blank">
-              <Tooltip content={<T>open submission in new tab</T>}>
+            <Tooltip content={<T>open submission in new tab</T>}>
+              <Link href={ROUTES.SUBMISSIONS.VIEW(submitId)} target="_blank">
                 <div className="jk-button light only-icon small link"><OpenInNewIcon /></div>
-              </Tooltip>
-            </Link>
-            <CopyToClipboard text={submitId}>
-              <Tooltip content={<T>copy id</T>}>
+              </Link>
+            </Tooltip>
+            <Tooltip content={<T>copy id</T>}>
+              <CopyToClipboard text={submitId}>
                 <div className="jk-button light only-icon small"><ContentCopyIcon /></div>
-              </Tooltip>
-            </CopyToClipboard>
+              </CopyToClipboard>
+            </Tooltip>
             <Tooltip content={<T>reload</T>}>
               <ButtonLoader
                 size="small"

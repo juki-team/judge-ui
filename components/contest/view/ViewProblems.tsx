@@ -78,7 +78,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                         : (JUDGE[judge]?.getProblemUrl(key) || '')}
                       target="_blank"
                     >
-                      <div className="jk-row gap">
+                      <div className="jk-row gap link">
                         <div className="fw-bd cr-g3 jk-col">
                           {JUDGE[judge]?.label || (judge === Judge.CUSTOMER ? '' : judge)}
                           <div>{key}</div>

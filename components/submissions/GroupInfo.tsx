@@ -20,7 +20,7 @@ export interface GroupInfoProps {
   submitId: string,
 }
 
-const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
+const DiffViewButton = ({ diffInput, croppedDiff }: { diffInput: string, croppedDiff: boolean }) => {
   
   const [ isOpen, setIsOpen ] = useState(false);
   const [ diff, setDiff ] = useState('');
@@ -47,9 +47,14 @@ const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
       <Button icon={<VisibilityIcon />} className="" size="tiny" type="light" onClick={() => setIsOpen(true)}>
         <T>view diff</T>
       </Button>
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} closeWhenKeyEscape closeWhenClickOutside>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} closeWhenKeyEscape closeWhenClickOutside closeIcon>
         <div className="jk-col stretch gap jk-pg-lg diff-body-modal">
           <div>
+            {croppedDiff && (
+              <T className="tt-se cr-er fw-bd">
+                only the first 1000 characters of the difference are being displayed
+              </T>
+            )}
           </div>
           <div dangerouslySetInnerHTML={{ __html: diff }} />
           {diffInput.includes('No newline at end of file') && (
@@ -62,7 +67,7 @@ const DiffViewButton = ({ diffInput }: { diffInput: string }) => {
       </Modal>
     </>
   );
-}
+};
 
 export const GroupInfo = (props: GroupInfoProps) => {
   
@@ -114,7 +119,10 @@ export const GroupInfo = (props: GroupInfoProps) => {
         <div className="jk-row">
           <Verdict verdict={testCase.verdict} submitId={submitId} />
           {testCase.diff && (
-            <DiffViewButton diffInput={testCase.diff.replaceAll(testCase.testCaseKey + '.judge.out', 'A').replaceAll(testCase.testCaseKey + '.out', 'B')} />
+            <DiffViewButton
+              croppedDiff={testCase.croppedDiff}
+              diffInput={testCase.diff.replaceAll(testCase.testCaseKey + '.judge.out', 'A').replaceAll(testCase.testCaseKey + '.out', 'B')}
+            />
           )}
         </div>
         {problemMode === ProblemScoringMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
@@ -170,8 +178,9 @@ export const GroupInfo = (props: GroupInfoProps) => {
         <div className={classNames('jk-row extend block gap jk-table-inline-row fw-bd')}>
           <div className="jk-row" style={{ flex: 0.4 }}><T>#</T></div>
           <div className="jk-row center gap"><T className="tt-se">verdict</T></div>
-          {problemMode === ProblemScoringMode.PARTIAL && <div className="jk-row center gap"><T className="tt-se">points</T>
-          </div>}
+          {problemMode === ProblemScoringMode.PARTIAL &&
+            <div className="jk-row center gap"><T className="tt-se">points</T>
+            </div>}
           <div className="jk-row center gap"><T className="tt-se">time</T></div>
           <div className="jk-row center gap"><T className="tt-se">memory</T></div>
           <div className="jk-row center gap"><T className="tt-se">exit code</T></div>
@@ -179,11 +188,9 @@ export const GroupInfo = (props: GroupInfoProps) => {
         <div
           style={{
             width: '100%',
-            ...(testCases.length > 3 ? {
-              height: rowHeight * 3,
-              boxShadow: 'inset 0 0 2px rgba(var(--t-color-black-rgb), 0.3), inset 0 1px 3px 1px rgba(var(--t-color-black-rgb), 0.15)',
-            } : {}),
+            height: rowHeight * Math.min(testCases.length, 3) + 1,
           }}
+          className={classNames({ 'top-bottom-inset-shadow': testCases.length > 3 })}
         >
           <VirtualizedRowsFixed
             size={testCases.length}

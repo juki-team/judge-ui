@@ -14,7 +14,7 @@ function Submit() {
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
-      tabs={oneTab(<SubmitView submitId={submitId as string} />)}
+      tabs={oneTab(<div className="jk-pg bc-we jk-br-ie"><SubmitView submitId={submitId as string} /></div>)}
     >
       <h3><T>submission</T>&nbsp;{submitId}</h3>
     </TwoContentLayout>
