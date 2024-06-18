@@ -9,9 +9,9 @@ import {
   TextField,
   TextHeadCell,
 } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, ROUTES } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
-import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
+import { useJukiRouter, useJukiUI, useJukiUser, useNotification } from 'hooks';
 import React, { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -28,12 +28,14 @@ import {
 
 export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   
-  const { problems = {}, user, key } = contest;
+  const { problems = {}, user } = contest;
   const { isJudge, isAdmin } = user || {};
-  const { searchParams, pushRoute, routeParams: { key: contestKey, index, tab } } = useJukiRouter();
+  const { searchParams, routeParams: { key: contestKey, index, tab } } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
+  const { company: { key } } = useJukiUser();
   const isJudgeOrAdmin = isJudge || isAdmin;
+  const isCustomCompany = key !== JUKI_APP_COMPANY_KEY;
   
   const columns = useMemo(() => {
     return [
@@ -70,7 +72,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                 isJudgeOrAdmin
                   ? (
                     <Link
-                      href={judge === Judge.JUKI_JUDGE
+                      href={isCustomCompany
                         ? window?.location.origin + '/' + (JUDGE[judge]?.getProblemUrl(key)
                         || '').split('/').slice(3).join('/')
                         : (JUDGE[judge]?.getProblemUrl(key) || '')}
@@ -142,6 +144,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                   }
                 }}
                 size="tiny"
+                type="light"
               >
                 <T>rejudge problem</T>
               </ButtonLoader>
@@ -182,7 +185,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         minWidth: 64,
       } as DataViewerHeadersType<ContestProblemType>,
     ];
-  }, [ isJudgeOrAdmin, contestKey, searchParams, addSuccessNotification, addErrorNotification, Link ]);
+  }, [ isJudgeOrAdmin, contestKey, searchParams, addSuccessNotification, addErrorNotification, Link, isCustomCompany ]);
   const data = Object.values(problems);
   
   return (
@@ -192,12 +195,12 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
       rows={{ height: 70 }}
       rowsView={viewPortSize !== 'sm'}
       name={QueryParam.ALL_USERS_TABLE}
-      onRecordClick={async ({ isCard, data, index }) => {
-        await pushRoute({
-          pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
-          searchParams,
-        });
-      }}
+      // onRecordClick={async ({ isCard, data, index }) => {
+      //   await pushRoute({
+      //     pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
+      //     searchParams,
+      //   });
+      // }}
       getRecordStyle={({ data, index, isCard }) => {
         if (isCard) {
           return { borderTop: '6px solid ' + data[index]?.color, cursor: 'pointer' };

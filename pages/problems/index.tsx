@@ -27,7 +27,16 @@ import {
   ROUTES,
 } from 'config/constants';
 import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
-import { useEffect, useFetcher, useJukiRouter, useJukiUser, useMemo, useState, useTrackLastPath } from 'hooks';
+import {
+  useEffect,
+  useFetcher,
+  useJukiRouter,
+  useJukiUI,
+  useJukiUser,
+  useMemo,
+  useState,
+  useTrackLastPath,
+} from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -60,6 +69,7 @@ function Problems() {
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { user: { canCreateProblem }, company: { name, key } } = useJukiUser();
   const { searchParams, setSearchParams } = useJukiRouter();
+  const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();
   const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
   const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
@@ -74,7 +84,9 @@ function Problems() {
       index: 'key',
       field: ({ record: { key }, isCard }) => (
         <Field className="jk-row fw-bd cr-py">
-          {key}
+          <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT) }}>
+            <div className="jk-row link">{key}</div>
+          </Link>
         </Field>
       ),
       sort: true,
@@ -89,7 +101,9 @@ function Problems() {
       field: ({ record: { key, judge, name, user }, isCard }) => (
         <Field className={classNames('jk-row fw-bd jk-pg-sm cr-py', { left: !isCard, center: isCard })}>
           <div className="jk-row gap nowrap">
-            <div className="jk-row">{name}</div>
+            <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT) }}>
+              <div className="jk-row link">{name}</div>
+            </Link>
             {user.solved ? (
               <Tooltip
                 content={<T className="tt-se ws-np">solved</T>}
@@ -218,7 +232,7 @@ function Problems() {
         minWidth: 180,
       } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
     ] : []),
-  ], [ canCreateProblem, tags, judge ]);
+  ], [ canCreateProblem, tags, judge, Link ]);
   
   const breadcrumbs = [
     <T className="tt-se" key="problems">problems</T>,
@@ -284,11 +298,11 @@ function Problems() {
           refreshInterval={60000}
           extraNodes={extraNodes}
           cards={{ height: 256, expanded: true }}
-          onRecordClick={async ({ data, index }) => {
-            if (window?.getSelection()?.type !== 'Range') {
-              await pushRoute({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
-            }
-          }}
+          // onRecordClick={async ({ data, index }) => {
+          //   if (window?.getSelection()?.type !== 'Range') {
+          //     await pushRoute({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
+          //   }
+          // }}
           dependencies={[ judge ]}
         />
       ))}
