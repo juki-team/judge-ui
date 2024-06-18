@@ -53,6 +53,10 @@ export const JUDGE_API_V1 = {
       return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(
         contestKey)}`, filterUrl), sortUrl);
     },
+    CONTEST_EXPORT: (contestKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
+      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions/export?page=${page}&size=${size}&contestKey=${encodeURIComponent(
+        contestKey)}`, filterUrl), sortUrl);
+    },
     CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
       return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(
         contestKey)}&nickname=${nickname}`, filterUrl), sortUrl);

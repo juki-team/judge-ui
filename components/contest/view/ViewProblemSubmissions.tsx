@@ -1,9 +1,11 @@
-import { PagedDataViewer } from 'components';
+import { ButtonLoader, PagedDataViewer, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUI } from 'hooks';
+import { authorizedRequest, getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
+import { useJukiUI, useRef } from 'hooks';
 import { useMemo } from 'react';
-import { ContestResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
+import { ContestResponseDTO, DataViewerHeadersType, QueryParam, Status, SubmissionDataResponseDTO } from 'types';
+import { downloadBlobAsFile } from '../../../helpers';
+import { HTTPMethod } from '../../../types';
 import {
   submissionActionsColumn,
   submissionDateColumn,
@@ -42,18 +44,43 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
     submissionMemoryUsed(),
   ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge, Link, Image ]);
   
+  const lastGetUrl = useRef({ filter: {}, sort: {} });
+  
   return (
     <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>
       rows={{ height: 80 }}
       cards={{ width: 272, expanded: true }}
       headers={columns}
-      getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, toFilterUrl(filter), toSortUrl(sort))
-      )}
+      getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
+        lastGetUrl.current = {
+          filter,
+          sort,
+        };
+        return JUDGE_API_V1.SUBMISSIONS.CONTEST(contest?.key, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
+      }}
       name={QueryParam.STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
       getRowKey={({ data, index }) => data[index].submitId}
+      extraNodes={[
+        <ButtonLoader
+          key="export"
+          type="light"
+          size="tiny"
+          onClick={async (setLoaderStatus) => {
+            const url = JUDGE_API_V1.SUBMISSIONS.CONTEST_EXPORT(contest?.key, 1, 1000000, toFilterUrl(lastGetUrl.current.filter), toSortUrl(lastGetUrl.current.sort));
+            setLoaderStatus(Status.LOADING);
+            const result = await authorizedRequest(
+              url,
+              { method: HTTPMethod.GET, responseType: 'blob' },
+            );
+            downloadBlobAsFile(result, contest.name + ' - submissions.csv');
+            setLoaderStatus(Status.SUCCESS);
+          }}
+        >
+          <T>export as csv</T>
+        </ButtonLoader>,
+      ]}
     />
   );
 };

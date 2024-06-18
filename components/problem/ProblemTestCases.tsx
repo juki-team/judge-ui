@@ -191,7 +191,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
               JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problem.key),
               { method: HTTPMethod.GET, responseType: 'blob' },
             );
-            await downloadBlobAsFile(result, problem.key + '.zip');
+            downloadBlobAsFile(result, problem.key + '.zip');
             setLoaderStatus(Status.SUCCESS);
           }}
         >
