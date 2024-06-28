@@ -84,12 +84,6 @@ export const JUDGE_API_V1 = {
     TAG_LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/tag-list`;
     },
-    DATA: (key: string) => {
-      if (!key) {
-        return null;
-      }
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}/data`;
-    },
     PROBLEM: (key: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}`;
     },

@@ -172,6 +172,8 @@ export {
   HomeLink,
   TwoContentLayout,
   FirstLoginWrapper,
+  ProblemView,
+  ProblemInfo,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

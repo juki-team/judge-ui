@@ -39,24 +39,6 @@
   }
 }
 
-.sample-text-content {
-  width: 100%;
-  padding: var(--pad-xt);
-  position: relative;
-  min-height: 26px;
-  
-  .copy-test-icon {
-    position: absolute;
-    right: var(--pad-xt);
-  }
-  
-  > span:not(.jk-icon) {
-    background-color: var(--t-color-highlight-light) !important;
-    white-space: pre;
-    font-family: monospace;
-  }
-}
-
 .alert-modal-json-viewer {
   max-height: calc(var(--100VH) - 300px);
   overflow: auto;

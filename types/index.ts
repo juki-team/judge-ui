@@ -102,7 +102,6 @@ export type {
   MenuType,
   DataViewerHeadersType,
   FilterSelectOfflineType,
-  RowSortableItemContentType,
   RowSortableItem,
   CropImageType,
   FilterTextOfflineType,
@@ -132,6 +131,7 @@ export type {
   SetSearchParamsType,
   LinkCmpProps,
   UserCodeEditorProps,
+  SimpleSortableRowsProps,
 } from '@juki-team/base-ui';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

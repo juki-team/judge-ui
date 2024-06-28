@@ -1,5 +1,4 @@
 import {
-  ButtonLoader,
   DownloadIcon,
   FlagEnImage,
   FlagEsImage,
@@ -13,17 +12,8 @@ import {
 import { classNames, downloadBlobAsFile, downloadJukiMarkdownAsPdf, getStatementData } from 'helpers';
 import { useJukiUI, useJukiUser, useT } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import {
-  EditCreateProblemType,
-  Judge,
-  Language,
-  ProblemResponseDTO,
-  ProblemScoringMode,
-  ProfileSetting,
-  Status,
-} from 'types';
+import { EditCreateProblemType, Judge, Language, ProblemResponseDTO, ProblemScoringMode, ProfileSetting } from 'types';
 import { ProblemLetter } from './ProblemLetter';
-import { JukiProblemInfo } from './ProblemView/ProblemInfo';
 import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
@@ -334,48 +324,6 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
               : null}
           </div>
         </div>
-        {!contest && !editing && (
-          <div className="screen md lg hg flex-1">
-            <JukiProblemInfo
-              settings={settings}
-              status={status}
-              tags={tags}
-              author={author}
-              expand
-            >
-              <ButtonLoader
-                size="small"
-                icon={<DownloadIcon />}
-                onClick={async (setLoaderStatus) => {
-                  setLoaderStatus(Status.LOADING);
-                  try {
-                    await handleDownloadPdf();
-                    setLoaderStatus(Status.SUCCESS);
-                  } catch (error) {
-                    setLoaderStatus(Status.ERROR);
-                  }
-                }}
-              >
-                <T>download as pdf</T>
-              </ButtonLoader>
-              <ButtonLoader
-                size="small"
-                icon={<DownloadIcon />}
-                onClick={async (setLoaderStatus) => {
-                  setLoaderStatus(Status.LOADING);
-                  try {
-                    await handleDownloadMd();
-                    setLoaderStatus(Status.SUCCESS);
-                  } catch (error) {
-                    setLoaderStatus(Status.ERROR);
-                  }
-                }}
-              >
-                <T>download as md</T>
-              </ButtonLoader>
-            </JukiProblemInfo>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -6,23 +6,6 @@
   }
 }
 
-.jk-split-pane.contest-problem-split-pane {
-  > .jk-split-first-pane {
-    overflow: auto;
-  }
-}
-
-.jk-full-screen-overlay {
-  background: var(--t-color-white-dark);
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: var(--z-index-popover);
-  width: calc(100% - var(--pad-md) * 2);
-  height: calc(100% - var(--pad-md) * 2);
-  padding: var(--pad-md);
-}
-
 .problem-index {
   padding: 3px 10px;
   

@@ -1,2 +1,1 @@
-export * from './MyActiveSessions';
-export * from './ProfileSubmissions';
+export * from './ProfileViewLayout';

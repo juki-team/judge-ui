@@ -31,4 +31,5 @@ export {
   toFilterUrl,
   toSortUrl,
   oneTab,
+  getStatementData,
 } from '@juki-team/base-ui';

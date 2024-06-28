@@ -23,6 +23,7 @@ function Admin() {
   const {
     data,
     mutate: companyListMutate,
+    isLoading,
   } = useFetcher<ContentsResponseType<CompanyUserPermissionsResponseDTO>>(jukiSettings.API.company.getPermissionList().url);
   
   const companyKey = searchParams.get(QueryParam.COMPANY) as string;
@@ -108,6 +109,7 @@ function Admin() {
       tabs={tabs}
       selectedTabKey={selectedTabKey}
       getPathname={tabKey => ROUTES.ADMIN.PAGE(tabKey)}
+      loading={isLoading}
     >
       <div className="jk-row-col extend">
         <h3 className="flex-1"><T>administration</T></h3>

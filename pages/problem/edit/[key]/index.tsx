@@ -1,5 +1,5 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import { EditCreateProblem, FetcherLayer } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
 import { useJukiRouter } from 'hooks';
 import { ContentResponseType, ProblemResponseDTO } from 'types';
 import Custom404 from '../../../404';
@@ -10,7 +10,7 @@ function ProblemEdit() {
   
   return (
     <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
-      url={JUDGE_API_V1.PROBLEM.DATA(key as string)}
+      url={jukiSettings.API.problem.getData({ params: { problemKey: key as string } }).url}
       errorView={<Custom404 />}
     >
       {({ data }) => {
