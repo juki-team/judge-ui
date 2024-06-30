@@ -109,6 +109,10 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
             <T className="tt-se fw-bd ta-cr">start date</T>
             <div className="ta-cr">{dtf(contest.settings.startTimestamp)}</div>
           </div>
+          <div className="jk-col bc-we jk-br-ie jk-pg-sm">
+            <T className="tt-se fw-bd ta-cr">end date</T>
+            <div className="ta-cr">{dtf(contest.settings.endTimestamp)}</div>
+          </div>
           {contest.settings.endTimestamp !== contest.settings.frozenTimestamp && (
             <div className="jk-col bc-we jk-br-ie jk-pg-sm">
               <div className="jk-row gap nowrap">
@@ -136,12 +140,12 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
               </div>
             </div>
           )}
-          {(contest.settings.endTimestamp - contest.settings.startTimestamp) !== contest.settings.timeToSolve && (
-            <div className="jk-col bc-we jk-br-ie jk-pg-sm">
-              <T className="tt-se fw-bd ta-cr">time for solve</T>
-              <div>{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</div>
-            </div>
-          )}
+          {/*{(contest.settings.endTimestamp - contest.settings.startTimestamp) !== contest.settings.timeToSolve && (*/}
+          {/*  <div className="jk-col bc-we jk-br-ie jk-pg-sm">*/}
+          {/*    <T className="tt-se fw-bd ta-cr">time for solve</T>*/}
+          {/*    <div>{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</div>*/}
+          {/*  </div>*/}
+          {/*)}*/}
           {!!contest.settings.penalty && (
             <div className="jk-col bc-we jk-br-ie jk-pg-sm">
               <T className="tt-se fw-bd ta-cr">penalty by incorrect answer</T>

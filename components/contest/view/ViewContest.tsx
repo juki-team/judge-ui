@@ -357,7 +357,7 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
+                // width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
               }}
             >
               {contest.name}
