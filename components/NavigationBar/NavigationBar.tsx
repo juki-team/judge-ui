@@ -2,8 +2,6 @@ import {
   AssignmentIcon,
   CupIcon,
   HelpIcon,
-  JukiCouchLogoHorImage,
-  JukiUtilsLogoHorImage,
   LeaderboardIcon,
   LinkLastPath,
   MainMenu,
@@ -15,13 +13,21 @@ import {
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { PropsWithChildren } from 'react';
-import { ContestsTab, LastPathKey, MenuType, ProfileTab, QueryParam, QueryParamKey } from 'types';
-
+import {
+  ContestsTab,
+  LastPathKey,
+  MenuType,
+  ProfileSetting,
+  ProfileTab,
+  QueryParam,
+  QueryParamKey,
+  Theme,
+} from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, pushRoute, searchParams } = useJukiRouter();
-  const { components: { Link } } = useJukiUI();
+  const { components: { Link, Image } } = useJukiUI();
   
   const {
     user: {
@@ -33,6 +39,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       canHandleUsers,
       canHandleServices,
       canHandleSettings,
+      settings: { [ProfileSetting.THEME]: userTheme },
     },
     company: { key },
   } = useJukiUser();
@@ -120,18 +127,29 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         moreApps={
           <>
             <a href="https://utils.juki.app" target="_blank">
-              <div className="jk-row space-between">
-                <div style={{ width: 95 }}><JukiUtilsLogoHorImage /></div>
-                <div className="lnik">utils.juki.app</div>
+              <div className="jk-row gap left">
+                <Image
+                  width={100}
+                  height={50}
+                  src={`https://images.juki.pub/assets/juki-utils-horizontal-${userTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
+                  alt="juki coach"
+                />
+                <div className="link">utils.juki.app</div>
               </div>
             </a>
-            <div className="jk-row gap">
-              <div style={{ width: 95 }}><JukiCouchLogoHorImage /></div>
-              <div className="jk-row nowrap" style={{ alignItems: 'baseline' }}>
-                <T className="tt-se">developing</T>&nbsp;
-                <div className="dot-flashing" />
+            <a href="https://coach.juki.app" target="_blank">
+              <div className="jk-row gap left">
+                <Image
+                  width={100}
+                  height={50}
+                  src={`https://images.juki.pub/assets/juki-coach-horizontal-${userTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
+                  alt="juki coach"
+                />
+                <div className="jk-row nowrap" style={{ alignItems: 'baseline' }}>
+                  <T className="link">coach.juki.app</T>
+                </div>
               </div>
-            </div>
+            </a>
           </>
         }
       >

@@ -61,6 +61,11 @@ module.exports = withPlugins([
       },
       {
         protocol: 'https',
+        hostname: 'images.juki.pub',
+        pathname: '/assets/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'juki-judge.s3.us-east-2.amazonaws.com',
         pathname: '/public/user/image/**',
       },
