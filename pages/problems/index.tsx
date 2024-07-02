@@ -67,7 +67,7 @@ function Problems() {
   
   useTrackLastPath(LastPathKey.PROBLEMS);
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  const { user: { canCreateProblem }, company: { name, key } } = useJukiUser();
+  const { user: { permissions: { problem: { create: canCreateProblem } } }, company: { name, key } } = useJukiUser();
   const { searchParams, setSearchParams } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();
@@ -205,33 +205,31 @@ function Problems() {
       cardPosition: 'bottomRight',
       minWidth: 200,
     } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-    ...(canCreateProblem ? [
-      {
-        head: 'visibility',
-        index: 'status',
-        field: ({ record: { status } }) => (
-          <TextField
-            text={<T className="tt-se">{PROBLEM_STATUS[status].label}</T>}
-            label={<T className="tt-se">visibility</T>}
-          />
-        ),
-        sort: true,
-        filter: {
-          type: 'select',
-          options: ([
-            ProblemStatus.ARCHIVED,
-            ProblemStatus.RESERVED,
-            ProblemStatus.PRIVATE,
-            ProblemStatus.PUBLIC,
-          ] as ProblemStatus[]).map(status => ({
-            value: status,
-            label: <T className="tt-se">{PROBLEM_STATUS[status].label}</T>,
-          })),
-        },
-        cardPosition: 'bottomLeft',
-        minWidth: 180,
-      } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-    ] : []),
+    {
+      head: 'visibility',
+      index: 'status',
+      field: ({ record: { status } }) => (
+        <TextField
+          text={<T className="tt-se">{PROBLEM_STATUS[status].label}</T>}
+          label={<T className="tt-se">visibility</T>}
+        />
+      ),
+      sort: true,
+      filter: {
+        type: 'select',
+        options: ([
+          ProblemStatus.ARCHIVED,
+          ProblemStatus.RESERVED,
+          ProblemStatus.PRIVATE,
+          ProblemStatus.PUBLIC,
+        ] as ProblemStatus[]).map(status => ({
+          value: status,
+          label: <T className="tt-se">{PROBLEM_STATUS[status].label}</T>,
+        })),
+      },
+      cardPosition: 'bottomLeft',
+      minWidth: 180,
+    } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
   ], [ canCreateProblem, tags, judge, Link ]);
   
   const breadcrumbs = [

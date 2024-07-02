@@ -55,7 +55,7 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
   const { pushRoute, searchParams } = useJukiRouter();
   const { pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
   const { viewPortSize, components: { Link } } = useJukiUI();
-  const { user: { canCreateContest } } = useJukiUser();
+  const { user: { permissions: { canCreateContest } } } = useJukiUser();
   const { t } = useT();
   const { listenSubmission } = useTask();
   const { addWarningNotification, notifyResponse } = useNotification();

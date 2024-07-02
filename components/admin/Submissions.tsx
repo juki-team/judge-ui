@@ -3,7 +3,7 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUI } from 'hooks';
 import { useMemo } from 'react';
-import { CompanyResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
+import { CompanyUserPermissionsResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
   submissionActionsColumn,
   submissionDateColumn,
@@ -15,7 +15,7 @@ import {
   submissionVerdictColumn,
 } from '../submissions/helpers';
 
-export function AllSubmissions({ company }: { company: CompanyResponseDTO }) {
+export function AllSubmissions({ company }: { company: CompanyUserPermissionsResponseDTO }) {
   
   const { components: { Link, Image } } = useJukiUI();
   

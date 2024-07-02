@@ -9,7 +9,7 @@ import {
   TwoContentLayout,
 } from 'components';
 import { ROUTES } from 'config/constants';
-import { useEffect, useJukiRouter, useJukiUI, useJukiUser, useTrackLastPath } from 'hooks';
+import { useEffect, useJukiRouter, useJukiUser, useTrackLastPath } from 'hooks';
 import { ContestsTab, LastPathKey, TabsType } from 'types';
 
 function Contests() {
@@ -17,8 +17,7 @@ function Contests() {
   useTrackLastPath(LastPathKey.CONTESTS);
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const { routeParams: { tab: contestsTab }, pushRoute, replaceRoute, searchParams } = useJukiRouter();
-  const { user: { canCreateContest } } = useJukiUser();
-  const { viewPortSize } = useJukiUI();
+  const { user: { permissions: { canCreateContest } } } = useJukiUser();
   useEffect(() => {
     if (![
       ContestsTab.ALL,

@@ -32,13 +32,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const {
     user: {
       nickname,
-      canViewSubmissionsManagement,
-      canHandleEmail,
-      canHandleJudges,
-      canCreateUser,
-      canHandleUsers,
-      canHandleServices,
-      canHandleSettings,
+      permissions: {
+        canViewSubmissionsManagement,
+        canCreateUser,
+        canHandleUsers,
+      },
       settings: { [ProfileSetting.THEME]: userTheme },
     },
     company: { key },
@@ -86,12 +84,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   }
   if (
     canViewSubmissionsManagement
-    || canHandleEmail
-    || canHandleJudges
     || canCreateUser
     || canHandleUsers
-    || canHandleServices
-    || canHandleSettings
   ) {
     menu.push({
       label: <T className="tt-se">admin</T>,

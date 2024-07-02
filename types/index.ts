@@ -76,7 +76,6 @@ export type {
   TaskResponseDTO,
   TaskDefinitionResponseDTO,
   SqsPropertiesResponseDTO,
-  UserState,
   UserRankResponseDTO,
   ContestProblemType,
   EmailDataResponseDTO,

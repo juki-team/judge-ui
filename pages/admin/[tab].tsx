@@ -1,6 +1,6 @@
-import { AllSubmissions, JudgesManagement, MailManagement, Select, T, TwoContentLayout } from 'components';
+import { AllSubmissions, Select, T, TwoContentLayout } from 'components';
 import { jukiSettings } from 'config';
-import { ROUTES } from 'config/constants';
+import { EMPTY_USER_PERMISSIONS, ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useFetcher, useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
 import { ReactNode, useEffect, useMemo } from 'react';
@@ -31,21 +31,9 @@ function Admin() {
   const company = companies.find((company) => company.key === companyKey);
   const {
     canViewSubmissionsManagement,
-    canHandleEmail,
-    canHandleJudges,
     canCreateUser,
     canHandleUsers,
-    canHandleServices,
-    canHandleSettings,
-  } = company?.userPermissions || {
-    canViewSubmissionsManagement: false,
-    canHandleEmail: false,
-    canHandleJudges: false,
-    canCreateUser: false,
-    canHandleUsers: false,
-    canHandleServices: false,
-    canHandleSettings: false,
-  };
+  } = company?.userPermissions || EMPTY_USER_PERMISSIONS;
   
   useEffect(() => {
     if (!companyKey && companies[0]) {
@@ -54,12 +42,8 @@ function Admin() {
   }, [ companyKey, companies, setSearchParams ]);
   
   if (!canViewSubmissionsManagement
-    && !canHandleEmail
-    && !canHandleJudges
     && !canCreateUser
-    && !canHandleUsers
-    && !canHandleServices
-    && !canHandleSettings) {
+    && !canHandleUsers) {
     return <Custom404 />;
   }
   
@@ -75,20 +59,6 @@ function Admin() {
       body: company
         ? <AllSubmissions company={company} />
         : <div className="bc-we jk-pg-sm jk-br-ie"><T className="tt-se cr-er">select a company</T></div>,
-    };
-  }
-  if (canHandleEmail) {
-    tabs[AdminTab.EMAIL_SENDER] = {
-      key: AdminTab.EMAIL_SENDER,
-      header: <T className="tt-ce ws-np">email sender</T>,
-      body: <MailManagement company={company} />,
-    };
-  }
-  if (canHandleJudges) {
-    tabs[AdminTab.JUDGES_MANAGEMENT] = {
-      key: AdminTab.JUDGES_MANAGEMENT,
-      header: <T className="tt-ce ws-np">judges</T>,
-      body: <JudgesManagement company={company} />,
     };
   }
   

@@ -4,9 +4,9 @@ import Custom404 from '../../404';
 
 function ProblemCreate() {
   
-  const { user: { canCreateProblem } } = useJukiUser();
+  const { user: { permissions: { problem: { create } } } } = useJukiUser();
   
-  if (!canCreateProblem) {
+  if (!create) {
     return <Custom404 />;
   }
   

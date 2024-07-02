@@ -4,7 +4,7 @@ import Custom404 from '../../404';
 
 function ContestCreate() {
   
-  const { user: { canCreateContest } } = useJukiUser();
+  const { user: { permissions: { canCreateContest } } } = useJukiUser();
   
   if (!canCreateContest) {
     return <Custom404 />;
