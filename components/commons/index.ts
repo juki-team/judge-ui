@@ -177,6 +177,7 @@ export {
   PagedDataViewer,
   CreateEntityLayout,
   UpdateEntityLayout,
+  DocumentMembersContent,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

@@ -91,6 +91,7 @@ export type {
   UpsertProblemDTO,
   ProblemDataResponseDTO,
   DocumentMembersResponseDTO,
+  UserBasicInfoResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType, QueryParamKey } from '@juki-team/base-ui';

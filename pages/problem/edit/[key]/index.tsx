@@ -16,6 +16,7 @@ function toUpsertWorksheetDTO(problem: ProblemDataResponseDTO): UpsertProblemUID
     settings: problem.settings,
     statement: problem.statement,
     tags: problem.tags,
+    owner: problem.owner,
   };
 }
 

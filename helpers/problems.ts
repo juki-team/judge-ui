@@ -24,7 +24,7 @@ export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO
     description: entity?.statement?.description ?? EMPTY_TEXT_LANGUAGES,
     input: entity?.statement?.input ?? EMPTY_TEXT_LANGUAGES,
     output: entity?.statement?.output ?? EMPTY_TEXT_LANGUAGES,
-    sampleCases: [],
+    sampleCases: entity?.statement?.sampleCases ?? [],
     note: entity?.statement?.note ?? EMPTY_TEXT_LANGUAGES,
     html: entity?.statement?.html ?? EMPTY_TEXT_LANGUAGES,
   },

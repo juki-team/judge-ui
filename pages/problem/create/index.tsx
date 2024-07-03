@@ -1,13 +1,14 @@
 import { CreateEntityLayout, EditCreateProblem } from 'components';
 import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
 import { toUpsertProblemDTO } from 'helpers';
-import { useJukiUser } from 'hooks';
+import { useJukiUser, useMemo } from 'hooks';
 import { ProblemTab, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 import Custom404 from '../../404';
 
 function ProblemCreate() {
   
-  const { user: { permissions: { problem: { create } } } } = useJukiUser();
+  const { user: { nickname, imageUrl, permissions: { problem: { create } } } } = useJukiUser();
+  const newEntity = useMemo(() => () => PROBLEM_DEFAULT({ nickname, imageUrl }), [ nickname, imageUrl ]);
   
   if (!create) {
     return <Custom404 />;
@@ -15,7 +16,7 @@ function ProblemCreate() {
   
   return (
     <CreateEntityLayout<UpsertProblemUIDTO, UpsertProblemDTO, {}>
-      newEntity={PROBLEM_DEFAULT}
+      newEntity={newEntity}
       Cmp={EditCreateProblem}
       createApiURL={JUDGE_API_V1.PROBLEM.CREATE}
       listRoute={ROUTES.PROBLEMS.LIST}

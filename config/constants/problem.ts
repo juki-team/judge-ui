@@ -1,7 +1,7 @@
 import { EntityAccess, Judge, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
 import { EMPTY_TEXT_LANGUAGES } from './commons';
 
-export const PROBLEM_DEFAULT = (): UpsertProblemUIDTO => {
+export const PROBLEM_DEFAULT = ({ nickname, imageUrl }: { nickname: string, imageUrl: string }): UpsertProblemUIDTO => {
   return {
     judge: Judge.CUSTOMER,
     author: '',
@@ -31,5 +31,6 @@ export const PROBLEM_DEFAULT = (): UpsertProblemUIDTO => {
       managers: {},
       spectators: {},
     },
+    owner: { nickname, imageUrl },
   };
 };

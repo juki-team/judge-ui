@@ -71,6 +71,8 @@ export enum ProblemTab {
   // STATISTICS = 'statistics',
   SETUP = 'setup',
   EDITORIAL = 'editorial',
+  ACCESS = 'access',
+  DELETE = 'delete',
 }
 
 export enum ContestTab {

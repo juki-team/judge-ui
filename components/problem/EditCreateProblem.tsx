@@ -5,6 +5,8 @@ import { useEntityDiff, useJukiUI } from 'hooks';
 import React, { useState } from 'react';
 import { LastPathKey, ProblemTab, TabsType, UpsertComponentEntityProps, UpsertProblemUIDTO } from 'types';
 import { Input } from '../index';
+import { ProblemAccess } from './ProblemAccess';
+import { ProblemDelete } from './ProblemDelete';
 import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemSettings } from './ProblemSettings';
 import { ProblemTestCases } from './ProblemTestCases';
@@ -57,6 +59,37 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
           setEditorial={(editorial) => setProblem(prevState => (
             { ...prevState, editorial }
           ))}
+        />
+      ),
+    },
+    [ProblemTab.ACCESS]: {
+      key: ProblemTab.ACCESS,
+      header: <T className="tt-se ws-np">access</T>,
+      body: (
+        <ProblemAccess
+          members={problem.members}
+          setMembers={(setStateAction) => {
+            if (typeof setStateAction === 'function') {
+              setProblem(prevState => (
+                { ...prevState, members: setStateAction(prevState.members) }
+              ));
+            } else {
+              setProblem(prevState => (
+                { ...prevState, members: setStateAction }
+              ));
+            }
+          }}
+          documentOwner={problem.owner}
+        />
+      ),
+    },
+    [ProblemTab.DELETE]: {
+      key: ProblemTab.DELETE,
+      header: <T className="tt-se ws-np">delete</T>,
+      body: (
+        <ProblemDelete
+          problemJudgeKey={problemJudgeKey}
+          documentOwner={problem.owner}
         />
       ),
     },

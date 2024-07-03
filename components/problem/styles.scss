@@ -270,3 +270,8 @@
     box-shadow: inset 0px -1px 2px 1px var(--t-color-highlight), inset 0px 1px 2px 1px var(--t-color-highlight);
   }
 }
+
+.jk-button.bc-er {
+  --button-background-color: var(--t-color-error);
+}
+
