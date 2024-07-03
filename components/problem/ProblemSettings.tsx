@@ -8,27 +8,24 @@ import {
   MultiSelect,
   PlusIcon,
   Popover,
+  ProblemScoringModeInformation,
   Select,
   T,
-  TotalProblemInformation,
   UserCodeEditor,
   WarningIcon,
 } from 'components';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
-  EmptyTextLanguages,
+  EMPTY_TEXT_LANGUAGES,
   PROBLEM_MODE,
-  PROBLEM_STATUS,
   PROBLEM_TYPE,
   PROGRAMMING_LANGUAGE,
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
 } from 'config/constants';
-import { classNames, getProblemJudgeKey } from 'helpers';
+import { classNames } from 'helpers';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
-  EditCreateProblemType,
-  Judge,
   Language,
   ProblemScoringMode,
   ProblemSettingsByProgrammingLanguageType,
@@ -36,6 +33,7 @@ import {
   ProblemType,
   ProgrammingLanguage,
   SubmissionRunStatus,
+  UpsertProblemUIDTO,
 } from 'types';
 
 export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: string[]) => void }) => {
@@ -74,18 +72,17 @@ export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: s
 };
 
 interface ProblemSettingsProps {
-  problem: EditCreateProblemType,
-  setProblem: Dispatch<SetStateAction<EditCreateProblemType>>
+  problem: UpsertProblemUIDTO,
+  setProblem: Dispatch<SetStateAction<UpsertProblemUIDTO>>,
+  problemJudgeKey: string,
 }
 
-export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) => {
+export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: ProblemSettingsProps) => {
   
   const [ open, setOpen ] = useState(false);
   const [ source, setSource ] = useState('');
   
   const onCloseModal = () => setOpen(false);
-  // TODO: check if the problem is custom or juki judge
-  const problemJudgeKey = getProblemJudgeKey(/*problem.judge*/ Judge.JUKI_JUDGE, problem.key);
   
   const fixPointsByGroups = (_pointsByGroups: ProblemSettingsPointsByGroupsType, toFilter?: number): ProblemSettingsPointsByGroupsType => {
     const pointsByGroups: ProblemSettingsPointsByGroupsType = {};
@@ -124,27 +121,10 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
   
   return (
     <div className="jk-col left stretch gap nowrap">
-      <div className="jk-row left nowrap gap bc-we jk-br-ie jk-pg-sm">
-        <div className="jk-row nowrap fw-bd tx-xl cr-er"><T className="tt-se ws-np">problem status</T>:</div>
-        <Select
-          options={Object.values(PROBLEM_STATUS).map(status => ({
-            value: status.value,
-            label: (
-              <div className="jk-col left">
-                <div className="jk-row extend"><T className="fw-bd tt-se">{status.label}</T></div>
-                <div className="jk-row extend"><T className="tt-se">{status.description}</T></div>
-              </div>
-            ),
-          }))}
-          selectedOption={{ value: problem.status }}
-          onChange={({ value }) => setProblem(prevState => ({ ...prevState, status: value }))}
-          extend
-        />
-      </div>
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left nowrap gap">
           <div className="fw-bd tt-se"><T>problem scoring mode</T>:</div>
-          <div><TotalProblemInformation /></div>
+          <div><ProblemScoringModeInformation /></div>
           <Select
             options={RUNNER_ACCEPTED_PROBLEM_MODES.map(mode => ({
               value: mode,
@@ -252,7 +232,7 @@ export const ProblemSettings = ({ problem, setProblem }: ProblemSettingsProps) =
                         ...problem.settings,
                         pointsByGroups: fixPointsByGroups({
                           ...problem.settings.pointsByGroups,
-                          [groupIndex]: { group: groupIndex, points: 0, partial: 0, description: EmptyTextLanguages },
+                          [groupIndex]: { group: groupIndex, points: 0, partial: 0, description: EMPTY_TEXT_LANGUAGES },
                         }),
                       },
                     });

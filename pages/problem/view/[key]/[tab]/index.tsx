@@ -1,9 +1,9 @@
-import { jukiSettings } from '@juki-team/base-ui';
 import { AssignmentIcon, Button, FetcherLayer, LinkLastPath, ProblemViewLayout, T, TwoContentLayout } from 'components';
+import { jukiSettings } from 'config';
 import { ROUTES } from 'config/constants';
 import { oneTab } from 'helpers';
 import { useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
-import { ContentResponseType, LastPathKey, ProblemResponseDTO, ProblemTab } from 'types';
+import { ContentResponseType, LastPathKey, ProblemDataResponseDTO, ProblemTab } from 'types';
 import Custom404 from '../../../../404';
 
 export default function ProblemViewPage() {
@@ -28,7 +28,7 @@ export default function ProblemViewPage() {
   ];
   
   return (
-    <FetcherLayer<ContentResponseType<ProblemResponseDTO>>
+    <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
       url={jukiSettings.API.problem.getData({ params: { problemKey: problemKey as string } }).url}
       loadingView={
         <TwoContentLayout breadcrumbs={breadcrumbs} loading>

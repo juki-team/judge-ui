@@ -8,7 +8,6 @@ export {
   ErrorCode,
   Judge,
   ProblemScoringMode,
-  ProblemStatus,
   ProblemType,
   ProblemVerdict,
   ProfileSetting,
@@ -35,6 +34,7 @@ export {
   SocketEvent,
   CompanyLogoType,
   Status,
+  EntityAccess,
 } from '@juki-team/commons';
 
 export type {
@@ -51,7 +51,6 @@ export type {
   TestCaseResultType,
   ScoreboardResponseDTO,
   ContestResponseDTO,
-  ProblemResponseDTO,
   ProblemSettingsPointsByGroupsType,
   UserSummaryResponseDTO,
   UserManagementResponseDTO,
@@ -63,7 +62,6 @@ export type {
   UserPingType,
   UserBasicResponseDTO,
   ProblemSummaryListResponseDTO,
-  CreateProblemDTO,
   TextLanguageType,
   ProblemSettingsType,
   ProblemSampleCasesType,
@@ -90,6 +88,9 @@ export type {
   CompanyResourceSpecificationsResponseDTO,
   CompanyUserPermissionsResponseDTO,
   SubmissionDataResponseDTO,
+  UpsertProblemDTO,
+  ProblemDataResponseDTO,
+  DocumentMembersResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType, QueryParamKey } from '@juki-team/base-ui';
@@ -131,6 +132,7 @@ export type {
   LinkCmpProps,
   UserCodeEditorProps,
   SimpleSortableRowsProps,
+  UpsertComponentEntityProps,
 } from '@juki-team/base-ui';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

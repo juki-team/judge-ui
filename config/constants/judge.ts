@@ -75,9 +75,9 @@ export const JUDGE_API_V1 = {
     },
   },
   PROBLEM: {
-    LIST: (judge: Judge, page: number, size: number, filterUrl: string, sortUrl: string) => {
+    SUMMARY_LIST: (judge: Judge, page: number, size: number, filterUrl: string, sortUrl: string) => {
       return withSort(withFilter(
-        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/list?page=${page}&size=${size}&judge=${judge}`,
+        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/summary-list?page=${page}&size=${size}&judge=${judge}`,
         filterUrl,
       ), sortUrl);
     },

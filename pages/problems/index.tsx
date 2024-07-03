@@ -1,8 +1,8 @@
-import { oneTab, TwoContentLayout } from '@juki-team/base-ui';
 import {
   ButtonLoader,
   CheckIcon,
   CloseIcon,
+  CopyToClipboard,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
   Field,
@@ -14,19 +14,20 @@ import {
   T,
   TextField,
   Tooltip,
-  UserNicknameLink,
+  TwoContentLayout,
+  UserChip,
 } from 'components';
+import { jukiSettings } from 'config';
 import {
   JUDGE,
   JUDGE_API_V1,
   JUKI_APP_COMPANY_KEY,
   PROBLEM_MODE,
   PROBLEM_MODES,
-  PROBLEM_STATUS,
   PROBLEM_TYPE,
   ROUTES,
 } from 'config/constants';
-import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
+import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
   useFetcher,
@@ -43,7 +44,6 @@ import {
   FilterSelectOnlineType,
   Judge,
   LastPathKey,
-  ProblemStatus,
   ProblemSummaryListResponseDTO,
   ProblemTab,
   ProblemType,
@@ -83,10 +83,14 @@ function Problems() {
       head: 'id',
       index: 'key',
       field: ({ record: { key }, isCard }) => (
-        <Field className="jk-row fw-bd cr-py">
-          <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT) }}>
-            <div className="jk-row link">{key}</div>
-          </Link>
+        <Field className="jk-row">
+          <CopyToClipboard text={window.location.host + ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT)}>
+            <div>
+              <Tooltip content={<T>copy link</T>} placement="top" withPortal>
+                <div className="jk-row link tx-s">{key}</div>
+              </Tooltip>
+            </div>
+          </CopyToClipboard>
         </Field>
       ),
       sort: true,
@@ -99,10 +103,10 @@ function Problems() {
       headClassName: 'left',
       index: 'name',
       field: ({ record: { key, judge, name, user }, isCard }) => (
-        <Field className={classNames('jk-row fw-bd jk-pg-sm cr-py', { left: !isCard, center: isCard })}>
+        <Field className={classNames('jk-row jk-pg-sm', { left: !isCard, center: isCard })}>
           <div className="jk-row gap nowrap">
             <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT) }}>
-              <div className="jk-row link">{name}</div>
+              <div className="jk-row link fw-bd">{name}</div>
             </Link>
             {user.solved ? (
               <Tooltip
@@ -119,7 +123,7 @@ function Problems() {
                 <div className="jk-row"><CloseIcon size="small" filledCircle className="cr-wg" /></div>
               </Tooltip>
             )}
-            {user.isEditor && (
+            {user.isManager && (
               <Tooltip
                 content={<T className="tt-se ws-np">you are editor</T>}
                 placement="top"
@@ -188,49 +192,21 @@ function Problems() {
     ] as DataViewerHeadersType<ProblemSummaryListResponseDTO>[] : []),
     {
       head: judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler',
-      index: 'ownerUserNickname',
-      field: ({ record: { ownerUserNickname } }) => (
+      index: 'owner',
+      field: ({ record: { owner: { nickname, imageUrl } } }) => (
         <TextField
           className="jk-row"
-          text={
-            <UserNicknameLink nickname={ownerUserNickname}>
-              <div className="link">{ownerUserNickname}</div>
-            </UserNicknameLink>
-          }
-          label={<T className="tt-se">nickname</T>}
+          text={<UserChip nickname={nickname} imageUrl={imageUrl} />}
+          label={
+            <T className="tt-se">{judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler'}</T>}
         />
       ),
       sort: true,
-      filter: { type: 'text-auto' },
+      // filter: { type: 'text' },
       cardPosition: 'bottomRight',
       minWidth: 200,
     } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-    {
-      head: 'visibility',
-      index: 'status',
-      field: ({ record: { status } }) => (
-        <TextField
-          text={<T className="tt-se">{PROBLEM_STATUS[status].label}</T>}
-          label={<T className="tt-se">visibility</T>}
-        />
-      ),
-      sort: true,
-      filter: {
-        type: 'select',
-        options: ([
-          ProblemStatus.ARCHIVED,
-          ProblemStatus.RESERVED,
-          ProblemStatus.PRIVATE,
-          ProblemStatus.PUBLIC,
-        ] as ProblemStatus[]).map(status => ({
-          value: status,
-          label: <T className="tt-se">{PROBLEM_STATUS[status].label}</T>,
-        })),
-      },
-      cardPosition: 'bottomLeft',
-      minWidth: 180,
-    } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-  ], [ canCreateProblem, tags, judge, Link ]);
+  ], [ tags, judge, Link ]);
   
   const breadcrumbs = [
     <T className="tt-se" key="problems">problems</T>,
@@ -287,20 +263,21 @@ function Problems() {
       breadcrumbs={breadcrumbs}
       tabs={oneTab(judge && (
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
-          getRecordStyle={() => ({ cursor: 'pointer' })}
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-            return JUDGE_API_V1.PROBLEM.LIST(judge, page, pageSize, toFilterUrl(filter), toSortUrl(sort));
+            return jukiSettings.API.problem.getSummaryList({
+              params: {
+                page,
+                size: pageSize,
+                filterUrl: toFilterUrl({ ...filter, judge }),
+                sortUrl: toSortUrl(sort),
+              },
+            }).url;
           }}
           name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judge] || '')}
           refreshInterval={60000}
           extraNodes={extraNodes}
           cards={{ height: 256, expanded: true }}
-          // onRecordClick={async ({ data, index }) => {
-          //   if (window?.getSelection()?.type !== 'Range') {
-          //     await pushRoute({ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, data[index].key), ProblemTab.STATEMENT) });
-          //   }
-          // }}
           dependencies={[ judge ]}
         />
       ))}

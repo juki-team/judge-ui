@@ -174,11 +174,13 @@ export {
   FirstLoginWrapper,
   ProblemView,
   ProblemInfo,
+  PagedDataViewer,
+  CreateEntityLayout,
+  UpdateEntityLayout,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';
 export * from './CustomHead';
 export * from './Image';
-export * from './PagedDataViewer';
 export * from './TextLangEdit';
 export * from './Information';

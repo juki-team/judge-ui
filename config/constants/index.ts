@@ -1,5 +1,4 @@
 export {
-  PROBLEM_STATUS,
   ERROR,
   SYSTEM_ROLE,
   PROBLEM_TYPE,
@@ -31,11 +30,10 @@ export {
   EMPTY_USER_PERMISSIONS,
 } from '@juki-team/commons';
 
-export { ALPHANUMERIC_DASH_UNDERSCORE_REGEX } from '@juki-team/base-ui';
+export { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui';
 
 export * from './commons';
 export * from './contest';
-export * from './defaultObjects';
 export * from './judge';
 export * from './problem';
 export * from './routes';

@@ -11,9 +11,9 @@ const Verdict = ({ verdict }: { verdict: ProblemVerdict }) => {
       </div>
     </Tooltip>
   );
-}
+};
 
-export const TotalProblemInformation = ({ filledCircle }: InformationProps) => {
+export const ProblemScoringModeInformation = ({ filledCircle }: InformationProps) => {
   const [ isOpen, setIsOpen ] = useState(false);
   return (
     <>
@@ -83,7 +83,7 @@ export const TotalProblemInformation = ({ filledCircle }: InformationProps) => {
       <div
         onClick={(event) => {
           event.stopPropagation();
-          setIsOpen(true)
+          setIsOpen(true);
         }}
         className="jk-row clickable br-50-pc"
       >

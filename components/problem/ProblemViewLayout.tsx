@@ -26,7 +26,7 @@ import {
   HTTPMethod,
   Judge,
   LastPathKey,
-  ProblemResponseDTO,
+  ProblemDataResponseDTO,
   ProblemTab,
   ReactNode,
   Status,
@@ -37,7 +37,7 @@ import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemSubmissions } from './ProblemSubmissions';
 
 export const ProblemViewLayout = ({ problem, reloadProblem }: {
-  problem: ProblemResponseDTO,
+  problem: ProblemDataResponseDTO,
   reloadProblem: KeyedMutator<any>,
 }) => {
   
@@ -142,7 +142,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   ];
   
   const extraNodes = [];
-  if (problem.user?.isEditor && (problem.judge === Judge.JUKI_JUDGE || problem.judge === Judge.CUSTOMER)) {
+  if (problem.user?.isManager && (problem.judge === Judge.JUKI_JUDGE || problem.judge === Judge.CUSTOMER)) {
     extraNodes.push(
       <Popover
         content={<T className="ws-np tt-se">only submissions that are not in a contest will be

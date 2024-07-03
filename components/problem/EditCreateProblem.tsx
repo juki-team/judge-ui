@@ -1,63 +1,23 @@
-import { TwoContentLayout } from '@juki-team/base-ui';
-import {
-  Breadcrumbs,
-  ButtonLoader,
-  CheckUnsavedChanges,
-  CloseIcon,
-  LinkLastPath,
-  ProblemStatement,
-  SaveIcon,
-  T,
-  TabsInline,
-  TwoContentSection,
-} from 'components';
-import { JUDGE_API_V1, PROBLEM_DEFAULT, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useJukiRouter, useJukiUI, useNotification } from 'hooks';
-import React, { ReactNode, useState } from 'react';
-import { mutate } from 'swr';
-import {
-  ButtonLoaderOnClickType,
-  ContentResponseType,
-  EditCreateProblemType,
-  HTTPMethod,
-  Judge,
-  LastPathKey,
-  ProblemResponseDTO,
-  ProblemTab,
-  Status,
-  TabsType,
-} from 'types';
+import { LinkLastPath, ProblemStatement, T, TwoContentLayout } from 'components';
+import { ROUTES } from 'config/constants';
+import { renderReactNodeOrFunctionP1 } from 'helpers';
+import { useEntityDiff, useJukiUI } from 'hooks';
+import React, { useState } from 'react';
+import { LastPathKey, ProblemTab, TabsType, UpsertComponentEntityProps, UpsertProblemUIDTO } from 'types';
 import { Input } from '../index';
 import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemSettings } from './ProblemSettings';
 import { ProblemTestCases } from './ProblemTestCases';
 
-interface EditCreateProblemProps {
-  problem?: EditCreateProblemType,
-}
-
-export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblemProps) => {
+export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProblemUIDTO, ProblemTab>) => {
+  
+  const { entity: initialProblem, entityKey: problemJudgeKey, tabButtons } = props;
   
   const editing = !!initialProblem;
-  const { pushRoute } = useJukiRouter();
-  const [ problem, setProblem ] = useState(editing ? initialProblem : PROBLEM_DEFAULT());
-  const { notifyResponse } = useNotification();
-  const { viewPortSize, components: { Link } } = useJukiUI();
-  const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
-    setLoaderStatus(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<ProblemResponseDTO>>(
-      await authorizedRequest(
-        editing ? JUDGE_API_V1.PROBLEM.PROBLEM(problem.key) : JUDGE_API_V1.PROBLEM.CREATE(),
-        { method: editing ? HTTPMethod.PUT : HTTPMethod.POST, body: JSON.stringify(problem) },
-      ));
-    if (notifyResponse(response, setLoaderStatus)) {
-      setLoaderStatus(Status.LOADING);
-      await mutate(JUDGE_API_V1.PROBLEM.PROBLEM(response.content.key));
-      await pushRoute(ROUTES.PROBLEMS.VIEW(response.content?.key, ProblemTab.STATEMENT));
-      setLoaderStatus(Status.SUCCESS);
-    }
-  };
+  
+  const [ problem, setProblem ] = useState(initialProblem);
+  useEntityDiff(initialProblem, true);
+  const { components: { Link } } = useJukiUI();
   
   const tabs: TabsType<ProblemTab> = {
     [ProblemTab.STATEMENT]: {
@@ -65,13 +25,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       header: <T className="tt-ce ws-np">statement</T>,
       body: (
         <ProblemStatement
-          problem={{
-            ...problem,
-            judge: Judge.JUKI_JUDGE,
-            ownerNickname: '',
-            user: { isEditor: false, solved: false, tried: false },
-            ownerUserNickname: '',
-          }}
+          problem={problem}
           setProblem={setProblem}
         />
       ),
@@ -80,7 +34,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
       key: ProblemTab.SETUP,
       header: <T className="tt-ce ws-np">settings</T>,
       body: (
-        <ProblemSettings problem={problem} setProblem={setProblem} />
+        <ProblemSettings problem={problem} setProblem={setProblem} problemJudgeKey={problemJudgeKey} />
       ),
     },
     ...(
@@ -89,7 +43,7 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
           key: ProblemTab.TESTS,
           header: <T className="tt-se ws-np">test cases</T>,
           body: (
-            <ProblemTestCases problem={problem} />
+            <ProblemTestCases problem={problem} problemJudgeKey={problemJudgeKey} />
           ),
         },
       } : {}
@@ -108,53 +62,22 @@ export const EditCreateProblem = ({ problem: initialProblem }: EditCreateProblem
     },
   };
   
-  const extraNodes = [
-    <CheckUnsavedChanges
-      onClickContinue={() => pushRoute(editing
-        ? ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT)
-        : ROUTES.PROBLEMS.LIST())}
-      value={problem}
-      key="cancel"
-    >
-      <ButtonLoader
-        type="light"
-        size="small"
-        icon={<CloseIcon />}
-        responsiveMobile
-      >
-        <T>cancel</T>
-      </ButtonLoader>
-    </CheckUnsavedChanges>,
-    <ButtonLoader
-      size="small"
-      icon={<SaveIcon />}
-      onClick={onSave}
-      responsiveMobile
-      disabled={JSON.stringify(initialProblem) === JSON.stringify(problem)}
-      key="update/create"
-    >
-      {editing ? <T>update</T> : <T>create</T>}
-    </ButtonLoader>,
-  ];
-  
-  const [ tab, setTab ] = useState<ProblemTab>(ProblemTab.STATEMENT);
-  
-  const breadcrumbs: ReactNode[] = [
+  const breadcrumbs = ({ selectedTabKey }: { selectedTabKey: ProblemTab }) => [
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     editing
       ? (
-        <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problem.key, ProblemTab.STATEMENT) }} className="link">
+        <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problemJudgeKey, ProblemTab.STATEMENT) }} className="link">
           <div className="ws-np">{problem.name}</div>
         </Link>
       ) : <div className="ws-np">{problem.name}</div>,
-    renderReactNodeOrFunctionP1(tabs[tab]?.header, { selectedTabKey: tab }),
+    renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
   ];
   
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={tabs}
-      tabButtons={extraNodes}
+      tabButtons={tabButtons(problem)}
     >
       <div className="jk-row extend center tx-h">
         <Input

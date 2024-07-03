@@ -1,11 +1,11 @@
-import { EditCreateProblemType, ProblemScoringMode, ProblemStatus, ProblemType } from 'types';
-import { EmptyTextLanguages } from './commons';
+import { EntityAccess, Judge, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
+import { EMPTY_TEXT_LANGUAGES } from './commons';
 
-export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
+export const PROBLEM_DEFAULT = (): UpsertProblemUIDTO => {
   return {
+    judge: Judge.CUSTOMER,
     author: '',
-    editorial: EmptyTextLanguages,
-    key: '',
+    editorial: EMPTY_TEXT_LANGUAGES,
     name: '',
     settings: {
       timeLimit: 1000,
@@ -18,14 +18,18 @@ export const PROBLEM_DEFAULT = (): EditCreateProblemType => {
       evaluatorSource: '',
     },
     statement: {
-      description: EmptyTextLanguages,
-      input: EmptyTextLanguages,
-      output: EmptyTextLanguages,
+      description: EMPTY_TEXT_LANGUAGES,
+      input: EMPTY_TEXT_LANGUAGES,
+      output: EMPTY_TEXT_LANGUAGES,
       sampleCases: [],
-      note: EmptyTextLanguages,
-      html: EmptyTextLanguages,
+      note: EMPTY_TEXT_LANGUAGES,
+      html: EMPTY_TEXT_LANGUAGES,
     },
-    status: ProblemStatus.RESERVED,
     tags: [],
+    members: {
+      access: EntityAccess.PRIVATE,
+      managers: {},
+      spectators: {},
+    },
   };
 };

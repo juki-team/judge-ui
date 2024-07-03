@@ -1,32 +1,21 @@
-import {
-  DownloadIcon,
-  FlagEnImage,
-  FlagEsImage,
-  FloatToolbar,
-  MdMathEditor,
-  MdMathViewer,
-  PlusIcon,
-  T,
-  TabsInline,
-} from 'components';
-import { classNames, downloadBlobAsFile, downloadJukiMarkdownAsPdf, getStatementData } from 'helpers';
-import { useJukiUI, useJukiUser, useT } from 'hooks';
+import { FlagEnImage, FlagEsImage, MdMathEditor, MdMathViewer, PlusIcon, T, TabsInline } from 'components';
+import { classNames } from 'helpers';
+import { useJukiUser } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { EditCreateProblemType, Judge, Language, ProblemResponseDTO, ProblemScoringMode, ProfileSetting } from 'types';
+import { Judge, Language, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
 import { ProblemLetter } from './ProblemLetter';
 import { SampleTest } from './SampleTest';
 
 interface ProblemStatementProps {
-  problem: ProblemResponseDTO,
-  setProblem?: Dispatch<SetStateAction<EditCreateProblemType>>,
+  problem: UpsertProblemUIDTO,
+  setProblem: Dispatch<SetStateAction<UpsertProblemUIDTO>>,
   contest?: { index: string, color: string },
 }
 
 export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatementProps) => {
   
-  const { judge, key: problemKey, name, settings, tags, author, status, statement } = problem;
-  const editing = !!setProblem;
-  const { viewPortSize } = useJukiUI();
+  const { judge, name, settings, tags, author, statement } = problem;
+  
   const {
     user: {
       settings: {
@@ -35,15 +24,6 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
       },
     },
   } = useJukiUser();
-  const { t } = useT();
-  const problemName = contest?.index ? `(${t('problem')} ${contest?.index}) ${name}` : `(${t('id')} ${problemKey}) ${name}`;
-  const {
-    statementDescription,
-    statementInput,
-    statementOutput,
-    statementNote,
-    mdStatement,
-  } = getStatementData(t, { statement, settings }, preferredLanguage, problemName);
   const [ language, setLanguage ] = useState<Language>(Language.EN);
   
   if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judge)) {
@@ -69,13 +49,6 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
     );
   }
   
-  const handleDownloadPdf = () => {
-    return downloadJukiMarkdownAsPdf(mdStatement, preferredTheme, `Juki Judge ${problemName}.pdf`);
-  };
-  
-  const handleDownloadMd = async () => {
-    downloadBlobAsFile(new Blob([ mdStatement ], { type: 'text/plain' }), `Juki Judge ${problemName}.md`);
-  };
   
   const tabs = {
     [Language.EN]: {
@@ -92,112 +65,69 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
     },
   };
   
-  const isSmall = viewPortSize === 'sm';
-  
   return (
     <div className="jk-row extend top">
       <div className="jk-row extend top gap nowrap stretch left">
-        <div className={classNames('jk-col top stretch flex-3', { editing })}>
-          {!editing && isSmall && (
-            <FloatToolbar
-              actionButtons={[
-                {
-                  icon: <DownloadIcon />,
-                  buttons: [
-                    {
-                      icon: <DownloadIcon />,
-                      label: <T>pdf</T>,
-                      onClick: handleDownloadPdf,
-                    },
-                    {
-                      icon: <DownloadIcon />,
-                      label: <T>md</T>,
-                      onClick: handleDownloadMd,
-                    },
-                  ],
-                },
-              ]}
-            />
-          )}
-          {editing && (
-            <div className="jk-col">
-              <div className="jk-row">
-                <TabsInline<Language>
-                  tabs={tabs}
-                  onChange={(language) => setLanguage(language)}
-                  selectedTabKey={language}
-                />
-              </div>
+        <div className={classNames('jk-col top stretch flex-3 editing?')}>
+          <div className="jk-col">
+            <div className="jk-row">
+              <TabsInline<Language>
+                tabs={tabs}
+                onChange={(language) => setLanguage(language)}
+                selectedTabKey={language}
+              />
             </div>
-          )}
+          </div>
           <div>
             <h3><T>description</T></h3>
-            {editing ? (
-              <div className="text-edit">
-                <MdMathEditor
-                  informationButton
-                  uploadImageButton
-                  source={statement.description?.[language]}
-                  onChange={value => setProblem(prevState => ({
-                    ...prevState,
-                    statement: {
-                      ...prevState.statement,
-                      description: { ...statement.description, [language]: value },
-                    },
-                  }))}
-                />
-              </div>
-            ) : (
-              <div className="bc-we jk-pg-sm jk-br-ie">
-                <MdMathViewer source={statementDescription} />
-              </div>
-            )}
+            <div className="text-edit">
+              <MdMathEditor
+                informationButton
+                uploadImageButton
+                source={statement.description?.[language]}
+                onChange={value => setProblem(prevState => ({
+                  ...prevState,
+                  statement: {
+                    ...prevState.statement,
+                    description: { ...statement.description, [language]: value },
+                  },
+                }))}
+              />
+            </div>
           </div>
           <div>
-            {(editing || !!statementInput) && <h3><T>input</T></h3>}
-            {editing ? (
-              <div className="text-edit">
-                <MdMathEditor
-                  informationButton
-                  uploadImageButton
-                  source={statement.input?.[language]}
-                  onChange={value => setProblem(prevState => ({
-                    ...prevState,
-                    statement: {
-                      ...statement,
-                      input: { ...statement.input, [language]: value },
-                    },
-                  }))}
-                />
-              </div>
-            ) : !!statementInput
-              ? <div className="bc-we jk-pg-sm jk-br-ie">
-                <MdMathViewer source={statementInput} />
-              </div>
-              : null}
+            <h3><T>input</T></h3>
+            <div className="text-edit">
+              <MdMathEditor
+                informationButton
+                uploadImageButton
+                source={statement.input?.[language]}
+                onChange={value => setProblem(prevState => ({
+                  ...prevState,
+                  statement: {
+                    ...statement,
+                    input: { ...statement.input, [language]: value },
+                  },
+                }))}
+              />
+            </div>
           </div>
           <div>
-            {(editing || !!statementOutput) && <h3><T>output</T></h3>}
-            {editing ? (
-              <div className="text-edit">
-                <MdMathEditor
-                  informationButton
-                  uploadImageButton
-                  source={statement.output?.[language]}
-                  onChange={value => setProblem(prevState => ({
-                    ...prevState,
-                    statement: {
-                      ...statement,
-                      output: { ...statement.output, [language]: value },
-                    },
-                  }))}
-                />
-              </div>
-            ) : statementOutput
-              ? <div className="bc-we jk-pg-sm jk-br-ie">
-                <MdMathViewer source={statementOutput} />
-              </div>
-              : null}
+            <h3><T>output</T></h3>
+            <div className="text-edit">
+              <MdMathEditor
+                informationButton
+                uploadImageButton
+                source={statement.output?.[language]}
+                onChange={value => setProblem(prevState => ({
+                  ...prevState,
+                  statement: {
+                    ...statement,
+                    output: { ...statement.output, [language]: value },
+                  },
+                }))}
+              />
+            </div>
           </div>
           {settings.mode === ProblemScoringMode.SUBTASK && (
             <div>
@@ -205,7 +135,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
               <div className="jk-col left stretch gap">
                 {Object.values(settings.pointsByGroups).map(pointsByGroup => (
                   <div className="jk-row extend gap" key={pointsByGroup.group}>
-                    {editing && pointsByGroup.group !== 0 ? (
+                    {pointsByGroup.group !== 0 ? (
                       <>
                         <div className="jk-col fw-bd cr-pd" style={{ width: 100 }}>
                           <div className="tx-l"><T className="tt-se">subtask</T> {pointsByGroup.group}</div>
@@ -262,25 +192,22 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           )}
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1 jk-pg-sm-tb">
-              {/*<h3><T>output sample</T></h3>*/}
               <div className="jk-row"><T className="tt-se tx-h cr-pd fw-bd">input sample</T></div>
               <div className="jk-row"><T className="tt-se tx-h cr-pd fw-bd">output sample</T></div>
             </div>
-            {editing && (
-              <div className="jk-row">
-                <PlusIcon
-                  className="cr-py"
-                  filledCircle
-                  onClick={() => setProblem(prevState => ({
-                    ...prevState,
-                    statement: {
-                      ...statement,
-                      sampleCases: [ ...statement.sampleCases, { input: '', output: '' } ],
-                    },
-                  }))}
-                />
-              </div>
-            )}
+            <div className="jk-row">
+              <PlusIcon
+                className="cr-py"
+                filledCircle
+                onClick={() => setProblem(prevState => ({
+                  ...prevState,
+                  statement: {
+                    ...statement,
+                    sampleCases: [ ...statement.sampleCases, { input: '', output: '' } ],
+                  },
+                }))}
+              />
+            </div>
           </div>
           <div className="jk-col stretch gap">
             {(statement.sampleCases || [ { input: '', output: '' } ]).map((sample, index) => (
@@ -296,32 +223,21 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
             ))}
           </div>
           <div>
-            {editing ? (
-              <>
-                <h3><T>note</T></h3>
-                <div className="text-edit">
-                  <MdMathEditor
-                    informationButton
-                    uploadImageButton
-                    source={statement.note?.[language]}
-                    onChange={value => setProblem(prevState => ({
-                      ...prevState,
-                      statement: {
-                        ...statement,
-                        note: { ...statement.note, [language]: value },
-                      },
-                    }))}
-                  />
-                </div>
-              </>
-            ) : !!statementNote
-              ? <>
-                <h3><T>note</T></h3>
-                <div className="br-g6 bc-we jk-pg-md jk-border-radius-inline">
-                  <MdMathViewer source={statementNote} />
-                </div>
-              </>
-              : null}
+            <h3><T>note</T></h3>
+            <div className="text-edit">
+              <MdMathEditor
+                informationButton
+                uploadImageButton
+                source={statement.note?.[language]}
+                onChange={value => setProblem(prevState => ({
+                  ...prevState,
+                  statement: {
+                    ...statement,
+                    note: { ...statement.note, [language]: value },
+                  },
+                }))}
+              />
+            </div>
           </div>
         </div>
       </div>

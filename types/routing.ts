@@ -21,12 +21,6 @@ export enum QueryParam {
   RANKING_TABLE = 'rgt',
   // courses
   COURSES_TABLE = 'cst',
-  // table queries
-  PAGE_TABLE = 'p',
-  PAGE_SIZE_TABLE = 'z',
-  SORT_TABLE = 's',
-  FILTER_TABLE = 'f',
-  VIEW_MODE_TABLE = 'v',
   // problems
   JUDGE = 'judge',
   // adming

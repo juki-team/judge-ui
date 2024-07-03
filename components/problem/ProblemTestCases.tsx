@@ -24,12 +24,12 @@ import {
   ButtonLoaderOnClickType,
   ContentResponseType,
   ContentsResponseType,
-  EditCreateProblemType,
   HTTPMethod,
   KeyFileType,
   ProblemScoringMode,
   ProblemTestCasesResponseDTO,
   Status,
+  UpsertProblemUIDTO,
 } from 'types';
 import Custom404 from '../../pages/404';
 import { TwoActionModal } from '../index';
@@ -76,11 +76,12 @@ const transform = (problemTestCases: ProblemTestCasesResponseDTO) => {
 };
 
 interface ProblemTestCasesPageProps {
-  problem: EditCreateProblemType,
-  testCases: ProblemTestCasesResponseDTO
+  problem: UpsertProblemUIDTO,
+  testCases: ProblemTestCasesResponseDTO,
+  problemJudgeKey: string,
 }
 
-const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemTestCasesPageProps) => {
+const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJudgeKey }: ProblemTestCasesPageProps) => {
   
   const [ testCases, setTestCases ] = useState<{ [key: string]: NewTestCaseType }>(transform(problemTestCases));
   const [ newGroups, setNewGroups ] = useState([ 1 ]);
@@ -96,10 +97,10 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
     setLock(true);
     setLoaderStatus(Status.LOADING);
     const response = cleanRequest<ContentsResponseType<{}>>(
-      await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, keyFile), {
+      await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCaseKey, keyFile), {
         method: HTTPMethod.DELETE,
       }));
-    await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+    await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
     notifyResponse(response, setLoaderStatus);
     setLock(false);
   };
@@ -142,7 +143,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
       [testCase.testCaseKey]: { ...prevState[testCase.testCaseKey], [keyFile + 'NewFileState']: UploadState.UPLOADING },
     }));
     const result = cleanRequest<ContentsResponseType<{}>>(
-      await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE(problem.key), {
+      await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE(problemJudgeKey), {
         method: HTTPMethod.POST,
         body: formData,
       }));
@@ -173,7 +174,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
           onClick={async (setLoaderStatus) => {
             setLock(true);
             setLoaderStatus(Status.LOADING);
-            await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+            await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
             setLoaderStatus(Status.SUCCESS);
             setLock(false);
           }}
@@ -188,10 +189,10 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
             const result = await authorizedRequest(
-              JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problem.key),
+              JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problemJudgeKey),
               { method: HTTPMethod.GET, responseType: 'blob' },
             );
-            downloadBlobAsFile(result, problem.key + '.zip');
+            downloadBlobAsFile(result, problemJudgeKey + '.zip');
             setLoaderStatus(Status.SUCCESS);
           }}
         >
@@ -218,15 +219,16 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                     setLoaderStatus(Status.LOADING);
                     await Promise.all([ 'input' as KeyFileType, 'output' as KeyFileType ].map(async (keyFile: KeyFileType) => {
                       const response = cleanRequest<ContentsResponseType<{}>>(
-                        await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCaseKey, keyFile), {
+                        await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCaseKey, keyFile), {
                           method: HTTPMethod.DELETE,
                         }));
                       notifyResponse(response);
                     }));
                     setLoaderStatus(Status.SUCCESS);
                   }
-                  await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+                  await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
                   setLock(false);
+                  setModal(null);
                 },
                 label: <T>delete</T>,
               }}
@@ -286,12 +288,12 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                       setLock(true);
                       setLoaderStatus(Status.LOADING);
                       const response = cleanRequest<ContentsResponseType<{}>>(
-                        await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASES_GROUPS(problem.key), {
+                        await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASES_GROUPS(problemJudgeKey), {
                           method: HTTPMethod.PUT,
                           body: JSON.stringify({ testCases: { [testCase.testCaseKey]: { groups: testCase.groups } } }),
                         }));
                       notifyResponse(response, setLoaderStatus);
-                      await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+                      await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
                       setLock(false);
                     }}
                   />
@@ -341,10 +343,10 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                             onClick={async (setLoaderStatus) => {
                               setLoaderStatus(Status.LOADING);
                               const result = await authorizedRequest(
-                                JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problem.key, testCase.testCaseKey, keyPut),
+                                JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCase.testCaseKey, keyPut),
                                 { method: HTTPMethod.GET, responseType: 'blob' },
                               );
-                              await downloadBlobAsFile(result, problem.key + '.zip');
+                              await downloadBlobAsFile(result, problemJudgeKey + '.zip');
                               setLoaderStatus(Status.SUCCESS);
                             }}
                             disabled={lock}
@@ -409,7 +411,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
                     }
                   }));
                 }
-                await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key));
+                await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
                 setLoaderStatus(Status.SUCCESS);
                 setLock(false);
               }}
@@ -460,15 +462,20 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases }: ProblemT
   );
 };
 
-export const ProblemTestCases = ({ problem }: { problem: EditCreateProblemType }) => {
+interface ProblemTestCasesProps {
+  problem: UpsertProblemUIDTO,
+  problemJudgeKey: string,
+}
+
+export const ProblemTestCases = ({ problem, problemJudgeKey }: ProblemTestCasesProps) => {
   return (
     <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>
-      url={JUDGE_API_V1.PROBLEM.TEST_CASES(problem.key)}
+      url={JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)}
       errorView={<Custom404 />}
       options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}
     >
       {({ data }) => {
-        return <ProblemTestCasesPage problem={problem} testCases={data.content} />;
+        return <ProblemTestCasesPage problem={problem} testCases={data.content} problemJudgeKey={problemJudgeKey} />;
       }}
     </FetcherLayer>
   );
