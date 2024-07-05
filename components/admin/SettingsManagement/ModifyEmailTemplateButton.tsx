@@ -1,7 +1,7 @@
 import { Button, ButtonLoader, CodeEditor, Modal, T } from 'components';
 import { jukiSettings } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { KeyedMutator } from 'swr';
 import { ContentResponseType, HTTPMethod, ProgrammingLanguage, Status } from 'types';
@@ -17,7 +17,7 @@ export const ModifyEmailTemplateButton = (props: ModifyEmailTemplateButtonProps)
   const { companyKey, emailTemplate: initialEmailTemplate, mutate } = props;
   const [ emailTemplate, setEmailTemplate ] = useState(initialEmailTemplate);
   const [ open, setOpen ] = useState(false);
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   useEffect(() => {
     setEmailTemplate(initialEmailTemplate);
   }, [ initialEmailTemplate, open ]);

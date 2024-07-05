@@ -178,6 +178,9 @@ export {
   CreateEntityLayout,
   UpdateEntityLayout,
   DocumentMembersContent,
+  PendingIcon,
+  PendingActionsIcon,
+  VoidIcon,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

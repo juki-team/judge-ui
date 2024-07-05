@@ -1,7 +1,7 @@
 import { ButtonLoader, InputToggle, T } from 'components/index';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { KeyedMutator } from 'swr';
 import { CompanyResponseDTO, ContentResponseType, HTTPMethod, JudgeResponseDTO, Status } from 'types';
@@ -15,7 +15,7 @@ interface JudgeManagementBodyProps {
 
 export const JudgeManagementBody = ({ company, judge, mutate, withError }: JudgeManagementBodyProps) => {
   
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   const [ languages, setLanguages ] = useState(judge.languages);
   useEffect(() => {
     setLanguages(judge.languages);

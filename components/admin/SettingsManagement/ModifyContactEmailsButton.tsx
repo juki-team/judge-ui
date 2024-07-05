@@ -1,7 +1,7 @@
 import { AddIcon, Button, ButtonLoader, DeleteIcon, Input, Modal, T } from 'components';
 import { jukiSettings } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { KeyedMutator } from 'swr';
 import { ContentResponseType, HTTPMethod, Status } from 'types';
@@ -17,7 +17,7 @@ export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps)
   const { companyKey, contactEmails: initialContactEmails, mutate } = props;
   const [ contactEmails, setContactEmails ] = useState<string[]>(initialContactEmails);
   const [ open, setOpen ] = useState(false);
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   useEffect(() => {
     setContactEmails(initialContactEmails);
     // eslint-disable-next-line react-hooks/exhaustive-deps

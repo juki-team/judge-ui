@@ -12,21 +12,6 @@ const withFilter = (path: string, filterUrl?: string) => {
 
 export const JUDGE_API_V1 = {
   SYS: {
-    AWS_ECS_TASK_LIST: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-list?companyKey=${companyKey}`;
-    },
-    AWS_ECS_TASK_DEFINITION_LIST: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/task-definition-list?companyKey=${companyKey}`;
-    },
-    AWS_ECS_STOP_TASK_TASK_ARN: (taskArn: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/stop-task/${encodeURIComponent(taskArn)}`;
-    },
-    AWS_ECS_RUN_TASK_TASK_DEFINITION: (taskDefinition: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/run-task/${encodeURIComponent(taskDefinition)}`;
-    },
-    AWS_ECS_ADJUST_TASKS: (companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/aws/ecs/adjust-tasks?companyKey${companyKey}`;
-    },
     MAIL_SEND: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/send`;
     },
@@ -75,15 +60,6 @@ export const JUDGE_API_V1 = {
     },
   },
   PROBLEM: {
-    SUMMARY_LIST: (judge: Judge, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(
-        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/summary-list?page=${page}&size=${size}&judge=${judge}`,
-        filterUrl,
-      ), sortUrl);
-    },
-    TAG_LIST: () => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/tag-list`;
-    },
     PROBLEM: (key: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}`;
     },

@@ -1,7 +1,7 @@
 import { T } from 'components';
 import { JUDGE_API_V1, PROBLEM_VERDICT } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useEffect, useJkSocket, useJukiUser, useNotification, useState } from 'hooks';
+import { useEffect, useJkSocket, useJukiNotification, useJukiUser, useState } from 'hooks';
 import { createContext } from 'react';
 import {
   ContentsResponseType,
@@ -22,7 +22,7 @@ export const TaskContext = createContext<{
 
 export const TaskProvider = ({ children }: PropsWithChildren<{}>) => {
   const { user: { nickname } } = useJukiUser();
-  const { addErrorNotification, addSuccessNotification } = useNotification();
+  const { addErrorNotification, addSuccessNotification } = useJukiNotification();
   const [ submissions, setSubmissions ] = useState<Submissions>({});
   const { pop } = useJkSocket(SocketEvent.SUBMISSION);
   useEffect(() => {

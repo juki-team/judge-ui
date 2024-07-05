@@ -19,7 +19,7 @@ import {
   getSimpleProblemJudgeKey,
   renderReactNodeOrFunctionP1,
 } from 'helpers';
-import { useJukiRouter, useJukiUI, useJukiUser, useNotification, useTask, useTrackLastPath } from 'hooks';
+import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useTask, useTrackLastPath } from 'hooks';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
@@ -34,6 +34,7 @@ import {
   TabsType,
 } from 'types';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
+import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
 
 export const ProblemViewLayout = ({ problem, reloadProblem }: {
@@ -44,7 +45,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { searchParams, routeParams: { key: problemKey, tab: problemTab }, pushRoute } = useJukiRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
-  const { addSuccessNotification, addErrorNotification, notifyResponse } = useNotification();
+  const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const { listenSubmission } = useTask();
   const { components: { Link } } = useJukiUI();
   const tabs: TabsType<ProblemTab> = {
@@ -245,6 +246,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
             <div className="jk-tag warning">{JUDGE[problem.judge].label}</div>
           )}
           <ProblemInfo problem={problem} />
+          <ProblemStatus {...problem.user} />
         </div>
       </div>
     </TwoContentLayout>

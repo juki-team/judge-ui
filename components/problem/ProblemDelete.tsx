@@ -1,7 +1,7 @@
 import { ButtonLoader, T } from 'components';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiRouter, useNotification } from 'hooks';
+import { useJukiNotification, useJukiRouter } from 'hooks';
 import React from 'react';
 import { ContentResponseType, HTTPMethod, Status, SubmissionRunStatus, UserBasicInfoResponseDTO } from 'types';
 
@@ -12,7 +12,7 @@ interface ProblemStatementProps {
 
 export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStatementProps) => {
   
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   const { pushRoute } = useJukiRouter();
   
   return (

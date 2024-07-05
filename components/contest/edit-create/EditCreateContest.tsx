@@ -13,7 +13,7 @@ import {
 import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiRouter, useJukiUI, useNotification, useRef, useState } from 'hooks';
+import { useEffect, useJukiNotification, useJukiRouter, useJukiUI, useRef, useState } from 'hooks';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
@@ -36,8 +36,8 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   
   const editing = !!initialContest;
   
-  const { addWarningNotification } = useNotification();
-  const { notifyResponse } = useNotification();
+  const { addWarningNotification } = useJukiNotification();
+  const { notifyResponse } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
   const [ contest, setContest ] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT(isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));

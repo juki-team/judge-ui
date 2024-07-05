@@ -11,22 +11,6 @@ export const TextLangEdit = ({ text, setText }: {
       <Tabs
         tabs={[
           {
-            key: Language.EN,
-            body: (
-              <MdMathEditor
-                informationButton
-                uploadImageButton
-                source={text?.[Language.EN]}
-                onChange={value => setText({ ...text, [Language.EN]: value })}
-              />
-            ),
-            header: (
-              <div className="jk-row nowrap">
-                English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div>
-              </div>
-            ),
-          },
-          {
             key: Language.ES,
             body: (
               <MdMathEditor
@@ -39,6 +23,22 @@ export const TextLangEdit = ({ text, setText }: {
             header: (
               <div className="jk-row nowrap">
                 Español <div style={{ width: 50, height: 24 }}><FlagEsImage /></div>
+              </div>
+            ),
+          },
+          {
+            key: Language.EN,
+            body: (
+              <MdMathEditor
+                informationButton
+                uploadImageButton
+                source={text?.[Language.EN]}
+                onChange={value => setText({ ...text, [Language.EN]: value })}
+              />
+            ),
+            header: (
+              <div className="jk-row nowrap">
+                English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div>
               </div>
             ),
           },

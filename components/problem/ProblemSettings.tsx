@@ -1,19 +1,19 @@
 import {
   Button,
-  CloseIcon,
   DeleteIcon,
+  InfoIcon,
   Input,
   InputToggle,
   Modal,
   MultiSelect,
   PlusIcon,
-  Popover,
   ProblemScoringModeInformation,
   Select,
   T,
+  Tooltip,
   UserCodeEditor,
-  WarningIcon,
 } from 'components';
+import { jukiSettings } from 'config';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   EMPTY_TEXT_LANGUAGES,
@@ -24,8 +24,10 @@ import {
   RUNNER_ACCEPTED_PROBLEM_TYPES,
 } from 'config/constants';
 import { classNames } from 'helpers';
+import { useFetcher, useJukiUser } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
+  ContentResponseType,
   Language,
   ProblemScoringMode,
   ProblemSettingsByProgrammingLanguageType,
@@ -38,34 +40,27 @@ import {
 
 export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: string[]) => void }) => {
   
-  const [ text, setText ] = useState('');
+  const { company: { key: companyKey } } = useJukiUser();
+  const { data } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.company.getJudgeProblemTags({ params: { companyKey } }).url);
+  
+  const allTags = Array.from(new Set([ ...(data?.success ? data.content : []), ...tags ]));
   
   return (
-    <div className="jk-row left gap">
-      <div className="jk-row left gap">
-        {tags?.map(tag => (
-          <div className="jk-tag gray-6" key={tag}>
-            <div className="jk-row gap">
-              {tag}
-              <CloseIcon
-                filledCircle
-                size="small"
-                className="cr-g3"
-                onClick={() => onChange(tags.filter(t => t !== tag))}
-              />
-            </div>
-          </div>
-        ))}
+    <div className="jk-row nowrap gap extend">
+      <div className="jk-row nowrap">
+        <T className="tt-se fw-bd">tags</T>&nbsp;
+        <Tooltip content={<T className="tt-se">to add new tags contact to the administrator</T>}>
+          <div className="jk-row"><InfoIcon /></div>
+        </Tooltip>
+        &nbsp;<span className="fw-bd">:</span>
       </div>
-      <Input onChange={newValue => setText(newValue)} value={text} />
-      <Button
-        disabled={text === '' || tags.some(tag => tag === text)}
-        icon={<PlusIcon />}
-        size="small"
-        onClick={() => {
-          onChange([ ...tags, text ]);
-          setText('');
+      <MultiSelect
+        options={allTags.map(tag => ({ value: tag, label: <T>{tag}</T> }))}
+        selectedOptions={tags.map(value => ({ value }))}
+        onChange={(tags) => {
+          onChange(tags.map(({ value }) => value));
         }}
+        extend
       />
     </div>
   );
@@ -372,13 +367,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left nowrap gap">
           <div className="jk-row fw-bd tt-se nowrap">
-            <T className="ws-np tt-se">programming languages</T>
-            {!Object.keys(problem.settings?.byProgrammingLanguage).length && (
-              <Popover content={<T>there must be at least one language selected</T>}>
-                <div><WarningIcon className="cr-er" /></div>
-              </Popover>
-            )}
-            :
+            <T className="ws-np tt-se">limits by programming languages</T>:
           </div>
           <MultiSelect
             options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}
@@ -468,10 +457,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             extend
           />
         </div>
-        <div className="jk-row left gap">
-          <div className="fw-bd tt-se"><T>tags</T>:</div>
-          <Tags tags={problem.tags} onChange={tags => setProblem({ ...problem, tags })} />
-        </div>
+        <Tags tags={problem.tags} onChange={tags => setProblem({ ...problem, tags })} />
       </div>
     </div>
   );

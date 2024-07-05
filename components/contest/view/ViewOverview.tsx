@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useJukiRouter, useJukiUI, useJukiUser, useNotification, useSWR } from 'hooks';
+import { useDateFormat, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useSWR } from 'hooks';
 import {
   ContentResponseType,
   ContestResponseDTO,
@@ -29,7 +29,7 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
   const { routeParams } = useJukiRouter();
   const { appendSearchParams } = useJukiRouter();
   const { dtf, rlt } = useDateFormat();
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   const { mutate } = useSWR();
   const { viewPortSize } = useJukiUI();
   

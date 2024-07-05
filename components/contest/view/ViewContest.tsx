@@ -21,10 +21,10 @@ import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { parseContest, renderReactNodeOrFunctionP1 } from 'helpers';
 import {
   useContestRouter,
+  useJukiNotification,
   useJukiRouter,
   useJukiUI,
   useJukiUser,
-  useNotification,
   useT,
   useTask,
   useTrackLastPath,
@@ -58,7 +58,7 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
   const { user: { permissions: { canCreateContest } } } = useJukiUser();
   const { t } = useT();
   const { listenSubmission } = useTask();
-  const { addWarningNotification, notifyResponse } = useNotification();
+  const { addWarningNotification, notifyResponse } = useJukiNotification();
   
   const {
     user: { isAdmin, isJudge, isContestant, isGuest, isSpectator },

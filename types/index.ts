@@ -97,6 +97,7 @@ export type {
 export { Period, NotificationType, QueryParamKey } from '@juki-team/base-ui';
 
 export type {
+  IconProps,
   BasicModalProps,
   ModalProps,
   TabsType,

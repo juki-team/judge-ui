@@ -12,8 +12,8 @@
     "pull": "yarn add @juki-team/commons @juki-team/base-ui"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^0.1.438",
-    "@juki-team/commons": "^0.0.557",
+    "@juki-team/base-ui": "^0.1.446",
+    "@juki-team/commons": "^0.0.564",
     "@next/bundle-analyzer": "^14.1.2",
     "@vercel/analytics": "^1.2.2",
     "deep-object-diff": "^1.1.7",

@@ -11,7 +11,7 @@ import {
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
-import { useJukiRouter, useJukiUI, useJukiUser, useNotification } from 'hooks';
+import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -31,7 +31,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
   const { problems = {}, user } = contest;
   const { isJudge, isAdmin } = user || {};
   const { searchParams, routeParams: { key: contestKey, index, tab } } = useJukiRouter();
-  const { addSuccessNotification, addErrorNotification } = useNotification();
+  const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { company: { key } } = useJukiUser();
   const isJudgeOrAdmin = isJudge || isAdmin;

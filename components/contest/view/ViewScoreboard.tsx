@@ -24,7 +24,7 @@ import {
   downloadSheetDataAsXlsxFile,
   getProblemJudgeKey,
 } from 'helpers';
-import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useNotification, useT } from 'hooks';
+import { useDataViewerRequester, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useT } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -114,7 +114,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
 export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDTO, mutate: KeyedMutator<any> }) => {
   
   const { user, company: { imageUrl, name } } = useJukiUser();
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   const { searchParams, routeParams: { key: contestKey, tab: contestTab, index: problemIndex } } = useJukiRouter();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);

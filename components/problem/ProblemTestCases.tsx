@@ -18,7 +18,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize } from 'helpers';
-import { useEffect, useNotification, useState, useSWR } from 'hooks';
+import { useEffect, useJukiNotification, useState, useSWR } from 'hooks';
 import { ReactNode } from 'react';
 import {
   ButtonLoaderOnClickType,
@@ -89,7 +89,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
   useEffect(() => {
     setTestCases(transform(problemTestCases));
   }, [ problemTestCases ]);
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   const { mutate } = useSWR();
   const [ modal, setModal ] = useState<ReactNode>(null);
   

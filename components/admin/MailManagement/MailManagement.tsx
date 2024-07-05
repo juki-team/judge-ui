@@ -2,7 +2,7 @@ import { Button, ButtonLoader, CodeEditor, FetcherLayer, Input, Select, SendIcon
 import { jukiSettings } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiNotification } from 'hooks';
 import React, { useState } from 'react';
 import {
   CompanyResponseDTO,
@@ -82,7 +82,7 @@ Sigan programando.`;
 
 export const MailManagement = ({ company }: { company: CompanyResponseDTO }) => {
   
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   const [ password, setPassword ] = useState('');
   const [ from, setFrom ] = useState('');
   const [ to, setTo ] = useState('');

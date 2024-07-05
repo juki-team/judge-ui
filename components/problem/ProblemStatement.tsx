@@ -24,7 +24,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
       },
     },
   } = useJukiUser();
-  const [ language, setLanguage ] = useState<Language>(Language.EN);
+  const [ language, setLanguage ] = useState<Language>(Language.ES);
   
   if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judge)) {
     return (
@@ -51,16 +51,16 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
   
   
   const tabs = {
-    [Language.EN]: {
-      key: Language.EN,
-      header: (
-        <div className="jk-row nowrap">English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div></div>
-      ),
-    },
     [Language.ES]: {
       key: Language.ES,
       header: (
         <div className="jk-row nowrap">Español <div style={{ width: 50, height: 24 }}><FlagEsImage /></div></div>
+      ),
+    },
+    [Language.EN]: {
+      key: Language.EN,
+      header: (
+        <div className="jk-row nowrap">English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div></div>
       ),
     },
   };

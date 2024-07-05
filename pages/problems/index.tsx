@@ -1,7 +1,5 @@
 import {
   ButtonLoader,
-  CheckIcon,
-  CloseIcon,
   CopyToClipboard,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
@@ -10,23 +8,17 @@ import {
   PagedDataViewer,
   PlusIcon,
   Popover,
+  ProblemStatus,
   Select,
   T,
   TextField,
   Tooltip,
   TwoContentLayout,
   UserChip,
+  VoidIcon,
 } from 'components';
 import { jukiSettings } from 'config';
-import {
-  JUDGE,
-  JUDGE_API_V1,
-  JUKI_APP_COMPANY_KEY,
-  PROBLEM_MODE,
-  PROBLEM_MODES,
-  PROBLEM_TYPE,
-  ROUTES,
-} from 'config/constants';
+import { JUDGE, JUKI_APP_COMPANY_KEY, PROBLEM_MODE, PROBLEM_MODES, PROBLEM_TYPE, ROUTES } from 'config/constants';
 import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
@@ -39,7 +31,7 @@ import {
   useTrackLastPath,
 } from 'hooks';
 import {
-  ContentsResponseType,
+  ContentResponseType,
   DataViewerHeadersType,
   FilterSelectOnlineType,
   Judge,
@@ -71,7 +63,8 @@ function Problems() {
   const { searchParams, setSearchParams } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();
-  const { data: tags } = useFetcher<ContentsResponseType<string>>(JUDGE_API_V1.PROBLEM.TAG_LIST());
+  const { company: { key: companyKey } } = useJukiUser();
+  const { data: tags } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.company.getJudgeProblemTags({ params: { companyKey } }).url);
   const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
   useEffect(() => {
     if (!judge) {
@@ -104,31 +97,21 @@ function Problems() {
       index: 'name',
       field: ({ record: { key, judge, name, user }, isCard }) => (
         <Field className={classNames('jk-row jk-pg-sm', { left: !isCard, center: isCard })}>
-          <div className="jk-row gap nowrap">
+          <div className="jk-row nowrap">
             <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT) }}>
               <div className="jk-row link fw-bd">{name}</div>
             </Link>
-            {user.solved ? (
-              <Tooltip
-                content={<T className="tt-se ws-np">solved</T>}
-                placement="top"
-              >
-                <div className="jk-row"><CheckIcon size="small" filledCircle className="cr-ss" /></div>
-              </Tooltip>
-            ) : user.tried && (
-              <Tooltip
-                content={<T className="tt-se ws-np">tried</T>}
-                placement="top"
-              >
-                <div className="jk-row"><CloseIcon size="small" filledCircle className="cr-wg" /></div>
-              </Tooltip>
-            )}
+            {(user.tried || user.solved) && <>&nbsp;</>}
+            <ProblemStatus {...user} size="small" />
             {user.isManager && (
               <Tooltip
                 content={<T className="tt-se ws-np">you are editor</T>}
                 placement="top"
+                withPortal
               >
-                <div className="jk-tag tx-s fw-bd letter-tag">E</div>
+                <div className="jk-row tx-s cr-py">
+                  &nbsp;<VoidIcon size="small" filledSquare letter="E" />
+                </div>
               </Tooltip>
             )}
           </div>
@@ -184,7 +167,7 @@ function Problems() {
         ),
         filter: {
           type: 'select',
-          options: (tags?.success ? tags.contents : []).map(tag => ({ value: tag, label: tag })),
+          options: (tags?.success ? tags.content : []).map(tag => ({ value: tag, label: tag })),
         } as FilterSelectOnlineType,
         cardPosition: 'center',
         minWidth: 250,
@@ -196,7 +179,7 @@ function Problems() {
       field: ({ record: { owner: { nickname, imageUrl } } }) => (
         <TextField
           className="jk-row"
-          text={<UserChip nickname={nickname} imageUrl={imageUrl} />}
+          text={<UserChip nickname={nickname} imageUrl={imageUrl} companyKey={companyKey} />}
           label={
             <T className="tt-se">{judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler'}</T>}
         />
@@ -206,7 +189,7 @@ function Problems() {
       cardPosition: 'bottomRight',
       minWidth: 200,
     } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-  ], [ tags, judge, Link ]);
+  ], [ tags, judge, Link, companyKey ]);
   
   const breadcrumbs = [
     <T className="tt-se" key="problems">problems</T>,

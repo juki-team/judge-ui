@@ -1,6 +1,5 @@
 export {
   useOutsideAlerter,
-  useNotification,
   useT,
   useJukiUser,
   useJukiUI,
@@ -14,6 +13,7 @@ export {
   useLastPath,
   useTrackLastPath,
   useEntityDiff,
+  useJukiNotification,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export { useEffect, useRef, useState, useMemo } from 'react';

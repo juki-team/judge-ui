@@ -17,7 +17,7 @@ import {
 } from 'components';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey } from 'helpers';
-import { useDateFormat, useFetcher, useJukiRouter, useJukiUI, useNotification } from 'hooks';
+import { useDateFormat, useFetcher, useJukiNotification, useJukiRouter, useJukiUI } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
 
@@ -33,7 +33,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
     answer: string,
     public: boolean,
   }>(null);
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(routeParams.key as string));
   const { components: { Image } } = useJukiUI();
   const isJudgeOrAdmin = isJudge || isAdmin;

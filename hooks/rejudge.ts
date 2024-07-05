@@ -1,11 +1,11 @@
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useNotification } from 'hooks';
+import { useJukiNotification } from 'hooks';
 import { ButtonLoaderOnClickType, ContentResponseType, HTTPMethod, Status, SubmissionRunStatus } from 'types';
 
 export const useRejudgeServices = () => {
   
-  const { notifyResponse } = useNotification();
+  const { notifyResponse } = useJukiNotification();
   
   return {
     rejudgeSubmission: (submissionId: string): ButtonLoaderOnClickType => async (setLoaderStatus, loaderStatus, event) => {

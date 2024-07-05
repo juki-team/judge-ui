@@ -41,7 +41,7 @@ export default function Home() {
                         )}
                       </div>
                       {PROGRAMMING_LANGUAGE[value].compilePattern && (
-                        <pre className="ws-bs bc-w2 jk-pg-sm">
+                        <pre className="ws-bs bc-wd jk-pg-sm">
                           {PROGRAMMING_LANGUAGE[value].compilePattern
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
@@ -50,7 +50,7 @@ export default function Home() {
                       )}
                       <div><T className="tt-se">run command</T>:</div>
                       {PROGRAMMING_LANGUAGE[value].runPattern && (
-                        <pre className="ws-bs bc-w2 jk-pg-sm">
+                        <pre className="ws-bs bc-wd jk-pg-sm">
                           {PROGRAMMING_LANGUAGE[value].runPattern
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
@@ -65,7 +65,7 @@ export default function Home() {
                       {PROGRAMMING_LANGUAGE[value].executableVersion && (
                         <>
                           <div><T className="tt-se">executable version</T>:</div>
-                          <pre className="ws-bs bc-w2 jk-pg-sm">
+                          <pre className="ws-bs bc-wd jk-pg-sm">
                           {PROGRAMMING_LANGUAGE[value].executableVersion
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
