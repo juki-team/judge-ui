@@ -162,12 +162,12 @@ function Problems() {
         index: 'tags',
         field: ({ record: { tags }, isCard }) => (
           <Field className={classNames('jk-row gap', { center: isCard, left: !isCard })}>
-            {tags.filter(tag => !!tag).map(tag => <div className="jk-tag gray-6 tx-s" key={tag}>{tag}</div>)}
+            {tags.filter(tag => !!tag).map(tag => <div className="jk-tag gray-6 tx-s" key={tag}><T>{tag}</T></div>)}
           </Field>
         ),
         filter: {
           type: 'select',
-          options: (tags?.success ? tags.content : []).map(tag => ({ value: tag, label: tag })),
+          options: (tags?.success ? tags.content : []).map(tag => ({ value: tag, label: <T>{tag}</T> })),
         } as FilterSelectOnlineType,
         cardPosition: 'center',
         minWidth: 250,
