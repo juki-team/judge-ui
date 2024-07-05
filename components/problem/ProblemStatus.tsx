@@ -8,7 +8,7 @@ export const ProblemStatus = ({ solved, tried, size }: {
 }) => {
   return solved ? (
     <Tooltip
-      content={<T className="tt-se ws-np">solved</T>}
+      content={<T className="tt-se ws-np">you solved it</T>}
       placement="top"
       withPortal
     >
@@ -16,7 +16,7 @@ export const ProblemStatus = ({ solved, tried, size }: {
     </Tooltip>
   ) : tried && (
     <Tooltip
-      content={<T className="tt-se ws-np">tried</T>}
+      content={<T className="tt-se ws-np">you tried it</T>}
       placement="top"
       withPortal
     >
