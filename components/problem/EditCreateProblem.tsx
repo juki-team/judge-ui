@@ -1,5 +1,5 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import { LinkLastPath, ProblemStatement, T, TwoContentLayout } from 'components';
-import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEntityDiff, useJukiUI } from 'hooks';
 import React, { useState } from 'react';
@@ -99,7 +99,7 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     editing
       ? (
-        <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(problemJudgeKey, ProblemTab.STATEMENT) }} className="link">
+        <Link href={{ pathname: jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey }) }} className="link">
           <div className="ws-np">{problem.name}</div>
         </Link>
       ) : <div className="ws-np">{problem.name}</div>,

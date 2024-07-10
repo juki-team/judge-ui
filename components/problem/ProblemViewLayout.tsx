@@ -1,3 +1,4 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import {
   AutorenewIcon,
   ButtonLoader,
@@ -11,7 +12,7 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
+import { JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY } from 'config/constants';
 import {
   authorizedRequest,
   cleanRequest,
@@ -28,10 +29,10 @@ import {
   LastPathKey,
   ProblemDataResponseDTO,
   ProblemTab,
-  ReactNode,
   Status,
   SubmissionRunStatus,
   TabsType,
+  TwoContentLayoutProps,
 } from 'types';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatus } from './ProblemStatus';
@@ -43,7 +44,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
 }) => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  const { searchParams, routeParams: { key: problemKey, tab: problemTab }, pushRoute } = useJukiRouter();
+  const { searchParams, routeParams: { key: problemKey }, pushRoute } = useJukiRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const { listenSubmission } = useTask();
@@ -91,7 +92,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                       //   '',
                       // ));
                       pushRoute({
-                        pathname: ROUTES.PROBLEMS.VIEW('' + problemKey, ProblemTab.MY_SUBMISSIONS),
+                        pathname: jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: problemKey as string }),
                         searchParams,
                       });
                     }
@@ -119,7 +120,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     header: <T className="ws-np tt-ce">submissions</T>,
     body: <ProblemSubmissions problem={problem} />,
   };
-  const breadcrumbs: ReactNode[] = [
+  const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [
     <LinkLastPath
       lastPathKey={LastPathKey.PROBLEMS}
       key="problems"
@@ -128,10 +129,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     </LinkLastPath>,
     <Link
       href={{
-        pathname: ROUTES.PROBLEMS.VIEW(
-          getSimpleProblemJudgeKey(problem.judge, problem.key, companyKey === JUKI_APP_COMPANY_KEY),
-          ProblemTab.STATEMENT,
-        ),
+        pathname: jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: getSimpleProblemJudgeKey(problem.judge, problem.key, companyKey === JUKI_APP_COMPANY_KEY) }),
         search: searchParams.toString(),
       }}
       className="link"
@@ -139,7 +137,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     >
       <div className="ws-np">{problem.name}</div>
     </Link>,
-    renderReactNodeOrFunctionP1(tabs[problemTab as string]?.header, { selectedTabKey: problemTab as ProblemTab }),
+    renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
   ];
   
   const extraNodes = [];
@@ -189,7 +187,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         icon={<EditIcon />}
         onClick={async setLoaderStatus => {
           setLoaderStatus(Status.LOADING);
-          await pushRoute(ROUTES.PROBLEMS.EDIT(problemKey as string));
+          pushRoute(jukiSettings.ROUTES.judge().problems.edit({ problemJudgeKey: problemKey as string }));
           setLoaderStatus(Status.SUCCESS);
         }}
         responsiveMobile
@@ -225,8 +223,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     <TwoContentLayout
       tabs={tabs}
       breadcrumbs={breadcrumbs}
-      selectedTabKey={problemTab as ProblemTab}
-      getPathname={tabKey => ROUTES.PROBLEMS.VIEW(problemKey as string, tabKey)}
       tabButtons={extraNodes}
     >
       <div>

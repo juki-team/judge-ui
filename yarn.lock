@@ -996,10 +996,25 @@
     "@lezer/common" "^1.0.2"
     "@lezer/css" "^1.0.0"
 
-"@codemirror/lang-html@^6.0.0", "@codemirror/lang-html@^6.4.6":
+"@codemirror/lang-html@^6.0.0":
   version "6.4.7"
   resolved "https://registry.yarnpkg.com/@codemirror/lang-html/-/lang-html-6.4.7.tgz#e375e3c9ae898b5aca6e17b5055a3a76c7a8f5ff"
   integrity sha512-y9hWSSO41XlcL4uYwWyk0lEgTHcelWWfRuqmvcAmxfCs0HNWZdriWo/EU43S63SxEZpc1Hd50Itw7ktfQvfkUg==
+  dependencies:
+    "@codemirror/autocomplete" "^6.0.0"
+    "@codemirror/lang-css" "^6.0.0"
+    "@codemirror/lang-javascript" "^6.0.0"
+    "@codemirror/language" "^6.4.0"
+    "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.17.0"
+    "@lezer/common" "^1.0.0"
+    "@lezer/css" "^1.1.0"
+    "@lezer/html" "^1.3.0"
+
+"@codemirror/lang-html@^6.4.9":
+  version "6.4.9"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-html/-/lang-html-6.4.9.tgz#d586f2cc9c341391ae07d1d7c545990dfa069727"
+  integrity sha512-aQv37pIMSlueybId/2PVSP6NPnmurFDVmZwzc7jszd2KAF8qd4VBbvNYPXWQq90WIARjsdVkPbw29pszmHws3Q==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/lang-css" "^6.0.0"
@@ -1053,23 +1068,23 @@
     "@codemirror/language" "^6.0.0"
     "@lezer/json" "^1.0.0"
 
-"@codemirror/lang-markdown@^6.0.5":
-  version "6.2.3"
-  resolved "https://registry.yarnpkg.com/@codemirror/lang-markdown/-/lang-markdown-6.2.3.tgz#ce572230a872e8eef88bce40213f26e66a7e4497"
-  integrity sha512-wCewRLWpdefWi7uVkHIDiE8+45Fe4buvMDZkihqEom5uRUQrl76Zb13emjeK3W+8pcRgRfAmwelURBbxNEKCIg==
+"@codemirror/lang-markdown@^6.2.5":
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-markdown/-/lang-markdown-6.2.5.tgz#451941bf743d3788e73598f1aedb71cbeb6f71ba"
+  integrity sha512-Hgke565YcO4fd9pe2uLYxnMufHO5rQwRr+AAhFq8ABuhkrjyX8R5p5s+hZUTdV60O0dMRjxKhBLxz8pu/MkUVA==
   dependencies:
     "@codemirror/autocomplete" "^6.7.1"
     "@codemirror/lang-html" "^6.0.0"
     "@codemirror/language" "^6.3.0"
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
+    "@lezer/common" "^1.2.1"
     "@lezer/markdown" "^1.0.0"
 
-"@codemirror/lang-python@^6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@codemirror/lang-python/-/lang-python-6.1.4.tgz#12151d9dfe70dec6600a4628d7f0a9e302e4360f"
-  integrity sha512-b6d1TDqrkCjFNvMO01SWldFiDoZ39yl3tDMC1Y5f8glA2eZpynPxJhwYVTlGFr0stizcJgrp6ojLEGH2myoZAw==
+"@codemirror/lang-python@^6.1.6":
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-python/-/lang-python-6.1.6.tgz#0c55e7e2dfa85b68be93b9692e5d3f76f284bbb2"
+  integrity sha512-ai+01WfZhWqM92UqjnvorkxosZ2aq2u28kHvr+N3gu012XqY2CThD67JPMHnGceRfXPDBmn1HnyqowdpF57bNg==
   dependencies:
     "@codemirror/autocomplete" "^6.3.2"
     "@codemirror/language" "^6.8.0"
@@ -1193,15 +1208,15 @@
   resolved "https://registry.yarnpkg.com/@handsontable/pikaday/-/pikaday-1.0.0.tgz#21a432b727791d48f4f231094d999b1a4b5f6f5f"
   integrity sha512-1VN6N38t5/DcjJ7y7XUYrDx1LuzvvzlrFdBdMG90Qo1xc8+LXHqbWbsTEm5Ec5gXTEbDEO53vUT35R+2COmOyg==
 
-"@handsontable/react@^14.1.0":
-  version "14.1.0"
-  resolved "https://registry.yarnpkg.com/@handsontable/react/-/react-14.1.0.tgz#4dff65415a059bbdeb515af61cb9e5d2e8d69628"
-  integrity sha512-tgqeiiVIG1PBczaq5/pwtQBlhmldej4wEfqx3L7aJn1fcbArGGsCbRdNd6aneH4BP79aC/ajiwr2vVx7NeAcgg==
+"@handsontable/react@^14.4.0":
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@handsontable/react/-/react-14.4.0.tgz#cec400ce90ba4f5c7e777a66695acf05fb2ee02c"
+  integrity sha512-89SGHJAXm2ggBKgPU9WdKImuOjhudwT2ok4VbIv+8NUtAAeJPdorNaO41VYfGkGPfGJfMPoHFLbsAiy1kfSnNA==
 
-"@hookform/resolvers@^3.3.2":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.3.2.tgz#5c40f06fe8137390b071d961c66d27ee8f76f3bc"
-  integrity sha512-Tw+GGPnBp+5DOsSg4ek3LCPgkBOuOgS5DsDV7qsWNH9LZc433kgsWICjlsh2J9p04H2K66hsXPPb9qn9ILdUtA==
+"@hookform/resolvers@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.9.0.tgz#cf540ac21c6c0cd24a40cf53d8e6d64391fb753d"
+  integrity sha512-bU0Gr4EepJ/EQsH/IwEzYLsT/PEj5C0ynLQ4m+GSHS+xKH4TfSelhluTgOaoc4kA5s7eCsQbM4wvZLzELmWzUg==
 
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"
@@ -1279,30 +1294,30 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.448":
-  version "0.1.448"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.448/b0b429b66606a99b198430752959cba7bc75e978#b0b429b66606a99b198430752959cba7bc75e978"
-  integrity sha512-uwOkZA9U31OK7k9CgDGiN5dHPCL8wRa5htG7x4lsD3xb+dBlAfsyhZLt3Dmzrx0BpEFRJj89krNg3jhlvQakig==
+"@juki-team/base-ui@^0.1.485":
+  version "0.1.485"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.485/b87598e26914ab353aa3c8b278ce7fb0aae4b445#b87598e26914ab353aa3c8b278ce7fb0aae4b445"
+  integrity sha512-rKHySO7Ounk6XnWuA3DejdUSviwhz/mnbwq9hnIcCtqFTyYAg5nbX7e31Xmps0gZf8BXYjzhoEWm6n616wxN/w==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
-    "@codemirror/lang-html" "^6.4.6"
+    "@codemirror/lang-html" "^6.4.9"
     "@codemirror/lang-java" "^6.0.1"
     "@codemirror/lang-javascript" "^6.2.2"
     "@codemirror/lang-json" "^6.0.1"
-    "@codemirror/lang-markdown" "^6.0.5"
-    "@codemirror/lang-python" "^6.1.4"
-    "@handsontable/react" "^14.1.0"
-    "@hookform/resolvers" "^3.3.2"
+    "@codemirror/lang-markdown" "^6.2.5"
+    "@codemirror/lang-python" "^6.1.6"
+    "@handsontable/react" "^14.4.0"
+    "@hookform/resolvers" "^3.9.0"
     "@monaco-editor/react" "^4.4.2"
-    "@tanstack/react-virtual" "^3.1.3"
+    "@tanstack/react-virtual" "^3.8.2"
     "@types/graphlib-dot" "^0.6.4"
-    "@uiw/react-codemirror" "^4.21.24"
+    "@uiw/react-codemirror" "^4.23.0"
     copy-to-clipboard "^3.3.3"
     countries-and-timezones "^3.6.0"
     deep-object-diff "^1.1.9"
     graphlib-dot "^0.6.4"
     graphviz-react "^1.2.5"
-    handsontable "^14.1.0"
+    handsontable "^14.4.0"
     immutability-helper "^3.1.1"
     prismjs "^1.29.0"
     react-collapse "^5.1.1"
@@ -1311,24 +1326,24 @@
     react-device-detect "^2.2.3"
     react-dnd "^16.0.1"
     react-dnd-html5-backend "^16.0.1"
-    react-hook-form "^7.51.0"
+    react-hook-form "^7.52.1"
     react-image-crop "^11.0.1"
     react-markdown "^9.0.1"
     react-modal "^3.15.1"
-    react-resize-detector "^10.0.1"
+    react-resize-detector "^11.0.1"
     react-tiny-popover "^8.0.4"
-    react-tooltip "^5.26.3"
+    react-tooltip "^5.27.1"
     rehype-katex "^7.0.0"
     remark-gfm "^4.0.0"
     remark-math "^6.0.0"
     swr "^2.2.5"
-    uuid "^9.0.0"
-    yup "^1.3.2"
+    uuid "^10.0.0"
+    yup "^1.4.0"
 
-"@juki-team/commons@^0.0.564":
-  version "0.0.564"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.564/03e033ac47157d63bc2abd5f1250cfb2e7d8114e#03e033ac47157d63bc2abd5f1250cfb2e7d8114e"
-  integrity sha512-bD68HGAxjQDfMfooq4Fv3rMixASr/CwvCy1Be3L2hIdaBfX5i6/O3V0kdvh4/MuiPQ3uGEoq+yVivyyQHTLEcw==
+"@juki-team/commons@^0.0.567":
+  version "0.0.567"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.567/4fbc5253c543d4a72d0076d30e9b86464f05a764#4fbc5253c543d4a72d0076d30e9b86464f05a764"
+  integrity sha512-1jtyut2nTHGIk/KCBS6Z37i4sGn9EFVTp549srX4xaL011ecGJ18A5izKU0sPGQSgkzVIQZNmFcwImnd2G+EEA==
   dependencies:
     uuid "^10.0.0"
 
@@ -1609,17 +1624,17 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tanstack/react-virtual@^3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.1.3.tgz#4ef2a7dd819a7dd2b634d50cbd6ba498f06529ec"
-  integrity sha512-YCzcbF/Ws/uZ0q3Z6fagH+JVhx4JLvbSflgldMgLsuvB8aXjZLLb3HvrEVxY480F9wFlBiXlvQxOyXb5ENPrNA==
+"@tanstack/react-virtual@^3.8.2":
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.8.2.tgz#0901ac7a8ab0ffe06f15e8317f0f56e1523b6580"
+  integrity sha512-g78+DA29K0ByAfDkuibfLQqDshf8Aha/zcyEZ+huAX/yS/TWj/CUiEY4IJfDrFacdxIFmsLm0u4VtsLSKTngRw==
   dependencies:
-    "@tanstack/virtual-core" "3.1.3"
+    "@tanstack/virtual-core" "3.8.2"
 
-"@tanstack/virtual-core@3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.1.3.tgz#77ced625f19ec9350f6e460f142b3be9bff03866"
-  integrity sha512-Y5B4EYyv1j9V8LzeAoOVeTg0LI7Fo5InYKgAjkY1Pu9GjtUwX/EKxNcU7ng3sKr99WEf+bPTcktAeybyMOYo+g==
+"@tanstack/virtual-core@3.8.2":
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.8.2.tgz#e4413c2eb822d80666cfeb8a5354427c7458579f"
+  integrity sha512-ffpN6kTaPGwQPoWMcBAHbdv2ZCpj1SugldoYAcY0C4xH+Pej1KCOEUisNeEgbUnXOp8Y/4q6wGPu2tFHthOIQw==
 
 "@types/debug@^4.0.0":
   version "4.1.12"
@@ -1819,10 +1834,10 @@
     "@typescript-eslint/types" "6.13.2"
     eslint-visitor-keys "^3.4.1"
 
-"@uiw/codemirror-extensions-basic-setup@4.21.24":
-  version "4.21.24"
-  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.21.24.tgz#b936c3daff0100e1a3d5b0500478747cfc80f7db"
-  integrity sha512-TJYKlPxNAVJNclW1EGumhC7I02jpdMgBon4jZvb5Aju9+tUzS44IwORxUx8BD8ZtH2UHmYS+04rE3kLk/BtnCQ==
+"@uiw/codemirror-extensions-basic-setup@4.23.0":
+  version "4.23.0"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.23.0.tgz#c3c181153335c208a25d59b8ecbc7fc87fe85356"
+  integrity sha512-+k5nkRpUWGaHr1JWT8jcKsVewlXw5qBgSopm9LW8fZ6KnSNZBycz8kHxh0+WSvckmXEESGptkIsb7dlkmJT/hQ==
   dependencies:
     "@codemirror/autocomplete" "^6.0.0"
     "@codemirror/commands" "^6.0.0"
@@ -1832,16 +1847,16 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/react-codemirror@^4.21.24":
-  version "4.21.24"
-  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.21.24.tgz#38b05e0a24d2307313b2e73390b20d0251837170"
-  integrity sha512-8zs5OuxbhikHocHBsVBMuW1vqlv4ccZAkt4rFwr7ebLP2Q6RwHsjpsR9GeGyAigAqonKRoeHugqF78UMrkaTgg==
+"@uiw/react-codemirror@^4.23.0":
+  version "4.23.0"
+  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.23.0.tgz#5eeadcd5de61213ad76ac3c772fffb7e5b54b465"
+  integrity sha512-MnqTXfgeLA3fsUUQjqjJgemEuNyoGALgsExVm0NQAllAAi1wfj+IoKFeK+h3XXMlTFRCFYOUh4AHDv0YXJLsOg==
   dependencies:
     "@babel/runtime" "^7.18.6"
     "@codemirror/commands" "^6.1.0"
     "@codemirror/state" "^6.1.1"
     "@codemirror/theme-one-dark" "^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup" "4.21.24"
+    "@uiw/codemirror-extensions-basic-setup" "4.23.0"
     codemirror "^6.0.0"
 
 "@ungap/structured-clone@^1.0.0", "@ungap/structured-clone@^1.2.0":
@@ -2443,10 +2458,10 @@ core-js-compat@^3.31.0, core-js-compat@^3.33.1:
   dependencies:
     browserslist "^4.22.2"
 
-core-js@^3.31.1:
-  version "3.35.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.35.1.tgz#9c28f8b7ccee482796f8590cc8d15739eaaf980c"
-  integrity sha512-IgdsbxNyMskrTFxa9lWHyMwAJU5gXOPP+1yO+K59d50VLVAIDAbs7gIv705KzALModfK3ZrSZTPNpC0PQgIZuw==
+core-js@^3.37.0:
+  version "3.37.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.37.1.tgz#d21751ddb756518ac5a00e4d66499df981a62db9"
+  integrity sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==
 
 countries-and-timezones@^3.6.0:
   version "3.6.0"
@@ -3444,20 +3459,20 @@ gzip-size@^6.0.0:
   dependencies:
     duplexer "^0.1.2"
 
-handsontable@^14.1.0:
-  version "14.1.0"
-  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-14.1.0.tgz#c7230d3ce36ace9e6c4125a3dba5353a5fdb7718"
-  integrity sha512-7j6rvOTyNoz84u6ZjCluGhQp+VCVGi0bg2Os5cCTaStyDjyB5y/b0En8qWMyXMTcXzN+GeDn8eB+N6dqSYPnTg==
+handsontable@^14.4.0:
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-14.4.0.tgz#7a7706356c8a694b4bade15980b6537ded22d0b0"
+  integrity sha512-uTIIx5UgG+2I0flUDj8lxftJAXbBpbkIAFIKugvMW2bNHYNxaNMGAGZ/QFOeCXiYwxeztBATKxMkLpg7N+HrOg==
   dependencies:
     "@handsontable/pikaday" "^1.0.0"
     "@types/pikaday" "1.7.4"
-    core-js "^3.31.1"
+    core-js "^3.37.0"
     dompurify "^2.1.1"
-    moment "2.29.4"
+    moment "2.30.1"
     numbro "2.1.2"
     pikaday "1.8.2"
   optionalDependencies:
-    hyperformula "^2.4.0"
+    hyperformula "^2.6.2"
 
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
@@ -3652,14 +3667,13 @@ http-proxy@^1.18.1:
     follow-redirects "^1.0.0"
     requires-port "^1.0.0"
 
-hyperformula@^2.4.0:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/hyperformula/-/hyperformula-2.6.1.tgz#ba30ec23fb7a92aa7eb25c7cc3cb9b3de698ac81"
-  integrity sha512-GzL+R+UweB4FtT7p71cDS0wFVq5CMUjBincSSVzccBsPRgw4aIc/GbWLuuvrX6mH/r2ubYDu6udnr1/+OMoI9w==
+hyperformula@^2.6.2:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/hyperformula/-/hyperformula-2.7.0.tgz#3a96209272bd8b884fb28b7232861d1dc36b48dc"
+  integrity sha512-fbpLfT8tDGKVA8tIAw4yJ9neQXabL9zJQ3T2de1r7RbdcneGQ9B6hRzi57SFfQ9vy76iR4JexEYG/pV6mcsW8Q==
   dependencies:
     chevrotain "^6.5.0"
     tiny-emitter "^2.1.0"
-    unorm "^1.6.0"
 
 i18next-chained-backend@^4.6.2:
   version "4.6.2"
@@ -4814,12 +4828,7 @@ mkdirp@0.3.0:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.3.0.tgz#1bbf5ab1ba827af23575143490426455f481fe1e"
   integrity sha512-OHsdUcVAQ6pOtg5JYWpCBo9W/GySVuwvP9hueRMW7UqshC0tbfzLv8wjySTPm3tfUZ/21CE9E1pJagOA91Pxew==
 
-moment@2.29.4:
-  version "2.29.4"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
-  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
-
-moment@>=2.14.0:
+moment@2.30.1, moment@>=2.14.0:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
@@ -5284,10 +5293,10 @@ react-flip-move@^3.0.5:
   resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-3.0.5.tgz#8b87510ad32ebef01ebca94902b445f456bbc0f7"
   integrity sha512-Mf4XpbkUNZy9eu80iXXFIjToDvw+bnHxmKHVoositbMpV87O/EQswnXUqVovRHoTx/F+4dE+p//PyJnAT7OtPA==
 
-react-hook-form@^7.51.0:
-  version "7.51.0"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.51.0.tgz#757ae71b37c26e00590bd3788508287dcc5ecdaf"
-  integrity sha512-BggOy5j58RdhdMzzRUHGOYhSz1oeylFAv6jUSG86OvCIvlAvS7KvnRY7yoAf2pfEiPN7BesnR0xx73nEk3qIiw==
+react-hook-form@^7.52.1:
+  version "7.52.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.52.1.tgz#ec2c96437b977f8b89ae2d541a70736c66284852"
+  integrity sha512-uNKIhaoICJ5KQALYZ4TOaOLElyM+xipord+Ha3crEFhTntdLvWZqVY49Wqd/0GiVCA/f9NjemLeiNPjG7Hpurg==
 
 react-image-crop@^11.0.1:
   version "11.0.1"
@@ -5330,10 +5339,10 @@ react-modal@^3.15.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
-react-resize-detector@^10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/react-resize-detector/-/react-resize-detector-10.0.1.tgz#ae9a8c5b6b93c4c11e03b3eb87e57fd7b62f1020"
-  integrity sha512-CR2EdP83ycGlWkhhrd6+hhZVhPJO4xnzClFCTBXlODVTHOgiDJQu77sBt67J7P3gfU4ec/kOuf2c5EcyTUNLXQ==
+react-resize-detector@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/react-resize-detector/-/react-resize-detector-11.0.1.tgz#70684958ae82bc0deb240d133a1ee440e0624532"
+  integrity sha512-1Tdgu6Ou3vI3RQD+o2/kTvDibb4NRe7Oh83hIjNNEXb6WKKCQT99VQlh3Xlbdq2HtkUoFEMrgMMKkYI83YbD7Q==
   dependencies:
     lodash "^4.17.21"
 
@@ -5342,10 +5351,10 @@ react-tiny-popover@^8.0.4:
   resolved "https://registry.yarnpkg.com/react-tiny-popover/-/react-tiny-popover-8.0.4.tgz#bf76f1db8a9b62f4eb10fe0dc770a65c52d59560"
   integrity sha512-pn0Y/G0gyMdYTBEWSKCCnaZsXAa54PkfnRE4fnMM5633SSClYrXxwXKc6vPYgJ9shLatGginxMjnhXq6guZmng==
 
-react-tooltip@^5.26.3:
-  version "5.26.3"
-  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-5.26.3.tgz#bcb9a53e15bdbf9ae007ddf8bf413a317a637054"
-  integrity sha512-MpYAws8CEHUd/RC4GaDCdoceph/T4KHM5vS5Dbk8FOmLMvvIht2ymP2htWdrke7K6lqPO8rz8+bnwWUIXeDlzg==
+react-tooltip@^5.27.1:
+  version "5.27.1"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-5.27.1.tgz#a94481ba146d828d31642f14d6ab29b56998fcda"
+  integrity sha512-a+micPXcMOMt11CYlwJD4XShcqGziasHco4NPe1OFw298WBTILMyzUgNC1LAFViAe791JdHNVSJIpzhZm2MvDA==
   dependencies:
     "@floating-ui/dom" "^1.6.1"
     classnames "^2.3.0"
@@ -6304,11 +6313,6 @@ universalify@^2.0.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.1.tgz#168efc2180964e6386d061e094df61afe239b18d"
   integrity sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==
 
-unorm@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/unorm/-/unorm-1.6.0.tgz#029b289661fba714f1a9af439eb51d9b16c205af"
-  integrity sha512-b2/KCUlYZUeA7JFUuRJZPUtr4gZvBh7tavtv4fvk4+KV9pfGiR6CQAQAWl49ZpR3ts2dk4FYkP7EIgDJoiOLDA==
-
 upath@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/upath/-/upath-1.2.0.tgz#8f66dbcd55a883acdae4408af8b035a5044c1894"
@@ -6338,11 +6342,6 @@ uuid@^10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
   integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
-
-uuid@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
-  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 vfile-location@^5.0.0:
   version "5.0.2"
@@ -6750,10 +6749,10 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-yup@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/yup/-/yup-1.3.2.tgz#afffc458f1513ed386e6aaf4bcaa4e67a9e270dc"
-  integrity sha512-6KCM971iQtJ+/KUaHdrhVr2LDkfhBtFPRnsG1P8F4q3uUVQ2RfEM9xekpha9aA4GXWJevjM10eDcPQ1FfWlmaQ==
+yup@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/yup/-/yup-1.4.0.tgz#898dcd660f9fb97c41f181839d3d65c3ee15a43e"
+  integrity sha512-wPbgkJRCqIf+OHyiTBQoJiP5PFuAXaWiJK6AmYkzQAh5/c2K9hzSApBZG5wV9KoKSePF7sAxmNSvh/13YHkFDg==
   dependencies:
     property-expr "^2.0.5"
     tiny-case "^1.0.3"

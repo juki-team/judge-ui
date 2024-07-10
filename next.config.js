@@ -43,10 +43,10 @@ module.exports = withPlugins([
     version,
   },
   // output:"standalone",
-  i18n: {
-    locales: [ Language.EN.toLowerCase(), Language.ES.toLowerCase() ],
-    defaultLocale: Language.EN.toLowerCase(),
-  },
+  // i18n: {
+  //   locales: [ Language.EN.toLowerCase(), Language.ES.toLowerCase() ],
+  //   defaultLocale: Language.EN.toLowerCase(),
+  // },
   images: {
     remotePatterns: [
       {

@@ -1,4 +1,4 @@
-import { NewVersionAvailableModal } from 'components'
+import { NewVersionAvailableModal } from 'components';
 import { createContext } from 'helpers';
 import { useEffect, useFetcher, useJukiRouter, useJukiUser, usePrevious, useState } from 'hooks';
 import { useRouter } from 'next/router';
@@ -46,11 +46,11 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   const userLanguage = user.settings?.[ProfileSetting.LANGUAGE] === Language.ES ? Language.ES : Language.EN;
   
   useEffect(() => {
-    if (isReady) {
-      if (locale?.toLowerCase() !== userLanguage.toLowerCase()) {
-        void replace({ pathname, query }, asPath, { locale: userLanguage.toLowerCase() });
-      }
-    }
+    // if (isReady) {
+    //   if (locale?.toLowerCase() !== userLanguage.toLowerCase()) {
+    //     void replace({ pathname, query }, asPath, { locale: userLanguage.toLowerCase() });
+    //   }
+    // }
   }, [ userLanguage, user.nickname, locale, pathname, asPath, replace, query, isReady ]);
   
   const userTheme = user.settings?.[ProfileSetting.THEME];

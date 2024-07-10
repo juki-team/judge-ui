@@ -94,7 +94,7 @@ export type {
   UserBasicInfoResponseDTO,
 } from '@juki-team/commons';
 
-export { Period, NotificationType, QueryParamKey } from '@juki-team/base-ui';
+export { Period, NotificationType, QueryParamKey, ProblemTab } from '@juki-team/base-ui';
 
 export type {
   IconProps,
@@ -135,6 +135,7 @@ export type {
   UserCodeEditorProps,
   SimpleSortableRowsProps,
   UpsertComponentEntityProps,
+  TwoContentLayoutProps,
 } from '@juki-team/base-ui';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

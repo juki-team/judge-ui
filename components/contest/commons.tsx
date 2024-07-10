@@ -14,7 +14,7 @@ import {
 export const contestNameColumn = (auto: boolean, Link: FC<PropsWithChildren<LinkCmpProps>>): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: 'contest name',
   index: 'name',
-  field: ({ record: { name, key, user }, isCard }) => (
+  Field: ({ record: { name, key, user }, isCard }) => (
     <Field className="jk-row left block">
       {user.isGuest || user.isAdmin || user.isContestant || user.isJudge || user.isSpectator ? (
         <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
@@ -79,7 +79,7 @@ export const contestNameColumn = (auto: boolean, Link: FC<PropsWithChildren<Link
 export const contestStartDateColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: 'start date',
   index: 'startDate',
-  field: ({ record: { settings, isEndless }, isCard }) => (
+  Field: ({ record: { settings, isEndless }, isCard }) => (
     <Field className="jk-col extend">
       {isEndless ? (
           isCard ? '' : '-'
@@ -115,7 +115,7 @@ export const contestStartDateColumn = (): DataViewerHeadersType<ContestSummaryLi
 export const contestEndDateColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: 'end date',
   index: 'endDate',
-  field: ({ record: { settings, isEndless }, isCard }) => (
+  Field: ({ record: { settings, isEndless }, isCard }) => (
     <Field className="jk-col extend">
       {isEndless ? (
           isCard ? '' : '-'
@@ -151,7 +151,7 @@ export const contestEndDateColumn = (): DataViewerHeadersType<ContestSummaryList
 export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: 'contestants',
   index: 'totalContestants',
-  field: ({ record: { totalContestants }, isCard }) => (
+  Field: ({ record: { totalContestants }, isCard }) => (
     <Field className="jk-row">
       {isCard ? (
         <div className="jk-row gap nowrap center">

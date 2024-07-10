@@ -21,7 +21,7 @@ export const ContestsAllList = () => {
     {
       head: 'state',
       index: 'state',
-      field: ({ record: contest }) => (
+      Field: ({ record: contest }) => (
         <Field className="jk-row pad">
           <div
             className={`jk-tag ${contestStateMap[[

@@ -67,15 +67,6 @@ export const ROUTES = {
     LIST() {
       return '/' + ROUTES.PARAMS.PROBLEMS;
     },
-    CREATE() {
-      return [ '', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.CREATE ].join('/');
-    },
-    VIEW(key: string, tab: ProblemTab | typeof _TAB) {
-      return [ '', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.VIEW, key, tab ].join('/');
-    },
-    EDIT(key: string) {
-      return [ '', ROUTES.PARAMS.PROBLEM, ROUTES.PARAMS.EDIT, key ].join('/');
-    },
   },
   SUBMISSIONS: {
     VIEW(key: string) {

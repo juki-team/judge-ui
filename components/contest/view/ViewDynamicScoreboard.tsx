@@ -45,7 +45,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       {
         head: '#',
         index: 'position',
-        field: ({ record: { position, focus } }) => (
+        Field: ({ record: { position, focus } }) => (
           <Field className={classNames('jk-row', { highlight: !!focus?.length })}>{position}</Field>
         ),
         minWidth: 64,
@@ -54,7 +54,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       {
         head: 'nickname',
         index: 'nickname',
-        field: ({ record: { userNickname, userImageUrl, focus } }) => (
+        Field: ({ record: { userNickname, userImageUrl, focus } }) => (
           <Field
             className={classNames('jk-row center gap', {
               'own': userNickname === user.nickname,
@@ -80,7 +80,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       {
         head: 'points',
         index: 'points',
-        field: ({ record: { focus, totalPenalty, totalPoints }, isCard }) => (
+        Field: ({ record: { focus, totalPenalty, totalPoints }, isCard }) => (
           <Field className={classNames('jk-col center', { highlight: !!focus?.length })}>
             <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
             {!contest.isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
@@ -116,7 +116,7 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
             </Tooltip>
           ),
           index: problem.index,
-          field: ({ record: { problems, focus }, isCard }) => {
+          Field: ({ record: { problems, focus }, isCard }) => {
             const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
             const problemData = problems[problemJudgeKey];
             return (

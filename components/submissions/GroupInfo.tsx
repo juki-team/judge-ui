@@ -1,3 +1,6 @@
+import {
+  VirtualizedRowsFixedProps,
+} from '@juki-team/base-ui/dist/module-types/components/atoms/VirtualizedRowsFixed/types';
 import { Button, Collapse, Modal, T, Tooltip, UpIcon, VirtualizedRowsFixed, VisibilityIcon } from 'components';
 import * as Diff2Html from 'diff2html';
 import { LineMatchingType } from 'diff2html/lib-esm/types';
@@ -5,7 +8,7 @@ import { ColorSchemeType } from 'diff2html/lib/types';
 import { classNames } from 'helpers';
 import { useEffect, useJukiUI, useJukiUser, useState } from 'hooks';
 import React, { useCallback } from 'react';
-import { ProblemScoringMode, ProblemVerdict, ProfileSetting, TestCaseResultType, Theme, VirtualItem } from 'types';
+import { ProblemScoringMode, ProblemVerdict, ProfileSetting, TestCaseResultType, Theme } from 'types';
 import { Memory, Time, Verdict } from './index';
 
 export interface GroupInfoProps {
@@ -88,9 +91,8 @@ export const GroupInfo = (props: GroupInfoProps) => {
   
   const testCasesString = JSON.stringify(testCases);
   
-  const renderRow = useCallback((virtualItem: VirtualItem) => {
+  const renderRow: VirtualizedRowsFixedProps['renderRow'] = useCallback((index) => {
     const testCases = JSON.parse(testCasesString);
-    const index = virtualItem.index;
     const testCase = testCases[index];
     return (
       <div

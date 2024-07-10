@@ -1,10 +1,9 @@
 import { AssignmentIcon, Button, FetcherLayer, LinkLastPath, ProblemViewLayout, T, TwoContentLayout } from 'components';
 import { jukiSettings } from 'config';
-import { ROUTES } from 'config/constants';
 import { oneTab } from 'helpers';
 import { useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
-import { ContentResponseType, LastPathKey, ProblemDataResponseDTO, ProblemTab } from 'types';
-import Custom404 from '../../../../404';
+import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
+import Custom404 from '../../404';
 
 export default function ProblemViewPage() {
   
@@ -16,7 +15,7 @@ export default function ProblemViewPage() {
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     <Link
       href={{
-        pathname: ROUTES.PROBLEMS.VIEW(problemKey as string, ProblemTab.STATEMENT),
+        pathname: jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: problemKey as string }),
         search: searchParams.toString(),
       }}
       className="link"
@@ -24,7 +23,6 @@ export default function ProblemViewPage() {
     >
       <div className="ws-np">{problemKey}</div>
     </Link>,
-    <T className="ws-np tt-ce" key="statement">statement</T>,
   ];
   
   return (

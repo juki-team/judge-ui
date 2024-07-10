@@ -1,3 +1,4 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import {
   AssignmentIcon,
   CupIcon,
@@ -65,7 +66,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: ({ children }) => (
         <LinkLastPath
           lastPathKey={LastPathKey.SECTION_PROBLEM}
-          onDoubleClickRoute={ROUTES.PROBLEMS.LIST()}
+          onDoubleClickRoute={jukiSettings.ROUTES.judge().problems.list()}
         >
           {children}
         </LinkLastPath>
@@ -103,11 +104,15 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     menuItemWrapper: ({ children }) => <LinkLastPath lastPathKey={LastPathKey.SECTION_HELP}>{children}</LinkLastPath>,
   });
   
+  const userPreviewQuery = searchParams.getAll(QueryParamKey.USER_PREVIEW);
+  const [ userPreviewNickname, userPreviewCompanyKey ] = Array.isArray(userPreviewQuery) ? userPreviewQuery as unknown as [ string, string ] : [ userPreviewQuery as string ];
+  
   return (
     <>
       <UserPreviewModal
         isOpen={!!searchParams.get(QueryParamKey.USER_PREVIEW)}
-        nickname={searchParams.get(QueryParamKey.USER_PREVIEW) as string}
+        nickname={userPreviewNickname}
+        companyKey={userPreviewCompanyKey}
         onClose={() => deleteSearchParams({ name: QueryParamKey.USER_PREVIEW })}
         userHref={ROUTES.PROFILE.PAGE(searchParams.get(QueryParamKey.USER_PREVIEW) as string, ProfileTab.PROFILE)}
       />

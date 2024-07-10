@@ -61,20 +61,6 @@ export enum ServicesManagementTab {
   VIRTUAL_USERS = 'virtual-users',
 }
 
-export enum ProblemTab {
-  STATEMENT = 'statement',
-  EDITOR = 'editor',
-  MY_SUBMISSIONS = 'my-submissions',
-  SUBMISSIONS = 'submissions',
-  TESTS = 'tests',
-  // RANKING = 'ranking',
-  // STATISTICS = 'statistics',
-  SETUP = 'setup',
-  EDITORIAL = 'editorial',
-  ACCESS = 'access',
-  DELETE = 'delete',
-}
-
 export enum ContestTab {
   OVERVIEW = 'overview',
   PROBLEMS = 'problems',

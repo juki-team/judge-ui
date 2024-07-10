@@ -1,5 +1,6 @@
 import { ButtonLoader, T } from 'components';
-import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
+import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useJukiRouter } from 'hooks';
 import React from 'react';
@@ -34,7 +35,7 @@ export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStateme
               method: HTTPMethod.DELETE,
             }));
           if (notifyResponse(response, setLoaderStatus)) {
-            pushRoute({ pathname: ROUTES.PROBLEMS.LIST() });
+            pushRoute({ pathname: jukiSettings.ROUTES.judge().problems.list() });
           }
         }}
         className="bc-er"

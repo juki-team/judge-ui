@@ -1,25 +1,28 @@
 import {
+  getProblemKeyIdHeader,
+  getProblemModeHeader,
+  getProblemNameHeader,
+  getProblemOwnerHeader,
+  getProblemTagsHeader,
+  getProblemTypeHeader,
+  ProblemDataViewerType,
+  toProblemDataViewer,
+} from '@juki-team/base-ui';
+import {
   ButtonLoader,
-  CopyToClipboard,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
-  Field,
   InfoIcon,
   PagedDataViewer,
   PlusIcon,
   Popover,
-  ProblemStatus,
   Select,
   T,
-  TextField,
-  Tooltip,
   TwoContentLayout,
-  UserChip,
-  VoidIcon,
 } from 'components';
 import { jukiSettings } from 'config';
-import { JUDGE, JUKI_APP_COMPANY_KEY, PROBLEM_MODE, PROBLEM_MODES, PROBLEM_TYPE, ROUTES } from 'config/constants';
-import { buttonLoaderLink, classNames, getSimpleProblemJudgeKey, oneTab, toFilterUrl, toSortUrl } from 'helpers';
+import { JUDGE, JUKI_APP_COMPANY_KEY } from 'config/constants';
+import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
   useFetcher,
@@ -33,12 +36,9 @@ import {
 import {
   ContentResponseType,
   DataViewerHeadersType,
-  FilterSelectOnlineType,
   Judge,
   LastPathKey,
   ProblemSummaryListResponseDTO,
-  ProblemTab,
-  ProblemType,
   QueryParam,
   ReactNode,
 } from 'types';
@@ -64,132 +64,24 @@ function Problems() {
   const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();
   const { company: { key: companyKey } } = useJukiUser();
-  const { data: tags } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.company.getJudgeProblemTags({ params: { companyKey } }).url);
+  const { data } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.company.getJudgeProblemTags({ params: { companyKey } }).url);
+  const tags = useMemo(() => data?.success ? data.content : [], [ data ]);
   const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
   useEffect(() => {
     if (!judge) {
       setSearchParams({ name: QueryParam.JUDGE, value: Judge.CUSTOMER });
     }
   }, [ judge, setSearchParams ]);
-  const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
-    {
-      head: 'id',
-      index: 'key',
-      field: ({ record: { key }, isCard }) => (
-        <Field className="jk-row">
-          <CopyToClipboard text={window.location.host + ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT)}>
-            <div>
-              <Tooltip content={<T>copy link</T>} placement="top" withPortal>
-                <div className="jk-row link tx-s">{key}</div>
-              </Tooltip>
-            </div>
-          </CopyToClipboard>
-        </Field>
-      ),
-      sort: true,
-      filter: { type: 'text' },
-      cardPosition: 'top',
-      sticky: true,
-    },
-    {
-      head: 'problem name',
-      headClassName: 'left',
-      index: 'name',
-      field: ({ record: { key, judge, name, user }, isCard }) => (
-        <Field className={classNames('jk-row jk-pg-sm', { left: !isCard, center: isCard })}>
-          <div className="jk-row nowrap">
-            <Link href={{ pathname: ROUTES.PROBLEMS.VIEW(getSimpleProblemJudgeKey(judge, key), ProblemTab.STATEMENT) }}>
-              <div className="jk-row link fw-bd">{name}</div>
-            </Link>
-            {(user.tried || user.solved) && <>&nbsp;</>}
-            <ProblemStatus {...user} size="small" />
-            {user.isManager && (
-              <Tooltip
-                content={<T className="tt-se ws-np">you are editor</T>}
-                placement="top"
-                withPortal
-              >
-                <div className="jk-row tx-s cr-py">
-                  &nbsp;<VoidIcon size="small" filledSquare letter="E" />
-                </div>
-              </Tooltip>
-            )}
-          </div>
-        </Field>
-      ),
-      sort: true,
-      filter: { type: 'text' },
-      cardPosition: 'center',
-      minWidth: 300,
-    },
+  const columns: DataViewerHeadersType<ProblemDataViewerType>[] = useMemo(() => [
+    getProblemKeyIdHeader(false),
+    getProblemNameHeader(),
     ...((judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER) ? [
-      {
-        head: 'mode',
-        index: 'mode',
-        field: ({ record: { key, settings: { mode } }, isCard }) => (
-          <Field className="jk-row">
-            <T className="tt-se">{PROBLEM_MODE[mode].label}</T>
-          </Field>
-        ),
-        sort: true,
-        filter: {
-          type: 'select',
-          options: PROBLEM_MODES.map((problemMode) => ({ value: problemMode, label: PROBLEM_MODE[problemMode].label })),
-        },
-        cardPosition: 'top',
-      },
-      {
-        head: 'type',
-        index: 'type',
-        field: ({ record: { key, settings: { type } }, isCard }) => (
-          <Field className="jk-row">
-            <T className="tt-se">{PROBLEM_TYPE[type].label}</T>
-          </Field>
-        ),
-        sort: true,
-        filter: {
-          type: 'select',
-          options: [ ProblemType.STANDARD, ProblemType.DYNAMIC ].map((problemType) => ({
-            value: problemType,
-            label: PROBLEM_TYPE[problemType].label,
-          })),
-        },
-        cardPosition: 'top',
-        minWidth: 100,
-      },
-      {
-        head: 'tags',
-        index: 'tags',
-        field: ({ record: { tags }, isCard }) => (
-          <Field className={classNames('jk-row gap', { center: isCard, left: !isCard })}>
-            {tags.filter(tag => !!tag).map(tag => <div className="jk-tag gray-6 tx-s" key={tag}><T>{tag}</T></div>)}
-          </Field>
-        ),
-        filter: {
-          type: 'select',
-          options: (tags?.success ? tags.content : []).map(tag => ({ value: tag, label: <T>{tag}</T> })),
-        } as FilterSelectOnlineType,
-        cardPosition: 'center',
-        minWidth: 250,
-      },
-    ] as DataViewerHeadersType<ProblemSummaryListResponseDTO>[] : []),
-    {
-      head: judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler',
-      index: 'owner',
-      field: ({ record: { owner: { nickname, imageUrl } } }) => (
-        <TextField
-          className="jk-row"
-          text={<UserChip nickname={nickname} imageUrl={imageUrl} companyKey={companyKey} />}
-          label={
-            <T className="tt-se">{judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER ? 'owner' : 'crawler'}</T>}
-        />
-      ),
-      sort: true,
-      // filter: { type: 'text' },
-      cardPosition: 'bottomRight',
-      minWidth: 200,
-    } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
-  ], [ tags, judge, Link, companyKey ]);
+      getProblemModeHeader(),
+      getProblemTypeHeader(),
+      getProblemTagsHeader(tags),
+    ] : []),
+    getProblemOwnerHeader(judge !== Judge.JUKI_JUDGE && judge !== Judge.CUSTOMER),
+  ], [ tags, judge ]);
   
   const breadcrumbs = [
     <T className="tt-se" key="problems">problems</T>,
@@ -202,7 +94,7 @@ function Problems() {
         size="small"
         icon={<PlusIcon />}
         responsiveMobile
-        onClick={buttonLoaderLink(() => pushRoute(ROUTES.PROBLEMS.CREATE()))}
+        onClick={buttonLoaderLink(() => pushRoute(jukiSettings.ROUTES.judge().problems.new()))}
       >
         <T>create</T>
       </ButtonLoader>,
@@ -245,7 +137,7 @@ function Problems() {
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={oneTab(judge && (
-        <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
+        <PagedDataViewer<ProblemDataViewerType, ProblemSummaryListResponseDTO>
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
             return jukiSettings.API.problem.getSummaryList({
@@ -262,6 +154,7 @@ function Problems() {
           extraNodes={extraNodes}
           cards={{ height: 256, expanded: true }}
           dependencies={[ judge ]}
+          toRow={toProblemDataViewer}
         />
       ))}
     >

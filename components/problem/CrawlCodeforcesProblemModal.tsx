@@ -1,9 +1,9 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
-import { ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
-import { BasicModalProps, Judge, ProblemTab, Status } from 'types';
+import { BasicModalProps, Judge, Status } from 'types';
 
 interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
   judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
@@ -40,7 +40,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            await pushRoute(ROUTES.PROBLEMS.VIEW(getProblemJudgeKey(judge, key), ProblemTab.STATEMENT));
+            pushRoute(jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: getProblemJudgeKey(judge, key) }));
             setLoaderStatus(Status.SUCCESS);
           }}
         >

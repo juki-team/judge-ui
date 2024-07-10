@@ -42,7 +42,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
       {
         head: <TextHeadCell text={<T>index</T>} />,
         index: 'index',
-        field: ({ record: { myAttempts, mySuccess, index, color }, isCard }) => (
+        Field: ({ record: { myAttempts, mySuccess, index, color }, isCard }) => (
           <Field className="jk-row">
             <div>
               <div
@@ -66,7 +66,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         {
           head: <TextHeadCell text={<T>id</T>} />,
           index: 'id',
-          field: ({ record: { judge, key }, isCard }) => (
+          Field: ({ record: { judge, key }, isCard }) => (
             <TextField
               text={
                 isJudgeOrAdmin
@@ -107,7 +107,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
       {
         head: <TextHeadCell text={<T>name</T>} />,
         index: 'name',
-        field: ({ record: { name, index, judge, key }, isCard }) => (
+        Field: ({ record: { name, index, judge, key }, isCard }) => (
           <Field className="jk-col">
             <Link
               href={{
@@ -158,7 +158,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
       {
         head: <TextHeadCell text={<T>points</T>} />,
         index: 'points',
-        field: ({ record: { points }, isCard }) => (
+        Field: ({ record: { points }, isCard }) => (
           <TextField text={points} label={<T className="tt-se">points</T>} />
         ),
         sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
@@ -168,7 +168,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
       {
         head: <TextHeadCell text={<T>success rate</T>} />,
         index: 'success-rate',
-        field: ({ record: { totalAttempts, totalSuccess }, isCard }) => (
+        Field: ({ record: { totalAttempts, totalSuccess }, isCard }) => (
           <TextField
             text={totalAttempts ? (totalSuccess / totalAttempts * 100).toFixed(1) + ' %' : '-'}
             label={<T className="tt-se">success rate</T>}

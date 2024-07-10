@@ -11,6 +11,7 @@ import {
   TextHeadCell,
   UserNicknameLink,
 } from 'components';
+import { jukiSettings } from 'config';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
 import { getProblemJudgeKey } from 'helpers';
 import { FC, PropsWithChildren } from 'react';
@@ -20,7 +21,6 @@ import {
   ImageCmpProps,
   Judge,
   LinkCmpProps,
-  ProblemTab,
   SubmissionDataResponseDTO,
 } from 'types';
 import { SubmissionInfo } from './SubmissionInfo';
@@ -29,7 +29,7 @@ import { Memory, Time } from './utils';
 export const submissionNickname = (Image: FC<ImageCmpProps>): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'user nickname',
   index: 'nickname',
-  field: ({ record: { userNickname, userImageUrl }, isCard }) => (
+  Field: ({ record: { userNickname, userImageUrl }, isCard }) => (
     <TextField
       className="gap"
       text={
@@ -57,7 +57,7 @@ type SubmissionContestColumnProps = {
 export const submissionContestColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, props?: SubmissionContestColumnProps): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'contest',
   index: 'contest',
-  field: ({ record: { problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
+  Field: ({ record: { problemName, contestName, contestKey, contestProblemIndex }, isCard }) => (
     <TextField
       text={contestKey ? (
         <Link
@@ -90,7 +90,7 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
     />
   ),
   index: 'problemJudgeKeys',
-  field: ({
+  Field: ({
             record: { problemKey, problemName, contestName, contestKey, contestProblemIndex, problemJudge },
             isCard,
           }) => (
@@ -119,10 +119,12 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
         </Link>
       ) : (
         <Link
-          href={ROUTES.PROBLEMS.VIEW(problemJudge === Judge.JUKI_JUDGE ? problemKey : getProblemJudgeKey(
-            problemJudge,
-            problemKey,
-          ), ProblemTab.STATEMENT)}
+          href={jukiSettings.ROUTES.judge().problems.view({
+            problemJudgeKey: problemJudge === Judge.JUKI_JUDGE ? problemKey : getProblemJudgeKey(
+              problemJudge,
+              problemKey,
+            ),
+          })}
           target={props?.blankTarget ? '_blank' : ''}
         >
           <div className="jk-row link">
@@ -142,7 +144,7 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
 export const submissionLanguage = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'language',
   index: 'language',
-  field: ({ record: { submitId, canViewSourceCode, language }, isCard }) => (
+  Field: ({ record: { submitId, canViewSourceCode, language }, isCard }) => (
     isCard ? null :
       <Field>
         <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
@@ -177,7 +179,7 @@ const options = Object.values(PROBLEM_VERDICT)
 export const submissionVerdictColumn = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'verdict',
   index: 'verdict',
-  field: ({ record: { submitId, points, status, verdict, canViewSourceCode, processedCases }, isCard }) => (
+  Field: ({ record: { submitId, points, status, verdict, canViewSourceCode, processedCases }, isCard }) => (
     <Field>
       <div className="jk-col nowrap extend" style={{ padding: '4px 0', boxSizing: 'border-box' }}>
         <TextField
@@ -218,7 +220,7 @@ type SubmissionActionsColumnProps = {
 export const submissionActionsColumn = ({ canRejudge }: SubmissionActionsColumnProps): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'actions',
   index: 'actions',
-  field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
+  Field: ({ record: { submitId, points, status, verdict, canViewSourceCode }, isCard }) => (
     <Field>
       <div className="jk-col nowrap extend" style={{ padding: '4px 0', boxSizing: 'border-box' }}>
         {canRejudge && <RejudgeButton submissionId={submitId} />}
@@ -232,7 +234,7 @@ export const submissionActionsColumn = ({ canRejudge }: SubmissionActionsColumnP
 export const submissionDateColumn = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'date',
   index: 'timestamp',
-  field: ({ record: { timestamp }, isCard }) => (
+  Field: ({ record: { timestamp }, isCard }) => (
     <DateField className="jk-row" date={new Date(timestamp)} label="date" twoLines={!isCard} />
   ),
   sort: true,
@@ -247,7 +249,7 @@ export const submissionDateColumn = (): DataViewerHeadersType<SubmissionDataResp
 export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'time',
   index: 'timeUsed',
-  field: ({ record: { timeUsed, submitId, canViewSourceCode, language, verdict, memoryUsed }, isCard }) => (
+  Field: ({ record: { timeUsed, submitId, canViewSourceCode, language, verdict, memoryUsed }, isCard }) => (
     isCard ? (
         <SubmissionInfo submitId={submitId} canViewSourceCode={canViewSourceCode}>
           <Field className="jk-row gap nowrap cr-g1">
@@ -276,7 +278,7 @@ export const submissionTimeUsed = (): DataViewerHeadersType<SubmissionDataRespon
 export const submissionMemoryUsed = (): DataViewerHeadersType<SubmissionDataResponseDTO> => ({
   head: 'memory',
   index: 'memoryUsed',
-  field: ({ record: { memoryUsed, verdict }, isCard }) => (
+  Field: ({ record: { memoryUsed, verdict }, isCard }) => (
     isCard ? null :
       <TextField text={<Memory memoryUsed={memoryUsed} verdict={verdict} />} label="memory used" />
   ),

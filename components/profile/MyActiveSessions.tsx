@@ -21,7 +21,7 @@ export function MyActiveSessions() {
     {
       head: 'session',
       index: 'session',
-      field: ({ record: { updatedAt, deviceName, osName } }) => (
+      Field: ({ record: { updatedAt, deviceName, osName } }) => (
         <Field className="jk-col center">
           <div className="fw-bd">{deviceName}</div>
           <div>{osName}</div>
@@ -38,7 +38,7 @@ export function MyActiveSessions() {
     {
       head: 'operations',
       index: 'operations',
-      field: ({ record: { id } }) => {
+      Field: ({ record: { id } }) => {
         return (
           <Field className="jk-col center gap">
             <ButtonLoader

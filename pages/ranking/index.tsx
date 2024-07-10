@@ -11,7 +11,7 @@ function Ranking() {
     {
       head: 'position',
       index: 'key',
-      field: ({ record: {}, isCard, recordIndex }) => (
+      Field: ({ record: {}, isCard, recordIndex }) => (
         isCard ? null : (
           <Field className="jk-row fw-br">
             <div>{recordIndex + 1}</div>
@@ -25,7 +25,7 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="tt-se">nickname</T>} className="left" />,
       index: 'nickname',
-      field: ({ record: { nickname, imageUrl }, isCard, recordIndex }) => (
+      Field: ({ record: { nickname, imageUrl }, isCard, recordIndex }) => (
         <Field className="jk-row link fw-bd gap">
           {isCard && <div className="fw-br jk-pg-sm">{recordIndex + 1}</div>}
           <UserNicknameLink nickname={nickname}>
@@ -50,7 +50,7 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="wb-bw tt-se">points by problems</T>} />,
       index: 'problem-points',
-      field: ({ record: { problemPoints }, isCard }) => (
+      Field: ({ record: { problemPoints }, isCard }) => (
         <TextField
           text={<>
             <div className="fw-bd">{problemPoints.toFixed(2)}</div>
@@ -82,7 +82,7 @@ function Ranking() {
     {
       head: <TextHeadCell text={<><T className="tt-se">country</T>, <T className="tt-se">city</T></>} />,
       index: 'country-city',
-      field: ({ record: { country, city } }) => (
+      Field: ({ record: { country, city } }) => (
         <Field className="jk-row center">
           {city}{city ? <>,&nbsp;</> : ''}<span className="fw-bd">{country}</span>
         </Field>
@@ -94,7 +94,7 @@ function Ranking() {
     {
       head: 'institution',
       index: 'institution',
-      field: ({ record: { institution } }) => (
+      Field: ({ record: { institution } }) => (
         <Field className="jk-row center">
           {institution}
         </Field>

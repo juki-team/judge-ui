@@ -29,7 +29,7 @@ const SponsoredByTag = () => {
       <a href="https://juki.app" target="_blank" rel="noreferrer">Juki.app</a>
     </div>
   );
-}
+};
 
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   
@@ -45,7 +45,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
   const [ mounted, setMounted ] = useState(false);
   useEffect(() => {
     setMounted(true);
-  }, [])
+  }, []);
   
   if (!isReady || !mounted) {
     return <div className="jk-col" style={{ height: 'var(--100VH)' }}><SpinIcon size="very-huge" /></div>;
@@ -80,9 +80,12 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
           pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
           searchParams: new URLSearchParams(),
         },
-        [LastPathKey.SECTION_PROBLEM]: { pathname: ROUTES.PROBLEMS.LIST(), searchParams: new URLSearchParams() },
+        [LastPathKey.SECTION_PROBLEM]: {
+          pathname: jukiSettings.ROUTES.judge().problems.list(),
+          searchParams: new URLSearchParams(),
+        },
         [LastPathKey.PROBLEMS]: {
-          pathname: ROUTES.PROBLEMS.LIST(),
+          pathname: jukiSettings.ROUTES.judge().problems.list(),
           searchParams: new URLSearchParams({ [QueryParam.JUDGE]: Judge.CUSTOMER }),
         },
         [LastPathKey.SECTION_ADMIN]: {

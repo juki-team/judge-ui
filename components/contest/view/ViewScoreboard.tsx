@@ -123,7 +123,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       {
         head: '#',
         index: 'position',
-        field: ({ record: { position } }) => (
+        Field: ({ record: { position } }) => (
           <Field className="jk-row">{position}</Field>
         ),
         minWidth: 64,
@@ -132,7 +132,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       {
         head: 'nickname',
         index: 'nickname',
-        field: ({ record: { userNickname, userImageUrl } }) => (
+        Field: ({ record: { userNickname, userImageUrl } }) => (
           <Field className={classNames('jk-row center gap', { 'own': userNickname === user.nickname })}>
             <Image src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} height={38} width={38} />
             <UserNicknameLink nickname={userNickname}>
@@ -153,7 +153,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       {
         head: 'points',
         index: 'points',
-        field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
+        Field: ({ record: { totalPenalty, totalPoints }, isCard }) => (
           <Field className="jk-col center">
             <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
             {!contest.isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
@@ -189,7 +189,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
             </Tooltip>
           ),
           index: problem.index,
-          field: ({ record: { problems }, isCard }) => {
+          Field: ({ record: { problems }, isCard }) => {
             const problemData = problems[getProblemJudgeKey(problem.judge, problem.key)];
             return (
               <Field className="jk-row center nowrap">
