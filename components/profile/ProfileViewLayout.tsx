@@ -1,3 +1,4 @@
+import { TwoContentLayoutProps } from '@juki-team/base-ui';
 import {
   Button,
   ChangePasswordModal,
@@ -12,7 +13,6 @@ import {
 import { ROUTES } from 'config/constants';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiRouter, useJukiUI, useJukiUser, useState } from 'hooks';
-import { ReactNode } from 'react';
 import { KeyedMutator } from 'swr';
 import { ProfileTab, TabsType, UserProfileResponseDTO } from 'types';
 import { MyActiveSessions } from './MyActiveSessions';
@@ -26,7 +26,7 @@ interface ProfileViewLayoutProps {
 export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutProps) {
   
   const { mutatePing } = useJukiUser();
-  const { routeParams: { nickname, tab }, replaceRoute } = useJukiRouter();
+  const { routeParams: { nickname }, replaceRoute } = useJukiRouter();
   const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
   const { viewPortSize, components: { Link } } = useJukiUI();
@@ -91,7 +91,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
     ] : []),
   ];
   
-  const breadcrumbs: ReactNode[] = [
+  const breadcrumbs: TwoContentLayoutProps<ProfileTab>['breadcrumbs'] = ({ selectedTabKey }) => [
     <Link
       href={ROUTES.PROFILE.PAGE(nickname as string, ProfileTab.PROFILE)}
       className="link"
@@ -99,7 +99,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
     >
       {nickname}
     </Link>,
-    renderReactNodeOrFunctionP1(tabHeaders[tab as ProfileTab]?.header, { selectedTabKey: tab as ProfileTab }),
+    renderReactNodeOrFunctionP1(tabHeaders[selectedTabKey]?.header, { selectedTabKey }),
   ];
   
   return (
@@ -127,8 +127,6 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
       <TwoContentLayout
         breadcrumbs={breadcrumbs}
         tabs={tabHeaders}
-        selectedTabKey={tab as ProfileTab}
-        getPathname={(tabKey) => ROUTES.PROFILE.PAGE(nickname as string, tabKey)}
         tabButtons={extraNodes}
       >
         <h1>{nickname}</h1>

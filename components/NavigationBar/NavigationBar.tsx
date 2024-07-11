@@ -1,4 +1,3 @@
-import { jukiSettings } from '@juki-team/base-ui';
 import {
   AssignmentIcon,
   CupIcon,
@@ -11,19 +10,11 @@ import {
   T,
   UserPreviewModal,
 } from 'components';
+import { jukiSettings } from 'config';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { PropsWithChildren } from 'react';
-import {
-  ContestsTab,
-  LastPathKey,
-  MenuType,
-  ProfileSetting,
-  ProfileTab,
-  QueryParam,
-  QueryParamKey,
-  Theme,
-} from 'types';
+import { ContestsTab, LastPathKey, MenuType, ProfileSetting, QueryParam, QueryParamKey, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
@@ -114,13 +105,13 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         nickname={userPreviewNickname}
         companyKey={userPreviewCompanyKey}
         onClose={() => deleteSearchParams({ name: QueryParamKey.USER_PREVIEW })}
-        userHref={ROUTES.PROFILE.PAGE(searchParams.get(QueryParamKey.USER_PREVIEW) as string, ProfileTab.PROFILE)}
+        userHref={jukiSettings.ROUTES.profiles().view({ nickname: userPreviewNickname })}
       />
       {searchParams.get(QueryParam.SUBMISSION_VIEW) && (
         <SubmissionModal submitId={searchParams.get(QueryParam.SUBMISSION_VIEW) as string} />
       )}
       <MainMenu
-        onSeeMyProfile={() => pushRoute(ROUTES.PROFILE.PAGE(nickname, ProfileTab.PROFILE))}
+        onSeeMyProfile={() => pushRoute(jukiSettings.ROUTES.profiles().view({ nickname }))}
         menu={menu}
         profileSelected={pathname.includes('/profile/')}
         moreApps={

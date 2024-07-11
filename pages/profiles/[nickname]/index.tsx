@@ -2,7 +2,7 @@ import { FetcherLayer, ProfileViewLayout } from 'components';
 import { jukiSettings } from 'config';
 import { useJukiRouter } from 'hooks';
 import { ContentResponseType, UserProfileResponseDTO } from 'types';
-import Custom404 from '../../../404';
+import Custom404 from '../../404';
 
 export default function ProfileView() {
   
