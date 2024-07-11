@@ -1,6 +1,6 @@
 import { EditCreateProblem, FetcherLayer, UpdateEntityLayout } from 'components';
 import { jukiSettings } from 'config';
-import { getProblemJudgeKey, toUpsertProblemDTO } from 'helpers';
+import { getJudgeKeyOfProblemJudgeKey, getProblemJudgeKey, toUpsertProblemDTO } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
 import { JUDGE_API_V1 } from '../../../../config/constants';
@@ -36,7 +36,7 @@ function ProblemEdit() {
               entity={toUpsertWorksheetDTO(data.content)}
               entityKey={getProblemJudgeKey(data.content.judge, data.content.key)}
               Cmp={EditCreateProblem}
-              viewRoute={(entityKey) => jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: entityKey })}
+              viewRoute={(entityKey) => jukiSettings.ROUTES.problems().view({ key: getJudgeKeyOfProblemJudgeKey(entityKey).key })}
               updateApiURL={JUDGE_API_V1.PROBLEM.PROBLEM}
               viewApiURL={entityKey => jukiSettings.API.problem.getData({ params: { problemKey: entityKey } }).url}
               toEntityUpsert={toUpsertProblemDTO}

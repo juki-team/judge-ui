@@ -1,6 +1,5 @@
 import { jukiSettings } from '@juki-team/base-ui';
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
-import { getProblemJudgeKey } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
 import { BasicModalProps, Judge, Status } from 'types';
@@ -40,7 +39,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            pushRoute(jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: getProblemJudgeKey(judge, key) }));
+            pushRoute(jukiSettings.ROUTES.problems().view({ key }));
             setLoaderStatus(Status.SUCCESS);
           }}
         >

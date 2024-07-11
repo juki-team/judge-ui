@@ -181,6 +181,12 @@ export {
   PendingIcon,
   PendingActionsIcon,
   VoidIcon,
+  getProblemKeyIdHeader,
+  getProblemModeHeader,
+  getProblemNameHeader,
+  getProblemOwnerHeader,
+  getProblemTagsHeader,
+  getProblemTypeHeader,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

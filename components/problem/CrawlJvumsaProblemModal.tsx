@@ -1,5 +1,5 @@
-import { jukiSettings } from '@juki-team/base-ui';
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
+import { jukiSettings } from 'config';
 import { getProblemJudgeKey } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
@@ -28,7 +28,7 @@ export const CrawlJvumsaProblemModal = ({ onClose, isOpen }: BasicModalProps) =>
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            pushRoute(jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: getProblemJudgeKey(Judge.JV_UMSA, key.trim()) }));
+            pushRoute(jukiSettings.ROUTES.problems().view({ key: getProblemJudgeKey(Judge.JV_UMSA, key.trim()) }));
             setLoaderStatus(Status.SUCCESS);
           }}
         >

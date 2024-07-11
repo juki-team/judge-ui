@@ -12,14 +12,8 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY } from 'config/constants';
-import {
-  authorizedRequest,
-  cleanRequest,
-  getProblemJudgeKey,
-  getSimpleProblemJudgeKey,
-  renderReactNodeOrFunctionP1,
-} from 'helpers';
+import { JUDGE, JUDGE_API_V1 } from 'config/constants';
+import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useTask, useTrackLastPath } from 'hooks';
 import { KeyedMutator } from 'swr';
 import {
@@ -58,7 +52,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           problem={problem}
           withoutName
           infoPlacement="name"
-          codeEditorSourceStoreKey={getProblemJudgeKey(problem.judge, problem.key)}
+          codeEditorSourceStoreKey={problem.key}
           codeEditorCenterButtons={({ sourceCode, language }) => {
             return (
               <FirstLoginWrapper>
@@ -68,17 +62,18 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                   disabled={sourceCode === ''}
                   onClick={async setLoaderStatus => {
                     setLoaderStatus(Status.LOADING);
+                    const { url, ...options } = jukiSettings.API.problem.submit({
+                      params: { key: problem.key },
+                      body: { language: language as string, source: sourceCode },
+                    });
                     const response = cleanRequest<ContentResponseType<any>>(
-                      await authorizedRequest(
-                        JUDGE_API_V1.PROBLEM.SUBMIT(problem.judge, problem.key),
-                        { method: HTTPMethod.POST, body: JSON.stringify({ language, source: sourceCode }) },
-                      ),
+                      await authorizedRequest(url, options),
                     );
                     
                     if (notifyResponse(response, setLoaderStatus)) {
                       listenSubmission(
                         response.content.submitId,
-                        problem.judge,
+                        problem.judgeKey,
                         problem.key,
                       );
                       // TODO fix the filter Url param
@@ -92,7 +87,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                       //   '',
                       // ));
                       pushRoute({
-                        pathname: jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: problemKey as string }),
+                        pathname: jukiSettings.ROUTES.problems().view({ key: problemKey as string }),
                         searchParams,
                       });
                     }
@@ -129,7 +124,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     </LinkLastPath>,
     <Link
       href={{
-        pathname: jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: getSimpleProblemJudgeKey(problem.judge, problem.key, companyKey === JUKI_APP_COMPANY_KEY) }),
+        pathname: jukiSettings.ROUTES.problems().view({ key: problem.key }),
         search: searchParams.toString(),
       }}
       className="link"
@@ -141,11 +136,14 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   ];
   
   const extraNodes = [];
-  if (problem.user?.isManager && (problem.judge === Judge.JUKI_JUDGE || problem.judge === Judge.CUSTOMER)) {
+  if (problem.user?.isManager && (problem.judgeKey === Judge.JUKI_JUDGE || problem.judgeKey === Judge.CUSTOMER)) {
     extraNodes.push(
       <Popover
-        content={<T className="ws-np tt-se">only submissions that are not in a contest will be
-          judged</T>}
+        content={
+          <T className="ws-np tt-se">
+            only submissions that are not in a contest will be judged
+          </T>
+        }
         placement="left"
         showPopperArrow
       >
@@ -160,7 +158,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                 status: SubmissionRunStatus.RECEIVED
               }>>(
                 await authorizedRequest(
-                  JUDGE_API_V1.REJUDGE.PROBLEM(getProblemJudgeKey(problem.judge, problem.key)), { method: HTTPMethod.POST },
+                  JUDGE_API_V1.REJUDGE.PROBLEM(problem.key), { method: HTTPMethod.POST },
                 ),
               );
               if (result.success) {
@@ -187,7 +185,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         icon={<EditIcon />}
         onClick={async setLoaderStatus => {
           setLoaderStatus(Status.LOADING);
-          pushRoute(jukiSettings.ROUTES.judge().problems.edit({ problemJudgeKey: problemKey as string }));
+          pushRoute(jukiSettings.ROUTES.problems().edit({ key: problemKey as string }));
           setLoaderStatus(Status.SUCCESS);
         }}
         responsiveMobile
@@ -195,7 +193,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         {<T>edit</T>}
       </ButtonLoader>,
     );
-  } else if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judge) && user.isLogged) {
+  } else if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judgeKey as Judge) && user.isLogged) {
     extraNodes.push(
       <ButtonLoader
         size="small"
@@ -205,7 +203,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           setLoaderStatus(Status.LOADING);
           const response = cleanRequest<ContentResponseType<string>>(
             await authorizedRequest(
-              JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(getProblemJudgeKey(problem.judge, problem.key)),
+              JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(problem.key),
               { method: HTTPMethod.POST },
             ),
           );
@@ -238,8 +236,8 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           >
             {problem.name}
           </h2>
-          {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judge) && (
-            <div className="jk-tag warning">{JUDGE[problem.judge].label}</div>
+          {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judgeKey as Judge) && (
+            <div className="jk-tag warning">{JUDGE[problem.judgeKey as Judge].label}</div>
           )}
           <ProblemInfo problem={problem} />
           <ProblemStatus {...problem.user} />

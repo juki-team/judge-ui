@@ -35,7 +35,7 @@ export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStateme
               method: HTTPMethod.DELETE,
             }));
           if (notifyResponse(response, setLoaderStatus)) {
-            pushRoute({ pathname: jukiSettings.ROUTES.judge().problems.list() });
+            pushRoute({ pathname: jukiSettings.ROUTES.problems().list() });
           }
         }}
         className="bc-er"

@@ -40,7 +40,7 @@ import {
   Status,
   TabsType,
 } from 'types';
-import { authorizedRequest, cleanRequest, getProblemJudgeKey } from '../../../helpers';
+import { authorizedRequest, cleanRequest } from '../../../helpers';
 import { HTTPMethod } from '../../../types';
 import { FirstLoginWrapper } from '../../index';
 import { getContestTimeLiteral } from '../commons';
@@ -88,7 +88,6 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
     if (problemArrayIndex !== -1) {
       const problem = problems[problemArrayIndex];
-      const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
       tabHeaders[ContestTab.PROBLEM] = {
         key: ContestTab.PROBLEM,
         header: (
@@ -124,7 +123,7 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
           <ProblemView
             problem={problem}
             infoPlacement="name"
-            codeEditorSourceStoreKey={contest.key + '/' + problemJudgeKey}
+            codeEditorSourceStoreKey={contest.key + '/' + problem.key}
             codeEditorCenterButtons={({ sourceCode, language }) => {
               const validSubmit = (
                 <ButtonLoader
@@ -135,12 +134,12 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
                     setLoaderStatus(Status.LOADING);
                     const response = cleanRequest<ContentResponseType<any>>(
                       await authorizedRequest(
-                        JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problemJudgeKey),
+                        JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problem.key),
                         { method: HTTPMethod.POST, body: JSON.stringify({ language, source: sourceCode }) },
                       ),
                     );
                     if (notifyResponse(response, setLoaderStatus)) {
-                      listenSubmission(response.content.submitId, problem.judge, problem.key);
+                      listenSubmission(response.content.submitId, problem.key);
                       pushTab(ContestTab.MY_SUBMISSIONS);
                       // TODO fix the filter Url param
                       // await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(

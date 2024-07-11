@@ -89,7 +89,7 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
       text={props?.onlyProblem ? 'problem' : 'problem / contest'}
     />
   ),
-  index: 'problemJudgeKeys',
+  index: 'problemKeys',
   Field: ({
             record: { problemKey, problemName, contestName, contestKey, contestProblemIndex, problemJudge },
             isCard,
@@ -119,8 +119,8 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
         </Link>
       ) : (
         <Link
-          href={jukiSettings.ROUTES.judge().problems.view({
-            problemJudgeKey: problemJudge === Judge.JUKI_JUDGE ? problemKey : getProblemJudgeKey(
+          href={jukiSettings.ROUTES.problems().view({
+            key: problemJudge === Judge.JUKI_JUDGE ? problemKey : getProblemJudgeKey(
               problemJudge,
               problemKey,
             ),

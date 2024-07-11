@@ -41,7 +41,7 @@ export type {
   VirtualUserResponseDTO,
   SocketEventSubmissionResponseDTO,
   CompanyResponseDTO,
-  JudgeResponseDTO,
+  JudgeResponseDataDTO,
   ErrorType,
   UserSettingsType,
   ErrorResponseType,
@@ -136,6 +136,7 @@ export type {
   SimpleSortableRowsProps,
   UpsertComponentEntityProps,
   TwoContentLayoutProps,
+  ProblemDataViewerType,
 } from '@juki-team/base-ui';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

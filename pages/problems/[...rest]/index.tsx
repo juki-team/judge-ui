@@ -6,7 +6,7 @@ function View() {
   const { replaceRoute } = useJukiRouter();
   
   useEffect(() => {
-    void replaceRoute(jukiSettings.ROUTES.judge().problems.list());
+    void replaceRoute(jukiSettings.ROUTES.problems().list());
   }, [ replaceRoute ]);
   
   return null;

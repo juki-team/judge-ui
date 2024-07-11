@@ -66,7 +66,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: ({ children }) => (
         <LinkLastPath
           lastPathKey={LastPathKey.SECTION_PROBLEM}
-          onDoubleClickRoute={jukiSettings.ROUTES.judge().problems.list()}
+          onDoubleClickRoute={jukiSettings.ROUTES.problems().list()}
         >
           {children}
         </LinkLastPath>

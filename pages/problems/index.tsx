@@ -1,17 +1,13 @@
 import {
+  ButtonLoader,
+  CrawlCodeforcesProblemModal,
+  CrawlJvumsaProblemModal,
   getProblemKeyIdHeader,
   getProblemModeHeader,
   getProblemNameHeader,
   getProblemOwnerHeader,
   getProblemTagsHeader,
   getProblemTypeHeader,
-  ProblemDataViewerType,
-  toProblemDataViewer,
-} from '@juki-team/base-ui';
-import {
-  ButtonLoader,
-  CrawlCodeforcesProblemModal,
-  CrawlJvumsaProblemModal,
   InfoIcon,
   PagedDataViewer,
   PlusIcon,
@@ -21,8 +17,7 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiSettings } from 'config';
-import { JUDGE, JUKI_APP_COMPANY_KEY } from 'config/constants';
-import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
+import { buttonLoaderLink, oneTab, toFilterUrl, toProblemDataViewer, toSortUrl } from 'helpers';
 import {
   useEffect,
   useFetcher,
@@ -37,7 +32,9 @@ import {
   ContentResponseType,
   DataViewerHeadersType,
   Judge,
+  JudgeResponseDataDTO,
   LastPathKey,
+  ProblemDataViewerType,
   ProblemSummaryListResponseDTO,
   QueryParam,
   ReactNode,
@@ -64,44 +61,48 @@ function Problems() {
   const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();
   const { company: { key: companyKey } } = useJukiUser();
-  const { data } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.company.getJudgeProblemTags({ params: { companyKey } }).url);
-  const tags = useMemo(() => data?.success ? data.content : [], [ data ]);
-  const judge: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
+  const { data } = useFetcher<ContentResponseType<JudgeResponseDataDTO[]>>(jukiSettings.API.company.getJudgeList().url);
+  const judgeKey: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
+  const tags = useMemo(() => data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : [], [ data, judgeKey ]);
+  const judges = (data?.success ? data.content : []).map(judge => ({
+    value: judge.key,
+    label: judge.key,
+  }));
   useEffect(() => {
-    if (!judge) {
+    if (!judgeKey) {
       setSearchParams({ name: QueryParam.JUDGE, value: Judge.CUSTOMER });
     }
-  }, [ judge, setSearchParams ]);
+  }, [ judgeKey, setSearchParams ]);
   const columns: DataViewerHeadersType<ProblemDataViewerType>[] = useMemo(() => [
     getProblemKeyIdHeader(false),
     getProblemNameHeader(),
-    ...((judge === Judge.JUKI_JUDGE || judge === Judge.CUSTOMER) ? [
+    ...((judgeKey === Judge.JUKI_JUDGE || judgeKey === Judge.CUSTOMER) ? [
       getProblemModeHeader(),
       getProblemTypeHeader(),
       getProblemTagsHeader(tags),
     ] : []),
-    getProblemOwnerHeader(judge !== Judge.JUKI_JUDGE && judge !== Judge.CUSTOMER),
-  ], [ tags, judge ]);
+    getProblemOwnerHeader(judgeKey !== Judge.JUKI_JUDGE && judgeKey !== Judge.CUSTOMER),
+  ], [ tags, judgeKey ]);
   
   const breadcrumbs = [
     <T className="tt-se" key="problems">problems</T>,
   ];
   
   const extraNodes = [];
-  if (canCreateProblem && judge === Judge.CUSTOMER) {
+  if (canCreateProblem && judgeKey === Judge.CUSTOMER) {
     extraNodes.push(
       <ButtonLoader
         size="small"
         icon={<PlusIcon />}
         responsiveMobile
-        onClick={buttonLoaderLink(() => pushRoute(jukiSettings.ROUTES.judge().problems.new()))}
+        onClick={buttonLoaderLink(() => pushRoute(jukiSettings.ROUTES.problems().new()))}
       >
         <T>create</T>
       </ButtonLoader>,
     );
   }
   const [ modal, setModal ] = useState<ReactNode>(null);
-  if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judge)) {
+  if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judgeKey)) {
     extraNodes.push(
       <div className="jk-row gap">
         {modal}
@@ -110,13 +111,13 @@ function Problems() {
           icon={<PlusIcon />}
           responsiveMobile
           onClick={() => {
-            if (judge === Judge.CODEFORCES) {
+            if (judgeKey === Judge.CODEFORCES) {
               setModal(<CrawlCodeforcesProblemModal isOpen judge={Judge.CODEFORCES} onClose={() => setModal(null)} />);
             }
-            if (judge === Judge.JV_UMSA) {
+            if (judgeKey === Judge.JV_UMSA) {
               setModal(<CrawlJvumsaProblemModal isOpen onClose={() => setModal(null)} />);
             }
-            if (judge === Judge.CODEFORCES_GYM) {
+            if (judgeKey === Judge.CODEFORCES_GYM) {
               setModal(
                 <CrawlCodeforcesProblemModal
                   isOpen
@@ -136,7 +137,7 @@ function Problems() {
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
-      tabs={oneTab(judge && (
+      tabs={oneTab(judgeKey && (
         <PagedDataViewer<ProblemDataViewerType, ProblemSummaryListResponseDTO>
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
@@ -144,16 +145,16 @@ function Problems() {
               params: {
                 page,
                 size: pageSize,
-                filterUrl: toFilterUrl({ ...filter, judge }),
+                filterUrl: toFilterUrl({ ...filter, judgeKey }),
                 sortUrl: toSortUrl(sort),
               },
             }).url;
           }}
-          name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judge] || '')}
+          name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judgeKey] || '')}
           refreshInterval={60000}
           extraNodes={extraNodes}
           cards={{ height: 256, expanded: true }}
-          dependencies={[ judge ]}
+          dependencies={[ judgeKey ]}
           toRow={toProblemDataViewer}
         />
       ))}
@@ -161,7 +162,7 @@ function Problems() {
       <div className="jk-row space-between extend pn-re">
         <div className="jk-row gap">
           <h2><T>problems</T></h2>
-          {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judge) && (
+          {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judgeKey) && (
             <Popover
               content={<div><T className="tt-se">only tracked problems are displayed</T></div>}
               placement="bottom"
@@ -173,19 +174,8 @@ function Problems() {
         <div style={{ width: 200 }}>
           <Select
             className="jk-border-radius-inline jk-button secondary"
-            options={[
-              { value: Judge.CUSTOMER, label: <span className="ws-np">{name + ' judge'}</span> },
-              ...(key === JUKI_APP_COMPANY_KEY ? [] : [
-                {
-                  value: Judge.JUKI_JUDGE,
-                  label: <span className="ws-np">{JUDGE[Judge.JUKI_JUDGE].label}</span>,
-                },
-              ]),
-              { value: Judge.CODEFORCES, label: <>{JUDGE[Judge.CODEFORCES].label}</> },
-              { value: Judge.CODEFORCES_GYM, label: <>{JUDGE[Judge.CODEFORCES_GYM].label}</> },
-              { value: Judge.JV_UMSA, label: <>{JUDGE[Judge.JV_UMSA].label}</> },
-            ]}
-            selectedOption={{ value: judge }}
+            options={judges}
+            selectedOption={{ value: judgeKey }}
             onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}
             extend
           />

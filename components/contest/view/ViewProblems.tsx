@@ -1,3 +1,5 @@
+import { jukiSettings } from '@juki-team/base-ui';
+import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import {
   ButtonLoader,
   CheckIcon,
@@ -9,8 +11,8 @@ import {
   TextField,
   TextHeadCell,
 } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
-import { authorizedRequest, cleanRequest, getProblemJudgeKey, lettersToIndex } from 'helpers';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
+import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { useMemo } from 'react';
 import {
@@ -20,7 +22,6 @@ import {
   ContestTab,
   DataViewerHeadersType,
   HTTPMethod,
-  Judge,
   QueryParam,
   Status,
   SubmissionRunStatus,
@@ -66,21 +67,21 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         {
           head: <TextHeadCell text={<T>id</T>} />,
           index: 'id',
-          Field: ({ record: { judge, key }, isCard }) => (
+          Field: ({ record: { judgeKey, key }, isCard }) => (
             <TextField
               text={
                 isJudgeOrAdmin
                   ? (
                     <Link
-                      href={isCustomCompany
-                        ? window?.location.origin + '/' + (JUDGE[judge]?.getProblemUrl(key)
-                        || '').split('/').slice(3).join('/')
-                        : (JUDGE[judge]?.getProblemUrl(key) || '')}
+                      href={EXTERNAL_JUDGE_KEYS.includes(judgeKey)
+                        ? jukiSettings.ROUTES.problems(`https://judge.juki.app`).view({ key })
+                        : jukiSettings.ROUTES.problems(`https://${judgeKey}.jukijudge.com`).view({ key })
+                      }
                       target="_blank"
                     >
                       <div className="jk-row gap link">
                         <div className="fw-bd cr-g3 jk-col">
-                          {JUDGE[judge]?.label || (judge === Judge.CUSTOMER ? '' : judge)}
+                          {isCustomCompany ? judgeKey : ''}
                           <div>{key}</div>
                         </div>
                         <OpenInNewIcon size="tiny" />
@@ -89,7 +90,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                   ) : (
                     <div className="jk-row gap">
                       <div className="fw-bd cr-g3 jk-col">
-                        {JUDGE[judge]?.label || judge}
+                        {isCustomCompany ? judgeKey : ''}
                         <div>{key}</div>
                       </div>
                       <OpenInNewIcon size="tiny" />
@@ -107,7 +108,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
       {
         head: <TextHeadCell text={<T>name</T>} />,
         index: 'name',
-        Field: ({ record: { name, index, judge, key }, isCard }) => (
+        Field: ({ record: { name, index, judgeKey, key }, isCard }) => (
           <Field className="jk-col">
             <Link
               href={{
@@ -126,8 +127,7 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
                     status: SubmissionRunStatus.RECEIVED
                   }>>(
                     await authorizedRequest(
-                      JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(
-                        contestKey as string, getProblemJudgeKey(judge, key)),
+                      JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, key),
                       { method: HTTPMethod.POST },
                     ),
                   );

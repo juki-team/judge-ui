@@ -81,11 +81,11 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
           searchParams: new URLSearchParams(),
         },
         [LastPathKey.SECTION_PROBLEM]: {
-          pathname: jukiSettings.ROUTES.judge().problems.list(),
+          pathname: jukiSettings.ROUTES.problems().list(),
           searchParams: new URLSearchParams(),
         },
         [LastPathKey.PROBLEMS]: {
-          pathname: jukiSettings.ROUTES.judge().problems.list(),
+          pathname: jukiSettings.ROUTES.problems().list(),
           searchParams: new URLSearchParams({ [QueryParam.JUDGE]: Judge.CUSTOMER }),
         },
         [LastPathKey.SECTION_ADMIN]: {

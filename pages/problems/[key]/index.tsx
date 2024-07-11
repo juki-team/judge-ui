@@ -15,7 +15,7 @@ export default function ProblemViewPage() {
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     <Link
       href={{
-        pathname: jukiSettings.ROUTES.judge().problems.view({ problemJudgeKey: problemKey as string }),
+        pathname: jukiSettings.ROUTES.problems().view({ key: problemKey as string }),
         search: searchParams.toString(),
       }}
       className="link"
@@ -27,7 +27,7 @@ export default function ProblemViewPage() {
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
-      url={jukiSettings.API.problem.getData({ params: { problemKey: problemKey as string } }).url}
+      url={jukiSettings.API.problem.getData({ params: { key: problemKey as string } }).url}
       loadingView={
         <TwoContentLayout breadcrumbs={breadcrumbs} loading>
           <h2

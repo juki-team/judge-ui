@@ -46,17 +46,11 @@ export const JUDGE_API_V1 = {
       return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(
         contestKey)}&nickname=${nickname}`, filterUrl), sortUrl);
     },
-    PROBLEM: (judge: Judge, problemKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(
-        judge,
-        problemKey,
-      )}`, filterUrl), sortUrl);
+    PROBLEM: (problemKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
+      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemKeys=${problemKey}`, filterUrl), sortUrl);
     },
-    PROBLEM_NICKNAME: (judge: Judge, problemKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemJudgeKeys=${getProblemJudgeKey(
-        judge,
-        problemKey,
-      )}&nickname=${nickname}`, filterUrl), sortUrl);
+    PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
+      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemKeys=${problemKey}&nickname=${nickname}`, filterUrl), sortUrl);
     },
   },
   PROBLEM: {

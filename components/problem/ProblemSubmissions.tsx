@@ -38,7 +38,6 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDT
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
         JUDGE_API_V1.SUBMISSIONS.PROBLEM(
-          problem?.judge,
           problem?.key,
           page,
           pageSize,
