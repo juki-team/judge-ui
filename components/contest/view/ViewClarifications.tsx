@@ -15,8 +15,8 @@ import {
   Tooltip,
   UserNicknameLink,
 } from 'components';
-import { JUDGE, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, getProblemJudgeKey } from 'helpers';
+import { JUDGE_API_V1 } from 'config/constants';
+import { authorizedRequest, classNames, cleanRequest } from 'helpers';
 import { useDateFormat, useFetcher, useJukiNotification, useJukiRouter, useJukiUI } from 'hooks';
 import React, { useState } from 'react';
 import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
@@ -184,15 +184,17 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                   { value: '', label: <T className="tt-se">general</T> },
                   ...(Object.values(contest.problems)
                     .map(problem => ({
-                      value: getProblemJudgeKey(problem.judge, problem.key),
-                      label: <><span
-                        className="fw-bd"
-                      >{problem.index}</span> - {problem.name} ({JUDGE[problem.judge]?.label} {problem.key})</>,
+                      value: problem.key,
+                      label: <>
+                        <span
+                          className="fw-bd"
+                        >{problem.index}</span> - {problem.name} ({problem.judgeKey} {problem.key})
+                      </>,
                     }))),
                 ]}
                 selectedOption={{
                   value: clarification.problemJudgeKey,
-                  label: clarification.problemJudgeKey === '' || Object.values(contest.problems).map(problem => getProblemJudgeKey(problem.judge, problem.key)).includes(clarification.problemJudgeKey)
+                  label: clarification.problemJudgeKey === '' || Object.values(contest.problems).map(problem => problem.key).includes(clarification.problemJudgeKey)
                     ? undefined
                     : <T className="tt-se">problem not found</T>,
                 }}

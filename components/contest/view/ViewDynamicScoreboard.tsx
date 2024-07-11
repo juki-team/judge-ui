@@ -13,7 +13,7 @@ import {
   UserNicknameLink,
 } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
-import { classNames, getProblemJudgeKey } from 'helpers';
+import { classNames } from 'helpers';
 import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -117,10 +117,9 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
           ),
           index: problem.index,
           Field: ({ record: { problems, focus }, isCard }) => {
-            const problemJudgeKey = getProblemJudgeKey(problem.judge, problem.key);
-            const problemData = problems[problemJudgeKey];
+            const problemData = problems[problem.key];
             return (
-              <Field className={classNames('jk-row center nowrap', { highlight: focus?.includes(problemJudgeKey) })}>
+              <Field className={classNames('jk-row center nowrap', { highlight: focus?.includes(problem.key) })}>
                 {(problemData?.success || !!problemData?.points) && (
                   <Tooltip
                     content={

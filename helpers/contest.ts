@@ -6,7 +6,6 @@ import {
   EditContestProblemBasicType,
   EditCreateContestType,
 } from 'types';
-import { getProblemJudgeKey } from './commons';
 import { roundTimestamp } from './index';
 
 export const adjustContest = (contest: EditCreateContestType, prevContest: EditCreateContestType): EditCreateContestType => {
@@ -34,7 +33,7 @@ export const adjustContest = (contest: EditCreateContestType, prevContest: EditC
       Math.max(roundTimestamp(problemEndTimestamp), problemStartTimestamp),
       contest.settings.endTimestamp,
     );
-    problems[getProblemJudgeKey(problem.judge, problem.key)] = {
+    problems[problem.key] = {
       ...problem,
       startTimestamp: problemStartTimestamp,
       endTimestamp: problemEndTimestamp,
@@ -91,10 +90,10 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
 export const parseContest = (contest: ContestResponseDTO): EditCreateContestType => {
   const problems: { [key: string]: EditContestProblemBasicType } = {};
   Object.values(contest.problems).forEach(problem => {
-    problems[getProblemJudgeKey(problem.judge, problem.key)] = {
+    problems[problem.key] = {
       key: problem.key,
       index: problem.index,
-      judge: problem.judge,
+      judgeKey: problem.judgeKey,
       name: problem.name,
       points: problem.points,
       color: problem.color,

@@ -1,6 +1,6 @@
 import { PagedDataViewer } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
-import { getProblemJudgeKey, toFilterUrl, toSortUrl } from 'helpers';
+import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUI, useJukiUser } from 'hooks';
 import { useMemo } from 'react';
 import { ContestResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
@@ -25,9 +25,9 @@ export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponse
         filter: {
           type: 'select',
           options: Object.values(contest.problems)
-            .map(({ index, name, key, judge }) => ({
+            .map(({ index, name, key }) => ({
               label: <div>{index ? `(${index})` : ''} {name}</div>,
-              value: getProblemJudgeKey(judge, key),
+              value: key,
             })),
         },
       },

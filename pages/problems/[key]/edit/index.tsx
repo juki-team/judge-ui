@@ -1,6 +1,6 @@
 import { EditCreateProblem, FetcherLayer, UpdateEntityLayout } from 'components';
 import { jukiSettings } from 'config';
-import { getJudgeKeyOfProblemJudgeKey, getProblemJudgeKey, toUpsertProblemDTO } from 'helpers';
+import { toUpsertProblemDTO } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
 import { JUDGE_API_V1 } from '../../../../config/constants';
@@ -10,7 +10,7 @@ function toUpsertWorksheetDTO(problem: ProblemDataResponseDTO): UpsertProblemUID
   return {
     author: problem.author,
     editorial: problem.editorial,
-    judge: problem.judge,
+    judgeKey: problem.judgeKey,
     members: problem.members,
     name: problem.name,
     settings: problem.settings,
@@ -26,7 +26,7 @@ function ProblemEdit() {
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
-      url={jukiSettings.API.problem.getData({ params: { problemKey: key as string } }).url}
+      url={jukiSettings.API.problem.getData({ params: { key: key as string } }).url}
       errorView={<Custom404 />}
     >
       {({ data }) => {
@@ -34,11 +34,11 @@ function ProblemEdit() {
           return (
             <UpdateEntityLayout
               entity={toUpsertWorksheetDTO(data.content)}
-              entityKey={getProblemJudgeKey(data.content.judge, data.content.key)}
+              entityKey={data.content.key}
               Cmp={EditCreateProblem}
-              viewRoute={(entityKey) => jukiSettings.ROUTES.problems().view({ key: getJudgeKeyOfProblemJudgeKey(entityKey).key })}
+              viewRoute={(entityKey) => jukiSettings.ROUTES.problems().view({ key: entityKey })}
               updateApiURL={JUDGE_API_V1.PROBLEM.PROBLEM}
-              viewApiURL={entityKey => jukiSettings.API.problem.getData({ params: { problemKey: entityKey } }).url}
+              viewApiURL={entityKey => jukiSettings.API.problem.getData({ params: { key: entityKey } }).url}
               toEntityUpsert={toUpsertProblemDTO}
             />
           );

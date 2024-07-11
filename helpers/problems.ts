@@ -1,4 +1,4 @@
-import { EntityAccess, Judge, ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
+import { EntityAccess, ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 import { EMPTY_TEXT_LANGUAGES } from '../config/constants';
 
 export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO => ({
@@ -29,5 +29,4 @@ export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO
     html: entity?.statement?.html ?? EMPTY_TEXT_LANGUAGES,
   },
   editorial: entity?.editorial ?? EMPTY_TEXT_LANGUAGES,
-  judge: entity?.judge ?? Judge.CUSTOMER,
 });

@@ -22,7 +22,6 @@ import {
   cleanRequest,
   downloadDataTableAsCsvFile,
   downloadSheetDataAsXlsxFile,
-  getProblemJudgeKey,
 } from 'helpers';
 import { useDataViewerRequester, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useT } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
@@ -66,7 +65,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
     
     if (contest?.problems) {
       for (const problem of Object.values(contest?.problems)) {
-        const problemData = user.problems[getProblemJudgeKey(problem.judge, problem.key)];
+        const problemData = user.problems[problem.key];
         let text = '';
         if (problemData?.success || !!problemData?.points) {
           text = problemData?.points + ' ' + (problemData?.points === 1 ? t('point') : t('points'));
@@ -190,7 +189,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
           ),
           index: problem.index,
           Field: ({ record: { problems }, isCard }) => {
-            const problemData = problems[getProblemJudgeKey(problem.judge, problem.key)];
+            const problemData = problems[problem.key];
             return (
               <Field className="jk-row center nowrap">
                 {(problemData?.success || !!problemData?.points) && (

@@ -1,4 +1,4 @@
-import { FetcherLayer, T, TabsInline } from 'components';
+/*import { FetcherLayer, T, TabsInline } from 'components';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import React from 'react';
@@ -96,3 +96,4 @@ export const JudgesManagement = ({ company }: { company: CompanyResponseDTO }) =
     </div>
   );
 };
+*/

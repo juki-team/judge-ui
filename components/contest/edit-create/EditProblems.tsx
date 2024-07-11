@@ -1,3 +1,4 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import {
   BalloonIcon,
   DeleteIcon,
@@ -11,22 +12,14 @@ import {
   SimpleSortableRows,
   T,
 } from 'components';
-import { JUDGE, PALLETE } from 'config/constants';
-import {
-  classNames,
-  disableOutOfRange,
-  getProblemJudgeKey,
-  indexToLetters,
-  lettersToIndex,
-  roundTimestamp,
-} from 'helpers';
+import { PALLETE } from 'config/constants';
+import { classNames, disableOutOfRange, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
 import { useEffect, useJukiUser, useRef, useState } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import {
   ContestProblemBasicType,
   EditContestProblemBasicType,
   EditCreateContestType,
-  Judge,
   RowSortableItem,
   SimpleSortableRowsProps,
 } from 'types';
@@ -55,7 +48,6 @@ export const RowProblem: SimpleSortableRowsProps<Problem, {
   return (
     <div
       className={classNames('jk-row left jk-table-inline-row', { 'bc-we elevation-1': isPreview })}
-      // ref={previewRef as RefObject<HTMLDivElement>}
       style={{
         opacity: (isDragging && !isPreview) ? 0.4 : 1,
         borderTop: isPreview ? '1px solid var(--t-color-gray-5)' : undefined,
@@ -69,7 +61,10 @@ export const RowProblem: SimpleSortableRowsProps<Problem, {
       <div className="jk-row center gap" style={{ flex: 1 }}>
         <span className="fw-bd">{problem.key}</span>
         {problem.name}
-        <a href={JUDGE[problem.judge]?.getProblemUrl(problem.key)} target="_blank">
+        <a
+          href={jukiSettings.ROUTES.problems(`https://${problem.judgeKey}.jukijudge.com'`).view({ key: problem.key })}
+          target="_blank"
+        >
           <div className="jk-row"><OpenInNewIcon size="small" /></div>
         </a>
       </div>
@@ -229,7 +224,7 @@ export const RowProblem: SimpleSortableRowsProps<Problem, {
         </div>
       )}
       <div className="jk-row" style={{ width: 150 }}>
-        {problem.judge === Judge.CUSTOMER ? companyName : JUDGE[problem.judge]?.label || problem.judge}
+        {problem.judgeKey}
       </div>
       <div className="jk-row" style={{ width: 30 }}>
         <DeleteIcon
@@ -267,7 +262,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       .map((problem) => {
         const value: Problem = {
           key: problem.key,
-          judge: problem.judge,
+          judgeKey: problem.judgeKey,
           name: problem.name,
           points: problem.points,
           color: problem.color,
@@ -302,10 +297,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     setContest(prevState => {
       const problemsObj: { [key: string]: EditContestProblemBasicType } = {};
       problems.forEach((problem, index) => {
-        problemsObj[getProblemJudgeKey(problem.value.judge, problem.value.key)] = {
+        problemsObj[problem.value.key] = {
           key: problem.value.key + '',
           index: indexToLetters(index + 1),
-          judge: problem.value.judge,
+          judgeKey: problem.value.judgeKey,
           name: problem.value.name,
           points: problem.value.points,
           color: problem.value.color,
@@ -402,7 +397,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       key: problem.key,
                       color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
                       points: 1,
-                      judge: problem.judge,
+                      judgeKey: problem.judgeKey,
                       startTimestamp: contest.settings.startTimestamp,
                       endTimestamp: contest.settings.endTimestamp,
                     };

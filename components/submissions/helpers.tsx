@@ -13,16 +13,8 @@ import {
 } from 'components';
 import { jukiSettings } from 'config';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
-import { getProblemJudgeKey } from 'helpers';
 import { FC, PropsWithChildren } from 'react';
-import {
-  ContestTab,
-  DataViewerHeadersType,
-  ImageCmpProps,
-  Judge,
-  LinkCmpProps,
-  SubmissionDataResponseDTO,
-} from 'types';
+import { ContestTab, DataViewerHeadersType, ImageCmpProps, LinkCmpProps, SubmissionDataResponseDTO } from 'types';
 import { SubmissionInfo } from './SubmissionInfo';
 import { Memory, Time } from './utils';
 
@@ -91,8 +83,7 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
   ),
   index: 'problemKeys',
   Field: ({
-            record: { problemKey, problemName, contestName, contestKey, contestProblemIndex, problemJudge },
-            isCard,
+            record: { problemKey, problemName, contestName, contestKey, contestProblemIndex, problemJudgeKey },
           }) => (
     <TextField
       text={contestKey ? (
@@ -119,12 +110,7 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
         </Link>
       ) : (
         <Link
-          href={jukiSettings.ROUTES.problems().view({
-            key: problemJudge === Judge.JUKI_JUDGE ? problemKey : getProblemJudgeKey(
-              problemJudge,
-              problemKey,
-            ),
-          })}
+          href={jukiSettings.ROUTES.problems().view({ key: problemKey })}
           target={props?.blankTarget ? '_blank' : ''}
         >
           <div className="jk-row link">

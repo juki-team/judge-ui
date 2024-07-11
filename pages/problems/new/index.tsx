@@ -16,6 +16,7 @@ function ProblemCreate() {
     nickname,
     imageUrl,
     companyKey,
+    judgeKey: companyKey,
   }), [ nickname, imageUrl, companyKey ]);
   
   if (!create) {

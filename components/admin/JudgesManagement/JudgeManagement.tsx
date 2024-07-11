@@ -1,14 +1,14 @@
-import { ButtonLoader, InputToggle, T } from 'components/index';
+/*import { ButtonLoader, InputToggle, T } from 'components/index';
 import { JUDGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification } from 'hooks';
 import React, { useEffect, useState } from 'react';
 import { KeyedMutator } from 'swr';
-import { CompanyResponseDTO, ContentResponseType, HTTPMethod, JudgeResponseDTO, Status } from 'types';
+import { CompanyResponseDTO, ContentResponseType, HTTPMethod, JudgeResponseDataDTO, Status } from 'types';
 
 interface JudgeManagementBodyProps {
   company: CompanyResponseDTO,
-  judge: JudgeResponseDTO,
+  judge: JudgeResponseDataDTO,
   mutate: KeyedMutator<string>,
   withError?: boolean,
 }
@@ -96,3 +96,4 @@ export const JudgeManagementBody = ({ company, judge, mutate, withError }: Judge
     </div>
   );
 };
+*/

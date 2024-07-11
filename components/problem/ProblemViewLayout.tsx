@@ -73,7 +73,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                     if (notifyResponse(response, setLoaderStatus)) {
                       listenSubmission(
                         response.content.submitId,
-                        problem.judgeKey,
                         problem.key,
                       );
                       // TODO fix the filter Url param

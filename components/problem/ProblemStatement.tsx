@@ -1,8 +1,9 @@
+import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import { FlagEnImage, FlagEsImage, MdMathEditor, MdMathViewer, PlusIcon, T, TabsInline } from 'components';
 import { classNames } from 'helpers';
 import { useJukiUser } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { Judge, Language, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
+import { Language, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
 import { ProblemLetter } from './ProblemLetter';
 import { SampleTest } from './SampleTest';
 
@@ -14,7 +15,7 @@ interface ProblemStatementProps {
 
 export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatementProps) => {
   
-  const { judge, name, settings, tags, author, statement } = problem;
+  const { judgeKey, settings, statement } = problem;
   
   const {
     user: {
@@ -26,7 +27,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
   } = useJukiUser();
   const [ language, setLanguage ] = useState<Language>(Language.ES);
   
-  if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judge)) {
+  if (EXTERNAL_JUDGE_KEYS.includes(judgeKey)) {
     return (
       <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
         <div
@@ -41,7 +42,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
             />
           )}
           <div
-            className={`${judge}-statement`}
+            className={`${judgeKey}-statement`}
             dangerouslySetInnerHTML={{ __html: statement.html[Language.EN] || statement.html[Language.ES] }}
           />
         </div>
