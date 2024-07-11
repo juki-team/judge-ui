@@ -68,11 +68,12 @@ function Problems() {
     value: judge.key,
     label: judge.key,
   }));
+  const firstJudgeKey = judges[0]?.value;
   useEffect(() => {
     if (!judgeKey) {
-      setSearchParams({ name: QueryParam.JUDGE, value: Judge.CUSTOMER });
+      setSearchParams({ name: QueryParam.JUDGE, value: firstJudgeKey });
     }
-  }, [ judgeKey, setSearchParams ]);
+  }, [ judgeKey, setSearchParams, firstJudgeKey ]);
   const columns: DataViewerHeadersType<ProblemDataViewerType>[] = useMemo(() => [
     getProblemKeyIdHeader(false),
     getProblemNameHeader(),
