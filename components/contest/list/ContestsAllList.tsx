@@ -1,5 +1,5 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import { Field, PagedDataViewer, T } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUI } from 'hooks';
 import { useMemo } from 'react';
@@ -17,7 +17,7 @@ export const ContestsAllList = () => {
   
   const { components: { Link } } = useJukiUI();
   
-  const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
+  const columns = useMemo(() => [
     {
       head: 'state',
       index: 'state',
@@ -53,23 +53,24 @@ export const ContestsAllList = () => {
     contestStartDateColumn(),
     contestEndDateColumn(),
     contestantsColumn(),
-  ], [ Link ]);
-  
-  // const { pushRoute } = useJukiRouter();
+  ] as DataViewerHeadersType<ContestSummaryListResponseDTO>[], [ Link ]);
   
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
-      // getRecordStyle={() => ({ cursor: 'pointer' })}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        JUDGE_API_V1.CONTEST.LIST(page, pageSize, toFilterUrl(filter), toSortUrl(sort))
+        jukiSettings.API.contest.getSummaryList({
+          params: {
+            page,
+            size: pageSize,
+            filterUrl: toFilterUrl(filter),
+            sortUrl: toSortUrl(sort),
+          },
+        }).url
       )}
       name={QueryParam.ALL_CONTESTS_TABLE}
       refreshInterval={60000}
       cards={{ width: 320, expanded: true }}
-      // onRecordClick={async ({ data, index }) => {
-      //   await pushRoute({ pathname: ROUTES.CONTESTS.VIEW(data[index].key, ContestTab.OVERVIEW) });
-      //}}
     />
   );
 };

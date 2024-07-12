@@ -342,7 +342,6 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     breadcrumbs.push(renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }));
   }
   
-  console.log({ contestTab });
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
