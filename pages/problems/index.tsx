@@ -69,7 +69,7 @@ function Problems() {
   }));
   const firstJudgeKey = judges[0]?.value;
   useEffect(() => {
-    if (!judgeKey) {
+    if (!judgeKey && firstJudgeKey) {
       setSearchParams({ name: QueryParam.JUDGE, value: firstJudgeKey });
     }
   }, [ judgeKey, setSearchParams, firstJudgeKey ]);
@@ -145,7 +145,7 @@ function Problems() {
               params: {
                 page,
                 size: pageSize,
-                filterUrl: toFilterUrl({ ...filter, judgeKey }),
+                filterUrl: toFilterUrl({ ...filter, judgeKeys: judgeKey }),
                 sortUrl: toSortUrl(sort),
               },
             }).url;
