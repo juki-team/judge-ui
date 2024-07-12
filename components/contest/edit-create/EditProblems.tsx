@@ -396,7 +396,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       key: problem.key,
                       color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
                       points: 1,
-                      judgeKey: problem.judgeKey,
+                      judgeKey: problem.judge?.key,
                       startTimestamp: contest.settings.startTimestamp,
                       endTimestamp: contest.settings.endTimestamp,
                     };

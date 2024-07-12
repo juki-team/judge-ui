@@ -1,3 +1,4 @@
+import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import {
   ButtonLoader,
   CrawlCodeforcesProblemModal,
@@ -76,7 +77,7 @@ function Problems() {
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     getProblemKeyHeader(),
     getProblemNameHeader(false),
-    ...((judgeKey === Judge.JUKI_JUDGE || judgeKey === Judge.CUSTOMER) ? [
+    ...(!EXTERNAL_JUDGE_KEYS.includes(judgeKey) ? [
       getProblemModeHeader(),
       getProblemTypeHeader(),
       getProblemTagsHeader(tags),

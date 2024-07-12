@@ -13,14 +13,13 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { JUDGE, JUDGE_API_V1 } from 'config/constants';
+import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useTask, useTrackLastPath } from 'hooks';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
   HTTPMethod,
-  Judge,
   LastPathKey,
   ProblemDataResponseDTO,
   ProblemTab,
@@ -136,7 +135,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   ];
   
   const extraNodes = [];
-  if (problem.user?.isManager && !EXTERNAL_JUDGE_KEYS.includes(problem.judgeKey)) {
+  if (problem.user?.isManager && !EXTERNAL_JUDGE_KEYS.includes(problem.judge?.key)) {
     extraNodes.push(
       <Popover
         content={
@@ -193,7 +192,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         {<T>edit</T>}
       </ButtonLoader>,
     );
-  } else if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(problem.judgeKey as Judge) && user.isLogged) {
+  } else if (EXTERNAL_JUDGE_KEYS.includes(problem.judge?.key) && user.isLogged) {
     extraNodes.push(
       <ButtonLoader
         size="small"
@@ -203,7 +202,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           setLoaderStatus(Status.LOADING);
           const response = cleanRequest<ContentResponseType<string>>(
             await authorizedRequest(
-              JUDGE_API_V1.PROBLEM.RE_CRAWL_PROBLEM(problem.key),
+              jukiSettings.API.problem.reCrawl({ params: { key: problem.key } }).url,
               { method: HTTPMethod.POST },
             ),
           );
@@ -236,9 +235,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           >
             {problem.name}
           </h2>
-          {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(problem.judgeKey as Judge) && (
-            <div className="jk-tag warning">{JUDGE[problem.judgeKey as Judge].label}</div>
-          )}
+          <div className="jk-tag gray-6">{problem.judge?.name}</div>
           <ProblemInfo problem={problem} />
           <ProblemStatus {...problem.user} />
         </div>

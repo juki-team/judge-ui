@@ -29,7 +29,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   
   const { problems = {}, user } = contest;
   const { isManager, isAdministrator } = user || {};
-  const { searchParams, routeParams: { key: contestKey, index, tab } } = useJukiRouter();
+  const { routeParams: { key: contestKey, index, tab } } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { company: { key } } = useJukiUser();
@@ -192,12 +192,6 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       rows={{ height: 70 }}
       rowsView={viewPortSize !== 'sm'}
       name={QueryParam.CONTEST_PROBLEMS_TABLE + '-' + contest.key}
-      // onRecordClick={async ({ isCard, data, index }) => {
-      //   await pushRoute({
-      //     pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
-      //     searchParams,
-      //   });
-      // }}
       getRecordStyle={({ data, index, isCard }) => {
         if (isCard) {
           return { borderTop: '6px solid ' + data[index]?.color, cursor: 'pointer' };

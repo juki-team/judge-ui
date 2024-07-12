@@ -1,16 +1,16 @@
 import { EditCreateProblem, FetcherLayer, UpdateEntityLayout } from 'components';
 import { jukiSettings } from 'config';
+import { JUDGE_API_V1 } from 'config/constants';
 import { toUpsertProblemDTO } from 'helpers';
 import { useJukiRouter } from 'hooks';
 import { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
-import { JUDGE_API_V1 } from '../../../../config/constants';
 import Custom404 from '../../../404';
 
 function toUpsertWorksheetDTO(problem: ProblemDataResponseDTO): UpsertProblemUIDTO {
   return {
     author: problem.author,
     editorial: problem.editorial,
-    judgeKey: problem.judgeKey,
+    judgeKey: problem.judge?.key,
     members: problem.members,
     name: problem.name,
     settings: problem.settings,
