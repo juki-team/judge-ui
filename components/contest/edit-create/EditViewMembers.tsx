@@ -1,4 +1,4 @@
-import { DocumentCustomMembersContent, T, UserChip } from 'components';
+import { CAN_SEE_CONTEST, DocumentCustomMembersContent, T, UserChip } from 'components';
 import { isEndlessContest } from 'helpers';
 import { useJukiUser } from 'hooks';
 import React from 'react';
@@ -21,7 +21,7 @@ const PrintUsers = ({ members }: { members?: ContestDataResponseDTO['members']['
   );
 };
 
-export const EditViewMembers = ({ setContest, contest, editing }: EditViewMembersContestProps) => {
+export const EditViewMembers = ({ setContest, contest, editing = false }: EditViewMembersContestProps) => {
   
   const isEditing = !!setContest;
   const { company: { key } } = useJukiUser();
@@ -37,23 +37,83 @@ export const EditViewMembers = ({ setContest, contest, editing }: EditViewMember
   
   
   return (
-    <DocumentCustomMembersContent
-      members={contest.members}
-      setMembers={(setStateAction) => {
-        if (typeof setStateAction === 'function') {
-          setContest?.(prevState => ({ ...prevState, members: setStateAction(prevState.members) }));
-        } else {
-          setContest?.(prevState => ({ ...prevState, members: setStateAction }));
-        }
-      }}
-      documentOwner={contest.owner}
-      administrators
-      managers
-      participants
-      guests
-      spectators
-      labels={{ administrators: { description: 'oliwi' } }}
-    />
+    <div className="bc-we jk-br-ie jk-pg-sm">
+      <DocumentCustomMembersContent
+        members={contest.members}
+        setMembers={(setStateAction) => {
+          if (typeof setStateAction === 'function') {
+            setContest?.(prevState => ({ ...prevState, members: setStateAction(prevState.members) }));
+          } else {
+            setContest?.(prevState => ({ ...prevState, members: setStateAction }));
+          }
+        }}
+        documentOwner={contest.owner}
+        administrators={editing}
+        managers={editing}
+        participants={editing}
+        guests={editing}
+        spectators={editing}
+        labels={{
+          administrators: {
+            description: (
+              <>
+                <T className="tt-se">
+                  a administrator can change the parameters of the contest and see everything related to the contest.
+                </T>
+                <T className="tt-se">
+                  the person who creates the contest is administrator by default.
+                </T>
+              </>
+            ),
+          },
+          managers: {
+            name: 'judges',
+            description: (
+              <>
+                <T className="tt-se">
+                  {`a guest ${CAN_SEE_CONTEST}.`}
+                </T>
+                <T className="tt-se">
+                  a guest can register for the contest.
+                </T>
+              </>
+            ),
+          },
+          participants: {
+            name: 'contestants',
+            description: (
+              <>
+                <T className="tt-se">
+                  {`a contestant ${CAN_SEE_CONTEST}.`}
+                </T>
+                <T className="tt-se">
+                  a contestant can submit solutions on the problems.
+                </T>
+              </>
+            ),
+          },
+          guests: {
+            description: (
+              <>
+                <T className="tt-se">
+                  {`a guest ${CAN_SEE_CONTEST}.`}
+                </T>
+                <T className="tt-se">
+                  a guest can register for the contest.
+                </T>
+              </>
+            ),
+          },
+          spectators: {
+            description: (
+              <T className="tt-se">
+                {`a spectator ${CAN_SEE_CONTEST}.`}
+              </T>
+            ),
+          },
+        }}
+      />
+    </div>
   );
   /*
   return (

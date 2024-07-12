@@ -22,7 +22,7 @@ export const QuietInformation = (props: InformationProps) => {
   );
 };
 
-const CAN_SEE_CONTEST = 'can see the problems, the scoreboard, the submission list and the clarifications';
+export const CAN_SEE_CONTEST = 'can see the problems, the scoreboard, the submission list and the clarifications';
 
 export const GuestInformation = (props: InformationProps) => {
   return (

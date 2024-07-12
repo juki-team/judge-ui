@@ -109,6 +109,19 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
 };
 
 export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO => {
+  
+  const problems: UpsertContestDTO['problems'] = {};
+  for (const problem of Object.values(entity.problems)) {
+    problems[problem.key] = {
+      color: problem.color,
+      endTimestamp: problem.endTimestamp,
+      index: problem.index,
+      key: problem.key,
+      points: problem.points,
+      startTimestamp: problem.startTimestamp,
+    };
+  }
+  
   return {
     description: entity.description ?? '',
     members: {
@@ -124,7 +137,7 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
       spectators: Object.keys(entity.members.spectators),
     },
     name: entity.name ?? '',
-    problems: {},
+    problems,
     settings: {
       clarifications: entity.settings?.clarifications ?? false,
       numberJudgeValidations: entity.settings?.numberJudgeValidations ?? 0,
