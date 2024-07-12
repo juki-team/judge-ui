@@ -9,7 +9,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { _setFlags, TaskProvider, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
-import { AdminTab, AppProps, ContestsTab, FC, ImageCmpProps, Judge, LastPathKey, QueryParam } from 'types';
+import { AdminTab, AppProps, FC, ImageCmpProps, Judge, LastPathKey, QueryParam } from 'types';
 import { useRouter } from '../hooks/useRouter';
 import { useSearchParams } from '../hooks/useSearchParams';
 import i18nInstance from '../i18n';
@@ -73,11 +73,11 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       i18n={i18nInstance}
       initialLastPath={{
         [LastPathKey.SECTION_CONTEST]: {
-          pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
+          pathname: jukiSettings.ROUTES.contests().list(),
           searchParams: new URLSearchParams(''),
         },
         [LastPathKey.CONTESTS]: {
-          pathname: ROUTES.CONTESTS.LIST(ContestsTab.ALL),
+          pathname: jukiSettings.ROUTES.contests().list(),
           searchParams: new URLSearchParams(),
         },
         [LastPathKey.SECTION_PROBLEM]: {
