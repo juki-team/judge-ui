@@ -28,6 +28,7 @@ import { useFetcher } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   ContentResponseType,
+  JudgeDataResponseDTO,
   Language,
   ProblemScoringMode,
   ProblemSettingsByProgrammingLanguageType,
@@ -38,11 +39,15 @@ import {
   UpsertProblemUIDTO,
 } from 'types';
 
-export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: string[]) => void }) => {
+export const Tags = ({ tags, judgeKey, onChange }: {
+  tags: string[],
+  onChange: (newTags: string[]) => void,
+  judgeKey: string
+}) => {
   
-  const { data } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.judge.get({ params: { key: '' } }).url);
+  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO>>(jukiSettings.API.judge.getData({ params: { key: judgeKey } }).url);
   
-  const allTags = Array.from(new Set([ ...(data?.success ? data.content : []), ...tags ]));
+  const allTags = Array.from(new Set([ ...(data?.success ? data.content.problemTags : []), ...tags ]));
   
   return (
     <div className="jk-row nowrap gap extend">
@@ -57,7 +62,7 @@ export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: s
         options={allTags.map(tag => ({ value: tag, label: <T>{tag}</T> }))}
         selectedOptions={tags.map(value => ({ value }))}
         onChange={(tags) => {
-          onChange(tags.map(({ value }) => value));
+          onChange(tags.map(({ value }) => value).sort());
         }}
         extend
       />
@@ -456,7 +461,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             extend
           />
         </div>
-        <Tags tags={problem.tags} onChange={tags => setProblem({ ...problem, tags })} />
+        <Tags tags={problem.tags} judgeKey={problem.judgeKey} onChange={tags => setProblem({ ...problem, tags })} />
       </div>
     </div>
   );

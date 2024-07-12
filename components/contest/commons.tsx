@@ -1,26 +1,25 @@
-import { LinkCmpProps } from '@juki-team/base-ui';
 import { CheckIcon, DateLiteral, EventIcon, Field, GroupIcon, Popover, ScheduleIcon, T, Timer } from 'components';
-import { ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
 import { classNames } from 'helpers';
 import React, { FC, PropsWithChildren } from 'react';
 import {
-  ContestResponseDTO,
+  ContestDataResponseDTO,
   ContestSummaryListResponseDTO,
-  ContestTab,
   DataViewerHeadersType,
   JkTableHeaderFilterType,
+  LinkCmpProps,
 } from 'types';
 
-export const contestNameColumn = (auto: boolean, Link: FC<PropsWithChildren<LinkCmpProps>>): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
+export const contestNameColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>): DataViewerHeadersType<ContestSummaryListResponseDTO> => ({
   head: 'contest name',
   index: 'name',
   Field: ({ record: { name, key, user }, isCard }) => (
     <Field className="jk-row left block">
-      {user.isGuest || user.isAdmin || user.isContestant || user.isJudge || user.isSpectator ? (
-        <Link href={ROUTES.CONTESTS.VIEW(key, ContestTab.OVERVIEW)}>
+      {user.isGuest || user.isAdministrator || user.isParticipant || user.isManager || user.isSpectator ? (
+        <Link href={jukiSettings.ROUTES.contests().view({ key })}>
           <div className={classNames('gap nowrap link fw-bd space-between', { 'jk-col': isCard, 'jk-row': !isCard })}>
             <div style={{ textAlign: isCard ? undefined : 'left' }}>{name}</div>
-            {user.isAdmin ? (
+            {user.isAdministrator ? (
               <Popover
                 content={<T className="tt-se ws-np">you are admin</T>}
                 placement="top"
@@ -28,7 +27,7 @@ export const contestNameColumn = (auto: boolean, Link: FC<PropsWithChildren<Link
               >
                 <div className="jk-tag tx-s fw-bd letter-tag">A</div>
               </Popover>
-            ) : user.isJudge ? (
+            ) : user.isManager ? (
               <Popover
                 content={<T className="tt-se ws-np">you are judge</T>}
                 placement="top"
@@ -36,7 +35,7 @@ export const contestNameColumn = (auto: boolean, Link: FC<PropsWithChildren<Link
               >
                 <div className="jk-tag tx-s fw-bd letter-tag">J</div>
               </Popover>
-            ) : user.isContestant ? (
+            ) : user.isParticipant ? (
               <Popover
                 content={<T className="tt-se ws-np">registered</T>}
                 placement="top"
@@ -70,8 +69,8 @@ export const contestNameColumn = (auto: boolean, Link: FC<PropsWithChildren<Link
       )}
     </Field>
   ),
-  sort: auto ? { compareFn: () => (rowA, rowB) => rowB.name.localeCompare(rowA.name) } : true,
-  filter: { type: auto ? 'text-auto' : 'text' } as JkTableHeaderFilterType<ContestSummaryListResponseDTO>,
+  sort: true,
+  filter: { type: 'text' } as JkTableHeaderFilterType<ContestSummaryListResponseDTO>,
   cardPosition: 'center',
   minWidth: 320,
 });
@@ -170,7 +169,7 @@ export const contestantsColumn = (): DataViewerHeadersType<ContestSummaryListRes
   cardPosition: 'bottom',
 });
 
-export const getContestTimeLiteral = (contest: ContestResponseDTO) => {
+export const getContestTimeLiteral = (contest: ContestDataResponseDTO) => {
   let timeInterval = 0;
   if (contest.isEndless) {
     timeInterval = -1;

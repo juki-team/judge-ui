@@ -9,6 +9,7 @@ export enum QueryParam {
   ECS_DEFINITIONS_TASK_TABLE = 'edt',
   ECS_TASKS_TABLE = 'ett',
   LOGGED_USERS_TABLE = 'lut',
+  CONTEST_PROBLEMS_TABLE = 'cpt',
   // contests
   ALL_CONTESTS_TABLE = 'act',
   ENDLESS_CONTESTS_TABLE = 'ect',
@@ -59,20 +60,6 @@ export enum ServicesManagementTab {
   FILES_MANAGEMENT = 'files-management',
   VIRTUAL_SUBMISSIONS_QUEUE = 'virtual-submissions-queue',
   VIRTUAL_USERS = 'virtual-users',
-}
-
-export enum ContestTab {
-  OVERVIEW = 'overview',
-  PROBLEMS = 'problems',
-  PROBLEM = 'problem',
-  SCOREBOARD = 'scoreboard',
-  DYNAMIC_SCOREBOARD = 'dynamic-scoreboard',
-  MY_SUBMISSIONS = 'my-submissions',
-  CLARIFICATIONS = 'clarifications',
-  SUBMISSIONS = 'submissions',
-  SETUP = 'setup',
-  // JUDGE = 'judge',
-  MEMBERS = 'members',
 }
 
 export enum ContestsTab {

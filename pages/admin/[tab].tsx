@@ -78,7 +78,7 @@ function Admin() {
       breadcrumbs={breadcrumbs}
       tabs={tabs}
       selectedTabKey={selectedTabKey}
-      getPathname={tabKey => ROUTES.ADMIN.PAGE(tabKey)}
+      getHrefOnTabChange={tabKey => ROUTES.ADMIN.PAGE(tabKey)}
       loading={isLoading}
     >
       <div className="jk-row-col extend">

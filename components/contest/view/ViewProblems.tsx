@@ -1,5 +1,3 @@
-import { jukiSettings } from '@juki-team/base-ui';
-import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import {
   ButtonLoader,
   CheckIcon,
@@ -11,14 +9,14 @@ import {
   TextField,
   TextHeadCell,
 } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
+import { DEFAULT_DATA_VIEWER_PROPS, EXTERNAL_JUDGE_KEYS, JUDGE_API_V1, JUKI_APP_COMPANY_KEY } from 'config/constants';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { useMemo } from 'react';
 import {
   ContentResponseType,
-  ContestProblemType,
-  ContestResponseDTO,
+  ContestDataResponseDTO,
   ContestTab,
   DataViewerHeadersType,
   HTTPMethod,
@@ -27,174 +25,173 @@ import {
   SubmissionRunStatus,
 } from 'types';
 
-export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
+export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   const { problems = {}, user } = contest;
-  const { isJudge, isAdmin } = user || {};
+  const { isManager, isAdministrator } = user || {};
   const { searchParams, routeParams: { key: contestKey, index, tab } } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { company: { key } } = useJukiUser();
-  const isJudgeOrAdmin = isJudge || isAdmin;
+  const isJudgeOrAdmin = isManager || isAdministrator;
   const isCustomCompany = key !== JUKI_APP_COMPANY_KEY;
   
-  const columns = useMemo(() => {
-    return [
-      {
-        head: <TextHeadCell text={<T>index</T>} />,
-        index: 'index',
-        Field: ({ record: { myAttempts, mySuccess, index, color }, isCard }) => (
-          <Field className="jk-row">
-            <div>
-              <div
-                className={'fw-br problem-index bc-g6 jk-border-radius-inline pn-re' +
-                  (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
-              >
-                {!!myAttempts && (mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
-                {index}
-              </div>
-              {!isCard && (
-                <div style={{ position: 'absolute', width: 8, height: '100%', top: 0, left: 0, background: color }} />
-              )}
+  const columns = useMemo(() => [
+    {
+      head: <TextHeadCell text={<T>index</T>} />,
+      index: 'index',
+      Field: ({ record: { myAttempts, mySuccess, index, color }, isCard }) => (
+        <Field className="jk-row">
+          <div>
+            <div
+              className={'fw-br problem-index bc-g6 jk-border-radius-inline pn-re' +
+                (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
+            >
+              {!!myAttempts && (mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}
+              {index}
             </div>
-          </Field>
-        ),
-        sort: { compareFn: () => (recordA, recordB) => lettersToIndex(recordB.index) - lettersToIndex(recordA.index) },
-        cardPosition: isJudgeOrAdmin ? 'topLeft' : 'top',
-        minWidth: 48,
-      } as DataViewerHeadersType<ContestProblemType>,
-      ...(isJudgeOrAdmin ? [
-        {
-          head: <TextHeadCell text={<T>id</T>} />,
-          index: 'id',
-          Field: ({ record: { judgeKey, key }, isCard }) => (
-            <TextField
-              text={
-                isJudgeOrAdmin
-                  ? (
-                    <Link
-                      href={EXTERNAL_JUDGE_KEYS.includes(judgeKey)
-                        ? jukiSettings.ROUTES.problems(`https://judge.juki.app`).view({ key })
-                        : jukiSettings.ROUTES.problems(`https://${judgeKey}.jukijudge.com`).view({ key })
-                      }
-                      target="_blank"
-                    >
-                      <div className="jk-row gap link">
-                        <div className="fw-bd cr-g3 jk-col">
-                          {isCustomCompany ? judgeKey : ''}
-                          <div>{key}</div>
-                        </div>
-                        <OpenInNewIcon size="tiny" />
-                      </div>
-                    </Link>
-                  ) : (
-                    <div className="jk-row gap">
+            {!isCard && (
+              <div style={{ position: 'absolute', width: 8, height: '100%', top: 0, left: 0, background: color }} />
+            )}
+          </div>
+        </Field>
+      ),
+      sort: { compareFn: () => (recordA, recordB) => lettersToIndex(recordB.index) - lettersToIndex(recordA.index) },
+      cardPosition: isJudgeOrAdmin ? 'topLeft' : 'top',
+      minWidth: 48,
+    },
+    ...(isJudgeOrAdmin ? [
+      {
+        head: <TextHeadCell text={<T>id</T>} />,
+        index: 'id',
+        Field: ({ record: { judgeKey, key }, isCard }) => (
+          <TextField
+            text={
+              isJudgeOrAdmin
+                ? (
+                  <Link
+                    href={EXTERNAL_JUDGE_KEYS.includes(judgeKey)
+                      ? jukiSettings.ROUTES.problems(`https://judge.juki.app`).view({ key })
+                      : jukiSettings.ROUTES.problems(`https://${judgeKey}.jukijudge.com`).view({ key })
+                    }
+                    target="_blank"
+                  >
+                    <div className="jk-row gap link">
                       <div className="fw-bd cr-g3 jk-col">
                         {isCustomCompany ? judgeKey : ''}
                         <div>{key}</div>
                       </div>
                       <OpenInNewIcon size="tiny" />
                     </div>
-                  )
-              }
-              label={<T>id</T>}
-            />
-          ),
-          sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
-          cardPosition: 'topRight',
-          minWidth: 48,
-        } as DataViewerHeadersType<ContestProblemType>,
-      ] : []),
-      {
-        head: <TextHeadCell text={<T>name</T>} />,
-        index: 'name',
-        Field: ({ record: { name, index, judgeKey, key }, isCard }) => (
-          <Field className="jk-col">
-            <Link
-              href={{
-                pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, index),
-                search: searchParams.toString(),
-              }}
-            >
-              <div className="link fw-bd">{name}</div>
-            </Link>
-            {isJudgeOrAdmin && (
-              <ButtonLoader
-                onClick={async (setLoaderStatus, loaderStatus, event) => {
-                  setLoaderStatus(Status.LOADING);
-                  const result = cleanRequest<ContentResponseType<{
-                    listCount: number,
-                    status: SubmissionRunStatus.RECEIVED
-                  }>>(
-                    await authorizedRequest(
-                      JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, key),
-                      { method: HTTPMethod.POST },
-                    ),
-                  );
-                  if (result.success) {
-                    addSuccessNotification(
-                      <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
-                    );
-                    setLoaderStatus(Status.SUCCESS);
-                  } else {
-                    addErrorNotification(
-                      <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
-                    );
-                    setLoaderStatus(Status.ERROR);
-                  }
-                }}
-                size="tiny"
-                type="light"
-              >
-                <T>rejudge problem</T>
-              </ButtonLoader>
-            )}
-          </Field>
-        ),
-        sort: { compareFn: () => (recordA, recordB) => recordB.name.localeCompare(recordA.name) },
-        cardPosition: 'center',
-        minWidth: 128,
-      } as DataViewerHeadersType<ContestProblemType>,
-      {
-        head: <TextHeadCell text={<T>points</T>} />,
-        index: 'points',
-        Field: ({ record: { points }, isCard }) => (
-          <TextField text={points} label={<T className="tt-se">points</T>} />
-        ),
-        sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
-        cardPosition: 'bottomLeft',
-        minWidth: 64,
-      } as DataViewerHeadersType<ContestProblemType>,
-      {
-        head: <TextHeadCell text={<T>success rate</T>} />,
-        index: 'success-rate',
-        Field: ({ record: { totalAttempts, totalSuccess }, isCard }) => (
-          <TextField
-            text={totalAttempts ? (totalSuccess / totalAttempts * 100).toFixed(1) + ' %' : '-'}
-            label={<T className="tt-se">success rate</T>}
+                  </Link>
+                ) : (
+                  <div className="jk-row gap">
+                    <div className="fw-bd cr-g3 jk-col">
+                      {isCustomCompany ? judgeKey : ''}
+                      <div>{key}</div>
+                    </div>
+                    <OpenInNewIcon size="tiny" />
+                  </div>
+                )
+            }
+            label={<T>id</T>}
           />
         ),
-        sort: {
-          compareFn: () => (recordA, recordB) => {
-            const A = recordA.totalAttempts ? recordA.totalSuccess / recordA.totalAttempts : -1;
-            const B = recordB.totalAttempts ? recordB.totalSuccess / recordB.totalAttempts : -1;
-            return B - A;
-          },
+        sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
+        cardPosition: 'topRight',
+        minWidth: 48,
+      },
+    ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[] : []),
+    {
+      head: <TextHeadCell text={<T>name</T>} />,
+      index: 'name',
+      Field: ({ record: { name, index, judgeKey, key }, isCard }) => (
+        <Field className="jk-col">
+          <Link
+            href={jukiSettings.ROUTES.contests().view({
+              key: contestKey as string,
+              tab: ContestTab.PROBLEM,
+              subTab: index,
+            })}
+          >
+            <div className="link fw-bd">{name}</div>
+          </Link>
+          {isJudgeOrAdmin && (
+            <ButtonLoader
+              onClick={async (setLoaderStatus, loaderStatus, event) => {
+                setLoaderStatus(Status.LOADING);
+                const result = cleanRequest<ContentResponseType<{
+                  listCount: number,
+                  status: SubmissionRunStatus.RECEIVED
+                }>>(
+                  await authorizedRequest(
+                    JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, key),
+                    { method: HTTPMethod.POST },
+                  ),
+                );
+                if (result.success) {
+                  addSuccessNotification(
+                    <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
+                  );
+                  setLoaderStatus(Status.SUCCESS);
+                } else {
+                  addErrorNotification(
+                    <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
+                  );
+                  setLoaderStatus(Status.ERROR);
+                }
+              }}
+              size="tiny"
+              type="light"
+            >
+              <T>rejudge problem</T>
+            </ButtonLoader>
+          )}
+        </Field>
+      ),
+      sort: { compareFn: () => (recordA, recordB) => recordB.name.localeCompare(recordA.name) },
+      cardPosition: 'center',
+      minWidth: 128,
+    },
+    {
+      head: <TextHeadCell text={<T>points</T>} />,
+      index: 'points',
+      Field: ({ record: { points }, isCard }) => (
+        <TextField text={points} label={<T className="tt-se">points</T>} />
+      ),
+      sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
+      cardPosition: 'bottomLeft',
+      minWidth: 64,
+    },
+    {
+      head: <TextHeadCell text={<T>success rate</T>} />,
+      index: 'success-rate',
+      Field: ({ record: { totalAttempts, totalSuccess }, isCard }) => (
+        <TextField
+          text={totalAttempts ? (totalSuccess / totalAttempts * 100).toFixed(1) + ' %' : '-'}
+          label={<T className="tt-se">success rate</T>}
+        />
+      ),
+      sort: {
+        compareFn: () => (recordA, recordB) => {
+          const A = recordA.totalAttempts ? recordA.totalSuccess / recordA.totalAttempts : -1;
+          const B = recordB.totalAttempts ? recordB.totalSuccess / recordB.totalAttempts : -1;
+          return B - A;
         },
-        cardPosition: 'bottomRight',
-        minWidth: 64,
-      } as DataViewerHeadersType<ContestProblemType>,
-    ];
-  }, [ isJudgeOrAdmin, contestKey, searchParams, addSuccessNotification, addErrorNotification, Link, isCustomCompany ]);
+      },
+      cardPosition: 'bottomRight',
+      minWidth: 64,
+    },
+  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contestKey, addSuccessNotification, addErrorNotification, Link, isCustomCompany ]);
   const data = Object.values(problems);
   
   return (
-    <DataViewer<ContestProblemType>
+    <DataViewer<ContestDataResponseDTO['problems'][string]>
       headers={columns}
       data={data}
       rows={{ height: 70 }}
       rowsView={viewPortSize !== 'sm'}
-      name={QueryParam.ALL_USERS_TABLE}
+      name={QueryParam.CONTEST_PROBLEMS_TABLE + '-' + contest.key}
       // onRecordClick={async ({ isCard, data, index }) => {
       //   await pushRoute({
       //     pathname: ROUTES.CONTESTS.VIEW(key, ContestTab.PROBLEM, data[index].index),
@@ -208,6 +205,8 @@ export const ViewProblems = ({ contest }: { contest: ContestResponseDTO }) => {
         return { cursor: 'pointer' };
       }}
       cards={{ height: 200 }}
+      initializing={false}
+      setLoaderStatusRef={setLoaderStatus => setLoaderStatus(Status.NONE)}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

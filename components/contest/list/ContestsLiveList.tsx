@@ -11,7 +11,7 @@ export const ContestsLiveList = () => {
   const { components: { Link } } = useJukiUI();
   
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
-    contestNameColumn(false, Link),
+    contestNameColumn(Link),
     contestStartDateColumn(),
     contestEndDateColumn(),
     contestantsColumn(),

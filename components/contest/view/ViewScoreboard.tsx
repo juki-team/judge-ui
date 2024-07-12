@@ -28,7 +28,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
-  ContestResponseDTO,
+  ContestDataResponseDTO,
   ContestTab,
   DataViewerHeadersType,
   HTTPMethod,
@@ -41,7 +41,7 @@ import { getContestTimeLiteral } from '../commons';
 
 interface DownloadButtonProps {
   data: ScoreboardResponseDTO[],
-  contest: ContestResponseDTO,
+  contest: ContestDataResponseDTO,
   disabled: boolean
 }
 
@@ -56,9 +56,9 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
   const body = data.map(user => {
     const base = [
       user.position,
-      user.userNickname,
-      user.userGivenName,
-      user.userFamilyName,
+      user.user.nickname,
+      user.user.givenName,
+      user.user.familyName,
       (user.totalPoints).toFixed(2),
       Math.round(user.totalPenalty),
     ];
@@ -110,7 +110,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
   );
 };
 
-export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDTO, mutate: KeyedMutator<any> }) => {
+export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataResponseDTO, mutate: KeyedMutator<any> }) => {
   
   const { user, company: { imageUrl, name } } = useJukiUser();
   const { notifyResponse } = useJukiNotification();
@@ -131,17 +131,17 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
       {
         head: 'nickname',
         index: 'nickname',
-        Field: ({ record: { userNickname, userImageUrl } }) => (
-          <Field className={classNames('jk-row center gap', { 'own': userNickname === user.nickname })}>
-            <Image src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} height={38} width={38} />
-            <UserNicknameLink nickname={userNickname}>
+        Field: ({ record: { user: { nickname, imageUrl } } }) => (
+          <Field className={classNames('jk-row center gap', { 'own': nickname === user.nickname })}>
+            <Image src={imageUrl} className="jk-user-profile-img large" alt={nickname} height={38} width={38} />
+            <UserNicknameLink nickname={nickname}>
               <div
                 className={classNames('jk-border-radius ', {
-                  'bc-py cr-we fw-br': userNickname === user.nickname,
-                  'link': userNickname !== user.nickname,
+                  'bc-py cr-we fw-br': nickname === user.nickname,
+                  'link': nickname !== user.nickname,
                 })}
               >
-                {userNickname}
+                {nickname}
               </div>
             </UserNicknameLink>
           </Field>
@@ -262,7 +262,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
             <div className="cr-er"><GearsIcon /></div>
           </Tooltip>
         ),
-        ((contest?.user?.isAdmin || contest?.user?.isJudge) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
+        ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
           <div className="jk-row">
             <Button
               size="tiny"
@@ -274,7 +274,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
             </Button>
           </div>
         ),
-        (contest?.user?.isAdmin) && (
+        (contest?.user?.isAdministrator) && (
           <div className="jk-row">
             <ButtonLoader
               size="tiny"
@@ -283,7 +283,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
                 const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    contest?.settings.scoreboardLocked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contestKey as string) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contestKey as string),
+                    contest?.settings.locked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contestKey as string) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contestKey as string),
                     { method: HTTPMethod.POST },
                   ),
                 );
@@ -291,11 +291,11 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestResponseDT
                 notifyResponse(response, setLoaderStatus);
               }}
             >
-              <T>{contest?.settings.scoreboardLocked ? 'unlock' : 'lock'}</T>
+              <T>{contest?.settings.locked ? 'unlock' : 'lock'}</T>
             </ButtonLoader>
           </div>
         ),
-        (contest?.user?.isAdmin || contest?.user?.isJudge) && (
+        (contest?.user?.isAdministrator || contest?.user?.isManager) && (
           <div className="jk-row">
             <ButtonLoader
               size="tiny"

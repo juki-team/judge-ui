@@ -3,7 +3,7 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUI, useRef } from 'hooks';
 import { useMemo } from 'react';
-import { ContestResponseDTO, DataViewerHeadersType, QueryParam, Status, SubmissionDataResponseDTO } from 'types';
+import { ContestDataResponseDTO, DataViewerHeadersType, QueryParam, Status, SubmissionDataResponseDTO } from 'types';
 import { downloadBlobAsFile } from '../../../helpers';
 import { HTTPMethod } from '../../../types';
 import {
@@ -17,7 +17,7 @@ import {
   submissionVerdictColumn,
 } from '../../submissions/helpers';
 
-export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDTO }) => {
+export const ViewProblemSubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   const { components: { Link, Image } } = useJukiUI();
   
@@ -38,11 +38,11 @@ export const ViewProblemSubmissions = ({ contest }: { contest: ContestResponseDT
     }),
     submissionDateColumn(),
     submissionVerdictColumn(),
-    ...(contest.user.isJudge || contest.user.isAdmin ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
+    ...(contest.user.isManager || contest.user.isAdministrator ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
-  ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge, Link, Image ]);
+  ], [ contest.problems, contest.user.isAdministrator, contest.user.isManager, Link, Image ]);
   
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   

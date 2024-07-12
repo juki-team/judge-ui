@@ -3,7 +3,7 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUI, useJukiUser } from 'hooks';
 import { useMemo } from 'react';
-import { ContestResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
+import { ContestDataResponseDTO, DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
   submissionActionsColumn,
   submissionDateColumn,
@@ -14,7 +14,7 @@ import {
   submissionVerdictColumn,
 } from '../../submissions/helpers';
 
-export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponseDTO }) => {
+export const ViewProblemMySubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   const { user: { nickname } } = useJukiUser();
   const { components: { Link } } = useJukiUI();
@@ -35,11 +35,11 @@ export const ViewProblemMySubmissions = ({ contest }: { contest: ContestResponse
     }),
     submissionDateColumn(),
     submissionVerdictColumn(),
-    ...(contest.user.isJudge || contest.user.isAdmin ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
+    ...(contest.user.isManager || contest.user.isAdministrator ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
     submissionLanguage(),
     submissionTimeUsed(),
     submissionMemoryUsed(),
-  ], [ contest.problems, contest.user.isAdmin, contest.user.isJudge, Link ]);
+  ], [ contest.problems, contest.user.isAdministrator, contest.user.isManager, Link ]);
   
   return (
     <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>

@@ -14,7 +14,7 @@ import { jukiSettings } from 'config';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { PropsWithChildren } from 'react';
-import { ContestsTab, LastPathKey, MenuType, ProfileSetting, QueryParam, QueryParamKey, Theme } from 'types';
+import { LastPathKey, MenuType, ProfileSetting, QueryParam, QueryParamKey, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
@@ -44,7 +44,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       menuItemWrapper: ({ children }) => (
         <LinkLastPath
           lastPathKey={LastPathKey.SECTION_CONTEST}
-          onDoubleClickRoute={ROUTES.CONTESTS.LIST(ContestsTab.ALL)}
+          onDoubleClickRoute={jukiSettings.ROUTES.contests().list()}
         >
           {children}
         </LinkLastPath>

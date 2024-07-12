@@ -5,7 +5,6 @@ import {
   CustomHead,
   EditIcon,
   EditViewMembers,
-  LinkLastPath,
   NavigateBeforeIcon,
   NavigateNextIcon,
   ProblemView,
@@ -17,31 +16,22 @@ import {
   ViewProblemMySubmissions,
   ViewProblems,
 } from 'components';
-import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
-import { parseContest, renderReactNodeOrFunctionP1 } from 'helpers';
-import {
-  useContestRouter,
-  useJukiNotification,
-  useJukiRouter,
-  useJukiUI,
-  useJukiUser,
-  useT,
-  useTask,
-  useTrackLastPath,
-} from 'hooks';
+import { jukiSettings } from 'config';
+import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
+import { renderReactNodeOrFunctionP1, toUpsertContestDTOUI } from 'helpers';
+import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useT, useTask, useTrackLastPath } from 'hooks';
 import React, { ReactNode } from 'react';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
-  ContestResponseDTO,
+  ContestDataResponseDTO,
   ContestTab,
-  EditCreateContestType,
   LastPathKey,
   Status,
   TabsType,
+  UpsertContestDTOUI,
 } from 'types';
 import { authorizedRequest, cleanRequest } from '../../../helpers';
-import { HTTPMethod } from '../../../types';
 import { FirstLoginWrapper } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
@@ -49,11 +39,13 @@ import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
 import { ViewProblemSubmissions } from './ViewProblemSubmissions';
 import { ViewScoreboard } from './ViewScoreboard';
 
-export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, mutate: KeyedMutator<any> }) {
+export function ContestView({ contest, mutate }: { contest: ContestDataResponseDTO, mutate: KeyedMutator<any> }) {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  const { pushRoute, searchParams } = useJukiRouter();
-  const { pushTab, contestKey, problemIndex, contestTab } = useContestRouter();
+  const { pushRoute, searchParams, routeParams: { key: _contestKey } } = useJukiRouter();
+  const contestKey = _contestKey as string;
+  const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
+  const problemIndex = searchParams.get('subTab') || '';
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { user: { permissions: { canCreateContest } } } = useJukiUser();
   const { t } = useT();
@@ -61,7 +53,7 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
   const { addWarningNotification, notifyResponse } = useJukiNotification();
   
   const {
-    user: { isAdmin, isJudge, isContestant, isGuest, isSpectator },
+    user: { isAdministrator, isManager, isParticipant, isGuest, isSpectator },
   } = contest;
   const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
   const statusLabel = contestStateMap[key].label;
@@ -82,12 +74,12 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     },
   };
   
-  if (isAdmin || isJudge || contest.isLive || contest.isPast || contest.isEndless) {
+  if (isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless) {
     const problems = Object.values(contest.problems);
     problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
     const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
+    const problem = problems[problemArrayIndex];
     if (problemArrayIndex !== -1) {
-      const problem = problems[problemArrayIndex];
       tabHeaders[ContestTab.PROBLEM] = {
         key: ContestTab.PROBLEM,
         header: (
@@ -98,10 +90,11 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
               onClick={async (event) => {
                 event.stopPropagation();
                 const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
-                await pushRoute({
-                  pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, previousProblemIndex),
-                  searchParams,
-                });
+                pushRoute(jukiSettings.ROUTES.contests().view({
+                  key: contest.key,
+                  tab: ContestTab.PROBLEM,
+                  subTab: previousProblemIndex,
+                }));
               }}
             />
             <T className="tt-ce ws-np">problem</T> {problemIndex}
@@ -111,10 +104,11 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
               onClick={async (event) => {
                 event.stopPropagation();
                 const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
-                await pushRoute({
-                  pathname: ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, nextProblemIndex),
-                  searchParams,
-                });
+                pushRoute(jukiSettings.ROUTES.contests().view({
+                  key: contest.key,
+                  tab: ContestTab.PROBLEM,
+                  subTab: nextProblemIndex,
+                }));
               }}
             />
           </div>
@@ -132,15 +126,22 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
                   disabled={sourceCode === ''}
                   onClick={async setLoaderStatus => {
                     setLoaderStatus(Status.LOADING);
+                    const { url, ...options } = jukiSettings.API.contest.submit({
+                      params: {
+                        key: contest.key,
+                        problemKey: problem.key,
+                      }, body: { language: language as string, source: sourceCode },
+                    });
                     const response = cleanRequest<ContentResponseType<any>>(
-                      await authorizedRequest(
-                        JUDGE_API_V1.CONTEST.SUBMIT(contest.key, problem.key),
-                        { method: HTTPMethod.POST, body: JSON.stringify({ language, source: sourceCode }) },
-                      ),
+                      await authorizedRequest(url, options),
                     );
                     if (notifyResponse(response, setLoaderStatus)) {
                       listenSubmission(response.content.submitId, problem.key);
-                      pushTab(ContestTab.MY_SUBMISSIONS);
+                      pushRoute(jukiSettings.ROUTES.contests().view({
+                        key: contestKey,
+                        tab: ContestTab.MY_SUBMISSIONS,
+                        subTab: problemIndex,
+                      }));
                       // TODO fix the filter Url param
                       // await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(
                       //   contestKey,
@@ -153,10 +154,10 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
                     }
                   }}
                 >
-                  {isAdmin || isJudge ? <T>submit as judge</T> : <T>submit</T>}
+                  {isAdministrator || isManager ? <T>submit as judge</T> : <T>submit</T>}
                 </ButtonLoader>
               );
-              if (isAdmin || isJudge || isContestant) {
+              if (isAdministrator || isManager || isParticipant) {
                 return (
                   <FirstLoginWrapper>
                     {validSubmit}
@@ -170,7 +171,11 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
                     size="tiny"
                     onClick={() => {
                       addWarningNotification(<T className="tt-se">to submit, first register</T>);
-                      pushTab(ContestTab.OVERVIEW);
+                      pushRoute(jukiSettings.ROUTES.contests().view({
+                        key: contestKey,
+                        tab: ContestTab.OVERVIEW,
+                        subTab: problemIndex,
+                      }));
                     }}
                   >
                     <T>submit</T>
@@ -204,7 +209,7 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     };
   }
   
-  if (isAdmin || isJudge || !contest.settings.scoreboardLocked) {
+  if (isAdministrator || isManager || !contest.settings.locked) {
     tabHeaders[ContestTab.DYNAMIC_SCOREBOARD] = {
       key: ContestTab.DYNAMIC_SCOREBOARD,
       header: <T className="tt-ce ws-np">dynamic scoreboard</T>,
@@ -212,12 +217,12 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     };
   }
   
-  if (isAdmin ||
-    isJudge ||
+  if (isAdministrator ||
+    isManager ||
     (
       (
         contest.isLive || contest.isPast || contest.isEndless
-      ) && isContestant
+      ) && isParticipant
     )) {
     tabHeaders[ContestTab.MY_SUBMISSIONS] = {
       key: ContestTab.MY_SUBMISSIONS,
@@ -226,7 +231,7 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     };
   }
   
-  if (isAdmin || isJudge || contest.isLive || contest.isPast || contest.isEndless) {
+  if (isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless) {
     tabHeaders[ContestTab.SUBMISSIONS] = {
       key: ContestTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,
@@ -242,15 +247,12 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     };
   }
   
-  if (isAdmin || isJudge || contest.isPast || contest.isEndless) {
+  if (isAdministrator || isManager || contest.isPast || contest.isEndless) {
     tabHeaders[ContestTab.MEMBERS] = {
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,
       body: (
-        <EditViewMembers
-          contest={contest as unknown as EditCreateContestType}
-          membersToView={contest.members}
-        />
+        <EditViewMembers contest={contest as unknown as UpsertContestDTOUI} />
       ),
     };
   }
@@ -272,13 +274,13 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
         size="small"
         onClick={async setLoaderStatus => {
           setLoaderStatus(Status.LOADING);
-          const { key, name, ...parsedContest } = parseContest(contest);
+          const { name, ...parsedContest } = toUpsertContestDTOUI(contest);
           localStorage.setItem(LS_INITIAL_CONTEST_KEY, JSON.stringify({
             ...parsedContest,
             key: `${key}-${t('copy')}`,
             name: `${name} (${t('COPY')})`,
           }));
-          await pushRoute(ROUTES.CONTESTS.CREATE());
+          pushRoute(jukiSettings.ROUTES.contests().new());
           setLoaderStatus(Status.SUCCESS);
         }}
         icon={<CopyIcon />}
@@ -290,13 +292,13 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     );
   }
   
-  if (isAdmin) {
+  if (isAdministrator) {
     extraNodes.push(
       <ButtonLoader
         size="small"
         onClick={async setLoaderStatus => {
           setLoaderStatus(Status.LOADING);
-          await pushRoute(ROUTES.CONTESTS.EDIT(contestKey));
+          pushRoute(jukiSettings.ROUTES.contests().edit({ key: contestKey }));
           setLoaderStatus(Status.SUCCESS);
         }}
         icon={<EditIcon />}
@@ -308,14 +310,15 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
   }
   
   const breadcrumbs: ReactNode[] = [
-    <LinkLastPath
-      lastPathKey={LastPathKey.CONTESTS}
-      key="contests"
+    <Link
+      href={jukiSettings.ROUTES.contests().list()}
+      className="link"
+      key="contest.name"
     >
       <T className="tt-se">contests</T>
-    </LinkLastPath>,
+    </Link>,
     <Link
-      href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query: searchParams.toString() }}
+      href={jukiSettings.ROUTES.contests().view({ key: contestKey, tab: ContestTab.OVERVIEW, subTab: problemIndex })}
       className="link"
       key="contest.name"
     >
@@ -325,10 +328,10 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
   if (contestTab === ContestTab.PROBLEM) {
     breadcrumbs.push(
       <Link
-        href={{
-          pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.PROBLEMS),
-          query: searchParams.toString(),
-        }}
+        href={jukiSettings.ROUTES.contests().view({
+          key: contestKey,
+          tab: ContestTab.PROBLEMS,
+        })}
         className="link"
       >
         <T className="tt-se">problems</T>
@@ -339,12 +342,13 @@ export function ContestView({ contest, mutate }: { contest: ContestResponseDTO, 
     breadcrumbs.push(renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }));
   }
   
+  console.log({ contestTab });
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
       selectedTabKey={contestTab}
-      getPathname={tab => ROUTES.CONTESTS.VIEW('' + contestKey, tab, problemIndex || undefined)}
+      getHrefOnTabChange={tab => jukiSettings.ROUTES.contests().view({ key: contestKey, tab, subTab: problemIndex })}
       tabButtons={extraNodes}
     >
       <div>

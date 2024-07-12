@@ -19,13 +19,13 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
 import { useDateFormat, useFetcher, useJukiNotification, useJukiRouter, useJukiUI } from 'hooks';
 import React, { useState } from 'react';
-import { ContentResponseType, ContestResponseDTO, HTTPMethod, Status } from 'types';
+import { ContentResponseType, ContestDataResponseDTO, HTTPMethod, Status } from 'types';
 
-export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO }) => {
+export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   const { routeParams } = useJukiRouter();
   const { dtf } = useDateFormat();
-  const { isAdmin, isContestant, isJudge } = contest.user;
+  const { isAdministrator, isParticipant, isManager } = contest.user;
   const [ clarification, setClarification ] = useState<null | {
     clarificationId: string,
     problemJudgeKey: string,
@@ -36,12 +36,12 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
   const { notifyResponse } = useJukiNotification();
   const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(routeParams.key as string));
   const { components: { Image } } = useJukiUI();
-  const isJudgeOrAdmin = isJudge || isAdmin;
+  const isJudgeOrAdmin = isManager || isAdministrator;
   
   return (
     <div className="jk-col top jk-pg-md nowrap">
       <div className="jk-row">
-        {(isJudgeOrAdmin || isContestant) && (
+        {(isJudgeOrAdmin || isParticipant) && (
           isJudgeOrAdmin ? (
             <Button
               icon={<NotificationsActiveIcon />}
@@ -56,7 +56,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
             >
               <T className="tt-se fw-bd">send clarification</T>
             </Button>
-          ) : isContestant && (
+          ) : isParticipant && (
             <Button
               icon={<NotificationsActiveIcon />}
               size="small"
@@ -252,7 +252,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestResponseDTO })
                       answer: clarification.answer,
                       public: clarification.public,
                     };
-                  } else if (isContestant) {
+                  } else if (isParticipant) {
                     payload = {
                       problemJudgeKey: clarification.problemJudgeKey,
                       question: clarification.question,

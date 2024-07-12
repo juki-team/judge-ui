@@ -18,7 +18,7 @@ import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser } from 'h
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
-  ContestResponseDTO,
+  ContestDataResponseDTO,
   ContestTab,
   DataViewerHeadersType,
   KeyedMutator,
@@ -32,7 +32,7 @@ interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTO {
 }
 
 export const ViewDynamicScoreboard = ({ contest, mutate }: {
-  contest: ContestResponseDTO,
+  contest: ContestDataResponseDTO,
   mutate: KeyedMutator<any>
 }) => {
   
@@ -54,22 +54,22 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       {
         head: 'nickname',
         index: 'nickname',
-        Field: ({ record: { userNickname, userImageUrl, focus } }) => (
+        Field: ({ record: { user: { nickname, imageUrl, companyKey }, focus } }) => (
           <Field
             className={classNames('jk-row center gap', {
-              'own': userNickname === user.nickname,
+              'own': nickname === user.nickname,
               highlight: !!focus?.length,
             })}
           >
-            <Image src={userImageUrl} className="jk-user-profile-img large" alt={userNickname} height={38} width={38} />
-            <UserNicknameLink nickname={userNickname}>
+            <Image src={imageUrl} className="jk-user-profile-img large" alt={nickname} height={38} width={38} />
+            <UserNicknameLink nickname={nickname}>
               <div
                 className={classNames('jk-border-radius ', {
-                  'bc-py cr-we fw-br': userNickname === user.nickname,
-                  'link': userNickname !== user.nickname,
+                  'bc-py cr-we fw-br': nickname === user.nickname,
+                  'link': nickname !== user.nickname,
                 })}
               >
-                {userNickname}
+                {nickname}
               </div>
             </UserNicknameLink>
           </Field>
@@ -183,11 +183,11 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
     if (response?.success && response.content[index]) {
       setData(prevState => {
         const prevByUsers: { [key: string]: ScoreboardResponseDTO } = {};
-        prevState.forEach(user => prevByUsers[user.userNickname] = user);
+        prevState.forEach(user => prevByUsers[user.user.nickname] = user);
         return response.content[index].content.map(user => {
           const focus: string[] = [];
           for (const problemKey in user.problems) {
-            if (JSON.stringify(user.problems[problemKey]) !== JSON.stringify(prevByUsers[user.userNickname]?.problems[problemKey])) {
+            if (JSON.stringify(user.problems[problemKey]) !== JSON.stringify(prevByUsers[user.user.nickname]?.problems[problemKey])) {
               focus.push(problemKey);
             }
           }

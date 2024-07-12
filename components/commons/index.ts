@@ -187,6 +187,7 @@ export {
   getProblemOwnerHeader,
   getProblemTagsHeader,
   getProblemTypeHeader,
+  DocumentCustomMembersContent,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

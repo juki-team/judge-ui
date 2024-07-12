@@ -1,4 +1,4 @@
-import { ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
 import { useEffect, useJukiRouter } from 'hooks';
 
 function View() {
@@ -6,7 +6,7 @@ function View() {
   const { replaceRoute } = useJukiRouter();
   
   useEffect(() => {
-    void replaceRoute(ROUTES.HOME.PAGE());
+    void replaceRoute(jukiSettings.ROUTES.root());
   }, [ replaceRoute ]);
   
   return null;

@@ -1,4 +1,3 @@
-import { jukiSettings } from '@juki-team/base-ui';
 import {
   BalloonIcon,
   DeleteIcon,
@@ -12,27 +11,25 @@ import {
   SimpleSortableRows,
   T,
 } from 'components';
+import { jukiSettings } from 'config';
 import { PALLETE } from 'config/constants';
 import { classNames, disableOutOfRange, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
 import { useEffect, useJukiUser, useRef, useState } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import {
-  ContestProblemBasicType,
-  EditContestProblemBasicType,
-  EditCreateContestType,
+  ContestProblemBasicDataResponseDTO,
   RowSortableItem,
   SimpleSortableRowsProps,
+  UpsertContestDTOUI,
+  UpsertContestProblemDTOUI,
 } from 'types';
 import { EditContestProps } from '../types';
 
-type Problem = Omit<ContestProblemBasicType, 'index'> & {
-  name: string,
-}
 
-export const RowProblem: SimpleSortableRowsProps<Problem, {
-  setProblems: Dispatch<SetStateAction<RowSortableItem<Problem>[]>>,
+export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponseDTO, {
+  setProblems: Dispatch<SetStateAction<RowSortableItem<ContestProblemBasicDataResponseDTO>[]>>,
   withTime: number,
-  contest: EditCreateContestType,
+  contest: UpsertContestDTOUI,
   contestEndDate: Date,
   contestStartDate: Date,
   companyName: string
@@ -73,7 +70,7 @@ export const RowProblem: SimpleSortableRowsProps<Problem, {
           onChange={(props) => {
             setProblems(prevState => prevState.map(p => {
               if (p.key === problem.key) {
-                const value: Problem = { ...p.value, color: props.hex };
+                const value: ContestProblemBasicDataResponseDTO = { ...p.value, color: props.hex };
                 return { ...p, value };
               }
               return p;
@@ -256,11 +253,12 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [ withTimeRestriction, withTime ]);
   const contestStartDate = useMemo(() => new Date(contest.settings.startTimestamp), [ contest.settings.startTimestamp ]);
   const contestEndDate = useMemo(() => new Date(contest.settings.endTimestamp), [ contest.settings.endTimestamp ]);
-  const parseProblems = useCallback((problems: { [key: string]: ContestProblemBasicType & { name: string } }) => {
+  const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDTOUI }) => {
     return Object.values(problems)
       .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
       .map((problem) => {
-        const value: Problem = {
+        const value: ContestProblemBasicDataResponseDTO = {
+          index: problem.index,
           key: problem.key,
           judgeKey: problem.judgeKey,
           name: problem.name,
@@ -275,10 +273,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
   }, []);
-  const [ problems, setProblems ] = useState<RowSortableItem<Problem>[]>(parseProblems(contest.problems));
+  const [ problems, setProblems ] = useState<RowSortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
   useEffect(() => {
     setProblems(prevState => prevState.map(problem => {
-      const value: Problem = { ...problem.value };
+      const value: ContestProblemBasicDataResponseDTO = { ...problem.value };
       if (!withTime) {
         value.startTimestamp = contest.settings.startTimestamp;
         value.endTimestamp = contest.settings.endTimestamp;
@@ -295,7 +293,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   }, [ contest, parseProblems ]);
   useEffect(() => {
     setContest(prevState => {
-      const problemsObj: { [key: string]: EditContestProblemBasicType } = {};
+      const problemsObj: { [key: string]: UpsertContestProblemDTOUI } = {};
       problems.forEach((problem, index) => {
         problemsObj[problem.value.key] = {
           key: problem.value.key + '',
@@ -392,8 +390,9 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                         ...PALLETE.CLAROS.filter(color => !problems.some(p => p.value.color === color.color)),
                       ];
                     }
-                    const value: Problem = {
+                    const value: ContestProblemBasicDataResponseDTO = {
                       name: problem.name,
+                      index: '',
                       key: problem.key,
                       color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
                       points: 1,

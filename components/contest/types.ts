@@ -1,19 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
-import { ContestResponseDTO, EditCreateContestType } from 'types';
+import { UpsertContestDTOUI } from 'types';
 
 export interface EditContestProps {
-  contest: EditCreateContestType,
-  setContest: Dispatch<SetStateAction<EditCreateContestType>>,
+  contest: UpsertContestDTOUI,
+  setContest: Dispatch<SetStateAction<UpsertContestDTOUI>>,
   editing?: boolean
 }
 
-export interface EditCreateContestProps {
-  contest?: EditCreateContestType;
-}
-
 export interface EditViewMembersContestProps {
-  contest: EditCreateContestType,
-  membersToView?: ContestResponseDTO['members'],
-  setContest?: Dispatch<SetStateAction<EditCreateContestType>>,
+  contest: UpsertContestDTOUI,
+  setContest?: Dispatch<SetStateAction<UpsertContestDTOUI>>,
   editing?: boolean
 }

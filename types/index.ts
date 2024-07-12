@@ -35,13 +35,15 @@ export {
   CompanyLogoType,
   Status,
   EntityAccess,
+  EntityMembersRank,
 } from '@juki-team/commons';
 
 export type {
+  ContestProblemBasicDataResponseDTO,
   VirtualUserResponseDTO,
   SocketEventSubmissionResponseDTO,
   CompanyResponseDTO,
-  JudgeResponseDataDTO,
+  JudgeDataResponseDTO,
   ErrorType,
   UserSettingsType,
   ErrorResponseType,
@@ -50,13 +52,13 @@ export type {
   ContentsResponseType,
   TestCaseResultType,
   ScoreboardResponseDTO,
-  ContestResponseDTO,
+  ContestDataResponseDTO,
   ProblemSettingsPointsByGroupsType,
   UserSummaryResponseDTO,
   UserManagementResponseDTO,
-  ContestProblemBasicType,
+  ContestProblemDataResponseDTO,
   ContestSummaryListResponseDTO,
-  CreateContestDTO,
+  UpsertContestDTO,
   UserProfileResponseDTO,
   PingResponseDTO,
   UserPingType,
@@ -71,6 +73,7 @@ export type {
   SessionBasicResponseDTO,
   ProblemTestCasesResponseDTO,
   SystemRole,
+  UpsertContestProblemDTO,
   TaskResponseDTO,
   TaskDefinitionResponseDTO,
   SqsPropertiesResponseDTO,
@@ -94,7 +97,7 @@ export type {
   UserBasicInfoResponseDTO,
 } from '@juki-team/commons';
 
-export { Period, NotificationType, QueryParamKey, ProblemTab } from '@juki-team/base-ui';
+export { Period, NotificationType, QueryParamKey, ProblemTab, ContestTab } from '@juki-team/base-ui';
 
 export type {
   IconProps,

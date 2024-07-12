@@ -1,24 +1,15 @@
-import { UserChip } from '@juki-team/base-ui';
-import { ContestResponseDTO } from '@juki-team/commons';
-import {
-  ContestantInformation,
-  GuestInformation,
-  InputToggle,
-  SpectatorInformation,
-  T,
-  UsersSelector,
-} from 'components';
-import { classNames, isEndlessContest } from 'helpers';
+import { DocumentCustomMembersContent, T, UserChip } from 'components';
+import { isEndlessContest } from 'helpers';
 import { useJukiUser } from 'hooks';
 import React from 'react';
-import { AdminInformation, JudgeInformation } from '../Informations';
+import { ContestDataResponseDTO, EntityMembersRank } from 'types';
 import { EditViewMembersContestProps } from '../types';
 
-const PrintUsers = ({ members }: { members?: ContestResponseDTO['members']['spectators'] }) => {
+const PrintUsers = ({ members }: { members?: ContestDataResponseDTO['members']['spectators'] }) => {
   const users = Object.values(members || {});
   
   if (!users.length) {
-    return <div className="jk-row extend"><T className="fw-lr">nobody</T></div>
+    return <div className="jk-row extend"><T className="fw-lr">nobody</T></div>;
   }
   
   return (
@@ -28,27 +19,43 @@ const PrintUsers = ({ members }: { members?: ContestResponseDTO['members']['spec
       ))}
     </div>
   );
-}
+};
 
-export const EditViewMembers = ({ setContest, contest, editing, membersToView }: EditViewMembersContestProps) => {
+export const EditViewMembers = ({ setContest, contest, editing }: EditViewMembersContestProps) => {
   
   const isEditing = !!setContest;
   const { company: { key } } = useJukiUser();
   const guests = contest.members.guests;
   const spectators = contest.members.spectators;
-  const contestants = contest.members.contestants;
-  const judges = contest.members.judges;
+  const contestants = contest.members.participants;
+  const judges = contest.members.managers;
   const administrators = contest.members.administrators;
   
-  const openRegistration = isEditing
-    ? contest.members.guests.length === 1 && contest.members.guests[0] === '*'
-    : !!membersToView?.guests['*'];
-  const openScore = isEditing
-    ? contest.members.spectators.length === 1 && contest.members.spectators[0] === '*'
-    : !!membersToView?.spectators['*'];
-  
+  const openRegistration = contest.members.rankGuests === EntityMembersRank.OPEN;
+  const openScore = contest.members.rankSpectators === EntityMembersRank.OPEN;
   const competition = isEndlessContest(contest);
   
+  
+  return (
+    <DocumentCustomMembersContent
+      members={contest.members}
+      setMembers={(setStateAction) => {
+        if (typeof setStateAction === 'function') {
+          setContest?.(prevState => ({ ...prevState, members: setStateAction(prevState.members) }));
+        } else {
+          setContest?.(prevState => ({ ...prevState, members: setStateAction }));
+        }
+      }}
+      documentOwner={contest.owner}
+      administrators
+      managers
+      participants
+      guests
+      spectators
+      labels={{ administrators: { description: 'oliwi' } }}
+    />
+  );
+  /*
   return (
     <div className="jk-col gap left top stretch gap nowrap">
       <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
@@ -188,5 +195,5 @@ export const EditViewMembers = ({ setContest, contest, editing, membersToView }:
         ) : <PrintUsers members={membersToView?.administrators} />}
       </div>
     </div>
-  );
+  );*/
 };

@@ -1,3 +1,4 @@
+import { EntityMembersRank } from '@juki-team/commons';
 import {
   FrozenInformation,
   Input,
@@ -14,7 +15,6 @@ import {
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   CONTEST_DEFAULT,
-  CONTEST_STATUS,
   CONTEST_TEMPLATE,
   MAX_DATE,
   MIN_DATE,
@@ -28,7 +28,6 @@ import { EditContestProps } from '../types';
 export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
   const [ checks, setChecks ] = useState({ duration: true, frozen: true, quiet: true });
-  
   const startDate = new Date(contest.settings.startTimestamp);
   const endDate = new Date(contest.settings.endTimestamp);
   const frozenDate = new Date(contest.settings.frozenTimestamp);
@@ -47,8 +46,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
   return (
     <div className="jk-col left top stretch gap nowrap">
-      <div className="jk-col left top stretch gap bc-we jk-br-ie jk-pg-sm">
-        <div className="jk-row center gap nowrap">
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
+        <div className="jk-row left gap nowrap">
           <T className="fw-bd tt-se tx-xl cr-py">template</T>:&nbsp;
           <Select
             options={Object.values(CONTEST_TEMPLATE).map(template => ({
@@ -71,10 +70,16 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     endTimestamp: MAX_DATE.getTime(),
                     penalty: 0,
                   },
-                  members: { ...prevState.members, spectators: [ '*' ], guests: [ '*' ] },
+                  members: {
+                    ...prevState.members,
+                    rankSpectators: EntityMembersRank.OPEN,
+                    spectators: {},
+                    rankGuests: EntityMembersRank.OPEN,
+                    guests: {},
+                  },
                 }, prevState));
               } else if (value === ContestTemplate.CLASSIC || value === ContestTemplate.CUSTOM) {
-                const contestDefault = CONTEST_DEFAULT();
+                const contestDefault = CONTEST_DEFAULT(contest.owner);
                 setContest(prevState => adjustContest({
                   ...prevState,
                   settings: {
@@ -90,43 +95,6 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             }}
           />
         </div>
-        <div className="jk-row left gap nowrap">
-          <div className="jk-row nowrap fw-bd tx-xl cr-er"><T className="tt-se ws-np">contest status</T>:</div>
-          <Select
-            options={Object.values(CONTEST_STATUS).map(status => ({
-              value: status.value,
-              label: (
-                <div className="jk-col left">
-                  <T className="fw-bd tt-se tx-xl cr-py">{status.label}</T>
-                  <T className="tt-se">{status.description}</T>
-                </div>
-              ),
-            }))}
-            selectedOption={{ value: contest.status }}
-            onChange={({ value }) => setContest(prevState => ({ ...prevState, status: value }))}
-            popoverClassName="max-popover-select-size"
-            extend
-          />
-        </div>
-        <div className="jk-row left gap nowrap">
-          <div className="fw-bd tt-se tx-xl cr-py"><T>key</T>:</div>
-          <div className="link">
-            {window.location.host}/contest/view/
-            <Input
-              value={contest.key}
-              onChange={value => {
-                setContest(prevState => ({
-                  ...prevState,
-                  key: value.trim().split(' ').join('-').replace(/[^0-9a-z_-]/gi, ''),
-                }));
-              }}
-              size="auto"
-            />
-            /overview
-          </div>
-        </div>
-      </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         {!competition && (
           <div className="jk-row left gap nowrap">
             <div className="fw-bd tt-se tx-xl cr-py"><T>start date</T>:</div>
@@ -414,21 +382,6 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             leftLabel={<T className={classNames('tt-se', { 'fw-bd': !contest.settings.clarifications })}>no
               available</T>}
             rightLabel={<T className={classNames('tt-se', { 'fw-bd': contest.settings.clarifications })}>available</T>}
-          />
-        </div>
-        <div className="jk-row left gap">
-          <div className="fw-bd tt-se tx-xl cr-py"><T>editorial of problems</T>:</div>
-          <InputToggle
-            size="small"
-            checked={contest.settings.problemEditorials}
-            onChange={(value) => setContest(prevState => ({
-              ...prevState,
-              settings: { ...prevState.settings, problemEditorials: value },
-            }))}
-            leftLabel={<T className={classNames('tt-se', { 'fw-bd': !contest.settings.problemEditorials })}>no
-              available</T>}
-            rightLabel={
-              <T className={classNames('tt-se', { 'fw-bd': contest.settings.problemEditorials })}>available</T>}
           />
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { ButtonLoader, PlusIcon, T } from 'components';
-import { ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
 import { buttonLoaderLink } from 'helpers';
 import { useJukiRouter } from 'hooks';
 
@@ -11,7 +11,7 @@ export const CreateContestButton = () => {
     <ButtonLoader
       size="small"
       icon={<PlusIcon />}
-      onClick={buttonLoaderLink(() => pushRoute(ROUTES.CONTESTS.CREATE()))}
+      onClick={buttonLoaderLink(() => pushRoute(jukiSettings.ROUTES.contests().new()))}
       responsiveMobile
     >
       <T>create</T>

@@ -1,4 +1,5 @@
-import { ContestStatus, ContestTemplate, EditCreateContestType, ProgrammingLanguage } from 'types';
+import { EMPTY_ENTITY_MEMBERS } from 'config/constants';
+import { ContestTemplate, ProgrammingLanguage, UpsertContestDTOUI, UserBasicInfoResponseDTO } from 'types';
 
 export const FIVE_HOURS = 1000 * 60 * 60 * 5;
 export const ONE_HOUR = 1000 * 60 * 60;
@@ -6,13 +7,12 @@ export const FIFTEEN_MINUTES = 1000 * 60 * 15;
 
 export const LS_INITIAL_CONTEST_KEY = 'jk-initial-contest';
 
-
-export const CONTEST_DEFAULT = (initialContest?: Partial<EditCreateContestType>): EditCreateContestType => {
+export const CONTEST_DEFAULT = (owner: UserBasicInfoResponseDTO, initialContest?: Partial<UpsertContestDTOUI>): UpsertContestDTOUI => {
   const now = (new Date(Date.now() + 1000 * 60 * 5));
   now.setSeconds(0, 0);
   
   return {
-    key: '',
+    owner,
     name: '',
     description: `# \\textAlign=center Bienvenido
 
@@ -56,11 +56,9 @@ Oscar Arias | Problem Setter`,
       frozenTimestamp: now.getTime() + FIVE_HOURS - ONE_HOUR,
       quietTimestamp: now.getTime() + FIVE_HOURS - FIFTEEN_MINUTES,
       endTimestamp: now.getTime() + FIVE_HOURS,
-      problemEditorials: false,
     },
-    members: { administrators: [], judges: [], contestants: [], guests: [ '*' ], spectators: [ '*' ] },
+    members: EMPTY_ENTITY_MEMBERS(),
     tags: [],
-    status: ContestStatus.PUBLIC,
     ...initialContest,
   };
 };

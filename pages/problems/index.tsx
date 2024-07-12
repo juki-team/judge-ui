@@ -32,7 +32,7 @@ import {
   ContentResponseType,
   DataViewerHeadersType,
   Judge,
-  JudgeResponseDataDTO,
+  JudgeDataResponseDTO,
   LastPathKey,
   ProblemSummaryListResponseDTO,
   QueryParam,
@@ -60,7 +60,7 @@ function Problems() {
   const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();
   const { company: { key: companyKey } } = useJukiUser();
-  const { data } = useFetcher<ContentResponseType<JudgeResponseDataDTO[]>>(jukiSettings.API.company.getJudgeList().url);
+  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiSettings.API.company.getJudgeList().url);
   const judgeKey: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
   const tags = useMemo(() => data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : [], [ data, judgeKey ]);
   const judges = (data?.success ? data.content : []).map(judge => ({

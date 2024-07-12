@@ -1,9 +1,13 @@
-import { ContestProblemBasicType, CreateContestDTO } from './index';
+import { ContestDataResponseDTO, EntityMembersResponseDTO } from '@juki-team/commons';
+import { UpsertContestProblemDTO } from 'types';
+import { UpsertContestDTO } from './index';
 
-export type EditContestProblemBasicType = ContestProblemBasicType & { name: string };
+export type UpsertContestProblemDTOUI = UpsertContestProblemDTO & { name: string, judgeKey: string };
 
-export type EditCreateContestType = CreateContestDTO & {
-  problems: { [key: string]: EditContestProblemBasicType },
+export interface UpsertContestDTOUI extends Omit<UpsertContestDTO, 'members'> {
+  owner: ContestDataResponseDTO['owner'],
+  members: EntityMembersResponseDTO,
+  problems: { [key: string]: UpsertContestProblemDTOUI },
 }
 
 export enum ContestTemplate {

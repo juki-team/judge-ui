@@ -1,14 +1,9 @@
+import { UpsertContestDTO } from '@juki-team/commons';
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
-import {
-  ContestProblemBasicType,
-  ContestResponseDTO,
-  ContestTemplate,
-  EditContestProblemBasicType,
-  EditCreateContestType,
-} from 'types';
+import { ContestDataResponseDTO, ContestTemplate, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
 import { roundTimestamp } from './index';
 
-export const adjustContest = (contest: EditCreateContestType, prevContest: EditCreateContestType): EditCreateContestType => {
+export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertContestDTOUI): UpsertContestDTOUI => {
   const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
   const endTimestamp = Math.max(roundTimestamp(contest.settings.endTimestamp), startTimestamp);
   const frozenTimestamp = Math.min(
@@ -19,7 +14,7 @@ export const adjustContest = (contest: EditCreateContestType, prevContest: EditC
     Math.max(roundTimestamp(contest.settings.quietTimestamp), frozenTimestamp),
     endTimestamp,
   );
-  const problems: { [key: string]: ContestProblemBasicType & { name: string } } = {};
+  const problems: UpsertContestDTOUI['problems'] = {};
   Object.entries(contest.problems).forEach(([ problemJudgeKey, problem ]) => {
     let problemStartTimestamp = prevContest.problems[problemJudgeKey].startTimestamp
     === prevContest.settings.startTimestamp ? startTimestamp : problem.startTimestamp;
@@ -87,13 +82,13 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
   return ContestTemplate.CUSTOM;
 };
 
-export const parseContest = (contest: ContestResponseDTO): EditCreateContestType => {
-  const problems: { [key: string]: EditContestProblemBasicType } = {};
+export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertContestDTOUI => {
+  const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
   Object.values(contest.problems).forEach(problem => {
     problems[problem.key] = {
       key: problem.key,
-      index: problem.index,
       judgeKey: problem.judgeKey,
+      index: problem.index,
       name: problem.name,
       points: problem.points,
       color: problem.color,
@@ -102,22 +97,45 @@ export const parseContest = (contest: ContestResponseDTO): EditCreateContestType
     };
   });
   
-  const members = {
-    administrators: Object.keys(contest.members.administrators),
-    judges: Object.keys(contest.members.judges),
-    contestants: Object.keys(contest.members.contestants),
-    guests: Object.keys(contest.members.guests),
-    spectators: Object.keys(contest.members.spectators),
-  };
-  
   return {
     description: contest.description,
-    key: contest.key,
-    members,
+    members: contest.members,
     name: contest.name,
     problems,
     settings: contest.settings,
     tags: contest.tags,
-    status: contest.status,
+    owner: contest.owner,
+  };
+};
+
+export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO => {
+  return {
+    description: entity.description ?? '',
+    members: {
+      rankAdministrators: entity.members.rankAdministrators,
+      administrators: Object.keys(entity.members.administrators),
+      rankManagers: entity.members.rankManagers,
+      managers: Object.keys(entity.members.managers),
+      rankParticipants: entity.members.rankParticipants,
+      participants: Object.keys(entity.members.participants),
+      rankGuests: entity.members.rankGuests,
+      guests: Object.keys(entity.members.guests),
+      rankSpectators: entity.members.rankSpectators,
+      spectators: Object.keys(entity.members.spectators),
+    },
+    name: entity.name ?? '',
+    problems: {},
+    settings: {
+      clarifications: entity.settings?.clarifications ?? false,
+      numberJudgeValidations: entity.settings?.numberJudgeValidations ?? 0,
+      languages: entity.settings?.languages ?? [],
+      penalty: entity.settings?.penalty ?? 0,
+      timeToSolve: entity.settings?.timeToSolve ?? 0,
+      startTimestamp: entity.settings?.startTimestamp ?? 0,
+      frozenTimestamp: entity.settings?.frozenTimestamp ?? 0,
+      quietTimestamp: entity.settings?.quietTimestamp ?? 0,
+      endTimestamp: entity.settings?.endTimestamp ?? 0,
+    },
+    tags: entity.tags ?? [],
   };
 };

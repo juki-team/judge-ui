@@ -1,46 +1,42 @@
-import {
-  ButtonLoader,
-  CheckUnsavedChanges,
-  CloseIcon,
-  CodeEditor,
-  Input,
-  LinkLastPath,
-  MdMathEditor,
-  SaveIcon,
-  T,
-  TwoContentLayout,
-} from 'components';
+import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
+import { jukiSettings } from 'config';
 import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { authorizedRequest, cleanRequest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiRouter, useJukiUI, useRef, useState } from 'hooks';
+import { useEffect, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
-  ContestsTab,
   ContestTab,
-  EditCreateContestType,
   HTTPMethod,
   LastPathKey,
   ProgrammingLanguage,
-  ReactNode,
   Status,
   TabsType,
+  TwoContentLayoutProps,
+  UpsertComponentEntityProps,
+  UpsertContestDTOUI,
 } from 'types';
-import { EditCreateContestProps } from '../types';
 import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';
 import { EditViewMembers } from './EditViewMembers';
 
-export const EditCreateContest = ({ contest: initialContest }: EditCreateContestProps) => {
+export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContestDTOUI, ContestTab>) => {
+  
+  const { entity: initialContest, entityKey: contestKey, tabButtons } = props;
   
   const editing = !!initialContest;
   
   const { addWarningNotification } = useJukiNotification();
   const { notifyResponse } = useJukiNotification();
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { components: { Link } } = useJukiUI();
   const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
-  const [ contest, setContest ] = useState<EditCreateContestType>(initialContest || CONTEST_DEFAULT(isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
+  const { user: { nickname, imageUrl }, company: { key: companyKey } } = useJukiUser();
+  const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest || CONTEST_DEFAULT({
+    nickname,
+    imageUrl,
+    companyKey,
+  }, isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
   useEffect(() => {
     localStorage.removeItem(LS_INITIAL_CONTEST_KEY);
   }, []);
@@ -75,7 +71,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
   const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
     setLoaderStatus(Status.LOADING);
     const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-      editing ? JUDGE_API_V1.CONTEST.CONTEST(initialContest.key) : JUDGE_API_V1.CONTEST.CREATE(),
+      editing ? JUDGE_API_V1.CONTEST.CONTEST(contestKey) : JUDGE_API_V1.CONTEST.CREATE(),
       {
         method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
         body: JSON.stringify(contest),
@@ -83,7 +79,7 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
     ));
     if (notifyResponse(response, setLoaderStatus)) {
       setLoaderStatus(Status.LOADING);
-      await pushRoute(ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW));
+      await pushRoute(ROUTES.CONTESTS.VIEW(contestKey, ContestTab.OVERVIEW));
       setLoaderStatus(Status.SUCCESS);
     }
   };
@@ -128,54 +124,25 @@ export const EditCreateContest = ({ contest: initialContest }: EditCreateContest
     },
   };
   
-  const [ contestTab, setContestTab ] = useState<ContestTab>(ContestTab.OVERVIEW);
-  const extraNodes = [
-    <CheckUnsavedChanges
-      onClickContinue={() => pushRoute(editing
-        ? ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW)
-        : ROUTES.CONTESTS.LIST(ContestsTab.ALL))}
-      value={contest}
-      key="key"
-    >
-      <ButtonLoader
-        size="small"
-        icon={<CloseIcon />}
-        responsiveMobile
-      >
-        <T>cancel</T>
-      </ButtonLoader>
-    </CheckUnsavedChanges>,
-    <ButtonLoader
-      type="secondary"
-      size="small"
-      onClick={onSave}
-      icon={<SaveIcon />}
-      responsiveMobile
-      key="update/create"
-    >
-      {editing ? <T>update</T> : <T>create</T>}
-    </ButtonLoader>,
-  ];
-  
-  const breadcrumbs: ReactNode[] = [
+  const breadcrumbs: TwoContentLayoutProps<ContestTab>['breadcrumbs'] = ({ selectedTabKey }) => [
     <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,
     editing
       ? (
         <Link
-          href={{ pathname: ROUTES.CONTESTS.VIEW(contest.key, ContestTab.OVERVIEW), query: searchParams.toString() }}
+          href={jukiSettings.ROUTES.contests().view({ key: contestKey })}
           className="link"
         >
           <div>{contest.name}</div>
         </Link>
       ) : <div>{contest.name}</div>,
-    renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }),
+    renderReactNodeOrFunctionP1(tabHeaders[selectedTabKey]?.header, { selectedTabKey }),
   ];
   
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
-      tabButtons={extraNodes}
+      tabButtons={tabButtons(contest)}
     >
       <div className="jk-row extend center tx-h">
         <Input

@@ -49,7 +49,7 @@ export const ContestsAllList = () => {
       cardPosition: 'top',
       minWidth: 130,
     },
-    contestNameColumn(false, Link),
+    contestNameColumn(Link),
     contestStartDateColumn(),
     contestEndDateColumn(),
     contestantsColumn(),

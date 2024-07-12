@@ -15,16 +15,16 @@ import { authorizedRequest, classNames, cleanRequest } from 'helpers';
 import { useDateFormat, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useSWR } from 'hooks';
 import {
   ContentResponseType,
-  ContestResponseDTO,
+  ContestDataResponseDTO,
   HTTPMethod,
   QueryParamKey,
   SetLoaderStatusOnClickType,
   Status,
 } from 'types';
 
-export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
+export const ViewOverview = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
-  const { isJudge, isAdmin, isContestant, isGuest, isSpectator } = contest.user;
+  const { isManager, isAdministrator, isParticipant, isGuest, isSpectator } = contest.user;
   const { user: { isLogged } } = useJukiUser();
   const { routeParams } = useJukiRouter();
   const { appendSearchParams } = useJukiRouter();
@@ -61,15 +61,15 @@ export const ViewOverview = ({ contest }: { contest: ContestResponseDTO }) => {
       </div>
       <div className="jk-col stretch gap flex-3 contest-overview-information">
         <div className="content-side-right-bar-top">
-          {isAdmin
+          {isAdministrator
             ? <div className="jk-row center gap bc-we jk-br-ie fw-bd cr-py jk-pg-sm">
               <T className="tt-se ta-cr">you are admin</T> <AdminInformation filledCircle />
             </div>
-            : isJudge
+            : isManager
               ? <div className="jk-row center gap bc-we jk-br-ie fw-bd cr-py jk-pg-sm">
                 <T className="tt-se ta-cr">you are judge</T> <JudgeInformation filledCircle />
               </div>
-              : (isContestant
+              : (isParticipant
                 ? <div className="jk-row center gap bc-we jk-br-ie fw-br cr-py jk-pg-sm">
                   <T className="tt-se ta-cr">you are contestant</T> <ContestantInformation filledCircle />
                 </div>
