@@ -27,7 +27,7 @@ const SubmitViewLayout = ({ submit }: { submit: SubmissionDataResponseDTO }) => 
   const {
     submitId,
     isProblemEditor,
-    problemMode,
+    problemScoringMode,
     language,
     sourceCode,
     memoryUsed,
@@ -49,7 +49,7 @@ const SubmitViewLayout = ({ submit }: { submit: SubmissionDataResponseDTO }) => 
     testCaseResults || []
   ).forEach((testCase) => {
     const group = testCase.group ? (
-      problemMode === ProblemScoringMode.SUBTASK ? testCase.group : 1
+      problemScoringMode === ProblemScoringMode.SUBTASK ? testCase.group : 1
     ) : 0;
     if (testCasesByGroup[group]) {
       testCasesByGroup[group].push(testCase);
@@ -122,18 +122,18 @@ const SubmitViewLayout = ({ submit }: { submit: SubmissionDataResponseDTO }) => 
         <div>
           <h3>
             <T>
-              {problemMode === ProblemScoringMode.SUBTASK
+              {problemScoringMode === ProblemScoringMode.SUBTASK
                 ? 'information by subtasks'
-                : problemMode === ProblemScoringMode.PARTIAL
+                : problemScoringMode === ProblemScoringMode.PARTIAL
                   ? 'information by groups'
                   : 'sample and test case information'}
             </T>
           </h3>
           <div className="jk-col gap">
             <div className="jk-row extend block gap jk-table-inline-header">
-              <div className="jk-row"><T>{problemMode === ProblemScoringMode.SUBTASK ? 'groups' : ''}</T></div>
+              <div className="jk-row"><T>{problemScoringMode === ProblemScoringMode.SUBTASK ? 'groups' : ''}</T></div>
               <div className="jk-row" style={{ flex: 3 }}><T>verdict</T></div>
-              {(problemMode === ProblemScoringMode.SUBTASK || problemMode === ProblemScoringMode.PARTIAL) && (
+              {(problemScoringMode === ProblemScoringMode.SUBTASK || problemScoringMode === ProblemScoringMode.PARTIAL) && (
                 <div className="jk-row"><T>points</T></div>
               )}
               <div className="jk-row"><T>time</T></div>
@@ -149,7 +149,7 @@ const SubmitViewLayout = ({ submit }: { submit: SubmissionDataResponseDTO }) => 
                   key={groupKey}
                   groupKey={+groupKey}
                   isProblemEditor={isProblemEditor}
-                  problemMode={problemMode}
+                  problemScoringMode={problemScoringMode}
                   memoryUsed={result.memoryUsed}
                   verdict={result.verdict}
                   timeUsed={result.timeUsed}
@@ -166,11 +166,11 @@ const SubmitViewLayout = ({ submit }: { submit: SubmissionDataResponseDTO }) => 
                   key={groupKey}
                   groupKey={+groupKey}
                   isProblemEditor={isProblemEditor}
-                  problemMode={problemMode}
+                  problemScoringMode={problemScoringMode}
                   memoryUsed={0}
                   verdict={ProblemVerdict.PENDING}
                   timeUsed={0}
-                  points={problemMode === ProblemScoringMode.PARTIAL
+                  points={problemScoringMode === ProblemScoringMode.PARTIAL
                     ? +result.reduce((sum, testCase) => sum + testCase.points, 0).toFixed(3)
                     : 0}
                   testCases={result}

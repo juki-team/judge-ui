@@ -33,5 +33,4 @@ export {
   toSortUrl,
   oneTab,
   getStatementData,
-  toProblemDataViewer,
 } from '@juki-team/base-ui';

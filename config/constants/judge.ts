@@ -1,4 +1,3 @@
-import { getProblemJudgeKey } from 'helpers';
 import { Judge, KeyFileType } from 'types';
 import { API_VERSION, JUKI_SERVICE_BASE_URL } from './settings';
 
@@ -77,9 +76,6 @@ export const JUDGE_API_V1 = {
     },
     TEST_CASE_KEY_FILE: (problemKey: string, testCaseKey: string, keyFile: KeyFileType) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/${problemKey}/test-case/${testCaseKey}/key-file/${keyFile}`;
-    },
-    SUBMIT: (judge: Judge, key: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submit/problem/${getProblemJudgeKey(judge, key)}`;
     },
   },
   CONTEST: {

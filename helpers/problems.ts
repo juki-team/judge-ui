@@ -14,7 +14,7 @@ export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO
     memoryLimit: entity?.settings?.memoryLimit || 0,
     withPE: entity?.settings?.withPE || false,
     type: entity?.settings?.type ?? ProblemType.STANDARD,
-    mode: entity?.settings?.mode ?? ProblemScoringMode.SUBTASK,
+    scoringMode: entity?.settings?.scoringMode ?? ProblemScoringMode.SUBTASK,
     byProgrammingLanguage: entity?.settings?.byProgrammingLanguage ?? {},
     evaluatorSource: entity?.settings?.evaluatorSource || '',
     pointsByGroups: entity?.settings?.pointsByGroups ?? {},

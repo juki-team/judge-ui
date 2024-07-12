@@ -14,7 +14,7 @@ import { Memory, Time, Verdict } from './index';
 export interface GroupInfoProps {
   isProblemEditor: boolean,
   groupKey: number,
-  problemMode: ProblemScoringMode,
+  problemScoringMode: ProblemScoringMode,
   timeUsed: number,
   memoryUsed: number,
   verdict: ProblemVerdict,
@@ -76,7 +76,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
   
   const {
     groupKey,
-    problemMode,
+    problemScoringMode,
     timeUsed,
     memoryUsed,
     verdict,
@@ -127,7 +127,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
             />
           )}
         </div>
-        {problemMode === ProblemScoringMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
+        {problemScoringMode === ProblemScoringMode.PARTIAL && <div className="jk-row">{testCase.points}</div>}
         <div className="jk-row center ws-np nowrap">
           <Time verdict={testCase.verdict} timeUsed={testCase.timeUsed} />
         </div>
@@ -139,7 +139,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
         </div>
       </div>
     );
-  }, [ isProblemEditor, problemMode, submitId, testCasesString ]);
+  }, [ isProblemEditor, problemScoringMode, submitId, testCasesString ]);
   
   return (
     <Collapse
@@ -153,9 +153,9 @@ export const GroupInfo = (props: GroupInfoProps) => {
           <div className="jk-row left nowrap">
             {!!testCases.length && <><UpIcon onClick={toggle} rotate={isOpen ? 0 : 180} className="link" />&nbsp;</>}
             {+groupKey ? (
-                problemMode === ProblemScoringMode.SUBTASK
+                problemScoringMode === ProblemScoringMode.SUBTASK
                   ? <><T className="tt-se ws-np">subtask</T>&nbsp;{groupKey}</>
-                  : problemMode === ProblemScoringMode.PARTIAL
+                  : problemScoringMode === ProblemScoringMode.PARTIAL
                     ? <><T className="tt-se ws-np">group</T>&nbsp;{groupKey}</>
                     : <T className="tt-se">test cases</T>) :
               <T className="tt-se">sample cases</T>}
@@ -163,7 +163,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
           <div className="jk-row center gap nowrap" style={{ flex: 3 }}>
             <Verdict verdict={verdict} points={points} submitId={submitId} />
           </div>
-          {(problemMode === ProblemScoringMode.SUBTASK || problemMode === ProblemScoringMode.PARTIAL) && (
+          {(problemScoringMode === ProblemScoringMode.SUBTASK || problemScoringMode === ProblemScoringMode.PARTIAL) && (
             <div className="jk-row">{+points.toFixed(4)}</div>
           )}
           <div className="jk-row center gap">
@@ -180,7 +180,7 @@ export const GroupInfo = (props: GroupInfoProps) => {
         <div className={classNames('jk-row extend block gap jk-table-inline-row fw-bd')}>
           <div className="jk-row" style={{ flex: 0.4 }}><T>#</T></div>
           <div className="jk-row center gap"><T className="tt-se">verdict</T></div>
-          {problemMode === ProblemScoringMode.PARTIAL &&
+          {problemScoringMode === ProblemScoringMode.PARTIAL &&
             <div className="jk-row center gap"><T className="tt-se">points</T>
             </div>}
           <div className="jk-row center gap"><T className="tt-se">time</T></div>

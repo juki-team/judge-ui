@@ -181,7 +181,7 @@ export {
   PendingIcon,
   PendingActionsIcon,
   VoidIcon,
-  getProblemKeyIdHeader,
+  getProblemKeyHeader,
   getProblemModeHeader,
   getProblemNameHeader,
   getProblemOwnerHeader,

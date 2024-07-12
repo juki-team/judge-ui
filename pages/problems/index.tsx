@@ -2,7 +2,7 @@ import {
   ButtonLoader,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
-  getProblemKeyIdHeader,
+  getProblemKeyHeader,
   getProblemModeHeader,
   getProblemNameHeader,
   getProblemOwnerHeader,
@@ -17,7 +17,7 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiSettings } from 'config';
-import { buttonLoaderLink, oneTab, toFilterUrl, toProblemDataViewer, toSortUrl } from 'helpers';
+import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
   useFetcher,
@@ -34,7 +34,6 @@ import {
   Judge,
   JudgeResponseDataDTO,
   LastPathKey,
-  ProblemDataViewerType,
   ProblemSummaryListResponseDTO,
   QueryParam,
   ReactNode,
@@ -74,9 +73,9 @@ function Problems() {
       setSearchParams({ name: QueryParam.JUDGE, value: firstJudgeKey });
     }
   }, [ judgeKey, setSearchParams, firstJudgeKey ]);
-  const columns: DataViewerHeadersType<ProblemDataViewerType>[] = useMemo(() => [
-    getProblemKeyIdHeader(false),
-    getProblemNameHeader(),
+  const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
+    getProblemKeyHeader(),
+    getProblemNameHeader(false),
     ...((judgeKey === Judge.JUKI_JUDGE || judgeKey === Judge.CUSTOMER) ? [
       getProblemModeHeader(),
       getProblemTypeHeader(),
@@ -139,7 +138,7 @@ function Problems() {
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={oneTab(judgeKey && (
-        <PagedDataViewer<ProblemDataViewerType, ProblemSummaryListResponseDTO>
+        <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
             return jukiSettings.API.problem.getSummaryList({
@@ -156,7 +155,6 @@ function Problems() {
           extraNodes={extraNodes}
           cards={{ height: 256, expanded: true }}
           dependencies={[ judgeKey ]}
-          toRow={toProblemDataViewer}
         />
       ))}
     >

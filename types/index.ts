@@ -136,7 +136,6 @@ export type {
   SimpleSortableRowsProps,
   UpsertComponentEntityProps,
   TwoContentLayoutProps,
-  ProblemDataViewerType,
 } from '@juki-team/base-ui';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

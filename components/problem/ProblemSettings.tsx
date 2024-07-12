@@ -24,7 +24,7 @@ import {
   RUNNER_ACCEPTED_PROBLEM_TYPES,
 } from 'config/constants';
 import { classNames } from 'helpers';
-import { useFetcher, useJukiUser } from 'hooks';
+import { useFetcher } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   ContentResponseType,
@@ -40,8 +40,7 @@ import {
 
 export const Tags = ({ tags, onChange }: { tags: string[], onChange: (newTags: string[]) => void }) => {
   
-  const { company: { key: companyKey } } = useJukiUser();
-  const { data } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.company.getJudgeProblemTags({ params: { companyKey } }).url);
+  const { data } = useFetcher<ContentResponseType<string[]>>(jukiSettings.API.judge.get({ params: { key: '' } }).url);
   
   const allTags = Array.from(new Set([ ...(data?.success ? data.content : []), ...tags ]));
   
@@ -125,21 +124,21 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
               value: mode,
               label: <T className="tt-se">{PROBLEM_MODE[mode].label}</T>,
             }))}
-            selectedOption={{ value: problem.settings?.mode }}
-            onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, mode: value } })}
+            selectedOption={{ value: problem.settings?.scoringMode }}
+            onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, scoringMode: value } })}
             extend
           />
         </div>
-        {(problem.settings.mode === ProblemScoringMode.SUBTASK || problem.settings.mode === ProblemScoringMode.PARTIAL) && (
+        {(problem.settings.scoringMode === ProblemScoringMode.SUBTASK || problem.settings.scoringMode === ProblemScoringMode.PARTIAL) && (
           <div className="jk-row left gap">
             <div className="fw-bd tt-se nowrap"><T className="ws-np">points by groups</T>:</div>
             <div>
               <div className="jk-row jk-table-inline-header block">
                 <div className="jk-row"><T className="tt-se">group</T></div>
-                {problem.settings.mode === ProblemScoringMode.SUBTASK && (
+                {problem.settings.scoringMode === ProblemScoringMode.SUBTASK && (
                   <div className="jk-row"><T className="tt-se">subtask points</T></div>
                 )}
-                {problem.settings.mode === ProblemScoringMode.PARTIAL && (
+                {problem.settings.scoringMode === ProblemScoringMode.PARTIAL && (
                   <div className="jk-row"><T className="tt-se">partial points</T></div>
                 )}
               </div>
@@ -161,7 +160,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                       />
                     )}
                   </div>
-                  {problem.settings.mode === ProblemScoringMode.SUBTASK && (
+                  {problem.settings.scoringMode === ProblemScoringMode.SUBTASK && (
                     <div className="jk-row">
                       <Input
                         disabled={group === 0}
@@ -181,7 +180,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                       />
                     </div>
                   )}
-                  {problem.settings.mode === ProblemScoringMode.PARTIAL && (
+                  {problem.settings.scoringMode === ProblemScoringMode.PARTIAL && (
                     <div className="jk-row">
                       <Input
                         disabled={group === 0}
@@ -205,12 +204,12 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
               ))}
               <div className="jk-row jk-table-inline-row block">
                 <div className="jk-row"><T className="tt-se">total</T></div>
-                {problem.settings.mode === ProblemScoringMode.SUBTASK && (
+                {problem.settings.scoringMode === ProblemScoringMode.SUBTASK && (
                   <div className="jk-row">
                     {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.points, 0)}
                   </div>
                 )}
-                {problem.settings.mode === ProblemScoringMode.PARTIAL && (
+                {problem.settings.scoringMode === ProblemScoringMode.PARTIAL && (
                   <div className="jk-row">
                     {Object.values(problem.settings.pointsByGroups).reduce((sum, group) => sum + group.partial, 0)}
                   </div>

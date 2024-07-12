@@ -126,7 +126,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         outputNewFile: newTestCases[testCaseKey]?.outputNewFile || null,
         inputNewFile: newTestCases[testCaseKey]?.inputNewFile || null,
         testCaseKey,
-        groups: problem.settings.mode === ProblemScoringMode.SUBTASK ? newGroups : [ 1 ],
+        groups: problem.settings.scoringMode === ProblemScoringMode.SUBTASK ? newGroups : [ 1 ],
       } as NewTestCaseType;
       newTestCases[testCaseKey][(keyFile + 'NewFile') as 'outputNewFile'] = file;
       newTestCases[testCaseKey][(keyFile + 'NewFileState') as 'outputNewFileState'] = UploadState.NO_SAVED;
@@ -247,7 +247,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
       </div>
       <div className="jk-col stretch bc-we">
         <div className="jk-table-inline-header jk-row block">
-          {(problem.settings.mode === ProblemScoringMode.SUBTASK || problem.settings.mode === ProblemScoringMode.PARTIAL) && (
+          {(problem.settings.scoringMode === ProblemScoringMode.SUBTASK || problem.settings.scoringMode === ProblemScoringMode.PARTIAL) && (
             <div className="jk-row">
               <T>group</T>
             </div>
@@ -263,7 +263,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         {Object.values(testCases).map((testCase) => {
           return (
             <div className="jk-table-inline-row jk-row block" key={testCase.testCaseKey}>
-              {(problem.settings.mode === ProblemScoringMode.SUBTASK || problem.settings.mode === ProblemScoringMode.PARTIAL) && (
+              {(problem.settings.scoringMode === ProblemScoringMode.SUBTASK || problem.settings.scoringMode === ProblemScoringMode.PARTIAL) && (
                 <div className="jk-row nowrap">
                   <MultiSelect
                     disabled={lock}
@@ -421,7 +421,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           </div>
         </div>
         <div className="jk-table-inline-row jk-row block">
-          {(problem.settings.mode === ProblemScoringMode.SUBTASK || problem.settings.mode === ProblemScoringMode.PARTIAL) && (
+          {(problem.settings.scoringMode === ProblemScoringMode.SUBTASK || problem.settings.scoringMode === ProblemScoringMode.PARTIAL) && (
             <div className="jk-row">
               <MultiSelect
                 options={groupsOptions}

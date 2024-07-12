@@ -15,7 +15,7 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey }: {
     settings: {
       timeLimit: 1000,
       memoryLimit: 256000,
-      mode: ProblemScoringMode.TOTAL,
+      scoringMode: ProblemScoringMode.TOTAL,
       type: ProblemType.STANDARD,
       withPE: true,
       pointsByGroups: {},
