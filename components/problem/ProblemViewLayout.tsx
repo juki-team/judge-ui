@@ -1,4 +1,5 @@
 import { jukiSettings } from '@juki-team/base-ui';
+import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import {
   AutorenewIcon,
   ButtonLoader,
@@ -135,7 +136,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   ];
   
   const extraNodes = [];
-  if (problem.user?.isManager && (problem.judgeKey === Judge.JUKI_JUDGE || problem.judgeKey === Judge.CUSTOMER)) {
+  if (problem.user?.isManager && !EXTERNAL_JUDGE_KEYS.includes(problem.judgeKey)) {
     extraNodes.push(
       <Popover
         content={
