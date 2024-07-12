@@ -90,7 +90,7 @@ function Problems() {
   ];
   
   const extraNodes = [];
-  if (canCreateProblem && judgeKey === Judge.CUSTOMER) {
+  if (canCreateProblem && judgeKey === judges[0]?.value) {
     extraNodes.push(
       <ButtonLoader
         size="small"
