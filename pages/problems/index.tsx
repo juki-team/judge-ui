@@ -65,7 +65,7 @@ function Problems() {
   const tags = useMemo(() => data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : [], [ data, judgeKey ]);
   const judges = (data?.success ? data.content : []).map(judge => ({
     value: judge.key,
-    label: judge.key,
+    label: judge.name,
   }));
   const firstJudgeKey = judges[0]?.value;
   useEffect(() => {
