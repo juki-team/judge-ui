@@ -62,7 +62,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     },
     ...(isJudgeOrAdmin ? [
       {
-        head: <TextHeadCell text={<T>id</T>} />,
+        head: <TextHeadCell text={<T>key</T>} />,
         index: 'id',
         Field: ({ record: { judgeKey, key }, isCard }) => (
           <TextField
