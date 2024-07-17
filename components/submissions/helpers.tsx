@@ -12,7 +12,7 @@ import {
   UserNicknameLink,
 } from 'components';
 import { jukiSettings } from 'config';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE, ROUTES } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, PROBLEM_VERDICT, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { FC, PropsWithChildren } from 'react';
 import { ContestTab, DataViewerHeadersType, ImageCmpProps, LinkCmpProps, SubmissionDataResponseDTO } from 'types';
 import { SubmissionInfo } from './SubmissionInfo';
@@ -53,7 +53,11 @@ export const submissionContestColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
     <TextField
       text={contestKey ? (
         <Link
-          href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
+          href={jukiSettings.ROUTES.contests().view({
+            key: contestKey,
+            tab: ContestTab.PROBLEM,
+            subTab: contestProblemIndex,
+          })}
           target={props?.blankTarget ? '_blank' : ''}
         >
           <div className="jk-row link">
@@ -88,7 +92,11 @@ export const submissionProblemColumn = (Link: FC<PropsWithChildren<LinkCmpProps>
     <TextField
       text={contestKey ? (
         <Link
-          href={ROUTES.CONTESTS.VIEW(contestKey, ContestTab.PROBLEM, contestProblemIndex)}
+          href={jukiSettings.ROUTES.contests().view({
+            key: contestKey,
+            tab: ContestTab.PROBLEM,
+            subTab: contestProblemIndex,
+          })}
           target={props?.blankTarget ? '_blank' : ''}
         >
           {props?.onlyProblem ? (

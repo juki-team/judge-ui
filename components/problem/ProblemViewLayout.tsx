@@ -1,5 +1,3 @@
-import { jukiSettings } from '@juki-team/base-ui';
-import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import {
   AutorenewIcon,
   ButtonLoader,
@@ -13,7 +11,8 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
+import { jukiSettings } from 'config';
+import { EXTERNAL_JUDGE_KEYS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useTask, useTrackLastPath } from 'hooks';
 import { KeyedMutator } from 'swr';

@@ -1,24 +1,7 @@
-import { CAN_SEE_CONTEST, DocumentCustomMembersContent, T, UserChip } from 'components';
+import { CAN_SEE_CONTEST, DocumentCustomMembersContent, T } from 'components';
 import { useJukiUser } from 'hooks';
 import React from 'react';
-import { ContestDataResponseDTO } from 'types';
 import { EditViewMembersContestProps } from '../types';
-
-const PrintUsers = ({ members }: { members?: ContestDataResponseDTO['members']['spectators'] }) => {
-  const users = Object.values(members || {});
-  
-  if (!users.length) {
-    return <div className="jk-row extend"><T className="fw-lr">nobody</T></div>;
-  }
-  
-  return (
-    <div className="jk-row left gap">
-      {users.map(({ nickname, imageUrl }) => (
-        <UserChip imageUrl={imageUrl} nickname={nickname} key={nickname} />
-      ))}
-    </div>
-  );
-};
 
 export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestProps) => {
   

@@ -2,7 +2,6 @@ import {
   BalloonIcon,
   Button,
   ButtonLoader,
-  contestStateMap,
   DataViewer,
   Field,
   FullscreenExitIcon,
@@ -15,11 +14,13 @@ import {
   Tooltip,
   UserNicknameLink,
 } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import {
   authorizedRequest,
   classNames,
   cleanRequest,
+  contestStateMap,
   downloadDataTableAsCsvFile,
   downloadSheetDataAsXlsxFile,
 } from 'helpers';
@@ -177,10 +178,11 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
             >
               <div className="jk-col extend fw-bd">
                 <Link
-                  href={{
-                    pathname: ROUTES.CONTESTS.VIEW(contestKey as string, ContestTab.PROBLEM, problem.index),
-                    query: searchParams.toString(),
-                  }}
+                  href={jukiSettings.ROUTES.contests().view({
+                    key: contestKey as string,
+                    tab: ContestTab.PROBLEM,
+                    subTab: problem.index,
+                  })}
                 >
                   {problem.index}
                 </Link>
@@ -224,7 +226,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       }
     }
     return base;
-  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, Link, contestKey, searchParams ]);
+  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, Link, contestKey ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {

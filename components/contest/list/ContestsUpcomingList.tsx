@@ -1,21 +1,18 @@
-import { PagedDataViewer } from 'components';
+import { getContestDateHeader, getContestNameHeader, PagedDataViewer } from 'components';
 import { jukiSettings } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUI } from 'hooks';
+import { useJukiUser } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, QueryParam } from 'types';
-import { contestantsColumn, contestEndDateColumn, contestNameColumn, contestStartDateColumn } from '../commons';
 
 export const ContestsUpcomingList = () => {
   
-  const { components: { Link } } = useJukiUI();
-  
+  const { company: { key: companyKey } } = useJukiUser();
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
-    contestNameColumn(Link),
-    contestStartDateColumn(),
-    contestEndDateColumn(),
-    contestantsColumn(),
-  ], [ Link ]);
+    getContestNameHeader(),
+    getContestDateHeader(),
+    // getContestContestantsHeader(),
+  ], []);
   
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
@@ -25,7 +22,7 @@ export const ContestsUpcomingList = () => {
           params: {
             page,
             size: pageSize,
-            filterUrl: toFilterUrl({ ...filter, state: 'upcoming' }),
+            filterUrl: toFilterUrl({ ...filter, companyKeys: companyKey, status: 'upcoming' }),
             sortUrl: toSortUrl(sort),
           },
         }).url

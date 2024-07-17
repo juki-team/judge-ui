@@ -1,6 +1,5 @@
 import {
   ButtonLoader,
-  contestStateMap,
   CopyIcon,
   CustomHead,
   EditIcon,
@@ -18,7 +17,7 @@ import {
 } from 'components';
 import { jukiSettings } from 'config';
 import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import { renderReactNodeOrFunctionP1, toUpsertContestDTOUI } from 'helpers';
+import { contestStateMap, renderReactNodeOrFunctionP1, toUpsertContestDTOUI } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useT, useTask, useTrackLastPath } from 'hooks';
 import React, { ReactNode } from 'react';
 import { KeyedMutator } from 'swr';

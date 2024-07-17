@@ -188,6 +188,10 @@ export {
   getProblemTagsHeader,
   getProblemTypeHeader,
   DocumentCustomMembersContent,
+  getContestStatusHeader,
+  getContestNameHeader,
+  getContestDateHeader,
+  getContestContestantsHeader,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

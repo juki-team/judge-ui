@@ -1,59 +1,19 @@
-import { jukiSettings } from '@juki-team/base-ui';
-import { Field, PagedDataViewer, T } from 'components';
+import { getContestDateHeader, getContestNameHeader, getContestStatusHeader, PagedDataViewer } from 'components';
+import { jukiSettings } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUI } from 'hooks';
+import { useJukiUser } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, QueryParam } from 'types';
-import { contestantsColumn, contestEndDateColumn, contestNameColumn, contestStartDateColumn } from '../commons';
-
-export const contestStateMap = {
-  [[ true, false, false, false ].toString()]: { order: 0, label: 'past', color: 'gray-5' },
-  [[ false, true, false, false ].toString()]: { order: 1, label: 'live', color: 'error' },
-  [[ false, false, true, false ].toString()]: { order: 2, label: 'upcoming', color: 'success' },
-  [[ false, false, false, true ].toString()]: { order: 3, label: 'endless', color: 'info' },
-};
 
 export const ContestsAllList = () => {
   
-  const { components: { Link } } = useJukiUI();
-  
+  const { company: { key: companyKey } } = useJukiUser();
   const columns = useMemo(() => [
-    {
-      head: 'state',
-      index: 'state',
-      Field: ({ record: contest }) => (
-        <Field className="jk-row pad">
-          <div
-            className={`jk-tag ${contestStateMap[[
-              contest.isPast,
-              contest.isLive,
-              contest.isFuture,
-              contest.isEndless,
-            ].toString()]?.color}`}
-          >
-            <T className="tt-ue tx-s">{contestStateMap[[
-              contest.isPast,
-              contest.isLive,
-              contest.isFuture,
-              contest.isEndless,
-            ].toString()]?.label}</T>
-          </div>
-        </Field>
-      ),
-      filter: {
-        type: 'select', options: [ 'upcoming', 'live', 'past' ].map(option => ({
-          value: option,
-          label: <T className="tt-ce">{option}</T>,
-        })),
-      },
-      cardPosition: 'top',
-      minWidth: 130,
-    },
-    contestNameColumn(Link),
-    contestStartDateColumn(),
-    contestEndDateColumn(),
-    contestantsColumn(),
-  ] as DataViewerHeadersType<ContestSummaryListResponseDTO>[], [ Link ]);
+    getContestStatusHeader(),
+    getContestNameHeader(),
+    getContestDateHeader(),
+    // getContestContestantsHeader(),
+  ] as DataViewerHeadersType<ContestSummaryListResponseDTO>[], []);
   
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
@@ -63,7 +23,7 @@ export const ContestsAllList = () => {
           params: {
             page,
             size: pageSize,
-            filterUrl: toFilterUrl(filter),
+            filterUrl: toFilterUrl({ companyKeys: companyKey, ...filter }),
             sortUrl: toSortUrl(sort),
           },
         }).url

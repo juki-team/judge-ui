@@ -1,11 +1,10 @@
-import { ROUTES } from 'config/constants';
+import { jukiSettings } from 'config';
 import { useEffect, useJukiRouter } from 'hooks';
-import { ContestsTab } from 'types';
 
 function View() {
   const { replaceRoute } = useJukiRouter();
   useEffect(() => {
-    void replaceRoute(ROUTES.CONTESTS.LIST(ContestsTab.ALL));
+    void replaceRoute(jukiSettings.ROUTES.contests().list());
   }, [ replaceRoute ]);
   return null;
 }

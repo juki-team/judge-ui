@@ -8,10 +8,10 @@ import { ContentResponseType, HTTPMethod, Status, UserBasicInfoResponseDTO } fro
 
 interface ProblemStatementProps {
   documentOwner: UserBasicInfoResponseDTO,
-  problemJudgeKey: string,
+  contestKey: string,
 }
 
-export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStatementProps) => {
+export const ContestDelete = ({ contestKey, documentOwner }: ProblemStatementProps) => {
   
   const { notifyResponse } = useJukiNotification();
   const { pushRoute } = useJukiRouter();
@@ -20,7 +20,7 @@ export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStateme
     <div className="jk-col gap jk-pg bc-we jk-br-ie cr-er">
       <T className="tt-se cr-er fw-bd">are you sure you want to delete it?</T>
       <div style={{ display: 'ruby' }}>
-        <T className="tt-se cr-er">you will no longer have access to this problem</T>, &nbsp;
+        <T className="tt-se cr-er">you will no longer have access to this contest</T>, &nbsp;
         <T className="cr-er">to see it again contact the administrator</T>.
       </div>
       <ButtonLoader
@@ -28,11 +28,11 @@ export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStateme
           setLoaderStatus(Status.LOADING);
           setLoaderStatus(Status.LOADING);
           const response = cleanRequest<ContentResponseType<true>>(
-            await authorizedRequest(JUDGE_API_V1.PROBLEM.PROBLEM(problemJudgeKey), {
+            await authorizedRequest(JUDGE_API_V1.CONTEST.CONTEST(contestKey), {
               method: HTTPMethod.DELETE,
             }));
           if (notifyResponse(response, setLoaderStatus)) {
-            pushRoute({ pathname: jukiSettings.ROUTES.problems().list() });
+            pushRoute({ pathname: jukiSettings.ROUTES.contests().list() });
           }
         }}
         className="bc-er"

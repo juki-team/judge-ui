@@ -1,5 +1,5 @@
-import { jukiSettings } from '@juki-team/base-ui';
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
+import { jukiSettings } from 'config';
 import { useJukiRouter } from 'hooks';
 import { useState } from 'react';
 import { BasicModalProps, Judge, Status } from 'types';

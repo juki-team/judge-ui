@@ -1,22 +1,19 @@
 import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
 import { jukiSettings } from 'config';
-import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY, ROUTES } from 'config/constants';
+import { CONTEST_DEFAULT, LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { diff } from 'deep-object-diff';
-import { authorizedRequest, cleanRequest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
+import { isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
+import { useEffect, useJukiNotification, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
 import {
-  ButtonLoaderOnClickType,
-  ContentResponseType,
   ContestTab,
-  HTTPMethod,
   LastPathKey,
   ProgrammingLanguage,
-  Status,
   TabsType,
   TwoContentLayoutProps,
   UpsertComponentEntityProps,
   UpsertContestDTOUI,
 } from 'types';
+import { ContestDelete } from './ContestDelete';
 import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';
 import { EditViewMembers } from './EditViewMembers';
@@ -28,7 +25,6 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
   const editing = !!initialContest;
   
   const { addWarningNotification } = useJukiNotification();
-  const { notifyResponse } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
   const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
   const { user: { nickname, imageUrl }, company: { key: companyKey } } = useJukiUser();
@@ -65,24 +61,6 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ JSON.stringify(initialContest) ]);
-  
-  const { searchParams, pushRoute, routeParams } = useJukiRouter();
-  
-  const onSave: ButtonLoaderOnClickType = async (setLoaderStatus) => {
-    setLoaderStatus(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-      editing ? JUDGE_API_V1.CONTEST.CONTEST(contestKey) : JUDGE_API_V1.CONTEST.CREATE(),
-      {
-        method: editing ? HTTPMethod.PUT : HTTPMethod.POST,
-        body: JSON.stringify(contest),
-      },
-    ));
-    if (notifyResponse(response, setLoaderStatus)) {
-      setLoaderStatus(Status.LOADING);
-      await pushRoute(ROUTES.CONTESTS.VIEW(contestKey, ContestTab.OVERVIEW));
-      setLoaderStatus(Status.SUCCESS);
-    }
-  };
   
   const tabHeaders: TabsType<ContestTab> = {
     [ContestTab.OVERVIEW]: {
@@ -123,6 +101,16 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
       ),
     },
   };
+  
+  if (editing) {
+    tabHeaders[ContestTab.DELETE] = {
+      key: ContestTab.DELETE,
+      header: <T className="tt-ce">delete</T>,
+      body: (
+        <ContestDelete documentOwner={contest.owner} contestKey={contestKey} />
+      ),
+    };
+  }
   
   const breadcrumbs: TwoContentLayoutProps<ContestTab>['breadcrumbs'] = ({ selectedTabKey }) => [
     <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,

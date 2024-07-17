@@ -1,4 +1,4 @@
-import { AdminTab, ContestsTab, ContestTab, CourseTab, ProblemTab, ProfileTab } from 'types';
+import { AdminTab, CourseTab, ProfileTab } from 'types';
 
 export const _TAB = ':tab';
 export const _SUB_SUB_TAB = ':subSubTab';
@@ -25,48 +25,6 @@ export const ROUTES = {
     COURSE: 'course',
     SHEETS: 'sheets',
     SHEET: 'sheet',
-  },
-  HOME: {
-    PAGE() {
-      return '/';
-    },
-  },
-  RESUME: {
-    PAGE: '/resume',
-  },
-  ABOUT: {
-    PAGE: '/about',
-  },
-  CONTESTS: {
-    LIST(tab: ContestsTab) {
-      return [ '', ROUTES.PARAMS.CONTESTS, tab ].join('/');
-    },
-    VIEW(key: string, tab: ContestTab | typeof _TAB, subTab?: string, subSubTab?: ProblemTab | typeof _SUB_SUB_TAB) {
-      return [
-        '',
-        ROUTES.PARAMS.CONTEST,
-        ROUTES.PARAMS.VIEW,
-        key,
-        tab,
-        ...(
-          subTab ? [ subTab ] : []
-        ),
-        ...(
-          subSubTab ? [ subSubTab ] : []
-        ),
-      ].join('/');
-    },
-    CREATE() {
-      return [ '', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.CREATE ].join('/');
-    },
-    EDIT(key: string) {
-      return [ '', ROUTES.PARAMS.CONTEST, ROUTES.PARAMS.EDIT, key ].join('/');
-    },
-  },
-  PROBLEMS: {
-    LIST() {
-      return '/' + ROUTES.PARAMS.PROBLEMS;
-    },
   },
   SUBMISSIONS: {
     VIEW(key: string) {
