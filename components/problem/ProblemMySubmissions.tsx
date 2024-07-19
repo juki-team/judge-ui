@@ -1,49 +1,47 @@
-import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
-import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUI, useJukiUser } from 'hooks';
-import React, { useMemo } from 'react';
-import { DataViewerHeadersType, ProblemDataResponseDTO, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
-  submissionActionsColumn,
-  submissionContestColumn,
-  submissionDateColumn,
-  submissionLanguage,
-  submissionMemoryUsed,
-  submissionTimeUsed,
-  submissionVerdictColumn,
-} from '../submissions/helpers';
+  getSubmissionDateHeader,
+  getSubmissionLanguageHeader,
+  getSubmissionMemoryHeader,
+  getSubmissionProblemHeader,
+  getSubmissionRejudgeHeader,
+  getSubmissionTimeHeader,
+  getSubmissionVerdictHeader,
+  PagedDataViewer,
+} from 'components';
+import { jukiSettings } from 'config';
+import { toFilterUrl, toSortUrl } from 'helpers';
+import { useJukiUser, useMemo } from 'hooks';
+import { DataViewerHeadersType, ProblemDataResponseDTO, QueryParam, SubmissionSummaryListResponseDTO } from 'types';
 
 export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {
   
   const { user: { nickname } } = useJukiUser();
-  const { components: { Link } } = useJukiUI();
-  const columns: DataViewerHeadersType<SubmissionDataResponseDTO>[] = useMemo(() => {
+  const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => {
     return [
-      submissionContestColumn(Link),
-      submissionDateColumn(),
-      submissionVerdictColumn(),
-      ...(problem.user.isManager ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
-      submissionLanguage(),
-      submissionTimeUsed(),
-      submissionMemoryUsed(),
+      getSubmissionProblemHeader(),
+      getSubmissionDateHeader(),
+      getSubmissionVerdictHeader(),
+      ...(problem.user.isManager ? [ getSubmissionRejudgeHeader() ] : []),
+      getSubmissionLanguageHeader(),
+      getSubmissionTimeHeader(),
+      getSubmissionMemoryHeader(),
     ];
-  }, [ problem.user.isManager, Link ]);
+  }, [ problem.user.isManager ]);
   
   return (
-    <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>
+    <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(
-          problem?.key,
-          nickname,
-          page,
-          pageSize,
-          toFilterUrl(filter),
-          toSortUrl(sort),
-        )
+        jukiSettings.API.submission.getSummaryList({
+          params: {
+            page,
+            pageSize,
+            filterUrl: toFilterUrl({ ...filter, problemKeys: problem.key, nicknames: nickname }),
+            sortUrl: toSortUrl(sort),
+          },
+        }).url
       )}
       name={QueryParam.MY_STATUS_TABLE}
       toRow={submission => submission}

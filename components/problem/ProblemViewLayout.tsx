@@ -14,7 +14,15 @@ import {
 import { jukiSettings } from 'config';
 import { EXTERNAL_JUDGE_KEYS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useTask, useTrackLastPath } from 'hooks';
+import {
+  useJukiNotification,
+  useJukiRouter,
+  useJukiTask,
+  useJukiUI,
+  useJukiUser,
+  useSWR,
+  useTrackLastPath,
+} from 'hooks';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
@@ -40,8 +48,9 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const { searchParams, routeParams: { key: problemKey }, pushRoute } = useJukiRouter();
   const { user, company: { key: companyKey } } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
-  const { listenSubmission } = useTask();
+  const { listenSubmission } = useJukiTask();
   const { components: { Link } } = useJukiUI();
+  const { matchMutate } = useSWR();
   const tabs: TabsType<ProblemTab> = {
     [ProblemTab.STATEMENT]: {
       key: ProblemTab.STATEMENT,
@@ -70,20 +79,8 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                     );
                     
                     if (notifyResponse(response, setLoaderStatus)) {
-                      listenSubmission(
-                        response.content.submitId,
-                        problem.key,
-                      );
-                      // TODO fix the filter Url param
-                      // await mutate(JUDGE_API_V1.SUBMISSIONS.PROBLEM_NICKNAME(
-                      //   problem.judge,
-                      //   problem.key,
-                      //   nickname,
-                      //   1,
-                      //   +(myStatusPageSize || PAGE_SIZE_OPTIONS[0]),
-                      //   '',
-                      //   '',
-                      // ));
+                      listenSubmission({ id: response.content.submitId, problem: { name: problem.name } });
+                      await matchMutate(new RegExp(`^${jukiSettings.SERVICE_API_URL}/submission`, 'g'));
                       pushRoute({
                         pathname: jukiSettings.ROUTES.problems().view({ key: problemKey as string }),
                         searchParams,

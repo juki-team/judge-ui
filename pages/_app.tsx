@@ -7,7 +7,7 @@ import { useJukiUser } from 'hooks';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { _setFlags, TaskProvider, UserProvider } from 'store';
+import { _setFlags, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import { AdminTab, AppProps, FC, ImageCmpProps, Judge, LastPathKey, QueryParam } from 'types';
 import { useRouter } from '../hooks/useRouter';
@@ -98,20 +98,18 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       {/*<ColorsModal />*/}
       <CustomHead />
       <UserProvider>
-        <TaskProvider>
-          <SWRConfig
-            value={{
-              revalidateIfStale: true, // when back to pages
-              revalidateOnFocus: false,
-              revalidateOnReconnect: false,
-            }}
-          >
-            <NavigationBar>
-              <Analytics />
-              <Component {...pageProps} />
-            </NavigationBar>
-          </SWRConfig>
-        </TaskProvider>
+        <SWRConfig
+          value={{
+            revalidateIfStale: true, // when back to pages
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+          }}
+        >
+          <NavigationBar>
+            <Analytics />
+            <Component {...pageProps} />
+          </NavigationBar>
+        </SWRConfig>
       </UserProvider>
       <SponsoredByTag />
     </JukiProviders>

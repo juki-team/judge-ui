@@ -11,14 +11,23 @@ import {
   T,
   Tooltip,
   TwoContentLayout,
+  ViewMySubmissions,
   ViewOverview,
-  ViewProblemMySubmissions,
   ViewProblems,
 } from 'components';
 import { jukiSettings } from 'config';
 import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { contestStateMap, renderReactNodeOrFunctionP1, toUpsertContestDTOUI } from 'helpers';
-import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useT, useTask, useTrackLastPath } from 'hooks';
+import {
+  useJukiNotification,
+  useJukiRouter,
+  useJukiTask,
+  useJukiUI,
+  useJukiUser,
+  useSWR,
+  useT,
+  useTrackLastPath,
+} from 'hooks';
 import React, { ReactNode } from 'react';
 import { KeyedMutator } from 'swr';
 import {
@@ -35,8 +44,8 @@ import { FirstLoginWrapper } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
-import { ViewProblemSubmissions } from './ViewProblemSubmissions';
 import { ViewScoreboard } from './ViewScoreboard';
+import { ViewSubmissions } from './ViewSubmissions';
 
 export function ContestView({ contest, mutate }: { contest: ContestDataResponseDTO, mutate: KeyedMutator<any> }) {
   
@@ -48,7 +57,8 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { user: { permissions: { canCreateContest } } } = useJukiUser();
   const { t } = useT();
-  const { listenSubmission } = useTask();
+  const { listenSubmission } = useJukiTask();
+  const { matchMutate } = useSWR();
   const { addWarningNotification, notifyResponse } = useJukiNotification();
   
   const {
@@ -135,21 +145,17 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
                       await authorizedRequest(url, options),
                     );
                     if (notifyResponse(response, setLoaderStatus)) {
-                      listenSubmission(response.content.submitId, problem.key);
+                      listenSubmission({
+                        id: response.content.submitId,
+                        problem: { name: problem.name },
+                        contest: { name: contest.name, problemIndex },
+                      });
                       pushRoute(jukiSettings.ROUTES.contests().view({
                         key: contestKey,
                         tab: ContestTab.MY_SUBMISSIONS,
                         subTab: problemIndex,
                       }));
-                      // TODO fix the filter Url param
-                      // await mutate(JUDGE_API_V1.SUBMISSIONS.CONTEST_NICKNAME(
-                      //   contestKey,
-                      //   nickname,
-                      //   1,
-                      //   +(myStatusPageSize || PAGE_SIZE_OPTIONS[0]),
-                      //   '',
-                      //   '',
-                      // ));
+                      await matchMutate(new RegExp(`^${jukiSettings.SERVICE_API_URL}/submission`, 'g'));
                     }
                   }}
                 >
@@ -226,7 +232,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     tabHeaders[ContestTab.MY_SUBMISSIONS] = {
       key: ContestTab.MY_SUBMISSIONS,
       header: <T className="tt-ce ws-np">my submissions</T>,
-      body: <ViewProblemMySubmissions contest={contest} />,
+      body: <ViewMySubmissions contest={contest} />,
     };
   }
   
@@ -234,7 +240,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     tabHeaders[ContestTab.SUBMISSIONS] = {
       key: ContestTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,
-      body: <ViewProblemSubmissions contest={contest} />,
+      body: <ViewSubmissions contest={contest} />,
     };
   }
   

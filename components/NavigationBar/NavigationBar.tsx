@@ -6,15 +6,13 @@ import {
   LinkLastPath,
   MainMenu,
   SettingsIcon,
-  SubmissionModal,
   T,
-  UserPreviewModal,
 } from 'components';
 import { jukiSettings } from 'config';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { PropsWithChildren } from 'react';
-import { LastPathKey, MenuType, ProfileSetting, QueryParam, QueryParamKey, Theme } from 'types';
+import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
@@ -95,21 +93,10 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     menuItemWrapper: ({ children }) => <LinkLastPath lastPathKey={LastPathKey.SECTION_HELP}>{children}</LinkLastPath>,
   });
   
-  const userPreviewQuery = searchParams.getAll(QueryParamKey.USER_PREVIEW);
-  const [ userPreviewNickname, userPreviewCompanyKey ] = Array.isArray(userPreviewQuery) ? userPreviewQuery as unknown as [ string, string ] : [ userPreviewQuery as string ];
   
   return (
     <>
-      <UserPreviewModal
-        isOpen={!!searchParams.get(QueryParamKey.USER_PREVIEW)}
-        nickname={userPreviewNickname}
-        companyKey={userPreviewCompanyKey}
-        onClose={() => deleteSearchParams({ name: QueryParamKey.USER_PREVIEW })}
-        userHref={jukiSettings.ROUTES.profiles().view({ nickname: userPreviewNickname })}
-      />
-      {searchParams.get(QueryParam.SUBMISSION_VIEW) && (
-        <SubmissionModal submitId={searchParams.get(QueryParam.SUBMISSION_VIEW) as string} />
-      )}
+      
       <MainMenu
         onSeeMyProfile={() => pushRoute(jukiSettings.ROUTES.profiles().view({ nickname }))}
         menu={menu}

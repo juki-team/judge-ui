@@ -192,6 +192,16 @@ export {
   getContestNameHeader,
   getContestDateHeader,
   getContestContestantsHeader,
+  getSubmissionContestHeader,
+  getSubmissionContestProblemHeader,
+  getSubmissionDateHeader,
+  getSubmissionVerdictHeader,
+  getSubmissionLanguageHeader,
+  getSubmissionTimeHeader,
+  getSubmissionMemoryHeader,
+  getSubmissionProblemHeader,
+  getSubmissionRejudgeHeader,
+  getSubmissionNicknameHeader,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

@@ -1,49 +1,48 @@
-import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
-import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUI } from 'hooks';
-import React, { useMemo } from 'react';
-import { DataViewerHeadersType, ProblemDataResponseDTO, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
-  submissionActionsColumn,
-  submissionContestColumn,
-  submissionDateColumn,
-  submissionLanguage,
-  submissionMemoryUsed,
-  submissionNickname,
-  submissionTimeUsed,
-  submissionVerdictColumn,
-} from '../submissions/helpers';
+  getSubmissionDateHeader,
+  getSubmissionLanguageHeader,
+  getSubmissionMemoryHeader,
+  getSubmissionNicknameHeader,
+  getSubmissionProblemHeader,
+  getSubmissionRejudgeHeader,
+  getSubmissionTimeHeader,
+  getSubmissionVerdictHeader,
+  PagedDataViewer,
+} from 'components';
+import { jukiSettings } from 'config';
+import { toFilterUrl, toSortUrl } from 'helpers';
+import { useMemo } from 'hooks';
+import { DataViewerHeadersType, ProblemDataResponseDTO, QueryParam, SubmissionSummaryListResponseDTO } from 'types';
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {
   
-  const { components: { Link, Image } } = useJukiUI();
-  const columns: DataViewerHeadersType<SubmissionDataResponseDTO>[] = useMemo(() => {
+  const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => {
     return [
-      submissionNickname(Image),
-      submissionContestColumn(Link),
-      submissionDateColumn(),
-      submissionVerdictColumn(),
-      ...(problem.user.isManager ? [ submissionActionsColumn({ canRejudge: true }) ] : []),
-      submissionLanguage(),
-      submissionTimeUsed(),
-      submissionMemoryUsed(),
+      getSubmissionNicknameHeader(),
+      getSubmissionProblemHeader(),
+      getSubmissionDateHeader(),
+      getSubmissionVerdictHeader(),
+      ...(problem.user.isManager ? [ getSubmissionRejudgeHeader() ] : []),
+      getSubmissionLanguageHeader(),
+      getSubmissionTimeHeader(),
+      getSubmissionMemoryHeader(),
     ];
-  }, [ problem.user.isManager, Link, Image ]);
+  }, [ problem.user.isManager ]);
   
   return (
-    <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>
+    <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        JUDGE_API_V1.SUBMISSIONS.PROBLEM(
-          problem?.key,
-          page,
-          pageSize,
-          toFilterUrl(filter),
-          toSortUrl(sort),
-        )
+        jukiSettings.API.submission.getSummaryList({
+          params: {
+            page,
+            pageSize,
+            filterUrl: toFilterUrl({ ...filter, problemKeys: problem.key }),
+            sortUrl: toSortUrl(sort),
+          },
+        }).url
       )}
       name={QueryParam.STATUS_TABLE}
       toRow={submission => submission}

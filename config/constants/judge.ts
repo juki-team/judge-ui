@@ -1,13 +1,5 @@
-import { Judge, KeyFileType } from 'types';
+import { KeyFileType } from 'types';
 import { API_VERSION, JUKI_SERVICE_BASE_URL } from './settings';
-
-const withSort = (path: string, sortUrl?: string) => {
-  return path + (sortUrl ? '&' + sortUrl : '');
-};
-
-const withFilter = (path: string, filterUrl?: string) => {
-  return path + (filterUrl ? '&' + filterUrl : '');
-};
 
 export const JUDGE_API_V1 = {
   SYS: {
@@ -15,49 +7,9 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/sys/email/send`;
     },
   },
-  SUBMIT: {
-    SUBMIT_ID: (submitId: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submit/${submitId}`;
-    },
-  },
-  SUBMISSIONS: {
-    LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(
-        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}`,
-        filterUrl,
-      ), sortUrl);
-    },
-    NICKNAME: (nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(
-        `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&nickname=${nickname}`,
-        filterUrl,
-      ), sortUrl);
-    },
-    CONTEST: (contestKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(
-        contestKey)}`, filterUrl), sortUrl);
-    },
-    CONTEST_EXPORT: (contestKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions/export?page=${page}&size=${size}&contestKey=${encodeURIComponent(
-        contestKey)}`, filterUrl), sortUrl);
-    },
-    CONTEST_NICKNAME: (contestKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&contestKey=${encodeURIComponent(
-        contestKey)}&nickname=${nickname}`, filterUrl), sortUrl);
-    },
-    PROBLEM: (problemKey: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemKeys=${problemKey}`, filterUrl), sortUrl);
-    },
-    PROBLEM_NICKNAME: (problemKey: string, nickname: string, page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return withSort(withFilter(`${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submissions?page=${page}&size=${size}&problemKeys=${problemKey}&nickname=${nickname}`, filterUrl), sortUrl);
-    },
-  },
   PROBLEM: {
     PROBLEM: (key: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/${key}`;
-    },
-    RE_CRAWL_PROBLEM: (key: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem/re-crawl/${key}`;
     },
     CREATE: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/problem`;
@@ -79,10 +31,6 @@ export const JUDGE_API_V1 = {
     },
   },
   CONTEST: {
-    LIST: (page: number, size: number, filterUrl: string | undefined, sortUrl: string | undefined) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/list?page=${page}&size=${size}${filterUrl ? '&'
-        + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
-    },
     CREATE: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest`;
     },
@@ -94,9 +42,6 @@ export const JUDGE_API_V1 = {
     },
     REGISTER: (key: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/register`;
-    },
-    SUBMIT: (key: string, problemJudgeKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/submit/contest/${key}/problem-judge-key/${problemJudgeKey}`;
     },
     SCOREBOARD: (key: string, unfrozen: boolean) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen' : ''}`;
@@ -120,12 +65,6 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/unlock-scoreboard`;
     },
   },
-  COURSE: {
-    LIST: (page: number, size: number, filterUrl: string, sortUrl: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/course/list?page=${page}&size=${size}${filterUrl ? '&'
-        + filterUrl : ''}${sortUrl ? '&' + sortUrl : ''}`;
-    },
-  },
   REJUDGE: {
     PROBLEM: (problemJudgeKey: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/problem/${problemJudgeKey}`;
@@ -133,24 +72,10 @@ export const JUDGE_API_V1 = {
     CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}`;
     },
-    SUBMISSION: (submissionId: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/submission/${submissionId}`;
-    },
   },
   RANKING: {
     LIST: () => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rank/list`;
-    },
-  },
-  JUDGE: {
-    GET: (judge: Judge, companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/company/${companyKey}`;
-    },
-    CRAWL_LANGUAGES: (judge: Judge, companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/company/${companyKey}/re-crawl-languages`;
-    },
-    LANGUAGES: (judge: Judge, companyKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/judge/${judge}/company/${companyKey}/languages`;
     },
   },
 };

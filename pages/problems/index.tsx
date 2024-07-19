@@ -145,7 +145,7 @@ function Problems() {
             return jukiSettings.API.problem.getSummaryList({
               params: {
                 page,
-                size: pageSize,
+                pageSize,
                 filterUrl: toFilterUrl({ ...filter, judgeKeys: judgeKey }),
                 sortUrl: toSortUrl(sort),
               },

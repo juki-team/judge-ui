@@ -3,7 +3,7 @@ import { jukiSettings } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useJukiUser } from 'hooks';
 import { useMemo } from 'react';
-import { ContestSummaryListResponseDTO, DataViewerHeadersType, QueryParam } from 'types';
+import { ContestSummaryListResponseDTO, DataViewerHeadersType, EntityState, QueryParam } from 'types';
 
 export const ContestsAllList = () => {
   
@@ -22,8 +22,8 @@ export const ContestsAllList = () => {
         jukiSettings.API.contest.getSummaryList({
           params: {
             page,
-            size: pageSize,
-            filterUrl: toFilterUrl({ companyKeys: companyKey, ...filter }),
+            pageSize,
+            filterUrl: toFilterUrl({ ...filter, companyKeys: companyKey, state: EntityState.RELEASED }),
             sortUrl: toSortUrl(sort),
           },
         }).url

@@ -1,3 +1,4 @@
+import { EntityState } from '@juki-team/commons';
 import { getContestDateHeader, getContestNameHeader, PagedDataViewer } from 'components';
 import { jukiSettings } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
@@ -21,8 +22,13 @@ export const ContestsUpcomingList = () => {
         jukiSettings.API.contest.getSummaryList({
           params: {
             page,
-            size: pageSize,
-            filterUrl: toFilterUrl({ ...filter, companyKeys: companyKey, status: 'upcoming' }),
+            pageSize,
+            filterUrl: toFilterUrl({
+              ...filter,
+              companyKeys: companyKey,
+              state: EntityState.RELEASED,
+              status: 'upcoming',
+            }),
             sortUrl: toSortUrl(sort),
           },
         }).url

@@ -5,7 +5,7 @@ export {
   useJukiUI,
   useFetcher,
   useSWR,
-  useJkSocket,
+  useJukiTask,
   useMatchMutate,
   usePrevious,
   useDataViewerRequester,

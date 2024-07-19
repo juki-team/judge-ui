@@ -1294,10 +1294,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.526":
-  version "0.1.526"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.526/429ff053b0b0f462ceb214a6a3148c76cf1e96a4#429ff053b0b0f462ceb214a6a3148c76cf1e96a4"
-  integrity sha512-yV5iKViKFKyU5sVgLdaw1tkYe9mNgUY9CDJ5NSKxQ4V0wKGUOsAzWnMGhTvC/6ctIPkAcDGAg1ef2xxAtTsEfg==
+"@juki-team/base-ui@^0.1.538":
+  version "0.1.538"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.538/2120f72802cc47d6b9077a9ae84090cdcdb51b0c#2120f72802cc47d6b9077a9ae84090cdcdb51b0c"
+  integrity sha512-1Kn/BOci1lgFAIbW85JmCjM6+xRGs+9DnYBMQbLEoY1aLOsR3+49ZbkeQZ2I+fcpsFACvQHKJ2VFhtF66FIqEg==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-html" "^6.4.9"
@@ -1315,6 +1315,7 @@
     copy-to-clipboard "^3.3.3"
     countries-and-timezones "^3.6.0"
     deep-object-diff "^1.1.9"
+    diff2html "^3.4.48"
     graphlib-dot "^0.6.4"
     graphviz-react "^1.2.5"
     handsontable "^14.4.0"
@@ -1340,10 +1341,10 @@
     uuid "^10.0.0"
     yup "^1.4.0"
 
-"@juki-team/commons@^0.0.610":
-  version "0.0.610"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.610/ec06dec45d9b02889dfd74566715d1674bceab0b#ec06dec45d9b02889dfd74566715d1674bceab0b"
-  integrity sha512-Lk/+b8heTVQlFHdsBIxHxI46S2YzQlJOYjZj81IhdVzXFMMiPoDE3JhtSx/UzqeT+XWyJRSx1f70jdqzTEh9sg==
+"@juki-team/commons@^0.0.617":
+  version "0.0.617"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.617/231a9dcd6e5d7b31122aadc87e1c5fa0529aae32#231a9dcd6e5d7b31122aadc87e1c5fa0529aae32"
+  integrity sha512-2GDd1yuglWQ4qZGkfmt8jQsejXuuRfyIIiJRz8ngsow1TpyFAt90S0Mn2pz1cVYF8RTPksiWDMcrelo/wvya4A==
   dependencies:
     uuid "^10.0.0"
 

@@ -1,38 +1,44 @@
-import { PagedDataViewer } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
-import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiRouter, useJukiUI, useMemo } from 'hooks';
-import { DataViewerHeadersType, QueryParam, SubmissionDataResponseDTO } from 'types';
 import {
-  submissionDateColumn,
-  submissionLanguage,
-  submissionMemoryUsed,
-  submissionProblemColumn,
-  submissionTimeUsed,
-  submissionVerdictColumn,
-} from '../submissions/helpers';
+  getSubmissionDateHeader,
+  getSubmissionLanguageHeader,
+  getSubmissionMemoryHeader,
+  getSubmissionProblemHeader,
+  getSubmissionTimeHeader,
+  getSubmissionVerdictHeader,
+  PagedDataViewer,
+} from 'components';
+import { jukiSettings } from 'config';
+import { toFilterUrl, toSortUrl } from 'helpers';
+import { useJukiRouter, useMemo } from 'hooks';
+import { DataViewerHeadersType, QueryParam, SubmissionSummaryListResponseDTO } from 'types';
 
 export function ProfileSubmissions() {
   
   const { routeParams: { nickname } } = useJukiRouter();
-  const { components: { Link } } = useJukiUI();
   
-  const columns: DataViewerHeadersType<SubmissionDataResponseDTO>[] = useMemo(() => [
-    submissionProblemColumn(Link, { blankTarget: true }),
-    submissionDateColumn(),
-    submissionVerdictColumn(),
-    submissionLanguage(),
-    submissionTimeUsed(),
-    submissionMemoryUsed(),
-  ], [ Link ]);
+  const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => [
+    getSubmissionProblemHeader(),
+    getSubmissionDateHeader(),
+    getSubmissionVerdictHeader(),
+    getSubmissionLanguageHeader(),
+    getSubmissionTimeHeader(),
+    getSubmissionMemoryHeader(),
+  ], []);
   
   return (
-    <PagedDataViewer<SubmissionDataResponseDTO, SubmissionDataResponseDTO>
+    <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        JUDGE_API_V1.SUBMISSIONS.NICKNAME(nickname as string, page, pageSize, toFilterUrl(filter), toSortUrl(sort))
+        jukiSettings.API.submission.getSummaryList({
+          params: {
+            page,
+            pageSize,
+            filterUrl: toFilterUrl({ ...filter, nicknames: nickname as string }),
+            sortUrl: toSortUrl(sort),
+          },
+        }).url
       )}
       name={QueryParam.PROFILE_SUBMISSIONS_TABLE}
       toRow={submission => submission}
