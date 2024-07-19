@@ -3,6 +3,7 @@ export {
   JukiProviders,
   RefreshIcon,
   AddIcon,
+  SubmitView,
   TwoActionModal,
   Tooltip,
   AppsIcon,

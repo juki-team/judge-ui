@@ -6,7 +6,6 @@ export {
   useFetcher,
   useSWR,
   useJukiTask,
-  useMatchMutate,
   usePrevious,
   useDataViewerRequester,
   useJukiRouter,
