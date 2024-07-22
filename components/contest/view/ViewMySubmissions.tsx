@@ -33,7 +33,7 @@ export const ViewMySubmissions = ({ contest }: { contest: ContestDataResponseDTO
     for (const { name, languages, key } of judges) {
       if (judgeKeys.includes(key)) {
         const languagesResult: LanguagesByJudge[string]['languages'] = {};
-        for (const { value, label } of languages) {
+        for (const { value, label } of languages.filter(lang => lang.enabled)) {
           languagesResult[value] = { label, value };
         }
         result[key] = { key, languages: languagesResult, name };

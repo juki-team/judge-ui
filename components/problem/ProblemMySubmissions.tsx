@@ -31,7 +31,7 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
     for (const { name, languages, key } of judges) {
       if (problem.judge.key === key) {
         const languagesResult: LanguagesByJudge[string]['languages'] = {};
-        for (const { value, label } of languages) {
+        for (const { value, label } of languages.filter(lang => lang.enabled)) {
           languagesResult[value] = { label, value };
         }
         result[key] = { key, languages: languagesResult, name };

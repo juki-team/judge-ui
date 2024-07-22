@@ -28,7 +28,7 @@ export function ProfileSubmissions() {
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
     for (const { name, languages, key } of judges) {
       const languagesResult: LanguagesByJudge[string]['languages'] = {};
-      for (const { value, label } of languages) {
+      for (const { value, label } of languages.filter(lang => lang.enabled)) {
         languagesResult[value] = { label, value };
       }
       result[key] = { key, languages: languagesResult, name };
