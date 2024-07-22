@@ -4,6 +4,7 @@ import {
   CustomHead,
   EditIcon,
   EditViewMembers,
+  FirstLoginWrapper,
   NavigateBeforeIcon,
   NavigateNextIcon,
   ProblemView,
@@ -17,7 +18,13 @@ import {
 } from 'components';
 import { jukiSettings } from 'config';
 import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import { contestStateMap, renderReactNodeOrFunctionP1, toUpsertContestDTOUI } from 'helpers';
+import {
+  authorizedRequest,
+  cleanRequest,
+  contestStateMap,
+  renderReactNodeOrFunctionP1,
+  toUpsertContestDTOUI,
+} from 'helpers';
 import {
   useJukiNotification,
   useJukiRouter,
@@ -39,8 +46,6 @@ import {
   TabsType,
   UpsertContestDTOUI,
 } from 'types';
-import { authorizedRequest, cleanRequest } from '../../../helpers';
-import { FirstLoginWrapper } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
@@ -55,7 +60,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
   const { viewPortSize, components: { Link } } = useJukiUI();
-  const { user: { permissions: { canCreateContest } } } = useJukiUser();
+  const { user: { permissions: { contests: { create: canCreateContest } } } } = useJukiUser();
   const { t } = useT();
   const { listenSubmission } = useJukiTask();
   const { matchMutate } = useSWR();

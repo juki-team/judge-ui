@@ -10,14 +10,37 @@ import {
 } from 'components';
 import { jukiSettings } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUI, useJukiUser } from 'hooks';
+import { useFetcher, useJukiUser } from 'hooks';
 import { useMemo } from 'react';
-import { ContestDataResponseDTO, DataViewerHeadersType, QueryParam, SubmissionSummaryListResponseDTO } from 'types';
+import {
+  ContentsResponseType,
+  ContestDataResponseDTO,
+  DataViewerHeadersType,
+  JudgeSummaryListResponseDTO,
+  LanguagesByJudge,
+  QueryParam,
+  SubmissionSummaryListResponseDTO,
+} from 'types';
 
 export const ViewMySubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   const { user: { nickname } } = useJukiUser();
-  const { components: { Link } } = useJukiUI();
+  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiSettings.API.judge.getSummaryList().url);
+  const languages = useMemo(() => {
+    const result: LanguagesByJudge = {};
+    const judges = judgePublicList?.success ? judgePublicList.contents : [];
+    const judgeKeys = Object.values(contest.problems).map(({ judgeKey }) => judgeKey);
+    for (const { name, languages, key } of judges) {
+      if (judgeKeys.includes(key)) {
+        const languagesResult: LanguagesByJudge[string]['languages'] = {};
+        for (const { value, label } of languages) {
+          languagesResult[value] = { label, value };
+        }
+        result[key] = { key, languages: languagesResult, name };
+      }
+    }
+    return result;
+  }, [ contest.problems, judgePublicList ]);
   
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => [
     getSubmissionProblemHeader({
@@ -36,10 +59,10 @@ export const ViewMySubmissions = ({ contest }: { contest: ContestDataResponseDTO
     getSubmissionDateHeader(),
     getSubmissionVerdictHeader(),
     ...(contest.user.isManager || contest.user.isAdministrator ? [ getSubmissionRejudgeHeader() ] : []),
-    getSubmissionLanguageHeader(),
+    getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.problems, contest.user.isAdministrator, contest.user.isManager ]);
+  ], [ contest.problems, contest.user.isAdministrator, contest.user.isManager, languages ]);
   
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>

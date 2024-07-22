@@ -13,17 +13,37 @@ import {
 } from 'components';
 import { jukiSettings } from 'config';
 import { authorizedRequest, downloadBlobAsFile, toFilterUrl, toSortUrl } from 'helpers';
-import { useRef } from 'hooks';
+import { useFetcher, useRef } from 'hooks';
 import { useMemo } from 'react';
 import {
+  ContentsResponseType,
   ContestDataResponseDTO,
   DataViewerHeadersType,
+  JudgeSummaryListResponseDTO,
+  LanguagesByJudge,
   QueryParam,
   Status,
   SubmissionSummaryListResponseDTO,
 } from 'types';
 
 export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
+  
+  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiSettings.API.judge.getSummaryList().url);
+  const languages = useMemo(() => {
+    const result: LanguagesByJudge = {};
+    const judges = judgePublicList?.success ? judgePublicList.contents : [];
+    const judgeKeys = Object.values(contest.problems).map(({ judgeKey }) => judgeKey);
+    for (const { name, languages, key } of judges) {
+      if (judgeKeys.includes(key)) {
+        const languagesResult: LanguagesByJudge[string]['languages'] = {};
+        for (const { value, label } of languages) {
+          languagesResult[value] = { label, value };
+        }
+        result[key] = { key, languages: languagesResult, name };
+      }
+    }
+    return result;
+  }, [ contest.problems, judgePublicList ]);
   
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => [
     getSubmissionNicknameHeader(),
@@ -43,10 +63,10 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     getSubmissionDateHeader(),
     getSubmissionVerdictHeader(),
     ...(contest.user.isManager || contest.user.isAdministrator ? [ getSubmissionRejudgeHeader() ] : []),
-    getSubmissionLanguageHeader(),
+    getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.problems, contest.user.isAdministrator, contest.user.isManager ]);
+  ], [ contest.problems, contest.user.isAdministrator, contest.user.isManager, languages ]);
   
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   

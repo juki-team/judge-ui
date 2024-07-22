@@ -17,7 +17,7 @@ function Contests() {
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const { searchParams, setSearchParams } = useJukiRouter();
   const contestsTab = searchParams.get('tab') as ContestsTab;
-  const { user: { permissions: { canCreateContest } } } = useJukiUser();
+  const { user: { permissions: { contests: { create: canCreateContest } } } } = useJukiUser();
   useEffect(() => {
     if (![
       ContestsTab.ALL,

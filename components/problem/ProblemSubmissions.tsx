@@ -11,10 +11,34 @@ import {
 } from 'components';
 import { jukiSettings } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useMemo } from 'hooks';
-import { DataViewerHeadersType, ProblemDataResponseDTO, QueryParam, SubmissionSummaryListResponseDTO } from 'types';
+import { useFetcher, useMemo } from 'hooks';
+import {
+  ContentsResponseType,
+  DataViewerHeadersType,
+  JudgeSummaryListResponseDTO,
+  LanguagesByJudge,
+  ProblemDataResponseDTO,
+  QueryParam,
+  SubmissionSummaryListResponseDTO,
+} from 'types';
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {
+  
+  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiSettings.API.judge.getSummaryList().url);
+  const languages = useMemo(() => {
+    const result: LanguagesByJudge = {};
+    const judges = judgePublicList?.success ? judgePublicList.contents : [];
+    for (const { name, languages, key } of judges) {
+      if (problem.judge.key === key) {
+        const languagesResult: LanguagesByJudge[string]['languages'] = {};
+        for (const { value, label } of languages) {
+          languagesResult[value] = { label, value };
+        }
+        result[key] = { key, languages: languagesResult, name };
+      }
+    }
+    return result;
+  }, [ judgePublicList, problem.judge.key ]);
   
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => {
     return [
@@ -23,11 +47,11 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDT
       getSubmissionDateHeader(),
       getSubmissionVerdictHeader(),
       ...(problem.user.isManager ? [ getSubmissionRejudgeHeader() ] : []),
-      getSubmissionLanguageHeader(),
+      getSubmissionLanguageHeader(languages),
       getSubmissionTimeHeader(),
       getSubmissionMemoryHeader(),
     ];
-  }, [ problem.user.isManager ]);
+  }, [ languages, problem.user.isManager ]);
   
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>

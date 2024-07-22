@@ -16,23 +16,25 @@ import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
-  const { pathname, pushRoute, searchParams } = useJukiRouter();
+  const { pathname, pushRoute } = useJukiRouter();
   const { components: { Link, Image } } = useJukiUI();
   
   const {
     user: {
       nickname,
       permissions: {
-        canViewSubmissionsManagement,
-        canCreateUser,
+        submissions: {
+          manage: canViewSubmissionsManagement,
+        },
+        users: {
+          create: canCreateUser,
+        },
         canHandleUsers,
       },
       settings: { [ProfileSetting.THEME]: userTheme },
     },
     company: { key },
   } = useJukiUser();
-  
-  const { deleteSearchParams } = useJukiRouter();
   
   const menu: MenuType[] = [
     {
@@ -92,7 +94,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     selected: ('/' + pathname).includes('//help'),
     menuItemWrapper: ({ children }) => <LinkLastPath lastPathKey={LastPathKey.SECTION_HELP}>{children}</LinkLastPath>,
   });
-  
   
   return (
     <>

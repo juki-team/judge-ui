@@ -56,7 +56,7 @@ function Problems() {
   
   useTrackLastPath(LastPathKey.PROBLEMS);
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  const { user: { permissions: { problem: { create: canCreateProblem } } }, company: { name, key } } = useJukiUser();
+  const { user: { permissions: { problems: { create: canCreateProblem } } } } = useJukiUser();
   const { searchParams, setSearchParams } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();

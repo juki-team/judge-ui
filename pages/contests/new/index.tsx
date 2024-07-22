@@ -9,7 +9,7 @@ import Custom404 from '../../404';
 function ContestCreate() {
   
   const {
-    user: { nickname, imageUrl, permissions: { canCreateContest } },
+    user: { nickname, imageUrl, permissions: { contests: { create: canCreateContest } } },
     company: { key: companyKey },
   } = useJukiUser();
   const newEntity = useMemo(() => () => CONTEST_DEFAULT({

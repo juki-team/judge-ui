@@ -8,28 +8,28 @@
 .problem-info {
   &:not(.horizontal) {
     min-width: 300px;
-    
+
     .label {
       margin-right: var(--pad-xt);
     }
   }
-  
+
   &.horizontal {
     position: sticky !important;
     top: 0;
     padding: var(--pad-t) 0;
-    
+
     .label {
       font-weight: var(--weight-semi-bold);
       line-height: 14px;
     }
-    
+
     > div {
       display: flex;
       flex-direction: column-reverse;
       justify-content: center;
       align-items: center;
-      
+
       > span {
         > span:nth-child(2) {
           display: none;
@@ -47,7 +47,7 @@
 
 .submission-info-code-source {
   position: relative;
-  
+
   .jk-code-viewer {
     > pre {
       min-height: 200px;
@@ -78,12 +78,12 @@
   border-right: 1px solid var(--t-color-gray-5);
   // border-bottom: 1px solid var(--t-color-gray-5);
   background-color: var(--t-color-white-2);
-  
+
   .jk-table-inline-row {
     border-left: 0;
     border-right: 0;
   }
-  
+
   .jk-table-inline-row:last-child {
     border-radius: 0;
     border-bottom: 0;
@@ -117,7 +117,9 @@
 .CODEFORCES-h3 {
   color: var(--t-color-primary-dark);
   font-size: 26px;
-  @include utils.sm { font-size: 22px; }
+  @include utils.sm {
+    font-size: 22px;
+  }
   font-weight: var(--weight-bold);
   line-height: 1.6;
 }
@@ -138,24 +140,24 @@
     > div:not(.header) {
       display: none;
     }
-    
+
     > div.header > div.title {
       display: none;
     }
   }
-  
+
   .header {
     text-align: center;
-    
+
     .title {
       @extend .CODEFORCES-h3;
     }
-    
+
     .time-limit, .memory-limit, .input-file, .output-file {
       display: flex;
       justify-content: center;
       @extend .ws-np;
-      
+
       .property-title {
         font-weight: var(--weight-bold);
         padding-right: var(--pad-xt);
@@ -163,17 +165,17 @@
       }
     }
   }
-  
+
   > div:not(.header):not(.input-specification):not(.output-specification):not(.sample-tests):not(.note) {
     @extend .CODEFORCES-content;
     margin-top: var(--pad-xt);
   }
-  
+
   .input-specification, .output-specification, .note {
     @extend .CODEFORCES-content;
     position: relative;
     margin-top: 42px;
-    
+
     .section-title {
       position: absolute;
       top: -42px;
@@ -181,21 +183,21 @@
       @extend .CODEFORCES-h3;
     }
   }
-  
+
   .sample-tests {
     .section-title {
       @extend .CODEFORCES-h3;
     }
-    
+
     .input, .output {
       .title {
         @extend .CODEFORCES-h3;
-        
+
         .input-output-copier {
           display: none;
         }
       }
-      
+
       > pre {
         @extend .CODEFORCES-content;
       }
@@ -207,48 +209,79 @@
   .text-center > .flex.justify-center.gap-4, .text-center > .text-xl.font-bold.tracking-tight.text-black.mb-1 {
     display: none;
   }
-  
+
+  // new format
+  #notification {
+    display: none;
+  }
+
+  > .flex.flex-col.items-center.p-6 {
+    padding: 0;
+
+    .text-center .grid.grid-cols-2 {
+      > div:nth-child(3), > div:nth-child(4) {
+        display: none;
+      }
+
+      margin: 0;
+    }
+  }
+
+  a[href*="javascript:CopyToClipboard"] {
+    display: none;
+  }
+
+  pre {
+    white-space: normal;
+  }
+
+  .ml-2.mx-auto.rounded {
+    margin: 0;
+  }
+
+  //
+
   &.only-info {
     > center {
       > h2 {
         display: none;
       }
-      
+
       white-space: nowrap;
     }
-    
+
     > *:not(center) {
       display: none;
     }
   }
-  
+
   > center {
     > a {
       display: none;
     }
-    
+
     > h2 {
       @extend .CODEFORCES-h3;
     }
-    
+
     > span {
       @extend .fw-bd;
     }
   }
-  
+
   > h2 {
     @extend .CODEFORCES-h3;
   }
-  
+
   > div.content {
     @extend .CODEFORCES-content;
   }
-  
+
   > table > tbody > tr > td > {
     h2 {
       @extend .CODEFORCES-h3;
     }
-    
+
     pre {
       @extend .CODEFORCES-content;
     }
@@ -258,7 +291,7 @@
 .top-bottom-inset-shadow {
   position: relative;
   overflow: hidden;
-  
+
   &:after {
     height: 100%;
     width: calc(100% + 16px);
@@ -274,4 +307,3 @@
 .jk-button.bc-er {
   --button-background-color: var(--t-color-error);
 }
-

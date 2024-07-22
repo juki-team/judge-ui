@@ -9,7 +9,7 @@ import Custom404 from '../../404';
 function ProblemCreate() {
   
   const {
-    user: { nickname, imageUrl, permissions: { problem: { create } } },
+    user: { nickname, imageUrl, permissions: { problems: { create } } },
     company: { key: companyKey },
   } = useJukiUser();
   const newEntity = useMemo(() => () => PROBLEM_DEFAULT({
