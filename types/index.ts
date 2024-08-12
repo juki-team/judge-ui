@@ -70,7 +70,6 @@ export type {
   ProblemSampleCasesType,
   ProblemStatementType,
   ProblemSettingsByProgrammingLanguageType,
-  SessionResponseDTO,
   SessionBasicResponseDTO,
   ProblemTestCasesResponseDTO,
   SystemRole,

@@ -1,13 +1,4 @@
-import {
-  AssignmentIcon,
-  CupIcon,
-  HelpIcon,
-  LeaderboardIcon,
-  LinkLastPath,
-  MainMenu,
-  SettingsIcon,
-  T,
-} from 'components';
+import { AssignmentIcon, CupIcon, HelpIcon, LeaderboardIcon, LinkLastPath, MainMenu, T } from 'components';
 import { jukiSettings } from 'config';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
@@ -29,7 +20,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         users: {
           create: canCreateUser,
         },
-        canHandleUsers,
       },
       settings: { [ProfileSetting.THEME]: userTheme },
     },
@@ -73,19 +63,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
       },
     );
-  }
-  if (
-    canViewSubmissionsManagement
-    || canCreateUser
-    || canHandleUsers
-  ) {
-    menu.push({
-      label: <T className="tt-se">admin</T>,
-      icon: <SettingsIcon />,
-      selected: ('/' + pathname).includes('//admin'),
-      menuItemWrapper: ({ children }) =>
-        <LinkLastPath lastPathKey={LastPathKey.SECTION_ADMIN}>{children}</LinkLastPath>,
-    });
   }
   
   menu.push({

@@ -15,8 +15,8 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
   
   const { entity: initialProblem, entityKey: problemJudgeKey, tabButtons } = props;
   
-  const editing = !!initialProblem;
-  
+  const editing = !!problemJudgeKey;
+  console.log({ problemJudgeKey });
   const [ problem, setProblem ] = useState(initialProblem);
   useEntityDiff(initialProblem, true);
   const { components: { Link } } = useJukiUI();
@@ -83,16 +83,19 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
         />
       ),
     },
-    [ProblemTab.DELETE]: {
-      key: ProblemTab.DELETE,
-      header: <T className="tt-se ws-np">delete</T>,
-      body: (
-        <ProblemDelete
-          problemJudgeKey={problemJudgeKey}
-          documentOwner={problem.owner}
-        />
-      ),
-    },
+    ...(
+      editing ? {
+        [ProblemTab.DELETE]: {
+          key: ProblemTab.DELETE,
+          header: <T className="tt-se ws-np">delete</T>,
+          body: (
+            <ProblemDelete
+              problemJudgeKey={problemJudgeKey}
+              documentOwner={problem.owner}
+            />
+          ),
+        },
+      } : {}),
   };
   
   const breadcrumbs = ({ selectedTabKey }: { selectedTabKey: ProblemTab }) => [

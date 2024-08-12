@@ -30,7 +30,7 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
               </T>
             </div>
           ),
-          readonly: !setContest,
+          readOnly: !setContest,
         }}
         managers={{
           name: 'judges',
@@ -44,7 +44,7 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
               </T>
             </div>
           ),
-          readonly: !setContest,
+          readOnly: !setContest,
         }}
         participants={{
           name: 'contestants',
@@ -58,8 +58,8 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
               </T>
             </div>
           ),
-          closeable: true,
-          readonly: !setContest,
+          closeable: false,
+          readOnly: !setContest,
         }}
         guests={{
           description: (
@@ -73,7 +73,7 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
             </div>
           ),
           closeable: true,
-          readonly: !setContest,
+          readOnly: !setContest,
         }}
         spectators={{
           description: (
@@ -84,7 +84,7 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
             </div>
           ),
           closeable: true,
-          readonly: !setContest,
+          readOnly: !setContest,
         }}
       />
     </div>

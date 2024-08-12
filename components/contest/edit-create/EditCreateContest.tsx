@@ -22,7 +22,7 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
   
   const { entity: initialContest, entityKey: contestKey, tabButtons } = props;
   
-  const editing = !!initialContest;
+  const editing = !!contestKey;
   
   const { addWarningNotification } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
