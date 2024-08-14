@@ -85,8 +85,8 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
   return (
     <Select
       disabled={disabled}
-      options={[ { value: 'csv', label: 'as csv' }, { value: 'xlsx', label: 'as xlsx' } ]}
-      selectedOption={{ value: 'x', label: 'download' }}
+      options={[ { value: 'csv', label: <T>as csv</T> }, { value: 'xlsx', label: <T>as xlsx</T> } ]}
+      selectedOption={{ value: 'x', label: <T>download</T> }}
       onChange={({ value }) => {
         switch (value) {
           case 'csv':
