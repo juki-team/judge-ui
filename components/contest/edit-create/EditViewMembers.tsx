@@ -40,7 +40,7 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
                 {`a judge ${CAN_SEE_CONTEST}.`}
               </T>
               <T className="tt-se">
-                a judge can rejudge the submissions and can view all submissions.
+                a judge can view and rejudge the submissions and can answer the clarifications.
               </T>
             </div>
           ),
