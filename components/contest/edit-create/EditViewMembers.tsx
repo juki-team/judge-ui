@@ -37,10 +37,10 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
           description: (
             <div style={{ maxWidth: 200 }}>
               <T className="tt-se">
-                {`a guest ${CAN_SEE_CONTEST}.`}
+                {`a judge ${CAN_SEE_CONTEST}.`}
               </T>
               <T className="tt-se">
-                a guest can register for the contest.
+                a judge can rejudge the submissions and can view all submissions.
               </T>
             </div>
           ),
