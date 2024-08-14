@@ -25,7 +25,6 @@ import {
 } from 'types';
 import { EditContestProps } from '../types';
 
-
 export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponseDTO, {
   setProblems: Dispatch<SetStateAction<RowSortableItem<ContestProblemBasicDataResponseDTO>[]>>,
   withTime: number,
@@ -317,7 +316,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     <div className="jk-col top nowrap gap stretch bc-we jk-br-ie jk-pg-sm">
       <div className="jk-col left gap stretch">
         <div className="jk-row left gap">
-          <div className="fw-bd tt-se tx-xl cr-py"><T>Problems with period time restriction</T></div>
+          <div className="fw-bd tt-se tx-xl cr-py"><T>problems with period time restriction</T></div>
           <InputToggle
             size="small"
             checked={!!withTime}
