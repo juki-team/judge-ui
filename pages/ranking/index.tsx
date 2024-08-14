@@ -21,6 +21,7 @@ function Ranking() {
       cardPosition: 'top',
       minWidth: 80,
       sticky: true,
+      // sticky: true,
     },
     {
       head: <TextHeadCell text={<T className="tt-se">nickname</T>} className="left" />,
@@ -53,13 +54,13 @@ function Ranking() {
       Field: ({ record: { problemPoints }, isCard }) => (
         <TextField
           text={<>
-            <div className="fw-bd">{problemPoints.toFixed(2)}</div>
+            <div className="fw-bd" style={{ fontFamily: 'monospace' }}>{problemPoints.toFixed(2)}</div>
             &nbsp;<T>pts.</T>
           </>}
           label={<T className="tt-se">on problems</T>}
         />
       ),
-      sort: { compareFn: () => (rowA, rowB) => rowB.problemPoints - rowA.problemPoints },
+      // sort: { compareFn: () => (rowA, rowB) => rowB.problemPoints - rowA.problemPoints },
       cardPosition: 'centerLeft',
       minWidth: 150,
     },
@@ -80,14 +81,16 @@ function Ranking() {
     //   minWidth: 150,
     // },
     {
-      head: <TextHeadCell text={<><T className="tt-se">country</T>, <T className="tt-se">city</T></>} />,
+      head: <TextHeadCell
+        text={<div className="jk-row"><T className="tt-se">country</T>,&nbsp;<T className="tt-se">city</T></div>}
+      />,
       index: 'country-city',
       Field: ({ record: { country, city } }) => (
         <Field className="jk-row center">
           {city}{city ? <>,&nbsp;</> : ''}<span className="fw-bd">{country}</span>
         </Field>
       ),
-      filter: { type: 'text-auto' },
+      filter: { type: 'text-auto', getValue: ({ record: { country, city } }) => country + city },
       cardPosition: 'bottom',
       minWidth: 200,
     },

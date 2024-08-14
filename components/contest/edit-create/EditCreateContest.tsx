@@ -31,7 +31,7 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
   const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest || CONTEST_DEFAULT({
     nickname,
     imageUrl,
-    companyKey,
+    company: { key: companyKey },
   }, isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
   useEffect(() => {
     localStorage.removeItem(LS_INITIAL_CONTEST_KEY);

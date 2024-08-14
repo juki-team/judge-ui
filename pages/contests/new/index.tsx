@@ -15,7 +15,7 @@ function ContestCreate() {
   const newEntity = useMemo(() => () => CONTEST_DEFAULT({
     nickname,
     imageUrl,
-    companyKey,
+    company: { key: companyKey },
   }), [ nickname, imageUrl, companyKey ]);
   if (!canCreateContest) {
     return <Custom404 />;

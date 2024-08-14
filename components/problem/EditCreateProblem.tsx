@@ -16,7 +16,6 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
   const { entity: initialProblem, entityKey: problemJudgeKey, tabButtons } = props;
   
   const editing = !!problemJudgeKey;
-  console.log({ problemJudgeKey });
   const [ problem, setProblem ] = useState(initialProblem);
   useEntityDiff(initialProblem, true);
   const { components: { Link } } = useJukiUI();

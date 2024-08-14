@@ -1,7 +1,7 @@
 import { AssignmentIcon, Button, ContestView, FetcherLayer, LinkLastPath, T, TwoContentLayout } from 'components';
 import { jukiSettings } from 'config';
 import { oneTab } from 'helpers';
-import { useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
+import { useEcsWakeUp, useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
 import React from 'react';
 import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
 import Custom404 from '../../404';
@@ -9,7 +9,8 @@ import Custom404 from '../../404';
 export default function ContestViewPage() {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  const { searchParams, routeParams: { key: contestKey } } = useJukiRouter();
+  useEcsWakeUp();
+  const { searchParams, routeParams: { key: contestKey }, pathname } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   
   const breadcrumbs = [

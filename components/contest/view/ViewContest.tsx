@@ -88,14 +88,15 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     },
   };
   
+  const problems = Object.values(contest.problems);
+  problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
+  const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
+  const problem = problems[problemArrayIndex];
+  
   if (isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless) {
-    const problems = Object.values(contest.problems);
-    problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
-    const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
-    const problem = problems[problemArrayIndex];
     if (problemArrayIndex !== -1) {
-      tabHeaders[ContestTab.PROBLEM] = {
-        key: ContestTab.PROBLEM,
+      tabHeaders[ContestTab.PROBLEMS] = {
+        key: ContestTab.PROBLEMS,
         header: (
           <div className="jk-row gap nowrap">
             <NavigateBeforeIcon
@@ -106,7 +107,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
                 const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
                 pushRoute(jukiSettings.ROUTES.contests().view({
                   key: contest.key,
-                  tab: ContestTab.PROBLEM,
+                  tab: ContestTab.PROBLEMS,
                   subTab: previousProblemIndex,
                 }));
               }}
@@ -120,7 +121,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
                 const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
                 pushRoute(jukiSettings.ROUTES.contests().view({
                   key: contest.key,
-                  tab: ContestTab.PROBLEM,
+                  tab: ContestTab.PROBLEMS,
                   subTab: nextProblemIndex,
                 }));
               }}
@@ -335,7 +336,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
       <div className="ws-np">{contest.name}</div>
     </Link>,
   ];
-  if (contestTab === ContestTab.PROBLEM) {
+  if (contestTab === ContestTab.PROBLEMS && problemArrayIndex !== -1) {
     breadcrumbs.push(
       <Link
         href={jukiSettings.ROUTES.contests().view({

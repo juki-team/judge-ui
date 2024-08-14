@@ -53,7 +53,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
     };
     tabHeaders[ProfileTab.MY_SESSIONS] = {
       key: ProfileTab.MY_SESSIONS,
-      header: <T className="tt-ce ws-np">my sessions</T>,
+      header: <T className="tt-ce ws-np">active sessions</T>,
       body: <MyActiveSessions />,
     };
   }

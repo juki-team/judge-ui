@@ -110,7 +110,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
           <Link
             href={jukiSettings.ROUTES.contests().view({
               key: contestKey as string,
-              tab: ContestTab.PROBLEM,
+              tab: ContestTab.PROBLEMS,
               subTab: index,
             })}
           >

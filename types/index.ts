@@ -55,8 +55,6 @@ export type {
   ScoreboardResponseDTO,
   ContestDataResponseDTO,
   ProblemSettingsPointsByGroupsType,
-  UserSummaryResponseDTO,
-  UserManagementResponseDTO,
   ContestProblemDataResponseDTO,
   ContestSummaryListResponseDTO,
   UpsertContestDTO,

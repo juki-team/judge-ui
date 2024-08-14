@@ -58,7 +58,6 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
               </T>
             </div>
           ),
-          closeable: false,
           readOnly: !setContest,
         }}
         guests={{

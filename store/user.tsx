@@ -1,16 +1,7 @@
-import { NewVersionAvailableModal } from 'components';
+import { NewVersionAvailableTrigger } from 'components';
 import { createContext } from 'helpers';
-import { useEffect, useFetcher, useJukiRouter, useJukiUser, usePrevious, useState } from 'hooks';
-import { useRouter } from 'next/router';
-import {
-  ContentResponseType,
-  FlagsType,
-  Language,
-  ProfileSetting,
-  PropsWithChildren,
-  SetFlagsType,
-  Theme,
-} from 'types';
+import { useEffect, useJukiUser, useState } from 'hooks';
+import { FlagsType, ProfileSetting, PropsWithChildren, SetFlagsType, Theme } from 'types';
 
 export const UserContext = createContext<{ flags: FlagsType, setFlags: SetFlagsType }>({
   flags: {
@@ -23,35 +14,9 @@ export const _setFlags: { current: SetFlagsType } = { current: () => null };
 
 export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
-  const { locale, pathname, asPath, query, replace, isReady } = useRouter();
-  const { reloadRoute } = useJukiRouter();
   const { user } = useJukiUser();
-  const { data, isLoading } = useFetcher<ContentResponseType<{ version: string }>>(
-    '/api/version',
-    { revalidateOnFocus: true, revalidateOnReconnect: true, revalidateIfStale: true, revalidateOnMount: true },
-  );
-  const version = (data?.success && data.content.version) || '';
-  const previousVersion = usePrevious(version);
-  const [ modal, setModal ] = useState(false);
-  const router = useRouter();
-  useEffect(() => {
-    if (previousVersion && version && version !== previousVersion) {
-      setModal(true);
-    }
-  }, [ version, previousVersion, router ]);
-  
   const [ flags, setFlags ] = useState<FlagsType>({ isHelpOpen: false, isHelpFocused: false });
   _setFlags.current = setFlags;
-  
-  const userLanguage = user.settings?.[ProfileSetting.LANGUAGE] === Language.ES ? Language.ES : Language.EN;
-  
-  useEffect(() => {
-    // if (isReady) {
-    //   if (locale?.toLowerCase() !== userLanguage.toLowerCase()) {
-    //     void replace({ pathname, query }, asPath, { locale: userLanguage.toLowerCase() });
-    //   }
-    // }
-  }, [ userLanguage, user.nickname, locale, pathname, asPath, replace, query, isReady ]);
   
   const userTheme = user.settings?.[ProfileSetting.THEME];
   
@@ -67,14 +32,7 @@ export const UserProvider = ({ children }: PropsWithChildren<{}>) => {
   
   return (
     <UserContext.Provider value={{ flags, setFlags }}>
-      <NewVersionAvailableModal
-        isOpen={modal}
-        onClose={() => setModal(false)}
-        previousVersion={previousVersion + ''}
-        newVersion={version + ''}
-        reload={reloadRoute}
-      />
-      {modal}
+      <NewVersionAvailableTrigger apiVersionUrl="/api/version" />
       {children}
     </UserContext.Provider>
   );

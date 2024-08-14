@@ -36,6 +36,6 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey }: {
       managers: {},
       spectators: {},
     },
-    owner: { nickname, imageUrl, companyKey },
+    owner: { nickname, imageUrl, company: { key: companyKey } },
   };
 };

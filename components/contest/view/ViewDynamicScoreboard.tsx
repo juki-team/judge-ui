@@ -1,35 +1,24 @@
+import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, Image, T, Timer, Tooltip } from 'components';
 import {
-  BalloonIcon,
-  Button,
-  DataViewer,
-  Field,
-  FullscreenExitIcon,
-  FullscreenIcon,
-  Image,
-  T,
-  Timer,
-  Tooltip,
-  UserNicknameLink,
-} from 'components';
-import { jukiSettings } from 'config';
+  getNicknameColumn,
+  getPointsColumn,
+  getPositionColumn,
+  getProblemScoreboardColumn,
+} from 'components/contest/view/columns';
+import { ScoreboardResponseDTOFocus } from 'components/contest/view/types';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { classNames, contestStateMap } from 'helpers';
+import { contestStateMap } from 'helpers';
 import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
-  ContestTab,
   DataViewerHeadersType,
   KeyedMutator,
   QueryParam,
   ScoreboardResponseDTO,
 } from 'types';
 import { getContestTimeLiteral } from '../commons';
-
-interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTO {
-  focus: string[];
-}
 
 export const ViewDynamicScoreboard = ({ contest, mutate }: {
   contest: ContestDataResponseDTO,
@@ -42,114 +31,14 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
   const [ fullscreen, setFullscreen ] = useState(false);
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
-      {
-        head: '#',
-        index: 'position',
-        Field: ({ record: { position, focus } }) => (
-          <Field className={classNames('jk-row', { highlight: !!focus?.length })}>{position}</Field>
-        ),
-        minWidth: 64,
-        sticky: true,
-      },
-      {
-        head: 'nickname',
-        index: 'nickname',
-        Field: ({ record: { user: { nickname, imageUrl, companyKey }, focus } }) => (
-          <Field
-            className={classNames('jk-row center gap', {
-              'own': nickname === user.nickname,
-              highlight: !!focus?.length,
-            })}
-          >
-            <Image src={imageUrl} className="jk-user-profile-img large" alt={nickname} height={38} width={38} />
-            <UserNicknameLink nickname={nickname}>
-              <div
-                className={classNames('jk-border-radius ', {
-                  'bc-py cr-we fw-br': nickname === user.nickname,
-                  'link': nickname !== user.nickname,
-                })}
-              >
-                {nickname}
-              </div>
-            </UserNicknameLink>
-          </Field>
-        ),
-        minWidth: 250,
-        sticky: viewPortSize !== 'sm',
-      },
-      {
-        head: 'points',
-        index: 'points',
-        Field: ({ record: { focus, totalPenalty, totalPoints }, isCard }) => (
-          <Field className={classNames('jk-col center', { highlight: !!focus?.length })}>
-            <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
-            {!contest.isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
-          </Field>
-        ),
-        minWidth: 128,
-        sticky: viewPortSize !== 'sm',
-      },
+      getPositionColumn(),
+      getNicknameColumn(viewPortSize, user.nickname),
+      getPointsColumn(viewPortSize, contest.isEndless),
     ];
     
     if (contest?.problems) {
       for (const problem of Object.values(contest?.problems)) {
-        base.push({
-          head: (
-            <Tooltip
-              content={
-                <div className="jk-row nowrap gap">
-                  <div className="fw-bd">{problem.index}</div>
-                  <div className="ws-np">{problem.name}</div>
-                </div>
-              }
-            >
-              <div className="jk-col extend fw-bd">
-                <Link
-                  href={jukiSettings.ROUTES.contests().view({
-                    key: contestKey as string,
-                    tab: ContestTab.PROBLEM,
-                    subTab: problem.index,
-                  })}
-                >
-                  {problem.index}
-                </Link>
-              </div>
-            </Tooltip>
-          ),
-          index: problem.index,
-          Field: ({ record: { problems, focus }, isCard }) => {
-            const problemData = problems[problem.key];
-            return (
-              <Field className={classNames('jk-row center nowrap', { highlight: focus?.includes(problem.key) })}>
-                {(problemData?.success || !!problemData?.points) && (
-                  <Tooltip
-                    content={
-                      <div className="ws-np">
-                        {problemData?.success ? problemData.points : <>{problemData.points}/{problem.points}</>}
-                        &nbsp;
-                        <T>{problem?.points === 1 ? 'point' : 'points'}</T>
-                      </div>
-                    }
-                  >
-                    <div style={{ color: problem.color }}>
-                      <BalloonIcon percent={(problemData.points / problem.points) * 100} />
-                    </div>
-                  </Tooltip>
-                )}
-                <div className="jk-row nowrap">
-                  <div className="tx-xs">{problemData?.attempts || '-'}</div>
-                  {!contest.isEndless && (
-                    <>
-                      <span className="cr-g3">/</span>
-                      <div className="tx-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
-                    </>
-                  )}
-                </div>
-              </Field>
-            );
-          },
-          minWidth: 120,
-        });
+        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem));
       }
     }
     return base;

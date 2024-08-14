@@ -203,6 +203,7 @@ export {
   getSubmissionProblemHeader,
   getSubmissionRejudgeHeader,
   getSubmissionNicknameHeader,
+  NewVersionAvailableTrigger,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';
