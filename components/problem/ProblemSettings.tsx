@@ -17,6 +17,7 @@ import { jukiSettings } from 'config';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   EMPTY_TEXT_LANGUAGES,
+  ONE_HOUR,
   PROBLEM_MODE,
   PROBLEM_TYPE,
   PROGRAMMING_LANGUAGE,
@@ -335,7 +336,10 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
           <Input
             type="number"
             value={problem.settings.timeLimit}
-            onChange={value => setProblem({ ...problem, settings: { ...problem.settings, timeLimit: value } })}
+            onChange={value => setProblem({
+              ...problem,
+              settings: { ...problem.settings, timeLimit: Math.max(Math.min(value, ONE_HOUR / 60 * 5), 0) },
+            })}
           />
           {problem.settings.timeLimit > 1 ? <T>milliseconds</T> : <T>millisecond</T>}
         </div>
@@ -344,7 +348,10 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
           <Input
             type="number"
             value={problem.settings.memoryLimit}
-            onChange={value => setProblem({ ...problem, settings: { ...problem.settings, memoryLimit: value } })}
+            onChange={value => setProblem({
+              ...problem,
+              settings: { ...problem.settings, memoryLimit: Math.max(Math.min(value, 2097152), 0) },
+            })}
           />
           <T>KB</T>
         </div>

@@ -46,7 +46,10 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
   }, [ contest.problems, judgePublicList ]);
   
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => [
-    getSubmissionNicknameHeader(),
+    getSubmissionNicknameHeader(Object.keys(contest.members.participants).map(participant => ({
+      value: participant,
+      label: participant,
+    }))),
     getSubmissionProblemHeader({
       header: {
         filter: {
@@ -66,7 +69,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.problems, contest.user.isAdministrator, contest.user.isManager, languages ]);
+  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, languages ]);
   
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   

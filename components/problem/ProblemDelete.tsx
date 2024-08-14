@@ -18,7 +18,7 @@ export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStateme
   
   return (
     <div className="jk-col gap jk-pg bc-we jk-br-ie cr-er">
-      <T className="tt-se cr-er fw-bd">are you sure you want to delete it?</T>
+      <T className="tt-se cr-er fw-bd">Are you sure you want to delete it?</T>
       <div style={{ display: 'ruby' }}>
         <T className="tt-se cr-er">you will no longer have access to this problem</T>, &nbsp;
         <T className="cr-er">to see it again contact the administrator</T>.
