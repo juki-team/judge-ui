@@ -118,10 +118,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       <T className="tt-se">problems</T>
     </LinkLastPath>,
     <Link
-      href={{
-        pathname: jukiSettings.ROUTES.problems().view({ key: problem.key }),
-        search: searchParams.toString(),
-      }}
+      href={jukiSettings.ROUTES.problems().view({ key: problem.key })}
       className="link"
       key="problem.name"
     >

@@ -9,16 +9,13 @@ export default function ProblemViewPage() {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   useEcsWakeUp();
-  const { searchParams, routeParams: { key: problemKey } } = useJukiRouter();
+  const { routeParams: { key: problemKey } } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   
   const breadcrumbs = [
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     <Link
-      href={{
-        pathname: jukiSettings.ROUTES.problems().view({ key: problemKey as string }),
-        search: searchParams.toString(),
-      }}
+      href={jukiSettings.ROUTES.problems().view({ key: problemKey as string })}
       className="link"
       key="key"
     >

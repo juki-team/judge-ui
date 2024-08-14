@@ -101,7 +101,7 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     editing
       ? (
-        <Link href={{ pathname: jukiSettings.ROUTES.problems().view({ key: problemJudgeKey }) }} className="link">
+        <Link href={jukiSettings.ROUTES.problems().view({ key: problemJudgeKey })} className="link">
           <div className="ws-np">{problem.name}</div>
         </Link>
       ) : <div className="ws-np">{problem.name}</div>,

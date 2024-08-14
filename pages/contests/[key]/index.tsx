@@ -16,10 +16,7 @@ export default function ContestViewPage() {
   const breadcrumbs = [
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">contests</T></LinkLastPath>,
     <Link
-      href={{
-        pathname: jukiSettings.ROUTES.contests().view({ key: contestKey as string }),
-        search: searchParams.toString(),
-      }}
+      href={jukiSettings.ROUTES.contests().view({ key: contestKey as string })}
       className="link"
       key="key"
     >
