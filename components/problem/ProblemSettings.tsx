@@ -309,7 +309,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         log: '',
                       },
                     }}
-                    initialSource={{ [PROGRAMMING_LANGUAGE[ProgrammingLanguage.CPP17].mime]: problem.settings.evaluatorSource }}
+                    initialSource={{ [ProgrammingLanguage.CPP17]: problem.settings.evaluatorSource }}
                     enableAddSampleCases
                     enableAddCustomSampleCases
                   />
