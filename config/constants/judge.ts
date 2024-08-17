@@ -70,7 +70,7 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/problem/${problemJudgeKey}`;
     },
     CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem-judge-key/${problemJudgeKey}`;
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/contest/${contestKey}/problem/${problemJudgeKey}`;
     },
   },
   RANKING: {
