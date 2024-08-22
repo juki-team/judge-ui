@@ -79,7 +79,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                     );
                     
                     if (notifyResponse(response, setLoaderStatus)) {
-                      listenSubmission({ id: response.content.submitId, problem: { name: problem.name } });
+                      listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
                       await matchMutate(new RegExp(`^${jukiSettings.SERVICE_API_URL}/submission`, 'g'));
                       pushRoute({
                         pathname: jukiSettings.ROUTES.problems().view({ key: problemKey as string }),

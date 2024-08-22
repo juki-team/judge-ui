@@ -155,7 +155,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
                         id: response.content.submitId,
                         problem: { name: problem.name },
                         contest: { name: contest.name, problemIndex },
-                      });
+                      }, true);
                       pushRoute(jukiSettings.ROUTES.contests().view({
                         key: contestKey,
                         tab: ContestTab.MY_SUBMISSIONS,
