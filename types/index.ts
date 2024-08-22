@@ -93,6 +93,8 @@ export type {
   UserBasicInfoResponseDTO,
   SubmissionSummaryListResponseDTO,
   JudgeSummaryListResponseDTO,
+  EntityMembersResponseDTO,
+  ProblemJudgeSummaryListResponseDTO,
 } from '@juki-team/commons';
 
 export { Period, NotificationType, QueryParamKey, ProblemTab, ContestTab } from '@juki-team/base-ui';

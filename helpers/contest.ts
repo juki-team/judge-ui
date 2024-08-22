@@ -87,7 +87,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
   Object.values(contest.problems).forEach(problem => {
     problems[problem.key] = {
       key: problem.key,
-      judgeKey: problem.judgeKey,
+      judge: problem.judge,
       index: problem.index,
       name: problem.name,
       points: problem.points,

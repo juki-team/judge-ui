@@ -1,4 +1,3 @@
-import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import {
   ButtonLoader,
   CrawlCodeforcesProblemModal,
@@ -64,6 +63,7 @@ function Problems() {
   const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiSettings.API.company.getJudgeList().url);
   const judgeKey: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
   const tags = useMemo(() => data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : [], [ data, judgeKey ]);
+  const isExternal = useMemo(() => data?.success ? (data.content.find(j => j.key === judgeKey)?.isExternal ?? true) : true, [ data, judgeKey ]);
   const judges = (data?.success ? data.content : []).map(judge => ({
     value: judge.key,
     label: judge.name,
@@ -77,13 +77,13 @@ function Problems() {
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     getProblemKeyHeader(),
     getProblemNameHeader(false),
-    ...(!EXTERNAL_JUDGE_KEYS.includes(judgeKey) ? [
+    ...(!isExternal ? [
       getProblemModeHeader(),
       getProblemTypeHeader(),
       getProblemTagsHeader(tags),
     ] : []),
-    getProblemOwnerHeader(judgeKey !== Judge.JUKI_JUDGE && judgeKey !== Judge.CUSTOMER),
-  ], [ tags, judgeKey ]);
+    getProblemOwnerHeader(isExternal),
+  ], [ tags, judgeKey, isExternal ]);
   
   const breadcrumbs = [
     <T className="tt-se" key="problems">problems</T>,

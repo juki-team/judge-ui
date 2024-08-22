@@ -58,7 +58,7 @@ export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponse
         <span className="fw-bd">{problem.key}</span>
         {problem.name}
         <a
-          href={jukiSettings.ROUTES.problems(`https://${problem.judgeKey}.jukijudge.com'`).view({ key: problem.key })}
+          href={jukiSettings.ROUTES.problems(problem.judge.isMain ? '' : `https://${problem.judge.key}.jukijudge.com'`).view({ key: problem.key })}
           target="_blank"
         >
           <div className="jk-row"><OpenInNewIcon size="small" /></div>
@@ -220,7 +220,7 @@ export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponse
         </div>
       )}
       <div className="jk-row" style={{ width: 150 }}>
-        {problem.judgeKey}
+        {problem.judge.name}
       </div>
       <div className="jk-row" style={{ width: 30 }}>
         <DeleteIcon
@@ -259,7 +259,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         const value: ContestProblemBasicDataResponseDTO = {
           index: problem.index,
           key: problem.key,
-          judgeKey: problem.judgeKey,
+          judge: problem.judge,
           name: problem.name,
           points: problem.points,
           color: problem.color,
@@ -297,7 +297,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         problemsObj[problem.value.key] = {
           key: problem.value.key + '',
           index: indexToLetters(index + 1),
-          judgeKey: problem.value.judgeKey,
+          judge: problem.value.judge,
           name: problem.value.name,
           points: problem.value.points,
           color: problem.value.color,
@@ -395,7 +395,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       key: problem.key,
                       color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
                       points: 1,
-                      judgeKey: problem.judge?.key,
+                      judge: problem.judge,
                       startTimestamp: contest.settings.startTimestamp,
                       endTimestamp: contest.settings.endTimestamp,
                     };

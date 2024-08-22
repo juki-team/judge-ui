@@ -1,4 +1,3 @@
-import { EXTERNAL_JUDGE_KEYS } from '@juki-team/commons';
 import { FlagEnImage, FlagEsImage, MdMathEditor, MdMathViewer, PlusIcon, T, TabsInline } from 'components';
 import { classNames } from 'helpers';
 import { useJukiUser } from 'hooks';
@@ -15,7 +14,7 @@ interface ProblemStatementProps {
 
 export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatementProps) => {
   
-  const { judgeKey, settings, statement } = problem;
+  const { judgeKey, settings, statement, judgeIsExternal } = problem;
   
   const {
     user: {
@@ -27,7 +26,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
   } = useJukiUser();
   const [ language, setLanguage ] = useState<Language>(Language.ES);
   
-  if (EXTERNAL_JUDGE_KEYS.includes(judgeKey)) {
+  if (judgeIsExternal) {
     return (
       <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
         <div
@@ -49,7 +48,6 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
       </div>
     );
   }
-  
   
   const tabs = {
     [Language.ES]: {

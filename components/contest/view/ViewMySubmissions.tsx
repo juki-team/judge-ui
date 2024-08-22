@@ -29,7 +29,7 @@ export const ViewMySubmissions = ({ contest }: { contest: ContestDataResponseDTO
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
-    const judgeKeys = Object.values(contest.problems).map(({ judgeKey }) => judgeKey);
+    const judgeKeys = Object.values(contest.problems).map(({ judge: { key: judgeKey } }) => judgeKey);
     for (const { name, languages, key } of judges) {
       if (judgeKeys.includes(key)) {
         const languagesResult: LanguagesByJudge[string]['languages'] = {};

@@ -188,7 +188,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                       label: <>
                         <span
                           className="fw-bd"
-                        >{problem.index}</span> - {problem.name} ({problem.judgeKey} {problem.key})
+                        >{problem.index}</span> - {problem.name} ({problem.judge.key} {problem.key})
                       </>,
                     }))),
                 ]}

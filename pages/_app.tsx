@@ -1,7 +1,14 @@
 import { Analytics } from '@vercel/analytics/react';
 import { CustomHead, ErrorBoundary, JukiProviders, NavigationBar, SpinIcon, T } from 'components';
 import { jukiSettings } from 'config';
-import { JUKI_APP_COMPANY_KEY, JUKI_SERVICE_BASE_URL, JUKI_TOKEN_NAME, NODE_ENV, ROUTES } from 'config/constants';
+import {
+  JUKI_APP_COMPANY_KEY,
+  JUKI_SERVICE_BASE_URL,
+  JUKI_SOCKET_BASE_URL,
+  JUKI_TOKEN_NAME,
+  NODE_ENV,
+  ROUTES,
+} from 'config/constants';
 import { consoleWarn } from 'helpers';
 import { useJukiUser } from 'hooks';
 import Image from 'next/image';
@@ -69,7 +76,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
         reloadRoute: reload,
         isLoadingRoute,
       }}
-      socketServiceUrl={JUKI_SERVICE_BASE_URL}
+      socketServiceUrl={JUKI_SOCKET_BASE_URL}
       i18n={i18nInstance}
       initialLastPath={{
         [LastPathKey.SECTION_CONTEST]: {

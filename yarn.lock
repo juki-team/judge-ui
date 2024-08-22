@@ -1294,10 +1294,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.591":
-  version "0.1.591"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.591/999e65097a2d5af1a3847554ba54ceac0206ece1#999e65097a2d5af1a3847554ba54ceac0206ece1"
-  integrity sha512-qnFe5l9A/x11VHcj/rkeAxLZI2LEi6FRJW2jOMLCsh6RH2e1hrKjrkNNm19VfVdvU/BG1jPXTk/oaPkYd7Ab+A==
+"@juki-team/base-ui@^0.1.596":
+  version "0.1.596"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.596/f7b18c6f82e79be3f9c1f4cb2c23c12c620812da#f7b18c6f82e79be3f9c1f4cb2c23c12c620812da"
+  integrity sha512-xcZAQvb9Veu/yqyQW42LVD1KDW0g6q6sSK5BcVvnnVqPthhNH6ZL72xLdVZx/sGslhWQazQp7sFRxnILYUZJSg==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-html" "^6.4.9"
@@ -1339,12 +1339,13 @@
     remark-math "^6.0.0"
     swr "^2.2.5"
     uuid "^10.0.0"
+    ws "^8.18.0"
     yup "^1.4.0"
 
-"@juki-team/commons@^0.0.638":
-  version "0.0.638"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.638/423195a0949a0146dfb82bfcaee1496433217e7f#423195a0949a0146dfb82bfcaee1496433217e7f"
-  integrity sha512-5GSKzS1az1MPBsxBoiDUwfyx0qlVcLVGnqcIiWNOwYmUCkyxxsu4UcgkKnHFpfSZmhKgROUCuTfffJImzGgY4g==
+"@juki-team/commons@^0.0.644":
+  version "0.0.644"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.644/207b236e95539e6d9ba75db6e668c8f753d2170a#207b236e95539e6d9ba75db6e668c8f753d2170a"
+  integrity sha512-duBuuMUfuMoscrRZ0SQ/BKA4QZbXz3oUyjpVzQ7YO7YgsO0CvfiiOCoFQaaDnEse0I8YRZejE0pviEWYJAa8sQ==
   dependencies:
     uuid "^10.0.0"
 
@@ -6695,6 +6696,11 @@ ws@^7.3.1:
   version "7.5.9"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.9.tgz#54fa7db29f4c7cec68b1ddd3a89de099942bb591"
   integrity sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==
+
+ws@^8.18.0:
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 ws@~8.11.0:
   version "8.11.0"

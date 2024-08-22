@@ -10,7 +10,7 @@ import {
   TextHeadCell,
 } from 'components';
 import { jukiSettings } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS, EXTERNAL_JUDGE_KEYS, JUDGE_API_V1, JUKI_APP_COMPANY_KEY } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, JUKI_APP_COMPANY_KEY } from 'config/constants';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { useMemo } from 'react';
@@ -64,21 +64,21 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       {
         head: <TextHeadCell text={<T>key</T>} />,
         index: 'id',
-        Field: ({ record: { judgeKey, key }, isCard }) => (
+        Field: ({ record: { judge: { key: judgeKey, isMain, name }, key }, isCard }) => (
           <TextField
             text={
               isJudgeOrAdmin
                 ? (
                   <Link
-                    href={EXTERNAL_JUDGE_KEYS.includes(judgeKey)
-                      ? jukiSettings.ROUTES.problems(`https://judge.juki.app`).view({ key })
+                    href={isMain
+                      ? jukiSettings.ROUTES.problems().view({ key })
                       : jukiSettings.ROUTES.problems(`https://${judgeKey}.jukijudge.com`).view({ key })
                     }
                     target="_blank"
                   >
                     <div className="jk-row gap link">
                       <div className="fw-bd cr-g3 jk-col">
-                        {isCustomCompany ? judgeKey : ''}
+                        {!isMain ? name : ''}
                         <div>{key}</div>
                       </div>
                       <OpenInNewIcon size="tiny" />
@@ -105,7 +105,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>name</T>} />,
       index: 'name',
-      Field: ({ record: { name, index, judgeKey, key }, isCard }) => (
+      Field: ({ record: { name, index, key }, isCard }) => (
         <Field className="jk-col">
           <Link
             href={jukiSettings.ROUTES.contests().view({

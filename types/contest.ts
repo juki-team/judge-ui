@@ -1,8 +1,15 @@
-import { ContestDataResponseDTO, EntityMembersResponseDTO } from '@juki-team/commons';
-import { UpsertContestProblemDTO } from 'types';
+import {
+  ContestDataResponseDTO,
+  EntityMembersResponseDTO,
+  ProblemJudgeSummaryListResponseDTO,
+  UpsertContestProblemDTO,
+} from 'types';
 import { UpsertContestDTO } from './index';
 
-export type UpsertContestProblemDTOUI = UpsertContestProblemDTO & { name: string, judgeKey: string };
+export type UpsertContestProblemDTOUI = UpsertContestProblemDTO & {
+  name: string,
+  judge: ProblemJudgeSummaryListResponseDTO,
+};
 
 export interface UpsertContestDTOUI extends Omit<UpsertContestDTO, 'members'> {
   owner: ContestDataResponseDTO['owner'],

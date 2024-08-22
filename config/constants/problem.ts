@@ -1,14 +1,16 @@
 import { EntityAccess, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
 import { EMPTY_TEXT_LANGUAGES } from './commons';
 
-export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey }: {
+export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judgeIsExternal }: {
   nickname: string,
   imageUrl: string,
   companyKey: string,
   judgeKey: string,
+  judgeIsExternal: boolean,
 }): UpsertProblemUIDTO => {
   return {
     judgeKey,
+    judgeIsExternal,
     author: '',
     editorial: EMPTY_TEXT_LANGUAGES,
     name: '',

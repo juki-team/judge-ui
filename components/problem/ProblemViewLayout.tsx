@@ -12,7 +12,7 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiSettings } from 'config';
-import { EXTERNAL_JUDGE_KEYS, JUDGE_API_V1 } from 'config/constants';
+import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
 import {
   useJukiNotification,
@@ -128,7 +128,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   ];
   
   const extraNodes = [];
-  if (problem.user?.isManager && !EXTERNAL_JUDGE_KEYS.includes(problem.judge?.key)) {
+  if (problem.user?.isManager && !problem.judge?.isExternal) {
     extraNodes.push(
       <Popover
         content={
@@ -185,7 +185,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         {<T>edit</T>}
       </ButtonLoader>,
     );
-  } else if (EXTERNAL_JUDGE_KEYS.includes(problem.judge?.key) && user.isLogged) {
+  } else if (problem.judge?.isExternal && user.isLogged) {
     extraNodes.push(
       <ButtonLoader
         size="small"

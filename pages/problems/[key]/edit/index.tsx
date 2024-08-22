@@ -11,6 +11,7 @@ function toUpsertWorksheetDTO(problem: ProblemDataResponseDTO): UpsertProblemUID
     author: problem.author,
     editorial: problem.editorial,
     judgeKey: problem.judge?.key,
+    judgeIsExternal: problem.judge?.isExternal,
     members: problem.members,
     name: problem.name,
     settings: problem.settings,
