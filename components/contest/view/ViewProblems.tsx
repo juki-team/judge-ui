@@ -60,48 +60,47 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       cardPosition: isJudgeOrAdmin ? 'topLeft' : 'top',
       minWidth: 48,
     },
-    ...(isJudgeOrAdmin ? [
-      {
-        head: <TextHeadCell text={<T>key</T>} />,
-        index: 'id',
-        Field: ({ record: { judge: { key: judgeKey, isMain, name }, key }, isCard }) => (
-          <TextField
-            text={
-              isJudgeOrAdmin
-                ? (
-                  <Link
-                    href={isMain
+    {
+      head: <TextHeadCell text={<T>key</T>} />,
+      index: 'id',
+      Field: ({ record: { judge: { key: judgeKey, isMain, name, isExternal }, key, url }, isCard }) => (
+        <TextField
+          text={
+            isJudgeOrAdmin || contest.isEndless || contest.isPast
+              ? (
+                <Link
+                  href={isExternal
+                    ? url
+                    : isMain
                       ? jukiSettings.ROUTES.problems().view({ key })
                       : jukiSettings.ROUTES.problems(`https://${judgeKey}.jukijudge.com`).view({ key })
-                    }
-                    target="_blank"
-                  >
-                    <div className="jk-row gap link">
-                      <div className="fw-bd cr-g3 jk-col">
-                        {!isMain ? name : ''}
-                        <div>{key}</div>
-                      </div>
-                      <OpenInNewIcon size="tiny" />
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="jk-row gap">
+                  }
+                  target="_blank"
+                >
+                  <div className="jk-row gap link tx-s">
                     <div className="fw-bd cr-g3 jk-col">
-                      {isCustomCompany ? judgeKey : ''}
+                      {!isMain ? name : ''}
                       <div>{key}</div>
                     </div>
                     <OpenInNewIcon size="tiny" />
                   </div>
-                )
-            }
-            label={<T>id</T>}
-          />
-        ),
-        sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
-        cardPosition: 'topRight',
-        minWidth: 48,
-      },
-    ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[] : []),
+                </Link>
+              ) : (
+                <div className="jk-row gap link tx-s">
+                  <div className="fw-bd cr-g3 jk-col">
+                    {!isMain ? name : ''}
+                    <div>{key}</div>
+                  </div>
+                </div>
+              )
+          }
+          label={<T>id</T>}
+        />
+      ),
+      sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
+      cardPosition: 'topRight',
+      minWidth: 48,
+    },
     {
       head: <TextHeadCell text={<T>name</T>} />,
       index: 'name',

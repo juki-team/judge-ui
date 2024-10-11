@@ -26,7 +26,7 @@ import {
   downloadSheetDataAsXlsxFile,
 } from 'helpers';
 import { useDataViewerRequester, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser, useT } from 'hooks';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -147,17 +147,18 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   useEffect(() => {
     reload();
   }, [ reload, unfrozen ]);
-  const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
+  const data: ScoreboardResponseDTO[] = useMemo(() => (response?.success ? response.contents : []), [response]);
   
-  const handleFullscreen = () => setFullscreen(!fullscreen);
+  const handleFullscreen = useCallback( () => setFullscreen(fullscreen => !fullscreen), []);
   
-  const score = (
+  const score = useMemo(() => (
     <DataViewer<ScoreboardResponseDTO>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
+      
       extraNodes={[
         !unfrozen && contest?.isFrozenTime && (
           <Tooltip content={<T className="ws-np">scoreboard frozen</T>}>
@@ -246,7 +247,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  );
+  ), [columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, mutate, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen]);
   
   if (fullscreen) {
     const literal = getContestTimeLiteral(contest);

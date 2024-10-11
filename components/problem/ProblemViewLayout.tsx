@@ -6,6 +6,7 @@ import {
   FirstLoginWrapper,
   LinkLastPath,
   Popover,
+  Portal,
   ProblemInfo,
   ProblemView,
   T,
@@ -30,6 +31,7 @@ import {
   LastPathKey,
   ProblemDataResponseDTO,
   ProblemTab,
+  QueryParam,
   Status,
   SubmissionRunStatus,
   TabsType,
@@ -51,6 +53,35 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const { listenSubmission } = useJukiTask();
   const { components: { Link } } = useJukiUI();
   const { matchMutate } = useSWR();
+  const printMode = searchParams.get(QueryParam.PRINT_MODE);
+  
+  if (printMode === 'asProblemset') {
+    return (
+      <Portal className="">
+        <div
+          style={{
+            // position: 'fixed',
+            // zIndex: 100000,
+            width: '100vw',
+            height: '100vh',
+            // top: 0,
+            // left: 0,
+            background: 'white',
+            padding: 'var(--pad-md)',
+            boxSizing: 'border-box',
+          }}
+        >
+          <ProblemView
+            problem={problem}
+            infoPlacement="none"
+            codeEditorSourceStoreKey={problem.key}
+            forPrinting
+          />
+        </div>
+      </Portal>
+    );
+  }
+  
   const tabs: TabsType<ProblemTab> = {
     [ProblemTab.STATEMENT]: {
       key: ProblemTab.STATEMENT,

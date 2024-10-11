@@ -24,6 +24,7 @@ export enum QueryParam {
   COURSES_TABLE = 'cst',
   // problems
   JUDGE = 'judge',
+  PRINT_MODE = 'print-mode',
   // adming
   COMPANY = 'company',
 }

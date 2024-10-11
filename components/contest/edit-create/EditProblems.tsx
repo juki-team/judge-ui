@@ -265,6 +265,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           color: problem.color,
           startTimestamp: problem.startTimestamp,
           endTimestamp: problem.endTimestamp,
+          url: '',
         };
         return {
           key: problem.key,
@@ -398,6 +399,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       judge: problem.judge,
                       startTimestamp: contest.settings.startTimestamp,
                       endTimestamp: contest.settings.endTimestamp,
+                      url: '',
                     };
                     setProblems(prevState => (
                       [

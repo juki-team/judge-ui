@@ -130,7 +130,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
         ),
         body: (
           <ProblemView
-            problem={problem}
+            problem={{ ...problem, user: { isOwner: false, isManager: false, tried: false, isSpectator: false, solved: false } }}
             infoPlacement="name"
             codeEditorSourceStoreKey={contest.key + '/' + problem.key}
             codeEditorCenterButtons={({ sourceCode, language }) => {
@@ -220,7 +220,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     };
   }
   
-  if (isAdministrator || isManager || !contest.settings.locked) {
+  if ((isAdministrator || isManager || !contest.settings.locked) && !contest.isEndless && !contest.isFuture) {
     tabHeaders[ContestTab.DYNAMIC_SCOREBOARD] = {
       key: ContestTab.DYNAMIC_SCOREBOARD,
       header: <T className="tt-ce ws-np">dynamic scoreboard</T>,

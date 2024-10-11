@@ -161,7 +161,7 @@ function Problems() {
     >
       <div className="jk-row space-between extend pn-re">
         <div className="jk-row gap">
-          <h2><T>problems</T></h2>
+          <h1><T>problems</T></h1>
           {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judgeKey) && (
             <Popover
               content={<div><T className="tt-se">only tracked problems are displayed</T></div>}

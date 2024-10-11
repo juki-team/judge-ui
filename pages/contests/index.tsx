@@ -76,7 +76,7 @@ function Contests() {
       // selectedTabKey={contestsTab as ContestsTab}
       // getPathname={(tab) => ROUTES.CONTESTS.LIST(tab)}
     >
-      <h2><T>contests</T></h2>
+      <h1><T>contests</T></h1>
     </TwoContentLayout>
   );
 }
