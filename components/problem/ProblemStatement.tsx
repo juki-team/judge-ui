@@ -214,10 +214,10 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                 index={index}
                 sampleCases={statement.sampleCases}
                 key={index}
-                setSampleCases={setProblem ? (sampleCases) => setProblem(prevState => ({
+                setSampleCases={(sampleCases) => setProblem(prevState => ({
                   ...prevState,
                   statement: { ...statement, sampleCases },
-                })) : undefined}
+                }))}
               />
             ))}
           </div>

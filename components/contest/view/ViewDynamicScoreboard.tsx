@@ -1,4 +1,4 @@
-import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, Image, T, Timer, Tooltip } from 'components';
+import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, Image, T, Timer } from 'components';
 import {
   getNicknameColumn,
   getPointsColumn,
@@ -104,18 +104,17 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
       extraNodes={[
-        <Tooltip
-          content={fullscreen
-            ? <T className="ws-np">exit full screen</T>
-            : <T className="ws-np">go to fullscreen</T>}
+        <div
+          data-tooltip-id="jk-tooltip"
+          data-tooltip-content={fullscreen ? 'exit full screen' : 'go to fullscreen'}
+          data-tooltip-t-class-name="ws-np"
+          className="jk-row"
           key="fullscreen"
         >
-          <div className="jk-row">
-            {fullscreen
-              ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
-              : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
-          </div>
-        </Tooltip>,
+          {fullscreen
+            ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
+            : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
+        </div>,
         <div className="jk-row gap" key="buttons">
           <Button size="small" type="light" onClick={() => setIndex(0)}>
             <T>start</T>

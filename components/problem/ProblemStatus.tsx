@@ -1,4 +1,4 @@
-import { CheckIcon, PendingActionsIcon, T, Tooltip } from 'components';
+import { CheckIcon, PendingActionsIcon } from 'components';
 import { IconProps } from 'types';
 
 export const ProblemStatus = ({ solved, tried, size }: {
@@ -7,20 +7,25 @@ export const ProblemStatus = ({ solved, tried, size }: {
   size?: IconProps['size']
 }) => {
   return solved ? (
-    <Tooltip
-      content={<T className="tt-se ws-np">you solved it</T>}
-      placement="top"
-      withPortal
+    <div
+      data-tooltip-id="jk-tooltip"
+      data-tooltip-content="you solved it"
+      data-tooltip-t-class-name="tt-se ws-np"
+      data-tooltip-place="top"
+      className="jk-row"
     >
-      <div className="jk-row"><CheckIcon size={size} filledCircle className="cr-ss" /></div>
-    </Tooltip>
+      <CheckIcon size={size} filledCircle className="cr-ss" />
+    </div>
   ) : tried && (
-    <Tooltip
-      content={<T className="tt-se ws-np">you tried it</T>}
-      placement="top"
-      withPortal
+    <div
+      data-tooltip-id="jk-tooltip"
+      data-tooltip-content="you tried it"
+      data-tooltip-t-class-name="tt-se ws-np"
+      data-tooltip-place="top"
+      
+      className="jk-row"
     >
-      <div className="jk-row"><PendingActionsIcon size={size} filledCircle className="cr-wg" /></div>
-    </Tooltip>
+      <PendingActionsIcon size={size} filledCircle className="cr-wg" />
+    </div>
   );
 };

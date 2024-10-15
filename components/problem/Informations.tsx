@@ -1,15 +1,17 @@
-import { ExclamationIcon, InformationProps, Modal, T, Tooltip } from 'components';
+import { ExclamationIcon, InformationProps, Modal, T } from 'components';
 import { PROBLEM_VERDICT } from 'config/constants';
 import { useState } from 'hooks';
 import { ProblemVerdict } from 'types';
 
 const Verdict = ({ verdict }: { verdict: ProblemVerdict }) => {
   return (
-    <Tooltip content={<div>{PROBLEM_VERDICT[verdict].label}</div>}>
-      <div className="jk-row center jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}>
-        {verdict}
-      </div>
-    </Tooltip>
+    <div
+      data-tooltip-id="jk-tooltip"
+      data-tooltip-content={PROBLEM_VERDICT[verdict].label}
+      className="jk-row center jk-tag" style={{ backgroundColor: PROBLEM_VERDICT[verdict]?.color }}
+    >
+      {verdict}
+    </div>
   );
 };
 

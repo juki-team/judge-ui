@@ -9,7 +9,6 @@ import {
   Select,
   SnowflakeIcon,
   T,
-  Tooltip,
 } from 'components';
 import {
   getNicknameColumn,
@@ -147,9 +146,9 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   useEffect(() => {
     reload();
   }, [ reload, unfrozen ]);
-  const data: ScoreboardResponseDTO[] = useMemo(() => (response?.success ? response.contents : []), [response]);
+  const data: ScoreboardResponseDTO[] = useMemo(() => (response?.success ? response.contents : []), [ response ]);
   
-  const handleFullscreen = useCallback( () => setFullscreen(fullscreen => !fullscreen), []);
+  const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
   
   const score = useMemo(() => (
     <DataViewer<ScoreboardResponseDTO>
@@ -158,17 +157,26 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       rows={{ height: 68 }}
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
-      
       extraNodes={[
         !unfrozen && contest?.isFrozenTime && (
-          <Tooltip content={<T className="ws-np">scoreboard frozen</T>}>
-            <div className="cr-io"><SnowflakeIcon /></div>
-          </Tooltip>
+          <div
+            data-tooltip-id="jk-tooltip"
+            data-tooltip-content="scoreboard frozen"
+            data-tooltip-t-class-name="ws-np"
+            className="cr-io"
+          >
+            <SnowflakeIcon />
+          </div>
         ),
         !unfrozen && contest?.isQuietTime && (
-          <Tooltip content={<T className="ws-np">scoreboard on quiet time</T>}>
-            <div className="cr-er"><GearsIcon /></div>
-          </Tooltip>
+          <div
+            data-tooltip-id="jk-tooltip"
+            data-tooltip-content="scoreboard on quiet time"
+            data-tooltip-t-class-name="ws-np"
+            className="cr-er"
+          >
+            <GearsIcon />
+          </div>
         ),
         ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
           <div className="jk-row">
@@ -228,18 +236,17 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
         <div className="jk-row" key="download">
           <DownloadButton data={data} contest={contest} disabled={isLoading} />
         </div>,
-        <Tooltip
-          content={fullscreen
-            ? <T className="ws-np">exit full screen</T>
-            : <T className="ws-np">go to fullscreen</T>}
+        <div
+          data-tooltip-id="jk-tooltip"
+          data-tooltip-content={fullscreen ? 'exit full screen' : 'go to fullscreen'}
+          data-tooltip-t-class-name="ws-np"
+          className="jk-row"
           key="fullscreen"
         >
-          <div className="jk-row">
-            {fullscreen
-              ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
-              : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
-          </div>
-        </Tooltip>,
+          {fullscreen
+            ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
+            : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
+        </div>,
       ]}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
@@ -247,7 +254,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, mutate, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen]);
+  ), [ columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, mutate, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);
   
   if (fullscreen) {
     const literal = getContestTimeLiteral(contest);

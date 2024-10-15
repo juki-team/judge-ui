@@ -5,7 +5,6 @@ import {
   EditIcon,
   FirstLoginWrapper,
   LinkLastPath,
-  Popover,
   Portal,
   ProblemInfo,
   ProblemView,
@@ -161,48 +160,39 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const extraNodes = [];
   if (problem.user?.isManager && !problem.judge?.isExternal) {
     extraNodes.push(
-      <Popover
-        content={
-          <T className="ws-np tt-se">
-            only submissions that are not in a contest will be judged
-          </T>
-        }
-        placement="left"
-        showPopperArrow
+      <ButtonLoader
+        data-tooltip-id="jk-tooltip"
+        data-tooltip-content="only submissions that are not in a contest will be judged"
+        data-tooltip-t-class-name="ws-np tt-se"
+        size="small"
+        icon={<AutorenewIcon />}
+        onClick={async setLoaderStatus => {
+          setLoaderStatus(Status.LOADING);
+          const result = cleanRequest<ContentResponseType<{
+            listCount: number,
+            status: SubmissionRunStatus.RECEIVED
+          }>>(
+            await authorizedRequest(
+              JUDGE_API_V1.REJUDGE.PROBLEM(problem.key), { method: HTTPMethod.POST },
+            ),
+          );
+          if (result.success) {
+            addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
+              <T>submissions</T></div>);
+            setLoaderStatus(Status.SUCCESS);
+          } else {
+            addErrorNotification(<T
+              className="tt-se"
+            >{result.message ||
+              'something went wrong, please try again later'}</T>);
+            setLoaderStatus(Status.ERROR);
+          }
+        }}
+        responsiveMobile
+        type="light"
       >
-        <div>
-          <ButtonLoader
-            size="small"
-            icon={<AutorenewIcon />}
-            onClick={async setLoaderStatus => {
-              setLoaderStatus(Status.LOADING);
-              const result = cleanRequest<ContentResponseType<{
-                listCount: number,
-                status: SubmissionRunStatus.RECEIVED
-              }>>(
-                await authorizedRequest(
-                  JUDGE_API_V1.REJUDGE.PROBLEM(problem.key), { method: HTTPMethod.POST },
-                ),
-              );
-              if (result.success) {
-                addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
-                  <T>submissions</T></div>);
-                setLoaderStatus(Status.SUCCESS);
-              } else {
-                addErrorNotification(<T
-                  className="tt-se"
-                >{result.message ||
-                  'something went wrong, please try again later'}</T>);
-                setLoaderStatus(Status.ERROR);
-              }
-            }}
-            responsiveMobile
-            type="light"
-          >
-            <T>rejudge</T>
-          </ButtonLoader>
-        </div>
-      </Popover>,
+        <T>rejudge</T>
+      </ButtonLoader>,
       <ButtonLoader
         size="small"
         icon={<EditIcon />}

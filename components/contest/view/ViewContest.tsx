@@ -7,10 +7,10 @@ import {
   FirstLoginWrapper,
   NavigateBeforeIcon,
   NavigateNextIcon,
+  Popover,
   ProblemView,
   SpectatorInformation,
   T,
-  Tooltip,
   TwoContentLayout,
   ViewMySubmissions,
   ViewOverview,
@@ -375,14 +375,14 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
             >
               {contest.name}
             </h2>
-            <Tooltip
+            <Popover
               content={literal}
               placement="bottom"
             >
               <div className={`jk-tag tt-ue tx-s ${tag} screen md lg`}>
                 <T className="ws-np">{statusLabel}</T>
               </div>
-            </Tooltip>
+            </Popover>
           </div>
           <div className="screen sm jk-row extend">{allLiteralLabel}</div>
         </div>

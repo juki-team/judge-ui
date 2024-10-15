@@ -1,21 +1,11 @@
-import {
-  ContentCopyIcon,
-  CopyToClipboard,
-  DeleteIcon,
-  EditIcon,
-  InfoIcon,
-  SaveIcon,
-  T,
-  TextArea,
-  Tooltip,
-} from 'components';
+import { ContentCopyIcon, CopyToClipboard, DeleteIcon, EditIcon, InfoIcon, SaveIcon, TextArea } from 'components';
 import React, { useEffect, useState } from 'react';
 import { ProblemSampleCasesType } from 'types';
 
 interface SampleTestProps {
   index: number,
   sampleCases: ProblemSampleCasesType,
-  setSampleCases?: (sampleCases: ProblemSampleCasesType) => void,
+  setSampleCases: (sampleCases: ProblemSampleCasesType) => void,
 }
 
 export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestProps) => {
@@ -32,12 +22,12 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
     });
   }, [ index, sampleCases ]);
   
-  const onSave = setSampleCases ? () => {
+  const onSave = () => {
     const newSamples = [ ...sampleCases ];
     newSamples[index] = sample;
     setSampleCases(newSamples);
     setEditable(false);
-  } : () => null;
+  };
   
   return (
     <div className="jk-row stretch gap">
@@ -56,14 +46,13 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
                   className="clickable br-50-pc copy-test-icon"
                 />
               </CopyToClipboard>
-              <Tooltip
-                content={
-                  <T>{`${sample.input.lastIndexOf('\n') === sample.input.length - 1 ? '' : 'no '}newline at end of file`}</T>
-                }
-                placement="left"
+              <div
+                data-tooltip-id="jk-tooltip"
+                data-tooltip-content={`${sample.input.lastIndexOf('\n') === sample.input.length - 1 ? '' : 'no '}newline at end of file`}
+                className="newline-eof"
               >
-                <div className="newline-eof"><InfoIcon size="small" /></div>
-              </Tooltip>
+                <InfoIcon size="small" />
+              </div>
               <span>{sample.input}</span>
             </div>
           )}
@@ -82,14 +71,13 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
                   className="clickable br-50-pc copy-test-icon"
                 />
               </CopyToClipboard>
-              <Tooltip
-                content={
-                  <T>{`${sample.output.lastIndexOf('\n') === sample.output.length - 1 ? '' : 'no '}newline at end of file`}</T>
-                }
-                placement="left"
+              <div
+                data-tooltip-id="jk-tooltip"
+                data-tooltip-content={`${sample.output.lastIndexOf('\n') === sample.output.length - 1 ? '' : 'no '}newline at end of file`}
+                className="newline-eof"
               >
-                <div className="newline-eof"><InfoIcon size="small" /></div>
-              </Tooltip>
+                <InfoIcon size="small" />
+              </div>
               <span>
                 {sample.output}
               </span>
@@ -97,18 +85,16 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
           )}
         </div>
       </div>
-      {setSampleCases && (
-        <div className="jk-row gap cr-py">
-          {editable
-            ? <SaveIcon size="small" className="cursor-pointer" onClick={onSave} />
-            : <EditIcon size="small" className="cursor-pointer" onClick={() => setEditable(true)} />}
-          <DeleteIcon
-            size="small"
-            className="cursor-pointer"
-            onClick={() => setSampleCases([ ...sampleCases ].filter((sample, sIndex) => sIndex !== index))}
-          />
-        </div>
-      )}
+      <div className="jk-row gap cr-py">
+        {editable
+          ? <SaveIcon size="small" className="cursor-pointer" onClick={onSave} />
+          : <EditIcon size="small" className="cursor-pointer" onClick={() => setEditable(true)} />}
+        <DeleteIcon
+          size="small"
+          className="cursor-pointer"
+          onClick={() => setSampleCases([ ...sampleCases ].filter((sample, sIndex) => sIndex !== index))}
+        />
+      </div>
     </div>
   );
 };

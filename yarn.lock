@@ -1068,10 +1068,10 @@
     "@codemirror/language" "^6.0.0"
     "@lezer/json" "^1.0.0"
 
-"@codemirror/lang-markdown@^6.2.5":
-  version "6.2.5"
-  resolved "https://registry.yarnpkg.com/@codemirror/lang-markdown/-/lang-markdown-6.2.5.tgz#451941bf743d3788e73598f1aedb71cbeb6f71ba"
-  integrity sha512-Hgke565YcO4fd9pe2uLYxnMufHO5rQwRr+AAhFq8ABuhkrjyX8R5p5s+hZUTdV60O0dMRjxKhBLxz8pu/MkUVA==
+"@codemirror/lang-markdown@^6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-markdown/-/lang-markdown-6.3.0.tgz#949f8803332441705ed6def34c565f2166479538"
+  integrity sha512-lYrI8SdL/vhd0w0aHIEvIRLRecLF7MiiRfzXFZY94dFwHqC9HtgxgagJ8fyYNBldijGatf9wkms60d8SrAj6Nw==
   dependencies:
     "@codemirror/autocomplete" "^6.7.1"
     "@codemirror/lang-html" "^6.0.0"
@@ -1208,10 +1208,10 @@
   resolved "https://registry.yarnpkg.com/@handsontable/pikaday/-/pikaday-1.0.0.tgz#21a432b727791d48f4f231094d999b1a4b5f6f5f"
   integrity sha512-1VN6N38t5/DcjJ7y7XUYrDx1LuzvvzlrFdBdMG90Qo1xc8+LXHqbWbsTEm5Ec5gXTEbDEO53vUT35R+2COmOyg==
 
-"@handsontable/react@^14.4.0":
-  version "14.4.0"
-  resolved "https://registry.yarnpkg.com/@handsontable/react/-/react-14.4.0.tgz#cec400ce90ba4f5c7e777a66695acf05fb2ee02c"
-  integrity sha512-89SGHJAXm2ggBKgPU9WdKImuOjhudwT2ok4VbIv+8NUtAAeJPdorNaO41VYfGkGPfGJfMPoHFLbsAiy1kfSnNA==
+"@handsontable/react@^14.6.0":
+  version "14.6.0"
+  resolved "https://registry.yarnpkg.com/@handsontable/react/-/react-14.6.0.tgz#4d50902260ff29d5230eb7ccc29ab941d9428499"
+  integrity sha512-Er30Z+H/vq/4FY1avTJnZMqdbRFV5Tv4H1hkJYTPGGHLXBbMykEFHA1xt4X4ejX2K30paouDZ+JeiCGGo6Q9LQ==
 
 "@hookform/resolvers@^3.9.0":
   version "3.9.0"
@@ -1294,31 +1294,32 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.611":
-  version "0.1.611"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.611/e6aabc108f853653464f4831e1d66231cf2c3bea#e6aabc108f853653464f4831e1d66231cf2c3bea"
-  integrity sha512-ziphQsUX6okjPU7I5vCavRYArE+YH0+7QL/LI8+je7w+wHO44j0Yv0AGZLct4YbfxPkuwc1FOcrKcGuRQm1/zA==
+"@juki-team/base-ui@^0.1.613":
+  version "0.1.613"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.613/9c6b4429ce3495150772fb5775d18c2942abc457#9c6b4429ce3495150772fb5775d18c2942abc457"
+  integrity sha512-LfACKhNvo+CvgOWGrxxV33XiaIoz0kigr2wzLJaRxdOIcfSMze0/yBsQ2ccostlIuQ54zZrfpU1uWhFIj2CV/w==
   dependencies:
     "@codemirror/lang-cpp" "^6.0.2"
     "@codemirror/lang-html" "^6.4.9"
     "@codemirror/lang-java" "^6.0.1"
     "@codemirror/lang-javascript" "^6.2.2"
     "@codemirror/lang-json" "^6.0.1"
-    "@codemirror/lang-markdown" "^6.2.5"
+    "@codemirror/lang-markdown" "^6.3.0"
     "@codemirror/lang-python" "^6.1.6"
-    "@handsontable/react" "^14.4.0"
+    "@handsontable/react" "^14.6.0"
     "@hookform/resolvers" "^3.9.0"
     "@monaco-editor/react" "^4.4.2"
     "@tanstack/react-virtual" "^3.8.2"
     "@types/graphlib-dot" "^0.6.4"
     "@uiw/react-codemirror" "^4.23.0"
     copy-to-clipboard "^3.3.3"
-    countries-and-timezones "^3.6.0"
+    countries-and-timezones "^3.7.1"
     deep-object-diff "^1.1.9"
     diff2html "^3.4.48"
+    framer-motion "^11.11.8"
     graphlib-dot "^0.6.4"
     graphviz-react "^1.2.5"
-    handsontable "^14.4.0"
+    handsontable "^14.6.0"
     immutability-helper "^3.1.1"
     prismjs "^1.29.0"
     react-collapse "^5.1.1"
@@ -1327,14 +1328,14 @@
     react-device-detect "^2.2.3"
     react-dnd "^16.0.1"
     react-dnd-html5-backend "^16.0.1"
-    react-hook-form "^7.52.1"
-    react-image-crop "^11.0.1"
+    react-hook-form "^7.53.0"
+    react-image-crop "^11.0.7"
     react-markdown "^9.0.1"
     react-modal "^3.15.1"
     react-resize-detector "^11.0.1"
-    react-tiny-popover "^8.0.4"
-    react-tooltip "^5.27.1"
-    rehype-katex "^7.0.0"
+    react-tiny-popover "^8.1.2"
+    react-tooltip "^5.28.0"
+    rehype-katex "^7.0.1"
     remark-gfm "^4.0.0"
     remark-math "^6.0.0"
     swr "^2.2.5"
@@ -2465,10 +2466,10 @@ core-js@^3.37.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.37.1.tgz#d21751ddb756518ac5a00e4d66499df981a62db9"
   integrity sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==
 
-countries-and-timezones@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/countries-and-timezones/-/countries-and-timezones-3.6.0.tgz#80716f05ebef270842fd72010f9b33e2848e24c7"
-  integrity sha512-8/nHBCs1eKeQ1jnsZVGdqrLYxS8nPcfJn8PnmxdJXWRLZdXsGFR8gnVhRjatGDBjqmPm7H+FtYpBYTPWd0Eiqg==
+countries-and-timezones@^3.7.1:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/countries-and-timezones/-/countries-and-timezones-3.7.2.tgz#432d50d9ed5fa6ed3382e9876132efce0375a665"
+  integrity sha512-BHAMt4pKb3U3r/mRfiIlVnDhRd8m6VC20gwCWtpZGZkSsjZmnMDKFnnjWYGWhBmypQAqcQILFJwmEhIgWGVTmw==
 
 crc-32@~1.2.0, crc-32@~1.2.1:
   version "1.2.2"
@@ -3261,6 +3262,13 @@ frac@~1.1.2:
   resolved "https://registry.yarnpkg.com/frac/-/frac-1.1.2.tgz#3d74f7f6478c88a1b5020306d747dc6313c74d0b"
   integrity sha512-w/XBfkibaTl3YDqASwfDUqkna4Z2p9cFSr1aHDt0WoMTECnRfBOv2WArlZILlqgWlmdIlALXGpM2AOhEk5W3IA==
 
+framer-motion@^11.11.8:
+  version "11.11.8"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.11.8.tgz#e402c9371c7fe132d22ec1b2349a2d23ed98a81d"
+  integrity sha512-mnGQNEoz99GtFXBBPw+Ag5K4FcfP5XrXxrxHz+iE4Lmg7W3sf2gKmGuvfkZCW/yIfcdv5vJd6KiSPETH1Pw68Q==
+  dependencies:
+    tslib "^2.4.0"
+
 fs-extra@^9.0.1:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-9.1.0.tgz#5954460c764a8da2094ba3554bf839e6b9a7c86d"
@@ -3461,10 +3469,10 @@ gzip-size@^6.0.0:
   dependencies:
     duplexer "^0.1.2"
 
-handsontable@^14.4.0:
-  version "14.4.0"
-  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-14.4.0.tgz#7a7706356c8a694b4bade15980b6537ded22d0b0"
-  integrity sha512-uTIIx5UgG+2I0flUDj8lxftJAXbBpbkIAFIKugvMW2bNHYNxaNMGAGZ/QFOeCXiYwxeztBATKxMkLpg7N+HrOg==
+handsontable@^14.6.0:
+  version "14.6.0"
+  resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-14.6.0.tgz#e90401b60364267a4b1e66874370b394a13bca52"
+  integrity sha512-zsjDZrnwKIOKJEcRgwKHQrjlCV5pKVPCBjl3mSXJLocDHFiyz9Zx0elPIu4Zei6G56FAN6otrSYPTV4j1P70Yw==
   dependencies:
     "@handsontable/pikaday" "^1.0.0"
     "@types/pikaday" "1.7.4"
@@ -5295,15 +5303,15 @@ react-flip-move@^3.0.5:
   resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-3.0.5.tgz#8b87510ad32ebef01ebca94902b445f456bbc0f7"
   integrity sha512-Mf4XpbkUNZy9eu80iXXFIjToDvw+bnHxmKHVoositbMpV87O/EQswnXUqVovRHoTx/F+4dE+p//PyJnAT7OtPA==
 
-react-hook-form@^7.52.1:
-  version "7.52.1"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.52.1.tgz#ec2c96437b977f8b89ae2d541a70736c66284852"
-  integrity sha512-uNKIhaoICJ5KQALYZ4TOaOLElyM+xipord+Ha3crEFhTntdLvWZqVY49Wqd/0GiVCA/f9NjemLeiNPjG7Hpurg==
+react-hook-form@^7.53.0:
+  version "7.53.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.53.0.tgz#3cf70951bf41fa95207b34486203ebefbd3a05ab"
+  integrity sha512-M1n3HhqCww6S2hxLxciEXy2oISPnAzxY7gvwVPrtlczTM/1dDadXgUxDpHMrMTblDOcm/AXtXxHwZ3jpg1mqKQ==
 
-react-image-crop@^11.0.1:
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-11.0.1.tgz#fffb7bad14042a820c1c18fea2fc8ba8ac65d567"
-  integrity sha512-rPXi9iJWoSZP0RWNhevoyAHvNz2ZElQilWE89AWXXRM9MKQUws5J9D0gfpuDOJBtUocirbWUyDcdNPAggP2AYQ==
+react-image-crop@^11.0.7:
+  version "11.0.7"
+  resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-11.0.7.tgz#25f3d37ccbb65a05d19d23b4740a5912835c741e"
+  integrity sha512-ZciKWHDYzmm366JDL18CbrVyjnjH0ojufGDmScfS4ZUqLHg4nm6ATY+K62C75W4ZRNt4Ii+tX0bSjNk9LQ2xzQ==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
@@ -5348,15 +5356,15 @@ react-resize-detector@^11.0.1:
   dependencies:
     lodash "^4.17.21"
 
-react-tiny-popover@^8.0.4:
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/react-tiny-popover/-/react-tiny-popover-8.0.4.tgz#bf76f1db8a9b62f4eb10fe0dc770a65c52d59560"
-  integrity sha512-pn0Y/G0gyMdYTBEWSKCCnaZsXAa54PkfnRE4fnMM5633SSClYrXxwXKc6vPYgJ9shLatGginxMjnhXq6guZmng==
+react-tiny-popover@^8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/react-tiny-popover/-/react-tiny-popover-8.1.2.tgz#e503466730fc2af02378965fd5ed1855d8e8f696"
+  integrity sha512-zzG9hGBCNeSesZLLItNOiQvIU+/tLdLQ9y8cfSAtLQnOH7eoKVJflQzEng8w7rTblE+cV0/R6dFjjiZS1A4qTA==
 
-react-tooltip@^5.27.1:
-  version "5.27.1"
-  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-5.27.1.tgz#a94481ba146d828d31642f14d6ab29b56998fcda"
-  integrity sha512-a+micPXcMOMt11CYlwJD4XShcqGziasHco4NPe1OFw298WBTILMyzUgNC1LAFViAe791JdHNVSJIpzhZm2MvDA==
+react-tooltip@^5.28.0:
+  version "5.28.0"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-5.28.0.tgz#c7b5343ab2d740a428494a3d8315515af1f26f46"
+  integrity sha512-R5cO3JPPXk6FRbBHMO0rI9nkUG/JKfalBSQfZedZYzmqaZQgq7GLzF8vcCWx6IhUCKg0yPqJhXIzmIO5ff15xg==
   dependencies:
     "@floating-ui/dom" "^1.6.1"
     classnames "^2.3.0"
@@ -5458,10 +5466,10 @@ regjsparser@^0.9.1:
   dependencies:
     jsesc "~0.5.0"
 
-rehype-katex@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/rehype-katex/-/rehype-katex-7.0.0.tgz#f5e9e2825981175a7b0a4d58ed9816c33576dfed"
-  integrity sha512-h8FPkGE00r2XKU+/acgqwWUlyzve1IiOKwsEkg4pDL3k48PiE0Pt+/uLtVHDVkN1yA4iurZN6UES8ivHVEQV6Q==
+rehype-katex@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/rehype-katex/-/rehype-katex-7.0.1.tgz#832e6d7af2744a228981d1b0fe89483a9e7c93a1"
+  integrity sha512-OiM2wrZ/wuhKkigASodFoo8wimG3H12LWQaH8qSPVJn9apWKFSH3YOCtbKpBorTVw/eI7cuT21XBbvwEswbIOA==
   dependencies:
     "@types/hast" "^3.0.0"
     "@types/katex" "^0.16.0"

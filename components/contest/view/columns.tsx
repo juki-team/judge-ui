@@ -1,10 +1,8 @@
-import { LinkCmpProps } from '@juki-team/base-ui';
-import { ContestProblemDataResponseDTO } from '@juki-team/commons';
-import { BalloonIcon, Field, Image, T, Tooltip, UserNicknameLink } from 'components/index';
+import { BalloonIcon, Field, Image, Popover, T, UserNicknameLink } from 'components';
 import { jukiSettings } from 'config';
 import { classNames } from 'helpers';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
-import { ContestTab, DataViewerHeadersType } from 'types';
+import { ContestProblemDataResponseDTO, ContestTab, DataViewerHeadersType, LinkCmpProps } from 'types';
 import { ScoreboardResponseDTOFocus } from './types';
 
 export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
@@ -59,7 +57,7 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
 
 export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, contestKey: string, isEndless: boolean, problem: ContestProblemDataResponseDTO): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
   head: (
-    <Tooltip
+    <Popover
       content={
         <div className="jk-row nowrap gap">
           <div className="fw-bd">{problem.index}</div>
@@ -81,7 +79,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
           {problem.index}
         </Link>
       </div>
-    </Tooltip>
+    </Popover>
   ),
   index: problem.index,
   Field: ({ record: { problems, focus }, isCard }) => {
@@ -89,8 +87,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
     return (
       <Field className={classNames('jk-row center nowrap', { highlight: !!focus?.includes(problem.key) })}>
         {(problemData?.success || !!problemData?.points) && (
-          <Tooltip
-            withPortal
+          <Popover
             content={
               <div className="jk-col">
                 <div className="ws-np">
@@ -110,7 +107,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
             >
               <BalloonIcon percent={(problemData.points / problem.points) * 100} />
             </div>
-          </Tooltip>
+          </Popover>
         )}
         <div className="jk-row nowrap">
           <div className="tx-xs">{problemData?.attempts || '-'}</div>

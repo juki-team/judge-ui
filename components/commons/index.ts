@@ -5,7 +5,6 @@ export {
   AddIcon,
   SubmitView,
   TwoActionModal,
-  Tooltip,
   AppsIcon,
   ArrowBackIcon,
   ArrowDownwardIcon,

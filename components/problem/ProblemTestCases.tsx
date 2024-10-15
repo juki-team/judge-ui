@@ -11,10 +11,10 @@ import {
   Input,
   LoadingIcon,
   MultiSelect,
+  Popover,
   ReloadIcon,
   SaveIcon,
   T,
-  Tooltip,
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize } from 'helpers';
@@ -310,7 +310,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                     </div>
                     <div className="jk-row" style={{ width: 80 }}>
                       {testCase[(keyPut + 'FileSize') as 'outputFileSize'] !== -1 ?
-                        <Tooltip
+                        <Popover
                           content={
                             <div className="jk-row center nowrap">
                               <T className="ws-np fw-bd tt-se">last updated</T>
@@ -319,23 +319,26 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           }
                         >
                           <div className="jk-row">{humanFileSize(testCase[(keyPut + 'FileSize') as 'outputFileSize'])}</div>
-                        </Tooltip>
+                        </Popover>
                         : '-'}
                     </div>
                     <div className="jk-row left" style={{ width: 70 }}>
                       {testCase[(keyPut + 'FileSize') as 'inputFileSize'] !== -1 && (
                         <>
-                          <Tooltip content={<T className="ws-np tt-se">the changes will be lost</T>}>
-                            <div className="jk-row">
-                              <ButtonLoader
-                                type="text"
-                                size="small"
-                                icon={<DeleteIcon />}
-                                onClick={handleServerDelete(testCase.testCaseKey, keyPut)}
-                                disabled={lock}
-                              />
-                            </div>
-                          </Tooltip>
+                          <div
+                            data-tooltip-id="jk-tooltip"
+                            data-tooltip-content="the changes will be lost"
+                            data-tooltip-t-class-name="ws-np tt-se"
+                            className="jk-row"
+                          >
+                            <ButtonLoader
+                              type="text"
+                              size="small"
+                              icon={<DeleteIcon />}
+                              onClick={handleServerDelete(testCase.testCaseKey, keyPut)}
+                              disabled={lock}
+                            />
+                          </div>
                           <ButtonLoader
                             type="text"
                             size="small"

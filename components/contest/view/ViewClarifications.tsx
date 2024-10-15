@@ -10,9 +10,9 @@ import {
   MdMathViewer,
   Modal,
   NotificationsActiveIcon,
+  Popover,
   QuestionAnswerIcon,
   T,
-  Tooltip,
   UserNicknameLink,
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
@@ -114,12 +114,15 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                 <div className="jk-row left gap">
                   <div className="tx-h fw-bd cr-py">{clarification.question}</div>
                   <div className="jk-row gap">
-                    <Tooltip
-                      content={<div className="ws-np">{dtf(clarification.questionTimestamp)}</div>}
+                    <div
+                      data-tooltip-id="jk-tooltip"
+                      data-tooltip-content={dtf(clarification.questionTimestamp)}
+                      data-tooltip-t-class-name="ws-np"
+                      className="jk-row"
                     >
-                      <div className="jk-row"><ClockIcon className="cr-py" size="small" /></div>
-                    </Tooltip>
-                    <Tooltip
+                      <ClockIcon className="cr-py" size="small" />
+                    </div>
+                    <Popover
                       content={
                         <UserNicknameLink nickname={clarification.questionUserNickname}>
                           <div className="link tx-s ws-np">{clarification.questionUserNickname}</div>
@@ -136,7 +139,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                           />
                         </UserNicknameLink>
                       </div>
-                    </Tooltip>
+                    </Popover>
                   </div>
                   <div className="jk-row nowrap gap">
                     <div className="jk-tag primary-light">
@@ -158,11 +161,14 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                 </div>
                 {!!clarification.answerTimestamp && (
                   <div className="jk-row gap left top stretch nowrap">
-                    <Tooltip
-                      content={<div className="ws-np">{dtf(clarification.answerTimestamp)}</div>}
+                    <div
+                      data-tooltip-id="jk-tooltip"
+                      data-tooltip-content={dtf(clarification.answerTimestamp)}
+                      data-tooltip-t-class-name="ws-np"
+                      className="jk-row"
                     >
-                      <div className="jk-row"><ClockIcon size="small" /></div>
-                    </Tooltip>
+                      <ClockIcon size="small" />
+                    </div>
                     <div className="flex-1" style={{ overflow: 'auto', maxWidth: 'calc(100vw - 300px)' }}>
                       <MdMathViewer source={clarification.answer} />
                     </div>

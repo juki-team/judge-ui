@@ -10,7 +10,6 @@ import {
   ProblemScoringModeInformation,
   Select,
   T,
-  Tooltip,
   UserCodeEditor,
 } from 'components';
 import { jukiSettings } from 'config';
@@ -54,9 +53,14 @@ export const Tags = ({ tags, judgeKey, onChange }: {
     <div className="jk-row nowrap gap extend">
       <div className="jk-row nowrap">
         <T className="tt-se fw-bd">tags</T>&nbsp;
-        <Tooltip content={<T className="tt-se">to add new tags contact to the administrator</T>}>
-          <div className="jk-row"><InfoIcon /></div>
-        </Tooltip>
+        <div
+          data-tooltip-id="jk-tooltip"
+          data-tooltip-content="to add new tags contact to the administrator"
+          data-tooltip-t-class-name="tt-se"
+          className="jk-row"
+        >
+          <InfoIcon />
+        </div>
         &nbsp;<span className="fw-bd">:</span>
       </div>
       <MultiSelect
