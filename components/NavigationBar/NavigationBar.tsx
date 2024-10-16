@@ -9,28 +9,27 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const { pathname, pushRoute } = useJukiRouter();
   const { components: { Link, Image } } = useJukiUI();
-  
   const {
     user: {
       nickname,
-      permissions: {
-        submissions: {
-          manage: canViewSubmissionsManagement,
-        },
-        users: {
-          create: canCreateUser,
-        },
-      },
       settings: { [ProfileSetting.THEME]: userTheme },
     },
     company: { key },
   } = useJukiUser();
+  const isContestsPage = ('/' + pathname).includes('//contest');
+  const isProblemsPage = ('/' + pathname).includes('//problem');
+  const isRankingPage = ('/' + pathname).includes('//ranking');
+  const backPah = isContestsPage ? jukiSettings.ROUTES.contests().list()
+    : isProblemsPage
+      ? jukiSettings.ROUTES.problems().list()
+      : '/';
+  console.log({ pathname, backPah });
   
   const menu: MenuType[] = [
     {
       label: <T className="tt-se">contests</T>,
       icon: <CupIcon />,
-      selected: ('/' + pathname).includes('//contest'),
+      selected: isContestsPage,
       menuItemWrapper: ({ children }) => (
         <LinkLastPath
           lastPathKey={LastPathKey.SECTION_CONTEST}
@@ -43,7 +42,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     {
       label: <T className="tt-se">problems</T>,
       icon: <AssignmentIcon />,
-      selected: ('/' + pathname).includes('//problem'),
+      selected: isProblemsPage,
       menuItemWrapper: ({ children }) => (
         <LinkLastPath
           lastPathKey={LastPathKey.SECTION_PROBLEM}
@@ -59,8 +58,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       {
         label: <T className="tt-se">ranking</T>,
         icon: <LeaderboardIcon />,
-        selected: ('/' + pathname).includes('//ranking'),
-        menuItemWrapper: ({ children }) => <Link className="link" href={ROUTES.RANKING.PAGE()}>{children}</Link>,
+        selected: isRankingPage,
+        menuItemWrapper: ({ children }) => (
+          <Link className="link dy-cs" href={ROUTES.RANKING.PAGE()}>
+            {children}</Link>
+        ),
       },
     );
   }
@@ -74,11 +76,13 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   return (
     <>
-      
       <MainMenu
         onSeeMyProfile={() => pushRoute(jukiSettings.ROUTES.profiles().view({ nickname }))}
         menu={menu}
         profileSelected={pathname.includes('/profile/')}
+        onBack={pathname !== backPah ? () => {
+          pushRoute(backPah);
+        } : undefined}
         moreApps={
           <>
             <a href="https://utils.juki.app" target="_blank">

@@ -1,6 +1,7 @@
-import { BalloonIcon, Field, Image, Popover, T, UserNicknameLink } from 'components';
+import { BalloonIcon, Field, Image, UserNicknameLink } from 'components';
 import { jukiSettings } from 'config';
 import { classNames } from 'helpers';
+import { TFunction } from 'i18next';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
 import { ContestProblemDataResponseDTO, ContestTab, DataViewerHeadersType, LinkCmpProps } from 'types';
 import { ScoreboardResponseDTOFocus } from './types';
@@ -55,31 +56,32 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
   sticky: viewPortSize !== 'sm',
 });
 
-export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, contestKey: string, isEndless: boolean, problem: ContestProblemDataResponseDTO): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
+export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, contestKey: string, isEndless: boolean, problem: ContestProblemDataResponseDTO, t: TFunction): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
   head: (
-    <Popover
-      content={
-        <div className="jk-row nowrap gap">
-          <div className="fw-bd">{problem.index}</div>
-          <div className="ws-np">{problem.name}</div>
-        </div>
-      }
+    <div
+      // Tooltip
+      // content={
+      //   <div className="jk-row nowrap gap">
+      //     <div className="fw-bd">{problem.index}</div>
+      //     <div className="ws-np">{problem.name}</div>
+      //   </div>
+      // }
+      data-tooltip-id="jk-tooltip"
+      data-tooltip-content={`${problem.index}. ${problem.name}`}
+      data-tooltip-t-class-name="ws-np"
+      className="jk-col extend fw-bd is-first-accepted"
+      style={{ '--balloon-color': problem.color } as CSSProperties}
     >
-      <div
-        className="jk-col extend fw-bd is-first-accepted"
-        style={{ '--balloon-color': problem.color } as CSSProperties}
+      <Link
+        href={jukiSettings.ROUTES.contests().view({
+          key: contestKey,
+          tab: ContestTab.PROBLEMS,
+          subTab: problem.index,
+        })}
       >
-        <Link
-          href={jukiSettings.ROUTES.contests().view({
-            key: contestKey,
-            tab: ContestTab.PROBLEMS,
-            subTab: problem.index,
-          })}
-        >
-          {problem.index}
-        </Link>
-      </div>
-    </Popover>
+        {problem.index}
+      </Link>
+    </div>
   ),
   index: problem.index,
   Field: ({ record: { problems, focus }, isCard }) => {
@@ -87,27 +89,23 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
     return (
       <Field className={classNames('jk-row center nowrap', { highlight: !!focus?.includes(problem.key) })}>
         {(problemData?.success || !!problemData?.points) && (
-          <Popover
-            content={
-              <div className="jk-col">
-                <div className="ws-np">
-                  {problemData?.success ? problemData.points : <>{problemData.points}/{problem.points}</>}
-                  &nbsp;
-                  <T>{problem?.points === 1 ? 'point' : 'points'}</T>
+          <div
+            data-tooltip-id="jk-tooltip"
+            data-tooltip-content={`${problem.index}. ${problem.name}`}
+            data-tooltip-html={`
+              <div class="jk-col">
+                <div class="ws-np">
+                  ${problemData?.success ? problemData.points : `${problemData.points} / ${problem.points}`}
+                  ${problem?.points === 1 ? t('point') : t('points')}
                 </div>
-                {problemData.isFirstAccepted && (
-                  <div className="fw-bd cr-ss tx-s"><T className="tt-se">first accepted</T></div>
-                )}
+                ${problemData.isFirstAccepted ? `<div class="fw-bd cr-ss tx-s"><span class="tt-se">${t('first accepted')}</span></div>` : ''}
               </div>
-            }
+            `}
+            style={{ color: problem.color, '--balloon-color': problem.color } as CSSProperties}
+            className={classNames({ 'is-first-accepted': problemData.isFirstAccepted })}
           >
-            <div
-              style={{ color: problem.color, '--balloon-color': problem.color } as CSSProperties}
-              className={classNames({ 'is-first-accepted': problemData.isFirstAccepted })}
-            >
-              <BalloonIcon percent={(problemData.points / problem.points) * 100} />
-            </div>
-          </Popover>
+            <BalloonIcon percent={(problemData.points / problem.points) * 100} />
+          </div>
         )}
         <div className="jk-row nowrap">
           <div className="tx-xs">{problemData?.attempts || '-'}</div>

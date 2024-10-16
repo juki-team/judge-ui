@@ -117,6 +117,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   const { routeParams: { key: contestKey } } = useJukiRouter();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
+  const { t } = useT();
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
@@ -126,7 +127,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
     
     if (contest?.problems) {
       for (const problem of Object.values(contest?.problems)) {
-        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem));
+        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem, t));
       }
     }
     return base;

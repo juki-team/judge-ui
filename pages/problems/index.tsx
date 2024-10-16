@@ -2,10 +2,8 @@ import {
   ButtonLoader,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
-  getProblemKeyHeader,
   getProblemModeHeader,
   getProblemNameHeader,
-  getProblemOwnerHeader,
   getProblemTagsHeader,
   getProblemTypeHeader,
   InfoIcon,
@@ -75,15 +73,15 @@ function Problems() {
     }
   }, [ judgeKey, setSearchParams, firstJudgeKey ]);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
-    getProblemKeyHeader(),
-    getProblemNameHeader(false),
+    // getProblemKeyHeader(),
+    getProblemNameHeader(false, { sticky: true, cardPosition: 'top' }),
     ...(!isExternal ? [
       getProblemModeHeader(),
       getProblemTypeHeader(),
       getProblemTagsHeader(tags),
     ] : []),
-    getProblemOwnerHeader(isExternal),
-  ], [ tags, judgeKey, isExternal ]);
+    // getProblemOwnerHeader(isExternal),
+  ], [ tags, isExternal ]);
   
   const breadcrumbs = [
     <T className="tt-se" key="problems">problems</T>,
@@ -154,7 +152,7 @@ function Problems() {
           name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judgeKey] || '')}
           refreshInterval={60000}
           extraNodes={extraNodes}
-          cards={{ height: 256, expanded: true }}
+          cards={{ height: 192, expanded: true }}
           dependencies={[ judgeKey ]}
         />
       ))}
