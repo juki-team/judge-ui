@@ -131,7 +131,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       }
     }
     return base;
-  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, Link, contestKey ]);
+  }, [ viewPortSize, user.nickname, contest.isEndless, contest?.problems, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {

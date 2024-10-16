@@ -8,7 +8,7 @@ import {
 import { ScoreboardResponseDTOFocus } from 'components/contest/view/types';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { contestStateMap } from 'helpers';
-import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
+import { useDataViewerRequester, useJukiRouter, useJukiUI, useJukiUser, useT } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -26,9 +26,10 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
 }) => {
   
   const { user, company: { imageUrl, name } } = useJukiUser();
-  const { searchParams, routeParams: { key: contestKey, tab: contestTab, index: problemIndex } } = useJukiRouter();
+  const { routeParams: { key: contestKey, tab: contestTab, index: problemIndex } } = useJukiRouter();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
+  const { t } = useT();
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       getPositionColumn(),
@@ -38,11 +39,11 @@ export const ViewDynamicScoreboard = ({ contest, mutate }: {
     
     if (contest?.problems) {
       for (const problem of Object.values(contest?.problems)) {
-        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem));
+        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem, t));
       }
     }
     return base;
-  }, [ viewPortSize, contest?.problems, contest.isEndless, user.nickname, Link, contestKey ]);
+  }, [ viewPortSize, user.nickname, contest.isEndless, contest?.problems, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
