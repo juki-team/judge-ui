@@ -5,9 +5,9 @@
     ],
     "target": {
       "namespace": "android_app",
-      "package_name": "app.juki.judge.twa",
+      "package_name": "judge.juki.app.twa",
       "sha256_cert_fingerprints": [
-        "A1:0B:DC:CE:D4:18:9B:95:8D:37:EE:43:A4:8D:CC:D3:F9:44:C9:04:50:B3:90:F4:14:F5:5F:3C:2C:8A:D6:58"
+        "39:47:46:E8:AE:99:2C:72:6D:15:C2:8D:8D:2D:C9:2B:DE:CD:2A:69:36:76:90:8C:E6:8B:D6:B3:3B:AB:35:B1"
       ]
     }
   }
