@@ -1,3 +1,4 @@
+import { InfoIcon } from '@juki-team/base-ui';
 import {
   AutorenewIcon,
   ButtonLoader,
@@ -92,6 +93,20 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           infoPlacement="name"
           codeEditorSourceStoreKey={problem.key}
           codeEditorCenterButtons={({ sourceCode, language }) => {
+            
+            if (problem.judge.isExternal) {
+              return (
+                <div className="jk-row">
+                  <InfoIcon
+                    data-tooltip-id="jk-tooltip"
+                    data-tooltip-content="it is not possible to submit to external judges at this time, we apologize for the inconvenience"
+                    data-tooltip-t-class-name="tt-se"
+                    className="cr-py"
+                  />
+                </div>
+              );
+            }
+            
             return (
               <FirstLoginWrapper>
                 <ButtonLoader

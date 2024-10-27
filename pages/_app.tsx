@@ -1,5 +1,13 @@
 import { Analytics } from '@vercel/analytics/react';
-import { CustomHead, ErrorBoundary, JukiProviders, NavigationBar, SpinIcon, T } from 'components';
+import {
+  CustomHead,
+  ErrorBoundary,
+  JukiProviders,
+  NavigationBar,
+  NewVersionAvailableTrigger,
+  SpinIcon,
+  T,
+} from 'components';
 import { jukiSettings } from 'config';
 import {
   JUKI_APP_COMPANY_KEY,
@@ -105,6 +113,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       {/*<ColorsModal />*/}
       <CustomHead />
       <UserProvider>
+        <NewVersionAvailableTrigger apiVersionUrl="/api/version" />
         <SWRConfig
           value={{
             revalidateIfStale: true, // when back to pages
