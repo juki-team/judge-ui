@@ -23,7 +23,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     : isProblemsPage
       ? jukiSettings.ROUTES.problems().list()
       : '/';
-  console.log({ pathname, backPah });
   
   const menu: MenuType[] = [
     {

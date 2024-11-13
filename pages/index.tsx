@@ -16,6 +16,11 @@ export default function Home() {
             <h3><T>competitive programmers home</T></h3>
             <p>{name} judge <T>is designed to make people improve their programming skills</T></p>
           </div>
+          {/*{key === JUKI_APP_COMPANY_KEY && (*/}
+          {/*  <div>*/}
+          {/*  */}
+          {/*  </div>*/}
+          {/*)}*/}
         </div>,
       )}
     >

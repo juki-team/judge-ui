@@ -91,7 +91,6 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
         {(problemData?.success || !!problemData?.points) && (
           <div
             data-tooltip-id="jk-tooltip"
-            data-tooltip-content={`${problem.index}. ${problem.name}`}
             data-tooltip-html={`
               <div class="jk-col">
                 <div class="ws-np">

@@ -11,14 +11,13 @@ import {
   Input,
   LoadingIcon,
   MultiSelect,
-  Popover,
   ReloadIcon,
   SaveIcon,
   T,
 } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize } from 'helpers';
-import { useEffect, useJukiNotification, useState, useSWR } from 'hooks';
+import { useEffect, useJukiNotification, useState, useSWR, useT } from 'hooks';
 import { ReactNode } from 'react';
 import {
   ButtonLoaderOnClickType,
@@ -92,6 +91,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
   const { notifyResponse } = useJukiNotification();
   const { mutate } = useSWR();
   const [ modal, setModal ] = useState<ReactNode>(null);
+  const { t } = useT();
   
   const handleServerDelete = (testCaseKey: string, keyFile: KeyFileType): ButtonLoaderOnClickType => async (setLoaderStatus) => {
     setLock(true);
@@ -126,7 +126,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         outputNewFile: newTestCases[testCaseKey]?.outputNewFile || null,
         inputNewFile: newTestCases[testCaseKey]?.inputNewFile || null,
         testCaseKey,
-        groups: problem.settings.scoringMode === ProblemScoringMode.SUBTASK ? newGroups : [ 1 ],
+        groups: problem.settings.scoringMode === ProblemScoringMode.SUBTASK ? (newTestCases[testCaseKey]?.groups || newGroups) : [ 1 ],
       } as NewTestCaseType;
       newTestCases[testCaseKey][(keyFile + 'NewFile') as 'outputNewFile'] = file;
       newTestCases[testCaseKey][(keyFile + 'NewFileState') as 'outputNewFileState'] = UploadState.NO_SAVED;
@@ -264,7 +264,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           return (
             <div className="jk-table-inline-row jk-row block" key={testCase.testCaseKey}>
               {(problem.settings.scoringMode === ProblemScoringMode.SUBTASK || problem.settings.scoringMode === ProblemScoringMode.PARTIAL) && (
-                <div className="jk-row nowrap">
+                <div className="jk-row nowrap gap">
                   <MultiSelect
                     disabled={lock}
                     extend
@@ -310,16 +310,18 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                     </div>
                     <div className="jk-row" style={{ width: 80 }}>
                       {testCase[(keyPut + 'FileSize') as 'outputFileSize'] !== -1 ?
-                        <Popover
-                          content={
-                            <div className="jk-row center nowrap">
-                              <T className="ws-np fw-bd tt-se">last updated</T>
-                              <span className="ws-np">: {new Date(testCase[(keyPut + 'FileLastModified') as 'outputFileLastModified']).toLocaleString()}</span>
+                        <div
+                          className="jk-row"
+                          data-tooltip-id="jk-tooltip"
+                          data-tooltip-html={`
+                            <div class="jk-row center">
+                              <span class="ws-np fw-bd tt-se">${t('last updated')}: </span>
+                              <span class="ws-np">${new Date(testCase[(keyPut + 'FileLastModified') as 'outputFileLastModified']).toLocaleString()}</span>
                             </div>
-                          }
+                          `}
                         >
-                          <div className="jk-row">{humanFileSize(testCase[(keyPut + 'FileSize') as 'outputFileSize'])}</div>
-                        </Popover>
+                          {humanFileSize(testCase[(keyPut + 'FileSize') as 'outputFileSize'])}
+                        </div>
                         : '-'}
                     </div>
                     <div className="jk-row left" style={{ width: 70 }}>
@@ -426,6 +428,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         <div className="jk-table-inline-row jk-row block">
           {(problem.settings.scoringMode === ProblemScoringMode.SUBTASK || problem.settings.scoringMode === ProblemScoringMode.PARTIAL) && (
             <div className="jk-row">
+              <T className="tt-se cr-er">only applicable for new test case keys</T>
               <MultiSelect
                 options={groupsOptions}
                 selectedOptions={newGroups.map(newGroup => ({ value: newGroup }))}

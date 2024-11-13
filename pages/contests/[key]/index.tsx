@@ -10,7 +10,7 @@ export default function ContestViewPage() {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   useEcsWakeUp();
-  const { searchParams, routeParams: { key: contestKey }, pathname } = useJukiRouter();
+  const { routeParams: { key: contestKey } } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   
   const breadcrumbs = [

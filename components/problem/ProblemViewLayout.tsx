@@ -48,7 +48,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { searchParams, routeParams: { key: problemKey }, pushRoute } = useJukiRouter();
-  const { user, company: { key: companyKey } } = useJukiUser();
+  const { user } = useJukiUser();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const { listenSubmission } = useJukiTask();
   const { components: { Link } } = useJukiUI();
@@ -155,6 +155,8 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     header: <T className="ws-np tt-ce">submissions</T>,
     body: <ProblemSubmissions problem={problem} />,
   };
+  const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
+  
   const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [
     <LinkLastPath
       lastPathKey={LastPathKey.PROBLEMS}
@@ -178,7 +180,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       <ButtonLoader
         data-tooltip-id="jk-tooltip"
         data-tooltip-content="only submissions that are not in a contest will be judged"
-        data-tooltip-t-class-name="ws-np tt-se"
+        data-tooltip-t-class-name="tt-se"
         size="small"
         icon={<AutorenewIcon />}
         onClick={async setLoaderStatus => {
@@ -250,6 +252,8 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       tabs={tabs}
       breadcrumbs={breadcrumbs}
       tabButtons={extraNodes}
+      selectedTabKey={problemTab}
+      getHrefOnTabChange={tab => jukiSettings.ROUTES.problems().view({ key: problem.key, tab })}
     >
       <div>
         <CustomHead title={problem.name} />

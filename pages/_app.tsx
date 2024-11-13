@@ -24,7 +24,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { _setFlags, UserProvider } from 'store';
 import { SWRConfig } from 'swr';
-import { AdminTab, AppProps, FC, ImageCmpProps, Judge, LastPathKey, QueryParam } from 'types';
+import { AdminTab, AppProps, FC, ImageCmpProps, LastPathKey } from 'types';
 import { useRouter } from '../hooks/useRouter';
 import { useSearchParams } from '../hooks/useSearchParams';
 import i18nInstance from '../i18n';
@@ -89,7 +89,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
       initialLastPath={{
         [LastPathKey.SECTION_CONTEST]: {
           pathname: jukiSettings.ROUTES.contests().list(),
-          searchParams: new URLSearchParams(''),
+          searchParams: new URLSearchParams(),
         },
         [LastPathKey.CONTESTS]: {
           pathname: jukiSettings.ROUTES.contests().list(),
@@ -101,7 +101,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
         },
         [LastPathKey.PROBLEMS]: {
           pathname: jukiSettings.ROUTES.problems().list(),
-          searchParams: new URLSearchParams({ [QueryParam.JUDGE]: Judge.CUSTOMER }),
+          searchParams: new URLSearchParams(),
         },
         [LastPathKey.SECTION_ADMIN]: {
           pathname: ROUTES.ADMIN.PAGE(AdminTab.SUBMISSIONS),

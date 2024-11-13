@@ -38,17 +38,19 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
         <ProblemSettings problem={problem} setProblem={setProblem} problemJudgeKey={problemJudgeKey} />
       ),
     },
-    ...(
-      editing ? {
-        [ProblemTab.TESTS]: {
-          key: ProblemTab.TESTS,
-          header: <T className="tt-se ws-np">test cases</T>,
-          body: (
-            <ProblemTestCases problem={problem} problemJudgeKey={problemJudgeKey} />
-          ),
-        },
-      } : {}
-    ),
+    [ProblemTab.TESTS]: {
+      key: ProblemTab.TESTS,
+      header: <T className="tt-se ws-np">test cases</T>,
+      body: (
+        editing
+          ? <ProblemTestCases problem={problem} problemJudgeKey={problemJudgeKey} />
+          : (
+            <div className="jk-col gap jk-pg bc-we jk-br-ie cr-er">
+              <T className="tt-se">you will be able to upload test cases once you have created the problem</T>
+            </div>
+          )
+      ),
+    },
     [ProblemTab.EDITORIAL]: {
       key: ProblemTab.EDITORIAL,
       header: <T className="tt-se ws-np">editorial</T>,
@@ -112,7 +114,7 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={tabs}
-      tabButtons={tabButtons(problem)}
+      tabButtons={tabButtons({ entityData: problem })}
     >
       <div className="jk-row extend center tx-h">
         <Input
