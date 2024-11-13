@@ -130,7 +130,7 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
-      tabButtons={tabButtons(contest)}
+      tabButtons={tabButtons({ entityData: contest })}
     >
       <div className="jk-row extend center tx-h">
         <Input
