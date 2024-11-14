@@ -1,14 +1,14 @@
 import { AssignmentIcon, Button, FetcherLayer, LinkLastPath, ProblemViewLayout, T, TwoContentLayout } from 'components';
 import { jukiSettings } from 'config';
 import { oneTab } from 'helpers';
-import { useEcsWakeUp, useJukiRouter, useJukiUI, useTrackLastPath } from 'hooks';
+import { useJukiRouter, useJukiUI, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
 import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
 import Custom404 from '../../404';
 
 export default function ProblemViewPage() {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  useEcsWakeUp();
+  useRunnerServicesWakeUp();
   const { routeParams: { key: problemKey } } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   
