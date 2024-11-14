@@ -42,7 +42,7 @@ export {
 export type {
   ContestProblemBasicDataResponseDTO,
   VirtualUserResponseDTO,
-  SocketEventSubmissionResponseDTO,
+  SocketEventSubmissionStatusResponseDTO,
   CompanyResponseDTO,
   JudgeDataResponseDTO,
   ErrorType,
