@@ -1,10 +1,10 @@
-import { InfoIcon } from '@juki-team/base-ui';
 import {
   AutorenewIcon,
   ButtonLoader,
   CustomHead,
   EditIcon,
   FirstLoginWrapper,
+  InfoIcon,
   LinkLastPath,
   Portal,
   ProblemInfo,
@@ -29,6 +29,7 @@ import {
   ContentResponseType,
   HTTPMethod,
   LastPathKey,
+  PrintMode,
   ProblemDataResponseDTO,
   ProblemTab,
   QueryParam,
@@ -55,13 +56,18 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const { matchMutate } = useSWR();
   const printMode = searchParams.get(QueryParam.PRINT_MODE);
   
-  if (printMode === 'asProblemset') {
+  if (printMode === PrintMode.AS_PROBLEM_SET) {
+    const jukiAppElement = document.getElementById('juki-app');
+    if (jukiAppElement) {
+      jukiAppElement.style.display = 'none';
+    }
     return (
       <Portal className="">
         <div
           style={{
             // position: 'fixed',
             // zIndex: 100000,
+            // overflowY: 'auto',
             width: '100vw',
             height: '100vh',
             // top: 0,
@@ -69,6 +75,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
             background: 'white',
             padding: 'var(--pad-md)',
             boxSizing: 'border-box',
+            // top: 0,
           }}
         >
           <ProblemView
@@ -138,6 +145,12 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
               </FirstLoginWrapper>
             );
           }}
+          // expandPosition={{
+          //   top: 0,
+          //   left: 0,
+          //   width: '100vw',
+          //   height: '100vh',
+          // }}
         />
       ),
     },

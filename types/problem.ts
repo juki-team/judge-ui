@@ -8,3 +8,7 @@ export interface UpsertProblemUIDTO extends Omit<UpsertProblemDTO, 'members'> {
   members: DocumentMembersResponseDTO,
   owner: UserBasicInfoResponseDTO,
 }
+
+export enum PrintMode {
+  AS_PROBLEM_SET = 'asProblemSet'
+}
