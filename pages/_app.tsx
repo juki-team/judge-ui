@@ -12,6 +12,7 @@ import { jukiSettings } from 'config';
 import {
   JUKI_APP_COMPANY_KEY,
   JUKI_SERVICE_BASE_URL,
+  JUKI_SERVICE_V2_URL,
   JUKI_SOCKET_BASE_URL,
   JUKI_TOKEN_NAME,
   NODE_ENV,
@@ -70,7 +71,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
     <JukiProviders
       components={{ Image: Image as FC<ImageCmpProps>, Link: Link }}
       serviceApiUrl={JUKI_SERVICE_BASE_URL + '/api/v1'}
-      utilsUiUrl="https://utils.juki.app"
+      serviceApiV2Url={JUKI_SERVICE_V2_URL}
       tokenName={JUKI_TOKEN_NAME}
       router={{
         searchParams,

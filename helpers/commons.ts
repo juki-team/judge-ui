@@ -23,7 +23,6 @@ export {
   renderReactNodeOrFunctionP1,
   authorizedRequest,
   toBlob,
-  handleShareMdPdf,
   downloadDataTableAsCsvFile,
   downloadJukiMarkdownAsPdf,
   downloadSheetDataAsXlsxFile,
