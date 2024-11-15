@@ -10,7 +10,7 @@ import {
   TextHeadCell,
 } from 'components';
 import { jukiSettings } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, JUKI_APP_COMPANY_KEY } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
 import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { useMemo } from 'react';
@@ -34,7 +34,6 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { company: { key } } = useJukiUser();
   const isJudgeOrAdmin = isManager || isAdministrator;
-  const isCustomCompany = key !== JUKI_APP_COMPANY_KEY;
   
   const columns = useMemo(() => [
     {
@@ -181,7 +180,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       cardPosition: 'bottomRight',
       minWidth: 64,
     },
-  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contestKey, addSuccessNotification, addErrorNotification, Link, isCustomCompany ]);
+  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest.isEndless, contest.isPast, Link, contestKey, addSuccessNotification, addErrorNotification ]);
   const data = Object.values(problems);
   
   return (
