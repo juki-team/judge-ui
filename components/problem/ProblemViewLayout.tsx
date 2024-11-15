@@ -61,6 +61,9 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     if (jukiAppElement) {
       jukiAppElement.style.display = 'none';
     }
+    if (document?.body?.style) {
+      document.body.style.background = 'none';
+    }
     return (
       <Portal className="">
         <div
@@ -68,8 +71,8 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
             // position: 'fixed',
             // zIndex: 100000,
             // overflowY: 'auto',
-            minWidth: '100vw',
-            minHeight: '100vh',
+            // minWidth: '100vw',
+            // minHeight: '100vh',
             // top: 0,
             // left: 0,
             background: 'white',
