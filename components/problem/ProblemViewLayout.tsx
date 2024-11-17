@@ -1,5 +1,6 @@
 import {
   AutorenewIcon,
+  Button,
   ButtonLoader,
   CustomHead,
   EditIcon,
@@ -13,7 +14,6 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiSettings } from 'config';
-import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
 import {
   useJukiNotification,
@@ -24,6 +24,7 @@ import {
   useSWR,
   useTrackLastPath,
 } from 'hooks';
+import { useState } from 'react';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
@@ -34,13 +35,13 @@ import {
   ProblemTab,
   QueryParam,
   Status,
-  SubmissionRunStatus,
   TabsType,
   TwoContentLayoutProps,
 } from 'types';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
+import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
 
 export const ProblemViewLayout = ({ problem, reloadProblem }: {
   problem: ProblemDataResponseDTO,
@@ -50,10 +51,11 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   const { searchParams, routeParams: { key: problemKey }, pushRoute } = useJukiRouter();
   const { user } = useJukiUser();
-  const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
+  const { notifyResponse } = useJukiNotification();
   const { listenSubmission } = useJukiTask();
   const { components: { Link } } = useJukiUI();
   const { matchMutate } = useSWR();
+  const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
   const printMode = searchParams.get(QueryParam.PRINT_MODE);
   
   if (printMode === PrintMode.AS_PROBLEM_SET) {
@@ -193,39 +195,18 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const extraNodes = [];
   if (problem.user?.isManager && !problem.judge?.isExternal) {
     extraNodes.push(
-      <ButtonLoader
+      <Button
         data-tooltip-id="jk-tooltip"
         data-tooltip-content="only submissions that are not in a contest will be judged"
         data-tooltip-t-class-name="tt-se"
         size="small"
         icon={<AutorenewIcon />}
-        onClick={async setLoaderStatus => {
-          setLoaderStatus(Status.LOADING);
-          const result = cleanRequest<ContentResponseType<{
-            listCount: number,
-            status: SubmissionRunStatus.RECEIVED
-          }>>(
-            await authorizedRequest(
-              JUDGE_API_V1.REJUDGE.PROBLEM(problem.key), { method: HTTPMethod.POST },
-            ),
-          );
-          if (result.success) {
-            addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
-              <T>submissions</T></div>);
-            setLoaderStatus(Status.SUCCESS);
-          } else {
-            addErrorNotification(<T
-              className="tt-se"
-            >{result.message ||
-              'something went wrong, please try again later'}</T>);
-            setLoaderStatus(Status.ERROR);
-          }
-        }}
+        onClick={() => setIsOpenRejudgeModal(true)}
         responsiveMobile
         type="light"
       >
         <T>rejudge</T>
-      </ButtonLoader>,
+      </Button>,
       <ButtonLoader
         size="small"
         icon={<EditIcon />}
@@ -272,6 +253,11 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       getHrefOnTabChange={tab => jukiSettings.ROUTES.problems().view({ key: problem.key, tab })}
     >
       <div>
+        <RejudgeConfirmationModal
+          isOpen={isOpenRejudgeModal}
+          onClose={() => setIsOpenRejudgeModal(false)}
+          problemKey={problem.key}
+        />
         <CustomHead title={problem.name} />
         <div className="jk-row gap left">
           <h2

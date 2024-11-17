@@ -66,6 +66,9 @@ export const JUDGE_API_V1 = {
     },
   },
   REJUDGE: {
+    PROBLEM_COUNT: (problemJudgeKey: string) => {
+      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/problem/${problemJudgeKey}/count`;
+    },
     PROBLEM: (problemJudgeKey: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/rejudge/problem/${problemJudgeKey}`;
     },
