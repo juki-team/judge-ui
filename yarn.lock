@@ -1343,10 +1343,10 @@
     ws "^8.18.0"
     yup "^1.4.0"
 
-"@juki-team/commons@^0.0.667":
-  version "0.0.667"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.667/b8ba0c36f202b6c58d139df9b978cf822d2512cb#b8ba0c36f202b6c58d139df9b978cf822d2512cb"
-  integrity sha512-8q0tgzSNxbkD/mT1w/lxHGRoK3IEn6nYWj5mtELfQXlHJ3yLUnX1nhLxs2v4jYYIDj2rDhAaf0sRYni1Offf6Q==
+"@juki-team/commons@^0.0.668":
+  version "0.0.668"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.668/a06aad58a6edbc0ef08fa5eede043176a703fbdf#a06aad58a6edbc0ef08fa5eede043176a703fbdf"
+  integrity sha512-GEYsjR2BemvVq7MEC6MduljW0LGz4xtYDVXL5V0rQnbdtBc5LP7kixiGc7xThJToN7jaIjqud31Pnvv2HwA6Cw==
   dependencies:
     uuid "^10.0.0"
 

@@ -12,9 +12,11 @@ import {
   Popover,
   Select,
   T,
+  TextField,
   TwoContentLayout,
 } from 'components';
 import { jukiSettings } from 'config';
+import { ENTITY_ACCESS } from 'config/constants';
 import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
@@ -29,6 +31,7 @@ import {
 import {
   ContentResponseType,
   DataViewerHeadersType,
+  EntityAccess,
   Judge,
   JudgeDataResponseDTO,
   LastPathKey,
@@ -78,6 +81,27 @@ function Problems() {
     ...(!isExternal ? [
       getProblemModeHeader(),
       getProblemTypeHeader(),
+      {
+        head: 'access',
+        index: 'access',
+        Field: ({ record: { members: { access } } }) => (
+          <TextField
+            className="jk-row"
+            text={<T className="tt-se">{ENTITY_ACCESS[access].label}</T>}
+            label={<T className="tt-se">type</T>}
+          />
+        ),
+        sort: true,
+        filter: {
+          type: 'select',
+          options: [ EntityAccess.PRIVATE, EntityAccess.RESTRICTED, EntityAccess.PUBLIC, EntityAccess.EXPOSED ].map((problemType) => ({
+            value: problemType,
+            label: ENTITY_ACCESS[problemType].label,
+          })),
+        },
+        cardPosition: 'upperLeft',
+        minWidth: 100,
+      } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
       getProblemTagsHeader(tags),
     ] : []),
     // getProblemOwnerHeader(isExternal),
