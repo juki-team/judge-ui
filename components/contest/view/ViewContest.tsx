@@ -130,8 +130,12 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
         ),
         body: (
           <ProblemView
-            problem={{ ...problem, user: { isOwner: false, isManager: false, tried: false, isSpectator: false, solved: false } }}
+            problem={{
+              ...problem,
+              user: { isOwner: false, isManager: false, tried: false, isSpectator: false, solved: false },
+            }}
             infoPlacement="name"
+            withoutDownloadButtons
             codeEditorSourceStoreKey={contest.key + '/' + problem.key}
             codeEditorCenterButtons={({ sourceCode, language }) => {
               const validSubmit = (
@@ -361,32 +365,27 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
       getHrefOnTabChange={tab => jukiSettings.ROUTES.contests().view({ key: contestKey, tab, subTab: problemIndex })}
       tabButtons={extraNodes}
     >
-      <div>
-        <CustomHead title={contest.name} />
-        <div className="jk-col pn-re">
-          <div className="jk-row nowrap gap extend">
-            <h2
-              style={{
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                // width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
-              }}
-            >
-              {contest.name}
-            </h2>
-            <Popover
-              content={literal}
-              placement="bottom"
-            >
-              <div className={`jk-tag tt-ue tx-s ${tag} screen md lg`}>
-                <T className="ws-np">{statusLabel}</T>
-              </div>
-            </Popover>
+      <CustomHead title={contest.name} />
+      <div className="jk-row nowrap gap extend left">
+        <h2
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {contest.name}
+        </h2>
+        <Popover
+          content={<div className="jk-pg-sm">{literal}</div>}
+          placement="bottom"
+        >
+          <div className={`jk-tag tt-ue tx-s ${tag} screen md lg`}>
+            <T className="ws-np">{statusLabel}</T>
           </div>
-          <div className="screen sm jk-row extend">{allLiteralLabel}</div>
-        </div>
+        </Popover>
       </div>
+      <div className="screen sm jk-row extend">{allLiteralLabel}</div>
     </TwoContentLayout>
   );
 }

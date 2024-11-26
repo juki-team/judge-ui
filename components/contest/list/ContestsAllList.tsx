@@ -23,7 +23,11 @@ export const ContestsAllList = () => {
           params: {
             page,
             pageSize,
-            filterUrl: toFilterUrl({ ...filter, companyKeys: companyKey, state: EntityState.RELEASED }),
+            filterUrl: toFilterUrl({
+              ...filter,
+              companyKeys: companyKey,
+              state: EntityState.RELEASED,
+            }),
             sortUrl: toSortUrl(sort),
           },
         }).url

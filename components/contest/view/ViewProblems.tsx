@@ -11,8 +11,8 @@ import {
 } from 'components';
 import { jukiSettings } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
+import { authorizedRequest, cleanRequest, downloadUrlAsFile, getLocalToken, lettersToIndex } from 'helpers';
+import { useJukiNotification, useJukiRouter, useJukiUI, useT } from 'hooks';
 import React, { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -32,8 +32,8 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   const { routeParams: { key: contestKey, index, tab } } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
-  const { company: { key } } = useJukiUser();
   const isJudgeOrAdmin = isManager || isAdministrator;
+  const { t } = useT();
   
   const columns = useMemo(() => [
     {
@@ -186,6 +186,34 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   return (
     <DataViewer<ContestDataResponseDTO['problems'][string]>
       headers={columns}
+      extraNodes={[
+        <ButtonLoader
+          key="download-contest-problemset"
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            const { url, ...options } = jukiSettings.API_V2.export.contest.problems.statementsToPdf({
+              params: {
+                key: contest.key,
+                token: getLocalToken(),
+              },
+            });
+            const response = cleanRequest<ContentResponseType<{ urlExportedPDF: string }>>(
+              await authorizedRequest(url, options),
+            );
+            
+            if (response.success) {
+              await downloadUrlAsFile('https://' + response.content.urlExportedPDF, `${contest.name} - ${t('problemset')}`);
+              setLoaderStatus(Status.SUCCESS);
+            } else {
+              setLoaderStatus(Status.ERROR);
+            }
+          }}
+          size="tiny"
+          type="light"
+        >
+          <T>download problemset</T>
+        </ButtonLoader>,
+      ]}
       data={data}
       rows={{ height: 70 }}
       rowsView={viewPortSize !== 'sm'}

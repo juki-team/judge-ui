@@ -33,4 +33,6 @@ export {
   oneTab,
   getStatementData,
   contestStateMap,
+  downloadUrlAsFile,
+  getLocalToken,
 } from '@juki-team/base-ui';

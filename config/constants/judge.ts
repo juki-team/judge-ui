@@ -49,9 +49,6 @@ export const JUDGE_API_V1 = {
     SCOREBOARD_HISTORY: (key: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/scoreboard-history`;
     },
-    RECALCULATE_SCOREBOARD: (key: string) => {
-      return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/recalculate-scoreboard`;
-    },
     CLARIFICATION: (key: string) => {
       return `${JUKI_SERVICE_BASE_URL}/${API_VERSION}/contest/${key}/clarification`;
     },

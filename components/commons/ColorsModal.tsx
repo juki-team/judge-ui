@@ -1,7 +1,6 @@
-import { Modal } from '@juki-team/base-ui';
+import { Modal } from 'components';
 
 export const ColorsModal = () => {
-  
   
   return (
     <Modal isOpen={true} onClose={() => null} className="test-test">
@@ -10,4 +9,4 @@ export const ColorsModal = () => {
       </div>
     </Modal>
   );
-}
+};

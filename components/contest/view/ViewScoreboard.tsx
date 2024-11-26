@@ -1,3 +1,4 @@
+import { jukiSettings } from '@juki-team/base-ui';
 import {
   Button,
   ButtonLoader,
@@ -220,11 +221,12 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
               disabled={isLoading}
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
-                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD(contestKey as string),
-                    { method: HTTPMethod.POST },
-                  ),
-                );
+                
+                const {
+                  url,
+                  ...options
+                } = jukiSettings.API.contest.recalculateScoreboard({ params: { key: contest.key } });
+                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
                 if (notifyResponse(response, setLoaderStatus)) {
                   reload();
                 }
