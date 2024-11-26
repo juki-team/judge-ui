@@ -1,6 +1,7 @@
+import { ContentResponseType, ContestDataResponseDTO } from '@juki-team/commons';
 import { DataViewer, T, TwoContentLayout } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { useDataViewerRequester, useFetcher, useJukiRouter, useJukiUI, useJukiUser, useMemo } from 'hooks';
+import { useDataViewerRequester, useFetcher, useJukiRouter, useJukiUI, useJukiUser, useMemo, useT } from 'hooks';
 import {
   ContentsResponseType,
   ContestSummaryListResponseDTO,
@@ -10,7 +11,12 @@ import {
   ScoreboardResponseDTO,
   TabsType,
 } from 'types';
-import { getNicknameColumn, getPointsColumn, getPositionColumn } from '../../components/contest/view/columns';
+import {
+  getNicknameColumn,
+  getPointsColumn,
+  getPositionColumn,
+  getProblemScoreboardColumn,
+} from '../../components/contest/view/columns';
 import { jukiSettings } from '../../config';
 import { toFilterUrl } from '../../helpers';
 
@@ -30,10 +36,17 @@ function Ranking() {
   const globalContests = globalContestsData?.success ? globalContestsData.contents : [];
   const { searchParams } = useJukiRouter();
   const tab = searchParams.get('tab') as string || globalContests[0]?.key || '';
-  const globalContest = globalContests.find(globalContest => globalContest.key === tab);
-  const { user } = useJukiUser();
   
-  console.log({ globalContests });
+  const { data: contestResponse } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(tab ? jukiSettings.API.contest.getData({
+    params: {
+      key: tab,
+    },
+  }).url : null);
+  const contestData = contestResponse?.success ? contestResponse.content : null;
+  const { user } = useJukiUser();
+  const { components: { Link } } = useJukiUI();
+  const { t } = useT();
+  
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
@@ -41,13 +54,11 @@ function Ranking() {
       getPointsColumn(viewPortSize, true),
     ];
     
-    // if (globalContest?.problems) {
-    //   for (const problem of Object.values(globalContest?.problems)) {
-    //     base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem, t));
-    //   }
-    // }
+    for (const problem of Object.values(contestData?.problems ?? {})) {
+      base.push(getProblemScoreboardColumn(Link, tab as string, true, problem, t));
+    }
     return base;
-  }, [ viewPortSize, user.nickname /*contest.isEndless, contest?.problems, Link, contestKey, t*/ ]);
+  }, [ viewPortSize, user.nickname, contestData, tab, t, Link ]);
   
   const {
     data: response,
@@ -57,11 +68,10 @@ function Ranking() {
     reload,
     reloadRef,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
-    () => JUDGE_API_V1.CONTEST.SCOREBOARD(globalContest?.key ?? '', true), { refreshInterval: 60000 },
+    () => JUDGE_API_V1.CONTEST.SCOREBOARD(tab ?? '', true), { refreshInterval: 60000 },
   );
   
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
-  console.log({ data });
   
   const breadcrumbs = [
     <T className="tt-se" key="ranking">scoreboard</T>,
@@ -89,7 +99,6 @@ function Ranking() {
     };
   }
   
-  console.log({ tabs });
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
