@@ -56,8 +56,7 @@ const SponsoredByTag = () => {
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
-  // jukiApiSocketManager.setSetting(JUKI_SERVICE_BASE_URL + '/api/v1', JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
-  const [ lang, setLanguage ] = useState<Language | undefined>();
+  const [ _, setLanguage ] = useState<Language | undefined>();
   
   useEffect(() => {
     jukiApiSocketManager.setApiSettings(JUKI_SERVICE_BASE_URL + '/api/v1', JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);

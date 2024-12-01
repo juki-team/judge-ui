@@ -5,7 +5,6 @@ import Loading from './loading';
 import { RootLayout } from './RootLayout';
 import './styles.scss';
 
-// TODO:
 const inter = Inter({
   weight: [ '100', '200', '300', '500', '700' ],
   subsets: [ 'latin' ],
