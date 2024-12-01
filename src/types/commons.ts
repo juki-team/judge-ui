@@ -110,6 +110,12 @@ export type {
   ImageCmpProps,
   AppendSearchParamsType,
   PlacementType,
+  TabsType,
+  RowSortableItem,
+  TabType,
+  SimpleSortableRowsProps,
+  TwoContentLayoutProps,
+  TwoContentSectionProps,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

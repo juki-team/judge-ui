@@ -1,11 +1,9 @@
 'use client';
 
 export type {
-  TabsType,
   MenuType,
   DataViewerHeadersType,
   FilterSelectOfflineType,
-  RowSortableItem,
   CropImageType,
   FilterTextOfflineType,
   SetLoaderStatusType,
@@ -14,14 +12,10 @@ export type {
   GetRecordKeyType,
   JkTableHeaderFilterType,
   FilterSelectOnlineType,
-  TabType,
   OnRecordClickType,
   DataViewerRequesterGetUrlType,
   GetRecordStyleType,
   UserCodeEditorProps,
-  SimpleSortableRowsProps,
   UpsertComponentEntityProps,
-  TwoContentLayoutProps,
   LanguagesByJudge,
-  TwoContentSectionProps,
 } from '@juki-team/base-ui';
