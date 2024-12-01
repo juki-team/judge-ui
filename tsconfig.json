@@ -22,12 +22,44 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "config": [
+        "./src/config"
+      ],
+      "config/constants": [
+        "./src/config/constants"
+      ],
+      "helpers": [
+        "./src/helpers"
+      ],
+      "hooks": [
+        "./src/hooks"
+      ],
+      "components": [
+        "./src/components"
+      ],
+      //      "components/server": [
+      //        "./src/server-components"
+      //      ],
+      "store": [
+        "./src/store"
+      ],
+      "types": [
+        "./src/types"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

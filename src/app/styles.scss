@@ -1,0 +1,146 @@
+@use "@juki-team/base-ui/styles/mixins" as utils;
+@import "@juki-team/base-ui/styles/base";
+@import "../components/problem/styles";
+@import "../components/contest/styles";
+@import "diff2html/bundles/css/diff2html.min.css";
+
+body {
+  @include utils.md {
+    --top-horizontal-menu-height: 56px;
+  }
+  @include utils.lg {
+    --top-horizontal-menu-height: 56px;
+  }
+  
+  margin: 0;
+  
+  --left-vertical-menu-width: 48px !important;
+}
+
+.image-404 {
+  max-height: calc(var(--100VH) - 300px);
+  width: calc(100vw - 400px);
+  max-width: 512px;
+  min-width: 200px;
+}
+
+li > * {
+  vertical-align: text-top;
+}
+
+.letter-tag {
+  margin-right: 4px;
+  height: 20px;
+  width: 20px;
+  min-width: 20px;
+  box-sizing: border-box;
+  padding: 0;
+  line-height: 20px;
+}
+
+.max-popover-select-size {
+  .jk-select-options {
+    width: 300px !important;
+  }
+}
+
+.jk-md-math-editor-style {
+  @extend .bc-we;
+  
+  .content-preview {
+    min-height: 141px;
+  }
+}
+
+.text-lang-edit {
+  min-height: 215px;
+  
+  .jk-md-math-editor-layout {
+    @extend .jk-md-math-editor-style;
+  }
+}
+
+.text-edit {
+  &-small {
+    .jk-md-math-editor-layout {
+      @extend .bc-we;
+      
+      .content-preview {
+        min-height: 48px;
+      }
+    }
+  }
+  
+  .jk-md-math-editor-layout {
+    @extend .jk-md-math-editor-style;
+    
+    .content-preview {
+      box-sizing: border-box;
+    }
+  }
+}
+
+.text-head-field, .text-head-field span.tx-s {
+  line-height: 16px;
+}
+
+.jk-menu-collapse {
+  top: 56px !important;
+}
+
+.height-100-percent {
+  height: 100%;
+}
+
+.sheet-page {
+  > div > div > .jk-md-math-viewer-layout {
+    width: 100%;
+    background-color: var(--t-color-white);
+    @extend .jk-border-radius-inline;
+    padding: 0 var(--pad-t);
+    box-sizing: border-box;
+  }
+  
+  .jk-md-math-editor-layout {
+    background-color: var(--t-color-white);
+    width: 100%;
+    min-height: 48px;
+  }
+  
+  > div {
+    margin: 0 0 var(--pad-xt) 0;
+  }
+}
+
+.options-header-content > .left-options > .jk-select-layout.languages-selector {
+  max-width: 200px;
+}
+
+.sponsored-by {
+  position: fixed;
+  bottom: 0;
+  right: var(--pad-md);
+  font-size: 10px;
+  background: var(--t-color-primary-dark);
+  color: var(--t-color-primary-text);
+  line-height: 1;
+  padding: 1px 4px 0 4px;
+  border-radius: 4px 4px 0 0;
+  
+  > a {
+    cursor: pointer !important;
+    @extend .fw-bd;
+  }
+}
+
+.diff-body-modal {
+  overflow: auto;
+  
+  .d2h-file-header {
+    display: none;
+  }
+  
+  .d2h-diff-tbody {
+    position: relative;
+  }
+}
