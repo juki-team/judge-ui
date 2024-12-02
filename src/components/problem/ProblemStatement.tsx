@@ -81,7 +81,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           </div>
           <div>
             <h3><T>description</T></h3>
-            <div className="text-edit">
+            <div className="text-editor">
               <MdMathEditor
                 informationButton
                 uploadImageButton
@@ -93,12 +93,13 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     description: { ...statement.description, [language]: value },
                   },
                 }))}
+                initEditMode
               />
             </div>
           </div>
           <div>
             <h3><T>input</T></h3>
-            <div className="text-edit">
+            <div className="text-editor">
               <MdMathEditor
                 informationButton
                 uploadImageButton
@@ -110,12 +111,13 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     input: { ...statement.input, [language]: value },
                   },
                 }))}
+                initEditMode
               />
             </div>
           </div>
           <div>
             <h3><T>output</T></h3>
-            <div className="text-edit">
+            <div className="text-editor">
               <MdMathEditor
                 informationButton
                 uploadImageButton
@@ -127,6 +129,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     output: { ...statement.output, [language]: value },
                   },
                 }))}
+                initEditMode
               />
             </div>
           </div>
@@ -147,7 +150,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                           </div>
                         </div>
                         :
-                        <div className="flex-1 text-edit-small">
+                        <div className="flex-1 text-editor">
                           <MdMathEditor
                             informationButton
                             uploadImageButton
@@ -168,6 +171,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                                 },
                               },
                             }))}
+                            initEditMode
                           />
                         </div>
                       </>
@@ -225,7 +229,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           </div>
           <div>
             <h3><T>note</T></h3>
-            <div className="text-edit">
+            <div className="text-editor">
               <MdMathEditor
                 informationButton
                 uploadImageButton
@@ -237,6 +241,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     note: { ...statement.note, [language]: value },
                   },
                 }))}
+                initEditMode
               />
             </div>
           </div>

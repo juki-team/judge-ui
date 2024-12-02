@@ -44,36 +44,13 @@ li > * {
   }
 }
 
-.jk-md-math-editor-style {
-  @extend .bc-we;
-  
-  .content-preview {
-    min-height: 141px;
-  }
-}
-
-.text-lang-edit {
-  min-height: 215px;
-  
-  .jk-md-math-editor-layout {
-    @extend .jk-md-math-editor-style;
-  }
-}
-
-.text-edit {
-  &-small {
-    .jk-md-math-editor-layout {
-      @extend .bc-we;
-      
-      .content-preview {
-        min-height: 48px;
-      }
-    }
+.text-editor {
+  .jk-md-math-viewer-layout {
+    @extend .bc-we;
+    min-height: 64px;
   }
   
   .jk-md-math-editor-layout {
-    @extend .jk-md-math-editor-style;
-    
     .content-preview {
       box-sizing: border-box;
     }

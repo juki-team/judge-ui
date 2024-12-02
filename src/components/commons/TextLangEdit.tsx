@@ -1,5 +1,5 @@
+import { FlagEnImage, FlagEsImage, MdMathEditor, Tabs } from 'components';
 import React from 'react';
-import { FlagEnImage, FlagEsImage, MdMathEditor, Tabs } from 'src/components/index';
 import { Language, TextLanguageType } from 'src/types';
 
 export const TextLangEdit = ({ text, setText }: {
@@ -7,7 +7,7 @@ export const TextLangEdit = ({ text, setText }: {
   setText: (text: TextLanguageType) => void
 }) => {
   return (
-    <div className="text-lang-edit">
+    <div className="text-editor">
       <Tabs
         tabs={[
           {
@@ -18,6 +18,7 @@ export const TextLangEdit = ({ text, setText }: {
                 uploadImageButton
                 source={text?.[Language.ES]}
                 onChange={value => setText({ ...text, [Language.ES]: value })}
+                initEditMode
               />
             ),
             header: (
@@ -34,6 +35,7 @@ export const TextLangEdit = ({ text, setText }: {
                 uploadImageButton
                 source={text?.[Language.EN]}
                 onChange={value => setText({ ...text, [Language.EN]: value })}
+                initEditMode
               />
             ),
             header: (

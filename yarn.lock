@@ -1246,10 +1246,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^0.1.744":
-  version "0.1.744"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.744/2c2f6e45768cc58380720a7ef4a689e8013bc542#2c2f6e45768cc58380720a7ef4a689e8013bc542"
-  integrity sha512-c67UHrAFAbdI+uOuR8UaMe26mAzNeoRCVarw0MFU3cLaYcbjwm0Od7OQx3SdfFXQWgZHh8xE2vL4Y3DghLa3Tw==
+"@juki-team/base-ui@^0.1.749":
+  version "0.1.749"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/0.1.749/16dff41f3a2c1a629346af057171e668b4ae9bd6#16dff41f3a2c1a629346af057171e668b4ae9bd6"
+  integrity sha512-4j0hEYgeHTYlAejV8Seq0rM876WLJg6+/B8sNtbp2/yiJdWcuLaerqja5BwBTRkIG7b5uN98pmrS4CXUXAy3vQ==
   dependencies:
     "@codemirror/autocomplete" "^6.18.3"
     "@codemirror/lang-cpp" "^6.0.2"
@@ -5375,11 +5375,6 @@ react-dom@^18.3.1:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
-
-react-flip-move@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.npmjs.org/react-flip-move/-/react-flip-move-3.0.5.tgz"
-  integrity sha512-Mf4XpbkUNZy9eu80iXXFIjToDvw+bnHxmKHVoositbMpV87O/EQswnXUqVovRHoTx/F+4dE+p//PyJnAT7OtPA==
 
 react-hook-form@^7.53.0:
   version "7.53.2"
