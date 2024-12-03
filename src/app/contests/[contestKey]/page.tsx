@@ -53,7 +53,7 @@ export default function ContestViewPage() {
                 <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
               </p>
               <LinkLastPath lastPathKey={LastPathKey.CONTESTS}>
-                <Button icon={<CupIcon />} type="light">
+                <Button icon={<CupIcon />}>
                   <T className="tt-se">go to contest list</T>
                 </Button>
               </LinkLastPath>
