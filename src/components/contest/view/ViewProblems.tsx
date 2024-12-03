@@ -31,7 +31,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   
   const { problems = {}, user } = contest;
   const { isManager, isAdministrator } = user || {};
-  const { routeParams: { key: contestKey, index, tab } } = useJukiRouter();
+  const { routeParams: { contestKey } } = useJukiRouter();
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isManager || isAdministrator;

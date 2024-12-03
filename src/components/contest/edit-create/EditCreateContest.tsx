@@ -69,7 +69,7 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce">overview</T>,
       body: (
-        <div className="bc-we">
+        <div className="bc-we" key="overview">
           <MdMathEditor
             informationButton
             uploadImageButton
@@ -85,21 +85,21 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
       key: ContestTab.SETUP,
       header: <T className="tt-ce">settings</T>,
       body: (
-        <EditSettings contest={contest} setContest={setContest} />
+        <EditSettings key="settings" contest={contest} setContest={setContest} />
       ),
     },
     [ContestTab.MEMBERS]: {
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,
       body: (
-        <EditViewMembers contest={contest} setContest={setContest} editing={editing} />
+        <EditViewMembers key="members" contest={contest} setContest={setContest} editing={editing} />
       ),
     },
     [ContestTab.PROBLEMS]: {
       key: ContestTab.PROBLEMS,
       header: <T className="tt-ce">problems</T>,
       body: (
-        <EditProblems contest={contest} setContest={setContest} />
+        <EditProblems key="problems" contest={contest} setContest={setContest} />
       ),
     },
   };
@@ -109,7 +109,7 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
       key: ContestTab.DELETE,
       header: <T className="tt-ce">delete</T>,
       body: (
-        <ContestDelete documentOwner={contest.owner} contestKey={contestKey} />
+        <ContestDelete key="delete" documentOwner={contest.owner} contestKey={contestKey} />
       ),
     };
   }

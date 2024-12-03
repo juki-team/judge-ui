@@ -128,6 +128,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
         ),
         body: (
           <ProblemView
+            key="problem-view"
             problem={{
               ...problem,
               user: { isOwner: false, isManager: false, tried: false, isSpectator: false, solved: false },
@@ -212,13 +213,13 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
             <T className="tt-ce ws-np">problems</T>
           </div>
         ),
-        body: <ViewProblems contest={contest} />,
+        body: <ViewProblems key="problems-view" contest={contest} />,
       };
     }
     tabHeaders[ContestTab.SCOREBOARD] = {
       key: ContestTab.SCOREBOARD,
       header: <T className="tt-ce ws-np">scoreboard</T>,
-      body: <ViewScoreboard contest={contest} mutate={mutate} />,
+      body: <ViewScoreboard key="scoreboard" contest={contest} mutate={mutate} />,
     };
   }
   
@@ -226,7 +227,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     tabHeaders[ContestTab.SUBMISSIONS] = {
       key: ContestTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,
-      body: <ViewSubmissions contest={contest} />,
+      body: <ViewSubmissions key="submissions" contest={contest} />,
     };
   }
   
@@ -234,7 +235,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     tabHeaders[ContestTab.CLARIFICATIONS] = {
       key: ContestTab.CLARIFICATIONS,
       header: <T className="tt-ce ws-np">clarifications</T>,
-      body: <ViewClarifications contest={contest} />,
+      body: <ViewClarifications key="clarifications" contest={contest} />,
     };
   }
   
@@ -243,7 +244,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,
       body: (
-        <EditViewMembers contest={contest as unknown as UpsertContestDTOUI} />
+        <EditViewMembers key="members" contest={contest as unknown as UpsertContestDTOUI} />
       ),
     };
   }
