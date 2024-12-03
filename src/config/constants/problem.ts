@@ -39,5 +39,15 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judg
       spectators: {},
     },
     owner: { nickname, imageUrl, company: { key: companyKey } },
+    costs: {
+      unlockEditorial: 0,
+      unlockHint: 0,
+      viewTestCases: 0,
+    },
+    rewardJukiCoins: {
+      forSolving: 0,
+      forSolvingFirstTry: 0,
+      forSolvingInAnExtraLanguage: 0,
+    },
   };
 };

@@ -1,5 +1,5 @@
-import { EntityAccess, ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 import { EMPTY_TEXT_LANGUAGES } from 'config/constants';
+import { EntityAccess, ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 
 export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO => ({
   members: {
@@ -29,4 +29,14 @@ export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO
     html: entity?.statement?.html ?? EMPTY_TEXT_LANGUAGES,
   },
   editorial: entity?.editorial ?? EMPTY_TEXT_LANGUAGES,
+  costs: {
+    unlockEditorial: 0,
+    unlockHint: 0,
+    viewTestCases: 0,
+  },
+  rewardJukiCoins: {
+    forSolving: 0,
+    forSolvingFirstTry: 0,
+    forSolvingInAnExtraLanguage: 0,
+  },
 });

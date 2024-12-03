@@ -313,6 +313,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         err: '',
                         sample: false,
                         log: '',
+                        messageTimestamp: 0,
                       },
                     }}
                     initialSource={{ [ProgrammingLanguage.CPP17]: problem.settings.evaluatorSource }}

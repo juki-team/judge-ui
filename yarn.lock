@@ -1293,10 +1293,10 @@
     xlsx "^0.18.5"
     yup "^1.4.0"
 
-"@juki-team/commons@^0.0.674":
-  version "0.0.674"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.674/b3edbecc5ed2e7eda9a3cee42f2be62a4eca37b6#b3edbecc5ed2e7eda9a3cee42f2be62a4eca37b6"
-  integrity sha512-ozH29qKHApgkHV9qgVeb89O5ZOU08lsMyOaqX5D/BqaayIqfx1hMj/e7OAEyVQcSa4aiauz0pM1vFWdZWCfiWA==
+"@juki-team/commons@^0.0.675":
+  version "0.0.675"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.675/aef554553f9cd3f9e7535b53e8e110eb4315754d#aef554553f9cd3f9e7535b53e8e110eb4315754d"
+  integrity sha512-bz++HRAUiJJqLBfaCaWiowhVInHHUjnC6Bomg0RA0MH7gK1gkJK1Qy2iPNPDbmpLav9A75SkIXW7JQmQveXywA==
   dependencies:
     uuid "^10.0.0"
 

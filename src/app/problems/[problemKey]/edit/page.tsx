@@ -19,6 +19,16 @@ function toUpsertWorksheetDTO(problem: ProblemDataResponseDTO): UpsertProblemUID
     statement: problem.statement,
     tags: problem.tags,
     owner: problem.owner,
+    costs: {
+      unlockEditorial: 0,
+      unlockHint: 0,
+      viewTestCases: 0,
+    },
+    rewardJukiCoins: {
+      forSolving: 0,
+      forSolvingFirstTry: 0,
+      forSolvingInAnExtraLanguage: 0,
+    },
   };
 }
 
