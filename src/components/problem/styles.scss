@@ -45,20 +45,6 @@
   border: 1px solid var(--t-color-gray-4);
 }
 
-.submission-info-code-source {
-  position: relative;
-  
-  .jk-code-viewer {
-    > pre {
-      min-height: 200px;
-      max-height: calc(var(--100VH) - 400px);
-      max-width: calc(var(--modal-width) - var(--pad-md) - var(--pad-md));
-      box-sizing: border-box;
-      overflow: auto;
-    }
-  }
-}
-
 .cr-io {
   .jk-tag {
     color: var(--t-color-info);
