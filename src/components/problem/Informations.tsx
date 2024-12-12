@@ -9,15 +9,7 @@ export const ProblemScoringModeInformation = ({ filledCircle }: InformationProps
   const [ isOpen, setIsOpen ] = useState(false);
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onClose={(setLoaderStatus, loaderStatus, event) => {
-          event.onRequestCloseModalEvent?.stopPropagation();
-          setIsOpen(false);
-        }}
-        closeWhenClickOutside
-        closeWhenKeyEscape
-      >
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="jk-col left stretch gap jk-pg">
           <h3><T>problem scoring mode</T></h3>
           <div><T className="tx-l cr-py fw-bd tt-se">total</T></div>
