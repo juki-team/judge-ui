@@ -17,7 +17,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
   const { pushRoute } = useJukiRouter();
   
   return (
-    <Modal isOpen={isOpen} onClose={onClose} closeWhenClickOutside closeWhenKeyEscape closeIcon>
+    <Modal isOpen={isOpen} onClose={onClose} closeIcon>
       <div className="jk-col gap jk-pg-md">
         <label>
           <T className="tt-se ws-np fw-bd">contest id</T>:&nbsp;

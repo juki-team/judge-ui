@@ -29,7 +29,7 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
   }
   
   return (
-    <Modal {...props} closeWhenClickOutside closeWhenKeyEscape>
+    <Modal {...props}>
       <div className="jk-pg-lg">
         <h1><T>rejudge</T></h1>
         <div className="jk-pg-tb cr-er">

@@ -25,7 +25,6 @@ export {
   CourseStatus,
   FileType,
   CourseType,
-  SocketEvent,
   CompanyLogoType,
   Status,
   EntityAccess,
@@ -36,7 +35,6 @@ export {
 export type {
   ContestProblemBasicDataResponseDTO,
   VirtualUserResponseDTO,
-  SocketEventSubmissionStatusResponseDTO,
   CompanyResponseDTO,
   JudgeDataResponseDTO,
   ErrorType,
