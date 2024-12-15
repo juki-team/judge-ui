@@ -6,7 +6,6 @@ import {
   ButtonLoader,
   EditIcon,
   FirstLoginWrapper,
-  InfoIcon,
   LinkLastPath,
   Portal,
   ProblemInfo,
@@ -99,18 +98,18 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           codeEditorSourceStoreKey={problem.key}
           codeEditorCenterButtons={({ sourceCode, language }) => {
             
-            if (problem.judge.isExternal) {
-              return (
-                <div className="jk-row">
-                  <InfoIcon
-                    data-tooltip-id="jk-tooltip"
-                    data-tooltip-content="it is not possible to submit to external judges at this time, we apologize for the inconvenience"
-                    data-tooltip-t-class-name="tt-se"
-                    className="cr-py"
-                  />
-                </div>
-              );
-            }
+            // if (problem.judge.isExternal && false) {
+            //   return (
+            //     <div className="jk-row">
+            //       <InfoIcon
+            //         data-tooltip-id="jk-tooltip"
+            //         data-tooltip-content="it is not possible to submit to external judges at this time, we apologize for the inconvenience"
+            //         data-tooltip-t-class-name="tt-se"
+            //         className="cr-py"
+            //       />
+            //     </div>
+            //   );
+            // }
             
             return (
               <FirstLoginWrapper>
