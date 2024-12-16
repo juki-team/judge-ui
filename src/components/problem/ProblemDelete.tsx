@@ -6,10 +6,10 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useJukiRouter } from 'hooks';
 import React from 'react';
-import { ContentResponseType, HTTPMethod, Status, UserBasicInfoResponseDTO } from 'types';
+import { ContentResponseType, HTTPMethod, Status, UserCompanyBasicInfoResponseDTO } from 'types';
 
 interface ProblemStatementProps {
-  documentOwner: UserBasicInfoResponseDTO,
+  documentOwner: UserCompanyBasicInfoResponseDTO,
   problemJudgeKey: string,
 }
 

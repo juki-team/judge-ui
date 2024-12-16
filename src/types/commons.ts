@@ -82,7 +82,7 @@ export type {
   UpsertProblemDTO,
   ProblemDataResponseDTO,
   DocumentMembersResponseDTO,
-  UserBasicInfoResponseDTO,
+  UserCompanyBasicInfoResponseDTO,
   SubmissionSummaryListResponseDTO,
   JudgeSummaryListResponseDTO,
   EntityMembersResponseDTO,

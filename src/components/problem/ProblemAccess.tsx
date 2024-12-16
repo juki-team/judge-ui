@@ -1,11 +1,11 @@
 import { DocumentMembersContent } from 'components';
 import React, { Dispatch, SetStateAction } from 'react';
-import { DocumentMembersResponseDTO, UserBasicInfoResponseDTO } from 'src/types';
+import { DocumentMembersResponseDTO, UserCompanyBasicInfoResponseDTO } from 'src/types';
 
 interface ProblemStatementProps {
   members: DocumentMembersResponseDTO;
   setMembers?: Dispatch<SetStateAction<DocumentMembersResponseDTO>>;
-  documentOwner: UserBasicInfoResponseDTO;
+  documentOwner: UserCompanyBasicInfoResponseDTO;
 }
 
 export const ProblemAccess = ({ members, setMembers, documentOwner }: ProblemStatementProps) => {
