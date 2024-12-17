@@ -1,6 +1,5 @@
 'use client';
 
-import { getProblemKeyHeader } from '@juki-team/base-ui';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { ENTITY_ACCESS } from 'config/constants';
 import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
@@ -18,6 +17,7 @@ import {
   ButtonLoader,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
+  getProblemKeyHeader,
   getProblemModeHeader,
   getProblemNameHeader,
   getProblemTagsHeader,
@@ -25,7 +25,6 @@ import {
   InfoIcon,
   PagedDataViewer,
   PlusIcon,
-  Popover,
   Select,
   T,
   TextField,
@@ -128,7 +127,7 @@ function Problems() {
     );
   }
   const [ modal, setModal ] = useState<ReactNode>(null);
-  if ([ Judge.CODEFORCES, Judge.JV_UMSA, Judge.CODEFORCES_GYM ].includes(judgeKey)) {
+  if (isExternal) {
     extraNodes.push(
       <div className="jk-row gap">
         {modal}
@@ -187,13 +186,11 @@ function Problems() {
       <div className="jk-row space-between extend pn-re">
         <div className="jk-row gap">
           <h1><T>problems</T></h1>
-          {[ Judge.CODEFORCES, Judge.JV_UMSA ].includes(judgeKey) && (
-            <Popover
-              content={<div><T className="tt-se">only tracked problems are displayed</T></div>}
-              placement="bottom"
-            >
-              <div><InfoIcon /></div>
-            </Popover>
+          {isExternal && (
+            <InfoIcon
+              data-tooltip-id="jk-tooltip"
+              data-tooltip-content="only tracked problems are displayed"
+            />
           )}
         </div>
         <div style={{ width: 200 }}>

@@ -20,7 +20,7 @@ import {
   JUKI_TOKEN_NAME,
   NODE_ENV,
 } from 'config/constants';
-import { useEffect, useJukiUI, useJukiUser, useState } from 'hooks';
+import { useEffect, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
 import { createInstance, i18n } from 'i18next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -54,6 +54,8 @@ const SponsoredByTag = () => {
   );
 };
 
+const delay = 50;
+
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
   const [ _, setLanguage ] = useState<Language | undefined>();
@@ -76,7 +78,47 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const routeParams = useParams();
   const pathname = usePathname();
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
-  
+  const lastTimeRef = useRef(0);
+  useEffect(() => {
+    function createSnowflake(x: number, y: number) {
+      const currentTime = Date.now(); // Obtiene el tiempo actual
+      if (currentTime - lastTimeRef.current < delay) return; // Si no ha pasado suficiente tiempo, sale
+      lastTimeRef.current = currentTime; // Actualiza el último tiempo
+      
+      // Crear el copo de nieve
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      
+      // Posición del copo
+      snowflake.style.left = `${x}px`;
+      snowflake.style.top = `${y}px`;
+      
+      // Tamaño aleatorio
+      const size = Math.random() * 20 + 10; // Entre 10px y 30px
+      snowflake.style.width = `${size}px`;
+      snowflake.style.height = `${size}px`;
+      snowflake.style.zIndex = '2000';
+      // snowflake.innerHTML = snowflakeSVG;
+      
+      // Agregar al body
+      document.body.appendChild(snowflake);
+      
+      // Eliminar el copo después de la animación
+      setTimeout(() => {
+        snowflake.remove();
+      }, 10000);
+    }
+    
+    // Evento para mover el ratón
+    document.addEventListener('mousemove', (e) => {
+      createSnowflake(e.pageX, e.pageY);
+    });
+    
+    // Evento para hacer click
+    document.addEventListener('click', (e) => {
+      createSnowflake(e.pageX, e.pageY);
+    });
+  }, []);
   const app = (
     <JukiProviders
       components={{ Image: Image as FC<ImageCmpProps>, Link: Link }}
