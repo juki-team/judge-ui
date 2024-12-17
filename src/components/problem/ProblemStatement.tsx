@@ -30,7 +30,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
   
   if (judgeIsExternal) {
     return (
-      <div className="jk-row extend top" style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+      <div className="jk-row extend top">
         <div
           className="jk-row extend top gap nowrap stretch left"
           style={{ position: 'relative' }}

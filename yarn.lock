@@ -1246,10 +1246,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.0.7":
-  version "1.0.7"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.7/ed2347903ba7f2415790e0417fa8f4fee7f70eb3#ed2347903ba7f2415790e0417fa8f4fee7f70eb3"
-  integrity sha512-7k9SK1rSbIf9CySyHdxU8Sw7nKKIuPsozKezsfT30Yu+4bKU+OHI6TcXPD2K3rtt3BL6oOEdGsb24kj7whovUA==
+"@juki-team/base-ui@^1.0.17":
+  version "1.0.17"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.17/734676949f5fb37471b65c3121f1a9e20898874e#734676949f5fb37471b65c3121f1a9e20898874e"
+  integrity sha512-NQqXlctnAOqHIvdniz0Eo7G2w8aeCozVGQHsdeNkEvLt2R0ow0RBa6TWtNAmAG5HsrJ6+hWE95d0Xj5j4joqRA==
   dependencies:
     "@codemirror/autocomplete" "^6.18.3"
     "@codemirror/lang-cpp" "^6.0.2"
@@ -1291,10 +1291,10 @@
     xlsx "^0.18.5"
     yup "^1.5.0"
 
-"@juki-team/commons@^0.0.691":
-  version "0.0.691"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.691/a495b2d900e7768b8f41d5f215b96d7d0245d888#a495b2d900e7768b8f41d5f215b96d7d0245d888"
-  integrity sha512-6IWZkOgAvM7/Hgixv0NkCbfCgQySbCgGnbflrHgHWpuwsY4mX0yTOy4yOxeVNM1MvOKtDG45GOIdENDAswj8xA==
+"@juki-team/commons@^0.0.692":
+  version "0.0.692"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.692/e3292c917a07b4f1ad131c261a59947dbf9ede7c#e3292c917a07b4f1ad131c261a59947dbf9ede7c"
+  integrity sha512-+PvD3LlW1xKmwO5c9bPAfwn6tLMDYDkflPgnidj5KLHjLrQUbtd8thhsal1JAFFCMNlwbwGwN7ePtuAWsQgVyA==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1":
   version "1.2.3"
@@ -3335,11 +3335,13 @@ frac@~1.1.2:
   resolved "https://registry.npmjs.org/frac/-/frac-1.1.2.tgz"
   integrity sha512-w/XBfkibaTl3YDqASwfDUqkna4Z2p9cFSr1aHDt0WoMTECnRfBOv2WArlZILlqgWlmdIlALXGpM2AOhEk5W3IA==
 
-framer-motion@^11.12.0:
-  version "11.12.0"
-  resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-11.12.0.tgz"
-  integrity sha512-gZaZeqFM6pX9kMVti60hYAa75jGpSsGYWAHbBfIkuHN7DkVHVkxSxeNYnrGmHuM0zPkWTzQx10ZT+fDjn7N4SA==
+framer-motion@^11.15.0:
+  version "11.15.0"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.15.0.tgz#93e5d1839d500ba9cab1d617959a36142a61212b"
+  integrity sha512-MLk8IvZntxOMg7lDBLw2qgTHHv664bYoYmnFTmE0Gm/FW67aOJk0WM3ctMcG+Xhcv+vh5uyyXwxvxhSeJzSe+w==
   dependencies:
+    motion-dom "^11.14.3"
+    motion-utils "^11.14.3"
     tslib "^2.4.0"
 
 fs-extra@^9.0.1:
@@ -4912,12 +4914,22 @@ moment@2.30.1, moment@>=2.14.0:
   resolved "https://registry.npmjs.org/moment/-/moment-2.30.1.tgz"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
 
-motion@^11.12.0:
-  version "11.12.0"
-  resolved "https://registry.npmjs.org/motion/-/motion-11.12.0.tgz"
-  integrity sha512-BFH9vwCs4dI9t1W1/1HonahOCnTxcKfzBR8D310wHFdx7oIwlP/51OqLNGO74lxOdCpTLf5BLe233k6yRqJo9Q==
+motion-dom@^11.14.3:
+  version "11.14.3"
+  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-11.14.3.tgz#725c72c0f1d0b632e42fdd8d13b69ecf9fe202c0"
+  integrity sha512-lW+D2wBy5vxLJi6aCP0xyxTxlTfiu+b+zcpVbGVFUxotwThqhdpPRSmX8xztAgtZMPMeU0WGVn/k1w4I+TbPqA==
+
+motion-utils@^11.14.3:
+  version "11.14.3"
+  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-11.14.3.tgz#cd4a413463739498411f82abb67b3dd58768b0f8"
+  integrity sha512-Xg+8xnqIJTpr0L/cidfTTBFkvRw26ZtGGuIhA94J9PQ2p4mEa06Xx7QVYZH0BP+EpMSaDlu+q0I0mmvwADPsaQ==
+
+motion@^11.15.0:
+  version "11.15.0"
+  resolved "https://registry.yarnpkg.com/motion/-/motion-11.15.0.tgz#1fb62b16300ad011dd4cde0a80ce3fc2a7e63b6e"
+  integrity sha512-iZ7dwADQJWGsqsSkBhNHdI2LyYWU+hA1Nhy357wCLZq1yHxGImgt3l7Yv0HT/WOskcYDq9nxdedyl4zUv7UFFw==
   dependencies:
-    framer-motion "^11.12.0"
+    framer-motion "^11.15.0"
     tslib "^2.4.0"
 
 mrmime@^2.0.0:

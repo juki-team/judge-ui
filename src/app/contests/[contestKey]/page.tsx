@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { oneTab } from 'helpers';
-import { useJukiRouter, useJukiUI, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
+import { useJukiRouter, useJukiUI, useJukiUser, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
 import React from 'react';
 import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
 
@@ -22,6 +22,7 @@ export default function ContestViewPage() {
   useRunnerServicesWakeUp();
   const { routeParams: { contestKey } } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
+  const { company: { key: companyKey } } = useJukiUser();
   
   const breadcrumbs = [
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">contests</T></LinkLastPath>,
@@ -36,7 +37,7 @@ export default function ContestViewPage() {
   
   return (
     <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
-      url={jukiApiSocketManager.API_V1.contest.getData({ params: { key: contestKey as string } }).url}
+      url={jukiApiSocketManager.API_V1.contest.getData({ params: { key: contestKey as string, companyKey } }).url}
       loadingView={
         <TwoContentLayout breadcrumbs={breadcrumbs} loading>
           <h2>

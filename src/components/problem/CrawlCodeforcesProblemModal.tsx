@@ -1,10 +1,11 @@
 'use client';
 
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
-import { jukiAppRoutes } from 'config';
-import { useJukiRouter } from 'hooks';
+import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { authorizedRequest, cleanRequest } from 'helpers';
+import { useJukiNotification, useJukiRouter } from 'hooks';
 import { useState } from 'react';
-import { BasicModalProps, Judge, Status } from 'types';
+import { BasicModalProps, ContentResponseType, Judge, Status } from 'types';
 
 interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
   judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
@@ -12,36 +13,52 @@ interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
 
 export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCodeforcesProblemModalProps) => {
   
-  const [ key, setKey ] = useState('');
-  
+  const [ index, setIndex ] = useState('');
+  const [ contestId, setContestId ] = useState('');
+  const { notifyResponse } = useJukiNotification();
   const { pushRoute } = useJukiRouter();
   
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
-      <div className="jk-col gap jk-pg-md">
-        <label>
-          <T className="tt-se ws-np fw-bd">contest id</T>:&nbsp;
-          <Input
-            size={6}
-            value={key.split('-')[0] || ''}
-            onChange={(value) => setKey(prevState => `${value.trim()}-${key.split('-')[1] || ''}`)}
-          />
-        </label>
-        <label className="jk-row nowrap">
-          <T className="tt-se ws-np fw-bd">index</T>:&nbsp;
-          <Input
-            size="auto"
-            value={key.split('-')[1] || ''}
-            onChange={(value) => setKey(prevState => `${key.split('-')[0] || ''}-${value.trim()}`)}
-          />
-        </label>
+      <div className="jk-col stretch gap jk-pg">
+        <h3><T>crawl codeforces problem</T></h3>
+        <Input
+          label={<T className="tt-se ws-np fw-bd">contest id</T>}
+          labelPlacement="top"
+          value={contestId}
+          onChange={setContestId}
+          extend
+          type="number"
+        />
+        <Input
+          label={<T className="tt-se ws-np fw-bd">index</T>}
+          labelPlacement="top"
+          size="auto"
+          value={index}
+          onChange={(value) => setIndex(value.toUpperCase())}
+          extend
+        />
         <ButtonLoader
           size="small"
           icon={<PlusIcon />}
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            pushRoute(jukiAppRoutes.JUDGE().problems.view({ key }));
+            const {
+              url,
+              ...options
+            } = jukiApiSocketManager.API_V2.webScraping.codeforces.problemStatement({
+              params: {
+                contestId,
+                index,
+              },
+            });
+            const response = cleanRequest<ContentResponseType<{ key: string }>>(
+              await authorizedRequest(url, options),
+            );
+            if (notifyResponse(response)) {
+              pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: response.content.key }));
+            }
             setLoaderStatus(Status.SUCCESS);
           }}
         >

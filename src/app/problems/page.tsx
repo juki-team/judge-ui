@@ -1,5 +1,6 @@
 'use client';
 
+import { getProblemKeyHeader } from '@juki-team/base-ui';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { ENTITY_ACCESS } from 'config/constants';
 import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
@@ -78,7 +79,7 @@ function Problems() {
     }
   }, [ judgeKey, setSearchParams, firstJudgeKey ]);
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
-    // getProblemKeyHeader(),
+    ...(isExternal ? [ getProblemKeyHeader() ] : []),
     getProblemNameHeader(false, { sticky: true, cardPosition: 'top' }),
     ...(!isExternal ? [
       getProblemModeHeader(),

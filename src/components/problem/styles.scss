@@ -102,18 +102,15 @@
 
 .CODEFORCES-h3 {
   color: var(--t-color-primary-dark);
-  font-size: 26px;
-  @include utils.sm {
-    font-size: 22px;
-  }
   font-weight: var(--weight-bold);
-  line-height: 1.6;
+  line-height: var(--line-height-head);
+  font-size: var(--font-size-h3);
 }
 
 .CODEFORCES-content {
   @extend .br-g6;
   @extend .bc-we;
-  @extend .jk-pg-md;
+  @extend .jk-pg-sm;
   @extend .jk-border-radius-inline;
 }
 
@@ -160,11 +157,11 @@
   .input-specification, .output-specification, .note {
     @extend .CODEFORCES-content;
     position: relative;
-    margin-top: 42px;
+    margin-top: calc(var(--font-size-h3) * var(--line-height-head));
     
     .section-title {
       position: absolute;
-      top: -42px;
+      top: calc(var(--font-size-h3) * var(--line-height-head) * -1);
       left: 0;
       @extend .CODEFORCES-h3;
     }
@@ -175,9 +172,18 @@
       @extend .CODEFORCES-h3;
     }
     
+    .sample-test {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--gap);
+    }
+    
     .input, .output {
       .title {
-        @extend .CODEFORCES-h3;
+        color: var(--t-color-primary-dark);
+        font-weight: var(--weight-bold);
+        line-height: var(--text-large-height);
+        font-size: var(--text-large-size);
         
         .input-output-copier {
           display: none;
