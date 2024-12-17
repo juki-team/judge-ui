@@ -28,7 +28,6 @@ export const ViewOverview = ({ contest }: { contest: ContestDataResponseDTO }) =
   
   const { isManager, isAdministrator, isParticipant, isGuest, isSpectator } = contest.user;
   const { user: { isLogged } } = useJukiUser();
-  const { routeParams } = useJukiRouter();
   const { appendSearchParams } = useJukiRouter();
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse } = useJukiNotification();
@@ -37,7 +36,7 @@ export const ViewOverview = ({ contest }: { contest: ContestDataResponseDTO }) =
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
     setLoader(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(routeParams.key as string), {
+    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(contest.key as string), {
       method: HTTPMethod.POST,
     }));
     if (notifyResponse(response)) {
