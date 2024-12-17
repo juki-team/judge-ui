@@ -36,12 +36,12 @@ export const ViewOverview = ({ contest }: { contest: ContestDataResponseDTO }) =
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType, key: string) => {
     setLoader(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(contest.key as string), {
+    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(contest.key), {
       method: HTTPMethod.POST,
     }));
     if (notifyResponse(response)) {
       setLoader(Status.LOADING);
-      await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(routeParams.key as string));
+      await mutate(JUDGE_API_V1.CONTEST.CONTEST_DATA(contest.key));
       setLoader(Status.SUCCESS);
     }
   };
