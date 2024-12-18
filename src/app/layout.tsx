@@ -13,8 +13,58 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Juki Judge',
+  title: {
+    template: 'Juki Judge | %s',
+    default: 'Juki Judge',
+  },
   description: 'Welcome to Juki Judge',
+  applicationName: 'Juki Judge',
+  keywords: [ 'Juki Judge' ],
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    title: 'Juki Judge',
+    description: 'Juki Judge is designed to make people improve their programming skills',
+    siteName: 'Juki Judge',
+    url: 'https://judge.juki.app',
+    images: [
+      {
+        url: 'https://images.juki.pub/assets/juki-judge-court.png',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Juki Judge',
+    description: 'Juki Judge is designed to make people improve their programming skills',
+    // siteId: '1467726470533754880',
+    creator: '@oscar_gauss',
+    // creatorId: '1467726470533754880',
+    images: [ 'https://images.juki.pub/assets/juki-judge-court.png' ], // Must be an absolute URL
+  },
+  verification: {
+    google: 'google',
+    yandex: 'yandex',
+    yahoo: 'yahoo',
+    other: {
+      me: [ 'oscargauss@juki.app', 'https://www.oscargauss.com' ],
+    },
+  },
+  appleWebApp: {
+    title: 'Juki Judge',
+    statusBarStyle: 'default',
+    startupImage: [
+      '/icons/apple-touch-icon.png',
+      // {
+      //   url: '/assets/startup/apple-touch-startup-image-1536x2008.png',
+      //   media: '(device-width: 768px) and (device-height: 1024px)',
+      // },
+    ],
+  },
 };
 
 export default async function Layout({
@@ -28,43 +78,12 @@ export default async function Layout({
   // const customTitle = `${company.name ? company.name : 'Juki'}  judge${title ? ' - ' + title : ''}`;
   // const customDescription = `${description ? description : 'Juki Judge is designed to make people improve their programming skills'}`;
   
-  const customTitle = 'Juki Judge';
-  const customDescription = 'Juki Judge is designed to make people improve their programming skills';
+  // const customTitle = 'Juki Judge';
+  // const customDescription = 'Juki Judge is designed to make people improve their programming skills';
   // TODO: update metadata with https://nextjs.org/docs/app/api-reference/functions/generate-metadata
   
   return (
     <html lang="en" className={inter.variable}>
-    <head>
-      <title>{customTitle}</title>
-      
-      <meta name="keywords" content="Juki Judge" />
-      <meta name="application-name" content={customTitle} />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      <meta name="apple-mobile-web-app-title" content={customTitle} />
-      <meta name="description" content={customDescription} />
-      <meta name="format-detection" content="telephone=no" />
-      <meta name="mobile-web-app-capable" content="yes" />
-      <meta name="msapplication-config" content="/browserconfig.xml" />
-      <meta name="msapplication-TileImage" content="/icons/ios/144.png" />
-      <meta name="msapplication-TileColor" content="#164066" />
-      <meta name="msapplication-tap-highlight" content="no" />
-      <meta name="theme-color" content="#FFFFFF" />
-      
-      <meta name="twitter:card" content="summary" />
-      <meta name="twitter:url" content="https://judge.juki.app" />
-      <meta name="twitter:title" content={customTitle} />
-      <meta name="twitter:description" content={customDescription} />
-      <meta name="twitter:image" content="https://judge.juki.app/icons/ios/192.png" />
-      <meta name="twitter:creator" content="@oscar_gauss" />
-      
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content={customTitle} />
-      <meta property="og:description" content={customDescription} />
-      <meta property="og:site_name" content={customTitle} />
-      <meta property="og:url" content="https://judge.juki.app" />
-      <meta property="og:image" content="https://judge.juki.app/icons/apple-touch-icon.png" />
-    </head>
     <body>
     <iframe
       style={{ display: 'none' }} src="https://utils.juki.app/jk-cross.html"

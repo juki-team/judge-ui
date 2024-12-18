@@ -82,7 +82,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     [ContestTab.OVERVIEW]: {
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce ws-np">overview</T>,
-      body: <ViewOverview contest={contest} />,
+      body: <ViewOverview contest={contest} reloadContest={mutate} />,
     },
   };
   

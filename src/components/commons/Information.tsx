@@ -1,5 +1,5 @@
+import { ExclamationIcon, Popover } from 'components';
 import { PropsWithChildren } from 'react';
-import { ExclamationIcon, Popover } from 'src/components/index';
 
 export interface InformationProps {
   filledCircle?: boolean,
@@ -7,7 +7,7 @@ export interface InformationProps {
 
 export const Information = ({ children, filledCircle }: PropsWithChildren<InformationProps>) => {
   return (
-    <Popover content={<div style={{ width: '200px' }}>{children}</div>}>
+    <Popover content={<div style={{ width: '200px' }} className="jk-pg-sm">{children}</div>}>
       <div className="jk-row">
         {filledCircle
           ? <ExclamationIcon rotate={180} filledCircle size="small" />

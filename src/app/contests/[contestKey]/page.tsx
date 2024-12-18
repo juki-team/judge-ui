@@ -1,73 +1,36 @@
-'use client';
+import { jukiApiSocketManager } from 'config';
+import { JUKI_SERVICE_BASE_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME } from 'config/constants';
+import { cleanRequest } from 'helpers';
+import type { Metadata } from 'next';
+import { ContentResponseType } from 'types';
+import ContestViewPage from './ContestViewPage';
 
-import {
-  Button,
-  ContestView,
-  CupIcon,
-  FetcherLayer,
-  LinkLastPath,
-  PageNotFound,
-  T,
-  TwoContentLayout,
-} from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { oneTab } from 'helpers';
-import { useJukiRouter, useJukiUI, useJukiUser, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
-import React from 'react';
-import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
+type Props = {
+  params: Promise<{ contestKey: string }>
+}
 
-export default function ContestViewPage() {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const contestKey = (await params).contestKey;
+  jukiApiSocketManager.setApiSettings(JUKI_SERVICE_BASE_URL + '/api/v1', JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
+  const response = await fetch(jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url);
+  const text = await response.text();
+  const product = cleanRequest<ContentResponseType<{
+    title: string,
+    description: string,
+    cover: string
+  }>>(text);
   
-  useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  useRunnerServicesWakeUp();
-  const { routeParams: { contestKey } } = useJukiRouter();
-  const { components: { Link } } = useJukiUI();
-  const { company: { key: companyKey } } = useJukiUser();
+  const { title, description, cover } = product.success ? product.content : { title: '', description: '', cover: '' };
   
-  const breadcrumbs = [
-    <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">contests</T></LinkLastPath>,
-    <Link
-      href={jukiAppRoutes.JUDGE().contests.view({ key: contestKey as string })}
-      className="link"
-      key="key"
-    >
-      <div className="ws-np">{contestKey}</div>
-    </Link>,
-  ];
-  
-  return (
-    <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
-      url={jukiApiSocketManager.API_V1.contest.getData({ params: { key: contestKey as string, companyKey } }).url}
-      loadingView={
-        <TwoContentLayout breadcrumbs={breadcrumbs} loading>
-          <h2>
-            {contestKey}
-          </h2>
-        </TwoContentLayout>
-      }
-      errorView={
-        <TwoContentLayout
-          breadcrumbs={breadcrumbs}
-          tabs={oneTab(
-            <PageNotFound>
-              <p>
-                <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
-              </p>
-              <LinkLastPath lastPathKey={LastPathKey.CONTESTS}>
-                <Button icon={<CupIcon />}>
-                  <T className="tt-se">go to contest list</T>
-                </Button>
-              </LinkLastPath>
-            </PageNotFound>,
-          )}
-        >
-          <h2><T>contest not found</T></h2>
-        </TwoContentLayout>
-      }
-    >
-      {({ data: { content: contest }, mutate }) => {
-        return <ContestView contest={contest} mutate={mutate} />;
-      }}
-    </FetcherLayer>
-  );
-};
+  return {
+    title,
+    description,
+    openGraph: {
+      images: [ cover ],
+    },
+  };
+}
+
+export default function Page() {
+  return <ContestViewPage />;
+}
