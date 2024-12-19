@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: 'Juki Judge',
   },
   description: 'Welcome to Juki Judge',
-  applicationName: 'Juki Judge',
+  applicationName: 'Juki Judge is designed to make people improve their programming skills',
   keywords: [ 'Juki Judge' ],
   formatDetection: {
     email: false,
@@ -67,20 +67,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Layout({
-                                       children,
-                                     }: {
-  children: ReactNode
-}) {
+export default async function Layout({ children }: { children: ReactNode }) {
   
   // jukiApiSocketManager.setSocketSettings(JUKI_SOCKET_BASE_URL);
   // const { company } = useJukiUser();
   // const customTitle = `${company.name ? company.name : 'Juki'}  judge${title ? ' - ' + title : ''}`;
   // const customDescription = `${description ? description : 'Juki Judge is designed to make people improve their programming skills'}`;
-  
-  // const customTitle = 'Juki Judge';
-  // const customDescription = 'Juki Judge is designed to make people improve their programming skills';
-  // TODO: update metadata with https://nextjs.org/docs/app/api-reference/functions/generate-metadata
   
   return (
     <html lang="en" className={inter.variable}>
