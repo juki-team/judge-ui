@@ -17,8 +17,8 @@ export const metadata: Metadata = {
     template: 'Juki Judge | %s',
     default: 'Juki Judge',
   },
-  description: 'Welcome to Juki Judge',
-  applicationName: 'Juki Judge is designed to make people improve their programming skills',
+  description: 'Juki Judge is designed to make people improve their programming skills',
+  applicationName: 'Juki Judge',
   keywords: [ 'Juki Judge' ],
   formatDetection: {
     email: false,
