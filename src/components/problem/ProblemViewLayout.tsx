@@ -129,7 +129,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                     
                     if (notifyResponse(response, setLoaderStatus)) {
                       listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
-                      await matchMutate(new RegExp(`^${jukiApiSocketManager.SERVICE_API_URL}/submission`, 'g'));
+                      await matchMutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
                       pushRoute({
                         pathname: jukiAppRoutes.JUDGE().problems.view({ key: problem.key }),
                         searchParams,

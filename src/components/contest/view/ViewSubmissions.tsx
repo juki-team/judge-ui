@@ -76,7 +76,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, languages ]);
+  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, user.nickname ]);
   
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   

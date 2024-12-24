@@ -104,7 +104,7 @@ export const ViewOverview = ({ contest, reloadContest }: ViewOverviewProps) => {
                   ? registerContest(setLoader)
                   : appendSearchParams({ name: QueryParamKey.SIGN_IN, value: '1' })}
                 type="secondary"
-                extend
+                expand
               >
                 <T>{isLogged ? 'enroll' : 'sign in'}</T>
               </ButtonLoader>

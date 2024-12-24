@@ -269,7 +269,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, mutate, notifyResponse, pushRoute, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);
+  ), [ columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, mutate, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);
   
   if (fullscreen) {
     const literal = getContestTimeLiteral(contest);

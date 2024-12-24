@@ -61,7 +61,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const [ _, setLanguage ] = useState<Language | undefined>();
   
   useEffect(() => {
-    jukiApiSocketManager.setApiSettings(JUKI_SERVICE_BASE_URL + '/api/v1', JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
+    jukiApiSocketManager.setApiSettings(JUKI_SERVICE_BASE_URL + '/api/v1', JUKI_SERVICE_V2_URL + '/v2', JUKI_TOKEN_NAME);
     jukiApiSocketManager.setSocketSettings(JUKI_SOCKET_BASE_URL);
     void jukiGlobalStore.setI18n(i18nInstance);
     
@@ -80,7 +80,10 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
   const lastTimeRef = useRef(0);
   useEffect(() => {
-    function createSnowflake(x: number, y: number) {
+    function createSnowflake(_x: number, _y: number) {
+      const x = _x + (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 80);
+      const y = _y + (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 80);
+      
       const currentTime = Date.now(); // Obtiene el tiempo actual
       if (currentTime - lastTimeRef.current < delay) return; // Si no ha pasado suficiente tiempo, sale
       lastTimeRef.current = currentTime; // Actualiza el último tiempo

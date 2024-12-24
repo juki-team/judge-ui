@@ -164,7 +164,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
                         tab: ContestTab.MY_SUBMISSIONS,
                         subTab: problemIndex,
                       }));
-                      await matchMutate(new RegExp(`^${jukiApiSocketManager.SERVICE_API_URL}/submission`, 'g'));
+                      await matchMutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
                     }
                   }}
                 >

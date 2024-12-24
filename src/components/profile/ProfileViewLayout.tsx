@@ -73,7 +73,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
         size={(viewPortSize !== 'sm') ? 'tiny' : 'regular'}
         icon={<LockIcon />}
         onClick={() => setOpenModal('RESET_PASSWORD')}
-        extend={viewPortSize === 'sm'}
+        expand={viewPortSize === 'sm'}
         key="reset password"
       >
         <T className="ws-np">reset password</T>
@@ -84,7 +84,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
         size={(viewPortSize !== 'sm') ? 'tiny' : 'regular'}
         icon={<LockIcon />}
         onClick={() => setOpenModal('DATA')}
-        extend={viewPortSize === 'sm'}
+        expand={viewPortSize === 'sm'}
         key="update profile"
       >
         <T className="ws-np">update profile</T>

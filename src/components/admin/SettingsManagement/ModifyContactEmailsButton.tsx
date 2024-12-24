@@ -66,7 +66,7 @@ export const ModifyContactEmailsButton = (props: ModifyContactEmailsButtonProps)
               className="jk-table-inline-row"
               onClick={() => setContactEmails([ ...contactEmails, '' ])}
               icon={<AddIcon />}
-              extend
+              expand
             >
               <T>add</T>
             </Button>

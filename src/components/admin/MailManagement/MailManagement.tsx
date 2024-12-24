@@ -151,7 +151,7 @@ export const MailManagement = ({ company }: { company: CompanyResponseDTO }) => 
               </div>
             </div>
             <ButtonLoader
-              extend
+              expand
               size="small"
               disabled={!to || !subject || !from || !password}
               icon={<SendIcon />}
