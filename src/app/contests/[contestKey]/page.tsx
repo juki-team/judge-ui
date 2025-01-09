@@ -12,15 +12,20 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const contestKey = (await params).contestKey;
   jukiApiSocketManager.setApiSettings(JUKI_SERVICE_BASE_URL + '/api/v1', JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
-  const response = await fetch(jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url);
-  const text = await response.text();
-  const product = cleanRequest<ContentResponseType<{
-    title: string,
-    description: string,
-    cover: string
-  }>>(text);
+  let result;
+  try {
+    const response = await fetch(jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url);
+    const text = await response.text();
+    result = cleanRequest<ContentResponseType<{
+      title: string,
+      description: string,
+      cover: string
+    }>>(text);
+  } catch (error) {
+    console.error('error on generateMetadata', error);
+  }
   
-  const { title, description, cover } = product.success ? product.content : { title: '', description: '', cover: '' };
+  const { title, description, cover } = result?.success ? result.content : { title: '', description: '', cover: '' };
   
   return {
     title,
