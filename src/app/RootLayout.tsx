@@ -14,7 +14,7 @@ import {
 import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
 import {
   JUKI_APP_COMPANY_KEY,
-  JUKI_SERVICE_BASE_URL,
+  JUKI_SERVICE_V1_URL,
   JUKI_SERVICE_V2_URL,
   JUKI_SOCKET_BASE_URL,
   JUKI_TOKEN_NAME,
@@ -61,7 +61,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const [ _, setLanguage ] = useState<Language | undefined>();
   
   useEffect(() => {
-    jukiApiSocketManager.setApiSettings(JUKI_SERVICE_BASE_URL + '/api/v1', JUKI_SERVICE_V2_URL + '/v2', JUKI_TOKEN_NAME);
+    jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
     jukiApiSocketManager.setSocketSettings(JUKI_SOCKET_BASE_URL);
     void jukiGlobalStore.setI18n(i18nInstance);
     
