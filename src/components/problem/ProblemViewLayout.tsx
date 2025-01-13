@@ -59,13 +59,25 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const printMode = searchParams.get(QueryParam.PRINT_MODE);
   
   if (printMode === PrintMode.AS_PROBLEM_SET) {
+    document.querySelectorAll('.jk-vertical-menu-layout-container, .jk-horizontal-menu-layout-container').forEach(element => {
+      if (element instanceof HTMLElement) {
+        element.style.display = 'none';
+      }
+    });
+    
     const jukiAppElement = document.getElementById('juki-app');
     if (jukiAppElement) {
-      jukiAppElement.style.display = 'none';
+      jukiAppElement.style.overflow = 'visible';
     }
+    
     if (document?.body?.style) {
       document.body.style.background = 'none';
     }
+    
+    if (document?.documentElement?.style) {
+      document.documentElement.style.overflowY = 'auto';
+    }
+    
     return (
       <Portal className="">
         <div
