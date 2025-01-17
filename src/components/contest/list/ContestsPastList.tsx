@@ -3,7 +3,7 @@
 import { getContestDateHeader, getContestNameHeader, PagedDataViewer } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUser } from 'hooks';
+import { useJukiUser, usePreload } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, EntityState, QueryParam } from 'types';
 
@@ -15,6 +15,7 @@ export const ContestsPastList = () => {
     getContestDateHeader(),
     // getContestContestantsHeader(),
   ], []);
+  const preload = usePreload();
   
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
@@ -32,6 +33,9 @@ export const ContestsPastList = () => {
       name={QueryParam.PAST_CONTESTS_TABLE}
       refreshInterval={60000}
       cards={{ width: 320, expanded: true }}
+      onRecordHover={({ data, index }) => {
+        void preload(jukiApiSocketManager.API_V1.contest.getData({ params: { key: data[index].key, companyKey } }).url);
+      }}
     />
   );
 };

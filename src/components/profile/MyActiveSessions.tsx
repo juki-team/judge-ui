@@ -1,9 +1,9 @@
+import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T } from 'components';
+import { jukiApiSocketManager } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
+import { useDataViewerRequester, useJukiUser, useMutate } from 'hooks';
 import { useMemo } from 'react';
-import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T } from 'src/components/index';
-import { jukiApiSocketManager } from 'src/config';
-import { useDataViewerRequester, useJukiUser, useSWR } from 'src/hooks';
-import { ContentsResponseType, DataViewerHeadersType, QueryParam, SessionBasicResponseDTO, Status } from 'src/types';
+import { ContentsResponseType, DataViewerHeadersType, QueryParam, SessionBasicResponseDTO, Status } from 'types';
 
 export function MyActiveSessions() {
   
@@ -15,7 +15,7 @@ export function MyActiveSessions() {
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<SessionBasicResponseDTO>>(() => jukiApiSocketManager.API_V1.user.getMySessions().url);
   
-  const { mutate } = useSWR();
+  const mutate = useMutate();
   
   const columns: DataViewerHeadersType<SessionBasicResponseDTO>[] = useMemo(() => [
     {

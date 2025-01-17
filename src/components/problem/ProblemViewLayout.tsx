@@ -21,7 +21,7 @@ import {
   useJukiTask,
   useJukiUI,
   useJukiUser,
-  useSWR,
+  useMutate,
   useTrackLastPath,
 } from 'hooks';
 import { useState } from 'react';
@@ -54,7 +54,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const { notifyResponse } = useJukiNotification();
   const { listenSubmission } = useJukiTask();
   const { components: { Link } } = useJukiUI();
-  const { matchMutate } = useSWR();
+  const mutate = useMutate();
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
   const printMode = searchParams.get(QueryParam.PRINT_MODE);
   
@@ -141,7 +141,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                     
                     if (notifyResponse(response, setLoaderStatus)) {
                       listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
-                      await matchMutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                      await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
                       pushRoute({
                         pathname: jukiAppRoutes.JUDGE().problems.view({ key: problem.key }),
                         searchParams,

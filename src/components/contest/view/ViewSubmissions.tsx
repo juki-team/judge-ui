@@ -1,6 +1,5 @@
 'use client';
 
-import { HTTPMethod } from '@juki-team/commons';
 import {
   ButtonLoader,
   getSubmissionDateHeader,
@@ -16,12 +15,13 @@ import {
 } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { authorizedRequest, downloadBlobAsFile, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiUser, useRef } from 'hooks';
+import { useFetcher, useJukiUser, usePreload, useRef } from 'hooks';
 import { useMemo } from 'react';
 import {
   ContentsResponseType,
   ContestDataResponseDTO,
   DataViewerHeadersType,
+  HTTPMethod,
   JudgeSummaryListResponseDTO,
   LanguagesByJudge,
   QueryParam,
@@ -78,7 +78,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
   ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, user.nickname ]);
-  
+  const preload = usePreload();
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   
   return (
@@ -127,6 +127,11 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
           <T>export as csv</T>
         </ButtonLoader>,
       ]}
+      onRecordHover={({ data, index }) => {
+        const { nickname, company: { key: companyKey } } = data[index].user;
+        void preload(jukiApiSocketManager.API_V1.user.getSummary({ params: { nickname, companyKey } }).url);
+        void preload(jukiApiSocketManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);
+      }}
     />
   );
 };

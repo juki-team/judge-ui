@@ -10,6 +10,7 @@ import {
   useJukiUI,
   useJukiUser,
   useMemo,
+  usePreload,
   useState,
   useTrackLastPath,
 } from 'hooks';
@@ -58,11 +59,11 @@ function Problems() {
   
   useTrackLastPath(LastPathKey.PROBLEMS);
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  const { user: { permissions: { problems: { create: canCreateProblem } } } } = useJukiUser();
+  const { user: { permissions: { problems: { create: canCreateProblem } }, sessionId } } = useJukiUser();
   const { searchParams, setSearchParams } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   const { pushRoute } = useJukiRouter();
-  const { company: { key: companyKey } } = useJukiUser();
+  const preload = usePreload();
   const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiSocketManager.API_V1.company.getJudgeList().url);
   const judgeKey: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
   const tags = useMemo(() => data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : [], [ data, judgeKey ]);
@@ -71,12 +72,14 @@ function Problems() {
     value: judge.key,
     label: judge.name,
   }));
+  
   const firstJudgeKey = judges[0]?.value;
   useEffect(() => {
     if (!judgeKey && firstJudgeKey) {
       setSearchParams({ name: QueryParam.JUDGE, value: firstJudgeKey });
     }
   }, [ judgeKey, setSearchParams, firstJudgeKey ]);
+  
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     ...(isExternal ? [ getProblemKeyHeader() ] : []),
     getProblemNameHeader(false, { sticky: true, cardPosition: 'top' }),
@@ -180,6 +183,9 @@ function Problems() {
           extraNodes={extraNodes}
           cards={{ height: 192, expanded: true }}
           dependencies={[ judgeKey ]}
+          onRecordHover={({ data, index }) => {
+            void preload(jukiApiSocketManager.API_V1.problem.getData({ params: { key: data[index].key } }).url);
+          }}
         />
       ))}
     >

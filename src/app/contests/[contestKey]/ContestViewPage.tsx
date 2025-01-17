@@ -66,7 +66,7 @@ export default function ContestViewPage() {
       }
     >
       {({ data: { content: contest }, mutate }) => {
-        return <ContestView contest={contest} mutate={mutate} />;
+        return <ContestView contest={contest} reloadContest={mutate} />;
       }}
     </FetcherLayer>
   );

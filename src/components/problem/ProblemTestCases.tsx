@@ -1,28 +1,29 @@
 'use client';
 
-import { CodeViewer, Modal, VisibilityIcon } from '@juki-team/base-ui';
-import { ProgrammingLanguage } from '@juki-team/commons';
 import {
   Button,
   ButtonLoader,
   CheckIcon,
   CloudDownloadIcon,
   CloudUploadIcon,
+  CodeViewer,
   DeleteIcon,
   DraftIcon,
   ErrorIcon,
   FetcherLayer,
   Input,
   LoadingIcon,
+  Modal,
   MultiSelect,
   RefreshIcon,
   SaveIcon,
   T,
+  VisibilityIcon,
 } from 'components';
 import { jukiGlobalStore } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile, humanFileSize } from 'helpers';
-import { useEffect, useJukiNotification, useState, useSWR } from 'hooks';
+import { useEffect, useJukiNotification, useMutate, useState } from 'hooks';
 import { ReactNode } from 'react';
 import {
   ButtonLoaderOnClickType,
@@ -32,9 +33,10 @@ import {
   KeyFileType,
   ProblemScoringMode,
   ProblemTestCasesResponseDTO,
+  ProgrammingLanguage,
   Status,
   UpsertProblemUIDTO,
-} from 'src/types';
+} from 'types';
 // import Custom404 from '../../../pages/404';
 import { TwoActionModal } from '../index';
 
@@ -94,7 +96,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     setTestCases(transform(problemTestCases));
   }, [ problemTestCases ]);
   const { notifyResponse } = useJukiNotification();
-  const { mutate, matchMutate } = useSWR();
+  const mutate = useMutate();
   const [ modal, setModal ] = useState<ReactNode>(null);
   const { t } = jukiGlobalStore.getI18n();
   
@@ -105,7 +107,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
       await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCaseKey, keyFile), {
         method: HTTPMethod.DELETE,
       }));
-    await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
+    await mutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
     notifyResponse(response, setLoaderStatus);
     setLock(false);
   };
@@ -179,7 +181,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           onClick={async (setLoaderStatus) => {
             setLock(true);
             setLoaderStatus(Status.LOADING);
-            await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
+            await mutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
             setLoaderStatus(Status.SUCCESS);
             setLock(false);
           }}
@@ -235,7 +237,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                     }));
                     setLoaderStatus(Status.SUCCESS);
                   }
-                  await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
+                  await mutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
                   setLock(false);
                   setModal(null);
                 },
@@ -302,7 +304,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           body: JSON.stringify({ testCases: { [testCase.testCaseKey]: { groups: testCase.groups } } }),
                         }));
                       notifyResponse(response, setLoaderStatus);
-                      await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
+                      await mutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
                       setLock(false);
                     }}
                   />
@@ -442,7 +444,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                     }
                   }));
                 }
-                await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
+                await mutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
                 setLoaderStatus(Status.SUCCESS);
                 setLock(false);
               }}

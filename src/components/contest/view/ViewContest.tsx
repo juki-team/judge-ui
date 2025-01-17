@@ -31,7 +31,7 @@ import {
   useJukiTask,
   useJukiUI,
   useJukiUser,
-  useSWR,
+  useMutate,
   useTrackLastPath,
 } from 'hooks';
 import { ReactNode } from 'react';
@@ -50,7 +50,10 @@ import { ViewClarifications } from './ViewClarifications';
 import { ViewScoreboard } from './ViewScoreboard';
 import { ViewSubmissions } from './ViewSubmissions';
 
-export function ContestView({ contest, mutate }: { contest: ContestDataResponseDTO, mutate: KeyedMutator<any> }) {
+export function ContestView({ contest, reloadContest }: {
+  contest: ContestDataResponseDTO,
+  reloadContest: KeyedMutator<any>
+}) {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const { pushRoute, searchParams } = useJukiRouter();
@@ -61,7 +64,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
   const { user: { permissions: { contests: { create: canCreateContest } } } } = useJukiUser();
   const { t } = jukiGlobalStore.getI18n();
   const { listenSubmission } = useJukiTask();
-  const { matchMutate } = useSWR();
+  const mutate = useMutate();
   const { addWarningNotification, notifyResponse } = useJukiNotification();
   
   const {
@@ -82,7 +85,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     [ContestTab.OVERVIEW]: {
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce ws-np">overview</T>,
-      body: <ViewOverview contest={contest} reloadContest={mutate} />,
+      body: <ViewOverview contest={contest} reloadContest={reloadContest} />,
     },
   };
   
@@ -164,7 +167,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
                         tab: ContestTab.MY_SUBMISSIONS,
                         subTab: problemIndex,
                       }));
-                      await matchMutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                      await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
                     }
                   }}
                 >
@@ -219,7 +222,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
     tabHeaders[ContestTab.SCOREBOARD] = {
       key: ContestTab.SCOREBOARD,
       header: <T className="tt-ce ws-np">scoreboard</T>,
-      body: <ViewScoreboard key="scoreboard" contest={contest} mutate={mutate} />,
+      body: <ViewScoreboard key="scoreboard" contest={contest} mutate={reloadContest} />,
     };
   }
   
