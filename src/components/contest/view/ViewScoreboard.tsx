@@ -1,15 +1,15 @@
 'use client';
 
 import {
+  AcUnitIcon,
   Button,
   ButtonLoader,
   DataViewer,
   FullscreenExitIcon,
   FullscreenIcon,
-  GearsIcon,
   Image,
+  ManufacturingIcon,
   Select,
-  SnowflakeIcon,
   T,
 } from 'components';
 import { jukiApiSocketManager, jukiGlobalStore } from 'config';
@@ -167,7 +167,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
             data-tooltip-t-class-name="ws-np"
             className="cr-io"
           >
-            <SnowflakeIcon />
+            <AcUnitIcon />
           </div>
         ),
         !unfrozen && contest?.isQuietTime && (
@@ -177,7 +177,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
             data-tooltip-t-class-name="ws-np"
             className="cr-er"
           >
-            <GearsIcon />
+            <ManufacturingIcon />
           </div>
         ),
         ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (

@@ -1,5 +1,21 @@
 'use client';
 
+import {
+  ButtonLoader,
+  ContentCopyIcon,
+  EditIcon,
+  EditViewMembers,
+  FirstLoginWrapper,
+  NavigateBeforeIcon,
+  NavigateNextIcon,
+  Popover,
+  ProblemView,
+  SpectatorInformation,
+  T,
+  TwoContentLayout,
+  ViewOverview,
+  ViewProblems,
+} from 'components';
 import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
 import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import {
@@ -19,22 +35,6 @@ import {
   useTrackLastPath,
 } from 'hooks';
 import { ReactNode } from 'react';
-import {
-  ButtonLoader,
-  CopyIcon,
-  EditIcon,
-  EditViewMembers,
-  FirstLoginWrapper,
-  NavigateBeforeIcon,
-  NavigateNextIcon,
-  Popover,
-  ProblemView,
-  SpectatorInformation,
-  T,
-  TwoContentLayout,
-  ViewOverview,
-  ViewProblems,
-} from 'src/components/index';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
@@ -275,7 +275,7 @@ export function ContestView({ contest, mutate }: { contest: ContestDataResponseD
           pushRoute(jukiAppRoutes.JUDGE().contests.new());
           setLoaderStatus(Status.SUCCESS);
         }}
-        icon={<CopyIcon />}
+        icon={<ContentCopyIcon />}
         responsiveMobile
         type="light"
         key="copy"

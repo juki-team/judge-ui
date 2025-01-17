@@ -1,5 +1,6 @@
 'use client';
 
+import { HTTPMethod } from '@juki-team/commons';
 import {
   ButtonLoader,
   getSubmissionDateHeader,
@@ -118,7 +119,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
                 sortUrl: toSortUrl(lastGetUrl.current.sort),
               },
             });
-            const result = await authorizedRequest(url, options);
+            const result = await authorizedRequest<HTTPMethod.GET, Blob>(url, options);
             downloadBlobAsFile(result, contest.name + ' - submissions.csv');
             setLoaderStatus(Status.SUCCESS);
           }}

@@ -3,11 +3,11 @@
 import {
   Button,
   ContestView,
-  CupIcon,
   FetcherLayer,
   LinkLastPath,
   PageNotFound,
   T,
+  TrophyIcon,
   TwoContentLayout,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
@@ -54,7 +54,7 @@ export default function ContestViewPage() {
                 <T className="tt-se">the contest does not exist or you do not have permissions to view it</T>
               </p>
               <LinkLastPath lastPathKey={LastPathKey.CONTESTS}>
-                <Button icon={<CupIcon />}>
+                <Button icon={<TrophyIcon />}>
                   <T className="tt-se">go to contest list</T>
                 </Button>
               </LinkLastPath>

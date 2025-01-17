@@ -123,49 +123,64 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
     });
   }, []);
   const app = (
-    <JukiProviders
-      components={{ Image: Image as FC<ImageCmpProps>, Link: Link }}
-      router={{
-        searchParams,
-        setSearchParams,
-        deleteSearchParams,
-        appendSearchParams,
-        pathname,
-        routeParams,
-        pushRoute: push,
-        replaceRoute: replace,
-        reloadRoute: refresh,
-        isLoadingRoute,
-      }}
-      initialLastPath={{
-        [LastPathKey.SECTION_CONTEST]: {
-          pathname: jukiAppRoutes.JUDGE().contests.list(),
-          searchParams: new URLSearchParams(),
-        },
-        [LastPathKey.CONTESTS]: {
-          pathname: jukiAppRoutes.JUDGE().contests.list(),
-          searchParams: new URLSearchParams(),
-        },
-        [LastPathKey.SECTION_PROBLEM]: {
-          pathname: jukiAppRoutes.JUDGE().problems.list(),
-          searchParams: new URLSearchParams(),
-        },
-        [LastPathKey.PROBLEMS]: {
-          pathname: jukiAppRoutes.JUDGE().problems.list(),
-          searchParams: new URLSearchParams(),
-        },
-        [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
+    <SWRConfig
+      value={{
+        revalidateIfStale: true, // when back to pages
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        errorRetryCount: 8,
+        errorRetryInterval: 100,
+        // shouldRetryOnError: (error) => {
+        //   console.log('shouldRetryOnError', { error });
+        //   return !error.message.includes('401');
+        // },
+        // onSuccess: (...props) => {
+        //   console.log('onSuccess', props);
+        // },
+        // onError: (err, key) => {
+        //   console.log('onError', { err, key });
+        //   // Usar datos en caché si existe un error
+        //   // const cachedData = SWRConfig.default.provider().get(key);
+        //   // if (cachedData) mutate(key, cachedData, false);
+        // },
       }}
     >
-      <UserProvider>
-        <NewVersionAvailableTrigger apiVersionUrl="/api/version" />
-        <SWRConfig
-          value={{
-            revalidateIfStale: true, // when back to pages
-            revalidateOnFocus: false,
-            revalidateOnReconnect: false,
-          }}
-        >
+      <JukiProviders
+        components={{ Image: Image as FC<ImageCmpProps>, Link: Link }}
+        router={{
+          searchParams,
+          setSearchParams,
+          deleteSearchParams,
+          appendSearchParams,
+          pathname,
+          routeParams,
+          pushRoute: push,
+          replaceRoute: replace,
+          reloadRoute: refresh,
+          isLoadingRoute,
+        }}
+        initialLastPath={{
+          [LastPathKey.SECTION_CONTEST]: {
+            pathname: jukiAppRoutes.JUDGE().contests.list(),
+            searchParams: new URLSearchParams(),
+          },
+          [LastPathKey.CONTESTS]: {
+            pathname: jukiAppRoutes.JUDGE().contests.list(),
+            searchParams: new URLSearchParams(),
+          },
+          [LastPathKey.SECTION_PROBLEM]: {
+            pathname: jukiAppRoutes.JUDGE().problems.list(),
+            searchParams: new URLSearchParams(),
+          },
+          [LastPathKey.PROBLEMS]: {
+            pathname: jukiAppRoutes.JUDGE().problems.list(),
+            searchParams: new URLSearchParams(),
+          },
+          [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
+        }}
+      >
+        <UserProvider>
+          <NewVersionAvailableTrigger apiVersionUrl="/api/version" />
           <NavigationBar>
             <Analytics key="analytics" />
             {Children.toArray(children)}
@@ -174,9 +189,9 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
           </NavigationBar>
           <JukiSocketAlert />
           <SponsoredByTag />
-        </SWRConfig>
-      </UserProvider>
-    </JukiProviders>
+        </UserProvider>
+      </JukiProviders>
+    </SWRConfig>
   );
   
   return NODE_ENV === 'development' ? app : <ErrorBoundary reload={refresh}>{app}</ErrorBoundary>;

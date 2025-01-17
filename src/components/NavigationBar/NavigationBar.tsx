@@ -1,6 +1,6 @@
 'use client';
 
-import { AssignmentIcon, CupIcon, HelpIcon, LeaderboardIcon, LinkLastPath, MainMenu, T } from 'components';
+import { AssignmentIcon, HelpIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, TrophyIcon } from 'components';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { PropsWithChildren } from 'react';
@@ -29,7 +29,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const menu: MenuType[] = [
     {
       label: <T className="tt-se">contests</T>,
-      icon: <CupIcon />,
+      icon: <TrophyIcon />,
       selected: isContestsPage,
       menuItemWrapper: ({ children }) => (
         <LinkLastPath

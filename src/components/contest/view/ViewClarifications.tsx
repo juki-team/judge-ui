@@ -3,7 +3,7 @@
 import {
   Button,
   ButtonLoader,
-  ClockIcon,
+  CommentIcon,
   EditIcon,
   Input,
   InputSelect,
@@ -13,7 +13,7 @@ import {
   Modal,
   NotificationsActiveIcon,
   Popover,
-  QuestionAnswerIcon,
+  ScheduleIcon,
   T,
   UserNicknameLink,
 } from 'components';
@@ -106,9 +106,9 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                           public: clarification.public,
                         });
                       }}
-                      icon={!!clarification.answerTimestamp ? <EditIcon /> : <QuestionAnswerIcon />}
+                      icon={!!clarification.answerTimestamp ? <EditIcon /> : <CommentIcon />}
                     >
-                      {!!clarification.answerTimestamp ? <T>edit</T> : <T>to-answer</T>}
+                      {!!clarification.answerTimestamp ? <T>edit</T> : <T>answer</T>}
                     </Button>
                   </div>
                 )}
@@ -121,7 +121,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                       data-tooltip-t-class-name="ws-np"
                       className="jk-row"
                     >
-                      <ClockIcon className="cr-py" size="small" />
+                      <ScheduleIcon className="cr-py" size="small" />
                     </div>
                     <Popover
                       content={
@@ -168,7 +168,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                       data-tooltip-t-class-name="ws-np"
                       className="jk-row"
                     >
-                      <ClockIcon size="small" />
+                      <ScheduleIcon size="small" />
                     </div>
                     <div className="flex-1" style={{ overflow: 'auto', maxWidth: 'calc(100vw - 300px)' }}>
                       <MdMathViewer source={clarification.answer} />

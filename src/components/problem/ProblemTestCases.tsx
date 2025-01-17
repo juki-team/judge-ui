@@ -1,5 +1,7 @@
 'use client';
 
+import { CodeViewer, Modal, VisibilityIcon } from '@juki-team/base-ui';
+import { ProgrammingLanguage } from '@juki-team/commons';
 import {
   Button,
   ButtonLoader,
@@ -7,19 +9,19 @@ import {
   CloudDownloadIcon,
   CloudUploadIcon,
   DeleteIcon,
-  ExclamationIcon,
+  DraftIcon,
+  ErrorIcon,
   FetcherLayer,
-  FileIcon,
   Input,
   LoadingIcon,
   MultiSelect,
-  ReloadIcon,
+  RefreshIcon,
   SaveIcon,
   T,
 } from 'components';
 import { jukiGlobalStore } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, downloadBlobAsFile, humanFileSize } from 'helpers';
+import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile, humanFileSize } from 'helpers';
 import { useEffect, useJukiNotification, useState, useSWR } from 'hooks';
 import { ReactNode } from 'react';
 import {
@@ -92,7 +94,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     setTestCases(transform(problemTestCases));
   }, [ problemTestCases ]);
   const { notifyResponse } = useJukiNotification();
-  const { mutate } = useSWR();
+  const { mutate, matchMutate } = useSWR();
   const [ modal, setModal ] = useState<ReactNode>(null);
   const { t } = jukiGlobalStore.getI18n();
   
@@ -103,7 +105,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
       await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCaseKey, keyFile), {
         method: HTTPMethod.DELETE,
       }));
-    await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
+    await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
     notifyResponse(response, setLoaderStatus);
     setLock(false);
   };
@@ -160,7 +162,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         ...prevState,
         [testCase.testCaseKey]: {
           ...prevState[testCase.testCaseKey],
-          [keyFile + 'NewFIleState']: UploadState.ERROR_ON_UPLOAD,
+          [keyFile + 'NewFileState']: UploadState.ERROR_ON_UPLOAD,
         },
       }));
     }
@@ -173,11 +175,11 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           size="small"
           disabled={lock}
           type="light"
-          icon={<ReloadIcon />}
+          icon={<RefreshIcon />}
           onClick={async (setLoaderStatus) => {
             setLock(true);
             setLoaderStatus(Status.LOADING);
-            await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
+            await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
             setLoaderStatus(Status.SUCCESS);
             setLock(false);
           }}
@@ -191,12 +193,16 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           icon={<CloudDownloadIcon />}
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const result = await authorizedRequest(
-              JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problemJudgeKey),
-              { method: HTTPMethod.GET, responseType: 'blob' },
+            const response = cleanRequest<ContentResponseType<{ urlExportedZip: string }>>(
+              await authorizedRequest(
+                JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problemJudgeKey),
+              ),
             );
-            downloadBlobAsFile(result, problemJudgeKey + '.zip');
-            setLoaderStatus(Status.SUCCESS);
+            if (notifyResponse(response, setLoaderStatus)) {
+              setLoaderStatus(Status.LOADING);
+              await downloadUrlAsFile(response.content.urlExportedZip, problemJudgeKey + '.zip');
+              setLoaderStatus(Status.SUCCESS);
+            }
           }}
         >
           <T>download all test cases</T>
@@ -229,7 +235,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                     }));
                     setLoaderStatus(Status.SUCCESS);
                   }
-                  await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
+                  await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
                   setLock(false);
                   setModal(null);
                 },
@@ -296,7 +302,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           body: JSON.stringify({ testCases: { [testCase.testCaseKey]: { groups: testCase.groups } } }),
                         }));
                       notifyResponse(response, setLoaderStatus);
-                      await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
+                      await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
                       setLock(false);
                     }}
                   />
@@ -347,15 +353,27 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           <ButtonLoader
                             type="text"
                             size="small"
-                            icon={<CloudDownloadIcon />}
+                            icon={<VisibilityIcon />}
                             onClick={async (setLoaderStatus) => {
                               setLoaderStatus(Status.LOADING);
-                              const result = await authorizedRequest(
-                                JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCase.testCaseKey, keyPut),
-                                { method: HTTPMethod.GET, responseType: 'blob' },
+                              const response = cleanRequest<ContentResponseType<{ source: string }>>(
+                                await authorizedRequest(
+                                  JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCase.testCaseKey, keyPut),
+                                ),
                               );
-                              await downloadBlobAsFile(result, problemJudgeKey + '.zip');
-                              setLoaderStatus(Status.SUCCESS);
+                              if (notifyResponse(response, setLoaderStatus)) {
+                                setModal(
+                                  <Modal isOpen onClose={() => setModal(null)} closeIcon>
+                                    <div className="jk-pg">
+                                      <div>{testCase.testCaseKey}.{keyPut === 'input' ? 'in' : 'out'}</div>
+                                      <CodeViewer
+                                        code={response.content.source} language={ProgrammingLanguage.TEXT}
+                                        style={{ maxHeight: 'calc(var(--100VH) * 0.9)', overflow: 'auto' }}
+                                      />
+                                    </div>
+                                  </Modal>,
+                                );
+                              }
                             }}
                             disabled={lock}
                           />
@@ -366,14 +384,16 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                   {!!testCase[(keyPut + 'NewFile') as 'outputNewFile'] && (
                     <div className={classNames('jk-row gap nowrap', { 'cr-er ': !!testCase[(keyPut + 'NewFile') as 'outputNewFile'] })}>
                       <div className="jk-row left nowrap" style={{ width: 110 }}>
-                        <FileIcon /><T className="ws-np">on local</T>:
+                        <DraftIcon /><T className="ws-np">on local</T>:
                       </div>
                       <div className="jk-row" style={{ width: 80 }}>
                         {testCase[(keyPut + 'NewFile') as 'outputNewFile']?.size ? humanFileSize(testCase[(keyPut + 'NewFile') as 'outputNewFile']?.size || 0) : '-'}
                       </div>
-                      <div className="jk-row left gap" style={{ width: 70 }}>
+                      <div className="jk-row left" style={{ width: 70 }}>
                         {testCase[(keyPut + 'NewFile') as 'outputNewFile'] && (
                           <Button
+                            data-tooltip-id="jk-tooltip"
+                            data-tooltip-content="delete"
                             type="text"
                             size="small"
                             icon={<DeleteIcon />}
@@ -382,7 +402,10 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           />
                         )}
                         {testCase[(keyPut + 'NewFileState') as 'outputNewFileState'] === UploadState.ERROR_ON_UPLOAD && (
-                          <ExclamationIcon />
+                          <ErrorIcon
+                            data-tooltip-id="jk-tooltip"
+                            data-tooltip-content="file not uploaded, error on upload file"
+                          />
                         )}
                         {testCase[(keyPut + 'NewFileState') as 'outputNewFileState'] === UploadState.UPLOADING && (
                           <LoadingIcon />
@@ -419,7 +442,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                     }
                   }));
                 }
-                await mutate(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey));
+                await matchMutate(new RegExp(JUDGE_API_V1.PROBLEM.TEST_CASES(problemJudgeKey)));
                 setLoaderStatus(Status.SUCCESS);
                 setLock(false);
               }}

@@ -29,6 +29,8 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+.npmrc
+
 # local development files
 /public/fallback-*.js*
 /public/service-worker*.js*
