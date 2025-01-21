@@ -33,7 +33,7 @@ export const ContestsLiveList = () => {
       name={QueryParam.LIVE_CONTESTS_TABLE}
       refreshInterval={60000}
       cards={{ width: 320, expanded: true }}
-      onRecordHover={({ data, index }) => {
+      onRecordRender={({ data, index }) => {
         void preload(jukiApiSocketManager.API_V1.contest.getData({ params: { key: data[index].key, companyKey } }).url);
       }}
     />

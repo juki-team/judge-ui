@@ -17,7 +17,7 @@ import {
   ViewProblems,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
-import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
+import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import {
   authorizedRequest,
   cleanRequest,
@@ -26,12 +26,14 @@ import {
   toUpsertContestDTOUI,
 } from 'helpers';
 import {
+  useEffect,
   useJukiNotification,
   useJukiRouter,
   useJukiTask,
   useJukiUI,
   useJukiUser,
   useMutate,
+  usePreload,
   useTrackLastPath,
 } from 'hooks';
 import { ReactNode } from 'react';
@@ -94,7 +96,15 @@ export function ContestView({ contest, reloadContest }: {
   const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
   const problem = problems[problemArrayIndex];
   
-  if (isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless) {
+  const preload = usePreload();
+  const canViewContest = isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless;
+  useEffect(() => {
+    if (canViewContest) {
+      void preload(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, false));
+    }
+  }, [ canViewContest, contest?.key, preload ]);
+  
+  if (canViewContest) {
     if (problemArrayIndex !== -1) {
       tabHeaders[ContestTab.PROBLEMS] = {
         key: ContestTab.PROBLEMS,
@@ -226,7 +236,7 @@ export function ContestView({ contest, reloadContest }: {
     };
   }
   
-  if (isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless) {
+  if (canViewContest) {
     tabHeaders[ContestTab.SUBMISSIONS] = {
       key: ContestTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,

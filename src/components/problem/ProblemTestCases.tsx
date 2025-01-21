@@ -144,30 +144,8 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
   const groupsOptions = Object.values(problem.settings.pointsByGroups)
     .map(group => ({ value: group.group, label: group.group + '' }));
   
-  const handleUpload = async (testCase: NewTestCaseType, formData: FormData, keyFile: KeyFileType) => {
-    setTestCases(prevState => ({
-      ...prevState,
-      [testCase.testCaseKey]: { ...prevState[testCase.testCaseKey], [keyFile + 'NewFileState']: UploadState.UPLOADING },
-    }));
-    const result = cleanRequest<ContentsResponseType<{}>>(
-      await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE(problemJudgeKey), {
-        method: HTTPMethod.POST,
-        body: formData,
-      }));
-    if (result.success) {
-      setTestCases(prevState => ({
-        ...prevState,
-        [testCase.testCaseKey]: { ...prevState[testCase.testCaseKey], [keyFile + 'NewFileState']: UploadState.SAVED },
-      }));
-    } else {
-      setTestCases(prevState => ({
-        ...prevState,
-        [testCase.testCaseKey]: {
-          ...prevState[testCase.testCaseKey],
-          [keyFile + 'NewFileState']: UploadState.ERROR_ON_UPLOAD,
-        },
-      }));
-    }
+  const handleUpload = async (testCase: NewTestCaseType, body: {}, keyFile: KeyFileType) => {
+  
   };
   
   return (
@@ -435,12 +413,57 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                 for (const testCase of Object.values(testCases)) {
                   await Promise.all(([ 'input' as KeyFileType, 'output' as KeyFileType ]).map(async (keyFile: KeyFileType) => {
                     if (testCase[(keyFile + 'NewFile') as 'outputNewFile']) {
-                      const formData = new FormData();
-                      formData.append('testCaseKey', testCase.testCaseKey);
-                      testCase.groups.forEach((group) => formData.append('groups[]', group + ''));
-                      formData.append('file', testCase[(keyFile + 'NewFile') as 'outputNewFile'] as File);
-                      formData.append('type', keyFile);
-                      await handleUpload(testCase, formData, keyFile);
+                      setTestCases(prevState => ({
+                        ...prevState,
+                        [testCase.testCaseKey]: {
+                          ...prevState[testCase.testCaseKey],
+                          [keyFile + 'NewFileState']: UploadState.UPLOADING,
+                        },
+                      }));
+                      const result = cleanRequest<ContentResponseType<{ signedUrl: string }>>(
+                        await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE(problemJudgeKey), {
+                          method: HTTPMethod.POST,
+                          body: JSON.stringify({
+                            testCaseKey: testCase.testCaseKey,
+                            groups: testCase.groups,
+                            type: keyFile,
+                          }),
+                        }));
+                      if (result.success) {
+                        try {
+                          const file = testCase[(keyFile + 'NewFile') as 'outputNewFile'] as File;
+                          await fetch(result.content.signedUrl, {
+                            method: HTTPMethod.PUT,
+                            headers: {
+                              'Content-Type': 'text/plain',
+                            },
+                            body: file,
+                          });
+                          setTestCases(prevState => ({
+                            ...prevState,
+                            [testCase.testCaseKey]: {
+                              ...prevState[testCase.testCaseKey],
+                              [keyFile + 'NewFileState']: UploadState.SAVED,
+                            },
+                          }));
+                        } catch (error) {
+                          setTestCases(prevState => ({
+                            ...prevState,
+                            [testCase.testCaseKey]: {
+                              ...prevState[testCase.testCaseKey],
+                              [keyFile + 'NewFileState']: UploadState.ERROR_ON_UPLOAD,
+                            },
+                          }));
+                        }
+                      } else {
+                        setTestCases(prevState => ({
+                          ...prevState,
+                          [testCase.testCaseKey]: {
+                            ...prevState[testCase.testCaseKey],
+                            [keyFile + 'NewFileState']: UploadState.ERROR_ON_UPLOAD,
+                          },
+                        }));
+                      }
                     }
                   }));
                 }

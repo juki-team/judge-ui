@@ -21,7 +21,7 @@ import {
   downloadDataTableAsCsvFile,
   downloadSheetDataAsXlsxFile,
 } from 'helpers';
-import { useDataViewerRequester, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
+import { useDataViewerRequester, useJukiNotification, useJukiUI, useJukiUser } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -113,7 +113,6 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   
   const { user, company: { imageUrl, name } } = useJukiUser();
   const { notifyResponse } = useJukiNotification();
-  const { pushRoute } = useJukiRouter();
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
   const { viewPortSize, components: { Link } } = useJukiUI();

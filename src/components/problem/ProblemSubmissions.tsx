@@ -74,7 +74,7 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDT
       name={QueryParam.STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
-      onRecordHover={({ data, index }) => {
+      onRecordRender={({ data, index }) => {
         const { nickname, company: { key: companyKey } } = data[index].user;
         void preload(jukiApiSocketManager.API_V1.user.getSummary({ params: { nickname, companyKey } }).url);
         void preload(jukiApiSocketManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);

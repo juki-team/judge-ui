@@ -183,7 +183,7 @@ function Problems() {
           extraNodes={extraNodes}
           cards={{ height: 192, expanded: true }}
           dependencies={[ judgeKey ]}
-          onRecordHover={({ data, index }) => {
+          onRecordRender={({ data, index }) => {
             void preload(jukiApiSocketManager.API_V1.problem.getData({ params: { key: data[index].key } }).url);
           }}
         />
