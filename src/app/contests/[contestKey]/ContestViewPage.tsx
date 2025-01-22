@@ -10,7 +10,7 @@ import {
   TrophyIcon,
   TwoContentLayout,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiSocketManager } from 'config';
 import { oneTab } from 'helpers';
 import { useJukiRouter, useJukiUI, useJukiUser, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
 import React from 'react';
@@ -24,22 +24,25 @@ export default function ContestViewPage() {
   const { components: { Link } } = useJukiUI();
   const { company: { key: companyKey } } = useJukiUser();
   
-  const breadcrumbs = [
-    <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">contests</T></LinkLastPath>,
-    <Link
-      href={jukiAppRoutes.JUDGE().contests.view({ key: contestKey as string })}
-      className="link"
-      key="key"
-    >
-      <div className="ws-np">{contestKey}</div>
-    </Link>,
-  ];
+  // const breadcrumbs = [
+  //   <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,
+  //   <Link
+  //     href={jukiAppRoutes.JUDGE().contests.view({ key: contestKey as string })}
+  //     className="link"
+  //     key="key"
+  //   >
+  //     <div className="ws-np">{contestKey}</div>
+  //   </Link>,
+  // ];
   
   return (
     <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
       url={jukiApiSocketManager.API_V1.contest.getData({ params: { key: contestKey as string, companyKey } }).url}
       loadingView={
-        <TwoContentLayout breadcrumbs={breadcrumbs} loading>
+        <TwoContentLayout
+          // breadcrumbs={breadcrumbs}
+          loading
+        >
           <h2>
             {contestKey}
           </h2>
@@ -47,7 +50,7 @@ export default function ContestViewPage() {
       }
       errorView={
         <TwoContentLayout
-          breadcrumbs={breadcrumbs}
+          // breadcrumbs={breadcrumbs}
           tabs={oneTab(
             <PageNotFound>
               <p>

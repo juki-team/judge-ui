@@ -10,6 +10,7 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
+import { jukiAppRoutes } from 'config';
 import { useEffect, useJukiRouter, useJukiUser, useTrackLastPath } from 'hooks';
 import { ContestsTab, LastPathKey, TabsType } from 'types';
 
@@ -60,10 +61,6 @@ export default function ContestsPage() {
     },
   };
   
-  const breadcrumbs = [
-    <T className="tt-se" key="contests">contests</T>,
-  ];
-  
   const extraNodes = [];
   
   if (canCreateContest) {
@@ -72,11 +69,10 @@ export default function ContestsPage() {
   
   return (
     <TwoContentLayout
-      breadcrumbs={breadcrumbs}
       tabs={tabs}
       tabButtons={extraNodes}
-      // selectedTabKey={contestsTab as ContestsTab}
-      // getPathname={(tab) => ROUTES.CONTESTS.LIST(tab)}
+      selectedTabKey={contestsTab as ContestsTab}
+      getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().contests.list() + `?tab=${tab}`}
     >
       <h1><T>contests</T></h1>
     </TwoContentLayout>

@@ -196,6 +196,7 @@ export {
   NewVersionAvailableTrigger,
   JukiSocketAlert,
   SubmissionModal,
+  LibraryBooksIcon,
 } from '@juki-team/base-ui';
 
 export * from './ColorsModal';

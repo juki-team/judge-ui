@@ -18,13 +18,7 @@ import {
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import {
-  authorizedRequest,
-  cleanRequest,
-  contestStateMap,
-  renderReactNodeOrFunctionP1,
-  toUpsertContestDTOUI,
-} from 'helpers';
+import { authorizedRequest, cleanRequest, contestStateMap, toUpsertContestDTOUI } from 'helpers';
 import {
   useEffect,
   useJukiNotification,
@@ -36,7 +30,7 @@ import {
   usePreload,
   useTrackLastPath,
 } from 'hooks';
-import { ReactNode } from 'react';
+import React from 'react';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
@@ -316,42 +310,42 @@ export function ContestView({ contest, reloadContest }: {
     );
   }
   
-  const breadcrumbs: ReactNode[] = [
-    <Link
-      href={jukiAppRoutes.JUDGE().contests.list()}
-      className="link"
-      key="contest.name"
-    >
-      <T className="tt-se">contests</T>
-    </Link>,
-    <Link
-      href={jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab: ContestTab.OVERVIEW, subTab: problemIndex })}
-      className="link"
-      key="contest.name"
-    >
-      <div className="ws-np">{contest.name}</div>
-    </Link>,
-  ];
-  if (contestTab === ContestTab.PROBLEMS && problemArrayIndex !== -1) {
-    breadcrumbs.push(
-      <Link
-        href={jukiAppRoutes.JUDGE().contests.view({
-          key: contestKey,
-          tab: ContestTab.PROBLEMS,
-        })}
-        className="link"
-      >
-        <T className="tt-se">problems</T>
-      </Link>,
-    );
-    breadcrumbs.push(<div>{problemIndex}</div>);
-  } else {
-    breadcrumbs.push(renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }));
-  }
+  // const breadcrumbs: ReactNode[] = [
+  //   <Link
+  //     href={jukiAppRoutes.JUDGE().contests.list()}
+  //     className="link"
+  //     key="contest.name"
+  //   >
+  //     <T className="tt-se">contests</T>
+  //   </Link>,
+  //   <Link
+  //     href={jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab: ContestTab.OVERVIEW, subTab: problemIndex })}
+  //     className="link"
+  //     key="contest.name"
+  //   >
+  //     <div className="ws-np">{contest.name}</div>
+  //   </Link>,
+  // ];
+  // if (contestTab === ContestTab.PROBLEMS && problemArrayIndex !== -1) {
+  //   breadcrumbs.push(
+  //     <Link
+  //       href={jukiAppRoutes.JUDGE().contests.view({
+  //         key: contestKey,
+  //         tab: ContestTab.PROBLEMS,
+  //       })}
+  //       className="link"
+  //     >
+  //       <T className="tt-se">problems</T>
+  //     </Link>,
+  //   );
+  //   breadcrumbs.push(<div>{problemIndex}</div>);
+  // } else {
+  //   breadcrumbs.push(renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }));
+  // }
   
   return (
     <TwoContentLayout
-      breadcrumbs={breadcrumbs}
+      // breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
       selectedTabKey={contestTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}
@@ -359,6 +353,14 @@ export function ContestView({ contest, reloadContest }: {
     >
       {/*<CustomHead title={contest.name} />*/}
       <div className="jk-row nowrap gap extend left">
+        {/*{viewPortSize !== 'sm' && (*/}
+        {/*  <>*/}
+        {/*    <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests">*/}
+        {/*      <T className="tt-se">contests</T>*/}
+        {/*    </LinkLastPath>*/}
+        {/*    /*/}
+        {/*  </>*/}
+        {/*)}*/}
         <h2
           style={{
             whiteSpace: 'nowrap',

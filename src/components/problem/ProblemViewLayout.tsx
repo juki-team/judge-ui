@@ -6,7 +6,6 @@ import {
   ButtonLoader,
   EditIcon,
   FirstLoginWrapper,
-  LinkLastPath,
   Portal,
   ProblemInfo,
   ProblemView,
@@ -14,7 +13,7 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, cleanRequest, renderReactNodeOrFunctionP1 } from 'helpers';
+import { authorizedRequest, cleanRequest } from 'helpers';
 import {
   useJukiNotification,
   useJukiRouter,
@@ -36,7 +35,6 @@ import {
   QueryParam,
   Status,
   TabsType,
-  TwoContentLayoutProps,
 } from 'types';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatus } from './ProblemStatus';
@@ -179,22 +177,22 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   };
   const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
   
-  const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [
-    <LinkLastPath
-      lastPathKey={LastPathKey.PROBLEMS}
-      key="problems"
-    >
-      <T className="tt-se">problems</T>
-    </LinkLastPath>,
-    <Link
-      href={jukiAppRoutes.JUDGE().problems.view({ key: problem.key })}
-      className="link"
-      key="problem.name"
-    >
-      <div className="ws-np">{problem.name}</div>
-    </Link>,
-    renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
-  ];
+  // const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [
+  //   <LinkLastPath
+  //     lastPathKey={LastPathKey.PROBLEMS}
+  //     key="problems"
+  //   >
+  //     <T className="tt-se">problems</T>
+  //   </LinkLastPath>,
+  //   <Link
+  //     href={jukiAppRoutes.JUDGE().problems.view({ key: problem.key })}
+  //     className="link"
+  //     key="problem.name"
+  //   >
+  //     <div className="ws-np">{problem.name}</div>
+  //   </Link>,
+  //   renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
+  // ];
   
   const extraNodes = [];
   if (problem.user?.isManager && !problem.judge?.isExternal) {
@@ -251,12 +249,12 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   return (
     <TwoContentLayout
       tabs={tabs}
-      breadcrumbs={breadcrumbs}
+      // breadcrumbs={breadcrumbs}
       tabButtons={extraNodes}
       selectedTabKey={problemTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
     >
-      <div>
+      <>
         <RejudgeConfirmationModal
           isOpen={isOpenRejudgeModal}
           onClose={() => setIsOpenRejudgeModal(false)}
@@ -271,7 +269,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           <ProblemInfo problem={problem} />
           <ProblemStatus {...problem.user} />
         </div>
-      </div>
+      </>
     </TwoContentLayout>
   );
 };

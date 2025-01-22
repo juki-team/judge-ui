@@ -127,13 +127,8 @@ function Ranking() {
   
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   
-  const breadcrumbs = [
-    <T className="tt-se" key="ranking">ranking</T>,
-  ];
-  
   return (
     <TwoContentLayout
-      breadcrumbs={breadcrumbs}
       tabs={oneTab(
         <DataViewer<UserRankResponseDTO>
           headers={columns}

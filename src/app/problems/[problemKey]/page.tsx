@@ -10,7 +10,7 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiSocketManager } from 'config';
 import { oneTab } from 'helpers';
 import { useJukiRouter, useJukiUI, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
 import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
@@ -22,22 +22,25 @@ export default function ProblemViewPage() {
   const { routeParams: { problemKey } } = useJukiRouter();
   const { components: { Link } } = useJukiUI();
   
-  const breadcrumbs = [
-    <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
-    <Link
-      href={jukiAppRoutes.JUDGE().problems.view({ key: problemKey as string })}
-      className="link"
-      key="key"
-    >
-      <div className="ws-np">{problemKey}</div>
-    </Link>,
-  ];
+  // const breadcrumbs = [
+  //   <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
+  //   <Link
+  //     href={jukiAppRoutes.JUDGE().problems.view({ key: problemKey as string })}
+  //     className="link"
+  //     key="key"
+  //   >
+  //     <div className="ws-np">{problemKey}</div>
+  //   </Link>,
+  // ];
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
       url={jukiApiSocketManager.API_V1.problem.getData({ params: { key: problemKey as string } }).url}
       loadingView={
-        <TwoContentLayout breadcrumbs={breadcrumbs} loading>
+        <TwoContentLayout
+          // breadcrumbs={breadcrumbs}
+          loading
+        >
           <h2>
             {problemKey}
           </h2>
@@ -45,7 +48,7 @@ export default function ProblemViewPage() {
       }
       errorView={
         <TwoContentLayout
-          breadcrumbs={breadcrumbs}
+          // breadcrumbs={breadcrumbs}
           tabs={oneTab(
             <PageNotFound>
               <p>

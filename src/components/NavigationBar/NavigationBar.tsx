@@ -1,6 +1,15 @@
 'use client';
 
-import { AssignmentIcon, HelpIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, TrophyIcon } from 'components';
+import {
+  AssignmentIcon,
+  HelpIcon,
+  LeaderboardIcon,
+  LibraryBooksIcon,
+  LinkLastPath,
+  MainMenu,
+  T,
+  TrophyIcon,
+} from 'components';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
 import React, { PropsWithChildren } from 'react';
@@ -70,7 +79,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     menu.push(
       {
         label: <T className="tt-se">boards</T>,
-        icon: <LeaderboardIcon />,
+        icon: <LibraryBooksIcon />,
         selected: isBoardsPage,
         menuItemWrapper: ({ children }) => (
           <Link className="link dy-cs" href={ROUTES.BOARDS.PAGE()}>

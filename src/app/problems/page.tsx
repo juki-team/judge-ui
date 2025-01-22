@@ -112,10 +112,6 @@ function Problems() {
     // getProblemOwnerHeader(isExternal),
   ], [ tags, isExternal ]);
   
-  const breadcrumbs = [
-    <T className="tt-se" key="problems">problems</T>,
-  ];
-  
   const extraNodes = [];
   if (canCreateProblem && judgeKey === judges[0]?.value) {
     extraNodes.push(
@@ -164,7 +160,6 @@ function Problems() {
   
   return (
     <TwoContentLayout
-      breadcrumbs={breadcrumbs}
       tabs={oneTab(judgeKey && (
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}

@@ -115,10 +115,6 @@ function Ranking() {
   const { searchParams } = useJukiRouter();
   const tab = searchParams.get('tab') as string || globalContests[0]?.key || '';
   
-  const breadcrumbs = [
-    <T className="tt-se" key="ranking">scoreboard</T>,
-  ];
-  
   const tabs: TabsType<string> = {};
   
   for (const globalContest of globalContests) {
@@ -131,7 +127,6 @@ function Ranking() {
   
   return (
     <TwoContentLayout
-      breadcrumbs={breadcrumbs}
       tabs={tabs}
       selectedTabKey={tab}
       getHrefOnTabChange={(value) => ROUTES.BOARDS.PAGE(value)}
