@@ -122,12 +122,12 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortSize, user.nickname),
-      getPointsColumn(viewPortSize, contest.isEndless),
+      getPointsColumn(viewPortSize, contest.isEndless || contest.isGlobal),
     ];
     
     if (contest?.problems) {
       for (const problem of Object.values(contest?.problems)) {
-        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem, t));
+        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless || contest.isGlobal, problem, t));
       }
     }
     return base;

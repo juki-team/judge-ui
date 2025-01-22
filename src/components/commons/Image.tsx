@@ -1,6 +1,6 @@
 import ImageComp from 'next/image';
-import { LoadingIcon } from 'src/components/index';
-import { ImageCmpProps } from 'src/types';
+import { ImageCmpProps } from 'types';
+import { LoadingIcon } from './commons';
 
 export const Image = ({ src, className, alt, height, width, style }: ImageCmpProps) => {
   // {/*<span className="next-js-image">*/}

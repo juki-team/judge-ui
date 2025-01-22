@@ -11,12 +11,21 @@ import { ContentResponseType, HTTPMethod, Status, UserCompanyBasicInfoResponseDT
 interface ProblemStatementProps {
   documentOwner: UserCompanyBasicInfoResponseDTO,
   problemJudgeKey: string,
+  deleted: boolean,
 }
 
-export const ProblemDelete = ({ problemJudgeKey, documentOwner }: ProblemStatementProps) => {
+export const ProblemDelete = ({ problemJudgeKey, documentOwner, deleted }: ProblemStatementProps) => {
   
   const { notifyResponse } = useJukiNotification();
   const { pushRoute } = useJukiRouter();
+  
+  if (deleted) {
+    return (
+      <div className="jk-col gap jk-pg bc-we jk-br-ie cr-er">
+        <T className="tt-se cr-er fw-bd">already deleted</T>
+      </div>
+    );
+  }
   
   return (
     <div className="jk-col gap jk-pg bc-we jk-br-ie cr-er">

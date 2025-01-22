@@ -37,6 +37,9 @@ export const JUDGE_API_V1 = {
     CONTEST: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}`;
     },
+    GLOBAL: (key: string) => {
+      return `${JUKI_SERVICE_V1_URL}/contest/${key}/global`;
+    },
     CONTEST_DATA: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/data`;
     },

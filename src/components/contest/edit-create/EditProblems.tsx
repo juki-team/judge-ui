@@ -15,7 +15,7 @@ import {
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { PALLETE } from 'config/constants';
-import { classNames, disableOutOfRange, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
+import { classNames, disableOutOfRange, getJudgeOrigin, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
 import { useEffect, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import {
@@ -59,15 +59,24 @@ export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponse
       <div className="jk-row" style={{ width: 40 }}>
         {indexToLetters(index + 1)}
       </div>
-      <div className="jk-row center gap" style={{ flex: 1 }}>
-        <span className="fw-bd">{problem.key}</span>
-        {problem.name}
-        <Link
-          href={jukiAppRoutes.JUDGE(problem.judge.isMain ? '' : `https://${problem.judge.key}.jukijudge.com'`).problems.view({ key: problem.key })}
-          target="_blank"
-        >
-          <div className="jk-row"><OpenInNewIcon size="small" /></div>
-        </Link>
+      <div className="jk-col center gap" style={{ flex: 1 }}>
+        <div className="jk-row gap">
+          <Link
+            href={jukiAppRoutes.JUDGE(getJudgeOrigin(problem.company.key)).problems.view({ key: problem.key })}
+            target="_blank"
+            className="link jk-row tx-s"
+            style={{ fontFamily: 'monospace' }}
+          >
+            {problem.key}&nbsp;
+              <div className="jk-row"><OpenInNewIcon size="small" /></div>
+          </Link>
+          {problem.name}
+        </div>
+        <div className="jk-row gap">
+          {problem.tags.map(tag => (
+            <div key={tag} className="jk-tag bc-hl">{tag}</div>
+          ))}
+        </div>
       </div>
       <div className="jk-row" style={{ width: 40 }}>
         <InputColor
@@ -271,6 +280,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           startTimestamp: problem.startTimestamp,
           endTimestamp: problem.endTimestamp,
           url: '',
+          tags: problem.tags,
+          company: problem.company,
         };
         return {
           key: problem.key,
@@ -309,6 +320,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           color: problem.value.color,
           startTimestamp: problem.value.startTimestamp,
           endTimestamp: problem.value.endTimestamp,
+          tags: problem.value.tags,
+          company: problem.value.company,
         };
       });
       return {
@@ -405,6 +418,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       startTimestamp: contest.settings.startTimestamp,
                       endTimestamp: contest.settings.endTimestamp,
                       url: '',
+                      tags: problem.tags,
+                      company: problem.company,
                     };
                     setProblems(prevState => (
                       [

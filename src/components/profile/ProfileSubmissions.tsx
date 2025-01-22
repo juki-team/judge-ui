@@ -6,10 +6,10 @@ import {
   getSubmissionTimeHeader,
   getSubmissionVerdictHeader,
   PagedDataViewer,
-} from 'src/components/index';
-import { jukiApiSocketManager } from 'src/config';
-import { toFilterUrl, toSortUrl } from 'src/helpers';
-import { useFetcher, useJukiRouter, useMemo } from 'src/hooks';
+} from 'components';
+import { jukiApiSocketManager } from 'config';
+import { toFilterUrl, toSortUrl } from 'helpers';
+import { useFetcher, useJukiRouter, useMemo, usePreload } from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -17,12 +17,13 @@ import {
   LanguagesByJudge,
   QueryParam,
   SubmissionSummaryListResponseDTO,
-} from 'src/types';
+} from 'types';
 
 export function ProfileSubmissions() {
   
   const { routeParams: { nickname } } = useJukiRouter();
   const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiSocketManager.API_V1.judge.getSummaryList().url);
+  const preload = usePreload();
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
@@ -63,6 +64,14 @@ export function ProfileSubmissions() {
       name={QueryParam.PROFILE_SUBMISSIONS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
+      onRecordRender={({ data, index }) => {
+        void preload(jukiApiSocketManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);
+        if (data[index].contest) {
+          void preload(jukiApiSocketManager.API_V1.contest.getData({ params: { key: data[index].contest.key } }).url);
+        } else {
+          void preload(jukiApiSocketManager.API_V1.problem.getData({ params: { key: data[index].problem.key } }).url);
+        }
+      }}
     />
   );
 }

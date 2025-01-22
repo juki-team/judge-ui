@@ -1,3 +1,4 @@
+import { EntityState } from '@juki-team/commons';
 import { EntityAccess, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
 import { EMPTY_TEXT_LANGUAGES } from './commons';
 
@@ -9,6 +10,7 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judg
   judgeIsExternal: boolean,
 }): UpsertProblemUIDTO => {
   return {
+    state: EntityState.RELEASED,
     judgeKey,
     judgeIsExternal,
     author: '',

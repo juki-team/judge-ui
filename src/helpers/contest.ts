@@ -84,6 +84,7 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
 
 export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertContestDTOUI => {
   const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+  console.log({ contest });
   Object.values(contest.problems).forEach(problem => {
     problems[problem.key] = {
       key: problem.key,
@@ -94,6 +95,8 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
       color: problem.color,
       startTimestamp: problem.startTimestamp,
       endTimestamp: problem.endTimestamp,
+      tags: problem.tags,
+      company: problem.company,
     };
   });
   
@@ -105,6 +108,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
     settings: contest.settings,
     tags: contest.tags,
     owner: contest.owner,
+    state: contest.state,
   };
 };
 

@@ -4,10 +4,11 @@ import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } fr
 import { jukiAppRoutes } from 'config';
 import { CONTEST_DEFAULT, LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { diff } from 'deep-object-diff';
-import { isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
+import { isGlobalContest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEffect, useJukiNotification, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
 import {
   ContestTab,
+  EntityState,
   LastPathKey,
   ProgrammingLanguage,
   TabsType,
@@ -35,6 +36,7 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
     imageUrl,
     company: { key: companyKey },
   }, isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
+  const isGlobal = isGlobalContest(contest.settings);
   useEffect(() => {
     localStorage.removeItem(LS_INITIAL_CONTEST_KEY);
   }, []);
@@ -64,8 +66,9 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ JSON.stringify(initialContest) ]);
   
-  const tabHeaders: TabsType<ContestTab> = {
-    [ContestTab.OVERVIEW]: {
+  const tabHeaders: TabsType<ContestTab> = {};
+  if (!isGlobal) {
+    tabHeaders[ContestTab.OVERVIEW] = {
       key: ContestTab.OVERVIEW,
       header: <T className="tt-ce">overview</T>,
       body: (
@@ -80,28 +83,29 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
           />
         </div>
       ),
-    },
-    [ContestTab.SETUP]: {
+    };
+    tabHeaders[ContestTab.SETUP] = {
       key: ContestTab.SETUP,
       header: <T className="tt-ce">settings</T>,
       body: (
         <EditSettings key="settings" contest={contest} setContest={setContest} />
       ),
-    },
-    [ContestTab.MEMBERS]: {
+    };
+    tabHeaders[ContestTab.MEMBERS] = {
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,
       body: (
         <EditViewMembers key="members" contest={contest} setContest={setContest} editing={editing} />
       ),
-    },
-    [ContestTab.PROBLEMS]: {
-      key: ContestTab.PROBLEMS,
-      header: <T className="tt-ce">problems</T>,
-      body: (
-        <EditProblems key="problems" contest={contest} setContest={setContest} />
-      ),
-    },
+    };
+  }
+  
+  tabHeaders[ContestTab.PROBLEMS] = {
+    key: ContestTab.PROBLEMS,
+    header: <T className="tt-ce">problems</T>,
+    body: (
+      <EditProblems key="problems" contest={contest} setContest={setContest} />
+    ),
   };
   
   if (editing) {
@@ -109,7 +113,12 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
       key: ContestTab.DELETE,
       header: <T className="tt-ce">delete</T>,
       body: (
-        <ContestDelete key="delete" documentOwner={contest.owner} contestKey={contestKey} />
+        <ContestDelete
+          key="delete"
+          documentOwner={contest.owner}
+          contestKey={contestKey}
+          deleted={contest.state === EntityState.ARCHIVED}
+        />
       ),
     };
   }

@@ -12,10 +12,9 @@ import {
   UserProfileSettings,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useJukiRouter, useJukiUI, useJukiUser, useState } from 'hooks';
 import { KeyedMutator } from 'swr';
-import { ProfileTab, TabsType, TwoContentLayoutProps, UserProfileResponseDTO } from 'types';
+import { ProfileTab, TabsType, UserProfileResponseDTO } from 'types';
 import { MyActiveSessions } from './MyActiveSessions';
 import { ProfileSubmissions } from './ProfileSubmissions';
 
@@ -27,11 +26,14 @@ interface ProfileViewLayoutProps {
 export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutProps) {
   
   const { mutatePing } = useJukiUser();
-  const { routeParams: { nickname }, replaceRoute } = useJukiRouter();
+  const { routeParams, replaceRoute, searchParams } = useJukiRouter();
   const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
   const { viewPortSize, components: { Link } } = useJukiUI();
+  
+  const { nickname } = routeParams as { nickname: string };
   const onClose = () => setOpenModal('');
+  const tab = searchParams.get('tab') as ProfileTab || ProfileTab.OVERVIEW;
   
   const tabHeaders: TabsType<ProfileTab> = {
     [ProfileTab.OVERVIEW]: {
@@ -92,16 +94,16 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
     ] : []),
   ];
   
-  const breadcrumbs: TwoContentLayoutProps<ProfileTab>['breadcrumbs'] = ({ selectedTabKey }) => [
-    <Link
-      href={jukiAppRoutes.JUDGE().profiles.view({ nickname: nickname as string, tab: ProfileTab.OVERVIEW })}
-      className="link"
-      key="nickname"
-    >
-      {nickname}
-    </Link>,
-    renderReactNodeOrFunctionP1(tabHeaders[selectedTabKey]?.header, { selectedTabKey }),
-  ];
+  // const breadcrumbs: TwoContentLayoutProps<ProfileTab>['breadcrumbs'] = ({ selectedTabKey }) => [
+  //   <Link
+  //     href={jukiAppRoutes.JUDGE().profiles.view({ nickname: nickname as string, tab: ProfileTab.OVERVIEW })}
+  //     className="link"
+  //     key="nickname"
+  //   >
+  //     {nickname}
+  //   </Link>,
+  //   renderReactNodeOrFunctionP1(tabHeaders[selectedTabKey]?.header, { selectedTabKey }),
+  // ];
   
   return (
     <>
@@ -129,9 +131,11 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
         }}
       />
       <TwoContentLayout
-        breadcrumbs={breadcrumbs}
+        // breadcrumbs={breadcrumbs}
         tabs={tabHeaders}
         tabButtons={extraNodes}
+        selectedTabKey={tab}
+        getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().profiles.view({ nickname, tab })}
       >
         <h1>{nickname}</h1>
       </TwoContentLayout>

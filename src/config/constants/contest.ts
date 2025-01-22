@@ -1,4 +1,10 @@
-import { ContestTemplate, ProgrammingLanguage, UpsertContestDTOUI, UserCompanyBasicInfoResponseDTO } from 'types';
+import {
+  ContestTemplate,
+  EntityState,
+  ProgrammingLanguage,
+  UpsertContestDTOUI,
+  UserCompanyBasicInfoResponseDTO,
+} from 'types';
 import { EMPTY_ENTITY_MEMBERS } from './index';
 
 export const FIVE_HOURS = 1000 * 60 * 60 * 5;
@@ -12,6 +18,7 @@ export const CONTEST_DEFAULT = (owner: UserCompanyBasicInfoResponseDTO, initialC
   now.setSeconds(0, 0);
   
   return {
+    state: EntityState.RELEASED,
     owner,
     name: '',
     description: `# \\textAlign=center Bienvenido

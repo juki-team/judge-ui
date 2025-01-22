@@ -1,6 +1,6 @@
+import { T, Timer } from 'components';
 import React from 'react';
-import { T, Timer } from 'src/components/index';
-import { ContestDataResponseDTO } from 'src/types';
+import { ContestDataResponseDTO } from 'types';
 
 export const getContestTimeLiteral = (contest: ContestDataResponseDTO) => {
   let timeInterval = 0;

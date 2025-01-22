@@ -41,6 +41,7 @@ import {
   UpsertContestDTOUI,
 } from 'src/types';
 import { KeyedMutator } from 'swr';
+import { EntityState } from 'types';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewScoreboard } from './ViewScoreboard';
@@ -139,6 +140,7 @@ export function ContestView({ contest, reloadContest }: {
             problem={{
               ...problem,
               user: { isOwner: false, isManager: false, tried: false, isSpectator: false, solved: false },
+              state: EntityState.RELEASED,
             }}
             infoPlacement="name"
             withoutDownloadButtons
@@ -230,7 +232,7 @@ export function ContestView({ contest, reloadContest }: {
     };
   }
   
-  if (canViewContest) {
+  if (canViewContest && !contest.isGlobal) {
     tabHeaders[ContestTab.SUBMISSIONS] = {
       key: ContestTab.SUBMISSIONS,
       header: <T className="tt-ce ws-np">submissions</T>,
@@ -238,7 +240,7 @@ export function ContestView({ contest, reloadContest }: {
     };
   }
   
-  if (contest.settings.clarifications) {
+  if (contest.settings.clarifications && !contest.isGlobal) {
     tabHeaders[ContestTab.CLARIFICATIONS] = {
       key: ContestTab.CLARIFICATIONS,
       header: <T className="tt-ce ws-np">clarifications</T>,
@@ -246,7 +248,7 @@ export function ContestView({ contest, reloadContest }: {
     };
   }
   
-  if (isAdministrator || isManager || contest.isPast || contest.isEndless) {
+  if ((isAdministrator || isManager || contest.isPast || contest.isEndless) && !contest.isGlobal) {
     tabHeaders[ContestTab.MEMBERS] = {
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,

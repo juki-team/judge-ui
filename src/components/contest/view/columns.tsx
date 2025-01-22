@@ -49,7 +49,7 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
   Field: ({ record: { focus, totalPenalty, totalPoints }, isCard }) => (
     <Field className={classNames('jk-col center', { highlight: !!focus?.length })}>
       <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
-      {!isEndless && <div className="cr-g4">{Math.round(totalPenalty)}</div>}
+      {!isEndless && <div className="cr-g4">{+totalPenalty.toFixed(2)}</div>}
     </Field>
   ),
   minWidth: 128,
@@ -87,7 +87,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
             data-tooltip-html={`
               <div class="jk-col">
                 <div class="ws-np">
-                  ${problemData?.success ? problemData.points : `${problemData.points} / ${problem.points}`}
+                  ${problemData?.success ? problemData.points : `${+problemData.points.toFixed(2)} / ${problem.points}`}
                   ${problem?.points === 1 ? t('point') : t('points')}
                 </div>
                 ${problemData.isFirstAccepted ? `<div class="fw-bd cr-ss tx-s"><span class="tt-se">${t('first accepted')}</span></div>` : ''}

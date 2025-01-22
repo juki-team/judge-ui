@@ -1,6 +1,6 @@
-import { createContext } from 'src/helpers';
-import { useState } from 'src/hooks';
-import { FlagsType, PropsWithChildren, SetFlagsType } from 'src/types';
+import { createContext } from 'helpers';
+import { useState } from 'hooks';
+import { FlagsType, PropsWithChildren, SetFlagsType } from 'types';
 
 export const UserContext = createContext<{ flags: FlagsType, setFlags: SetFlagsType }>({
   flags: {

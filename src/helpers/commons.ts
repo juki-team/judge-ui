@@ -14,7 +14,7 @@ export {
   mex,
   contentResponse,
   getJudgeKeyOfProblemJudgeKey,
-  
+  isGlobalContest,
 } from '@juki-team/commons';
 
 export {
@@ -36,4 +36,5 @@ export {
   contestStateMap,
   downloadUrlAsFile,
   cloneURLSearchParams,
+  getJudgeOrigin,
 } from '@juki-team/base-ui/helpers';

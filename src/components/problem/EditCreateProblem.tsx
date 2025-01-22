@@ -5,7 +5,7 @@ import { jukiAppRoutes } from 'config';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEntityDiff, useJukiUI } from 'hooks';
 import React, { useState } from 'react';
-import { LastPathKey, ProblemTab, TabsType, UpsertComponentEntityProps, UpsertProblemUIDTO } from 'types';
+import { EntityState, LastPathKey, ProblemTab, TabsType, UpsertComponentEntityProps, UpsertProblemUIDTO } from 'types';
 import { Input } from '../index';
 import { ProblemAccess } from './ProblemAccess';
 import { ProblemDelete } from './ProblemDelete';
@@ -95,6 +95,7 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
             <ProblemDelete
               problemJudgeKey={problemJudgeKey}
               documentOwner={problem.owner}
+              deleted={problem.state === EntityState.ARCHIVED}
             />
           ),
         },
