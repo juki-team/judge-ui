@@ -25,11 +25,17 @@ export const ROUTES = {
     COURSE: 'course',
     SHEETS: 'sheets',
     SHEET: 'sheet',
+    BOARDS: 'boards',
   },
   
   RANKING: {
     PAGE() {
       return '/' + ROUTES.PARAMS.RANKING;
+    },
+  },
+  BOARDS: {
+    PAGE(tab?: string) {
+      return '/' + ROUTES.PARAMS.BOARDS + (tab ? `?tab=${tab}` : '');
     },
   },
   PROFILE: {

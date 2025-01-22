@@ -59,13 +59,6 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
 export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, contestKey: string, isEndless: boolean, problem: ContestProblemDataResponseDTO, t: TFunction): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
   head: (
     <div
-      // Tooltip
-      // content={
-      //   <div className="jk-row nowrap gap">
-      //     <div className="fw-bd">{problem.index}</div>
-      //     <div className="ws-np">{problem.name}</div>
-      //   </div>
-      // }
       data-tooltip-id="jk-tooltip"
       data-tooltip-content={`${problem.index}. ${problem.name}`}
       data-tooltip-t-class-name="ws-np"

@@ -21,6 +21,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const isContestsPage = ('/' + pathname).includes('//contest');
   const isProblemsPage = ('/' + pathname).includes('//problem');
   const isRankingPage = ('/' + pathname).includes('//ranking');
+  const isBoardsPage = ('/' + pathname).includes('//board');
   const backPah = isContestsPage ? jukiAppRoutes.JUDGE().contests.list()
     : isProblemsPage
       ? jukiAppRoutes.JUDGE().problems.list()
@@ -62,6 +63,17 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         selected: isRankingPage,
         menuItemWrapper: ({ children }) => (
           <Link className="link dy-cs" href={ROUTES.RANKING.PAGE()}>
+            {children}</Link>
+        ),
+      },
+    );
+    menu.push(
+      {
+        label: <T className="tt-se">boards</T>,
+        icon: <LeaderboardIcon />,
+        selected: isBoardsPage,
+        menuItemWrapper: ({ children }) => (
+          <Link className="link dy-cs" href={ROUTES.BOARDS.PAGE()}>
             {children}</Link>
         ),
       },
