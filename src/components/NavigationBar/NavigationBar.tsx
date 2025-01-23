@@ -41,7 +41,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T className="tt-se">contests</T>,
       icon: <TrophyIcon />,
       selected: isContestsPage,
-      menuItemWrapper: ({ children }) => (
+      menuItemWrapper: ({ children }) => isContestsPage ? (
+        <LinkLastPath lastPathKey={LastPathKey.CONTESTS}>
+          {children}
+        </LinkLastPath>
+      ) : (
         <LinkLastPath
           lastPathKey={LastPathKey.SECTION_CONTEST}
           onDoubleClickRoute={jukiAppRoutes.JUDGE().contests.list()}
@@ -54,7 +58,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       label: <T className="tt-se">problems</T>,
       icon: <AssignmentIcon />,
       selected: isProblemsPage,
-      menuItemWrapper: ({ children }) => (
+      menuItemWrapper: ({ children }) => isProblemsPage ? (
+        <LinkLastPath lastPathKey={LastPathKey.PROBLEMS}>
+          {children}
+        </LinkLastPath>
+      ) : (
         <LinkLastPath
           lastPathKey={LastPathKey.SECTION_PROBLEM}
           onDoubleClickRoute={jukiAppRoutes.JUDGE().problems.list()}
