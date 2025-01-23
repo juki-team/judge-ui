@@ -1,5 +1,6 @@
 'use client';
 
+import { ProblemTab } from '@juki-team/base-ui/types';
 import {
   ButtonLoader,
   ContentCopyIcon,
@@ -18,7 +19,7 @@ import {
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import { authorizedRequest, cleanRequest, contestStateMap, toUpsertContestDTOUI } from 'helpers';
+import { authorizedRequest, cleanRequest, contestStateMap, isGlobalContest, toUpsertContestDTOUI } from 'helpers';
 import {
   useEffect,
   useJukiNotification,
@@ -98,7 +99,7 @@ export function ContestView({ contest, reloadContest }: {
       void preload(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, false));
     }
   }, [ canViewContest, contest?.key, preload ]);
-  
+  const isGlobal = isGlobalContest(contest.settings);
   if (canViewContest) {
     if (problemArrayIndex !== -1) {
       tabHeaders[ContestTab.PROBLEMS] = {
@@ -153,31 +154,55 @@ export function ContestView({ contest, reloadContest }: {
                   disabled={sourceCode === ''}
                   onClick={async setLoaderStatus => {
                     setLoaderStatus(Status.LOADING);
-                    const { url, ...options } = jukiApiSocketManager.API_V1.contest.submit({
-                      params: {
-                        key: contest.key,
-                        problemKey: problem.key,
-                      }, body: { language: language as string, source: sourceCode },
-                    });
-                    const response = cleanRequest<ContentResponseType<any>>(
-                      await authorizedRequest(url, options),
-                    );
+                    let response;
+                    if (isGlobal) {
+                      const { url, ...options } = jukiApiSocketManager.API_V1.problem.submit({
+                        params: {
+                          key: problem.key,
+                        }, body: { language: language as string, source: sourceCode },
+                      });
+                      response = cleanRequest<ContentResponseType<any>>(
+                        await authorizedRequest(url, options),
+                      );
+                    } else {
+                      const { url, ...options } = jukiApiSocketManager.API_V1.contest.submit({
+                        params: {
+                          key: contest.key,
+                          problemKey: problem.key,
+                        }, body: { language: language as string, source: sourceCode },
+                      });
+                      response = cleanRequest<ContentResponseType<any>>(
+                        await authorizedRequest(url, options),
+                      );
+                    }
+                    
                     if (notifyResponse(response, setLoaderStatus)) {
-                      listenSubmission({
-                        id: response.content.submitId,
-                        problem: { name: problem.name },
-                        contest: { name: contest.name, problemIndex },
-                      }, true);
-                      pushRoute(jukiAppRoutes.JUDGE().contests.view({
-                        key: contestKey,
-                        tab: ContestTab.MY_SUBMISSIONS,
-                        subTab: problemIndex,
-                      }));
-                      await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                      if (isGlobal) {
+                        listenSubmission({
+                          id: response.content.submitId,
+                          problem: { name: problem.name },
+                        }, true);
+                        pushRoute(jukiAppRoutes.JUDGE().problems.view({
+                          key: problem.key,
+                          tab: ProblemTab.MY_SUBMISSIONS,
+                        }));
+                      } else {
+                        listenSubmission({
+                          id: response.content.submitId,
+                          problem: { name: problem.name },
+                          contest: { name: contest.name, problemIndex },
+                        }, true);
+                        pushRoute(jukiAppRoutes.JUDGE().contests.view({
+                          key: contestKey,
+                          tab: ContestTab.MY_SUBMISSIONS,
+                          subTab: problemIndex,
+                        }));
+                        await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                      }
                     }
                   }}
                 >
-                  {isAdministrator || isManager ? <T>submit as judge</T> : <T>submit</T>}
+                  {(isAdministrator || isManager) && !isGlobal ? <T>submit as judge</T> : <T>submit</T>}
                 </ButtonLoader>
               );
               if (isAdministrator || isManager || isParticipant) {

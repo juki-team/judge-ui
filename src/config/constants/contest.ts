@@ -80,4 +80,5 @@ export const CONTEST_TEMPLATE: {
   [ContestTemplate.CUSTOM]: { value: ContestTemplate.CUSTOM, label: 'custom', description: 'custom' },
   [ContestTemplate.CLASSIC]: { value: ContestTemplate.CLASSIC, label: 'classic', description: 'classic' },
   [ContestTemplate.ENDLESS]: { value: ContestTemplate.ENDLESS, label: 'endless', description: 'endless' },
+  [ContestTemplate.GLOBAL]: { value: ContestTemplate.GLOBAL, label: 'global', description: 'global' },
 };

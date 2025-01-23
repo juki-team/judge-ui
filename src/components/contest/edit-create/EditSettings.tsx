@@ -21,7 +21,14 @@ import {
   MIN_DATE,
   PROGRAMMING_LANGUAGE,
 } from 'config/constants';
-import { adjustContest, classNames, disableOutOfRange, getContestTemplate, isEndlessContest } from 'helpers';
+import {
+  adjustContest,
+  classNames,
+  disableOutOfRange,
+  getContestTemplate,
+  isEndlessContest,
+  isGlobalContest,
+} from 'helpers';
 import { useState } from 'hooks';
 import { ContestTemplate, EntityMembersRank } from 'types';
 import { EditContestProps } from '../types';
@@ -43,6 +50,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   };
   
   const competition = isEndlessContest(contest);
+  const isGlobal = isGlobalContest(contest.settings);
+  
   const contestTemplate = getContestTemplate(contest);
   
   return (
@@ -60,7 +69,19 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               if (contestTemplate === value) {
                 return;
               }
-              if (value === ContestTemplate.ENDLESS) {
+              if (value === ContestTemplate.GLOBAL) {
+                setContest(prevState => adjustContest({
+                  ...prevState,
+                  settings: {
+                    ...prevState.settings,
+                    startTimestamp: 0,
+                    frozenTimestamp: 0,
+                    quietTimestamp: 0,
+                    endTimestamp: 0,
+                    penalty: 0,
+                  },
+                }, prevState));
+              } else if (value === ContestTemplate.ENDLESS) {
                 setContest(prevState => adjustContest({
                   ...prevState,
                   settings: {
@@ -96,7 +117,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             }}
           />
         </div>
-        {!competition && (
+        {!competition && !isGlobal && (
           <div className="jk-row left gap nowrap">
             <div className="fw-bd tt-se tx-xl cr-py"><T>start date</T>:</div>
             <InputDate
@@ -112,7 +133,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             />
           </div>
         )}
-        {!competition && (
+        {!competition && !isGlobal && (
           <div className="jk-col left stretch">
             <div className="jk-row gap left extend">
               <div className="fw-bd tt-se tx-xl cr-py"><T>duration</T></div>
@@ -185,7 +206,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             </div>
           </div>
         )}
-        {!competition && (
+        {!competition && !isGlobal && (
           <div className="jk-col left stretch">
             <div className="jk-row left extend gap">
               <div className="jk-row gap">
@@ -257,7 +278,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             </div>
           </div>
         )}
-        {!competition && (
+        {!competition && !isGlobal && (
           <div className="jk-col left stretch">
             <div className="jk-row left extend gap">
               <div className="jk-row gap">
@@ -329,7 +350,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             </div>
           </div>
         )}
-        {!competition && (
+        {!competition && !isGlobal && (
           <div className="jk-row left gap">
             <div className="fw-bd tt-se tx-xl cr-py"><T>penalty</T>:</div>
             <div className="jk-row gap left">
@@ -347,45 +368,48 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
           </div>
         )}
       </div>
-      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
-        <div className="jk-row left gap nowrap">
-          <div className="jk-row nowrap fw-bd tx-xl cr-py"><T className="tt-se">languages</T>
-            {!Object.keys(contest.settings.languages).length && (
-              <Popover content={<T>there must be at least one language selected</T>}>
-                <div className="jk-row nowrap">&nbsp;<WarningIcon className="cr-er" />&nbsp;</div>
-              </Popover>
-            )}
-            :
+      {!isGlobal && (
+        <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
+          <div className="jk-row left gap nowrap">
+            <div className="jk-row nowrap fw-bd tx-xl cr-py"><T className="tt-se">languages</T>
+              {!Object.keys(contest.settings.languages).length && (
+                <Popover content={<T>there must be at least one language selected</T>}>
+                  <div className="jk-row nowrap">&nbsp;<WarningIcon className="cr-er" />&nbsp;</div>
+                </Popover>
+              )}
+              :
+            </div>
+            <MultiSelect
+              options={ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({
+                label: PROGRAMMING_LANGUAGE[language].label,
+                value: language,
+              }))}
+              selectedOptions={contest.settings.languages.map(language => ({ value: language }))}
+              onChange={options => setContest(prevState => ({
+                ...prevState,
+                settings: { ...prevState.settings, languages: options.map(option => option.value) },
+              }))}
+              extend
+              optionsPlacement="top"
+            />
           </div>
-          <MultiSelect
-            options={ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({
-              label: PROGRAMMING_LANGUAGE[language].label,
-              value: language,
-            }))}
-            selectedOptions={contest.settings.languages.map(language => ({ value: language }))}
-            onChange={options => setContest(prevState => ({
-              ...prevState,
-              settings: { ...prevState.settings, languages: options.map(option => option.value) },
-            }))}
-            extend
-            optionsPlacement="top"
-          />
+          <div className="jk-row left gap">
+            <div className="fw-bd tt-se tx-xl cr-py"><T>clarifications</T>:</div>
+            <InputToggle
+              size="small"
+              checked={contest.settings.clarifications}
+              onChange={(value) => setContest(prevState => ({
+                ...prevState,
+                settings: { ...prevState.settings, clarifications: value },
+              }))}
+              leftLabel={<T className={classNames('tt-se', { 'fw-bd': !contest.settings.clarifications })}>no
+                available</T>}
+              rightLabel={
+                <T className={classNames('tt-se', { 'fw-bd': contest.settings.clarifications })}>available</T>}
+            />
+          </div>
         </div>
-        <div className="jk-row left gap">
-          <div className="fw-bd tt-se tx-xl cr-py"><T>clarifications</T>:</div>
-          <InputToggle
-            size="small"
-            checked={contest.settings.clarifications}
-            onChange={(value) => setContest(prevState => ({
-              ...prevState,
-              settings: { ...prevState.settings, clarifications: value },
-            }))}
-            leftLabel={<T className={classNames('tt-se', { 'fw-bd': !contest.settings.clarifications })}>no
-              available</T>}
-            rightLabel={<T className={classNames('tt-se', { 'fw-bd': contest.settings.clarifications })}>available</T>}
-          />
-        </div>
-      </div>
+      )}
       {/*<div className="jk-divider" />*/}
       {/*<T>number judge validations</T>*/}
       {/*<Input*/}

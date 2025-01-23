@@ -84,13 +84,17 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
         </div>
       ),
     };
-    tabHeaders[ContestTab.SETUP] = {
-      key: ContestTab.SETUP,
-      header: <T className="tt-ce">settings</T>,
-      body: (
-        <EditSettings key="settings" contest={contest} setContest={setContest} />
-      ),
-    };
+  }
+  
+  tabHeaders[ContestTab.SETUP] = {
+    key: ContestTab.SETUP,
+    header: <T className="tt-ce">settings</T>,
+    body: (
+      <EditSettings key="settings" contest={contest} setContest={setContest} />
+    ),
+  };
+  
+  if (!isGlobal) {
     tabHeaders[ContestTab.MEMBERS] = {
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,

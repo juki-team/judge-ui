@@ -25,5 +25,6 @@ export interface UpsertContestDTOUI extends Omit<UpsertContestDTO, 'members'> {
 export enum ContestTemplate {
   CLASSIC = 'CLASSIC',
   ENDLESS = 'ENDLESS',
+  GLOBAL = 'GLOBAL',
   CUSTOM = 'CUSTOM',
 }

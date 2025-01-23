@@ -1,7 +1,7 @@
 import { UpsertContestDTO } from '@juki-team/commons';
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
 import { ContestDataResponseDTO, ContestTemplate, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
-import { roundTimestamp } from './index';
+import { isGlobalContest, roundTimestamp } from './index';
 
 export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertContestDTOUI): UpsertContestDTOUI => {
   const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
@@ -79,12 +79,14 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
   if (isClassicContest(contest)) {
     return ContestTemplate.CLASSIC;
   }
+  if (isGlobalContest(contest.settings)) {
+    return ContestTemplate.GLOBAL;
+  }
   return ContestTemplate.CUSTOM;
 };
 
 export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertContestDTOUI => {
   const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
-  console.log({ contest });
   Object.values(contest.problems).forEach(problem => {
     problems[problem.key] = {
       key: problem.key,
