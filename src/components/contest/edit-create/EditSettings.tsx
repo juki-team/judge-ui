@@ -1,6 +1,9 @@
 'use client';
 
 import {
+  AddIcon,
+  Button,
+  DeleteIcon,
   FrozenInformation,
   Input,
   InputDate,
@@ -30,12 +33,14 @@ import {
   isGlobalContest,
 } from 'helpers';
 import { useState } from 'hooks';
+import React from 'react';
 import { ContestTemplate, EntityMembersRank } from 'types';
 import { EditContestProps } from '../types';
 
 export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
   const [ checks, setChecks ] = useState({ duration: true, frozen: true, quiet: true });
+  const [ newTag, setNewTag ] = useState('');
   const startDate = new Date(contest.settings.startTimestamp);
   const endDate = new Date(contest.settings.endTimestamp);
   const frozenDate = new Date(contest.settings.frozenTimestamp);
@@ -406,6 +411,41 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 available</T>}
               rightLabel={
                 <T className={classNames('tt-se', { 'fw-bd': contest.settings.clarifications })}>available</T>}
+            />
+          </div>
+        </div>
+      )}
+      {isGlobal && (
+        <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
+          <div className="jk-row nowrap gap extend left">
+            <div className="jk-row left nowrap">
+              <T className="tt-se fw-bd">tags</T>&nbsp;<span className="fw-bd">:</span>&nbsp;
+              <div className="jk-row gap">
+                {contest.tags.map(tag => (
+                  <div key={tag} className="jk-tag info jk-row">
+                    {tag}&nbsp;
+                    <DeleteIcon
+                      size="small"
+                      onClick={() => {
+                        setContest(prevState => ({
+                          ...prevState,
+                          tags: prevState.tags.filter(t => tag !== t),
+                        }));
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <Input value={newTag} onChange={setNewTag} />
+            <Button
+              onClick={() => {
+                setContest(prevState => ({
+                  ...prevState,
+                  tags: Array.from(new Set([ ...prevState.tags, newTag ])),
+                }));
+              }}
+              icon={<AddIcon />}
             />
           </div>
         </div>

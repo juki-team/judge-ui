@@ -186,7 +186,7 @@ function Problems() {
     >
       <div className="jk-row space-between extend pn-re">
         <div className="jk-row gap">
-          <h1><T>problems</T></h1>
+          <h1><T className="tt-se">problems</T></h1>
           {isExternal && (
             <InfoIcon
               data-tooltip-id="jk-tooltip"

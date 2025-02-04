@@ -14,8 +14,8 @@
     "push": "f() { yarn build && yarn git-push \"${1}\"; }; f"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^1.0.72",
-    "@juki-team/commons": "^0.0.718",
+    "@juki-team/base-ui": "^1.0.75",
+    "@juki-team/commons": "^0.0.721",
     "@vercel/analytics": "^1.2.2",
     "deep-object-diff": "^1.1.7",
     "diff2html": "^3.4.48",

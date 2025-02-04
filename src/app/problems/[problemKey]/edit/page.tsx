@@ -15,6 +15,7 @@ function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUID
     judgeIsExternal: problem.judge?.isExternal,
     members: problem.members,
     name: problem.name,
+    shortname: problem.shortname,
     settings: problem.settings,
     statement: problem.statement,
     tags: problem.tags,

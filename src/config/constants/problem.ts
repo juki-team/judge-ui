@@ -16,6 +16,7 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judg
     author: '',
     editorial: EMPTY_TEXT_LANGUAGES,
     name: '',
+    shortname: '',
     settings: {
       timeLimit: 1000,
       memoryLimit: 256000,

@@ -1,7 +1,7 @@
 'use client';
 
 import { ProblemTab } from '@juki-team/base-ui/types';
-import { DataViewer, T, TwoContentLayout } from 'components';
+import { Button, DataViewer, T, TwoContentLayout } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl } from 'helpers';
@@ -27,27 +27,37 @@ import {
 
 const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => {
   
-  const { viewPortSize } = useJukiUI();
   const { data: contestResponse } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(jukiApiSocketManager.API_V1.contest.getData({
     params: {
       key: contest.key,
     },
   }).url);
   const contestData = contestResponse?.success ? contestResponse.content : null;
-  const { user } = useJukiUser();
-  const { components: { Link } } = useJukiUI();
+  const { user: { nickname, permissions: { services: { administrate: canAdministrateServices } } } } = useJukiUser();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const { t } = jukiGlobalStore.getI18n();
+  const contestTags = JSON.stringify(contest.tags ?? []);
   
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
+    
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize, user.nickname),
+      getNicknameColumn(viewPortSize, nickname),
       getPointsColumn(viewPortSize, true),
     ];
     
+    const tags = JSON.parse(contestTags);
+    
     for (const problem of Object.values(contestData?.problems ?? {})) {
+      let group = '';
+      for (const tag of problem.tags) {
+        if (tags.includes(tag)) {
+          group = tag;
+        }
+      }
       base.push({
         ...getProblemScoreboardColumn(Link, contest.key, true, problem, t),
+        group,
         head: (
           <div
             data-tooltip-id="jk-tooltip"
@@ -62,14 +72,14 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
                 tab: ProblemTab.STATEMENT,
               })}
             >
-              {problem.name}
+              {problem.shortname || problem.name}
             </Link>
           </div>
         ),
       });
     }
     return base;
-  }, [ viewPortSize, user.nickname, contestData?.problems, Link, contest.key, t ]);
+  }, [ viewPortSize, nickname, contestData?.problems, Link, contest.key, t, contestTags ]);
   
   const {
     data: response,
@@ -86,7 +96,17 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   
   return (
     <DataViewer<ScoreboardResponseDTO>
+      extraNodes={canAdministrateServices ? [
+        <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key })} key="edit">
+          <Button size="tiny" type="light">
+            <T>edit</T></Button>
+        </Link>,
+      ] : []}
       headers={columns}
+      groups={contest.isGlobal ? contest.tags.map(tag => ({
+        key: tag,
+        label: <div className="jk-row fw-bd">{tag}</div>,
+      })) : undefined}
       data={data}
       rowsView={viewPortSize !== 'sm'}
       rows={{ height: 68 }}
@@ -131,7 +151,7 @@ function Ranking() {
       selectedTabKey={tab}
       getHrefOnTabChange={(value) => ROUTES.BOARDS.PAGE(value)}
     >
-      <h1><T>boards</T></h1>
+      <h1><T className="tt-se">boards</T></h1>
     </TwoContentLayout>
   );
 }

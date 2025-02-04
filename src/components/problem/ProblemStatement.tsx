@@ -1,6 +1,6 @@
 'use client';
 
-import { FlagEnImage, FlagEsImage, MdMathEditor, MdMathViewer, PlusIcon, T, TabsInline } from 'components';
+import { FlagEnImage, FlagEsImage, Input, MdMathEditor, MdMathViewer, PlusIcon, T, TabsInline } from 'components';
 import { classNames } from 'helpers';
 import { useJukiUser } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
@@ -70,6 +70,17 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
     <div className="jk-row extend top">
       <div className="jk-row extend top gap nowrap stretch left">
         <div className={classNames('jk-col top stretch flex-3 editing?')}>
+          <div className="jk-br-ie bc-we jk-row left jk-pg-sm">
+            <Input
+              value={problem.shortname}
+              label={<T className="tt-se">shortname</T>}
+              labelPlacement="left"
+              onChange={value => setProblem(prevState => ({
+                ...prevState,
+                shortname: value,
+              }))}
+            />
+          </div>
           <div className="jk-col">
             <div className="jk-row">
               <TabsInline<Language>

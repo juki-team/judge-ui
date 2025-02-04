@@ -8,6 +8,7 @@ export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO
     spectators: entity?.members?.spectators ? Object.keys(entity.members.spectators) : [],
   },
   name: entity?.name || '',
+  shortname: entity?.shortname || '',
   author: entity?.author || '',
   settings: {
     timeLimit: entity?.settings?.timeLimit || 0,

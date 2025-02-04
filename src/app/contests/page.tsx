@@ -74,7 +74,7 @@ export default function ContestsPage() {
       selectedTabKey={contestsTab as ContestsTab}
       getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().contests.list() + `?tab=${tab}`}
     >
-      <h1><T>contests</T></h1>
+      <h1><T className="tt-se">contests</T></h1>
     </TwoContentLayout>
   );
 }

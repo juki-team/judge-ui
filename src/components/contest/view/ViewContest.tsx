@@ -321,19 +321,16 @@ export function ContestView({ contest, reloadContest }: {
   
   if (isAdministrator) {
     extraNodes.push(
-      <ButtonLoader
-        size="small"
-        onClick={async setLoaderStatus => {
-          setLoaderStatus(Status.LOADING);
-          pushRoute(jukiAppRoutes.JUDGE().contests.edit({ key: contestKey }));
-          setLoaderStatus(Status.SUCCESS);
-        }}
-        icon={<EditIcon />}
-        responsiveMobile
-        key="edit"
-      >
-        <T>edit</T>
-      </ButtonLoader>,
+      <Link href={jukiAppRoutes.JUDGE().contests.edit({ key: contestKey })}>
+        <ButtonLoader
+          size="small"
+          icon={<EditIcon />}
+          responsiveMobile
+          key="edit"
+        >
+          <T>edit</T>
+        </ButtonLoader>
+      </Link>,
     );
   }
   

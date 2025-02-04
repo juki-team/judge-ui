@@ -53,9 +53,9 @@ export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponse
         opacity: (isDragging && !isPreview) ? 0.4 : 1,
         borderTop: isPreview ? '1px solid var(--t-color-gray-5)' : undefined,
       }}
-      ref={dragComponentRef}
+      // ref={dragComponentRef}
     >
-      <div className="jk-row" style={{ width: 30 }}>{dragComponent}</div>
+      <div className="jk-row" style={{ width: 30 }} ref={dragComponentRef}>{dragComponent}</div>
       <div className="jk-row" style={{ width: 40 }}>
         {indexToLetters(index + 1)}
       </div>
@@ -68,7 +68,7 @@ export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponse
             style={{ fontFamily: 'monospace' }}
           >
             {problem.key}&nbsp;
-              <div className="jk-row"><OpenInNewIcon size="small" /></div>
+            <div className="jk-row"><OpenInNewIcon size="small" /></div>
           </Link>
           {problem.name}
         </div>

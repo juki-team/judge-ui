@@ -108,7 +108,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
     name: contest.name,
     problems,
     settings: contest.settings,
-    tags: contest.tags,
+    tags: Array.isArray(contest.tags) ? contest.tags : [],
     owner: contest.owner,
     state: contest.state,
   };

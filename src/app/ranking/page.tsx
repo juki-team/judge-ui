@@ -143,7 +143,7 @@ function Ranking() {
         />,
       )}
     >
-      <h1><T>ranking</T></h1>
+      <h1><T className="tt-se">ranking</T></h1>
     </TwoContentLayout>
   );
 }
