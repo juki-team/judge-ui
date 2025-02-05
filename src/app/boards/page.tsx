@@ -5,7 +5,15 @@ import { Button, DataViewer, T, TwoContentLayout } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl } from 'helpers';
-import { useDataViewerRequester, useFetcher, useJukiRouter, useJukiUI, useJukiUser, useMemo } from 'hooks';
+import {
+  useDataViewerRequester,
+  useFetcher,
+  useJukiRouter,
+  useJukiUI,
+  useJukiUser,
+  useMemo,
+  useTrackLastPath,
+} from 'hooks';
 import { CSSProperties } from 'react';
 import {
   ContentResponseType,
@@ -14,6 +22,7 @@ import {
   ContestSummaryListResponseDTO,
   DataViewerHeadersType,
   EntityState,
+  LastPathKey,
   QueryParam,
   ScoreboardResponseDTO,
   TabsType,
@@ -119,7 +128,9 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   );
 };
 
-function Ranking() {
+function Boards() {
+  
+  useTrackLastPath(LastPathKey.BOARDS);
   
   const { data: globalContestsData } = useFetcher<ContentsResponseType<ContestSummaryListResponseDTO>>(jukiApiSocketManager.API_V1.contest.getSummaryList({
     params: {
@@ -156,4 +167,4 @@ function Ranking() {
   );
 }
 
-export default Ranking;
+export default Boards;

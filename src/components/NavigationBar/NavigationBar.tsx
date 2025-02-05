@@ -90,8 +90,9 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         icon: <LibraryBooksIcon />,
         selected: isBoardsPage,
         menuItemWrapper: ({ children }) => (
-          <Link className="link dy-cs" href={ROUTES.BOARDS.PAGE()}>
-            {children}</Link>
+          <LinkLastPath lastPathKey={LastPathKey.BOARDS}>
+            {children}
+          </LinkLastPath>
         ),
       },
     );

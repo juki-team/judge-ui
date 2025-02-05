@@ -124,8 +124,8 @@ export enum LastPathKey {
   CONTESTS = 'CONTESTS',
   SECTION_PROBLEM = 'SECTION_PROBLEMS',
   PROBLEMS = 'PROBLEMS',
-  SECTION_ADMIN = 'SECTION_ADMINS',
   SECTION_HELP = 'SECTION_HELP',
+  BOARDS = 'BOARDS',
 }
 
 export type { PropsWithChildren, ReactNode, FC } from 'react';

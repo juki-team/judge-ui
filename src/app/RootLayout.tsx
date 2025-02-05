@@ -19,6 +19,7 @@ import {
   JUKI_SOCKET_BASE_URL,
   JUKI_TOKEN_NAME,
   NODE_ENV,
+  ROUTES,
 } from 'config/constants';
 import { useEffect, useJukiUI, useJukiUser, useState } from 'hooks';
 import { createInstance, i18n } from 'i18next';
@@ -129,6 +130,10 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
           },
           [LastPathKey.PROBLEMS]: {
             pathname: jukiAppRoutes.JUDGE().problems.list(),
+            searchParams: new URLSearchParams(),
+          },
+          [LastPathKey.BOARDS]: {
+            pathname: ROUTES.BOARDS.PAGE(),
             searchParams: new URLSearchParams(),
           },
           [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
