@@ -28,6 +28,13 @@ async function getMetadata(contestKey: string) {
   
   const { title, description, cover } = result?.success ? result.content : { title: '', description: '', cover: '' };
   
+  return { title, description, cover };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  
+  const { title, description } = await getMetadata((await params).contestKey);
+  
   return {
     title,
     description,
@@ -37,20 +44,15 @@ async function getMetadata(contestKey: string) {
       description,
       siteName: 'Juki Judge',
       url: 'https://judge.juki.app',
-      images: [
-        {
-          url: cover,
-        },
-      ],
+      // images: [
+      //   {
+      //     url: cover,
+      //   },
+      // ],
     },
   };
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return await getMetadata((await params).contestKey);
-}
-
 export default function Page() {
-  
   return <ContestViewPage />;
 }
