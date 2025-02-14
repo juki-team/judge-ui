@@ -32,7 +32,14 @@ async function getMetadata(problemKey: string) {
     title,
     description,
     openGraph: {
-      images: [ cover ],
+      type: 'website',
+      title,
+      description,
+      images: [
+        {
+          url: cover,
+        },
+      ],
     },
   };
 }
