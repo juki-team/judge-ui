@@ -9,12 +9,13 @@ type Props = {
   params: Promise<{ contestKey: string }>
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const contestKey = (await params).contestKey;
+async function getMetadata(contestKey: string) {
   jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
   let result;
   try {
-    const response = await fetch(jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url);
+    const response = await fetch(
+      jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url,
+      { headers: { origin: 'https://juki.app' } });
     const text = await response.text();
     result = cleanRequest<ContentResponseType<{
       title: string,
@@ -36,6 +37,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  return await getMetadata((await params).contestKey);
+}
+
 export default function Page() {
+  
   return <ContestViewPage />;
 }

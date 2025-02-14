@@ -1,74 +1,47 @@
-'use client';
-
-import {
-  AssignmentIcon,
-  Button,
-  FetcherLayer,
-  LinkLastPath,
-  PageNotFound,
-  ProblemViewLayout,
-  T,
-  TwoContentLayout,
-} from 'components';
 import { jukiApiSocketManager } from 'config';
-import { oneTab } from 'helpers';
-import { useJukiRouter, useJukiUI, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
-import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
+import { JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME } from 'config/constants';
+import { cleanRequest } from 'helpers';
+import type { Metadata } from 'next';
+import { ContentResponseType } from 'types';
+import ProblemViewPage from './ProblemViewPage';
 
-export default function ProblemViewPage() {
+type Props = {
+  params: Promise<{ problemKey: string }>
+}
+
+async function getMetadata(problemKey: string) {
+  jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
+  let result;
+  try {
+    const response = await fetch(
+      jukiApiSocketManager.API_V1.problem.getMetadata({ params: { key: problemKey } }).url,
+      { headers: { origin: 'https://juki.app' } });
+    const text = await response.text();
+    result = cleanRequest<ContentResponseType<{
+      title: string,
+      description: string,
+      cover: string
+    }>>(text);
+  } catch (error) {
+    console.error('error on generateMetadata', error);
+  }
   
-  useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  useRunnerServicesWakeUp();
-  const { routeParams: { problemKey } } = useJukiRouter();
-  const { components: { Link } } = useJukiUI();
+  const { title, description, cover } = result?.success ? result.content : { title: '', description: '', cover: '' };
   
-  // const breadcrumbs = [
-  //   <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
-  //   <Link
-  //     href={jukiAppRoutes.JUDGE().problems.view({ key: problemKey as string })}
-  //     className="link"
-  //     key="key"
-  //   >
-  //     <div className="ws-np">{problemKey}</div>
-  //   </Link>,
-  // ];
+  return {
+    title,
+    description,
+    openGraph: {
+      images: [ cover ],
+    },
+  };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  return await getMetadata((await params).problemKey);
+}
+
+export default async function Page({ params }: Props) {
   
-  return (
-    <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
-      url={jukiApiSocketManager.API_V1.problem.getData({ params: { key: problemKey as string } }).url}
-      loadingView={
-        <TwoContentLayout
-          // breadcrumbs={breadcrumbs}
-          loading
-        >
-          <h2>
-            {problemKey}
-          </h2>
-        </TwoContentLayout>
-      }
-      errorView={
-        <TwoContentLayout
-          // breadcrumbs={breadcrumbs}
-          tabs={oneTab(
-            <PageNotFound>
-              <p>
-                <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
-              </p>
-              <LinkLastPath lastPathKey={LastPathKey.PROBLEMS}>
-                <Button icon={<AssignmentIcon />} type="light">
-                  <T className="tt-se">go to problem list</T>
-                </Button>
-              </LinkLastPath>
-            </PageNotFound>,
-          )}
-        >
-          <h2><T>problem not found</T></h2>
-        </TwoContentLayout>
-      }
-    >
-      {({ data, mutate }) => (
-        <ProblemViewLayout problem={data.content} reloadProblem={mutate} />
-      )}
-    </FetcherLayer>
-  );
-};
+  return <ProblemViewPage />;
+}
