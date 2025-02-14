@@ -35,6 +35,8 @@ async function getMetadata(problemKey: string) {
       type: 'website',
       title,
       description,
+      siteName: 'Juki Judge',
+      url: 'https://judge.juki.app',
       images: [
         {
           url: cover,
