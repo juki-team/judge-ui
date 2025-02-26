@@ -145,7 +145,7 @@ export function ContestView({ contest, reloadContest }: {
             }}
             infoPlacement="name"
             withoutDownloadButtons
-            codeEditorSourceStoreKey={contest.key + '/' + problem.key}
+            codeEditorStoreKey={contest.key + '/' + problem.key}
             codeEditorCenterButtons={({ sourceCode, language }) => {
               const validSubmit = (
                 <ButtonLoader

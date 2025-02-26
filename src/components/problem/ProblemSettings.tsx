@@ -282,7 +282,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                   }}
                 >
                   <UserCodeEditor
-                    sourceStoreKey={problemJudgeKey + '/evaluator'}
+                    storeKey={problemJudgeKey + '/evaluator'}
                     expandPosition={{
                       // width: 'var(--screen-content-width)',
                       // height: 'calc(var(--content-height) - var(--pad-md) - var(--pad-md))',

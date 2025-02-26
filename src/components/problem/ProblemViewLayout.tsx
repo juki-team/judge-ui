@@ -88,7 +88,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           <ProblemView
             problem={problem}
             infoPlacement="none"
-            codeEditorSourceStoreKey={problem.key}
+            codeEditorStoreKey={problem.key}
             forPrinting
           />
         </div>
@@ -105,7 +105,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           problem={problem}
           withoutName
           infoPlacement="name"
-          codeEditorSourceStoreKey={problem.key}
+          codeEditorStoreKey={problem.key}
           codeEditorCenterButtons={({ sourceCode, language }) => {
             
             // if (problem.judge.isExternal && false) {
