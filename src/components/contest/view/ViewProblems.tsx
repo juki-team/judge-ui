@@ -11,10 +11,10 @@ import {
   TextField,
   TextHeadCell,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
+import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, downloadUrlAsFile, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiRouter, useJukiUI } from 'hooks';
+import { useI18nStore, useJukiNotification, useJukiRouter, useJukiUI } from 'hooks';
 import React, { useMemo } from 'react';
 import {
   ContentResponseType,
@@ -35,7 +35,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isManager || isAdministrator;
-  const { t } = jukiGlobalStore.getI18n();
+  const t = useI18nStore(state => state.i18n.t);
   
   const columns = useMemo(() => [
     {

@@ -1,10 +1,9 @@
 'use client';
 
 import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, Image, T, Timer } from 'components';
-import { jukiGlobalStore } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { contestStateMap } from 'helpers';
-import { useDataViewerRequester, useJukiUI, useJukiUser } from 'hooks';
+import { useDataViewerRequester, useI18nStore, useJukiUI, useJukiUser } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   getNicknameColumn,
@@ -31,7 +30,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
   const contestKey = contest.key;
   const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
-  const { t } = jukiGlobalStore.getI18n();
+  const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       getPositionColumn(),

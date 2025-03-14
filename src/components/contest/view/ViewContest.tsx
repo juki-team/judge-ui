@@ -1,6 +1,5 @@
 'use client';
 
-import { ProblemTab } from '@juki-team/base-ui/types';
 import {
   ButtonLoader,
   ContentCopyIcon,
@@ -17,11 +16,12 @@ import {
   ViewOverview,
   ViewProblems,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
+import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { authorizedRequest, cleanRequest, contestStateMap, isGlobalContest, toUpsertContestDTOUI } from 'helpers';
 import {
   useEffect,
+  useI18nStore,
   useJukiNotification,
   useJukiRouter,
   useJukiTask,
@@ -32,17 +32,18 @@ import {
   useTrackLastPath,
 } from 'hooks';
 import React from 'react';
+import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
   ContestTab,
+  EntityState,
   LastPathKey,
+  ProblemTab,
   Status,
   TabsType,
   UpsertContestDTOUI,
-} from 'src/types';
-import { KeyedMutator } from 'swr';
-import { EntityState } from 'types';
+} from 'types';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewScoreboard } from './ViewScoreboard';
@@ -60,7 +61,7 @@ export function ContestView({ contest, reloadContest }: {
   const problemIndex = searchParams.get('subTab') || '';
   const { viewPortSize, components: { Link } } = useJukiUI();
   const { user: { permissions: { contests: { create: canCreateContest } } } } = useJukiUser();
-  const { t } = jukiGlobalStore.getI18n();
+  const t = useI18nStore(state => state.i18n.t);
   const { listenSubmission } = useJukiTask();
   const mutate = useMutate();
   const { addWarningNotification, notifyResponse } = useJukiNotification();

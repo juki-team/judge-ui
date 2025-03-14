@@ -20,10 +20,9 @@ import {
   T,
   VisibilityIcon,
 } from 'components';
-import { jukiGlobalStore } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile, humanFileSize } from 'helpers';
-import { useEffect, useJukiNotification, useMutate, useState } from 'hooks';
+import { useEffect, useI18nStore, useJukiNotification, useMutate, useState } from 'hooks';
 import { ReactNode } from 'react';
 import {
   ButtonLoaderOnClickType,
@@ -98,7 +97,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
   const { notifyResponse } = useJukiNotification();
   const mutate = useMutate();
   const [ modal, setModal ] = useState<ReactNode>(null);
-  const { t } = jukiGlobalStore.getI18n();
+  const t = useI18nStore(state => state.i18n.t);
   
   const handleServerDelete = (testCaseKey: string, keyFile: KeyFileType): ButtonLoaderOnClickType => async (setLoaderStatus) => {
     setLock(true);

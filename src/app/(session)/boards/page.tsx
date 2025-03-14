@@ -1,13 +1,13 @@
 'use client';
 
-import { ProblemTab } from '@juki-team/base-ui/types';
 import { Button, DataViewer, T, TwoContentLayout } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
+import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl } from 'helpers';
 import {
   useDataViewerRequester,
   useFetcher,
+  useI18nStore,
   useJukiRouter,
   useJukiUI,
   useJukiUser,
@@ -23,6 +23,7 @@ import {
   DataViewerHeadersType,
   EntityState,
   LastPathKey,
+  ProblemTab,
   QueryParam,
   ScoreboardResponseDTO,
   TabsType,
@@ -32,7 +33,7 @@ import {
   getPointsColumn,
   getPositionColumn,
   getProblemScoreboardColumn,
-} from '../../components/contest/view/columns';
+} from '../../../components/contest/view/columns';
 
 const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => {
   
@@ -44,7 +45,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   const contestData = contestResponse?.success ? contestResponse.content : null;
   const { user: { nickname, permissions: { services: { administrate: canAdministrateServices } } } } = useJukiUser();
   const { viewPortSize, components: { Link } } = useJukiUI();
-  const { t } = jukiGlobalStore.getI18n();
+  const t = useI18nStore(state => state.i18n.t);
   const contestTags = JSON.stringify(contest.tags ?? []);
   
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {

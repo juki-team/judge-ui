@@ -12,7 +12,7 @@ import {
   Select,
   T,
 } from 'components';
-import { jukiApiSocketManager, jukiGlobalStore } from 'config';
+import { jukiApiSocketManager } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import {
   authorizedRequest,
@@ -21,7 +21,7 @@ import {
   downloadDataTableAsCsvFile,
   downloadSheetDataAsXlsxFile,
 } from 'helpers';
-import { useDataViewerRequester, useJukiNotification, useJukiUI, useJukiUser } from 'hooks';
+import { useDataViewerRequester, useI18nStore, useJukiNotification, useJukiUI, useJukiUser } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -45,7 +45,7 @@ interface DownloadButtonProps {
 }
 
 const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
-  const { t } = jukiGlobalStore.getI18n();
+  const t = useI18nStore(state => state.i18n.t);
   
   const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
   for (const problem of Object.values(contest?.problems)) {
@@ -117,7 +117,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   const contestKey = contest.key;
   const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
-  const { t } = jukiGlobalStore.getI18n();
+  const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
@@ -131,7 +131,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       }
     }
     return base;
-  }, [ viewPortSize, user.nickname, contest.isEndless, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortSize, user.nickname, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
