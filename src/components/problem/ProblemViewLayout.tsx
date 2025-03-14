@@ -6,7 +6,6 @@ import {
   ButtonLoader,
   EditIcon,
   FirstLoginWrapper,
-  Portal,
   ProblemInfo,
   ProblemView,
   T,
@@ -29,10 +28,8 @@ import {
   ContentResponseType,
   HTTPMethod,
   LastPathKey,
-  PrintMode,
   ProblemDataResponseDTO,
   ProblemTab,
-  QueryParam,
   Status,
   TabsType,
 } from 'types';
@@ -54,47 +51,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const { components: { Link } } = useJukiUI();
   const mutate = useMutate();
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
-  const printMode = searchParams.get(QueryParam.PRINT_MODE);
-  
-  if (printMode === PrintMode.AS_PROBLEM_SET) {
-    document.querySelectorAll('.jk-vertical-menu-layout-container, .jk-horizontal-menu-layout-container').forEach(element => {
-      if (element instanceof HTMLElement) {
-        element.style.display = 'none';
-      }
-    });
-    
-    const jukiAppElement = document.getElementById('juki-app');
-    if (jukiAppElement) {
-      jukiAppElement.style.overflow = 'visible';
-    }
-    
-    if (document?.body?.style) {
-      document.body.style.background = 'none';
-    }
-    
-    if (document?.documentElement?.style) {
-      document.documentElement.style.overflowY = 'auto';
-    }
-    
-    return (
-      <Portal className="">
-        <div
-          style={{
-            background: 'white',
-            padding: 'var(--pad-md)',
-            boxSizing: 'border-box',
-          }}
-        >
-          <ProblemView
-            problem={problem}
-            infoPlacement="none"
-            codeEditorStoreKey={problem.key}
-            forPrinting
-          />
-        </div>
-      </Portal>
-    );
-  }
   
   const tabs: TabsType<ProblemTab> = {
     [ProblemTab.STATEMENT]: {

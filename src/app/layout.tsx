@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ReactNode, Suspense } from 'react';
 import Loading from './loading';
-import { RootLayout } from './RootLayout';
 import './styles.scss';
+import 'diff2html/bundles/css/diff2html.min.css';
 
 const inter = Inter({
   weight: [ '100', '200', '300', '500', '700' ],
@@ -76,15 +76,13 @@ export default async function Layout({ children }: { children: ReactNode }) {
   
   return (
     <html lang="en" className={inter.variable}>
-    <body>
+    <body className="jk-theme-light">
     <iframe
       style={{ display: 'none' }} src="https://utils.juki.app/jk-cross.html"
       className="juki-iframe-cross-domain"
     />
     <Suspense fallback={<Loading />}>
-      <RootLayout>
-        {children}
-      </RootLayout>
+      {children}
     </Suspense>
     </body>
     </html>

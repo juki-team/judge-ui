@@ -1,8 +1,7 @@
 @use "@juki-team/base-ui/styles/mixins" as utils;
-@import "@juki-team/base-ui/styles/base";
-@import "../components/problem/styles";
-@import "../components/contest/styles";
-@import "diff2html/bundles/css/diff2html.min.css";
+@use "@juki-team/base-ui/styles/base";
+@use "../components/problem/styles" as problemStyles;
+@use "../components/contest/styles" as contestStyles;
 
 body {
   @include utils.md {

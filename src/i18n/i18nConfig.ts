@@ -1,8 +1,9 @@
 import { Language } from 'types';
 
 const i18nConfig = {
-  locales: [ Language.EN, Language.ES ],
-  defaultLocale: Language.EN,
+  lang: Language.ES,
+  locales: [ Language.ES, Language.EN ],
+  defaultLocale: Language.ES,
   namespaces: [ 'translation' ],
 };
 

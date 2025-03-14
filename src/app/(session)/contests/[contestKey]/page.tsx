@@ -1,20 +1,19 @@
 import { jukiApiSocketManager } from 'config';
-import { JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { cleanRequest } from 'helpers';
 import type { Metadata } from 'next';
 import { ContentResponseType } from 'types';
-import ProblemViewPage from './ProblemViewPage';
+import ContestViewPage from './ContestViewPage';
 
 type Props = {
-  params: Promise<{ problemKey: string }>
+  params: Promise<{ contestKey: string }>
 }
 
-async function getMetadata(problemKey: string) {
-  jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
+async function getMetadata(contestKey: string) {
+  
   let result;
   try {
     const response = await fetch(
-      jukiApiSocketManager.API_V1.problem.getMetadata({ params: { key: problemKey } }).url,
+      jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url,
       { headers: { origin: 'https://juki.app' } });
     const text = await response.text();
     result = cleanRequest<ContentResponseType<{
@@ -33,7 +32,7 @@ async function getMetadata(problemKey: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
-  const { title, description } = await getMetadata((await params).problemKey);
+  const { title, description } = await getMetadata((await params).contestKey);
   
   return {
     title,
@@ -53,6 +52,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params }: Props) {
-  return <ProblemViewPage />;
+export default function Page() {
+  return <ContestViewPage />;
 }

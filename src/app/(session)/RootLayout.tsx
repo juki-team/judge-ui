@@ -11,7 +11,7 @@ import {
   T,
   UserPreviewModal,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes, jukiGlobalStore } from 'config';
+import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import {
   JUKI_APP_COMPANY_KEY,
   JUKI_SERVICE_V1_URL,
@@ -21,7 +21,7 @@ import {
   NODE_ENV,
   ROUTES,
 } from 'config/constants';
-import { useEffect, useJukiUI, useJukiUser, useState } from 'hooks';
+import { useEffect, useJukiUI, useJukiUser } from 'hooks';
 import { createInstance, i18n } from 'i18next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,13 +29,12 @@ import { useParams, usePathname } from 'next/navigation';
 import React, { Children, PropsWithChildren } from 'react';
 import { UserProvider } from 'store';
 import { SWRConfig } from 'swr';
-import { FC, ImageCmpProps, Language, LastPathKey } from 'types';
-import { useRouter } from '../hooks/useRouter';
-import { useSearchParams } from '../hooks/useSearchParams';
-import initTranslations from '../i18n/i18n';
+import { FC, ImageCmpProps, LastPathKey } from 'types';
+import { useRouter } from '../../hooks/useRouter';
+import { useSearchParams } from '../../hooks/useSearchParams';
+import initTranslations from '../../i18n/i18n';
 
 const i18nInstance = createInstance() as i18n;
-
 void initTranslations(i18nInstance);
 
 const SponsoredByTag = () => {
@@ -57,20 +56,9 @@ const SponsoredByTag = () => {
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
-  const [ _, setLanguage ] = useState<Language | undefined>();
-  
   useEffect(() => {
     jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
     jukiApiSocketManager.setSocketSettings(JUKI_SOCKET_BASE_URL);
-    void jukiGlobalStore.setI18n(i18nInstance);
-    
-    const handleLanguageChange = (lng: Language) => setLanguage(lng);
-    
-    i18nInstance.on('languageChanged', handleLanguageChange);
-    return () => {
-      i18nInstance.off('languageChanged', handleLanguageChange);
-    };
-    
   }, []);
   
   const { isLoadingRoute, push, replace, refresh } = useRouter();
