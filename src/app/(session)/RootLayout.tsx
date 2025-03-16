@@ -22,7 +22,6 @@ import {
   ROUTES,
 } from 'config/constants';
 import { useEffect, useJukiUI, useJukiUser } from 'hooks';
-import { createInstance, i18n } from 'i18next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
@@ -32,10 +31,6 @@ import { SWRConfig } from 'swr';
 import { FC, ImageCmpProps, LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
-import initTranslations from '../../i18n/i18n';
-
-const i18nInstance = createInstance() as i18n;
-void initTranslations(i18nInstance);
 
 const SponsoredByTag = () => {
   

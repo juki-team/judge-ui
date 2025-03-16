@@ -1,7 +1,7 @@
 import { BalloonIcon, Field, Image, UserNicknameLink } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames } from 'helpers';
-import { TFunction } from 'i18next';
+import { TFunction } from 'types';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
 import { ContestProblemDataResponseDTO, ContestTab, DataViewerHeadersType, LinkCmpProps } from 'types';
 import { ScoreboardResponseDTOFocus } from './types';
