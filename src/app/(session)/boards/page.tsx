@@ -8,11 +8,11 @@ import {
   useDataViewerRequester,
   useFetcher,
   useI18nStore,
-  useJukiRouter,
   useJukiUI,
-  useJukiUser,
   useMemo,
+  useRouterStore,
   useTrackLastPath,
+  useUserStore,
 } from 'hooks';
 import { CSSProperties } from 'react';
 import {
@@ -43,7 +43,8 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     },
   }).url);
   const contestData = contestResponse?.success ? contestResponse.content : null;
-  const { user: { nickname, permissions: { services: { administrate: canAdministrateServices } } } } = useJukiUser();
+  const userNickname = useUserStore(state => state.user.nickname);
+  const userCanAdministrateServices = useUserStore(state => state.user.permissions.services.administrate);
   const { viewPortSize, components: { Link } } = useJukiUI();
   const t = useI18nStore(state => state.i18n.t);
   const contestTags = JSON.stringify(contest.tags ?? []);
@@ -52,7 +53,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize, nickname),
+      getNicknameColumn(viewPortSize, userNickname),
       getPointsColumn(viewPortSize, true),
     ];
     
@@ -89,7 +90,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
       });
     }
     return base;
-  }, [ viewPortSize, nickname, contestData?.problems, Link, contest.key, t, contestTags ]);
+  }, [ viewPortSize, userNickname, contestData?.problems, Link, contest.key, t, contestTags ]);
   
   const {
     data: response,
@@ -106,7 +107,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   
   return (
     <DataViewer<ScoreboardResponseDTO>
-      extraNodes={canAdministrateServices ? [
+      extraNodes={userCanAdministrateServices ? [
         <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key })} key="edit">
           <Button size="tiny" type="light">
             <T>edit</T></Button>
@@ -144,7 +145,7 @@ function Boards() {
     },
   }).url);
   const globalContests = globalContestsData?.success ? globalContestsData.contents : [];
-  const { searchParams } = useJukiRouter();
+  const searchParams = useRouterStore(state => state.searchParams);
   const tab = searchParams.get('tab') as string || globalContests[0]?.key || '';
   
   const tabs: TabsType<string> = {};

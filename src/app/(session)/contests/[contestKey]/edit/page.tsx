@@ -1,16 +1,23 @@
 'use client';
 
-import { PageNotFound } from '@juki-team/base-ui';
-import { EditCreateContest, FetcherLayer, LinkLastPath, T, TwoContentLayout, UpdateEntityLayout } from 'components';
+import {
+  EditCreateContest,
+  FetcherLayer,
+  LinkLastPath,
+  PageNotFound,
+  T,
+  TwoContentLayout,
+  UpdateEntityLayout,
+} from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { isGlobalContest, oneTab, toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
-import { useJukiRouter } from 'hooks';
+import { useRouterStore } from 'hooks';
 import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
 
 function ContestEdit() {
   
-  const { routeParams: { contestKey } } = useJukiRouter();
+  const contestKey = useRouterStore(state => state.routeParams.contestKey);
   
   const breadcrumbs = [
     <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,

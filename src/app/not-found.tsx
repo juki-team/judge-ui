@@ -2,11 +2,11 @@
 
 import { PageNotFound, T } from 'components';
 import { jukiAppRoutes } from 'config';
-import { useEffect, useJukiRouter } from 'hooks';
+import { useEffect, useRouterStore } from 'hooks';
 
 export default function NotFound() {
   
-  const { replaceRoute } = useJukiRouter();
+  const replaceRoute = useRouterStore(state => state.replaceRoute);
   
   useEffect(() => {
     setTimeout(() => replaceRoute(jukiAppRoutes.JUDGE().home()), 2000);

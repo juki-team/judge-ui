@@ -5,7 +5,7 @@ import { jukiAppRoutes } from 'config';
 import { CONTEST_DEFAULT, LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { isGlobalContest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
+import { useEffect, useJukiNotification, useJukiUI, useRef, useState, useUserStore } from 'hooks';
 import {
   ContestTab,
   EntityState,
@@ -30,10 +30,13 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
   const { addWarningNotification } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
   const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
-  const { user: { nickname, imageUrl }, company: { key: companyKey } } = useJukiUser();
+  const companyKey = useUserStore(state => state.company.key);
+  const userNickname = useUserStore(state => state.user.nickname);
+  const userImageUrl = useUserStore(state => state.user.imageUrl);
+  
   const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest || CONTEST_DEFAULT({
-    nickname,
-    imageUrl,
+    nickname: userNickname,
+    imageUrl: userImageUrl,
     company: { key: companyKey },
   }, isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
   const isGlobal = isGlobalContest(contest.settings);

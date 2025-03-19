@@ -12,7 +12,7 @@ import {
   UserProfileSettings,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { useJukiRouter, useJukiUI, useJukiUser, useState } from 'hooks';
+import { useJukiUI, useJukiUser, useRouterStore, useState } from 'hooks';
 import { KeyedMutator } from 'swr';
 import { ProfileTab, TabsType, UserProfileResponseDTO } from 'types';
 import { MyActiveSessions } from './MyActiveSessions';
@@ -26,7 +26,9 @@ interface ProfileViewLayoutProps {
 export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutProps) {
   
   const { mutatePing } = useJukiUser();
-  const { routeParams, replaceRoute, searchParams } = useJukiRouter();
+  const routeParams = useRouterStore(state => state.routeParams);
+  const replaceRoute = useRouterStore(state => state.replaceRoute);
+  const searchParams = useRouterStore(state => state.searchParams);
   const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
   const { viewPortSize, components: { Link } } = useJukiUI();

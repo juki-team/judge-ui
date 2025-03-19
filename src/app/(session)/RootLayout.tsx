@@ -21,7 +21,7 @@ import {
   NODE_ENV,
   ROUTES,
 } from 'config/constants';
-import { useEffect, useJukiUI, useJukiUser } from 'hooks';
+import { useEffect, useJukiUI, useUserStore } from 'hooks';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
@@ -34,10 +34,10 @@ import { useSearchParams } from '../../hooks/useSearchParams';
 
 const SponsoredByTag = () => {
   
-  const { company: { key } } = useJukiUser();
+  const companyKey = useUserStore(state => state.company.key);
   const { components: { Link } } = useJukiUI();
   
-  if (key === JUKI_APP_COMPANY_KEY) {
+  if (companyKey === JUKI_APP_COMPANY_KEY) {
     return null;
   }
   

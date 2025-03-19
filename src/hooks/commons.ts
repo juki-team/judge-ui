@@ -6,8 +6,6 @@ export {
   useJukiTask,
   usePrevious,
   useDataViewerRequester,
-  useJukiRouter,
-  useLastPath,
   useTrackLastPath,
   useEntityDiff,
   useJukiNotification,
@@ -15,6 +13,8 @@ export {
   useMutate,
   usePreload,
   useI18nStore,
+  useRouterStore,
+  useUserStore,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export { useEffect, useRef, useState, useMemo } from 'react';

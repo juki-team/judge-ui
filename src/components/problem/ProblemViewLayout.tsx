@@ -15,12 +15,12 @@ import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import {
   useJukiNotification,
-  useJukiRouter,
   useJukiTask,
   useJukiUI,
-  useJukiUser,
   useMutate,
+  useRouterStore,
   useTrackLastPath,
+  useUserStore,
 } from 'hooks';
 import { useState } from 'react';
 import { KeyedMutator } from 'swr';
@@ -44,8 +44,9 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
 }) => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  const { searchParams, pushRoute } = useJukiRouter();
-  const { user } = useJukiUser();
+  const searchParams = useRouterStore(state => state.searchParams);
+  const pushRoute = useRouterStore(state => state.pushRoute);
+  const userIsLogged = useUserStore(state => state.user.isLogged);
   const { notifyResponse } = useJukiNotification();
   const { listenSubmission } = useJukiTask();
   const { components: { Link } } = useJukiUI();
@@ -119,7 +120,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     },
   };
   
-  if (user.isLogged) {
+  if (userIsLogged) {
     tabs[ProblemTab.MY_SUBMISSIONS] = {
       key: ProblemTab.MY_SUBMISSIONS,
       header: <T className="ws-np tt-ce">my submissions</T>,
@@ -178,7 +179,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         {<T>edit</T>}
       </ButtonLoader>,
     );
-  } else if (problem.judge?.isExternal && user.isLogged) {
+  } else if (problem.judge?.isExternal && userIsLogged) {
     extraNodes.push(
       <ButtonLoader
         size="small"

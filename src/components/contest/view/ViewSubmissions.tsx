@@ -15,7 +15,7 @@ import {
 } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { authorizedRequest, downloadBlobAsFile, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiUser, usePreload, useRef } from 'hooks';
+import { useFetcher, usePreload, useRef, useUserStore } from 'hooks';
 import { useMemo } from 'react';
 import {
   ContentsResponseType,
@@ -31,7 +31,7 @@ import {
 
 export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
-  const { user } = useJukiUser();
+  const userNickname = useUserStore(state => state.user.nickname);
   const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiSocketManager.API_V1.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
@@ -52,7 +52,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => [
     getSubmissionNicknameHeader([
       ...(contest.user.isAdministrator || contest.user.isManager || contest.user.isParticipant
-        ? [ { value: user.nickname, label: <T className="tt-se cr-ss fw-bd">my submissions</T> } ]
+        ? [ { value: userNickname, label: <T className="tt-se cr-ss fw-bd">my submissions</T> } ]
         : []),
       ...Object.keys(contest.members.participants).map(participant => ({
         value: participant,
@@ -77,7 +77,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, user.nickname ]);
+  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, userNickname ]);
   const preload = usePreload();
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   

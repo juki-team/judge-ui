@@ -2,12 +2,12 @@
 
 import { FetcherLayer, PageNotFound, ProfileViewLayout } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { useJukiRouter } from 'hooks';
+import { useRouterStore } from 'hooks';
 import { ContentResponseType, UserProfileResponseDTO } from 'types';
 
 export default function ProfileView() {
   
-  const { routeParams: { nickname } } = useJukiRouter();
+  const nickname = useRouterStore(state => state.routeParams.nickname);
   
   return (
     <FetcherLayer<ContentResponseType<UserProfileResponseDTO>>

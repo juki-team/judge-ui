@@ -1,7 +1,7 @@
 'use client';
 
 import { MdMathViewer, TextLangEdit } from 'components';
-import { useJukiUser } from 'hooks';
+import { useUserStore } from 'hooks';
 import React from 'react';
 import { ProfileSetting, TextLanguageType } from 'types';
 
@@ -12,12 +12,12 @@ interface ProblemStatementProps {
 
 export const ProblemEditorial = ({ editorial, setEditorial }: ProblemStatementProps) => {
   
-  const { user: { settings: { [ProfileSetting.LANGUAGE]: preferredLanguage } } } = useJukiUser();
+  const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
   return setEditorial ? (
     <TextLangEdit
       text={editorial}
       setText={(description) => setEditorial(description)}
     />
-  ) : <MdMathViewer source={editorial?.[preferredLanguage]} />;
+  ) : <MdMathViewer source={editorial?.[userPreferredLanguage]} />;
 };

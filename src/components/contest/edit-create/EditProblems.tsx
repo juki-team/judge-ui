@@ -16,7 +16,7 @@ import {
 import { jukiAppRoutes } from 'config';
 import { PALLETE } from 'config/constants';
 import { classNames, disableOutOfRange, getJudgeOrigin, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
-import { useEffect, useJukiUI, useJukiUser, useRef, useState } from 'hooks';
+import { useEffect, useJukiUI, useRef, useState, useUserStore } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import {
   ContestProblemBasicDataResponseDTO,
@@ -258,7 +258,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     }
   });
   const [ withTime, setWithTime ] = useState(withTimeRestriction ? 1 : 0);
-  const { company: { name: companyName } } = useJukiUser();
+  const companyName = useUserStore(state => state.company.name);
   useEffect(() => {
     if (withTimeRestriction && withTime === 0) {
       setWithTime(1);

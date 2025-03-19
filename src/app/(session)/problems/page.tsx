@@ -1,19 +1,5 @@
 'use client';
 
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { ENTITY_ACCESS } from 'config/constants';
-import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
-import {
-  useEffect,
-  useFetcher,
-  useJukiRouter,
-  useJukiUI,
-  useJukiUser,
-  useMemo,
-  usePreload,
-  useState,
-  useTrackLastPath,
-} from 'hooks';
 import {
   ButtonLoader,
   CrawlCodeforcesProblemModal,
@@ -30,7 +16,20 @@ import {
   T,
   TextField,
   TwoContentLayout,
-} from 'src/components';
+} from 'components';
+import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { ENTITY_ACCESS } from 'config/constants';
+import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
+import {
+  useEffect,
+  useFetcher,
+  useMemo,
+  usePreload,
+  useRouterStore,
+  useState,
+  useTrackLastPath,
+  useUserStore,
+} from 'hooks';
 import {
   ContentResponseType,
   DataViewerHeadersType,
@@ -59,10 +58,10 @@ function Problems() {
   
   useTrackLastPath(LastPathKey.PROBLEMS);
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  const { user: { permissions: { problems: { create: canCreateProblem } }, sessionId } } = useJukiUser();
-  const { searchParams, setSearchParams } = useJukiRouter();
-  const { components: { Link } } = useJukiUI();
-  const { pushRoute } = useJukiRouter();
+  const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
+  const pushRoute = useRouterStore(state => state.pushRoute);
+  const searchParams = useRouterStore(state => state.searchParams);
+  const setSearchParams = useRouterStore(state => state.setSearchParams);
   const preload = usePreload();
   const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiSocketManager.API_V1.company.getJudgeList().url);
   const judgeKey: Judge = searchParams.get(QueryParam.JUDGE) as Judge;
@@ -113,7 +112,7 @@ function Problems() {
   ], [ tags, isExternal ]);
   
   const extraNodes = [];
-  if (canCreateProblem && judgeKey === judges[0]?.value) {
+  if (userCanCreateProblem && judgeKey === judges[0]?.value) {
     extraNodes.push(
       <ButtonLoader
         size="small"
@@ -157,6 +156,8 @@ function Problems() {
       </div>,
     );
   }
+  
+  console.log('render Problems');
   
   return (
     <TwoContentLayout

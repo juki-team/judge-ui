@@ -8,13 +8,10 @@ import {
   JudgeInformationContent,
   SpectatorInformationContent,
 } from 'components';
-import { useJukiUser } from 'hooks';
 import React from 'react';
 import { EditViewMembersContestProps } from '../types';
 
 export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestProps) => {
-  
-  const { company: { key } } = useJukiUser();
   
   return (
     <div className="bc-we jk-br-ie jk-pg-sm">

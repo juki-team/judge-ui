@@ -23,13 +23,13 @@ import {
   useEffect,
   useI18nStore,
   useJukiNotification,
-  useJukiRouter,
   useJukiTask,
   useJukiUI,
-  useJukiUser,
   useMutate,
   usePreload,
+  useRouterStore,
   useTrackLastPath,
+  useUserStore,
 } from 'hooks';
 import React from 'react';
 import { KeyedMutator } from 'swr';
@@ -55,12 +55,13 @@ export function ContestView({ contest, reloadContest }: {
 }) {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  const { pushRoute, searchParams } = useJukiRouter();
+  const pushRoute = useRouterStore(state => state.pushRoute);
+  const searchParams = useRouterStore(state => state.searchParams);
   const contestKey = contest.key;
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
   const { viewPortSize, components: { Link } } = useJukiUI();
-  const { user: { permissions: { contests: { create: canCreateContest } } } } = useJukiUser();
+  const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
   const { listenSubmission } = useJukiTask();
   const mutate = useMutate();
@@ -295,7 +296,7 @@ export function ContestView({ contest, reloadContest }: {
     );
   }
   
-  if (canCreateContest && contest.isPast) {
+  if (userCanCreateContest && contest.isPast) {
     extraNodes.push(
       <ButtonLoader
         size="small"

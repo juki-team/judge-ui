@@ -9,7 +9,6 @@ import {
   InputDate,
   InputToggle,
   MultiSelect,
-  Popover,
   QuietInformation,
   Select,
   T,
@@ -378,9 +377,13 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
           <div className="jk-row left gap nowrap">
             <div className="jk-row nowrap fw-bd tx-xl cr-py"><T className="tt-se">languages</T>
               {!Object.keys(contest.settings.languages).length && (
-                <Popover content={<T>there must be at least one language selected</T>}>
-                  <div className="jk-row nowrap">&nbsp;<WarningIcon className="cr-er" />&nbsp;</div>
-                </Popover>
+                <div
+                  className="jk-row nowrap"
+                  data-tooltip-id="jk-tooltip"
+                  data-tooltip-content="there must be at least one language selected"
+                >
+                  &nbsp;<WarningIcon className="cr-er" />&nbsp;
+                </div>
               )}
               :
             </div>

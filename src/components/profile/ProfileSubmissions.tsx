@@ -9,7 +9,7 @@ import {
 } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiRouter, useMemo, usePreload } from 'hooks';
+import { useFetcher, useMemo, usePreload, useRouterStore } from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -21,7 +21,7 @@ import {
 
 export function ProfileSubmissions() {
   
-  const { routeParams: { nickname } } = useJukiRouter();
+  const nickname = useRouterStore(state => state.routeParams.nickname);
   const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiSocketManager.API_V1.judge.getSummaryList().url);
   const preload = usePreload();
   const languages = useMemo(() => {

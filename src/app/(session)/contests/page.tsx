@@ -11,16 +11,17 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { useEffect, useJukiRouter, useJukiUser, useTrackLastPath } from 'hooks';
+import { useEffect, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
 import { ContestsTab, LastPathKey, TabsType } from 'types';
 
 export default function ContestsPage() {
   
   useTrackLastPath(LastPathKey.CONTESTS);
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  const { searchParams, setSearchParams } = useJukiRouter();
+  const searchParams = useRouterStore(state => state.searchParams);
+  const setSearchParams = useRouterStore(state => state.setSearchParams);
   const contestsTab = searchParams.get('tab') as ContestsTab;
-  const { user: { permissions: { contests: { create: canCreateContest } } } } = useJukiUser();
+  const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   useEffect(() => {
     if (![
       ContestsTab.ALL,
@@ -63,7 +64,7 @@ export default function ContestsPage() {
   
   const extraNodes = [];
   
-  if (canCreateContest) {
+  if (userCanCreateContest) {
     extraNodes.push(<CreateContestButton />);
   }
   

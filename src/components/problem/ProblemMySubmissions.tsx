@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiUser, useMemo, usePreload } from 'hooks';
+import { useFetcher, useMemo, usePreload, useUserStore } from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -25,7 +25,7 @@ import {
 
 export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {
   
-  const { user: { nickname } } = useJukiUser();
+  const userNickname = useUserStore(state => state.user.nickname);
   const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiSocketManager.API_V1.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
@@ -65,7 +65,7 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
           params: {
             page,
             pageSize,
-            filterUrl: toFilterUrl({ ...filter, problemKeys: problem.key, nicknames: nickname }),
+            filterUrl: toFilterUrl({ ...filter, problemKeys: problem.key, nicknames: userNickname }),
             sortUrl: toSortUrl(sort),
           },
         }).url

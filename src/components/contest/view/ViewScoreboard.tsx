@@ -21,7 +21,7 @@ import {
   downloadDataTableAsCsvFile,
   downloadSheetDataAsXlsxFile,
 } from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiNotification, useJukiUI, useJukiUser } from 'hooks';
+import { useDataViewerRequester, useI18nStore, useJukiNotification, useJukiUI, useUserStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -111,7 +111,9 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
 
 export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataResponseDTO, mutate: KeyedMutator<any> }) => {
   
-  const { user, company: { imageUrl, name } } = useJukiUser();
+  const companyName = useUserStore(state => state.company.name);
+  const companyImageUrl = useUserStore(state => state.company.imageUrl);
+  const userNickname = useUserStore(state => state.user.nickname);
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
@@ -121,7 +123,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize, user.nickname),
+      getNicknameColumn(viewPortSize, userNickname),
       getPointsColumn(viewPortSize, contest.isEndless || contest.isGlobal),
     ];
     
@@ -131,7 +133,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       }
     }
     return base;
-  }, [ viewPortSize, user.nickname, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortSize, userNickname, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
@@ -285,8 +287,8 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       <div className="jk-full-screen-overlay">
         <div className="jk-row bc-pd" style={{ padding: 'var(--pad-xt)' }}>
           <Image
-            src={imageUrl}
-            alt={name}
+            src={companyImageUrl}
+            alt={companyName}
             height={viewPortSize === 'md' ? 40 : 46}
             width={viewPortSize === 'md' ? 80 : 92}
           />

@@ -3,7 +3,7 @@
 import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, Image, T, Timer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { contestStateMap } from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiUI, useJukiUser } from 'hooks';
+import { useDataViewerRequester, useI18nStore, useJukiUI, useUserStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   getNicknameColumn,
@@ -26,7 +26,9 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
   onClose: () => void,
 }) => {
   
-  const { user, company: { imageUrl, name } } = useJukiUser();
+  const companyName = useUserStore(state => state.company.name);
+  const companyImageUrl = useUserStore(state => state.company.imageUrl);
+  const userNickname = useUserStore(state => state.user.nickname);
   const contestKey = contest.key;
   const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
@@ -34,7 +36,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize, user.nickname),
+      getNicknameColumn(viewPortSize, userNickname),
       getPointsColumn(viewPortSize, contest.isEndless),
     ];
     
@@ -44,7 +46,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
       }
     }
     return base;
-  }, [ viewPortSize, user.nickname, contest.isEndless, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortSize, userNickname, contest.isEndless, contest?.problems, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
@@ -164,8 +166,8 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
       <div className="jk-full-screen-overlay">
         <div className="jk-row bc-pd" style={{ padding: 'var(--pad-xt)' }}>
           <Image
-            src={imageUrl}
-            alt={name}
+            src={companyImageUrl}
+            alt={companyName}
             height={viewPortSize === 'md' ? 40 : 46}
             width={viewPortSize === 'md' ? 80 : 92}
           />

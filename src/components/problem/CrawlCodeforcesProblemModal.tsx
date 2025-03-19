@@ -3,7 +3,7 @@
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useJukiRouter } from 'hooks';
+import { useJukiNotification, useRouterStore } from 'hooks';
 import { useState } from 'react';
 import { BasicModalProps, ContentResponseType, Judge, Status } from 'types';
 
@@ -16,7 +16,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
   const [ index, setIndex ] = useState('');
   const [ contestId, setContestId ] = useState('');
   const { notifyResponse } = useJukiNotification();
-  const { pushRoute } = useJukiRouter();
+  const pushRoute = useRouterStore(state => state.pushRoute);
   
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>

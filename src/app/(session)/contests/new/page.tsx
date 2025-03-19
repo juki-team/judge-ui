@@ -4,15 +4,17 @@ import { CreateEntityLayout, EditCreateContest, PageNotFound } from 'components'
 import { jukiAppRoutes } from 'config';
 import { CONTEST_DEFAULT, JUDGE_API_V1 } from 'config/constants';
 import { toUpsertContestDTO } from 'helpers';
-import { useJukiUser, useMemo } from 'hooks';
+import { useMemo, useUserStore } from 'hooks';
 import { UpsertContestDTO, UpsertContestDTOUI } from 'types';
 
 function ContestCreate() {
   
   const {
-    user: { nickname, imageUrl, permissions: { contests: { create: canCreateContest } } },
-    company: { key: companyKey },
-  } = useJukiUser();
+    nickname,
+    imageUrl,
+    permissions: { contests: { create: canCreateContest } },
+  } = useUserStore(state => state.user);
+  const companyKey = useUserStore(state => state.company.key);
   const newEntity = useMemo(() => () => CONTEST_DEFAULT({
     nickname,
     imageUrl,

@@ -2,7 +2,7 @@
 
 import { FlagEnImage, FlagEsImage, Input, MdMathEditor, MdMathViewer, PlusIcon, T, TabsInline } from 'components';
 import { classNames } from 'helpers';
-import { useJukiUser } from 'hooks';
+import { useUserStore } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Language, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
 import { ProblemLetter } from './ProblemLetter';
@@ -18,14 +18,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
   
   const { judgeKey, settings, statement, judgeIsExternal } = problem;
   
-  const {
-    user: {
-      settings: {
-        [ProfileSetting.LANGUAGE]: preferredLanguage,
-        [ProfileSetting.THEME]: preferredTheme,
-      },
-    },
-  } = useJukiUser();
+  const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   const [ language, setLanguage ] = useState<Language>(Language.ES);
   
   if (judgeIsExternal) {
@@ -196,7 +189,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                             : <T className="tt-se">points</T>})
                         </div>
                         <MdMathViewer
-                          source={pointsByGroup.description?.[preferredLanguage] || pointsByGroup.description?.[Language.EN] || pointsByGroup.description?.[Language.ES]}
+                          source={pointsByGroup.description?.[userPreferredLanguage] || pointsByGroup.description?.[Language.ES] || pointsByGroup.description?.[Language.EN]}
                         />
                       </div>
                     )}

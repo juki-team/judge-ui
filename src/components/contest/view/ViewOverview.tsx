@@ -14,7 +14,7 @@ import {
 } from 'components';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useJukiNotification, useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
+import { useDateFormat, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
@@ -33,8 +33,8 @@ interface ViewOverviewProps {
 export const ViewOverview = ({ contest, reloadContest }: ViewOverviewProps) => {
   
   const { isManager, isAdministrator, isParticipant, isGuest, isSpectator } = contest.user;
-  const { user: { isLogged } } = useJukiUser();
-  const { appendSearchParams } = useJukiRouter();
+  const userIsLogged = useUserStore(state => state.user.isLogged);
+  const appendSearchParams = useRouterStore(state => state.appendSearchParams);
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse } = useJukiNotification();
   const { viewPortSize } = useJukiUI();
@@ -93,20 +93,20 @@ export const ViewOverview = ({ contest, reloadContest }: ViewOverviewProps) => {
             <div className="jk-row center gap bc-we jk-br-ie jk-pg-sm">
               <div className="jk-row center">
                 &nbsp;
-                {isLogged
+                {userIsLogged
                   ? (isAdministrator || isManager)
                     ? <T className="tt-se">enroll to appear on the scoreboard</T>
                     : <T className="tt-se">enroll to participate</T>
                   : <T className="tt-se">sign in to register</T>}
               </div>
               <ButtonLoader
-                onClick={(setLoader) => isLogged
+                onClick={(setLoader) => userIsLogged
                   ? registerContest(setLoader)
                   : appendSearchParams({ name: QueryParamKey.SIGN_IN, value: '1' })}
                 type="secondary"
                 expand
               >
-                <T>{isLogged ? 'enroll' : 'sign in'}</T>
+                <T>{userIsLogged ? 'enroll' : 'sign in'}</T>
               </ButtonLoader>
             </div>
           </div>

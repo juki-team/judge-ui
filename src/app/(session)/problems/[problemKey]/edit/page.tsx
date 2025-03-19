@@ -4,7 +4,7 @@ import { EditCreateProblem, FetcherLayer, PageNotFound, UpdateEntityLayout } fro
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toUpsertProblemDTO } from 'helpers';
-import { useJukiRouter } from 'hooks';
+import { useRouterStore } from 'hooks';
 import { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
 
 function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUIDTO {
@@ -36,7 +36,7 @@ function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUID
 
 function ProblemEdit() {
   
-  const { routeParams: { problemKey } } = useJukiRouter();
+  const problemKey = useRouterStore(state => state.routeParams.problemKey);
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>

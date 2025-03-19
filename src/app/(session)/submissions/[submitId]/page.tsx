@@ -2,11 +2,11 @@
 
 import { SubmitView, T, TwoContentLayout } from 'components';
 import { oneTab } from 'helpers';
-import { useJukiRouter } from 'hooks';
+import { useRouterStore } from 'hooks';
 
 function Submit() {
   
-  const { routeParams: { submitId } } = useJukiRouter();
+  const submitId = useRouterStore(state => state.routeParams.submitId);
   
   const breadcrumbs = [
     <T className="tt-se" key="submission">submission</T>,

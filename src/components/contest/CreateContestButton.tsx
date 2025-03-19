@@ -3,11 +3,11 @@
 import { ButtonLoader, PlusIcon, T } from 'components';
 import { jukiAppRoutes } from 'config';
 import { buttonLoaderLink } from 'helpers';
-import { useJukiRouter } from 'hooks';
+import { useRouterStore } from 'hooks';
 
 export const CreateContestButton = () => {
   
-  const { pushRoute } = useJukiRouter();
+  const pushRoute = useRouterStore(state => state.pushRoute);
   
   return (
     <ButtonLoader

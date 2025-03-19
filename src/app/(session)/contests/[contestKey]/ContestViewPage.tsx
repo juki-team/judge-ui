@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { oneTab } from 'helpers';
-import { useJukiRouter, useJukiUI, useJukiUser, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
+import { useRouterStore, useRunnerServicesWakeUp, useTrackLastPath, useUserStore } from 'hooks';
 import React from 'react';
 import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
 
@@ -20,9 +20,9 @@ export default function ContestViewPage() {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   useRunnerServicesWakeUp();
-  const { routeParams: { contestKey } } = useJukiRouter();
-  const { components: { Link } } = useJukiUI();
-  const { company: { key: companyKey } } = useJukiUser();
+  const contestKey = useRouterStore(state => state.routeParams.contestKey);
+  // const { components: { Link } } = useJukiUI();
+  const companyKey = useUserStore(state => state.company.key);
   
   // const breadcrumbs = [
   //   <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests"><T className="tt-se">contests</T></LinkLastPath>,

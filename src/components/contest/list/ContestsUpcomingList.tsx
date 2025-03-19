@@ -3,13 +3,13 @@
 import { getContestDateHeader, getContestNameHeader, PagedDataViewer } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useJukiUser, usePreload } from 'hooks';
+import { usePreload, useUserStore } from 'hooks';
 import { useMemo } from 'react';
 import { ContestSummaryListResponseDTO, DataViewerHeadersType, EntityState, QueryParam } from 'types';
 
 export const ContestsUpcomingList = () => {
   
-  const { company: { key: companyKey } } = useJukiUser();
+  const companyKey = useUserStore(state => state.company.key);
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     getContestNameHeader(),
     getContestDateHeader(),

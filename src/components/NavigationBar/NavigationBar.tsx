@@ -10,23 +10,25 @@ import {
   T,
   TrophyIcon,
 } from 'components';
+import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
-import { useJukiRouter, useJukiUI, useJukiUser } from 'hooks';
+import { useEffect, useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import React, { PropsWithChildren } from 'react';
-import { jukiAppRoutes } from 'src/config';
 import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
-  const { pathname, pushRoute } = useJukiRouter();
+  const pathname = useRouterStore(state => state.pathname);
+  const pushRoute = useRouterStore(state => state.pushRoute);
   const { components: { Link, Image } } = useJukiUI();
-  const {
-    user: {
-      nickname,
-      settings: { [ProfileSetting.THEME]: userTheme },
-    },
-    company: { key },
-  } = useJukiUser();
+  useEffect(() => {
+    console.log('render');
+  }, [ Link, Image ]);
+  const state = useUserStore();
+  const user = useUserStore(state => state.user);
+  const companyKey = useUserStore(state => state.company.key);
+  const userNickname = useUserStore(state => state.user.nickname);
+  const userPreferredTheme = useUserStore(state => state.user.settings[ProfileSetting.THEME]);
   const isContestsPage = ('/' + pathname).includes('//contest');
   const isProblemsPage = ('/' + pathname).includes('//problem');
   const isRankingPage = ('/' + pathname).includes('//ranking');
@@ -39,6 +41,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const menu: MenuType[] = [
     {
       label: <T className="tt-se">contests</T>,
+      tooltipLabel: 'contests',
       icon: <TrophyIcon />,
       selected: isContestsPage,
       menuItemWrapper: ({ children }) => isContestsPage ? (
@@ -56,6 +59,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     },
     {
       label: <T className="tt-se">problems</T>,
+      tooltipLabel: 'problems',
       icon: <AssignmentIcon />,
       selected: isProblemsPage,
       menuItemWrapper: ({ children }) => isProblemsPage ? (
@@ -72,10 +76,11 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       ),
     },
   ];
-  if (key === JUKI_APP_COMPANY_KEY) {
+  if (companyKey === JUKI_APP_COMPANY_KEY) {
     menu.push(
       {
         label: <T className="tt-se">ranking</T>,
+        tooltipLabel: 'ranking',
         icon: <LeaderboardIcon />,
         selected: isRankingPage,
         menuItemWrapper: ({ children }) => (
@@ -87,6 +92,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     menu.push(
       {
         label: <T className="tt-se">boards</T>,
+        tooltipLabel: 'boards',
         icon: <LibraryBooksIcon />,
         selected: isBoardsPage,
         menuItemWrapper: ({ children }) => (
@@ -100,15 +106,18 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   menu.push({
     label: <T className="tt-se">info</T>,
+    tooltipLabel: 'info',
     icon: <HelpIcon />,
     selected: ('/' + pathname).includes('//help'),
     menuItemWrapper: ({ children }) => <LinkLastPath lastPathKey={LastPathKey.SECTION_HELP}>{children}</LinkLastPath>,
   });
   
+  console.log('render navigation bar', { user, state });
+  
   return (
     <>
       <MainMenu
-        onSeeMyProfile={() => pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname }))}
+        onSeeMyProfile={() => pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname: userNickname }))}
         menu={menu}
         profileSelected={pathname.includes('/profile/')}
         onBack={pathname !== backPah ? () => {
@@ -121,7 +130,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
                 <Image
                   width={100}
                   height={50}
-                  src={`https://images.juki.pub/assets/juki-utils-horizontal-${userTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
+                  src={`https://images.juki.pub/assets/juki-utils-horizontal-${userPreferredTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
                   alt="juki coach"
                 />
                 <div className="link">utils.juki.app</div>
@@ -132,7 +141,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
                 <Image
                   width={100}
                   height={50}
-                  src={`https://images.juki.pub/assets/juki-coach-horizontal-${userTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
+                  src={`https://images.juki.pub/assets/juki-coach-horizontal-${userPreferredTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
                   alt="juki coach"
                 />
                 <div className="jk-row nowrap" style={{ alignItems: 'baseline' }}>

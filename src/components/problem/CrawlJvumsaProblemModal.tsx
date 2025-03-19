@@ -2,15 +2,14 @@
 
 import { ButtonLoader, FetcherLayer, Input, Modal, PlusIcon, T } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { useJukiRouter } from 'hooks';
+import { useRouterStore } from 'hooks';
 import { useState } from 'react';
 import { BasicModalProps, ContentResponseType, Judge, JudgeDataResponseDTO, Status } from 'types';
 
 const Content = ({ judge }: { judge: JudgeDataResponseDTO }) => {
   
   const [ key, setKey ] = useState('');
-  
-  const { pushRoute } = useJukiRouter();
+  const pushRoute = useRouterStore(state => state.pushRoute);
   
   return (
     <>

@@ -1,4 +1,4 @@
-import { Modal } from 'src/components/index';
+import { Modal } from 'components';
 
 export const ColorsModal = () => {
   
