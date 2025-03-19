@@ -157,8 +157,6 @@ function Problems() {
     );
   }
   
-  console.log('render Problems');
-  
   return (
     <TwoContentLayout
       tabs={oneTab(judgeKey && (

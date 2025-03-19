@@ -12,7 +12,7 @@ import {
   UserProfileSettings,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { useJukiUI, useJukiUser, useRouterStore, useState } from 'hooks';
+import { useJukiUI, useRouterStore, useState, useUserStore } from 'hooks';
 import { KeyedMutator } from 'swr';
 import { ProfileTab, TabsType, UserProfileResponseDTO } from 'types';
 import { MyActiveSessions } from './MyActiveSessions';
@@ -25,11 +25,12 @@ interface ProfileViewLayoutProps {
 
 export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutProps) {
   
-  const { mutatePing } = useJukiUser();
+  const mutatePing = useUserStore(state => state.mutate);
+  const userNickname = useUserStore(state => state.user.nickname);
+  const companyKey = useUserStore(state => state.company.key);
   const routeParams = useRouterStore(state => state.routeParams);
   const replaceRoute = useRouterStore(state => state.replaceRoute);
   const searchParams = useRouterStore(state => state.searchParams);
-  const { user: { nickname: userNickname }, company } = useJukiUser();
   const [ openModal, setOpenModal ] = useState('');
   const { viewPortSize, components: { Link } } = useJukiUI();
   
@@ -114,7 +115,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
         isOpen={openModal === 'RESET_PASSWORD'}
         onClose={onClose}
         nickname={profile.nickname}
-        companyKey={company.key}
+        companyKey={companyKey}
       />
       <EditProfileModal
         isOpen={openModal === 'DATA'}

@@ -112,8 +112,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     menuItemWrapper: ({ children }) => <LinkLastPath lastPathKey={LastPathKey.SECTION_HELP}>{children}</LinkLastPath>,
   });
   
-  console.log('render navigation bar', { user, state });
-  
   return (
     <>
       <MainMenu

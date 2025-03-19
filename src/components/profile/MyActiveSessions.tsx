@@ -1,14 +1,14 @@
 import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
-import { useDataViewerRequester, useJukiUser, useMutate } from 'hooks';
+import { useDataViewerRequester, useJukiUser, useMutate, useUserStore } from 'hooks';
 import { useMemo } from 'react';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, SessionBasicResponseDTO, Status } from 'types';
 
 export function MyActiveSessions() {
   
-  const { deleteUserSession, user: { sessionId } } = useJukiUser();
-  
+  const { deleteUserSession } = useJukiUser();
+  const userSessionId = useUserStore(state => state.user.sessionId);
   const {
     data: response,
     request,
@@ -26,7 +26,7 @@ export function MyActiveSessions() {
           <div className="fw-bd">{deviceName}</div>
           <div>{osName}</div>
           <DateLiteral date={new Date(updateTimestamp)} />
-          {sessionId === id && <div className="jk-tag info"><T className="tt-se">this device</T></div>}
+          {userSessionId === id && <div className="jk-tag info"><T className="tt-se">this device</T></div>}
         </Field>
       ),
       cardPosition: 'top',
@@ -41,7 +41,7 @@ export function MyActiveSessions() {
       Field: ({ record: { id } }) => {
         return (
           <Field className="jk-col center gap">
-            {sessionId !== id && (
+            {userSessionId !== id && (
               <ButtonLoader
                 icon={<DeleteIcon />}
                 onClick={(setLoader) => deleteUserSession({
@@ -64,7 +64,7 @@ export function MyActiveSessions() {
       cardPosition: 'bottom',
       minWidth: 190,
     },
-  ], [ deleteUserSession, mutate, sessionId ]);
+  ], [ deleteUserSession, mutate, userSessionId ]);
   
   const data: SessionBasicResponseDTO[] = (response?.success ? response?.contents : []);
   
