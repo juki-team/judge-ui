@@ -49,6 +49,30 @@ const SponsoredByTag = () => {
   );
 };
 
+const initialLastPath = {
+  [LastPathKey.SECTION_CONTEST]: {
+    pathname: jukiAppRoutes.JUDGE().contests.list(),
+    searchParams: new URLSearchParams(),
+  },
+  [LastPathKey.CONTESTS]: {
+    pathname: jukiAppRoutes.JUDGE().contests.list(),
+    searchParams: new URLSearchParams(),
+  },
+  [LastPathKey.SECTION_PROBLEM]: {
+    pathname: jukiAppRoutes.JUDGE().problems.list(),
+    searchParams: new URLSearchParams(),
+  },
+  [LastPathKey.PROBLEMS]: {
+    pathname: jukiAppRoutes.JUDGE().problems.list(),
+    searchParams: new URLSearchParams(),
+  },
+  [LastPathKey.BOARDS]: {
+    pathname: ROUTES.BOARDS.PAGE(),
+    searchParams: new URLSearchParams(),
+  },
+  [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
+};
+
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
   useEffect(() => {
@@ -98,29 +122,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
           reloadRoute: refresh,
           isLoadingRoute,
         }}
-        initialLastPath={{
-          [LastPathKey.SECTION_CONTEST]: {
-            pathname: jukiAppRoutes.JUDGE().contests.list(),
-            searchParams: new URLSearchParams(),
-          },
-          [LastPathKey.CONTESTS]: {
-            pathname: jukiAppRoutes.JUDGE().contests.list(),
-            searchParams: new URLSearchParams(),
-          },
-          [LastPathKey.SECTION_PROBLEM]: {
-            pathname: jukiAppRoutes.JUDGE().problems.list(),
-            searchParams: new URLSearchParams(),
-          },
-          [LastPathKey.PROBLEMS]: {
-            pathname: jukiAppRoutes.JUDGE().problems.list(),
-            searchParams: new URLSearchParams(),
-          },
-          [LastPathKey.BOARDS]: {
-            pathname: ROUTES.BOARDS.PAGE(),
-            searchParams: new URLSearchParams(),
-          },
-          [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
-        }}
+        initialLastPath={initialLastPath}
       >
         <UserProvider>
           <NewVersionAvailableTrigger apiVersionUrl="/api/version" />
