@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
-import { useEffect, useJukiUI, useRouterStore, useUserStore } from 'hooks';
+import { useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import React, { PropsWithChildren } from 'react';
 import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
@@ -21,11 +21,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const pathname = useRouterStore(state => state.pathname);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const { components: { Link, Image } } = useJukiUI();
-  useEffect(() => {
-    console.log('render');
-  }, [ Link, Image ]);
-  const state = useUserStore();
-  const user = useUserStore(state => state.user);
   const companyKey = useUserStore(state => state.company.key);
   const userNickname = useUserStore(state => state.user.nickname);
   const userPreferredTheme = useUserStore(state => state.user.settings[ProfileSetting.THEME]);
