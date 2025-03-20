@@ -2,18 +2,17 @@
 
 import { PageNotFound, T } from 'components';
 import { jukiAppRoutes } from 'config';
-import { useEffect } from 'hooks';
-import { useRouter } from 'next/navigation';
+import { useEffect, useRouterStore } from 'hooks';
 
 export default function NotFound() {
   
-  const { replace } = useRouter();
+  const replaceRoute = useRouterStore(state => state.replaceRoute);
   
   useEffect(() => {
     setTimeout(() => {
-      replace(jukiAppRoutes.JUDGE().home());
-    }, 1000);
-  }, [ replace ]);
+      replaceRoute(jukiAppRoutes.JUDGE().home());
+    }, 2000);
+  }, [ replaceRoute ]);
   
   return (
     <PageNotFound>

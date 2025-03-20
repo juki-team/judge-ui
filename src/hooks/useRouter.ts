@@ -1,9 +1,8 @@
 import { useRouter as useNextRouter } from 'next/navigation';
-import { useCallback, useState, useTransition } from 'react';
+import { useCallback, useTransition } from 'react';
 
 export const useRouter = () => {
   const { push: pushRouter, replace: replaceRouter, ...rest } = useNextRouter();
-  const [ loaderCounter, setLoaderCounter ] = useState(0);
   const [ isPending, startTransition ] = useTransition();
   
   const push = useCallback(async (url: string) => {
@@ -20,5 +19,5 @@ export const useRouter = () => {
     });
   }, [ replaceRouter ]);
   
-  return { push, replace, isLoadingRoute: !!isPending, ...rest };
+  return { ...rest, push, replace, isLoadingRoute: !!isPending };
 };
