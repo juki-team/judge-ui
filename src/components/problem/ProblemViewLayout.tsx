@@ -24,15 +24,7 @@ import {
 } from 'hooks';
 import { useState } from 'react';
 import { KeyedMutator } from 'swr';
-import {
-  ContentResponseType,
-  HTTPMethod,
-  LastPathKey,
-  ProblemDataResponseDTO,
-  ProblemTab,
-  Status,
-  TabsType,
-} from 'types';
+import { ContentResponseType, LastPathKey, ProblemDataResponseDTO, ProblemTab, Status, TabsType } from 'types';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
@@ -180,27 +172,28 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       </ButtonLoader>,
     );
   } else if (problem.judge?.isExternal && userIsLogged) {
-    extraNodes.push(
-      <ButtonLoader
-        size="small"
-        type="light"
-        icon={<AutorenewIcon />}
-        onClick={async setLoaderStatus => {
-          setLoaderStatus(Status.LOADING);
-          const response = cleanRequest<ContentResponseType<string>>(
-            await authorizedRequest(
-              jukiApiSocketManager.API_V1.problem.reCrawl({ params: { key: problem.key } }).url,
-              { method: HTTPMethod.POST },
-            ),
-          );
-          await reloadProblem();
-          notifyResponse(response, setLoaderStatus);
-        }}
-        responsiveMobile
-      >
-        <T className="tt-se ws-np">re crawl</T>
-      </ButtonLoader>,
-    );
+    // TODO:
+    // extraNodes.push(
+    //   <ButtonLoader
+    //     size="small"
+    //     type="light"
+    //     icon={<AutorenewIcon />}
+    //     onClick={async setLoaderStatus => {
+    //       setLoaderStatus(Status.LOADING);
+    //       const response = cleanRequest<ContentResponseType<string>>(
+    //         await authorizedRequest(
+    //           jukiApiSocketManager.API_V1.problem.reCrawl({ params: { key: problem.key } }).url,
+    //           { method: HTTPMethod.POST },
+    //         ),
+    //       );
+    //       await reloadProblem();
+    //       notifyResponse(response, setLoaderStatus);
+    //     }}
+    //     responsiveMobile
+    //   >
+    //     <T className="tt-se ws-np">re crawl</T>
+    //   </ButtonLoader>,
+    // );
   }
   
   return (

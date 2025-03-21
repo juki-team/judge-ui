@@ -30,6 +30,7 @@ export {
   EntityAccess,
   EntityMembersRank,
   EntityState,
+  WebSocketActionEvent,
 } from '@juki-team/commons';
 
 export type {

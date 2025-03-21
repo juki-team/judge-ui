@@ -3,9 +3,9 @@
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useRouterStore } from 'hooks';
+import { useJukiNotification, useRouterStore, useUserStore } from 'hooks';
 import { useState } from 'react';
-import { BasicModalProps, ContentResponseType, Judge, Status } from 'types';
+import { BasicModalProps, ContentResponseType, Judge, Status, WebSocketActionEvent } from 'types';
 
 interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
   judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
@@ -17,11 +17,12 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
   const [ contestId, setContestId ] = useState('');
   const { notifyResponse } = useJukiNotification();
   const pushRoute = useRouterStore(state => state.pushRoute);
+  const userSessionId = useUserStore(state => state.user.sessionId);
   
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
       <div className="jk-col stretch gap jk-pg">
-        <h3><T>crawl codeforces problem</T></h3>
+        <h3><T className="tt-se">crawl codeforces problem</T></h3>
         <Input
           label={<T className="tt-se ws-np fw-bd">contest id</T>}
           labelPlacement="top"
@@ -44,11 +45,9 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const {
-              url,
-              ...options
-            } = jukiApiSocketManager.API_V2.webScraping.codeforces.problemStatement({
-              params: {
+            const { url, ...options } = jukiApiSocketManager.API_V1.problem.crawlStatement({
+              body: {
+                judgeKey: Judge.CODEFORCES,
                 contestId,
                 index,
               },
@@ -57,9 +56,15 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
               await authorizedRequest(url, options),
             );
             if (notifyResponse(response)) {
-              pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: response.content.key }));
+              jukiApiSocketManager.SOCKET.send({
+                event: WebSocketActionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
+                sessionId: userSessionId,
+                problemKey: `PC-${contestId}-${index}`,
+              }, () => {
+                setLoaderStatus(Status.SUCCESS);
+                pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: response.content.key }));
+              });
             }
-            setLoaderStatus(Status.SUCCESS);
           }}
         >
           <T>crawl</T>
