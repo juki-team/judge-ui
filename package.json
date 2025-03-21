@@ -1,7 +1,7 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.16.6",
+  "version": "1.16.7",
   "scripts": {
     "dev": "next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
@@ -14,7 +14,7 @@
     "deploy": "f() { yarn build && yarn git-push \"${1}\"; }; f"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^1.0.173",
+    "@juki-team/base-ui": "^1.0.174",
     "@juki-team/commons": "^0.0.750",
     "@vercel/analytics": "^1.2.2",
     "deep-object-diff": "^1.1.7",

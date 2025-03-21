@@ -4,16 +4,16 @@
 @use "../components/contest/styles" as contestStyles;
 
 body {
+  margin: 0;
+  
+  --left-vertical-menu-width: 48px !important;
+  
   @include utils.md {
     --top-horizontal-menu-height: 56px;
   }
   @include utils.lg {
     --top-horizontal-menu-height: 56px;
   }
-  
-  margin: 0;
-  
-  --left-vertical-menu-width: 48px !important;
 }
 
 .image-404 {
