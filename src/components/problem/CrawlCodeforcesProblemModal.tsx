@@ -56,13 +56,14 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
               await authorizedRequest(url, options),
             );
             if (notifyResponse(response)) {
+              const problemKey = `PC-${contestId}-${index}`;
               jukiApiSocketManager.SOCKET.send({
                 event: WebSocketActionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
                 sessionId: userSessionId,
-                problemKey: `PC-${contestId}-${index}`,
+                problemKey,
               }, () => {
                 setLoaderStatus(Status.SUCCESS);
-                pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: response.content.key }));
+                pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: problemKey }));
               });
             }
           }}
