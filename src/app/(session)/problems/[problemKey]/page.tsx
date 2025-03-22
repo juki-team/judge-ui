@@ -14,7 +14,7 @@ async function getMetadata(problemKey: string) {
   try {
     const response = await fetch(
       jukiApiSocketManager.API_V1.problem.getMetadata({ params: { key: problemKey } }).url,
-      { headers: { origin: 'https://juki.app' } });
+      { headers: { origin: 'https://juki.app', 'x-forwarded-host': 'juki.app' } });
     const text = await response.text();
     result = cleanRequest<ContentResponseType<{
       title: string,
