@@ -2,6 +2,7 @@
 
 import {
   AssignmentIcon,
+  CodeIcon,
   HelpIcon,
   LeaderboardIcon,
   LibraryBooksIcon,
@@ -28,6 +29,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const isProblemsPage = ('/' + pathname).includes('//problem');
   const isRankingPage = ('/' + pathname).includes('//ranking');
   const isBoardsPage = ('/' + pathname).includes('//board');
+  const isIDEPage = ('/' + pathname).includes('//ide');
   const backPah = isContestsPage ? jukiAppRoutes.JUDGE().contests.list()
     : isProblemsPage
       ? jukiAppRoutes.JUDGE().problems.list()
@@ -80,7 +82,8 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         selected: isRankingPage,
         menuItemWrapper: ({ children }) => (
           <Link className="link dy-cs" href={ROUTES.RANKING.PAGE()}>
-            {children}</Link>
+            {children}
+          </Link>
         ),
       },
     );
@@ -98,6 +101,20 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
       },
     );
   }
+  
+  menu.push(
+    {
+      label: <T className="tt-se">IDE</T>,
+      tooltipLabel: 'boards',
+      icon: <CodeIcon />,
+      selected: isIDEPage,
+      menuItemWrapper: ({ children }) => (
+        <Link className="link dy-cs" href={ROUTES.IDE.PAGE()}>
+          {children}
+        </Link>
+      ),
+    },
+  );
   
   menu.push({
     label: <T className="tt-se">info</T>,

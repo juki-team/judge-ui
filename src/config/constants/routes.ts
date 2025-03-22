@@ -26,6 +26,7 @@ export const ROUTES = {
     SHEETS: 'sheets',
     SHEET: 'sheet',
     BOARDS: 'boards',
+    IDE: 'ide',
   },
   
   RANKING: {
@@ -36,6 +37,11 @@ export const ROUTES = {
   BOARDS: {
     PAGE(tab?: string) {
       return '/' + ROUTES.PARAMS.BOARDS + (tab ? `?tab=${tab}` : '');
+    },
+  },
+  IDE: {
+    PAGE(tab?: string) {
+      return '/' + ROUTES.PARAMS.IDE;
     },
   },
   PROFILE: {
