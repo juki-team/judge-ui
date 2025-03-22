@@ -12,6 +12,7 @@ export default function IDEPage() {
           label: PROGRAMMING_LANGUAGE[language].label,
           value: language,
         }))}
+        enableAddCustomSampleCases
       />
     </div>
   );
