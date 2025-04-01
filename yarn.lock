@@ -1261,10 +1261,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.0.180":
-  version "1.0.180"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.180/cef63aa35b1ee071d6099f4ba90751e2580cbaa0#cef63aa35b1ee071d6099f4ba90751e2580cbaa0"
-  integrity sha512-3C2n9qz18KDK2Y1GjCjrMnakDnL+rU33AMlL4vgwX05O6i5R99Ve8FqdN7OcOO2xqKUeK2pYXVPFbSKcQpcPJw==
+"@juki-team/base-ui@^1.0.181":
+  version "1.0.181"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.181/44bd195e93f5efa841f07d862c391c5eb8539ebb#44bd195e93f5efa841f07d862c391c5eb8539ebb"
+  integrity sha512-Mu8tPsXaR+7NlgA0c84I9XgXZFEVnE78PBc8/+wF4rJXzMEwIzfbbg/bWiA7Equhi72m2yvLXnCW2QzlalkEKQ==
   dependencies:
     "@codemirror/autocomplete" "^6.18.6"
     "@codemirror/lang-cpp" "^6.0.2"
