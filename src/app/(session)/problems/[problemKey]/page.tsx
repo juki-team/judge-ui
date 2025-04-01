@@ -53,5 +53,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  return <ProblemViewPage />;
+  
+  const problemKey = (await params).problemKey;
+  
+  return <ProblemViewPage problemKey={problemKey} />;
 }

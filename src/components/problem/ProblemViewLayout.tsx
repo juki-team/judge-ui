@@ -124,7 +124,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     header: <T className="ws-np tt-ce">submissions</T>,
     body: <ProblemSubmissions problem={problem} />,
   };
-  const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
   
   // const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [
   //   <LinkLastPath
@@ -201,8 +200,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       tabs={tabs}
       // breadcrumbs={breadcrumbs}
       tabButtons={extraNodes}
-      selectedTabKey={problemTab}
-      getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
     >
       <>
         <RejudgeConfirmationModal

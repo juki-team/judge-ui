@@ -12,14 +12,13 @@ import {
 } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { oneTab } from 'helpers';
-import { useRouterStore, useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
+import { useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
 import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
 
-export default function ProblemViewPage() {
+export default function ProblemViewPage({ problemKey }: { problemKey: string }) {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   useRunnerServicesWakeUp();
-  const problemKey = useRouterStore(state => state.routeParams.problemKey);
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>

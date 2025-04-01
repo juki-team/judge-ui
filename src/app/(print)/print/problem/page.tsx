@@ -23,7 +23,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
         headers: {
           origin: 'https://juki.app',
           'x-juki-session-id': jukiSessionId,
-          'x-forwarded-host': host,
+          'x-forwarded-host': 'juki.app',
         } as HeadersInit,
       });
     
