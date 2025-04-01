@@ -23,7 +23,6 @@ import {
   DataViewerHeadersType,
   EntityState,
   LastPathKey,
-  ProblemTab,
   QueryParam,
   ScoreboardResponseDTO,
   TabsType,
@@ -78,10 +77,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
             style={{ '--balloon-color': problem.color } as CSSProperties}
           >
             <Link
-              href={jukiAppRoutes.JUDGE().problems.view({
-                key: problem.key,
-                tab: ProblemTab.STATEMENT,
-              })}
+              href={jukiAppRoutes.JUDGE().problems.view({ key: problem.key })}
             >
               {problem.shortname || problem.name}
             </Link>

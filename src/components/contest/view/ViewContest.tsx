@@ -39,7 +39,6 @@ import {
   ContestTab,
   EntityState,
   LastPathKey,
-  ProblemTab,
   Status,
   TabsType,
   UpsertContestDTOUI,
@@ -184,10 +183,11 @@ export function ContestView({ contest, reloadContest }: {
                           id: response.content.submitId,
                           problem: { name: problem.name },
                         }, true);
-                        pushRoute(jukiAppRoutes.JUDGE().problems.view({
-                          key: problem.key,
-                          tab: ProblemTab.MY_SUBMISSIONS,
-                        }));
+                        // TODO:
+                        // pushRoute(jukiAppRoutes.JUDGE().problems.view({
+                        //   key: problem.key,
+                        //   tab: ProblemTab.MY_SUBMISSIONS,
+                        // }));
                       } else {
                         listenSubmission({
                           id: response.content.submitId,
