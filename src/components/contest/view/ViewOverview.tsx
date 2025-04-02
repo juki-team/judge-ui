@@ -27,10 +27,11 @@ import {
 
 interface ViewOverviewProps {
   contest: ContestDataResponseDTO,
-  reloadContest: KeyedMutator<any>,
+  reloadContest?: KeyedMutator<any>,
+  forPrinting?: boolean,
 }
 
-export const ViewOverview = ({ contest, reloadContest }: ViewOverviewProps) => {
+export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOverviewProps) => {
   
   const { isManager, isAdministrator, isParticipant, isGuest, isSpectator } = contest.user;
   const userIsLogged = useUserStore(state => state.user.isLogged);
@@ -46,7 +47,7 @@ export const ViewOverview = ({ contest, reloadContest }: ViewOverviewProps) => {
     }));
     if (notifyResponse(response, setLoader)) {
       setLoader(Status.LOADING);
-      await reloadContest();
+      await reloadContest?.();
       setLoader(Status.SUCCESS);
     }
   };
@@ -65,7 +66,10 @@ export const ViewOverview = ({ contest, reloadContest }: ViewOverviewProps) => {
           className="jk-pg-md bc-we jk-br-ie"
         />
       </div>
-      <div className="jk-col stretch gap flex-3 contest-overview-information">
+      <div
+        className="jk-col stretch gap flex-3 contest-overview-information"
+        style={forPrinting ? { display: 'none' } : {}}
+      >
         <div className="content-side-right-bar-top">
           <div className="jk-row center bc-we jk-br-ie jk-pg-sm">
             <div className="jk-row center cr-py &nbsp;">

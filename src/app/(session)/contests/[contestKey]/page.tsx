@@ -52,6 +52,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function Page() {
-  return <ContestViewPage />;
+export default async function Page({ params }: Props) {
+  
+  const contestKey = (await params).contestKey;
+  
+  return <ContestViewPage contestKey={contestKey} />;
 }

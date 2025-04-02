@@ -198,4 +198,5 @@ export {
   JukiSocketAlert,
   SubmissionModal,
   LibraryBooksIcon,
+  JukiI18nProvider,
 } from '@juki-team/base-ui';

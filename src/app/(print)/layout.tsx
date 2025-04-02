@@ -1,5 +1,6 @@
 'use client';
 
+import { JukiI18nProvider } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_SOCKET_BASE_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { useEffect, useI18nStore } from 'hooks';
@@ -25,5 +26,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     }
   }, [ changeLanguage, language ]);
   
-  return children;
+  return (
+    <JukiI18nProvider>
+      {children}
+    </JukiI18nProvider>
+  );
 }

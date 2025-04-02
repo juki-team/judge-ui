@@ -32,7 +32,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   const { problems = {}, user } = contest;
   const { isManager, isAdministrator } = user || {};
   const contestKey = useRouterStore(state => state.routeParams.contestKey);
-  const { addSuccessNotification, addErrorNotification } = useJukiNotification();
+  const { addSuccessNotification, addErrorNotification, addWarningNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isManager || isAdministrator;
   const t = useI18nStore(state => state.i18n.t);
@@ -204,6 +204,15 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
             );
             
             if (response.success) {
+              if (!response.content.urlExportedPDF) {
+                return addWarningNotification(
+                  <div className="jk-col stretch" style={{ width: '100%' }}>
+                    <span className="tt-se">
+                      <T>{response.message}</T>
+                    </span>
+                  </div>,
+                );
+              }
               await downloadUrlAsFile('https://' + response.content.urlExportedPDF, `${contest.name} - ${t('problemset')}`);
               setLoaderStatus(Status.SUCCESS);
             } else {

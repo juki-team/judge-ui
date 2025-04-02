@@ -12,15 +12,14 @@ import {
 } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { oneTab } from 'helpers';
-import { useRouterStore, useRunnerServicesWakeUp, useTrackLastPath, useUserStore } from 'hooks';
+import { useRunnerServicesWakeUp, useTrackLastPath, useUserStore } from 'hooks';
 import React from 'react';
 import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
 
-export default function ContestViewPage() {
+export default function ContestViewPage({ contestKey }: { contestKey: string }) {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   useRunnerServicesWakeUp();
-  const contestKey = useRouterStore(state => state.routeParams.contestKey);
   // const { components: { Link } } = useJukiUI();
   const companyKey = useUserStore(state => state.company.key);
   
