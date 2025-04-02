@@ -152,13 +152,3 @@ html {
 #jk-two-content-section-second-panel > .two-content-layout-body > .jk-tabs-inline-body-motion-layout > .jk-split-pane.jk-problem-view-layout > .jk-split-first-pane > .jk-problem-view-statement.jk-pg-sm {
   padding-left: 0;
 }
-
-@media print {
-  .page-break {
-    break-before: page;
-  }
-  
-  .avoid-break {
-    break-inside: avoid;
-  }
-}
