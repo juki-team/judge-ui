@@ -39,6 +39,7 @@ import {
   ContestTab,
   EntityState,
   LastPathKey,
+  ProblemTab,
   Status,
   TabsType,
   UpsertContestDTOUI,
@@ -57,7 +58,7 @@ export function ContestView({ contest, reloadContest }: {
   const pushRoute = useRouterStore(state => state.pushRoute);
   const searchParams = useRouterStore(state => state.searchParams);
   const contestKey = contest.key;
-  // const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
+  const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
   const { viewPortSize, components: { Link } } = useJukiUI();
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
@@ -183,11 +184,10 @@ export function ContestView({ contest, reloadContest }: {
                           id: response.content.submitId,
                           problem: { name: problem.name },
                         }, true);
-                        // TODO:
-                        // pushRoute(jukiAppRoutes.JUDGE().problems.view({
-                        //   key: problem.key,
-                        //   tab: ProblemTab.MY_SUBMISSIONS,
-                        // }));
+                        pushRoute(jukiAppRoutes.JUDGE().problems.view({
+                          key: problem.key,
+                          tab: ProblemTab.MY_SUBMISSIONS,
+                        }));
                       } else {
                         listenSubmission({
                           id: response.content.submitId,
@@ -373,9 +373,9 @@ export function ContestView({ contest, reloadContest }: {
     <TwoContentLayout
       // breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
-      // selectedTabKey={contestTab}
-      // getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}
       tabButtons={extraNodes}
+      selectedTabKey={contestTab}
+      getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}
     >
       {/*<CustomHead title={contest.name} />*/}
       <div className="jk-row nowrap gap extend left">

@@ -121,7 +121,7 @@ export const useSearchParams = () => {
       }
     };
     void chunkUpdateSearchParams();
-  }, [ searchParams, updateTrigger, pushSearchParams, replaceSearchParams ]);
+  }, [ updateTrigger, pushSearchParams, replaceSearchParams ]);
   
   const appendSearchParams: AppendSearchParamsType = useCallback(async (...props: {
     name: string;

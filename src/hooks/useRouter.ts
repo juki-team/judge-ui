@@ -7,16 +7,18 @@ export const useRouter = () => {
   
   const push = useCallback(async (url: string) => {
     // setLoaderCounter(prevState => prevState + 1);
-    startTransition(() => {
-      pushRouter(url);
-    });
+    // startTransition(() => {
+    //   pushRouter(url);
+    // });
+    pushRouter(url);
     // setLoaderCounter(prevState => prevState - 1);
   }, [ pushRouter ]);
   
   const replace = useCallback(async (url: string) => {
-    startTransition(() => {
-      replaceRouter(url);
-    });
+    // startTransition(() => {
+    //   replaceRouter(url);
+    // });
+    replaceRouter(url);
   }, [ replaceRouter ]);
   
   return { ...rest, push, replace, isLoadingRoute: !!isPending };

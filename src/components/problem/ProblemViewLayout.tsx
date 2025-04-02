@@ -195,11 +195,15 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     // );
   }
   
+  const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
+  
   return (
     <TwoContentLayout
       tabs={tabs}
       // breadcrumbs={breadcrumbs}
       tabButtons={extraNodes}
+      selectedTabKey={problemTab}
+      getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
     >
       <>
         <RejudgeConfirmationModal
