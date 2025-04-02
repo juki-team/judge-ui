@@ -12,14 +12,17 @@ import {
   SpectatorInformation,
   T,
 } from 'components';
+import { jukiApiSocketManager } from 'config';
 import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
+import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
+import { useDateFormat, useI18nStore, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
+import React from 'react';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
   HTTPMethod,
+  ProfileSetting,
   QueryParamKey,
   SetLoaderStatusOnClickType,
   Status,
@@ -37,8 +40,10 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
   const userIsLogged = useUserStore(state => state.user.isLogged);
   const appendSearchParams = useRouterStore(state => state.appendSearchParams);
   const { dtf, rlt } = useDateFormat();
-  const { notifyResponse } = useJukiNotification();
+  const { notifyResponse, addWarningNotification } = useJukiNotification();
   const { viewPortSize } = useJukiUI();
+  const t = useI18nStore(state => state.i18n.t);
+  const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
   const registerContest = async (setLoader: SetLoaderStatusOnClickType) => {
     setLoader(Status.LOADING);
@@ -179,6 +184,45 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 >{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
               ))}
             </div>
+          </div>
+          <div className="jk-col bc-we jk-br-ie jk-pg-sm">
+            <ButtonLoader
+              key="download-contest-problemset"
+              onClick={async (setLoaderStatus) => {
+                setLoaderStatus(Status.LOADING);
+                const { url, ...options } = jukiApiSocketManager.API_V2.export.contest.problems.statementsToPdf({
+                  params: {
+                    key: contest.key,
+                    token: jukiApiSocketManager.getToken(),
+                    language: userPreferredLanguage,
+                  },
+                });
+                const response = cleanRequest<ContentResponseType<{ urlExportedPDF: string }>>(
+                  await authorizedRequest(url, options),
+                );
+                
+                if (response.success) {
+                  if (!response.content.urlExportedPDF) {
+                    setLoaderStatus(Status.SUCCESS);
+                    return addWarningNotification(
+                      <div className="jk-col stretch" style={{ width: '100%' }}>
+                    <span className="tt-se">
+                      <T>{response.message}</T>
+                    </span>
+                      </div>,
+                    );
+                  }
+                  await downloadUrlAsFile('https://' + response.content.urlExportedPDF, `${contest.name} - ${t('problemset')}`);
+                  setLoaderStatus(Status.SUCCESS);
+                } else {
+                  setLoaderStatus(Status.ERROR);
+                }
+              }}
+              size="tiny"
+              type="light"
+            >
+              <T>download problemset</T>
+            </ButtonLoader>
           </div>
         </div>
       </div>
