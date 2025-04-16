@@ -1,8 +1,8 @@
+import { ProblemView } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { cleanRequest } from 'helpers';
 import { ContentResponseType, ProblemDataResponseDTO } from 'types';
-import ProblemViewPage from './ProblemViewPage';
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
   
@@ -41,5 +41,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     );
   }
   
-  return <ProblemViewPage problem={problemData} />;
+  return (
+    <ProblemView
+      problem={problemData}
+      infoPlacement="none"
+      codeEditorStoreKey={problemData.key}
+      forPrinting
+    />
+  );
 }

@@ -12,6 +12,7 @@ export {
   useRunnerServicesWakeUp,
   useMutate,
   usePreload,
+  usePreloadComponents,
   useI18nStore,
   useRouterStore,
   useUserStore,

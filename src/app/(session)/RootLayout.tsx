@@ -3,10 +3,11 @@
 import { Analytics } from '@vercel/analytics/react';
 import {
   ErrorBoundary,
+  Image,
   JukiProviders,
   JukiSocketAlert,
   NavigationBar,
-  NewVersionAvailableTrigger,
+  NewVersionAvailable,
   SubmissionModal,
   T,
   UserPreviewModal,
@@ -21,8 +22,7 @@ import {
   NODE_ENV,
   ROUTES,
 } from 'config/constants';
-import { useEffect, useJukiUI, useUserStore } from 'hooks';
-import Image from 'next/image';
+import { useEffect, useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React, { Children, PropsWithChildren } from 'react';
@@ -50,19 +50,19 @@ const SponsoredByTag = () => {
 };
 
 const initialLastPath = {
-  [LastPathKey.SECTION_CONTEST]: {
-    pathname: jukiAppRoutes.JUDGE().contests.list(),
-    searchParams: new URLSearchParams(),
-  },
   [LastPathKey.CONTESTS]: {
     pathname: jukiAppRoutes.JUDGE().contests.list(),
     searchParams: new URLSearchParams(),
   },
-  [LastPathKey.SECTION_PROBLEM]: {
-    pathname: jukiAppRoutes.JUDGE().problems.list(),
+  [LastPathKey.SECTION_CONTEST]: {
+    pathname: jukiAppRoutes.JUDGE().contests.list(),
     searchParams: new URLSearchParams(),
   },
   [LastPathKey.PROBLEMS]: {
+    pathname: jukiAppRoutes.JUDGE().problems.list(),
+    searchParams: new URLSearchParams(),
+  },
+  [LastPathKey.SECTION_PROBLEM]: {
     pathname: jukiAppRoutes.JUDGE().problems.list(),
     searchParams: new URLSearchParams(),
   },
@@ -84,28 +84,14 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const routeParams = useParams();
   const pathname = usePathname();
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
+  usePreloadComponents();
   
   const app = (
     <SWRConfig
       value={{
-        revalidateIfStale: true, // when back to pages
+        revalidateIfStale: true,
         revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        errorRetryCount: 8,
-        errorRetryInterval: 100,
-        // shouldRetryOnError: (error) => {
-        //   console.log('shouldRetryOnError', { error });
-        //   return !error.message.includes('401');
-        // },
-        // onSuccess: (...props) => {
-        //   console.log('onSuccess', props);
-        // },
-        // onError: (err, key) => {
-        //   console.log('onError', { err, key });
-        //   // Usar datos en caché si existe un error
-        //   // const cachedData = SWRConfig.default.provider().get(key);
-        //   // if (cachedData) mutate(key, cachedData, false);
-        // },
+        revalidateOnReconnect: true,
       }}
     >
       <JukiProviders
@@ -125,7 +111,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         initialLastPath={initialLastPath}
       >
         <UserProvider>
-          <NewVersionAvailableTrigger apiVersionUrl="/api/version" />
+          <NewVersionAvailable apiVersionUrl="/api/version" />
           <NavigationBar>
             <Analytics key="analytics" />
             {Children.toArray(children)}

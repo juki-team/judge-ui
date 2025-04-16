@@ -17,16 +17,14 @@ import {
   ViewProblems,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
+import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { authorizedRequest, cleanRequest, contestStateMap, isGlobalContest, toUpsertContestDTOUI } from 'helpers';
 import {
-  useEffect,
   useI18nStore,
   useJukiNotification,
   useJukiTask,
   useJukiUI,
   useMutate,
-  usePreload,
   useRouterStore,
   useTrackLastPath,
   useUserStore,
@@ -94,47 +92,37 @@ export function ContestView({ contest, reloadContest }: {
   const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
   const problem = problems[problemArrayIndex];
   
-  const preload = usePreload();
   const canViewContest = isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless;
-  useEffect(() => {
-    if (canViewContest) {
-      void preload(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, false));
-    }
-  }, [ canViewContest, contest?.key, preload ]);
+  
   const isGlobal = isGlobalContest(contest.settings);
   if (canViewContest) {
     if (problemArrayIndex !== -1) {
+      const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
+      const prevUrl = jukiAppRoutes.JUDGE().contests.view({
+        key: contest.key,
+        tab: ContestTab.PROBLEMS,
+        subTab: previousProblemIndex,
+      });
+      const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
+      const nextUrl = jukiAppRoutes.JUDGE().contests.view({
+        key: contest.key,
+        tab: ContestTab.PROBLEMS,
+        subTab: nextProblemIndex,
+      });
       tabHeaders[ContestTab.PROBLEMS] = {
         key: ContestTab.PROBLEMS,
         header: (
           <div className="jk-row gap nowrap">
-            <NavigateBeforeIcon
-              style={{ padding: 0 }}
-              className="clickable jk-br-ie"
-              onClick={async (event) => {
-                event.stopPropagation();
-                const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
-                pushRoute(jukiAppRoutes.JUDGE().contests.view({
-                  key: contest.key,
-                  tab: ContestTab.PROBLEMS,
-                  subTab: previousProblemIndex,
-                }));
-              }}
-            />
-            <T className="tt-ce ws-np">problem</T> {problemIndex}
-            <NavigateNextIcon
-              style={{ padding: 0 }}
-              className="clickable jk-br-ie"
-              onClick={async (event) => {
-                event.stopPropagation();
-                const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
-                pushRoute(jukiAppRoutes.JUDGE().contests.view({
-                  key: contest.key,
-                  tab: ContestTab.PROBLEMS,
-                  subTab: nextProblemIndex,
-                }));
-              }}
-            />
+            <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key, tab: ContestTab.PROBLEMS })}>
+              <T className="tt-ce ws-np clickable jk-br-ie" style={{ padding: '2px 4px' }}>problems</T>
+            </Link>
+            <Link href={prevUrl} style={{ display: 'contents' }}>
+              <NavigateBeforeIcon style={{ padding: 0 }} className="clickable jk-br-ie" />
+            </Link>
+            {problemIndex}
+            <Link href={nextUrl} style={{ display: 'contents' }}>
+              <NavigateNextIcon style={{ padding: 0 }} className="clickable jk-br-ie" />
+            </Link>
           </div>
         ),
         body: (

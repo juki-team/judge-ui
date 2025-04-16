@@ -46,10 +46,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           {children}
         </LinkLastPath>
       ) : (
-        <LinkLastPath
-          lastPathKey={LastPathKey.SECTION_CONTEST}
-          onDoubleClickRoute={jukiAppRoutes.JUDGE().contests.list()}
-        >
+        <LinkLastPath lastPathKey={LastPathKey.SECTION_CONTEST}>
           {children}
         </LinkLastPath>
       ),
@@ -64,10 +61,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
           {children}
         </LinkLastPath>
       ) : (
-        <LinkLastPath
-          lastPathKey={LastPathKey.SECTION_PROBLEM}
-          onDoubleClickRoute={jukiAppRoutes.JUDGE().problems.list()}
-        >
+        <LinkLastPath lastPathKey={LastPathKey.SECTION_PROBLEM}>
           {children}
         </LinkLastPath>
       ),

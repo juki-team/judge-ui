@@ -1,3 +1,5 @@
+'use client';
+
 import { FlagEnImage, FlagEsImage, MdMathEditor, Tabs } from 'components';
 import React from 'react';
 import { Language, TextLanguageType } from 'src/types';

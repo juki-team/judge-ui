@@ -1,3 +1,5 @@
+'use client';
+
 import { ExclamationIcon, Popover } from 'components';
 import { PropsWithChildren } from 'react';
 

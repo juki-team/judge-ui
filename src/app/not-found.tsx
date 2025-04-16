@@ -7,17 +7,15 @@ import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
   
-  const { replace } = useRouter();
+  const router = useRouter();
   
   useEffect(() => {
-    setTimeout(() => {
-      replace(jukiAppRoutes.JUDGE().home());
-    }, 1000);
-  }, [ replace ]);
+    setTimeout(() => router.replace(jukiAppRoutes.COACH().home()), 200);
+  }, [ router ]);
   
   return (
-    <PageNotFound>
-      <h1><T>page not found</T></h1>
+    <PageNotFound style={{ height: 'var(--100VH) !important' }}>
+      <h1><T className="tt-se">page not found</T></h1>
       <div className="jk-row" style={{ alignItems: 'baseline' }}>
         <T className="tt-se tx-l">redirecting to home</T>&nbsp;
         <div className="dot-flashing" />

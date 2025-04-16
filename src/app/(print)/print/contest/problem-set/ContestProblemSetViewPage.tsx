@@ -7,7 +7,7 @@ import { ContestDataResponseDTO, EntityState } from 'types';
 export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   return (
-    <div id="juki-app" style={{ overflow: 'auto' }}>
+    <>
       <ViewOverview
         contest={contest}
         reloadContest={async () => {
@@ -30,7 +30,6 @@ export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataRes
           <div className="page-break" />
         </Fragment>
       ))}
-    
-    </div>
+    </>
   );
 };

@@ -3,6 +3,7 @@
 import {
   BalloonIcon,
   DeleteIcon,
+  DragIndicatorIcon,
   Input,
   InputColor,
   InputDate,
@@ -10,7 +11,7 @@ import {
   OpenInNewIcon,
   PlusIcon,
   ProblemSelector,
-  SimpleSortableRows,
+  SortableItems,
   T,
 } from 'components';
 import { jukiAppRoutes } from 'config';
@@ -20,21 +21,21 @@ import { useEffect, useJukiUI, useRef, useState, useUserStore } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import {
   ContestProblemBasicDataResponseDTO,
-  RowSortableItem,
-  SimpleSortableRowsProps,
+  SortableItem,
+  SortableItemComponent,
   UpsertContestDTOUI,
   UpsertContestProblemDTOUI,
 } from 'types';
 import { EditContestProps } from '../types';
 
-export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponseDTO, {
-  setProblems: Dispatch<SetStateAction<RowSortableItem<ContestProblemBasicDataResponseDTO>[]>>,
+export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDTO, {
+  setProblems: Dispatch<SetStateAction<SortableItem<ContestProblemBasicDataResponseDTO>[]>>,
   withTime: number,
   contest: UpsertContestDTOUI,
   contestEndDate: Date,
   contestStartDate: Date,
   companyName: string
-}>['Cmp'] = ({ value: problem, isPreview, dragComponentRef, dragComponent, isDragging, index, props }) => {
+}> = ({ item: { value: problem }, style, listeners, attributes, setNodeRef, isDragging, index, props }) => {
   const {
     setProblems,
     withTime,
@@ -48,14 +49,20 @@ export const RowProblem: SimpleSortableRowsProps<ContestProblemBasicDataResponse
   
   return (
     <div
-      className={classNames('jk-row left jk-table-inline-row', { 'bc-we elevation-1': isPreview })}
+      key={problem.key}
+      ref={setNodeRef}
+      className={classNames('jk-row left jk-table-inline-row bc-we', { 'elevation-1': isDragging })}
       style={{
-        opacity: (isDragging && !isPreview) ? 0.4 : 1,
-        borderTop: isPreview ? '1px solid var(--t-color-gray-5)' : undefined,
+        ...style,
+        borderTop: isDragging ? '1px solid var(--t-color-gray-5)' : undefined,
       }}
-      // ref={dragComponentRef}
+      {...attributes}
     >
-      <div className="jk-row" style={{ width: 30 }} ref={dragComponentRef}>{dragComponent}</div>
+      <div className="jk-row" style={{ width: 30 }}>
+        <div className="cr-py jk-row" style={{ cursor: isDragging ? 'grabbing' : 'grab' }}  {...listeners}>
+          <DragIndicatorIcon />
+        </div>
+      </div>
       <div className="jk-row" style={{ width: 40 }}>
         {indexToLetters(index + 1)}
       </div>
@@ -289,7 +296,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
   }, []);
-  const [ problems, setProblems ] = useState<RowSortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
+  const [ problems, setProblems ] = useState<SortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
   useEffect(() => {
     setProblems(prevState => prevState.map(problem => {
       const value: ContestProblemBasicDataResponseDTO = { ...problem.value };
@@ -382,13 +389,15 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           <div className="jk-row fw-bd tt-se" style={{ width: 150 }}><T>judge</T></div>
           <div style={{ width: 30 }} />
         </div>
-        <div className="jk-col extend stretch gap">
-          <SimpleSortableRows
-            rows={problems}
-            setRows={setProblems}
+        <div className="jk-col stretch">
+          <SortableItems
+            items={problems}
+            setItems={setProblems}
             props={{ setProblems, withTime, contest, contestEndDate, contestStartDate, companyName }}
             Cmp={RowProblem}
           />
+        </div>
+        <div className="jk-col extend stretch">
           <div className="jk-row left">
             <div className="jk-row" style={{ width: 30, padding: '0 var(--pad-xt)' }}>
               <PlusIcon />
