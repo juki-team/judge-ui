@@ -11,13 +11,12 @@ export default function Page() {
       breadcrumbs={[]}
       tabs={oneTab(
         <div className="jk-pg bc-we">
-          <h3><T>compilation of submissions</T></h3>
+          <h3><T className="tt-se">compilation of submissions</T></h3>
           {/*<div className="jk-row left nowrap">*/}
           <T className="tt-se">
             source files submitted to the Juki Judge will be compiled and running using the following command
             line arguments for the respective language.
           </T>
-          {/*</div>*/}
           {ACCEPTED_PROGRAMMING_LANGUAGES.map((value) => {
             return (
               <div key={value}>
@@ -83,7 +82,7 @@ export default function Page() {
     >
       <div className="jk-col extend stretch">
         <div className="jk-row nowrap extend stretch gap" style={{ boxSizing: 'border-box' }}>
-          <h1><T>help</T></h1>
+          <h1><T className="tt-se">help</T></h1>
         </div>
       </div>
     </TwoContentLayout>

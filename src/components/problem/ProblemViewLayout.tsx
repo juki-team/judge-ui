@@ -94,10 +94,10 @@ export const ProblemViewLayout = ({ problem }: {
                     if (notifyResponse(response, setLoaderStatus)) {
                       listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
                       await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
-                      pushRoute({
-                        pathname: jukiAppRoutes.JUDGE().problems.view({ key: problem.key }),
-                        searchParams,
-                      });
+                      pushRoute(jukiAppRoutes.JUDGE().problems.view({
+                        key: problem.key,
+                        tab: ProblemTab.MY_SUBMISSIONS,
+                      }));
                     }
                   }}
                 >

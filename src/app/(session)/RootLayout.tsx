@@ -12,7 +12,7 @@ import {
   T,
   UserPreviewModal,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiSocketManager } from 'config';
 import { useEffect, useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
@@ -50,27 +50,12 @@ const SponsoredByTag = () => {
 };
 
 const initialLastPath = {
-  [LastPathKey.CONTESTS]: {
-    pathname: jukiAppRoutes.JUDGE().contests.list(),
-    searchParams: new URLSearchParams(),
-  },
-  [LastPathKey.SECTION_CONTEST]: {
-    pathname: jukiAppRoutes.JUDGE().contests.list(),
-    searchParams: new URLSearchParams(),
-  },
-  [LastPathKey.PROBLEMS]: {
-    pathname: jukiAppRoutes.JUDGE().problems.list(),
-    searchParams: new URLSearchParams(),
-  },
-  [LastPathKey.SECTION_PROBLEM]: {
-    pathname: jukiAppRoutes.JUDGE().problems.list(),
-    searchParams: new URLSearchParams(),
-  },
-  [LastPathKey.BOARDS]: {
-    pathname: ROUTES.BOARDS.PAGE(),
-    searchParams: new URLSearchParams(),
-  },
-  [LastPathKey.SECTION_HELP]: { pathname: `/help`, searchParams: new URLSearchParams() },
+  [LastPathKey.CONTESTS]: '/contests',
+  [LastPathKey.SECTION_CONTEST]: '/contests',
+  [LastPathKey.PROBLEMS]: '/problems',
+  [LastPathKey.SECTION_PROBLEM]: '/problems',
+  [LastPathKey.BOARDS]: ROUTES.BOARDS.PAGE(),
+  [LastPathKey.SECTION_HELP]: `/help`,
 };
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {

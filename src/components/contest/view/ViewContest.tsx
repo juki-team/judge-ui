@@ -184,7 +184,7 @@ export function ContestView({ contest, reloadContest }: {
                         }, true);
                         pushRoute(jukiAppRoutes.JUDGE().contests.view({
                           key: contestKey,
-                          tab: ContestTab.MY_SUBMISSIONS,
+                          tab: ContestTab.SUBMISSIONS,
                           subTab: problemIndex,
                         }));
                         await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));

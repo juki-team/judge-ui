@@ -18,7 +18,10 @@ function Submit() {
       breadcrumbs={breadcrumbs}
       tabs={oneTab(<div className="jk-pg bc-we jk-br-ie"><SubmitView submitId={submitId as string} /></div>)}
     >
-      <h3><T>submission</T>&nbsp;{submitId}</h3>
+      <h3>
+        <T className="tt-se">submission</T>&nbsp;
+        <span className="tx-m" style={{ fontFamily: 'monospace' }}>[{submitId}]</span>
+      </h3>
     </TwoContentLayout>
   );
   
