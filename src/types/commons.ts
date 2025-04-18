@@ -132,6 +132,7 @@ export type {
   UserCodeEditorProps,
   UpsertComponentEntityProps,
   SortableItemComponent,
+  TableHeadFieldProps,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

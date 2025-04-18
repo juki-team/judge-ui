@@ -2,9 +2,9 @@
 
 import { CreateEntityLayout, EditCreateContest, PageNotFound } from 'components';
 import { jukiAppRoutes } from 'config';
-import { CONTEST_DEFAULT, JUDGE_API_V1 } from 'config/constants';
 import { toUpsertContestDTO } from 'helpers';
 import { useMemo, useUserStore } from 'hooks';
+import { CONTEST_DEFAULT, JUDGE_API_V1 } from 'src/constants';
 import { UpsertContestDTO, UpsertContestDTOUI } from 'types';
 
 function ContestCreate() {

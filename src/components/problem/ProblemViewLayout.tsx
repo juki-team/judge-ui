@@ -16,21 +16,27 @@ import { authorizedRequest, cleanRequest } from 'helpers';
 import {
   useJukiNotification,
   useJukiTask,
-  useJukiUI,
   useMutate,
   useRouterStore,
+  useState,
   useTrackLastPath,
   useUserStore,
 } from 'hooks';
-import { useState } from 'react';
-import { KeyedMutator } from 'swr';
-import { ContentResponseType, LastPathKey, ProblemDataResponseDTO, ProblemTab, Status, TabsType } from 'types';
+import {
+  ContentResponseType,
+  KeyedMutator,
+  LastPathKey,
+  ProblemDataResponseDTO,
+  ProblemTab,
+  Status,
+  TabsType,
+} from 'types';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
 import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
 
-export const ProblemViewLayout = ({ problem, reloadProblem }: {
+export const ProblemViewLayout = ({ problem }: {
   problem: ProblemDataResponseDTO,
   reloadProblem: KeyedMutator<any>,
 }) => {
@@ -41,7 +47,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const userIsLogged = useUserStore(state => state.user.isLogged);
   const { notifyResponse } = useJukiNotification();
   const { listenSubmission } = useJukiTask();
-  const { components: { Link } } = useJukiUI();
   const mutate = useMutate();
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
   

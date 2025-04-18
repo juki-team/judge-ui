@@ -13,10 +13,10 @@ import {
   T,
 } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
 import { useDateFormat, useI18nStore, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import React from 'react';
+import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,

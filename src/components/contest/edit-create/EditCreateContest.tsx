@@ -2,10 +2,11 @@
 
 import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
-import { CONTEST_DEFAULT, LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { diff } from 'deep-object-diff';
 import { isGlobalContest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiUI, useRef, useState, useUserStore } from 'hooks';
+import { useEffect, useJukiNotification, useJukiUI, useRef, useRouterStore, useState, useUserStore } from 'hooks';
+import { memo } from 'react';
+import { CONTEST_DEFAULT, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
   ContestTab,
   EntityState,
@@ -21,7 +22,7 @@ import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';
 import { EditViewMembers } from './EditViewMembers';
 
-export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContestDTOUI, ContestTab>) => {
+export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityProps<UpsertContestDTOUI, ContestTab>) {
   
   const { entity: initialContest, entityKey: contestKey, tabButtons } = props;
   
@@ -33,6 +34,8 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
   const companyKey = useUserStore(state => state.company.key);
   const userNickname = useUserStore(state => state.user.nickname);
   const userImageUrl = useUserStore(state => state.user.imageUrl);
+  const searchParams = useRouterStore(store => store.searchParams);
+  const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   
   const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest || CONTEST_DEFAULT({
     nickname: userNickname,
@@ -141,7 +144,7 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
           <div>{contest.name}</div>
         </Link>
       ) : <div>{contest.name}</div>,
-    renderReactNodeOrFunctionP1(tabHeaders[selectedTabKey]?.header, { selectedTabKey }),
+    selectedTabKey && renderReactNodeOrFunctionP1(tabHeaders[selectedTabKey]?.header, { selectedTabKey }),
   ];
   
   return (
@@ -149,6 +152,8 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
       tabButtons={tabButtons({ entityData: contest })}
+      selectedTabKey={contestTab}
+      getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.edit({ key: contestKey, tab })}
     >
       <div className="jk-row extend center tx-h">
         <Input
@@ -164,4 +169,4 @@ export const EditCreateContest = (props: UpsertComponentEntityProps<UpsertContes
       </div>
     </TwoContentLayout>
   );
-};
+});

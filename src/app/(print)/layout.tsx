@@ -2,11 +2,11 @@
 
 import { JukiI18nProvider } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_SOCKET_BASE_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { useEffect, useI18nStore } from 'hooks';
 import { useSearchParams } from 'next/navigation';
 import { ReactNode } from 'react';
 import './styles.scss';
+import { JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_SOCKET_BASE_URL, JUKI_TOKEN_NAME } from 'src/constants';
 import { Theme } from 'types';
 
 export default function Layout({ children }: { children: ReactNode }) {

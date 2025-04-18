@@ -7,13 +7,11 @@ import {
   DataViewer,
   FullscreenExitIcon,
   FullscreenIcon,
-  Image,
   ManufacturingIcon,
   Select,
   T,
 } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import {
   authorizedRequest,
   cleanRequest,
@@ -23,6 +21,7 @@ import {
 } from 'helpers';
 import { useDataViewerRequester, useI18nStore, useJukiNotification, useJukiUI, useUserStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -113,17 +112,16 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   
   const companyName = useUserStore(state => state.company.name);
   const companyImageUrl = useUserStore(state => state.company.imageUrl);
-  const userNickname = useUserStore(state => state.user.nickname);
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { viewPortSize, components: { Link, Image } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize, userNickname),
+      getNicknameColumn(viewPortSize),
       getPointsColumn(viewPortSize, contest.isEndless || contest.isGlobal),
     ];
     
@@ -133,7 +131,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       }
     }
     return base;
-  }, [ viewPortSize, userNickname, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortSize, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
@@ -271,6 +269,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   ), [ columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, mutate, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);
+  const onClose = useCallback(() => setDynamic(false), []);
   
   if (fullscreen) {
     const literal = getContestTimeLiteral(contest);
@@ -324,7 +323,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   }
   
   if (dynamic) {
-    return <ViewDynamicScoreboard contest={contest} onClose={() => setDynamic(false)} />;
+    return <ViewDynamicScoreboard contest={contest} onClose={onClose} />;
   }
   
   return score;

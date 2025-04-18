@@ -15,6 +15,9 @@ import {
   UserCodeEditor,
 } from 'components';
 import { jukiApiSocketManager } from 'config';
+import { classNames } from 'helpers';
+import { useFetcher } from 'hooks';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   EMPTY_TEXT_LANGUAGES,
@@ -24,10 +27,7 @@ import {
   PROGRAMMING_LANGUAGE,
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
-} from 'config/constants';
-import { classNames } from 'helpers';
-import { useFetcher } from 'hooks';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+} from 'src/constants';
 import {
   ContentResponseType,
   JudgeDataResponseDTO,

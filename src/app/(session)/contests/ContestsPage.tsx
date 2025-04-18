@@ -28,7 +28,7 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
       ContestsTab.UPCOMING,
       ContestsTab.PAST,
     ].includes(tab)) {
-      setSearchParams({ name: 'tab', value: ContestsTab.ALL, replace: true });
+      setSearchParams({ name: 'tab', value: ContestsTab.ALL }, true);
     }
   }, [ tab, setSearchParams ]);
   

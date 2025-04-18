@@ -1,7 +1,7 @@
 'use client';
 
 import { UserCodeEditor } from 'components';
-import { PROGRAMMING_LANGUAGE, RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES } from 'config/constants';
+import { PROGRAMMING_LANGUAGE, RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES } from 'src/constants';
 
 export default function IDEPage() {
   return (

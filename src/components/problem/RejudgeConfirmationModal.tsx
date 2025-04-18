@@ -1,9 +1,9 @@
 'use client';
 
 import { AutorenewIcon, Button, ButtonLoader, Modal, SpinIcon, T } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useFetcher, useJukiNotification } from 'hooks';
+import { JUDGE_API_V1 } from 'src/constants';
 import { BasicModalProps, ContentResponseType, HTTPMethod, Status, SubmissionRunStatus } from 'types';
 
 interface RejudgeConfirmationModalProps extends BasicModalProps {

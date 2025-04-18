@@ -1,5 +1,5 @@
 import { UpsertContestDTO } from '@juki-team/commons';
-import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
+import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'src/constants';
 import { ContestDataResponseDTO, ContestTemplate, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
 import { isGlobalContest, roundTimestamp } from './index';
 

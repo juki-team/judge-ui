@@ -12,9 +12,9 @@ import {
   TrophyIcon,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { JUKI_APP_COMPANY_KEY, ROUTES } from 'config/constants';
 import { useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import React, { PropsWithChildren } from 'react';
+import { JUKI_APP_COMPANY_KEY, ROUTES } from 'src/constants';
 import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {

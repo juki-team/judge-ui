@@ -102,7 +102,7 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
       } : {}),
   };
   
-  const breadcrumbs = ({ selectedTabKey }: { selectedTabKey: ProblemTab }) => [
+  const breadcrumbs = ({ selectedTabKey }: { selectedTabKey?: ProblemTab }) => [
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     editing
       ? (
@@ -110,7 +110,7 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
           <div className="ws-np">{problem.name}</div>
         </Link>
       ) : <div className="ws-np">{problem.name}</div>,
-    renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
+    selectedTabKey && renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
   ];
   
   return (

@@ -32,7 +32,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
   const replaceRoute = useRouterStore(state => state.replaceRoute);
   const searchParams = useRouterStore(state => state.searchParams);
   const [ openModal, setOpenModal ] = useState('');
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { viewPortSize } = useJukiUI();
   
   const { nickname } = routeParams as { nickname: string };
   const onClose = () => setOpenModal('');

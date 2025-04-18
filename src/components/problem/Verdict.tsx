@@ -1,4 +1,4 @@
-import { PROBLEM_VERDICT } from 'config/constants';
+import { PROBLEM_VERDICT } from 'src/constants';
 import { ProblemVerdict } from 'types';
 
 export const Verdict = ({ verdict }: { verdict: ProblemVerdict }) => {

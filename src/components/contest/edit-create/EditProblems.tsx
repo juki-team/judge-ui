@@ -15,10 +15,10 @@ import {
   T,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { PALLETE } from 'config/constants';
 import { classNames, disableOutOfRange, getJudgeOrigin, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
 import { useEffect, useJukiUI, useRef, useState, useUserStore } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
+import { PALLETE } from 'src/constants';
 import {
   ContestProblemBasicDataResponseDTO,
   SortableItem,
@@ -36,13 +36,13 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
   contestStartDate: Date,
   companyName: string
 }> = ({ item: { value: problem }, style, listeners, attributes, setNodeRef, isDragging, index, props }) => {
+  
   const {
     setProblems,
     withTime,
     contest,
     contestEndDate,
     contestStartDate,
-    companyName,
   } = props!;
   
   const { components: { Link } } = useJukiUI();

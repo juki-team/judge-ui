@@ -1,8 +1,8 @@
 import { ButtonLoader, DataViewer, DateLiteral, DeleteIcon, Field, T } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { useDataViewerRequester, useJukiUser, useMutate, useUserStore } from 'hooks';
 import { useMemo } from 'react';
+import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, SessionBasicResponseDTO, Status } from 'types';
 
 export function MyActiveSessions() {

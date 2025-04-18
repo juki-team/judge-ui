@@ -128,7 +128,6 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
         </ButtonLoader>,
       ]}
       onRecordRender={({ data, index }) => {
-        const { nickname, company: { key: companyKey } } = data[index].user;
         void preload(jukiApiSocketManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);
       }}
     />

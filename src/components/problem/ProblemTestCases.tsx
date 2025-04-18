@@ -20,10 +20,10 @@ import {
   T,
   VisibilityIcon,
 } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile, humanFileSize } from 'helpers';
 import { useEffect, useI18nStore, useJukiNotification, useMutate, useState } from 'hooks';
 import { ReactNode } from 'react';
+import { JUDGE_API_V1 } from 'src/constants';
 import {
   ButtonLoaderOnClickType,
   ContentResponseType,
@@ -142,10 +142,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
   
   const groupsOptions = Object.values(problem.settings.pointsByGroups)
     .map(group => ({ value: group.group, label: group.group + '' }));
-  
-  const handleUpload = async (testCase: NewTestCaseType, body: {}, keyFile: KeyFileType) => {
-  
-  };
   
   return (
     <div className="jk-col gap nowrap stretch">

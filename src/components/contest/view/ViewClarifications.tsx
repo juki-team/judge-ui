@@ -17,10 +17,10 @@ import {
   T,
   UserNicknameLink,
 } from 'components';
-import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
 import { useDateFormat, useFetcher, useJukiNotification, useJukiUI } from 'hooks';
 import React, { useState } from 'react';
+import { JUDGE_API_V1 } from 'src/constants';
 import { ContentResponseType, ContestDataResponseDTO, HTTPMethod, Status } from 'types';
 
 export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDTO }) => {

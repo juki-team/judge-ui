@@ -75,7 +75,6 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDT
       toRow={submission => submission}
       refreshInterval={60000}
       onRecordRender={({ data, index }) => {
-        const { nickname, company: { key: companyKey } } = data[index].user;
         void preload(jukiApiSocketManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);
       }}
     />

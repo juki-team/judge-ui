@@ -2,9 +2,9 @@
 
 import { EditCreateProblem, FetcherLayer, PageNotFound, UpdateEntityLayout } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { JUDGE_API_V1 } from 'config/constants';
 import { toUpsertProblemDTO } from 'helpers';
 import { useRouterStore } from 'hooks';
+import { JUDGE_API_V1 } from 'src/constants';
 import { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
 
 function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUIDTO {

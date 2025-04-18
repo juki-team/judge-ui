@@ -17,7 +17,6 @@ import {
   ViewProblems,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { authorizedRequest, cleanRequest, contestStateMap, isGlobalContest, toUpsertContestDTOUI } from 'helpers';
 import {
   useI18nStore,
@@ -30,6 +29,7 @@ import {
   useUserStore,
 } from 'hooks';
 import React from 'react';
+import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,

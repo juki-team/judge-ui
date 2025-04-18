@@ -1,9 +1,16 @@
-import { BalloonIcon, Field, Image, UserNicknameLink } from 'components';
+import { BalloonIcon, Field, UserNicknameLink } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames } from 'helpers';
-import { TFunction } from 'types';
+import { useJukiUI, useUserStore } from 'hooks';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
-import { ContestProblemDataResponseDTO, ContestTab, DataViewerHeadersType, LinkCmpProps } from 'types';
+import {
+  ContestProblemDataResponseDTO,
+  ContestTab,
+  DataViewerHeadersType,
+  LinkCmpProps,
+  TableHeadFieldProps,
+  TFunction,
+} from 'types';
 import { ScoreboardResponseDTOFocus } from './types';
 
 export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
@@ -16,10 +23,16 @@ export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTO
   sticky: true,
 });
 
-export const getNicknameColumn = (viewPortSize: string, userNickname: string): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
-  head: 'nickname',
-  index: 'nickname',
-  Field: ({ record: { user: { nickname, imageUrl, company: { key: companyKey } }, focus } }) => (
+const NicknameField = ({
+                         record: {
+                           user: { nickname, imageUrl, company: { key: companyKey } },
+                           focus,
+                         },
+                       }: TableHeadFieldProps<ScoreboardResponseDTOFocus>) => {
+  
+  const userNickname = useUserStore(state => state.user.nickname);
+  const { components: { Image } } = useJukiUI();
+  return (
     <Field
       className={classNames('jk-row center gap', {
         'own': nickname === userNickname,
@@ -38,7 +51,13 @@ export const getNicknameColumn = (viewPortSize: string, userNickname: string): D
         </div>
       </UserNicknameLink>
     </Field>
-  ),
+  );
+};
+
+export const getNicknameColumn = (viewPortSize: string): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
+  head: 'nickname',
+  index: 'nickname',
+  Field: NicknameField,
   minWidth: 250,
   sticky: viewPortSize !== 'sm',
 });

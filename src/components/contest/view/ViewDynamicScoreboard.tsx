@@ -1,7 +1,6 @@
 'use client';
 
-import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, Image, T, Timer } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
+import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, T, Timer } from 'components';
 import { contestStateMap } from 'helpers';
 import { useDataViewerRequester, useI18nStore, useJukiUI, useUserStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -11,6 +10,7 @@ import {
   getPositionColumn,
   getProblemScoreboardColumn,
 } from 'src/components/contest/view/columns';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
@@ -28,15 +28,14 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
   
   const companyName = useUserStore(state => state.company.name);
   const companyImageUrl = useUserStore(state => state.company.imageUrl);
-  const userNickname = useUserStore(state => state.user.nickname);
   const contestKey = contest.key;
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { viewPortSize, components: { Link, Image } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize, userNickname),
+      getNicknameColumn(viewPortSize),
       getPointsColumn(viewPortSize, contest.isEndless),
     ];
     
@@ -46,9 +45,9 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
       }
     }
     return base;
-  }, [ viewPortSize, userNickname, contest.isEndless, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortSize, contest.isEndless, contest?.problems, Link, contestKey, t ]);
   
-  const [ unfrozen, setUnfrozen ] = useState(false);
+  const [ unfrozen ] = useState(false);
   const {
     data: response,
     request,
@@ -149,7 +148,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
       reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, reloadRef, request, setLoaderStatusRef ]);
+  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, onClose, reloadRef, request, setLoaderStatusRef ]);
   
   if (fullscreen) {
     const literal = getContestTimeLiteral(contest);

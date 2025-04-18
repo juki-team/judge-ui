@@ -1,8 +1,8 @@
-import { ContestDataResponseDTO } from '@juki-team/commons';
+export const dynamic = 'force-dynamic';
+
 import { jukiApiSocketManager } from 'config';
-import { JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME } from 'config/constants';
 import { cleanRequest } from 'helpers';
-import { ContentResponseType } from 'types';
+import { ContentResponseType, ContestDataResponseDTO } from 'types';
 import { ContestProblemSetViewPage } from './ContestProblemSetViewPage';
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
@@ -10,7 +10,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   let contestData: ContestDataResponseDTO | null = null;
   
   try {
-    jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
     
     const { key, jukiSessionId } = (await searchParams) as { key: string, jukiSessionId: string };
     

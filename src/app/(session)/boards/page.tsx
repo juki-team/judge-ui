@@ -2,7 +2,6 @@
 
 import { Button, DataViewer, T, TwoContentLayout } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
 import { toFilterUrl } from 'helpers';
 import {
   useDataViewerRequester,
@@ -15,6 +14,7 @@ import {
   useUserStore,
 } from 'hooks';
 import { CSSProperties } from 'react';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'src/constants';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -42,7 +42,6 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     },
   }).url);
   const contestData = contestResponse?.success ? contestResponse.content : null;
-  const userNickname = useUserStore(state => state.user.nickname);
   const userCanAdministrateServices = useUserStore(state => state.user.permissions.services.administrate);
   const { viewPortSize, components: { Link } } = useJukiUI();
   const t = useI18nStore(state => state.i18n.t);
@@ -52,7 +51,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize, userNickname),
+      getNicknameColumn(viewPortSize),
       getPointsColumn(viewPortSize, true),
     ];
     
@@ -86,15 +85,15 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
       });
     }
     return base;
-  }, [ viewPortSize, userNickname, contestData?.problems, Link, contest.key, t, contestTags ]);
+  }, [ viewPortSize, contestData?.problems, Link, contest.key, t, contestTags ]);
   
   const {
     data: response,
     request,
-    isLoading,
+    // isLoading,
     setLoaderStatusRef,
-    reload,
-    reloadRef,
+    // reload,
+    // reloadRef,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest.key, true), { refreshInterval: 60000 },
   );

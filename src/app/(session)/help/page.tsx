@@ -1,8 +1,8 @@
 'use client';
 
 import { T, TwoContentLayout } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
 import { oneTab } from 'helpers';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'src/constants';
 
 export default function Page() {
   

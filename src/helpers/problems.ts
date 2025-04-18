@@ -1,4 +1,4 @@
-import { EMPTY_TEXT_LANGUAGES } from 'config/constants';
+import { EMPTY_TEXT_LANGUAGES } from 'src/constants';
 import { EntityAccess, ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 
 export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO => ({

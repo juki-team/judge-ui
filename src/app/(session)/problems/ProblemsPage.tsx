@@ -18,7 +18,6 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { ENTITY_ACCESS } from 'config/constants';
 import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
@@ -30,6 +29,7 @@ import {
   useTrackLastPath,
   useUserStore,
 } from 'hooks';
+import { ENTITY_ACCESS } from 'src/constants';
 import {
   ContentResponseType,
   DataViewerHeadersType,
@@ -61,7 +61,6 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   
   const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
   const pushRoute = useRouterStore(state => state.pushRoute);
-  const searchParams = useRouterStore(state => state.searchParams);
   const setSearchParams = useRouterStore(state => state.setSearchParams);
   const preload = usePreload();
   const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiSocketManager.API_V1.company.getJudgeList().url);

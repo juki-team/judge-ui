@@ -16,14 +16,6 @@ import {
   WarningIcon,
 } from 'components';
 import {
-  ACCEPTED_PROGRAMMING_LANGUAGES,
-  CONTEST_DEFAULT,
-  CONTEST_TEMPLATE,
-  MAX_DATE,
-  MIN_DATE,
-  PROGRAMMING_LANGUAGE,
-} from 'config/constants';
-import {
   adjustContest,
   classNames,
   disableOutOfRange,
@@ -33,6 +25,14 @@ import {
 } from 'helpers';
 import { useState } from 'hooks';
 import React from 'react';
+import {
+  ACCEPTED_PROGRAMMING_LANGUAGES,
+  CONTEST_DEFAULT,
+  CONTEST_TEMPLATE,
+  MAX_DATE,
+  MIN_DATE,
+  PROGRAMMING_LANGUAGE,
+} from 'src/constants';
 import { ContestTemplate, EntityMembersRank } from 'types';
 import { EditContestProps } from '../types';
 

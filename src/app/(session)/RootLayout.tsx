@@ -13,6 +13,10 @@ import {
   UserPreviewModal,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { useEffect, useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
+import Link from 'next/link';
+import { useParams, usePathname } from 'next/navigation';
+import React, { Children, PropsWithChildren } from 'react';
 import {
   JUKI_APP_COMPANY_KEY,
   JUKI_SERVICE_V1_URL,
@@ -21,14 +25,10 @@ import {
   JUKI_TOKEN_NAME,
   NODE_ENV,
   ROUTES,
-} from 'config/constants';
-import { useEffect, useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
-import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
-import React, { Children, PropsWithChildren } from 'react';
+} from 'src/constants';
 import { UserProvider } from 'store';
 import { SWRConfig } from 'swr';
-import { FC, ImageCmpProps, LastPathKey } from 'types';
+import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
 
@@ -95,7 +95,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
       }}
     >
       <JukiProviders
-        components={{ Image: Image as FC<ImageCmpProps>, Link: Link }}
+        components={{ Image, Link }}
         router={{
           searchParams,
           setSearchParams,

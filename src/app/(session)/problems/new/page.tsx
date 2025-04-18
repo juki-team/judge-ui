@@ -2,9 +2,9 @@
 
 import { CreateEntityLayout, EditCreateProblem, PageNotFound } from 'components';
 import { jukiAppRoutes } from 'config';
-import { JUDGE_API_V1, PROBLEM_DEFAULT } from 'config/constants';
 import { getJudgeKeyOfProblemJudgeKey, toUpsertProblemDTO } from 'helpers';
 import { useMemo, useUserStore } from 'hooks';
+import { JUDGE_API_V1, PROBLEM_DEFAULT } from 'src/constants';
 import { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 
 function ProblemCreate() {

@@ -12,10 +12,10 @@ import {
   TextHeadCell,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
 import { useJukiNotification, useJukiUI, useRouterStore } from 'hooks';
 import React, { useMemo } from 'react';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
   ContentResponseType,
   ContestDataResponseDTO,

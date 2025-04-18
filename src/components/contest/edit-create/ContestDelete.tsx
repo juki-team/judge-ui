@@ -2,10 +2,10 @@
 
 import { ButtonLoader, T } from 'components';
 import { jukiAppRoutes } from 'config';
-import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useRouterStore } from 'hooks';
 import React from 'react';
+import { JUDGE_API_V1 } from 'src/constants';
 import { ContentResponseType, HTTPMethod, Status, UserCompanyBasicInfoResponseDTO } from 'types';
 
 interface ProblemStatementProps {

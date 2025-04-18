@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   
-  const contestKey = (await params).contestKey;
+  const { contestKey } = await params;
   
   return <ContestViewPage contestKey={contestKey} />;
 }
