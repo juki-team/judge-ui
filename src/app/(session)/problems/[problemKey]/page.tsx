@@ -33,7 +33,7 @@ async function getMetadata(problemKey: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
-  const { title, description, cover } = await getMetadata((await params).problemKey);
+  const { title, description } = await getMetadata((await params).problemKey);
   
   return {
     title,
@@ -44,13 +44,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       siteName: 'Juki Judge',
       url: 'https://judge.juki.app',
-      images: [
-        {
-          url: cover,
-          width: 400,
-          height: 210,
-        },
-      ],
+      // images: [
+      //   {
+      //     url: cover,
+      //     width: 400,
+      //     height: 210,
+      //   },
+      // ],
     },
   };
 }
