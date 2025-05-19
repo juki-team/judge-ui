@@ -11,7 +11,7 @@ export const ProblemScoringModeInformation = ({ filledCircle }: InformationProps
     <>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="jk-col left stretch gap jk-pg">
-          <h3><T>problem scoring mode</T></h3>
+          <h3><T className="tt-se">problem scoring mode</T></h3>
           <div><T className="tx-l cr-py fw-bd tt-se">total</T></div>
           <div className="jk-row left">
             <T className="tt-se">if all test cases are</T>&nbsp;<Verdict verdict={ProblemVerdict.AC} />&nbsp;
@@ -69,7 +69,7 @@ export const ProblemScoringModeInformation = ({ filledCircle }: InformationProps
           event.stopPropagation();
           setIsOpen(true);
         }}
-        className="jk-row clickable br-50-pc"
+        className="jk-row cr-pr br-50-pc"
       >
         {filledCircle
           ? <ExclamationIcon rotate={180} filledCircle size="small" />

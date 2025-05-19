@@ -122,7 +122,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
         responsiveMobile
         onClick={buttonLoaderLink(() => pushRoute(jukiAppRoutes.JUDGE().problems.new()))}
       >
-        <T>create</T>
+        <T className="tt-se">create</T>
       </ButtonLoader>,
     );
   }
@@ -153,7 +153,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
             }
           }}
         >
-          <T>crawl</T>
+          <T className="tt-se">crawl</T>
         </ButtonLoader>
       </div>,
     );

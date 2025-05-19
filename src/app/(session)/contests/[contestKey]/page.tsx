@@ -1,4 +1,5 @@
 import { jukiApiSocketManager } from 'config';
+import { META_HEADERS } from 'config/constants';
 import { cleanRequest } from 'helpers';
 import type { Metadata } from 'next';
 import { ContentResponseType } from 'types';
@@ -14,7 +15,7 @@ async function getMetadata(contestKey: string) {
   try {
     const response = await fetch(
       jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url,
-      { headers: { origin: 'https://juki.app', 'x-forwarded-host': 'juki.app' } });
+      { headers: META_HEADERS() });
     const text = await response.text();
     result = cleanRequest<ContentResponseType<{
       title: string,

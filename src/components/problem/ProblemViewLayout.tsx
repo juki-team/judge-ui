@@ -101,7 +101,7 @@ export const ProblemViewLayout = ({ problem }: {
                     }
                   }}
                 >
-                  <T>submit</T>
+                  <T className="tt-se">submit</T>
                 </ButtonLoader>
               </FirstLoginWrapper>
             );
@@ -160,7 +160,7 @@ export const ProblemViewLayout = ({ problem }: {
         responsiveMobile
         type="light"
       >
-        <T>rejudge</T>
+        <T className="tt-se">rejudge</T>
       </Button>,
       <ButtonLoader
         size="small"
@@ -172,7 +172,7 @@ export const ProblemViewLayout = ({ problem }: {
         }}
         responsiveMobile
       >
-        {<T>edit</T>}
+        <T className="tt-se">edit</T>
       </ButtonLoader>,
     );
   } else if (problem.judge?.isExternal && userIsLogged) {

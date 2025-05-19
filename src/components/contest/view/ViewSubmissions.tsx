@@ -124,7 +124,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
             setLoaderStatus(Status.SUCCESS);
           }}
         >
-          <T>export as csv</T>
+          <T className="tt-se">export as csv</T>
         </ButtonLoader>,
       ]}
       onRecordRender={({ data, index }) => {

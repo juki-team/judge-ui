@@ -1,6 +1,6 @@
 'use client';
 
-import { CopyToClipboard, DeleteIcon, EditIcon, InfoIcon, SaveIcon, TextArea } from 'components';
+import { DeleteIcon, EditIcon, InfoIcon, SaveIcon, TextArea } from 'components';
 import React, { useEffect, useState } from 'react';
 import { ProblemSampleCasesType } from 'types';
 
@@ -42,13 +42,14 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
             />
           ) : (
             <div className="sample-text-content jk-border-radius-inline">
-              <CopyToClipboard text={sample.input} size="small" />
-              <div
-                data-tooltip-id="jk-tooltip"
-                data-tooltip-content={`${sample.input.lastIndexOf('\n') === sample.input.length - 1 ? '' : 'no '}newline at end of file`}
-                className="newline-eof"
-              >
-                <InfoIcon size="small" />
+              <div className="jk-row gap sample-text-icons">
+                <div
+                  data-tooltip-id="jk-tooltip"
+                  data-tooltip-content={`${sample.input.lastIndexOf('\n') === sample.input.length - 1 ? '' : 'no '}newline at end of file`}
+                  className="cr-th"
+                >
+                  <InfoIcon size="small" />
+                </div>
               </div>
               <span>{sample.input}</span>
             </div>
@@ -62,13 +63,14 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
             />
           ) : (
             <div className="sample-text-content jk-border-radius-inline">
-              <CopyToClipboard text={sample.output} size="small" />
-              <div
-                data-tooltip-id="jk-tooltip"
-                data-tooltip-content={`${sample.output.lastIndexOf('\n') === sample.output.length - 1 ? '' : 'no '}newline at end of file`}
-                className="newline-eof"
-              >
-                <InfoIcon size="small" />
+              <div className="jk-row gap sample-text-icons">
+                <div
+                  data-tooltip-id="jk-tooltip"
+                  data-tooltip-content={`${sample.output.lastIndexOf('\n') === sample.output.length - 1 ? '' : 'no '}newline at end of file`}
+                  className="cr-th"
+                >
+                  <InfoIcon size="small" />
+                </div>
               </div>
               <span>
                 {sample.output}

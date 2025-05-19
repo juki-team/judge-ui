@@ -159,7 +159,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
             setLock(false);
           }}
         >
-          <T>reload test cases</T> (<T>the changes will be lost</T>)
+          <T className="tt-se">reload test cases</T>&nbsp;(<T>the changes will be lost</T>)
         </ButtonLoader>
         <ButtonLoader
           size="small"
@@ -180,7 +180,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
             }
           }}
         >
-          <T>download all test cases</T>
+          <T className="tt-se">download all test cases</T>
         </ButtonLoader>
         {modal}
         <ButtonLoader
@@ -194,7 +194,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
               onClose={() => setModal(null)}
               secondary={{
                 onClick: () => setModal(null),
-                label: <T>cancel</T>,
+                label: <T className="tt-se">cancel</T>,
               }}
               primary={{
                 onClick: async (setLoaderStatus) => {
@@ -214,9 +214,9 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                   setLock(false);
                   setModal(null);
                 },
-                label: <T>delete</T>,
+                label: <T className="tt-se">delete</T>,
               }}
-              title={<T>delete all test cases</T>}
+              title={<T className="tt-se">delete all test cases</T>}
             >
               <div className="jk-col gap">
                 <T className="tt-se">
@@ -226,7 +226,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
             </TwoActionModal>,
           )}
         >
-          <T className="cr-er">delete all test cases</T>
+          <T className="cr-er tt-se">delete all test cases</T>
         </ButtonLoader>
       </div>
       <div className="jk-col stretch bc-we">
@@ -298,7 +298,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           className="jk-row"
                           data-tooltip-id="jk-tooltip"
                           data-tooltip-html={`
-                            <div class="jk-row center">
+                            <div class="jk-row gap center">
                               <span class="ws-np fw-bd tt-se">${t('last updated')}: </span>
                               <span class="ws-np">${new Date(testCase[(keyPut + 'FileLastModified') as 'outputFileLastModified']).toLocaleString()}</span>
                             </div>
@@ -467,7 +467,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                 setLock(false);
               }}
             >
-              <T>upload / replace files</T>
+              <T className="tt-se">upload / replace files</T>
             </ButtonLoader>
           </div>
         </div>
@@ -487,7 +487,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           <div className="jk-row">
             <label>
               <div className="jk-button primary jk-border-radius-inline">
-                <T className="fw-bd tt-ue ">load input files</T>
+                <T className="fw-bd tt-se">load input files</T>
               </div>
               <Input
                 type="files"
@@ -499,7 +499,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           <div className="jk-row">
             <label>
               <div className="jk-button primary jk-border-radius-inline">
-                <T className="fw-bd tt-ue">load output files</T>
+                <T className="fw-bd tt-se">load output files</T>
               </div>
               <Input
                 type="files"

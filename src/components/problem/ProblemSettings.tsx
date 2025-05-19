@@ -61,7 +61,7 @@ export const Tags = ({ tags, judgeKey, onChange }: {
           data-tooltip-t-class-name="tt-se"
           className="jk-row"
         >
-          <InfoIcon />
+          <InfoIcon size="small" />
         </div>
         &nbsp;<span className="fw-bd">:</span>
       </div>

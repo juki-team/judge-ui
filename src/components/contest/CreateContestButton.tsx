@@ -16,7 +16,7 @@ export const CreateContestButton = () => {
       onClick={buttonLoaderLink(() => pushRoute(jukiAppRoutes.JUDGE().contests.new()))}
       responsiveMobile
     >
-      <T>create</T>
+      <T className="tt-se">create</T>
     </ButtonLoader>
   );
 };

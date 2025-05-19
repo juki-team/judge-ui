@@ -84,7 +84,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
             </div>
           </div>
           <div>
-            <h3><T>description</T></h3>
+            <h3><T className="tt-se">description</T></h3>
             <div className="text-editor">
               <MdMathEditor
                 informationButton
@@ -97,12 +97,11 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     description: { ...statement.description, [language]: value },
                   },
                 }))}
-                initEditMode
               />
             </div>
           </div>
           <div>
-            <h3><T>input</T></h3>
+            <h3><T className="tt-se">input</T></h3>
             <div className="text-editor">
               <MdMathEditor
                 informationButton
@@ -115,12 +114,11 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     input: { ...statement.input, [language]: value },
                   },
                 }))}
-                initEditMode
               />
             </div>
           </div>
           <div>
-            <h3><T>output</T></h3>
+            <h3><T className="tt-se">output</T></h3>
             <div className="text-editor">
               <MdMathEditor
                 informationButton
@@ -133,13 +131,12 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     output: { ...statement.output, [language]: value },
                   },
                 }))}
-                initEditMode
               />
             </div>
           </div>
           {settings.scoringMode === ProblemScoringMode.SUBTASK && (
             <div>
-              <h3><T>subtasks description</T></h3>
+              <h3><T className="tt-se">subtasks description</T></h3>
               <div className="jk-col left stretch gap">
                 {Object.values(settings.pointsByGroups).map(pointsByGroup => (
                   <div className="jk-row extend gap" key={pointsByGroup.group}>
@@ -201,8 +198,8 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           )}
           <div className="jk-row stretch gap">
             <div className="jk-row stretch gap nowrap flex-1 jk-pg-sm-tb">
-              <div className="jk-row"><T className="tt-se tx-h cr-pd fw-bd">input sample</T></div>
-              <div className="jk-row"><T className="tt-se tx-h cr-pd fw-bd">output sample</T></div>
+              <div className="jk-row"><T className="tt-se tx-h cr-th fw-bd tt-se">input sample</T></div>
+              <div className="jk-row"><T className="tt-se tx-h cr-th fw-bd tt-se">output sample</T></div>
             </div>
             <div className="jk-row">
               <PlusIcon
@@ -232,7 +229,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
             ))}
           </div>
           <div>
-            <h3><T>note</T></h3>
+            <h3><T className="tt-se">note</T></h3>
             <div className="text-editor">
               <MdMathEditor
                 informationButton
@@ -245,7 +242,6 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                     note: { ...statement.note, [language]: value },
                   },
                 }))}
-                initEditMode
               />
             </div>
           </div>

@@ -48,7 +48,7 @@ export const ProblemDelete = ({ problemJudgeKey, documentOwner, deleted }: Probl
         }}
         className="bc-er"
       >
-        <T>delete</T>
+        <T className="tt-se">delete</T>
       </ButtonLoader>
     </div>
   );

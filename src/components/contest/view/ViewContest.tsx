@@ -192,7 +192,9 @@ export function ContestView({ contest, reloadContest }: {
                     }
                   }}
                 >
-                  {(isAdministrator || isManager) && !isGlobal ? <T>submit as judge</T> : <T>submit</T>}
+                  {(isAdministrator || isManager) && !isGlobal
+                    ? <T className="tt-se">submit as judge</T>
+                    : <T className="tt-se">submit</T>}
                 </ButtonLoader>
               );
               if (isAdministrator || isManager || isParticipant) {
@@ -216,7 +218,7 @@ export function ContestView({ contest, reloadContest }: {
                       }));
                     }}
                   >
-                    <T>submit</T>
+                    <T className="tt-se">submit</T>
                   </ButtonLoader>
                 );
               }
@@ -304,7 +306,7 @@ export function ContestView({ contest, reloadContest }: {
         type="light"
         key="copy"
       >
-        <T className="ws-np">copy</T>
+        <T className="ws-np tt-se">copy</T>
       </ButtonLoader>,
     );
   }

@@ -10,16 +10,19 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { jukiAppRoutes } from 'config';
-import { useEffect, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
-import { ContestsTab, LastPathKey, TabsType } from 'types';
+import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { useEffect, usePreload, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
+import { ContestsTab, ContestSummaryListResponseDTO, LastPathKey, PagedDataViewerProps, TabsType } from 'types';
 
 export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   
   useTrackLastPath(LastPathKey.CONTESTS);
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
+  
+  const preload = usePreload();
   const setSearchParams = useRouterStore(state => state.setSearchParams);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
+  const companyKey = useUserStore(state => state.company.key);
   useEffect(() => {
     if (!tab || ![
       ContestsTab.ALL,
@@ -32,44 +35,52 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
     }
   }, [ tab, setSearchParams ]);
   
-  const tabs: TabsType<ContestsTab> = {
-    [ContestsTab.ALL]: {
-      body: <ContestsAllList />,
-      key: ContestsTab.ALL,
-      header: <T className="tt-se ws-np">all</T>,
-    },
-    [ContestsTab.ENDLESS]: {
-      body: <ContestsEndlessList />,
-      key: ContestsTab.ENDLESS,
-      header: <T className="tt-se ws-np">endless</T>,
-    },
-    [ContestsTab.LIVE]: {
-      body: <ContestsLiveList />,
-      key: ContestsTab.LIVE,
-      header: <T className="tt-se ws-np">live</T>,
-    },
-    [ContestsTab.UPCOMING]: {
-      body: <ContestsUpcomingList />,
-      key: ContestsTab.UPCOMING,
-      header: <T className="tt-se ws-np">upcoming</T>,
-    },
-    [ContestsTab.PAST]: {
-      body: <ContestsPastList />,
-      key: ContestsTab.PAST,
-      header: <T className="tt-se ws-np">past</T>,
-    },
-  };
-  
   const extraNodes = [];
   
   if (userCanCreateContest) {
     extraNodes.push(<CreateContestButton />);
   }
   
+  const props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>> = {
+    refreshInterval: 60000,
+    cards: { width: 320, expanded: true },
+    onRecordRender: ({ data, index }) => {
+      void preload(jukiApiSocketManager.API_V1.contest.getData({ params: { key: data[index].key, companyKey } }).url);
+    },
+    extraNodes,
+  };
+  
+  const tabs: TabsType<ContestsTab> = {
+    [ContestsTab.ALL]: {
+      body: <ContestsAllList {...props} />,
+      key: ContestsTab.ALL,
+      header: <T className="tt-se ws-np">all</T>,
+    },
+    [ContestsTab.ENDLESS]: {
+      body: <ContestsEndlessList  {...props} />,
+      key: ContestsTab.ENDLESS,
+      header: <T className="tt-se ws-np">endless</T>,
+    },
+    [ContestsTab.LIVE]: {
+      body: <ContestsLiveList {...props} />,
+      key: ContestsTab.LIVE,
+      header: <T className="tt-se ws-np">live</T>,
+    },
+    [ContestsTab.UPCOMING]: {
+      body: <ContestsUpcomingList {...props} />,
+      key: ContestsTab.UPCOMING,
+      header: <T className="tt-se ws-np">upcoming</T>,
+    },
+    [ContestsTab.PAST]: {
+      body: <ContestsPastList {...props} />,
+      key: ContestsTab.PAST,
+      header: <T className="tt-se ws-np">past</T>,
+    },
+  };
+  
   return (
     <TwoContentLayout
       tabs={tabs}
-      tabButtons={extraNodes}
       selectedTabKey={tab}
       getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().contests.list() + `?tab=${tab}`}
     >

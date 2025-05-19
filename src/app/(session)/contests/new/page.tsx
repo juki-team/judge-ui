@@ -2,9 +2,9 @@
 
 import { CreateEntityLayout, EditCreateContest, PageNotFound } from 'components';
 import { jukiAppRoutes } from 'config';
-import { toUpsertContestDTO } from 'helpers';
+import { isStringJson, toUpsertContestDTO } from 'helpers';
 import { useMemo, useUserStore } from 'hooks';
-import { CONTEST_DEFAULT, JUDGE_API_V1 } from 'src/constants';
+import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import { UpsertContestDTO, UpsertContestDTOUI } from 'types';
 
 function ContestCreate() {
@@ -15,11 +15,14 @@ function ContestCreate() {
     permissions: { contests: { create: canCreateContest } },
   } = useUserStore(state => state.user);
   const companyKey = useUserStore(state => state.company.key);
+  
+  const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
+  
   const newEntity = useMemo(() => () => CONTEST_DEFAULT({
     nickname,
     imageUrl,
     company: { key: companyKey },
-  }), [ nickname, imageUrl, companyKey ]);
+  }, isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}), [ nickname, imageUrl, companyKey, localStorageInitialContest ]);
   
   if (!canCreateContest) {
     return <PageNotFound />;

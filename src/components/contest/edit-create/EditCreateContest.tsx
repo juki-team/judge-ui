@@ -3,10 +3,10 @@
 import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
 import { diff } from 'deep-object-diff';
-import { isGlobalContest, isStringJson, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiUI, useRef, useRouterStore, useState, useUserStore } from 'hooks';
+import { isGlobalContest, renderReactNodeOrFunctionP1 } from 'helpers';
+import { useEffect, useJukiNotification, useJukiUI, useRef, useRouterStore, useState } from 'hooks';
 import { memo } from 'react';
-import { CONTEST_DEFAULT, LS_INITIAL_CONTEST_KEY } from 'src/constants';
+import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
   ContestTab,
   EntityState,
@@ -30,18 +30,11 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
   
   const { addWarningNotification } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
-  const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
-  const companyKey = useUserStore(state => state.company.key);
-  const userNickname = useUserStore(state => state.user.nickname);
-  const userImageUrl = useUserStore(state => state.user.imageUrl);
+  
   const searchParams = useRouterStore(store => store.searchParams);
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   
-  const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest || CONTEST_DEFAULT({
-    nickname: userNickname,
-    imageUrl: userImageUrl,
-    company: { key: companyKey },
-  }, isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}));
+  const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest);
   const isGlobal = isGlobalContest(contest.settings);
   useEffect(() => {
     localStorage.removeItem(LS_INITIAL_CONTEST_KEY);
