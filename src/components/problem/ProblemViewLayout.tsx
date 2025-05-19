@@ -14,6 +14,7 @@ import {
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import {
+  useEffect,
   useJukiNotification,
   useJukiTask,
   useMutate,
@@ -28,6 +29,7 @@ import {
   LastPathKey,
   ProblemDataResponseDTO,
   ProblemTab,
+  ProfileSetting,
   Status,
   TabsType,
 } from 'types';
@@ -45,10 +47,33 @@ export const ProblemViewLayout = ({ problem }: {
   const searchParams = useRouterStore(state => state.searchParams);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const userIsLogged = useUserStore(state => state.user.isLogged);
+  const userSessionId = useUserStore(state => state.user.sessionId);
+  const userLang = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
   const { notifyResponse } = useJukiNotification();
   const { listenSubmission } = useJukiTask();
   const mutate = useMutate();
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
+  
+  useEffect(() => {
+    const { url, ...options } = jukiApiSocketManager.API_V2.export.problem.statementToPdf({
+      params: {
+        key: problem.key,
+        token: userSessionId,
+        language: userLang,
+      },
+    });
+    void authorizedRequest(url, options);
+    const { url: url1, ...options1 } = jukiApiSocketManager.API_V2.export.problem.statementToPng({
+      params: {
+        key: problem.key,
+        token: userSessionId,
+        language: userLang,
+      },
+    });
+    authorizedRequest(url1, options1).then((data) => {
+      console.log({ data: cleanRequest(data) });
+    });
+  }, [ problem.key, userLang, userSessionId ]);
   
   const tabs: TabsType<ProblemTab> = {
     [ProblemTab.STATEMENT]: {
