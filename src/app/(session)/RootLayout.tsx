@@ -100,11 +100,11 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
       >
         <UserProvider>
           <NavigationBar>
-            <Analytics key="analytics" />
             {Children.toArray(children)}
+            <SponsoredByTag />
           </NavigationBar>
-          <SponsoredByTag />
         </UserProvider>
+        <Analytics key="analytics" />
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <UserPreviewModal key="user-preview-modal" />
         <SubmissionModal key="submission-modal" />
