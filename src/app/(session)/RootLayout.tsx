@@ -58,7 +58,7 @@ const initialLastPath = {
   [LastPathKey.SECTION_HELP]: `/help`,
 };
 
-export const RootLayout = ({ children: _children }: PropsWithChildren<{}>) => {
+export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
   useEffect(() => {
     jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
@@ -71,9 +71,8 @@ export const RootLayout = ({ children: _children }: PropsWithChildren<{}>) => {
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
   const preloaders = usePreloadComponents();
   
-  let children = _children;
   const loadingBasic = preloaders.atoms && preloaders.atomsIconsGoogle && preloaders.atomsIconsSigns && preloaders.atomsIconsSpecials && preloaders.atomsImages
-    && preloaders.molecules;
+    && preloaders.molecules && preloaders.organisms && preloaders.templates;
   
   const app = (
     <SWRConfig
@@ -95,7 +94,7 @@ export const RootLayout = ({ children: _children }: PropsWithChildren<{}>) => {
           pushRoute: push,
           replaceRoute: replace,
           reloadRoute: refresh,
-          isLoadingRoute: isLoadingRoute || !(loadingBasic && preloaders.organisms && preloaders.templates),
+          isLoadingRoute: isLoadingRoute || !loadingBasic,
         }}
         initialLastPath={initialLastPath}
       >

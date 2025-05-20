@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <script>
-      const PERMITTED_DOMAINS = [
-        'https://juki.app',
-        'https://www.juki.app',
-        'https://judge.juki.app',
-        'https://utils.juki.app',
-        'https://couch.juki.app'
-      ];
-      window.addEventListener('message', function (event) {
-        if (PERMITTED_DOMAINS.includes(event.origin)) {
-          const { action, key, value } = event.data;
-          if (action === 'localStorage.setItem') {
-            localStorage.setItem(key, value);
-          } else if (action === 'localStorage.removeItem') {
-            localStorage.removeItem(key);
-          }
+<head>
+  <meta charset="UTF-8">
+  <script>
+    const PERMITTED_DOMAINS = [
+      'https://juki.app',
+      'https://www.juki.app',
+      'https://judge.juki.app',
+      'https://utils.juki.app',
+      'https://couch.juki.app'
+    ];
+    window.addEventListener('message', function (event) {
+      if (PERMITTED_DOMAINS.includes(event.origin)) {
+        const { action, key, value } = event.data;
+        if (action === 'localStorage.setItem') {
+          localStorage.setItem(key, value);
+        } else if (action === 'localStorage.removeItem') {
+          localStorage.removeItem(key);
         }
-      });
-    </script>
-    <title>Juki Judge</title>
-  </head>
-  <body>
-  </body>
+      }
+    });
+  </script>
+  <title>Juki Judge</title>
+</head>
+<body>
+</body>
 </html>
