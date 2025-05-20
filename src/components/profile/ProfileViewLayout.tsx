@@ -81,7 +81,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
         expand={viewPortSize === 'sm'}
         key="reset password"
       >
-        <T className="ws-np">reset password</T>
+        <T className="tt-se ws-np">reset password</T>
       </Button>,
     ] : []),
     ...(profile.canEditProfileData ? [
@@ -92,7 +92,7 @@ export function ProfileViewLayout({ profile, reloadProfile }: ProfileViewLayoutP
         expand={viewPortSize === 'sm'}
         key="update profile"
       >
-        <T className="ws-np">update profile</T>
+        <T className="tt-se ws-np">update profile</T>
       </Button>,
     ] : []),
   ];

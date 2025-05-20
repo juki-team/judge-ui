@@ -16,6 +16,7 @@ export {
   useI18nStore,
   useRouterStore,
   useUserStore,
+  useLazyLoadingStore,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export { useEffect, useRef, useState, useMemo } from 'react';

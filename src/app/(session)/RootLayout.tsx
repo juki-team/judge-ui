@@ -58,7 +58,7 @@ const initialLastPath = {
   [LastPathKey.SECTION_HELP]: `/help`,
 };
 
-export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
+export const RootLayout = ({ children: _children }: PropsWithChildren<{}>) => {
   
   useEffect(() => {
     jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
@@ -69,7 +69,11 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const routeParams = useParams();
   const pathname = usePathname();
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
-  usePreloadComponents();
+  const preloaders = usePreloadComponents();
+  
+  let children = _children;
+  const loadingBasic = preloaders.atoms && preloaders.atomsIconsGoogle && preloaders.atomsIconsSigns && preloaders.atomsIconsSpecials && preloaders.atomsImages
+    && preloaders.molecules;
   
   const app = (
     <SWRConfig
@@ -91,21 +95,21 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
           pushRoute: push,
           replaceRoute: replace,
           reloadRoute: refresh,
-          isLoadingRoute,
+          isLoadingRoute: isLoadingRoute || !(loadingBasic && preloaders.organisms && preloaders.templates),
         }}
         initialLastPath={initialLastPath}
       >
         <UserProvider>
-          <NewVersionAvailable apiVersionUrl="/api/version" />
           <NavigationBar>
             <Analytics key="analytics" />
             {Children.toArray(children)}
-            <UserPreviewModal key="user-preview-modal" />
-            <SubmissionModal key="submission-modal" />
           </NavigationBar>
-          <JukiSocketAlert />
           <SponsoredByTag />
         </UserProvider>
+        <NewVersionAvailable apiVersionUrl="/api/version" />
+        <UserPreviewModal key="user-preview-modal" />
+        <SubmissionModal key="submission-modal" />
+        <JukiSocketAlert />
       </JukiProviders>
     </SWRConfig>
   );

@@ -129,7 +129,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         } : undefined}
         moreApps={
           <>
-            <Link href="https://utils.juki.app" target="_blank">
+            <Link href="https://utils.juki.app">
               <div className="jk-row gap left">
                 <Image
                   width={100}
@@ -140,7 +140,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
                 <div className="link">utils.juki.app</div>
               </div>
             </Link>
-            <Link href="https://coach.juki.app" target="_blank">
+            <Link href="https://coach.juki.app">
               <div className="jk-row gap left">
                 <Image
                   width={100}

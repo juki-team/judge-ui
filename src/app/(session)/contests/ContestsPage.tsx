@@ -22,7 +22,7 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   const preload = usePreload();
   const setSearchParams = useRouterStore(state => state.setSearchParams);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.company?.key);
   useEffect(() => {
     if (!tab || ![
       ContestsTab.ALL,

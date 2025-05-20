@@ -23,7 +23,7 @@ export default function IDEPage() {
               downloadBlobAsFile(sourceCode as unknown as Blob, filename);
             }}
           >
-            <T>download code</T>
+            <T className="tt-se">download code</T>
           </Button>
         )}
       />
