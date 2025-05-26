@@ -1,6 +1,5 @@
 import { jukiApiSocketManager } from 'config';
-import { META_HEADERS } from 'config/constants';
-import { cleanRequest } from 'helpers';
+import { cleanRequest, getMetaHeaders } from 'helpers';
 import type { Metadata } from 'next';
 import { ContentResponseType } from 'types';
 import ProblemViewPage from './ProblemViewPage';
@@ -15,7 +14,7 @@ async function getMetadata(problemKey: string) {
   try {
     const response = await fetch(
       jukiApiSocketManager.API_V1.problem.getMetadata({ params: { key: problemKey } }).url,
-      { headers: META_HEADERS() });
+      { headers: getMetaHeaders() });
     const text = await response.text();
     result = cleanRequest<ContentResponseType<{
       title: string,

@@ -397,7 +397,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 ...prevState,
                 settings: { ...prevState.settings, languages: options.map(option => option.value) },
               }))}
-              extend
+              expand
               optionsPlacement="top"
             />
           </div>

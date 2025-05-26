@@ -206,7 +206,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                     : <T className="tt-se">problem not found</T>,
                 }}
                 onChange={({ value }) => setClarification({ ...clarification, problemJudgeKey: value })}
-                extend
+                expand
               />
             </div>
             <div className="jk-form-item">

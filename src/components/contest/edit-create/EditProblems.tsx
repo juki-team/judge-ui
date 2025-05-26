@@ -103,7 +103,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
       <div className="jk-row" style={{ width: 100 }}>
         <Input
           type="number"
-          extend
+          expand
           value={problem.points}
           onChange={(props) => {
             setProblems(prevState => prevState.map(p => {
@@ -139,7 +139,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 return p;
               }));
             }}
-            extend
+            expand
           />
         </div>
       )}
@@ -201,7 +201,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 return p;
               }));
             }}
-            extend
+            expand
           />
         </div>
       )}

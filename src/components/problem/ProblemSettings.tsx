@@ -71,7 +71,7 @@ export const Tags = ({ tags, judgeKey, onChange }: {
         onChange={(tags) => {
           onChange(tags.map(({ value }) => value).sort());
         }}
-        extend
+        expand
       />
     </div>
   );
@@ -138,7 +138,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             }))}
             selectedOption={{ value: problem.settings?.scoringMode }}
             onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, scoringMode: value } })}
-            extend
+            expand
           />
         </div>
         {(problem.settings.scoringMode === ProblemScoringMode.SUBTASK || problem.settings.scoringMode === ProblemScoringMode.PARTIAL) && (
@@ -188,7 +188,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                             }),
                           },
                         })}
-                        extend
+                        expand
                       />
                     </div>
                   )}
@@ -208,7 +208,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                             }),
                           },
                         })}
-                        extend
+                        expand
                       />
                     </div>
                   )}
@@ -264,7 +264,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             }))}
             selectedOption={{ value: problem.settings?.type }}
             onChange={({ value }) => setProblem({ ...problem, settings: { ...problem.settings, type: value } })}
-            extend
+            expand
           />
         </div>
         {problem.settings.type === ProblemType.DYNAMIC && (
@@ -411,7 +411,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                 },
               });
             }}
-            extend
+            expand
           />
         </div>
         <div className="jk-row left">
@@ -438,7 +438,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         },
                       },
                     })}
-                    extend
+                    expand
                   />
                   {/*{problem.settings.timeLimit > 1 ? <T>milliseconds</T> : <T>millisecond</T>}*/}
                   ms
@@ -457,7 +457,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         },
                       },
                     })}
-                    extend
+                    expand
                   />
                   <T>KB</T>
                 </div>
@@ -472,7 +472,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
           <Input
             onChange={value => setProblem({ ...problem, author: value })}
             value={problem.author}
-            extend
+            expand
           />
         </div>
         <Tags tags={problem.tags} judgeKey={problem.judgeKey} onChange={tags => setProblem({ ...problem, tags })} />

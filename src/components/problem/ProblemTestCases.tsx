@@ -251,7 +251,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                 <div className="jk-row nowrap gap">
                   <MultiSelect
                     disabled={lock}
-                    extend
+                    expand
                     options={groupsOptions}
                     selectedOptions={testCase.groups.map(group => ({ value: group }))}
                     onChange={(options) => {
@@ -479,7 +479,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                 options={groupsOptions}
                 selectedOptions={newGroups.map(newGroup => ({ value: newGroup }))}
                 onChange={(options) => setNewGroups(options.map(({ value }) => value))}
-                extend
+                expand
                 disabled={lock}
               />
             </div>

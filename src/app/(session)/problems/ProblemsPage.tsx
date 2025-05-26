@@ -202,7 +202,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
               options={judges}
               selectedOption={{ value: judgeKey }}
               onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}
-              extend
+              expand
             />
           </div>
         )}

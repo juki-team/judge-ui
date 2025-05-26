@@ -6,6 +6,7 @@ import {
   ButtonLoader,
   EditIcon,
   FirstLoginWrapper,
+  InfoIcon,
   ProblemInfo,
   ProblemView,
   T,
@@ -17,6 +18,7 @@ import {
   useEffect,
   useJukiNotification,
   useJukiTask,
+  useJukiUI,
   useMutate,
   useRouterStore,
   useState,
@@ -53,6 +55,7 @@ export const ProblemViewLayout = ({ problem }: {
   const { listenSubmission } = useJukiTask();
   const mutate = useMutate();
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
+  const { components: { Link } } = useJukiUI();
   
   useEffect(() => {
     const { url, ...options } = jukiApiSocketManager.API_V2.export.problem.statementToPdf({
@@ -101,34 +104,47 @@ export const ProblemViewLayout = ({ problem }: {
             // }
             
             return (
-              <FirstLoginWrapper>
-                <ButtonLoader
-                  type="secondary"
-                  size="tiny"
-                  disabled={sourceCode === ''}
-                  onClick={async setLoaderStatus => {
-                    setLoaderStatus(Status.LOADING);
-                    const { url, ...options } = jukiApiSocketManager.API_V1.problem.submit({
-                      params: { key: problem.key },
-                      body: { language: language as string, source: sourceCode },
-                    });
-                    const response = cleanRequest<ContentResponseType<any>>(
-                      await authorizedRequest(url, options),
-                    );
-                    
-                    if (notifyResponse(response, setLoaderStatus)) {
-                      listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
-                      await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
-                      pushRoute(jukiAppRoutes.JUDGE().problems.view({
-                        key: problem.key,
-                        tab: ProblemTab.MY_SUBMISSIONS,
-                      }));
-                    }
-                  }}
+              <div className="jk-row gap">
+                <FirstLoginWrapper>
+                  <ButtonLoader
+                    type="secondary"
+                    size="tiny"
+                    disabled={sourceCode === ''}
+                    onClick={async setLoaderStatus => {
+                      setLoaderStatus(Status.LOADING);
+                      const { url, ...options } = jukiApiSocketManager.API_V1.problem.submit({
+                        params: { key: problem.key },
+                        body: { language: language as string, source: sourceCode },
+                      });
+                      const response = cleanRequest<ContentResponseType<any>>(
+                        await authorizedRequest(url, options),
+                      );
+                      
+                      if (notifyResponse(response, setLoaderStatus)) {
+                        listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
+                        await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                        pushRoute(jukiAppRoutes.JUDGE().problems.view({
+                          key: problem.key,
+                          tab: ProblemTab.MY_SUBMISSIONS,
+                        }));
+                      }
+                    }}
+                  >
+                    <T className="tt-se">submit</T>
+                  </ButtonLoader>
+                </FirstLoginWrapper>
+                <Link
+                  data-tooltip-id="jk-tooltip"
+                  data-tooltip-content="how does it work?"
+                  href="https://www.juki.app/docs?page=2&sub_page=2&focus=ef99389d-f48f-415f-b652-38cac0a065b8"
+                  target="_blank"
+                  className="cr-py"
                 >
-                  <T className="tt-se">submit</T>
-                </ButtonLoader>
-              </FirstLoginWrapper>
+                  <div className="jk-row">
+                    <InfoIcon size="small" />
+                  </div>
+                </Link>
+              </div>
             );
           }}
           // expandPosition={{

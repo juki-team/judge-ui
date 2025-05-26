@@ -42,6 +42,7 @@ import {
   TabsType,
   UpsertContestDTOUI,
 } from 'types';
+import { InfoIcon } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewScoreboard } from './ViewScoreboard';
@@ -199,9 +200,22 @@ export function ContestView({ contest, reloadContest }: {
               );
               if (isAdministrator || isManager || isParticipant) {
                 return (
-                  <FirstLoginWrapper>
-                    {validSubmit}
-                  </FirstLoginWrapper>
+                  <div className="jk-row gap">
+                    <FirstLoginWrapper>
+                      {validSubmit}
+                    </FirstLoginWrapper>
+                    <Link
+                      data-tooltip-id="jk-tooltip"
+                      data-tooltip-content="how does it work?"
+                      href="https://www.juki.app/docs?page=2&sub_page=2&focus=ef99389d-f48f-415f-b652-38cac0a065b8"
+                      target="_blank"
+                      className="cr-py"
+                    >
+                      <div className="jk-row">
+                        <InfoIcon size="small" />
+                      </div>
+                    </Link>
+                  </div>
                 );
               }
               if (isGuest) {

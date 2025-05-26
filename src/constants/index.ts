@@ -1,5 +1,3 @@
-import { JUKI_FORWARDED_HOST, JUKI_METADATA, JUKI_SESSION_ID } from '@juki-team/commons';
-
 export {
   ERROR,
   SYSTEM_ROLE,
@@ -44,17 +42,3 @@ export * from './judge';
 export * from './problem';
 export * from './routes';
 export * from './settings';
-
-export const HEADERS = (jukiSessionId: string): HeadersInit => ({
-  origin: 'https://juki.app',
-  referer: 'https://juki.app',
-  [JUKI_SESSION_ID]: jukiSessionId,
-  [JUKI_FORWARDED_HOST]: 'juki.app',
-});
-
-export const META_HEADERS = (): HeadersInit => ({
-  origin: 'https://juki.app',
-  referer: 'https://juki.app',
-  [JUKI_METADATA]: 'true',
-  [JUKI_FORWARDED_HOST]: 'juki.app',
-});

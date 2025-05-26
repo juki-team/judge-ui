@@ -28,7 +28,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
           labelPlacement="top"
           value={contestId}
           onChange={setContestId}
-          extend
+          expand
           type="number"
         />
         <Input
@@ -37,7 +37,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
           size="auto"
           value={index}
           onChange={(value) => setIndex(value.toUpperCase())}
-          extend
+          expand
         />
         <ButtonLoader
           size="small"

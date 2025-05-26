@@ -2,8 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import { ProblemView } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { HEADERS } from 'config/constants';
-import { cleanRequest } from 'helpers';
+import { cleanRequest, getHeaders } from 'helpers';
 import { ContentResponseType, ProblemDataResponseDTO } from 'types';
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
@@ -16,7 +15,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     
     const { url } = jukiApiSocketManager.API_V1.problem.getData({ params: { key } });
     
-    const response = await fetch(url, { headers: HEADERS(jukiSessionId) });
+    const response = await fetch(url, { headers: getHeaders(jukiSessionId) });
     const text = await response.text();
     const result = cleanRequest<ContentResponseType<ProblemDataResponseDTO>>(text);
     if (result.success) {

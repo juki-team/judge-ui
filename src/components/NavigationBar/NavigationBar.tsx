@@ -3,7 +3,6 @@
 import {
   AssignmentIcon,
   CodeIcon,
-  HelpIcon,
   LeaderboardIcon,
   LibraryBooksIcon,
   LinkLastPath,
@@ -110,14 +109,6 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
     },
   );
   
-  menu.push({
-    label: <T className="tt-se">info</T>,
-    tooltipLabel: 'info',
-    icon: <HelpIcon />,
-    selected: ('/' + pathname).includes('//help'),
-    menuItemWrapper: ({ children }) => <LinkLastPath lastPathKey={LastPathKey.SECTION_HELP}>{children}</LinkLastPath>,
-  });
-  
   return (
     <>
       <MainMenu
@@ -127,34 +118,32 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         onBack={pathname !== backPah ? () => {
           pushRoute(backPah);
         } : undefined}
-        moreApps={
-          <>
-            <Link href="https://utils.juki.app">
-              <div className="jk-row gap left">
-                <Image
-                  width={100}
-                  height={50}
-                  src={`https://images.juki.pub/assets/juki-utils-horizontal-${userPreferredTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
-                  alt="juki coach"
-                />
-                <div className="link">utils.juki.app</div>
+        moreApps={companyKey == JUKI_APP_COMPANY_KEY && <>
+          <Link href="https://utils.juki.app">
+            <div className="jk-row gap left">
+              <Image
+                width={100}
+                height={50}
+                src={`https://images.juki.pub/assets/juki-utils-horizontal-${userPreferredTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
+                alt="juki utils"
+              />
+              <div className="link">utils.juki.app</div>
+            </div>
+          </Link>
+          <Link href="https://coach.juki.app">
+            <div className="jk-row gap left">
+              <Image
+                width={100}
+                height={50}
+                src={`https://images.juki.pub/assets/juki-coach-horizontal-${userPreferredTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
+                alt="juki coach"
+              />
+              <div className="jk-row nowrap" style={{ alignItems: 'baseline' }}>
+                <T className="link">coach.juki.app</T>
               </div>
-            </Link>
-            <Link href="https://coach.juki.app">
-              <div className="jk-row gap left">
-                <Image
-                  width={100}
-                  height={50}
-                  src={`https://images.juki.pub/assets/juki-coach-horizontal-${userPreferredTheme === Theme.DARK ? 'white' : 'color'}-logo.png`}
-                  alt="juki coach"
-                />
-                <div className="jk-row nowrap" style={{ alignItems: 'baseline' }}>
-                  <T className="link">coach.juki.app</T>
-                </div>
-              </div>
-            </Link>
-          </>
-        }
+            </div>
+          </Link>
+        </>}
       >
         {children}
       </MainMenu>
