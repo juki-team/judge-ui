@@ -143,7 +143,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
               size="tiny"
               type="light"
             >
-              <T>rejudge problem</T>
+              <T className="tt-se">rejudge problem</T>
             </ButtonLoader>
           )}
         </Field>
