@@ -103,4 +103,5 @@ export {
   JukiSocketAlert,
   SubmissionModal,
   JukiI18nProvider,
+  UserViewLayout,
 } from '@juki-team/base-ui';

@@ -1,9 +1,10 @@
 'use client';
 
-import { FetcherLayer, PageNotFound, ProfileViewLayout } from 'components';
+import { FetcherLayer, PageNotFound } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { useRouterStore } from 'hooks';
 import { ContentResponseType, UserProfileResponseDTO } from 'types';
+import { ProfileViewPage } from './ProfileViewPage';
 
 export default function ProfileView() {
   
@@ -14,7 +15,7 @@ export default function ProfileView() {
       url={nickname ? jukiApiSocketManager.API_V1.user.getProfile({ params: { nickname: nickname as string } }).url : null}
       errorView={<PageNotFound />}
     >
-      {({ data, mutate }) => <ProfileViewLayout profile={data.content} reloadProfile={mutate} />}
+      {({ data, mutate }) => <ProfileViewPage profile={data.content} reloadProfile={mutate} />}
     </FetcherLayer>
   );
 }
