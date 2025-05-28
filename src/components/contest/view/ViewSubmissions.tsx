@@ -2,11 +2,11 @@
 
 import {
   ButtonLoader,
+  getSubmissionContestProblemHeader,
   getSubmissionDateHeader,
   getSubmissionLanguageHeader,
   getSubmissionMemoryHeader,
   getSubmissionNicknameHeader,
-  getSubmissionProblemHeader,
   getSubmissionRejudgeHeader,
   getSubmissionTimeHeader,
   getSubmissionVerdictHeader,
@@ -58,7 +58,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
         value: participant,
         label: participant,
       })) ]),
-    getSubmissionProblemHeader({
+    getSubmissionContestProblemHeader({
       header: {
         filter: {
           type: 'select',
