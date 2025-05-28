@@ -1,10 +1,10 @@
 'use client';
 
 import {
+  getSubmissionContestProblemHeader,
   getSubmissionDateHeader,
   getSubmissionLanguageHeader,
   getSubmissionMemoryHeader,
-  getSubmissionProblemHeader,
   getSubmissionRejudgeHeader,
   getSubmissionTimeHeader,
   getSubmissionVerdictHeader,
@@ -44,7 +44,7 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
   
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => {
     return [
-      getSubmissionProblemHeader(),
+      getSubmissionContestProblemHeader(),
       getSubmissionDateHeader(),
       getSubmissionVerdictHeader(),
       ...(problem.user.isManager ? [ getSubmissionRejudgeHeader() ] : []),
