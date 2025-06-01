@@ -39,13 +39,20 @@ const DownloadButton = ({ contest, disabled, lastGetUrl }: DownloadButtonProps) 
   
   const [ loading, setLoading ] = useState(false);
   const { notifyResponse } = useJukiNotification();
+  
+  const options = [
+    { value: 'csv', label: <T className="tt-se">as csv</T> },
+  
+  ];
+  
+  if (contest.user.isManager || contest.user.isAdministrator) {
+    options.push({ value: 'complete', label: <T className="tt-se">as zip with source codes</T> });
+  }
+  
   return (
     <Select
       disabled={disabled || loading}
-      options={[
-        { value: 'csv', label: <T className="tt-se">as csv</T> },
-        { value: 'complete', label: <T className="tt-se">as zip with source codes</T> },
-      ]}
+      options={options}
       selectedOption={{ value: 'x', label: loading ? <SpinIcon /> : <T className="tt-se">download</T> }}
       onChange={async ({ value }) => {
         switch (value) {
