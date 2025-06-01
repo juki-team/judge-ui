@@ -35,10 +35,10 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_V1_URL}/contest`;
     },
     CONTEST: (key: string) => {
-      return `${JUKI_SERVICE_V1_URL}/contest/${key}`;
+      return `${JUKI_SERVICE_V1_URL}/contest/${encodeURIComponent(key)}`;
     },
     GLOBAL: (key: string) => {
-      return `${JUKI_SERVICE_V1_URL}/contest/${key}/global`;
+      return `${JUKI_SERVICE_V1_URL}/contest/${encodeURIComponent(key)}/global`;
     },
     CONTEST_DATA: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/data`;

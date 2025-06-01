@@ -221,7 +221,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
               size="tiny"
               type="light"
             >
-              <T>download problemset</T>
+              <T className="tt-se">download problemset</T>
             </ButtonLoader>
           </div>
         </div>

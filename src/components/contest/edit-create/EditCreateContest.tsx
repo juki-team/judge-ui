@@ -4,7 +4,7 @@ import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } fr
 import { jukiAppRoutes } from 'config';
 import { diff } from 'deep-object-diff';
 import { isGlobalContest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiUI, useRef, useRouterStore, useState } from 'hooks';
+import { useEffect, useJukiNotification, useJukiUI, useRef, useState } from 'hooks';
 import { memo } from 'react';
 import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
@@ -30,9 +30,6 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
   
   const { addWarningNotification } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
-  
-  const searchParams = useRouterStore(store => store.searchParams);
-  const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   
   const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest);
   const isGlobal = isGlobalContest(contest.settings);
@@ -145,8 +142,6 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
       tabButtons={tabButtons({ entityData: contest })}
-      selectedTabKey={contestTab}
-      getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.edit({ key: contestKey, tab })}
     >
       <div className="jk-row extend center tx-h">
         <Input

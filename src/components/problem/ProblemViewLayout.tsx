@@ -66,16 +66,6 @@ export const ProblemViewLayout = ({ problem }: {
       },
     });
     void authorizedRequest(url, options);
-    // const { url: url1, ...options1 } = jukiApiSocketManager.API_V2.export.problem.statementToPng({
-    //   params: {
-    //     key: problem.key,
-    //     token: userSessionId,
-    //     language: userLang,
-    //   },
-    // });
-    // authorizedRequest(url1, options1).then((data) => {
-    //   console.log({ data: cleanRequest(data) });
-    // });
   }, [ problem.key, userLang, userSessionId ]);
   
   const tabs: TabsType<ProblemTab> = {

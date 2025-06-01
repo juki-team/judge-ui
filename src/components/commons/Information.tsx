@@ -9,7 +9,14 @@ export interface InformationProps {
 
 export const Information = ({ children, filledCircle }: PropsWithChildren<InformationProps>) => {
   return (
-    <Popover content={<div style={{ width: '200px' }} className="jk-pg-sm">{children}</div>}>
+    <Popover
+      popoverClassName="bc-we jk-br-ie elevation-1 jk-pg-xsm"
+      content={
+        <div style={{ maxWidth: '200px' }}>
+          {children}
+        </div>
+      }
+    >
       <div className="jk-row">
         {filledCircle
           ? <ExclamationIcon rotate={180} filledCircle size="small" />

@@ -19,6 +19,7 @@ import {
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, contestStateMap, isGlobalContest, toUpsertContestDTOUI } from 'helpers';
 import {
+  useEffect,
   useI18nStore,
   useJukiNotification,
   useJukiTask,
@@ -38,6 +39,7 @@ import {
   EntityState,
   LastPathKey,
   ProblemTab,
+  ProfileSetting,
   Status,
   TabsType,
   UpsertContestDTOUI,
@@ -65,6 +67,18 @@ export function ContestView({ contest, reloadContest }: {
   const { listenSubmission } = useJukiTask();
   const mutate = useMutate();
   const { addWarningNotification, notifyResponse } = useJukiNotification();
+  const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
+  
+  useEffect(() => {
+    const { url, ...options } = jukiApiSocketManager.API_V2.export.contest.problems.statementsToPdf({
+      params: {
+        key: contest.key,
+        token: jukiApiSocketManager.getToken(),
+        language: userPreferredLanguage,
+      },
+    });
+    void authorizedRequest(url, options);
+  }, [ contest.key, userPreferredLanguage ]);
   
   const {
     user: { isAdministrator, isManager, isParticipant, isGuest, isSpectator },
@@ -334,7 +348,7 @@ export function ContestView({ contest, reloadContest }: {
           responsiveMobile
           key="edit"
         >
-          <T>edit</T>
+          <T className="tt-se">edit</T>
         </ButtonLoader>
       </Link>,
     );
