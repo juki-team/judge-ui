@@ -13,7 +13,7 @@ import {
   UserPreviewModal,
 } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { useEffect, useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
+import { useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React, { Children, PropsWithChildren } from 'react';
@@ -60,10 +60,10 @@ const initialLastPath = {
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
-  useEffect(() => {
-    jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
-    jukiApiSocketManager.setSocketSettings(JUKI_SOCKET_BASE_URL);
-  }, []);
+  // useEffect(() => {
+  jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
+  jukiApiSocketManager.setSocketSettings(JUKI_SOCKET_BASE_URL);
+  // }, []);
   
   const { isLoadingRoute, push, replace, refresh } = useRouter();
   const routeParams = useParams();

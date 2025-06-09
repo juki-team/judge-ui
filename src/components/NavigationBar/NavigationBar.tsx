@@ -98,7 +98,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   menu.push(
     {
       label: <T className="tt-se">IDE</T>,
-      tooltipLabel: 'boards',
+      tooltipLabel: 'IDE',
       icon: <CodeIcon />,
       selected: isIDEPage,
       menuItemWrapper: ({ children }) => (
