@@ -5,7 +5,6 @@ import {
   ErrorBoundary,
   Image,
   JukiProviders,
-  JukiSocketAlert,
   NavigationBar,
   NewVersionAvailable,
   SubmissionModal,
@@ -108,7 +107,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <UserPreviewModal key="user-preview-modal" />
         <SubmissionModal key="submission-modal" />
-        <JukiSocketAlert />
+        {/*<JukiSocketAlert />*/}
       </JukiProviders>
     </SWRConfig>
   );

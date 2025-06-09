@@ -14,12 +14,12 @@
     "deploy": "f() { yarn build && yarn git-push \"${1}\"; }; f"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^1.0.380",
+    "@juki-team/base-ui": "^1.0.381",
     "@juki-team/commons": "^0.0.777",
     "@vercel/analytics": "^1.2.2",
     "deep-object-diff": "^1.1.7",
     "motion": "^12.16.0",
-    "next": "^15.3.0",
+    "next": "^15.3.3",
     "next-compose-plugins": "^2.2.1",
     "next-pwa": "^5.6.0",
     "react": "^19.1.0",
@@ -28,13 +28,13 @@
     "xlsx-js-style": "^1.2.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^15.3.0",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "eslint": "^9.24.0",
-    "eslint-config-next": "^15.3.0",
+    "@next/bundle-analyzer": "^15.3.3",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.28.0",
+    "eslint-config-next": "^15.3.3",
     "local-ssl-proxy": "^2.0.5",
-    "sass": "^1.86.3",
+    "sass": "^1.89.1",
     "typescript": "^5.8.3"
   }
 }
