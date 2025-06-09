@@ -1360,10 +1360,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.0.378":
-  version "1.0.378"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.378/801433b262129c93c1297b66780858f5274a86d9#801433b262129c93c1297b66780858f5274a86d9"
-  integrity sha512-nDhmRv97k5HvEgmZOb0Go5BYuRw/qfXy+tjlTQMBa9sesPZY6cYcvKv6CBy+TkDcz1LIcggBbjDAWuyebkg0WQ==
+"@juki-team/base-ui@^1.0.380":
+  version "1.0.380"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.380/de0cee57eaef202011c12d849942e73798370abd#de0cee57eaef202011c12d849942e73798370abd"
+  integrity sha512-XmQMf4BtLKCfMRjtiDFi/E8iThSEz9QVlra0RUtsNGh+gYkNelydf/HVr5YvT25G/tFZ+AFY8w7txMRtOSTpeg==
   dependencies:
     "@codemirror/autocomplete" "^6.18.6"
     "@codemirror/lang-cpp" "^6.0.2"
@@ -1381,15 +1381,16 @@
     "@tanstack/react-virtual" "^3.13.9"
     "@types/graphlib-dot" "^0.6.4"
     "@uiw/react-codemirror" "^4.23.12"
+    codemirror "^6.0.1"
     countries-and-timezones "^3.8.0"
     d3-graphviz "^5.6.0"
+    d3-selection "^3.0.0"
     deep-object-diff "^1.1.9"
     diff2html "^3.4.51"
     graphlib-dot "^0.6.4"
     handsontable "^15.3.0"
     i18next "^25.2.1"
     immutability-helper "^3.1.1"
-    msw-storybook-addon "^2.0.5"
     prismjs "^1.30.0"
     react-color "^2.19.3"
     react-device-detect "^2.2.3"
@@ -2565,7 +2566,7 @@ cliui@^8.0.1:
     strip-ansi "^6.0.1"
     wrap-ansi "^7.0.0"
 
-codemirror@^6.0.0:
+codemirror@^6.0.0, codemirror@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-6.0.1.tgz#62b91142d45904547ee3e0e0e4c1a79158035a29"
   integrity sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==
@@ -2774,7 +2775,7 @@ d3-path@^3.1.0:
   resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-3.1.0.tgz#22df939032fb5a71ae8b1800d61ddb7851c42526"
   integrity sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ==
 
-"d3-selection@2 - 3", d3-selection@3:
+"d3-selection@2 - 3", d3-selection@3, d3-selection@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/d3-selection/-/d3-selection-3.0.0.tgz#c25338207efa72cc5b9bd1458a1a41901f1e1b31"
   integrity sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==
@@ -4163,11 +4164,6 @@ is-module@^1.0.0:
   resolved "https://registry.yarnpkg.com/is-module/-/is-module-1.0.0.tgz#3258fb69f78c14d5b815d664336b4cffb6441591"
   integrity sha512-51ypPSPCoTEIN9dy5Oy+h4pShgJmPCygKfyRCISBI+JoWT/2oJvK8QPxmwv7b/p239jXrm9M1mlQbyKJ5A152g==
 
-is-node-process@^1.0.1:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/is-node-process/-/is-node-process-1.2.0.tgz#ea02a1b90ddb3934a19aea414e88edef7e11d134"
-  integrity sha512-Vg4o6/fqPxIjtxgUH5QLJhwZ7gW5diGCVlXpuUfELC62CuxM1iHcRe51f2W1FDy04Ai4KJkagKjx3XaqyfRKXw==
-
 is-number-object@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/is-number-object/-/is-number-object-1.1.1.tgz#144b21e95a1bc148205dcc2814a9134ec41b2541"
@@ -5130,13 +5126,6 @@ ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
-
-msw-storybook-addon@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/msw-storybook-addon/-/msw-storybook-addon-2.0.5.tgz#93b3f6a18bb669d8e86474a7854e0f7a6ee2759d"
-  integrity sha512-uum2gtprDBoUb8GV/rPMwPytHmB8+AUr25BQUY0MpjYey5/ujaew2Edt+4oHiXpLTd0ThyMqmEvGy/sRpDV4lg==
-  dependencies:
-    is-node-process "^1.0.1"
 
 nanoid@^3.3.6:
   version "3.3.11"
