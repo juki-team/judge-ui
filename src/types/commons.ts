@@ -134,6 +134,7 @@ export type {
   SortableItemComponent,
   TableHeadFieldProps,
   PagedDataViewerProps,
+  DataViewerRequesterGetUrlType,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';
