@@ -2,9 +2,9 @@ import { KeyFileType } from 'types';
 import { JUKI_SERVICE_V1_URL } from './settings';
 
 export const JUDGE_API_V1 = {
-  SYS: {
-    MAIL_SEND: () => {
-      return `${JUKI_SERVICE_V1_URL}/sys/email/send`;
+  STATISTICS: {
+    PROBLEM: (problemKey: string) => {
+      return `${JUKI_SERVICE_V1_URL}/statistics/problem/${problemKey}/recalculate`;
     },
   },
   PROBLEM: {

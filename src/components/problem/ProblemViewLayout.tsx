@@ -13,6 +13,7 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import {
   useEffect,
@@ -27,6 +28,7 @@ import {
 } from 'hooks';
 import {
   ContentResponseType,
+  HTTPMethod,
   KeyedMutator,
   LastPathKey,
   ProblemDataResponseDTO,
@@ -35,6 +37,7 @@ import {
   Status,
   TabsType,
 } from 'types';
+import { InfoTestCases } from './InfoTestCases';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
@@ -46,6 +49,10 @@ export const ProblemViewLayout = ({ problem }: {
 }) => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
+  
+  useEffect(() => {
+    void authorizedRequest(JUDGE_API_V1.STATISTICS.PROBLEM(problem.key), { method: HTTPMethod.POST });
+  }, [ problem.key ]);
   const searchParams = useRouterStore(state => state.searchParams);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const userIsLogged = useUserStore(state => state.user.isLogged);
@@ -254,6 +261,7 @@ export const ProblemViewLayout = ({ problem }: {
           </h2>
           <div className="jk-tag bc-hl">{problem.judge?.name}</div>
           <ProblemInfo problem={problem} />
+          {problem.user.isManager && <InfoTestCases problem={problem} />}
           <ProblemStatus {...problem.user} />
         </div>
       </>
