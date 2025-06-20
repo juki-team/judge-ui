@@ -178,7 +178,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     tabs[ProblemTab.MY_SUBMISSIONS] = {
       key: ProblemTab.MY_SUBMISSIONS,
       header: <T className="ws-np tt-ce">my submissions</T>,
-      body: <ProblemMySubmissions problem={problem} />,
+      body: <ProblemMySubmissions problem={problem} key="my-submissions" />,
     };
   }
   tabs[ProblemTab.SUBMISSIONS] = {

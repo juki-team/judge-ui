@@ -1341,10 +1341,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.0.394":
-  version "1.0.394"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.394/89a8d3689d2471daaaa60c6b88c4546d62871b13#89a8d3689d2471daaaa60c6b88c4546d62871b13"
-  integrity sha512-vuhsGavVD1BLbYETtfz9gv+REvkNnACwkYZtfNKQYGBU/e8rbknww2j9fGPkTSDWe4bSKnXmHybT/OZNIzOZLw==
+"@juki-team/base-ui@^1.0.399":
+  version "1.0.399"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.0.399/bd9bd6ddbd25f6502283fc97251c1300320eea66#bd9bd6ddbd25f6502283fc97251c1300320eea66"
+  integrity sha512-ZAvQSNlVfbIm8YJNCfGaYMf94WwoHfHiKXDKRDYR5/+U3Ac1EPUg1JfWulVKkyVN8ks566E69s4o3B/wO+SNtw==
   dependencies:
     "@codemirror/autocomplete" "^6.18.6"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1359,7 +1359,7 @@
     "@floating-ui/react" "^0.27.12"
     "@handsontable/react" "^15.3.0"
     "@hookform/resolvers" "^5.1.1"
-    "@juki-team/commons" "^0.0.818"
+    "@juki-team/commons" "^0.0.819"
     "@tanstack/react-virtual" "^3.13.10"
     "@types/graphlib-dot" "^0.6.4"
     "@uiw/react-codemirror" "^4.23.13"
@@ -1390,10 +1390,15 @@
     yup "^1.6.1"
     zustand "^5.0.5"
 
-"@juki-team/commons@^0.0.818":
-  version "0.0.818"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.818/a4959c9828e7e6f3ddc48c4d214103d2806385fe#a4959c9828e7e6f3ddc48c4d214103d2806385fe"
-  integrity sha512-hwNXKs3zYIGzh5SMkorrJW54nE9dOg9+y1v4MVPSYO0sYmaQC2+eSF1yghtdqo1nuFHXriFXTIjvJ2b0rEaRow==
+"@juki-team/commons@^0.0.819":
+  version "0.0.819"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.819/c0000cd7108794e3184cd146cf231dbc2455e8af#c0000cd7108794e3184cd146cf231dbc2455e8af"
+  integrity sha512-1MxxScbe251tqAkKcacz60yTd1lue4pMUZeHFozK2OTnE801+fD1Qg8xubln1/D2Y91ke9P8rYACh652xuYtjw==
+
+"@juki-team/commons@^0.0.821":
+  version "0.0.821"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.821/3d6e3ed6e51b56948af0eb2fffb130040faef79f#3d6e3ed6e51b56948af0eb2fffb130040faef79f"
+  integrity sha512-hrxfIX8t21ADPQbJ6tsTDCFfUN1jdRTMAYl/pFQHTLgPAKSjFlsuIdvf+TW4A+v2ri/Snj39cXxFRAjX4GlMTg==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1":
   version "1.2.3"
