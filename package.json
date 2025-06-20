@@ -14,7 +14,7 @@
     "deploy": "f() { yarn build && yarn git-push \"${1}\"; }; f"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^1.0.392",
+    "@juki-team/base-ui": "^1.0.394",
     "@juki-team/commons": "^0.0.818",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.2.2",
