@@ -1,7 +1,7 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.19.13",
+  "version": "1.19.14",
   "scripts": {
     "dev": "next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
@@ -38,8 +38,5 @@
     "local-ssl-proxy": "^2.0.5",
     "sass": "^1.89.1",
     "typescript": "^5.8.3"
-  },
-  "resolutions": {
-    "yargs": "^17.7.2"
   }
 }
