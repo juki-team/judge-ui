@@ -29,6 +29,9 @@ export const JUDGE_API_V1 = {
     TEST_CASE_KEY_FILE: (problemKey: string, testCaseKey: string, keyFile: KeyFileType) => {
       return `${JUKI_SERVICE_V1_URL}/problem/${problemKey}/test-case/${testCaseKey}/key-file/${keyFile}`;
     },
+    STATISTICS: (key: string, startTimestamp: number, endTimestamp: number) => {
+      return `${JUKI_SERVICE_V1_URL}/statistics/problem/${key}?startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`;
+    },
   },
   CONTEST: {
     CREATE: () => {

@@ -31,7 +31,7 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
   return (
     <Modal {...props}>
       <div className="jk-pg-lg">
-        <h1><T>rejudge</T></h1>
+        <h1><T className="tt-se">rejudge</T></h1>
         <div className="jk-pg-tb cr-er">
           <T className="tt-se">there are</T>&nbsp;
           <span className="fw-bd">{data?.success && data.content.count}</span>&nbsp;
@@ -40,7 +40,7 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
         </div>
         <div className="jk-row gap right">
           <Button type="light" onClick={props.onClose}>
-            <T>cancel</T>
+            <T className="tt-se">cancel</T>
           </Button>
           <ButtonLoader
             data-tooltip-id="jk-tooltip"
@@ -71,8 +71,8 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
               }
             }}
           >
-            <T>rejudge</T>
-          </ButtonLoader>,
+            <T className="tt-se">rejudge</T>
+          </ButtonLoader>
         </div>
       </div>
     </Modal>

@@ -152,3 +152,17 @@ html {
 #jk-two-content-section-second-panel > .two-content-layout-body > .jk-tabs-inline-body-motion-layout > .jk-split-pane.jk-problem-view-layout > .jk-split-first-pane > .jk-problem-view-statement.jk-pg-sm {
   padding-left: 0;
 }
+
+.jk-tour-mask {
+  svg defs mask {
+    rect:last-child {
+      rx: var(--border-radius-inline) !important;
+      ry: var(--border-radius-inline);
+    }
+  }
+}
+
+.reactour__popover {
+  border-radius: var(--border-radius-inline);
+  padding: var(--pad-sm);
+}

@@ -1,14 +1,17 @@
 'use client';
 
+import { useTour } from '@reactour/tour';
 import {
   AutorenewIcon,
   Button,
   ButtonLoader,
+  DocumentMembersButton,
   EditIcon,
   FirstLoginWrapper,
   InfoIcon,
   ProblemInfo,
   ProblemView,
+  SpinIcon,
   T,
   TwoContentLayout,
 } from 'components';
@@ -26,6 +29,7 @@ import {
   useTrackLastPath,
   useUserStore,
 } from 'hooks';
+import dynamic from 'next/dynamic';
 import {
   ContentResponseType,
   HTTPMethod,
@@ -43,16 +47,31 @@ import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
 import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
 
-export const ProblemViewLayout = ({ problem }: {
+const LazyProblemStatistics = dynamic(() => import('./ProblemStatistics').then(mod => mod.ProblemStatistics), {
+  ssr: false,
+  loading: () => <SpinIcon />,
+});
+
+export const ProblemViewLayout = ({ problem, reloadProblem }: {
   problem: ProblemDataResponseDTO,
   reloadProblem: KeyedMutator<any>,
 }) => {
+  
+  const { setIsOpen } = useTour();
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   
   useEffect(() => {
     void authorizedRequest(JUDGE_API_V1.STATISTICS.PROBLEM(problem.key), { method: HTTPMethod.POST });
   }, [ problem.key ]);
+  
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('jk-seen-problem-statistics-tour');
+    if (!hasSeen) {
+      setIsOpen(true);
+      localStorage.setItem('jk-seen-problem-statistics-tour', 'true');
+    }
+  }, [ setIsOpen ]);
   const searchParams = useRouterStore(state => state.searchParams);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const userIsLogged = useUserStore(state => state.user.isLogged);
@@ -167,6 +186,11 @@ export const ProblemViewLayout = ({ problem }: {
     header: <T className="ws-np tt-ce">submissions</T>,
     body: <ProblemSubmissions problem={problem} />,
   };
+  tabs[ProblemTab.STATISTICS] = {
+    key: ProblemTab.STATISTICS,
+    header: <T className="ws-np tt-ce tab-statistics">statistics</T>,
+    body: <LazyProblemStatistics problem={problem} />,
+  };
   
   // const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [
   //   <LinkLastPath
@@ -188,6 +212,14 @@ export const ProblemViewLayout = ({ problem }: {
   const extraNodes = [];
   if (problem.user?.isManager && !problem.judge?.isExternal) {
     extraNodes.push(
+      <DocumentMembersButton
+        documentMembers={problem.members}
+        documentOwner={problem.owner}
+        documentName={<T>problem</T>}
+        saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM(problem.key)}
+        reloadDocument={reloadProblem}
+        copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
+      />,
       <Button
         data-tooltip-id="jk-tooltip"
         data-tooltip-content="only submissions that are not in a contest will be judged"
@@ -248,23 +280,21 @@ export const ProblemViewLayout = ({ problem }: {
       selectedTabKey={problemTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
     >
-      <>
-        <RejudgeConfirmationModal
-          isOpen={isOpenRejudgeModal}
-          onClose={() => setIsOpenRejudgeModal(false)}
-          problemKey={problem.key}
-        />
-        {/*<CustomHead title={problem.name} />*/}
-        <div className="jk-row gap left">
-          <h2>
-            {(problem.shortname ? `[${problem.shortname}] ` : '') + problem.name}&nbsp;
-          </h2>
-          <div className="jk-tag bc-hl">{problem.judge?.name}</div>
-          <ProblemInfo problem={problem} />
-          {problem.user.isManager && <InfoTestCases problem={problem} />}
-          <ProblemStatus {...problem.user} />
-        </div>
-      </>
+      <RejudgeConfirmationModal
+        isOpen={isOpenRejudgeModal}
+        onClose={() => setIsOpenRejudgeModal(false)}
+        problemKey={problem.key}
+      />
+      {/*<CustomHead title={problem.name} />*/}
+      <div className="jk-row gap left">
+        <h2>
+          {(problem.shortname ? `[${problem.shortname}] ` : '') + problem.name}&nbsp;
+        </h2>
+        <div className="jk-tag bc-hl tx-s">{problem.judge?.name}</div>
+        <ProblemInfo problem={problem} />
+        {problem.user.isManager && <InfoTestCases problem={problem} />}
+        <ProblemStatus {...problem.user} />
+      </div>
     </TwoContentLayout>
   );
 };

@@ -34,6 +34,7 @@ export {
   JUKI_FORWARDED_HOST,
   JUKI_SESSION_ID,
   JUKI_METADATA,
+  MONTH_NAMES,
 } from '@juki-team/commons';
 
 export * from './commons';

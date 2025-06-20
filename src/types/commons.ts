@@ -89,6 +89,8 @@ export type {
   EntityMembersResponseDTO,
   ProblemJudgeSummaryListResponseDTO,
   EntityCompanySummaryListResponseDTO,
+  StatisticsProblemResponseDTO,
+  StatisticsDateType,
 } from '@juki-team/commons';
 export { Period, NotificationType, QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/types';
 
@@ -135,6 +137,7 @@ export type {
   TableHeadFieldProps,
   PagedDataViewerProps,
   DataViewerRequesterGetUrlType,
+  DateLiteralProps,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

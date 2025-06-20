@@ -104,4 +104,5 @@ export {
   SubmissionModal,
   JukiI18nProvider,
   UserViewLayout,
+  DocumentMembersButton,
 } from '@juki-team/base-ui';

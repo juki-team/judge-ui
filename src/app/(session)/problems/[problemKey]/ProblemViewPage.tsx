@@ -1,5 +1,6 @@
 'use client';
 
+import { TourProvider } from '@reactour/tour';
 import {
   AssignmentIcon,
   Button,
@@ -14,6 +15,21 @@ import { jukiApiSocketManager } from 'config';
 import { oneTab } from 'helpers';
 import { useRunnerServicesWakeUp, useTrackLastPath } from 'hooks';
 import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
+
+const ContentStatistics = (...props: any[]) => {
+  return (
+    <div>
+      <T className="tt-se fw-bd">¡new!</T>&nbsp;<T className="tt-se">explore the statistics of the problem</T>
+    </div>
+  );
+};
+
+const steps = [
+  {
+    selector: '.jk-tabs-inline-tab-statistics',
+    content: ContentStatistics,
+  },
+];
 
 export default function ProblemViewPage({ problemKey }: { problemKey: string }) {
   
@@ -51,7 +67,20 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
       }
     >
       {({ data, mutate }) => (
-        <ProblemViewLayout problem={data.content} reloadProblem={mutate} />
+        <TourProvider
+          steps={steps}
+          onClickHighlighted={(event, { setIsOpen }) => {
+            setIsOpen(false);
+          }}
+          highlightedMaskClassName="testing-abc"
+          maskClassName="jk-tour-mask"
+          disableInteraction
+          showBadge={false}
+          showNavigation={false}
+          showCloseButton={false}
+        >
+          <ProblemViewLayout problem={data.content} reloadProblem={mutate} />
+        </TourProvider>
       )}
     </FetcherLayer>
   );

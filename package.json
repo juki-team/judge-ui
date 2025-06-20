@@ -14,8 +14,9 @@
     "deploy": "f() { yarn build && yarn git-push \"${1}\"; }; f"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^1.0.384",
-    "@juki-team/commons": "^0.0.807",
+    "@juki-team/base-ui": "^1.0.392",
+    "@juki-team/commons": "^0.0.818",
+    "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.2.2",
     "deep-object-diff": "^1.1.7",
     "motion": "^12.16.0",
@@ -24,6 +25,8 @@
     "next-pwa": "^5.6.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-joyride": "^2.9.3",
+    "recharts": "^2.15.3",
     "uuid": "^11.0.3",
     "xlsx-js-style": "^1.2.0"
   },

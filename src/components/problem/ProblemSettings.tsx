@@ -423,7 +423,9 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
           {Object.values(problem.settings?.byProgrammingLanguage).map(({ language }) => {
             return (
               <div className="jk-row block gap extend jk-table-inline-row" key={language}>
-                <div style={{ maxWidth: 200 }} className="jk-row">{PROGRAMMING_LANGUAGE[language].label}</div>
+                <div style={{ maxWidth: 200 }} className="jk-row">
+                  {PROGRAMMING_LANGUAGE[language]?.label ?? language}
+                </div>
                 <div className="jk-row center gap nowrap">
                   <Input
                     type="number"
