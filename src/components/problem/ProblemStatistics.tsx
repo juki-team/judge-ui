@@ -8,13 +8,7 @@ import { i18n } from 'i18next';
 import React, { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { TooltipProps } from 'recharts/types/component/Tooltip';
-import {
-  ContentResponseType,
-  DateLiteralProps,
-  ProblemDataResponseDTO,
-  StatisticsDateType,
-  StatisticsProblemResponseDTO,
-} from 'types';
+import { ContentResponseType, DateLiteralProps, ProblemDataResponseDTO, StatisticsProblemResponseDTO } from 'types';
 
 const now = Date.now();
 
@@ -66,7 +60,7 @@ const customizedAxisTick = (angle: number) => function Cmp({ x, y, payload }: { 
   );
 };
 
-type StatisticsDateKey = keyof StatisticsDateType<number>;
+type StatisticsDateKey = keyof StatisticsProblemResponseDTO['date'];
 
 const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t: i18n['t']) => {
   
@@ -104,7 +98,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
   const [ dateType, setDateType ] = useState<StatisticsDateKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};
-  const verdictsDate = data?.success ? data.content.date : {} as StatisticsDateType<number>;
+  const verdictsDate = data?.success ? data.content.date : {} as StatisticsProblemResponseDTO['date'];
   const languagesData = [];
   const verdictsData = [];
   const dateData = [];
