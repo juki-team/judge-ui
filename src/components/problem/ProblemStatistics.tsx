@@ -66,7 +66,7 @@ const customizedAxisTick = (angle: number) => function Cmp({ x, y, payload }: { 
   );
 };
 
-type StatisticsDateKey = keyof StatisticsDateType;
+type StatisticsDateKey = keyof StatisticsDateType<number>;
 
 const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t: i18n['t']) => {
   
@@ -104,7 +104,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
   const [ dateType, setDateType ] = useState<StatisticsDateKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};
-  const verdictsDate = data?.success ? data.content.date : {} as StatisticsDateType;
+  const verdictsDate = data?.success ? data.content.date : {} as StatisticsDateType<number>;
   const languagesData = [];
   const verdictsData = [];
   const dateData = [];
