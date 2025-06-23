@@ -10,9 +10,9 @@ import {
   UpdateEntityLayout,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { JUDGE_API_V1 } from 'config/constants';
 import { isGlobalContest, oneTab, toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
 import { useRouterStore } from 'hooks';
-import { JUDGE_API_V1 } from 'src/constants';
 import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
 
 function ContestEdit() {
@@ -25,7 +25,7 @@ function ContestEdit() {
   
   const Error = (
     <TwoContentLayout breadcrumbs={breadcrumbs} tabs={oneTab(<PageNotFound />)}>
-      <h2><T>contest not found</T></h2>
+      <h2><T className="tt-se">contest not found</T></h2>
     </TwoContentLayout>
   );
   

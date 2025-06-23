@@ -3,7 +3,7 @@
 import {
   Button,
   DeleteIcon,
-  InfoIcon,
+  InfoIIcon,
   Input,
   InputToggle,
   Modal,
@@ -61,7 +61,7 @@ export const Tags = ({ tags, judgeKey, onChange }: {
           data-tooltip-t-class-name="tt-se"
           className="jk-row"
         >
-          <InfoIcon size="small" />
+          <InfoIIcon circle size="small" />
         </div>
         &nbsp;<span className="fw-bd">:</span>
       </div>

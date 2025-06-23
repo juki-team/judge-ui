@@ -40,4 +40,5 @@ export {
   getHeaders,
   getMetaHeaders,
   showOfDateDisplayType,
+  objectDiff,
 } from '@juki-team/base-ui/helpers';

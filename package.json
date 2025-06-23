@@ -14,11 +14,10 @@
     "deploy": "f() { yarn build && yarn git-push \"${1}\"; }; f"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^1.0.401",
-    "@juki-team/commons": "^0.0.823",
+    "@juki-team/base-ui": "^1.0.409",
+    "@juki-team/commons": "^0.0.825",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.2.2",
-    "deep-object-diff": "^1.1.7",
     "motion": "^12.16.0",
     "next": "^15.3.3",
     "next-compose-plugins": "^2.2.1",

@@ -108,7 +108,9 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                       }}
                       icon={!!clarification.answerTimestamp ? <EditIcon /> : <CommentIcon />}
                     >
-                      {!!clarification.answerTimestamp ? <T>edit</T> : <T>answer</T>}
+                      {!!clarification.answerTimestamp
+                        ? <T className="tt-se">edit</T>
+                        : <T className="tt-se">answer</T>}
                     </Button>
                   </div>
                 )}

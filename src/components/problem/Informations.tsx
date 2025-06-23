@@ -1,6 +1,6 @@
 'use client';
 
-import { ExclamationIcon, InformationProps, Modal, T } from 'components';
+import { InfoIIcon, InformationProps, Modal, T } from 'components';
 import { useState } from 'hooks';
 import { ProblemVerdict } from 'types';
 import { Verdict } from './Verdict';
@@ -72,8 +72,8 @@ export const ProblemScoringModeInformation = ({ filledCircle }: InformationProps
         className="jk-row cr-pr br-50-pc"
       >
         {filledCircle
-          ? <ExclamationIcon rotate={180} filledCircle size="small" />
-          : <ExclamationIcon rotate={180} circle size="small" />}
+          ? <InfoIIcon filledCircle size="small" />
+          : <InfoIIcon circle size="small" />}
       </div>
     </>
   );

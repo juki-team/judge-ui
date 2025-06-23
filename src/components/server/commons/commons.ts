@@ -1,5 +1,4 @@
 export {
-  InfoIcon,
   BubbleChartIcon,
   ListIcon,
   LeaderboardIcon,
@@ -7,7 +6,7 @@ export {
   FullscreenExitIcon,
   FullscreenIcon,
   AcUnitIcon,
-  ArrowIcon,
+  InfoIIcon,
   AssignmentIcon,
   CheckIcon,
   ManufacturingIcon,

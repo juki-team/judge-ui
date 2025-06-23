@@ -1,12 +1,11 @@
 'use client';
 
-import { T } from 'components';
+import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
 import { useFetcher, useI18nStore, useJukiUI } from 'hooks';
 import { i18n } from 'i18next';
 import React, { useState } from 'react';
-import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { TooltipProps } from 'recharts/types/component/Tooltip';
 import { ContentResponseType, DateLiteralProps, ProblemDataResponseDTO, StatisticsProblemResponseDTO } from 'types';
 
@@ -133,25 +132,29 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
       <div className="jk-col gap nowrap flex-1 bc-we jk-pg-sm" style={{ height: '80%' }}>
         <T className="tt-se fw-bd">statistics by date</T>
         <div className="jk-row gap">
-          <div className={classNames('jk-tag', { 'bc-hl': dateType !== 'day' })} onClick={() => setDateType('day')}>
-            <T className="tt-se">day</T>
-          </div>
-          <div className={classNames('jk-tag', { 'bc-hl': dateType !== 'month' })} onClick={() => setDateType('month')}>
-            <T className="tt-se">month</T>
-          </div>
-          <div className={classNames('jk-tag', { 'bc-hl': dateType !== 'year' })} onClick={() => setDateType('year')}>
-            <T className="tt-se">year</T>
-          </div>
+          {[
+            { key: 'day' as StatisticsDateKey },
+            { key: 'month' as StatisticsDateKey },
+            { key: 'year' as StatisticsDateKey },
+          ].map(({ key }) => (
+            <Button
+              size="small"
+              type={dateType === key ? 'primary' : 'light'}
+              key={key}
+              onClick={() => {
+                setDateType(key);
+              }}
+            >
+              <T className="tt-se">{key}</T>
+            </Button>
+          ))}
         </div>
-        <ResponsiveContainer height={256}>
-          <LineChart data={dateData} margin={{ bottom: 128, right: 24, left: 0, top: 16 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="label" tick={customizedAxisTick(-75)} includeHidden interval={0} />
-            <YAxis interval={0} />
-            <Tooltip content={CustomTooltipA} />
-            <Line type="monotone" dataKey="accum" stroke="var(--t-color-primary-light)" />
-          </LineChart>
-        </ResponsiveContainer>
+        <LineChart
+          data={dateData}
+          margin={{ bottom: 128, right: 24, left: 0, top: 16 }}
+          tooltipContent={CustomTooltipA}
+          xAxisTick={customizedAxisTick(-75)}
+        />
       </div>
       <div className={classNames('top gap ht-100 nowrap', { 'jk-row': !oneColumn, 'jk-col': oneColumn })}>
         <div
@@ -161,15 +164,12 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
           )}
         >
           <T className="tt-se fw-bd">statistics by language</T>
-          <ResponsiveContainer minHeight={256}>
-            <BarChart data={languagesData} margin={{ bottom: 150, right: 24, left: 0, top: 16 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="label" tick={customizedAxisTick(-35)} includeHidden interval={0} />
-              <YAxis interval={0} />
-              <Tooltip content={CustomTooltip} />
-              <Bar dataKey="value" fill="var(--t-color-primary-light)" minPointSize={5} activeBar={false} />
-            </BarChart>
-          </ResponsiveContainer>
+          <BarChart
+            data={languagesData}
+            margin={{ bottom: 150, right: 24, left: 0, top: 16 }}
+            tooltipContent={CustomTooltip}
+            xAxisTick={customizedAxisTick(-35)}
+          />
         </div>
         <div
           className={classNames(
@@ -178,15 +178,12 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
           )}
         >
           <T className="tt-se fw-bd">statistics by verdict</T>
-          <ResponsiveContainer minHeight={256}>
-            <BarChart data={verdictsData} margin={{ bottom: 150, right: 24, left: 0, top: 16 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="label" tick={customizedAxisTick(-35)} includeHidden interval={0} />
-              <YAxis interval={0} />
-              <Tooltip content={CustomTooltip} />
-              <Bar dataKey="value" fill="var(--t-color-primary-light)" minPointSize={5} />
-            </BarChart>
-          </ResponsiveContainer>
+          <BarChart
+            data={verdictsData}
+            margin={{ bottom: 150, right: 24, left: 0, top: 16 }}
+            tooltipContent={CustomTooltip}
+            xAxisTick={customizedAxisTick(-35)}
+          />
         </div>
       </div>
     </div>

@@ -41,17 +41,7 @@ module.exports = withPlugins([
       {
         protocol: 'https',
         hostname: 'images.juki.pub',
-        pathname: '/u/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.juki.pub',
-        pathname: '/c/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.juki.pub',
-        pathname: '/assets/**',
+        pathname: '/**',
       },
       {
         protocol: 'https',

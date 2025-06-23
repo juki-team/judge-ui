@@ -105,4 +105,6 @@ export {
   JukiI18nProvider,
   UserViewLayout,
   DocumentMembersButton,
+  BarChart,
+  LineChart,
 } from '@juki-team/base-ui';

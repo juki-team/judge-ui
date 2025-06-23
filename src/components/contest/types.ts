@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { UpsertContestDTOUI } from 'src/types';
+import { UpsertContestDTOUI } from 'types';
 
 export interface EditContestProps {
   contest: UpsertContestDTOUI,

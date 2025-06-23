@@ -8,10 +8,9 @@ import {
   DocumentMembersButton,
   EditIcon,
   FirstLoginWrapper,
-  InfoIcon,
+  InfoIIcon,
   ProblemInfo,
   ProblemView,
-  SpinIcon,
   T,
   TwoContentLayout,
 } from 'components';
@@ -29,7 +28,6 @@ import {
   useTrackLastPath,
   useUserStore,
 } from 'hooks';
-import dynamic from 'next/dynamic';
 import {
   ContentResponseType,
   HTTPMethod,
@@ -43,14 +41,10 @@ import {
 } from 'types';
 import { InfoTestCases } from './InfoTestCases';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
+import { ProblemStatistics } from './ProblemStatistics';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
 import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
-
-const LazyProblemStatistics = dynamic(() => import('./ProblemStatistics').then(mod => mod.ProblemStatistics), {
-  ssr: false,
-  loading: () => <SpinIcon />,
-});
 
 export const ProblemViewLayout = ({ problem, reloadProblem }: {
   problem: ProblemDataResponseDTO,
@@ -109,7 +103,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
             // if (problem.judge.isExternal && false) {
             //   return (
             //     <div className="jk-row">
-            //       <InfoIcon
+            //       <InfoIIcon
             //         data-tooltip-id="jk-tooltip"
             //         data-tooltip-content="it is not possible to submit to external judges at this time, we apologize for the inconvenience"
             //         data-tooltip-t-class-name="tt-se"
@@ -157,7 +151,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                   className="cr-py"
                 >
                   <div className="jk-row">
-                    <InfoIcon size="small" />
+                    <InfoIIcon circle size="small" />
                   </div>
                 </Link>
               </div>
@@ -189,7 +183,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   tabs[ProblemTab.STATISTICS] = {
     key: ProblemTab.STATISTICS,
     header: <T className="ws-np tt-ce tab-statistics">statistics</T>,
-    body: <LazyProblemStatistics problem={problem} />,
+    body: <ProblemStatistics problem={problem} />,
   };
   
   // const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [

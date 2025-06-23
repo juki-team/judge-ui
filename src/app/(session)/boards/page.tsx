@@ -105,7 +105,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
       extraNodes={userCanAdministrateServices ? [
         <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key })} key="edit">
           <Button size="tiny" type="light">
-            <T>edit</T></Button>
+            <T className="tt-se">edit</T></Button>
         </Link>,
       ] : []}
       headers={columns}
@@ -149,7 +149,7 @@ function Boards() {
     tabs[globalContest.key] = {
       body: <Scoreboard contest={globalContest} />,
       key: globalContest.key,
-      header: <div>{globalContest.name}</div>,
+      header: <div className="ws-np">{globalContest.name}</div>,
     };
   }
   

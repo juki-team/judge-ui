@@ -6,6 +6,7 @@ import {
   EditIcon,
   EditViewMembers,
   FirstLoginWrapper,
+  InfoIIcon,
   NavigateBeforeIcon,
   NavigateNextIcon,
   Popover,
@@ -44,7 +45,6 @@ import {
   TabsType,
   UpsertContestDTOUI,
 } from 'types';
-import { InfoIcon } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewScoreboard } from './ViewScoreboard';
@@ -226,7 +226,7 @@ export function ContestView({ contest, reloadContest }: {
                       className="cr-py"
                     >
                       <div className="jk-row">
-                        <InfoIcon size="small" />
+                        <InfoIIcon circle size="small" />
                       </div>
                     </Link>
                   </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { DeleteIcon, EditIcon, InfoIcon, SaveIcon, TextArea } from 'components';
+import { DeleteIcon, EditIcon, InfoIIcon, SaveIcon, TextArea } from 'components';
 import React, { useEffect, useState } from 'react';
 import { ProblemSampleCasesType } from 'types';
 
@@ -48,7 +48,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
                   data-tooltip-content={`${sample.input.lastIndexOf('\n') === sample.input.length - 1 ? '' : 'no '}newline at end of file`}
                   className="cr-th"
                 >
-                  <InfoIcon size="small" />
+                  <InfoIIcon circle size="small" />
                 </div>
               </div>
               <span>{sample.input}</span>
@@ -69,7 +69,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
                   data-tooltip-content={`${sample.output.lastIndexOf('\n') === sample.output.length - 1 ? '' : 'no '}newline at end of file`}
                   className="cr-th"
                 >
-                  <InfoIcon size="small" />
+                  <InfoIIcon circle size="small" />
                 </div>
               </div>
               <span>

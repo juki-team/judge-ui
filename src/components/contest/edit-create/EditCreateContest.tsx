@@ -2,9 +2,8 @@
 
 import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
-import { diff } from 'deep-object-diff';
-import { isGlobalContest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiUI, useRef, useState } from 'hooks';
+import { isGlobalContest, objectDiff, renderReactNodeOrFunctionP1 } from 'helpers';
+import { useEffect, useJukiNotification, useJukiUI, useRef, useRouterStore, useState } from 'hooks';
 import { memo } from 'react';
 import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
@@ -30,16 +29,17 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
   
   const { addWarningNotification } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
-  
   const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest);
   const isGlobal = isGlobalContest(contest.settings);
+  const searchParams = useRouterStore(store => store.searchParams);
+  const tab = searchParams.get('tab') as ContestTab || ContestTab.OVERVIEW;
   useEffect(() => {
     localStorage.removeItem(LS_INITIAL_CONTEST_KEY);
   }, []);
   const lastContest = useRef(initialContest);
   useEffect(() => {
     if (editing && JSON.stringify(initialContest) !== JSON.stringify(lastContest.current)) {
-      const text = JSON.stringify(diff(lastContest.current as object, initialContest), null, 2);
+      const text = JSON.stringify(objectDiff(lastContest.current as object, initialContest), null, 2);
       const height = text.split('\n').length;
       addWarningNotification(
         <div>
@@ -142,6 +142,8 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
       tabButtons={tabButtons({ entityData: contest })}
+      selectedTabKey={tab}
+      getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().contests.edit({ key: contestKey, tab })}
     >
       <div className="jk-row extend center tx-h">
         <Input

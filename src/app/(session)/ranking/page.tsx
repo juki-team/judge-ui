@@ -1,9 +1,9 @@
 'use client';
 
 import { DataViewer, Field, T, TextField, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
+import { oneTab } from 'helpers';
 import { useDataViewerRequester, useEffect, useJukiUI, useMemo, useState } from 'hooks';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
-import { oneTab } from 'src/helpers';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {

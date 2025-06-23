@@ -9,7 +9,7 @@ import {
   getProblemNameHeader,
   getProblemTagsHeader,
   getProblemTypeHeader,
-  InfoIcon,
+  InfoIIcon,
   PagedDataViewer,
   PlusIcon,
   Select,
@@ -189,14 +189,16 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
         <div className="jk-row gap">
           <h1><T className="tt-se">problems</T></h1>
           {isExternal && (
-            <InfoIcon
+            <InfoIIcon
+              circle
               data-tooltip-id="jk-tooltip"
               data-tooltip-content="only tracked problems are displayed"
             />
           )}
         </div>
         {judgeKey && (
-          <div style={{ width: 200 }}>
+          <div className="jk-row gap nowrap jk-pg-xsm jk-br-ie">
+            <div className="jk-row nowrap"><T className="tt-se fw-br cr-th tx-h">judge</T>:</div>
             <Select
               className="jk-border-radius-inline jk-button secondary"
               options={judges}

@@ -2,7 +2,7 @@
 
 import { FlagEnImage, FlagEsImage, MdMathEditor, Tabs } from 'components';
 import React from 'react';
-import { Language, TextLanguageType } from 'src/types';
+import { Language, TextLanguageType } from 'types';
 
 export const TextLangEdit = ({ text, setText }: {
   text: TextLanguageType,

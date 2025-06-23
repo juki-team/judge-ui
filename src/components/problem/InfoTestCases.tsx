@@ -1,4 +1,4 @@
-import { ExclamationIcon, Popover, SpinIcon, T } from 'components';
+import { InfoIIcon, Popover, SpinIcon, T } from 'components';
 import { jukiApiSocketManager } from 'config';
 import { useFetcher } from 'hooks';
 import { ContentResponseType, ProblemDataResponseDTO, ProblemTestCasesResponseDTO } from 'types';
@@ -32,7 +32,7 @@ export const InfoTestCases = ({ problem }: { problem: ProblemDataResponseDTO }) 
       <div className="jk-row link">
         {isLoading
           ? <SpinIcon />
-          : <ExclamationIcon circle rotate={180} />}
+          : <InfoIIcon circle />}
       </div>
     </Popover>
   );
