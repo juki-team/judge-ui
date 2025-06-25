@@ -3,7 +3,7 @@
 import { CreateEntityLayout, EditCreateProblem, PageNotFound } from 'components';
 import { jukiAppRoutes } from 'config';
 import { getJudgeKeyOfProblemJudgeKey, toUpsertProblemDTO } from 'helpers';
-import { useMemo, useUserStore } from 'hooks';
+import { useMemo, useRouterStore, useUserStore } from 'hooks';
 import { JUDGE_API_V1, PROBLEM_DEFAULT } from 'src/constants';
 import { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 
@@ -13,14 +13,16 @@ function ProblemCreate() {
   const userImageUrl = useUserStore(state => state.user.imageUrl);
   const userNickname = useUserStore(state => state.user.nickname);
   const userCanCreateProblems = useUserStore(state => state.user.permissions.problems.create);
+  const searchParams = useRouterStore(store => store.searchParams);
+  const judge = searchParams.get('judge') ?? 'juki-judge';
   
   const newEntity = useMemo(() => () => PROBLEM_DEFAULT({
     nickname: userNickname,
     imageUrl: userImageUrl,
     companyKey,
-    judgeKey: companyKey,
+    judgeKey: judge,
     judgeIsExternal: false,
-  }), [ userNickname, userImageUrl, companyKey ]);
+  }), [ userNickname, userImageUrl, companyKey, judge ]);
   
   if (!userCanCreateProblems) {
     return <PageNotFound />;

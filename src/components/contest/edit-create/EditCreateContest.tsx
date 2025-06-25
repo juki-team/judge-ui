@@ -143,7 +143,11 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
       tabs={tabHeaders}
       tabButtons={tabButtons({ entityData: contest })}
       selectedTabKey={tab}
-      getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().contests.edit({ key: contestKey, tab })}
+      getHrefOnTabChange={(tab) =>
+        editing
+          ? jukiAppRoutes.JUDGE().contests.edit({ key: contestKey, tab })
+          : jukiAppRoutes.JUDGE().contests.new({ tab })
+      }
     >
       <div className="jk-row extend center tx-h">
         <Input

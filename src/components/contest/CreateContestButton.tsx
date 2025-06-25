@@ -1,22 +1,22 @@
 'use client';
 
-import { ButtonLoader, PlusIcon, T } from 'components';
+import { Button, PlusIcon, T } from 'components';
 import { jukiAppRoutes } from 'config';
-import { buttonLoaderLink } from 'helpers';
-import { useRouterStore } from 'hooks';
+import { useJukiUI } from 'hooks';
 
 export const CreateContestButton = () => {
   
-  const pushRoute = useRouterStore(state => state.pushRoute);
+  const { components: { Link } } = useJukiUI();
   
   return (
-    <ButtonLoader
-      size="small"
-      icon={<PlusIcon />}
-      onClick={buttonLoaderLink(() => pushRoute(jukiAppRoutes.JUDGE().contests.new()))}
-      responsiveMobile
-    >
-      <T className="tt-se">create</T>
-    </ButtonLoader>
+    <Link href={jukiAppRoutes.JUDGE().contests.new()}>
+      <Button
+        size="small"
+        icon={<PlusIcon />}
+        responsiveMobile
+      >
+        <T className="tt-se">create</T>
+      </Button>
+    </Link>
   );
 };

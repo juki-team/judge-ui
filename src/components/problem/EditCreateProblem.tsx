@@ -121,7 +121,11 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
       tabs={tabs}
       tabButtons={tabButtons({ entityData: problem })}
       selectedTabKey={tab}
-      getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().problems.edit({ key: problemJudgeKey, tab })}
+      getHrefOnTabChange={(tab) =>
+        editing
+          ? jukiAppRoutes.JUDGE().problems.edit({ key: problemJudgeKey, tab })
+          : jukiAppRoutes.JUDGE().problems.new({ judge: problem.judgeKey, tab })
+      }
     >
       <div className="jk-row extend center tx-h">
         <Input

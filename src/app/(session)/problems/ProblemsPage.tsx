@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Button,
   ButtonLoader,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
@@ -18,10 +19,11 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiApiSocketManager, jukiAppRoutes } from 'config';
-import { buttonLoaderLink, oneTab, toFilterUrl, toSortUrl } from 'helpers';
+import { oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
   useFetcher,
+  useJukiUI,
   useMemo,
   usePreload,
   useRouterStore,
@@ -60,7 +62,6 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   
   const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
-  const pushRoute = useRouterStore(state => state.pushRoute);
   const setSearchParams = useRouterStore(state => state.setSearchParams);
   const preload = usePreload();
   const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiSocketManager.API_V1.company.getJudgeList().url);
@@ -73,6 +74,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     value: judge.key,
     label: judge.name,
   }));
+  const { components: { Link } } = useJukiUI();
   
   const firstJudgeKey = judges[0]?.value;
   useEffect(() => {
@@ -116,14 +118,15 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   const extraNodes = [];
   if (userCanCreateProblem && judgeKey === judges[0]?.value) {
     extraNodes.push(
-      <ButtonLoader
-        size="small"
-        icon={<PlusIcon />}
-        responsiveMobile
-        onClick={buttonLoaderLink(() => pushRoute(jukiAppRoutes.JUDGE().problems.new()))}
-      >
-        <T className="tt-se">create</T>
-      </ButtonLoader>,
+      <Link href={jukiAppRoutes.JUDGE().problems.new({ judge: judgeKey })}>
+        <Button
+          size="small"
+          icon={<PlusIcon />}
+          responsiveMobile
+        >
+          <T className="tt-se">create</T>
+        </Button>
+      </Link>,
     );
   }
   const [ modal, setModal ] = useState<ReactNode>(null);

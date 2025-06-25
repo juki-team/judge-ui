@@ -226,18 +226,15 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       >
         <T className="tt-se">rejudge</T>
       </Button>,
-      <ButtonLoader
-        size="small"
-        icon={<EditIcon />}
-        onClick={async setLoaderStatus => {
-          setLoaderStatus(Status.LOADING);
-          pushRoute(jukiAppRoutes.JUDGE().problems.edit({ key: problem.key as string }));
-          setLoaderStatus(Status.SUCCESS);
-        }}
-        responsiveMobile
-      >
-        <T className="tt-se">edit</T>
-      </ButtonLoader>,
+      <Link href={jukiAppRoutes.JUDGE().problems.edit({ key: problem.key as string })}>
+        <Button
+          size="small"
+          icon={<EditIcon />}
+          responsiveMobile
+        >
+          <T className="tt-se">edit</T>
+        </Button>
+      </Link>,
     );
   } else if (problem.judge?.isExternal && userIsLogged) {
     // TODO:
