@@ -2,9 +2,13 @@
 
 import { Button, T, UserCodeEditor } from 'components';
 import { downloadBlobAsFile } from 'helpers';
+import { useCheckAndStartServices } from 'hooks';
 import { PROGRAMMING_LANGUAGE, RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES } from 'src/constants';
 
 export default function IDEPage() {
+  
+  useCheckAndStartServices();
+  
   return (
     <div className="jk-pg-md" style={{ width: '100%', height: '100%' }}>
       <UserCodeEditor

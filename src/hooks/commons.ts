@@ -9,7 +9,7 @@ export {
   useTrackLastPath,
   useEntityDiff,
   useJukiNotification,
-  useRunnerServicesWakeUp,
+  useCheckAndStartServices,
   useMutate,
   usePreload,
   usePreloadComponents,
