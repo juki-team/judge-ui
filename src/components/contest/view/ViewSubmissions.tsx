@@ -1,6 +1,5 @@
 'use client';
 
-import { ContentResponseType, getParamsOfUserKey } from '@juki-team/commons';
 import {
   getSubmissionContestProblemHeader,
   getSubmissionDateHeader,
@@ -11,100 +10,22 @@ import {
   getSubmissionTimeHeader,
   getSubmissionVerdictHeader,
   PagedDataViewer,
-  SpinIcon,
   T,
 } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { authorizedRequest, cleanRequest, downloadUrlAsFile, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiNotification, useMemo, usePreload, useRef, useState, useUserStore } from 'hooks';
-import { RefObject } from 'react';
+import { getParamsOfUserKey, toFilterUrl, toSortUrl } from 'helpers';
+import { useFetcher, useMemo, usePreload, useRef, useUserStore } from 'hooks';
 import {
   ContentsResponseType,
   ContestDataResponseDTO,
   DataViewerHeadersType,
+  DataViewerRequestPropsType,
+  DataViewerToolbarProps,
   JudgeSummaryListResponseDTO,
   LanguagesByJudge,
   QueryParam,
   SubmissionSummaryListResponseDTO,
 } from 'types';
-import { Select } from '../../index';
-
-interface DownloadButtonProps {
-  disabled: boolean,
-  lastGetUrl: RefObject<{ filter: {}, sort: {} }>,
-  contest: ContestDataResponseDTO,
-}
-
-const DownloadButton = ({ contest, disabled, lastGetUrl }: DownloadButtonProps) => {
-  
-  const [ loading, setLoading ] = useState(false);
-  const { notifyResponse } = useJukiNotification();
-  
-  const options = [
-    { value: 'csv', label: <T className="tt-se">as csv</T> },
-  
-  ];
-  
-  if (contest.user.isManager || contest.user.isAdministrator) {
-    options.push({ value: 'complete', label: <T className="tt-se">as zip with source codes</T> });
-  }
-  
-  return (
-    <Select
-      disabled={disabled || loading}
-      options={options}
-      selectedOption={{ value: 'x', label: loading ? <SpinIcon /> : <T className="tt-se">download</T> }}
-      onChange={async ({ value }) => {
-        switch (value) {
-          case 'csv': {
-            setLoading(true);
-            const { url, ...options } = jukiApiSocketManager.API_V1.submission.getExportSummaryList({
-              params: {
-                page: 1,
-                pageSize: 1000000,
-                filterUrl: toFilterUrl({ ...lastGetUrl.current.filter, contestKeys: contest.key }),
-                sortUrl: toSortUrl(lastGetUrl.current.sort),
-              },
-            });
-            const result = cleanRequest<ContentResponseType<{ urlExportedFile: string }>>(
-              await authorizedRequest(url, options),
-            );
-            if (notifyResponse(result)) {
-              setLoading(true);
-              await downloadUrlAsFile(result.content.urlExportedFile, contest.name + ' - submissions.csv');
-              setLoading(false);
-            }
-            setLoading(false);
-            break;
-          }
-          case 'complete':
-            setLoading(true);
-            const { url, ...options } = jukiApiSocketManager.API_V1.submission.getExportSummaryList({
-              params: {
-                page: 1,
-                pageSize: 1000000,
-                filterUrl: toFilterUrl({ ...lastGetUrl.current.filter, contestKeys: contest.key }),
-                sortUrl: toSortUrl(lastGetUrl.current.sort),
-                withSourceCodes: true,
-              },
-            });
-            const result = cleanRequest<ContentResponseType<{ urlExportedFile: string }>>(
-              await authorizedRequest(url, options),
-            );
-            if (notifyResponse(result)) {
-              setLoading(true);
-              await downloadUrlAsFile(result.content.urlExportedFile, contest.name + ' - submissions.zip');
-              setLoading(false);
-            }
-            setLoading(false);
-            break;
-          default:
-        }
-      }}
-      className="jk-border-radius-inline jk-button light tiny"
-    />
-  );
-};
 
 export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
@@ -165,9 +86,48 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, userNickname ]);
+  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, userNickname, companyKey ]);
   const preload = usePreload();
   const lastGetUrl = useRef({ filter: {}, sort: {} });
+  
+  const downloads = useMemo(() => {
+    const downloads: DataViewerToolbarProps<SubmissionSummaryListResponseDTO>['downloads'] = [
+      {
+        label: <T className="tt-se">download as csv</T>,
+        value: 'csv',
+        getUrl: ({ filter, sort }: DataViewerRequestPropsType) => (
+          jukiApiSocketManager.API_V1.submission.getExportSummaryList({
+            params: {
+              page: 1,
+              pageSize: 1000000,
+              filterUrl: toFilterUrl({ ...filter, contestKeys: contest.key }),
+              sortUrl: toSortUrl(sort),
+            },
+          }).url
+        ),
+        getFilename: () => contest.name + ' - submissions.csv',
+      },
+    ];
+    if (contest.user.isManager || contest.user.isAdministrator) {
+      downloads.push({
+        label: <T className="tt-se">download as zip with source codes</T>,
+        value: 'complete',
+        getUrl: ({ filter, sort }: DataViewerRequestPropsType) => (
+          jukiApiSocketManager.API_V1.submission.getExportSummaryList({
+            params: {
+              page: 1,
+              pageSize: 1000000,
+              filterUrl: toFilterUrl({ ...filter, contestKeys: contest.key }),
+              sortUrl: toSortUrl(sort),
+              withSourceCodes: true,
+            },
+          }).url
+        ),
+        getFilename: () => contest.name + ' - submissions.csv',
+      });
+    }
+    return downloads;
+  }, [ contest.key, contest.name, contest.user.isAdministrator, contest.user.isManager ]);
   
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
@@ -192,14 +152,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
       toRow={submission => submission}
       refreshInterval={60000}
       getRowKey={({ data, index }) => data[index].submitId}
-      extraNodes={[
-        <DownloadButton
-          key="export"
-          contest={contest}
-          lastGetUrl={lastGetUrl}
-          disabled={false}
-        />,
-      ]}
+      downloads={downloads}
       onRecordRender={({ data, index }) => {
         void preload(jukiApiSocketManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);
       }}

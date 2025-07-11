@@ -27,13 +27,13 @@ import { ReactNode } from 'react';
 import { JUDGE_API_V1 } from 'src/constants';
 import {
   ButtonLoaderOnClickType,
+  CodeLanguage,
   ContentResponseType,
   ContentsResponseType,
   HTTPMethod,
   KeyFileType,
   ProblemScoringMode,
   ProblemTestCasesResponseDTO,
-  ProgrammingLanguage,
   Status,
   UpsertProblemUIDTO,
 } from 'types';
@@ -343,7 +343,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                                     <div className="jk-pg">
                                       <div>{testCase.testCaseKey}.{keyPut === 'input' ? 'in' : 'out'}</div>
                                       <CodeViewer
-                                        code={response.content.source} language={ProgrammingLanguage.TEXT}
+                                        code={response.content.source} language={CodeLanguage.TEXT}
                                         style={{ maxHeight: 'calc(var(--100VH) * 0.9)', overflow: 'auto' }}
                                       />
                                     </div>

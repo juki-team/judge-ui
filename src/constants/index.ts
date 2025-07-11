@@ -4,7 +4,6 @@ export {
   PROBLEM_TYPE,
   PROBLEM_VERDICT,
   PROBLEM_MODE,
-  PROGRAMMING_LANGUAGE,
   USER_STATUS,
   FILE_ROLE,
   ENTITY_ACCESS,
@@ -35,6 +34,7 @@ export {
   JUKI_SESSION_ID,
   JUKI_METADATA,
   MONTH_NAMES,
+  CODE_LANGUAGE,
 } from '@juki-team/commons';
 
 export * from './commons';

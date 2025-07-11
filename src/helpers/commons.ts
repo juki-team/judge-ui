@@ -15,6 +15,7 @@ export {
   contentResponse,
   getJudgeKeyOfProblemJudgeKey,
   isGlobalContest,
+  getParamsOfUserKey,
 } from '@juki-team/commons';
 
 export {

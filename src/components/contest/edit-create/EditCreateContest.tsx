@@ -7,10 +7,10 @@ import { useEffect, useJukiNotification, useJukiUI, useRef, useRouterStore, useS
 import { memo } from 'react';
 import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
+  CodeLanguage,
   ContestTab,
   EntityState,
   LastPathKey,
-  ProgrammingLanguage,
   TabsType,
   TwoContentLayoutProps,
   UpsertComponentEntityProps,
@@ -51,7 +51,7 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
           <div style={{ height: height * 24 + 'px' }}>
             <CodeEditor
               sourceCode={text}
-              language={ProgrammingLanguage.JSON}
+              language={CodeLanguage.JSON}
               readOnly
             />
           </div>
@@ -70,9 +70,10 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
       body: (
         <div className="bc-we" key="overview">
           <MdMathEditor
+            key="description-md-math-editor"
             informationButton
             uploadImageButton
-            source={contest.description}
+            initialMd={contest.description}
             onChange={value => setContest(prevState => (
               { ...prevState, description: value }
             ))}

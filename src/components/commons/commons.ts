@@ -1,5 +1,7 @@
 'use client';
 
+import { MdMathEditorDeprecated } from '@juki-team/base-ui';
+
 export {
   JukiProviders,
   SubmitView,
@@ -32,7 +34,6 @@ export {
   InputPassword,
   InputRadio,
   InputToggle,
-  MdMathEditor,
   MdMathViewer,
   Modal,
   MultiSelect,
@@ -107,4 +108,8 @@ export {
   DocumentMembersButton,
   BarChart,
   LineChart,
+  // MdMathEditor,
+  // MdMathEditorDeprecated,
 } from '@juki-team/base-ui';
+
+export const MdMathEditor = MdMathEditorDeprecated;

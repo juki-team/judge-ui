@@ -154,11 +154,11 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
     const literal = getContestTimeLiteral(contest);
     const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
     const statusLabel = contestStateMap[key].label;
-    const tag = contestStateMap[key].color;
+    const tagBc = contestStateMap[key].bc;
     const allLiteralLabel = contest.isEndless
-      ? <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+      ? <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
         <T>{statusLabel}</T></div>
-      : <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+      : <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
         <T>{statusLabel}</T>,&nbsp;{literal}</div>;
     
     return (

@@ -202,13 +202,15 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
         {judgeKey && (
           <div className="jk-row gap nowrap jk-pg-xsm jk-br-ie">
             <div className="jk-row nowrap"><T className="tt-se fw-br cr-th tx-h">judge</T>:</div>
-            <Select
-              className="jk-border-radius-inline jk-button secondary"
-              options={judges}
-              selectedOption={{ value: judgeKey }}
-              onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}
-              expand
-            />
+            <div className="jk-row">
+              <Select
+                className="jk-border-radius-inline jk-button secondary"
+                options={judges}
+                selectedOption={{ value: judgeKey }}
+                onChange={({ value }) => setSearchParams({ name: QueryParam.JUDGE, value })}
+                // expand
+              />
+            </div>
           </div>
         )}
       </div>

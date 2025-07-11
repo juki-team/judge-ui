@@ -1,5 +1,4 @@
 @use "@juki-team/base-ui/styles/mixins" as utils;
-@use "@juki-team/base-ui/styles/base";
 
 .groups-popover {
   width: 150px;
@@ -108,10 +107,14 @@
 }
 
 .CODEFORCES-content {
-  @extend .br-g6;
-  @extend .bc-we;
-  @extend .jk-pg-sm;
-  @extend .jk-border-radius-inline;
+  //@extend .br-g6;
+  border: 1px solid var(--t-color-gray-6);
+  //@extend .bc-we;
+  background-color: var(--t-color-white);
+  //@extend .jk-pg-sm;
+  padding: var(--pad-sm);
+  //@extend .jk-border-radius-inline;
+  border-radius: var(--border-radius-inline);
 }
 
 .CODEFORCES-statement, .CODEFORCES_GYM-statement, .JV_UMSA-statement {
@@ -133,13 +136,13 @@
     text-align: center;
     
     .title {
-      @extend .CODEFORCES-h3;
+      //@extend .CODEFORCES-h3;
     }
     
     .time-limit, .memory-limit, .input-file, .output-file {
       display: flex;
       justify-content: center;
-      @extend .ws-np;
+      //@extend .ws-np;
       
       .property-title {
         font-weight: var(--weight-bold);
@@ -257,7 +260,8 @@
     }
     
     > span {
-      @extend .fw-bd;
+      //@extend .fw-bd;
+      font-weight: var(--weight-bold);
     }
   }
   

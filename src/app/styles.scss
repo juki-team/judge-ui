@@ -1,5 +1,4 @@
 @use "@juki-team/base-ui/styles/mixins" as utils;
-@use "@juki-team/base-ui/styles/base";
 @use "../components/problem/styles" as problemStyles;
 @use "../components/contest/styles" as contestStyles;
 
@@ -45,7 +44,7 @@ li > * {
 
 .text-editor {
   .jk-md-math-viewer-layout {
-    @extend .bc-we;
+    //@extend .bc-we;
     min-height: 64px;
   }
   
@@ -72,7 +71,7 @@ li > * {
   > div > div > .jk-md-math-viewer-layout {
     width: 100%;
     background-color: var(--t-color-white);
-    @extend .jk-border-radius-inline;
+    //@extend .jk-border-radius-inline;
     padding: 0 var(--pad-t);
     box-sizing: border-box;
   }
@@ -101,7 +100,7 @@ li > * {
   
   > a {
     cursor: pointer !important;
-    @extend .fw-bd;
+    //@extend .fw-bd;
   }
 }
 

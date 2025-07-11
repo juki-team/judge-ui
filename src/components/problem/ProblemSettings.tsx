@@ -20,15 +20,16 @@ import { useFetcher } from 'hooks';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
+  CODE_LANGUAGE,
   EMPTY_TEXT_LANGUAGES,
   ONE_HOUR,
   PROBLEM_MODE,
   PROBLEM_TYPE,
-  PROGRAMMING_LANGUAGE,
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
 } from 'src/constants';
 import {
+  CodeLanguage,
   ContentResponseType,
   JudgeDataResponseDTO,
   Language,
@@ -36,7 +37,6 @@ import {
   ProblemSettingsByProgrammingLanguageType,
   ProblemSettingsPointsByGroupsType,
   ProblemType,
-  ProgrammingLanguage,
   SubmissionRunStatus,
   UpsertProblemUIDTO,
 } from 'types';
@@ -295,8 +295,8 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                     }}
                     languages={[
                       {
-                        value: ProgrammingLanguage.CPP17,
-                        label: PROGRAMMING_LANGUAGE[ProgrammingLanguage.CPP17].label,
+                        value: CodeLanguage.CPP17,
+                        label: CODE_LANGUAGE[CodeLanguage.CPP17].label,
                       },
                     ]}
                     onSourceChange={setSource}
@@ -316,7 +316,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         messageTimestamp: 0,
                       },
                     }}
-                    initialSource={{ [ProgrammingLanguage.CPP17]: problem.settings.evaluatorSource }}
+                    initialSource={{ [CodeLanguage.CPP17]: problem.settings.evaluatorSource }}
                     enableAddSampleCases
                     enableAddCustomSampleCases
                   />
@@ -388,7 +388,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             <T className="ws-np tt-se">limits by programming languages</T>:
           </div>
           <MultiSelect
-            options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: PROGRAMMING_LANGUAGE[p].label }))}
+            options={ACCEPTED_PROGRAMMING_LANGUAGES.map(p => ({ value: p, label: CODE_LANGUAGE[p].label }))}
             selectedOptions={Object.values(problem.settings?.byProgrammingLanguage).map?.(({ language }) => ({
               value: language,
             }))}
@@ -424,7 +424,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             return (
               <div className="jk-row block gap extend jk-table-inline-row" key={language}>
                 <div style={{ maxWidth: 200 }} className="jk-row">
-                  {PROGRAMMING_LANGUAGE[language]?.label ?? language}
+                  {CODE_LANGUAGE[language]?.label ?? language}
                 </div>
                 <div className="jk-row center gap nowrap">
                   <Input

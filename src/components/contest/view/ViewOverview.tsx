@@ -16,7 +16,7 @@ import { jukiApiSocketManager } from 'config';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
 import { useDateFormat, useI18nStore, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import React from 'react';
-import { JUDGE_API_V1, PROGRAMMING_LANGUAGE } from 'src/constants';
+import { CODE_LANGUAGE, JUDGE_API_V1 } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
@@ -181,7 +181,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 <div
                   className="jk-tag gray-5"
                   key={language}
-                >{PROGRAMMING_LANGUAGE[language]?.label || language}</div>
+                >{CODE_LANGUAGE[language]?.label || language}</div>
               ))}
             </div>
           </div>

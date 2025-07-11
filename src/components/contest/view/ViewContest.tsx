@@ -85,13 +85,13 @@ export function ContestView({ contest, reloadContest }: {
   } = contest;
   const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
   const statusLabel = contestStateMap[key].label;
-  const tag = contestStateMap[key].color;
+  const tagBc = contestStateMap[key].bc;
   const literal = getContestTimeLiteral(contest);
   
   const allLiteralLabel = contest.isEndless
-    ? <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+    ? <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
       <T>{statusLabel}</T></div>
-    : <div className={`jk-row center extend nowrap jk-tag ${tag}`}>
+    : <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
       <T>{statusLabel}</T>,&nbsp;{literal}</div>;
   
   const tabHeaders: TabsType<ContestTab> = {
@@ -306,7 +306,7 @@ export function ContestView({ contest, reloadContest }: {
   const extraNodes = [];
   if (viewPortSize === 'hg') {
     extraNodes.push(
-      <div className={`jk-row nowrap jk-tag ${tag}`} key="status-label">
+      <div className={`jk-row nowrap jk-tag ${tagBc}`} key="status-label">
         {contest.isEndless
           ? <T className="ws-np">{statusLabel}</T>
           : <><T className="ws-np">{statusLabel}</T>,&nbsp;{literal}</>}
@@ -418,7 +418,7 @@ export function ContestView({ contest, reloadContest }: {
           content={<div className="jk-pg-sm">{literal}</div>}
           placement="bottom"
         >
-          <div className={`jk-tag tt-ue tx-s ${tag} screen md lg`}>
+          <div className={`jk-tag tt-ue tx-s ${tagBc} screen md lg`}>
             <T className="ws-np">{statusLabel}</T>
           </div>
         </Popover>

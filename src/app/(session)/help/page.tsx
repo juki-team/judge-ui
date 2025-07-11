@@ -1,7 +1,7 @@
 'use client';
 
 import { T, TwoContentLayout } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, PROGRAMMING_LANGUAGE } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, CODE_LANGUAGE } from 'config/constants';
 import { oneTab } from 'helpers';
 
 export default function Page() {
@@ -23,48 +23,48 @@ export default function Page() {
                 <ul>
                   <li>
                     <div className="jk-row left fw-bd">
-                      {PROGRAMMING_LANGUAGE[value].label}&nbsp;
-                      <div className="cr-g5 tx-s">[{PROGRAMMING_LANGUAGE[value].value}]</div>
+                      {CODE_LANGUAGE[value].label}&nbsp;
+                      <div className="cr-g5 tx-s">[{CODE_LANGUAGE[value].value}]</div>
                     </div>
                     <div>
                       <div><T className="tt-se">compilation command</T>:</div>
-                      {!PROGRAMMING_LANGUAGE[value].hasBuildFile && (
+                      {!CODE_LANGUAGE[value].hasBuildFile && (
                         <>
                           <div className="cr-ss"><T className="tt-se">no compilation required</T></div>
                         </>
                       )}
                       <div className="cr-g4">
-                        {!PROGRAMMING_LANGUAGE[value].hasBuildFile && PROGRAMMING_LANGUAGE[value].compilePattern && (
+                        {!CODE_LANGUAGE[value].hasBuildFile && CODE_LANGUAGE[value].compilePattern && (
                           <T className="tt-se">the following command is only to verify the integrity of the code</T>
                         )}
                       </div>
-                      {PROGRAMMING_LANGUAGE[value].compilePattern && (
+                      {CODE_LANGUAGE[value].compilePattern && (
                         <pre className="ws-bs bc-wd jk-pg-sm">
-                          {PROGRAMMING_LANGUAGE[value].compilePattern
+                          {CODE_LANGUAGE[value].compilePattern
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
                           }
                         </pre>
                       )}
                       <div><T className="tt-se">run command</T>:</div>
-                      {PROGRAMMING_LANGUAGE[value].runPattern && (
+                      {CODE_LANGUAGE[value].runPattern && (
                         <pre className="ws-bs bc-wd jk-pg-sm">
-                          {PROGRAMMING_LANGUAGE[value].runPattern
+                          {CODE_LANGUAGE[value].runPattern
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
                           }
                         </pre>
                       )}
-                      {PROGRAMMING_LANGUAGE[value].executable && (
+                      {CODE_LANGUAGE[value].executable && (
                         <div>
-                          <T className="tt-se">executable</T>: <div className="jk-tag gray-3">{PROGRAMMING_LANGUAGE[value].executable}</div>
+                          <T className="tt-se">executable</T>: <div className="jk-tag gray-3">{CODE_LANGUAGE[value].executable}</div>
                         </div>
                       )}
-                      {PROGRAMMING_LANGUAGE[value].executableVersion && (
+                      {CODE_LANGUAGE[value].executableVersion && (
                         <>
                           <div><T className="tt-se">executable version</T>:</div>
                           <pre className="ws-bs bc-wd jk-pg-sm">
-                          {PROGRAMMING_LANGUAGE[value].executableVersion
+                          {CODE_LANGUAGE[value].executableVersion
                             .replace('{{folder_path}}/{{compiled_file_name}}', '{file_compiled}')
                             .replace('{{folder_path}}/{{source_file_name}}', '{source_file}')
                           }

@@ -226,10 +226,9 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                 </label>
                 <MdMathEditor
                   onChange={answer => setClarification({ ...clarification, answer })}
-                  source={clarification.answer || '\n\n'}
+                  initialMd={clarification.answer || '\n\n'}
                   informationButton
                   uploadImageButton
-                  initEditMode
                 />
               </div>
             )}

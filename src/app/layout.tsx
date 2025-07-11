@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ReactNode, Suspense } from 'react';
 import './styles.scss';
-import 'diff2html/bundles/css/diff2html.min.css';
+import '@juki-team/base-ui/styles.css';
 
 const inter = Inter({
   weight: [ '100', '200', '300', '500', '700' ],

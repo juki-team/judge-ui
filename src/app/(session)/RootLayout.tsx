@@ -12,10 +12,6 @@ import {
   UserPreviewModal,
 } from 'components';
 import { jukiApiSocketManager } from 'config';
-import { useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
-import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
-import React, { Children, PropsWithChildren } from 'react';
 import {
   JUKI_APP_COMPANY_KEY,
   JUKI_SERVICE_V1_URL,
@@ -24,7 +20,11 @@ import {
   JUKI_TOKEN_NAME,
   NODE_ENV,
   ROUTES,
-} from 'src/constants';
+} from 'config/constants';
+import { useJukiUI, usePreloadComponents, useUserStore } from 'hooks';
+import Link from 'next/link';
+import { useParams, usePathname } from 'next/navigation';
+import React, { Children, PropsWithChildren } from 'react';
 import { UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
@@ -59,10 +59,8 @@ const initialLastPath = {
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
-  // useEffect(() => {
   jukiApiSocketManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
   jukiApiSocketManager.setSocketSettings(JUKI_SOCKET_BASE_URL);
-  // }, []);
   
   const { isLoadingRoute, push, replace, refresh } = useRouter();
   const routeParams = useParams();
@@ -71,7 +69,9 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const preloaders = usePreloadComponents();
   
   const loadingBasic = preloaders.atoms && preloaders.atomsIconsGoogle && preloaders.atomsIconsSigns && preloaders.atomsIconsSpecials && preloaders.atomsImages
-    && preloaders.molecules && preloaders.organisms && preloaders.templates;
+    && preloaders.molecules
+    && preloaders.organisms
+    && preloaders.templates;
   
   const app = (
     <SWRConfig

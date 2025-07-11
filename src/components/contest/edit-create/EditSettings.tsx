@@ -27,11 +27,11 @@ import { useState } from 'hooks';
 import React from 'react';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
+  CODE_LANGUAGE,
   CONTEST_DEFAULT,
   CONTEST_TEMPLATE,
   MAX_DATE,
   MIN_DATE,
-  PROGRAMMING_LANGUAGE,
 } from 'src/constants';
 import { ContestTemplate, EntityMembersRank } from 'types';
 import { EditContestProps } from '../types';
@@ -389,7 +389,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             </div>
             <MultiSelect
               options={ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({
-                label: PROGRAMMING_LANGUAGE[language].label,
+                label: CODE_LANGUAGE[language].label,
                 value: language,
               }))}
               selectedOptions={contest.settings.languages.map(language => ({ value: language }))}

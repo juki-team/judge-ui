@@ -3,7 +3,7 @@
 import { Button, T, UserCodeEditor } from 'components';
 import { downloadBlobAsFile } from 'helpers';
 import { useCheckAndStartServices } from 'hooks';
-import { PROGRAMMING_LANGUAGE, RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES } from 'src/constants';
+import { CODE_LANGUAGE, RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES } from 'src/constants';
 
 export default function IDEPage() {
   
@@ -14,7 +14,7 @@ export default function IDEPage() {
       <UserCodeEditor
         storeKey="*"
         languages={RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({
-          label: PROGRAMMING_LANGUAGE[language].label,
+          label: CODE_LANGUAGE[language].label,
           value: language,
         }))}
         enableAddCustomSampleCases
@@ -23,7 +23,7 @@ export default function IDEPage() {
             size="tiny"
             type="light"
             onClick={() => {
-              const filename = `code.${PROGRAMMING_LANGUAGE[language]?.fileExtension?.[0] || 'txt'}`;
+              const filename = `code.${CODE_LANGUAGE[language]?.fileExtension?.[0] || 'txt'}`;
               downloadBlobAsFile(sourceCode as unknown as Blob, filename);
             }}
           >

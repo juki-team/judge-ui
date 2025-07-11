@@ -6,14 +6,14 @@ import { classNames, showOfDateDisplayType } from 'helpers';
 import { useFetcher, useI18nStore, useJukiUI } from 'hooks';
 import { i18n } from 'i18next';
 import React, { useState } from 'react';
-import type { TooltipProps } from 'recharts/types/component/Tooltip';
+import type { ContentType } from 'recharts/types/component/Tooltip';
 import { ContentResponseType, DateLiteralProps, ProblemDataResponseDTO, StatisticsProblemResponseDTO } from 'types';
 
 const now = Date.now();
 
 const capitalized = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-const CustomTooltip = ({ active, payload, label, ...rest }: TooltipProps<number, number>) => {
+const CustomTooltip: ContentType<number, number> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="jk-pg-xsm bc-we jk-br-ie elevation-1">
@@ -27,7 +27,7 @@ const CustomTooltip = ({ active, payload, label, ...rest }: TooltipProps<number,
   return null;
 };
 
-const CustomTooltipA = ({ active, payload, label, ...rest }: TooltipProps<number, number>) => {
+const CustomTooltipA: ContentType<number, number> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="jk-pg-xsm bc-we jk-br-ie elevation-1">

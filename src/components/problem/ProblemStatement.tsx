@@ -89,7 +89,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
               <MdMathEditor
                 informationButton
                 uploadImageButton
-                source={statement.description?.[language]}
+                initialMd={statement.description?.[language]}
                 onChange={value => setProblem(prevState => ({
                   ...prevState,
                   statement: {
@@ -106,7 +106,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
               <MdMathEditor
                 informationButton
                 uploadImageButton
-                source={statement.input?.[language]}
+                initialMd={statement.input?.[language]}
                 onChange={value => setProblem(prevState => ({
                   ...prevState,
                   statement: {
@@ -123,7 +123,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
               <MdMathEditor
                 informationButton
                 uploadImageButton
-                source={statement.output?.[language]}
+                initialMd={statement.output?.[language]}
                 onChange={value => setProblem(prevState => ({
                   ...prevState,
                   statement: {
@@ -155,7 +155,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                           <MdMathEditor
                             informationButton
                             uploadImageButton
-                            source={pointsByGroup.description?.[language]}
+                            initialMd={pointsByGroup.description?.[language]}
                             onChange={value => setProblem(prevState => ({
                               ...prevState,
                               settings: {
@@ -172,7 +172,6 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                                 },
                               },
                             }))}
-                            initEditMode
                           />
                         </div>
                       </>
@@ -234,7 +233,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
               <MdMathEditor
                 informationButton
                 uploadImageButton
-                source={statement.note?.[language]}
+                initialMd={statement.note?.[language]}
                 onChange={value => setProblem(prevState => ({
                   ...prevState,
                   statement: {

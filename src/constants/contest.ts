@@ -1,7 +1,7 @@
 import {
+  CodeLanguage,
   ContestTemplate,
   EntityState,
-  ProgrammingLanguage,
   UpsertContestDTOUI,
   UserCompanyBasicInfoResponseDTO,
 } from 'types';
@@ -56,7 +56,7 @@ Oscar Arias | Problem Setter`,
     settings: {
       clarifications: true,
       numberJudgeValidations: 0,
-      languages: [ ProgrammingLanguage.CPP17, ProgrammingLanguage.JAVA, ProgrammingLanguage.PYTHON3 ],
+      languages: [ CodeLanguage.CPP17, CodeLanguage.JAVA, CodeLanguage.PYTHON3 ],
       penalty: 20,
       timeToSolve: 0,
       startTimestamp: now.getTime(),
