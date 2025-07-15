@@ -1,7 +1,7 @@
 'use client';
 
 import { ButtonLoader, FetcherLayer, Input, Modal, PlusIcon, T } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { useRouterStore } from 'hooks';
 import { useState } from 'react';
 import { BasicModalProps, ContentResponseType, Judge, JudgeDataResponseDTO, Status } from 'types';
@@ -41,7 +41,7 @@ export const CrawlJvumsaProblemModal = ({ onClose, isOpen }: BasicModalProps) =>
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
       <div className="jk-col gap jk-pg-md">
-        <FetcherLayer<ContentResponseType<JudgeDataResponseDTO>> url={jukiApiSocketManager.API_V1.judge.getData({ params: { key: Judge.JV_UMSA as string } }).url}>
+        <FetcherLayer<ContentResponseType<JudgeDataResponseDTO>> url={jukiApiManager.API_V1.judge.getData({ params: { key: Judge.JV_UMSA as string } }).url}>
           {({ data: { content } }) => (
             <Content judge={content} />
           )}

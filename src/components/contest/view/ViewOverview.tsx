@@ -12,7 +12,7 @@ import {
   SpectatorInformation,
   T,
 } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
 import { useDateFormat, useI18nStore, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import React from 'react';
@@ -190,10 +190,10 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
               key="download-contest-problemset"
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
-                const { url, ...options } = jukiApiSocketManager.API_V2.export.contest.problems.statementsToPdf({
+                const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
                   params: {
                     key: contest.key,
-                    token: jukiApiSocketManager.getToken(),
+                    token: jukiApiManager.getToken(),
                     language: userPreferredLanguage,
                   },
                 });

@@ -124,7 +124,6 @@ export type {
   CropImageType,
   FilterTextOfflineType,
   SetLoaderStatusType,
-  CodeEditorCenterButtonsType,
   CodeEditorExpandPositionType,
   GetRecordKeyType,
   JkTableHeaderFilterType,

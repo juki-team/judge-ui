@@ -14,7 +14,7 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import {
@@ -29,6 +29,7 @@ import {
   useUserStore,
 } from 'hooks';
 import {
+  CodeLanguage,
   ContentResponseType,
   HTTPMethod,
   KeyedMutator,
@@ -78,7 +79,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const { components: { Link } } = useJukiUI();
   
   useEffect(() => {
-    const { url, ...options } = jukiApiSocketManager.API_V2.export.problem.statementToPdf({
+    const { url, ...options } = jukiApiManager.API_V2.export.problem.statementToPdf({
       params: {
         key: problem.key,
         token: userSessionId,
@@ -98,8 +99,8 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
           withoutName
           infoPlacement="name"
           codeEditorStoreKey={problem.key}
-          codeEditorCenterButtons={({ sourceCode, language }) => {
-            
+          codeEditorCenterButtons={({ files, currentFileName }) => {
+            const { source = '', language = CodeLanguage.TEXT } = files[currentFileName] || {};
             // if (problem.judge.isExternal && false) {
             //   return (
             //     <div className="jk-row">
@@ -119,12 +120,12 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                   <ButtonLoader
                     type="secondary"
                     size="tiny"
-                    disabled={sourceCode === ''}
+                    disabled={source === ''}
                     onClick={async setLoaderStatus => {
                       setLoaderStatus(Status.LOADING);
-                      const { url, ...options } = jukiApiSocketManager.API_V1.problem.submit({
+                      const { url, ...options } = jukiApiManager.API_V1.problem.submit({
                         params: { key: problem.key },
-                        body: { language: language as string, source: sourceCode },
+                        body: { language: language as string, source },
                       });
                       const response = cleanRequest<ContentResponseType<any>>(
                         await authorizedRequest(url, options),
@@ -132,7 +133,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
                       
                       if (notifyResponse(response, setLoaderStatus)) {
                         listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
-                        await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                        await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
                         pushRoute(jukiAppRoutes.JUDGE().problems.view({
                           key: problem.key,
                           tab: ProblemTab.MY_SUBMISSIONS,

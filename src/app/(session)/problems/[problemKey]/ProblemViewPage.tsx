@@ -11,7 +11,7 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { oneTab } from 'helpers';
 import { useCheckAndStartServices, useTrackLastPath } from 'hooks';
 import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
@@ -38,7 +38,7 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
-      url={jukiApiSocketManager.API_V1.problem.getData({ params: { key: problemKey as string } }).url}
+      url={jukiApiManager.API_V1.problem.getData({ params: { key: problemKey as string } }).url}
       loadingView={
         <TwoContentLayout loading>
           <h2>

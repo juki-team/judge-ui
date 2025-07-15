@@ -10,7 +10,7 @@ import {
   TrophyIcon,
   TwoContentLayout,
 } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { oneTab } from 'helpers';
 import { useCheckAndStartServices, useTrackLastPath, useUserStore } from 'hooks';
 import React from 'react';
@@ -36,7 +36,7 @@ export default function ContestViewPage({ contestKey }: { contestKey: string }) 
   
   return (
     <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
-      url={jukiApiSocketManager.API_V1.contest.getData({ params: { key: contestKey as string, companyKey } }).url}
+      url={jukiApiManager.API_V1.contest.getData({ params: { key: contestKey as string, companyKey } }).url}
       loadingView={
         <TwoContentLayout
           // breadcrumbs={breadcrumbs}

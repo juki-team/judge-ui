@@ -17,7 +17,7 @@ import {
   ViewOverview,
   ViewProblems,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, contestStateMap, isGlobalContest, toUpsertContestDTOUI } from 'helpers';
 import {
   useEffect,
@@ -34,6 +34,7 @@ import React from 'react';
 import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
+  CodeLanguage,
   ContentResponseType,
   ContestDataResponseDTO,
   ContestTab,
@@ -70,10 +71,10 @@ export function ContestView({ contest, reloadContest }: {
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
   useEffect(() => {
-    const { url, ...options } = jukiApiSocketManager.API_V2.export.contest.problems.statementsToPdf({
+    const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
       params: {
         key: contest.key,
-        token: jukiApiSocketManager.getToken(),
+        token: jukiApiManager.getToken(),
         language: userPreferredLanguage,
       },
     });
@@ -151,30 +152,31 @@ export function ContestView({ contest, reloadContest }: {
             infoPlacement="name"
             withoutDownloadButtons
             codeEditorStoreKey={contest.key + '/' + problem.key}
-            codeEditorCenterButtons={({ sourceCode, language }) => {
+            codeEditorCenterButtons={({ files, currentFileName }) => {
+              const { source = '', language = CodeLanguage.TEXT } = files[currentFileName] || {};
               const validSubmit = (
                 <ButtonLoader
                   type="secondary"
                   size="tiny"
-                  disabled={sourceCode === ''}
+                  disabled={source === ''}
                   onClick={async setLoaderStatus => {
                     setLoaderStatus(Status.LOADING);
                     let response;
                     if (isGlobal) {
-                      const { url, ...options } = jukiApiSocketManager.API_V1.problem.submit({
+                      const { url, ...options } = jukiApiManager.API_V1.problem.submit({
                         params: {
                           key: problem.key,
-                        }, body: { language: language as string, source: sourceCode },
+                        }, body: { language: language as string, source },
                       });
                       response = cleanRequest<ContentResponseType<any>>(
                         await authorizedRequest(url, options),
                       );
                     } else {
-                      const { url, ...options } = jukiApiSocketManager.API_V1.contest.submit({
+                      const { url, ...options } = jukiApiManager.API_V1.contest.submit({
                         params: {
                           key: contest.key,
                           problemKey: problem.key,
-                        }, body: { language: language as string, source: sourceCode },
+                        }, body: { language: language as string, source },
                       });
                       response = cleanRequest<ContentResponseType<any>>(
                         await authorizedRequest(url, options),
@@ -202,7 +204,7 @@ export function ContestView({ contest, reloadContest }: {
                           tab: ContestTab.SUBMISSIONS,
                           subTab: problemIndex,
                         }));
-                        await mutate(new RegExp(`${jukiApiSocketManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                        await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
                       }
                     }
                   }}

@@ -11,7 +11,7 @@ import {
   Select,
   T,
 } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import {
   authorizedRequest,
   cleanRequest,
@@ -223,7 +223,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
                 const {
                   url,
                   ...options
-                } = jukiApiSocketManager.API_V1.contest.recalculateScoreboard({ params: { key: contest.key } });
+                } = jukiApiManager.API_V1.contest.recalculateScoreboard({ params: { key: contest.key } });
                 const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
                 if (notifyResponse(response, setLoaderStatus)) {
                   reload();

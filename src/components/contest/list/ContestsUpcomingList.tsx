@@ -1,7 +1,7 @@
 'use client';
 
 import { getContestDateHeader, getContestNameHeader, PagedDataViewer } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useUserStore } from 'hooks';
 import { useMemo } from 'react';
@@ -26,7 +26,7 @@ export const ContestsUpcomingList = (props: Partial<PagedDataViewerProps<Contest
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        jukiApiSocketManager.API_V1.contest.getSummaryList({
+        jukiApiManager.API_V1.contest.getSummaryList({
           params: {
             page,
             pageSize,

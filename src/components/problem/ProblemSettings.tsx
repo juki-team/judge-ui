@@ -14,10 +14,7 @@ import {
   T,
   UserCodeEditor,
 } from 'components';
-import { jukiApiSocketManager } from 'config';
-import { classNames } from 'helpers';
-import { useFetcher } from 'hooks';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { jukiApiManager } from 'config';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   CODE_LANGUAGE,
@@ -27,7 +24,10 @@ import {
   PROBLEM_TYPE,
   RUNNER_ACCEPTED_PROBLEM_MODES,
   RUNNER_ACCEPTED_PROBLEM_TYPES,
-} from 'src/constants';
+} from 'config/constants';
+import { classNames } from 'helpers';
+import { useFetcher } from 'hooks';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   CodeLanguage,
   ContentResponseType,
@@ -47,7 +47,7 @@ export const Tags = ({ tags, judgeKey, onChange }: {
   judgeKey: string
 }) => {
   
-  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO>>(jukiApiSocketManager.API_V1.judge.getData({ params: { key: judgeKey } }).url);
+  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO>>(jukiApiManager.API_V1.judge.getData({ params: { key: judgeKey } }).url);
   
   const allTags = Array.from(new Set([ ...(data?.success ? data.content.problemTags : []), ...tags ]));
   
@@ -86,7 +86,7 @@ interface ProblemSettingsProps {
 export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: ProblemSettingsProps) => {
   
   const [ open, setOpen ] = useState(false);
-  const [ source, setSource ] = useState('');
+  const [ source, _ ] = useState('');
   
   const onCloseModal = () => setOpen(false);
   
@@ -299,7 +299,8 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         label: CODE_LANGUAGE[CodeLanguage.CPP17].label,
                       },
                     ]}
-                    onSourceChange={setSource}
+                    // TODO:
+                    // onSourceChange={setSource}
                     initialTestCases={{
                       'custom-0': {
                         in: '',
@@ -316,7 +317,8 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         messageTimestamp: 0,
                       },
                     }}
-                    initialSource={{ [CodeLanguage.CPP17]: problem.settings.evaluatorSource }}
+                    // TODO:
+                    // initialSource={{ [CodeLanguage.CPP17]: problem.settings.evaluatorSource }}
                     enableAddSampleCases
                     enableAddCustomSampleCases
                   />

@@ -1351,10 +1351,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.1.25":
-  version "1.1.25"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.25/f81c1bb0117020e8637a0f09af37fc72ab333bc5#f81c1bb0117020e8637a0f09af37fc72ab333bc5"
-  integrity sha512-SBavU2r/06wEOeEBR1dtmuH3dYil3ZgP6PGpEjb/vLc5VnqwQaBn6OQmk9DHny4EqriDY3P1Z01jp8imZGjv2Q==
+"@juki-team/base-ui@^1.1.30":
+  version "1.1.30"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.30/484662bcbc00765f1d79f0265a382b616ec09519#484662bcbc00765f1d79f0265a382b616ec09519"
+  integrity sha512-M++4/NDy/wrE6m2cmA5ZkxFUf5YjQ4pzD+Mr5WpSbtYhLyVTHsnG4THE7Srk0+T7R0dytvdqS0KUx3wBuWzclg==
   dependencies:
     "@codemirror/autocomplete" "^6.18.6"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1369,7 +1369,7 @@
     "@floating-ui/react" "^0.27.12"
     "@handsontable/react" "^15.3.0"
     "@hookform/resolvers" "^5.1.1"
-    "@juki-team/commons" "^0.0.829"
+    "@juki-team/commons" "^0.0.854"
     "@tanstack/react-virtual" "^3.13.10"
     "@tiptap/core" "^2.25.0"
     "@tiptap/extension-blockquote" "^2.25.0"
@@ -1392,6 +1392,10 @@
     "@tiptap/extension-ordered-list" "^2.25.0"
     "@tiptap/extension-paragraph" "^2.25.0"
     "@tiptap/extension-strike" "^2.25.0"
+    "@tiptap/extension-table" "^2.26.1"
+    "@tiptap/extension-table-cell" "^2.26.1"
+    "@tiptap/extension-table-header" "^2.26.1"
+    "@tiptap/extension-table-row" "^2.26.1"
     "@tiptap/extension-text" "^2.25.0"
     "@tiptap/extension-underline" "^2.25.0"
     "@tiptap/pm" "^2.25.0"
@@ -1430,15 +1434,10 @@
     yup "^1.6.1"
     zustand "^5.0.5"
 
-"@juki-team/commons@^0.0.829":
-  version "0.0.829"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.829/bc2b2d097efbf9b2009e5cb48de9f0ff3a606cd3#bc2b2d097efbf9b2009e5cb48de9f0ff3a606cd3"
-  integrity sha512-WM6we6AngtrnNRpSl5Er2KyWdWvNHOY5aeavws/99TPZvC7qaeuKCYerdGxhEm6z7fDzBBIcyF/e+vXp7TpeHg==
-
-"@juki-team/commons@^0.0.833":
-  version "0.0.833"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.833/368462a51c7769afda73448e203553a55c85d444#368462a51c7769afda73448e203553a55c85d444"
-  integrity sha512-yQBhhgi9BLyjeZdB4H5U7fzYa5xuDysdUOzqKKcL/RcBLAvF8/kTX3MY9a9NKlmMGrIw1Nf4ovUl5bXPlUnwgQ==
+"@juki-team/commons@^0.0.854":
+  version "0.0.854"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.854/d8464360e2e251d74185b2f72ca326a9ef58f63a#d8464360e2e251d74185b2f72ca326a9ef58f63a"
+  integrity sha512-BnpTTc3U5B8laQvsGnLxNk5XbgG7a29Gfo3IhN9GtdgTycJCWtIUewWFmA/sl9YT9zWobUOnZqFMu3/K9Myxug==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1":
   version "1.2.3"
@@ -1992,6 +1991,26 @@
   version "2.25.0"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-strike/-/extension-strike-2.25.0.tgz#d571cb1ef885305862fb37efacc7e4b01f85c3ac"
   integrity sha512-Z5YBKnv4N6MMD1LEo9XbmWnmdXavZKOOJt/OkXYFZ3KgzB52Z3q3DDfH+NyeCtKKSWqWVxbBHKLnsojDerSf2g==
+
+"@tiptap/extension-table-cell@^2.26.1":
+  version "2.26.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table-cell/-/extension-table-cell-2.26.1.tgz#c204e9eef60f77063fc432faba4dd2ef2fe79ba3"
+  integrity sha512-0P5zY+WGFnULggJkX6+CevmFoBmVv1aUiBBXfcFuLG2mnUsS3QALQTowFtz/0/VbtbjzcOSStaGDHRJxPbk9XQ==
+
+"@tiptap/extension-table-header@^2.26.1":
+  version "2.26.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table-header/-/extension-table-header-2.26.1.tgz#1d9f2d609777201725ccd5850445d5e277a427fc"
+  integrity sha512-SAwTW9H+sjVYjoeU5z8pVDMHn3r3FCi+zp2KAxsEsmujcd7qrQdY0cAjQtWjckCq6H3sQkbICa+xlCCd7C8ZAQ==
+
+"@tiptap/extension-table-row@^2.26.1":
+  version "2.26.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table-row/-/extension-table-row-2.26.1.tgz#40c85b430b18b89363cb59459f1992ecdac93fcd"
+  integrity sha512-c4oLrUfj1EVVDpbfKX36v7nnaeI4NxML2KRTQXocvcY65VCe0bPQh8ujpPgPcnKEzdWYdIuAX9RbEAkiYWe8Ww==
+
+"@tiptap/extension-table@^2.26.1":
+  version "2.26.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-table/-/extension-table-2.26.1.tgz#26d45cd3f68def655c51c8ccbc6a3af507bdf49c"
+  integrity sha512-LQ63CK53qx2ZsbLTB4mUX0YCoGC0GbYQ82jS3kD+K7M/mb9MCkefvDk6rA8rXF8TjfGnv6o/Fseoot8uhH3qfg==
 
 "@tiptap/extension-text@^2.25.0":
   version "2.25.0"

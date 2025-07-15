@@ -50,7 +50,7 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
           :
           <div style={{ height: height * 24 + 'px' }}>
             <CodeEditor
-              sourceCode={text}
+              source={text}
               language={CodeLanguage.JSON}
               readOnly
             />

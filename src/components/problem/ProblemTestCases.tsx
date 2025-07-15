@@ -20,7 +20,7 @@ import {
   T,
   VisibilityIcon,
 } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile, humanFileSize } from 'helpers';
 import { useEffect, useI18nStore, useJukiNotification, useMutate, useState } from 'hooks';
 import { ReactNode } from 'react';
@@ -523,7 +523,7 @@ interface ProblemTestCasesProps {
 export const ProblemTestCases = ({ problem, problemJudgeKey }: ProblemTestCasesProps) => {
   return (
     <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>
-      url={jukiApiSocketManager.API_V1.problem.getTestCases({ params: { key: problemJudgeKey } }).url}
+      url={jukiApiManager.API_V1.problem.getTestCases({ params: { key: problemJudgeKey } }).url}
       // errorView={<Custom404 />}
       options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}
     >

@@ -18,7 +18,7 @@ import {
   TextField,
   TwoContentLayout,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
@@ -64,7 +64,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
   const setSearchParams = useRouterStore(state => state.setSearchParams);
   const preload = usePreload();
-  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiSocketManager.API_V1.company.getJudgeList().url);
+  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiManager.API_V1.company.getJudgeList().url);
   const tags = useMemo(() => (data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : []).map(tag => ({
     value: tag,
     label: <T>{tag}</T>,
@@ -168,7 +168,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-            return jukiApiSocketManager.API_V1.problem.getSummaryList({
+            return jukiApiManager.API_V1.problem.getSummaryList({
               params: {
                 page,
                 pageSize,
@@ -183,7 +183,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
           cards={{ height: 192, expanded: true }}
           dependencies={[ judgeKey ]}
           onRecordRender={({ data, index }) => {
-            void preload(jukiApiSocketManager.API_V1.problem.getData({ params: { key: data[index].key } }).url);
+            void preload(jukiApiManager.API_V1.problem.getData({ params: { key: data[index].key } }).url);
           }}
         />
       ))}

@@ -1,5 +1,5 @@
 import { InfoIIcon, Popover, SpinIcon, T } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { useFetcher } from 'hooks';
 import { ContentResponseType, ProblemDataResponseDTO, ProblemTestCasesResponseDTO } from 'types';
 
@@ -8,7 +8,7 @@ export const InfoTestCases = ({ problem }: { problem: ProblemDataResponseDTO }) 
   const {
     data,
     isLoading,
-  } = useFetcher<ContentResponseType<ProblemTestCasesResponseDTO>>(jukiApiSocketManager.API_V1.problem.getTestCases({ params: { key: problem.key } }).url);
+  } = useFetcher<ContentResponseType<ProblemTestCasesResponseDTO>>(jukiApiManager.API_V1.problem.getTestCases({ params: { key: problem.key } }).url);
   
   const testCases = data?.success ? data.content : [];
   

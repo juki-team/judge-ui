@@ -9,7 +9,7 @@ import {
   TwoContentLayout,
   UpdateEntityLayout,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { isGlobalContest, oneTab, toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
 import { useRouterStore } from 'hooks';
@@ -31,7 +31,7 @@ function ContestEdit() {
   
   return (
     <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
-      url={jukiApiSocketManager.API_V1.contest.getData({ params: { key: contestKey as string } }).url}
+      url={jukiApiManager.API_V1.contest.getData({ params: { key: contestKey as string } }).url}
       errorView={Error}
     >
       {({ data }) => {
@@ -48,7 +48,7 @@ function ContestEdit() {
                 }
                 return JUDGE_API_V1.CONTEST.CONTEST;
               }}
-              viewApiURL={entityKey => jukiApiSocketManager.API_V1.contest.getData({ params: { key: entityKey } }).url}
+              viewApiURL={entityKey => jukiApiManager.API_V1.contest.getData({ params: { key: entityKey } }).url}
               toEntityUpsert={toUpsertContestDTO}
             />
           );

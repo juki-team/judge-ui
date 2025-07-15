@@ -1,4 +1,4 @@
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { cleanRequest, getMetaHeaders } from 'helpers';
 import type { Metadata } from 'next';
 import { ContentResponseType } from 'types';
@@ -13,7 +13,7 @@ async function getMetadata(contestKey: string) {
   let result;
   try {
     const response = await fetch(
-      jukiApiSocketManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url,
+      jukiApiManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url,
       { headers: getMetaHeaders() });
     const text = await response.text();
     result = cleanRequest<ContentResponseType<{

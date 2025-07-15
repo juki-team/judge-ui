@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { ProblemView } from 'components';
-import { jukiApiSocketManager } from 'config';
+import { jukiApiManager } from 'config';
 import { cleanRequest, getHeaders } from 'helpers';
 import { ContentResponseType, ProblemDataResponseDTO } from 'types';
 
@@ -13,7 +13,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     
     const { key, jukiSessionId } = (await searchParams) as { key: string, jukiSessionId: string };
     
-    const { url } = jukiApiSocketManager.API_V1.problem.getData({ params: { key } });
+    const { url } = jukiApiManager.API_V1.problem.getData({ params: { key } });
     
     const response = await fetch(url, { headers: getHeaders(jukiSessionId) });
     const text = await response.text();

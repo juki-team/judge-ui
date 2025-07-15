@@ -1,11 +1,11 @@
 'use client';
 
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useRouterStore, useUserStore } from 'hooks';
+import { useJukiNotification } from 'hooks';
 import { useState } from 'react';
-import { BasicModalProps, ContentResponseType, Judge, Status, WebSocketActionEvent } from 'types';
+import { BasicModalProps, ContentResponseType, Judge, Status } from 'types';
 
 interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
   judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
@@ -16,8 +16,8 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
   const [ index, setIndex ] = useState('');
   const [ contestId, setContestId ] = useState('');
   const { notifyResponse } = useJukiNotification();
-  const pushRoute = useRouterStore(state => state.pushRoute);
-  const userSessionId = useUserStore(state => state.user.sessionId);
+  // const pushRoute = useRouterStore(state => state.pushRoute);
+  // const userSessionId = useUserStore(state => state.user.sessionId);
   
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
@@ -45,7 +45,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiSocketManager.API_V1.problem.crawlStatement({
+            const { url, ...options } = jukiApiManager.API_V1.problem.crawlStatement({
               body: {
                 judgeKey: Judge.CODEFORCES,
                 contestId,
@@ -56,15 +56,16 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCod
               await authorizedRequest(url, options),
             );
             if (notifyResponse(response)) {
-              const problemKey = `PC-${contestId}-${index}`;
-              jukiApiSocketManager.SOCKET.send({
-                event: WebSocketActionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
-                sessionId: userSessionId,
-                problemKey,
-              }, () => {
-                setLoaderStatus(Status.SUCCESS);
-                pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: problemKey }));
-              });
+              // TODO:
+              // const problemKey = `PC-${contestId}-${index}`;
+              // jukiApiManager.SOCKET.send({
+              //   event: WebSocketActionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
+              //   sessionId: userSessionId,
+              //   problemKey,
+              // }, () => {
+              //   setLoaderStatus(Status.SUCCESS);
+              //   pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: problemKey }));
+              // });
             }
           }}
         >

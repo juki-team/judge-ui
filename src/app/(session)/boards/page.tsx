@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, DataViewer, T, TwoContentLayout } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { toFilterUrl } from 'helpers';
 import {
   useDataViewerRequester,
@@ -36,7 +36,7 @@ import {
 
 const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => {
   
-  const { data: contestResponse } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(jukiApiSocketManager.API_V1.contest.getData({
+  const { data: contestResponse } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(jukiApiManager.API_V1.contest.getData({
     params: {
       key: contest.key,
     },
@@ -129,7 +129,7 @@ function Boards() {
   
   useTrackLastPath(LastPathKey.BOARDS);
   
-  const { data: globalContestsData } = useFetcher<ContentsResponseType<ContestSummaryListResponseDTO>>(jukiApiSocketManager.API_V1.contest.getSummaryList({
+  const { data: globalContestsData } = useFetcher<ContentsResponseType<ContestSummaryListResponseDTO>>(jukiApiManager.API_V1.contest.getSummaryList({
     params: {
       page: 1,
       pageSize: 100,

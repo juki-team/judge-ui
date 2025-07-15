@@ -10,7 +10,7 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { jukiApiSocketManager, jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { useEffect, usePreload, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
 import { ContestsTab, ContestSummaryListResponseDTO, LastPathKey, PagedDataViewerProps, TabsType } from 'types';
 
@@ -45,7 +45,7 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
     refreshInterval: 60000,
     cards: { width: 320, expanded: true },
     onRecordRender: ({ data, index }) => {
-      void preload(jukiApiSocketManager.API_V1.contest.getData({ params: { key: data[index].key, companyKey } }).url);
+      void preload(jukiApiManager.API_V1.contest.getData({ params: { key: data[index].key, companyKey } }).url);
     },
     extraNodes,
   };
