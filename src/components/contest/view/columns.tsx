@@ -65,7 +65,7 @@ export const getNicknameColumn = (viewPortSize: string): DataViewerHeadersType<S
 export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
   head: 'points',
   index: 'points',
-  Field: ({ record: { focus, totalPenalty, totalPoints }, isCard }) => (
+  Field: ({ record: { focus, totalPenalty, totalPoints } }) => (
     <Field className={classNames('jk-col center', { highlight: !!focus?.length })}>
       <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
       {!isEndless && <div className="cr-g4">{+totalPenalty.toFixed(2)}</div>}
@@ -96,7 +96,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
     </div>
   ),
   index: problem.index,
-  Field: ({ record: { problems, focus }, isCard }) => {
+  Field: ({ record: { problems, focus } }) => {
     const problemData = problems[problem.key];
     return (
       <Field className={classNames('jk-row center nowrap', { highlight: !!focus?.includes(problem.key) })}>

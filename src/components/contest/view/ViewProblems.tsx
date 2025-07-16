@@ -63,7 +63,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>key</T>} />,
       index: 'id',
-      Field: ({ record: { judge: { key: judgeKey, isMain, name, isExternal }, key, url }, isCard }) => (
+      Field: ({ record: { judge: { key: judgeKey, isMain, name, isExternal }, key, url } }) => (
         <TextField
           text={
             isJudgeOrAdmin || contest.isEndless || contest.isPast
@@ -104,7 +104,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>name</T>} />,
       index: 'name',
-      Field: ({ record: { name, index, key }, isCard }) => (
+      Field: ({ record: { name, index, key } }) => (
         <Field className="jk-col">
           <Link
             href={jukiAppRoutes.JUDGE().contests.view({
@@ -117,7 +117,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
           </Link>
           {isJudgeOrAdmin && (
             <ButtonLoader
-              onClick={async (setLoaderStatus, loaderStatus, event) => {
+              onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
                 const result = cleanRequest<ContentResponseType<{
                   listCount: number,
@@ -155,7 +155,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>points</T>} />,
       index: 'points',
-      Field: ({ record: { points }, isCard }) => (
+      Field: ({ record: { points } }) => (
         <TextField text={points} label={<T className="tt-se">points</T>} />
       ),
       sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
@@ -165,7 +165,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>success rate</T>} />,
       index: 'success-rate',
-      Field: ({ record: { totalAttempts, totalSuccess }, isCard }) => (
+      Field: ({ record: { totalAttempts, totalSuccess } }) => (
         <TextField
           text={totalAttempts ? (totalSuccess / totalAttempts * 100).toFixed(1) + ' %' : '-'}
           label={<T className="tt-se">success rate</T>}

@@ -11,20 +11,11 @@ import {
   T,
   UserPreviewModal,
 } from 'components';
-import { jukiApiManager } from 'config';
-import {
-  JUKI_APP_COMPANY_KEY,
-  JUKI_SERVICE_V1_URL,
-  JUKI_SERVICE_V2_URL,
-  JUKI_SOCKET_BASE_URL,
-  JUKI_TOKEN_NAME,
-  NODE_ENV,
-  ROUTES,
-} from 'config/constants';
+import { JUKI_APP_COMPANY_KEY, JUKI_SOCKET_BASE_URL, NODE_ENV, ROUTES } from 'config/constants';
 import { useJukiUI, usePreloadComponents, useUserStore, useWebsocketStore } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
-import React, { Children, PropsWithChildren } from 'react';
+import React, { Children, PropsWithChildren, useEffect } from 'react';
 import { UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
@@ -59,9 +50,12 @@ const initialLastPath = {
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   
-  jukiApiManager.setApiSettings(JUKI_SERVICE_V1_URL, JUKI_SERVICE_V2_URL, JUKI_TOKEN_NAME);
   const websocket = useWebsocketStore(store => store.websocket);
-  websocket.setSocketServiceUrl(JUKI_SOCKET_BASE_URL);
+  
+  useEffect(() => {
+    websocket.setSocketServiceUrl(JUKI_SOCKET_BASE_URL);
+  }, [ websocket ]);
+  
   const { isLoadingRoute, push, replace, refresh } = useRouter();
   const routeParams = useParams();
   const pathname = usePathname();

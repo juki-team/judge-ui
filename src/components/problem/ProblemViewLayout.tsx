@@ -1,43 +1,18 @@
 'use client';
 
 import { useTour } from '@reactour/tour';
-import {
-  AutorenewIcon,
-  Button,
-  ButtonLoader,
-  DocumentMembersButton,
-  EditIcon,
-  FirstLoginWrapper,
-  InfoIIcon,
-  ProblemInfo,
-  ProblemView,
-  T,
-  TwoContentLayout,
-} from 'components';
+import { AutorenewIcon, Button, DocumentMembersButton, EditIcon, ProblemInfo, T, TwoContentLayout } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest } from 'helpers';
+import { authorizedRequest } from 'helpers';
+import { useEffect, useJukiUI, useRef, useRouterStore, useState, useTrackLastPath, useUserStore } from 'hooks';
 import {
-  useEffect,
-  useJukiNotification,
-  useJukiTask,
-  useJukiUI,
-  useMutate,
-  useRouterStore,
-  useState,
-  useTrackLastPath,
-  useUserStore,
-} from 'hooks';
-import {
-  CodeLanguage,
-  ContentResponseType,
   HTTPMethod,
   KeyedMutator,
   LastPathKey,
   ProblemDataResponseDTO,
   ProblemTab,
   ProfileSetting,
-  Status,
   TabsType,
 } from 'types';
 import { InfoTestCases } from './InfoTestCases';
@@ -45,6 +20,7 @@ import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatistics } from './ProblemStatistics';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
+import { ProblemViewTab } from './ProblemViewTab';
 import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
 
 export const ProblemViewLayout = ({ problem, reloadProblem }: {
@@ -68,15 +44,15 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     }
   }, [ setIsOpen ]);
   const searchParams = useRouterStore(state => state.searchParams);
-  const pushRoute = useRouterStore(state => state.pushRoute);
   const userIsLogged = useUserStore(state => state.user.isLogged);
   const userSessionId = useUserStore(state => state.user.sessionId);
   const userLang = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
-  const { notifyResponse } = useJukiNotification();
-  const { listenSubmission } = useJukiTask();
-  const mutate = useMutate();
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
   const { components: { Link } } = useJukiUI();
+  
+  const lastSourceRef = useRef('');
+  const lastLanguageRef = useRef('');
+  const submissionTimestampsRef = useRef<number[]>([]);
   
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.problem.statementToPdf({
@@ -93,79 +69,11 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     [ProblemTab.STATEMENT]: {
       key: ProblemTab.STATEMENT,
       header: <T className="ws-np tt-ce">statement</T>,
-      body: (
-        <ProblemView
-          problem={problem}
-          withoutName
-          infoPlacement="name"
-          codeEditorStoreKey={problem.key}
-          codeEditorCenterButtons={({ files, currentFileName }) => {
-            const { source = '', language = CodeLanguage.TEXT } = files[currentFileName] || {};
-            // if (problem.judge.isExternal && false) {
-            //   return (
-            //     <div className="jk-row">
-            //       <InfoIIcon
-            //         data-tooltip-id="jk-tooltip"
-            //         data-tooltip-content="it is not possible to submit to external judges at this time, we apologize for the inconvenience"
-            //         data-tooltip-t-class-name="tt-se"
-            //         className="cr-py"
-            //       />
-            //     </div>
-            //   );
-            // }
-            
-            return (
-              <div className="jk-row gap">
-                <FirstLoginWrapper>
-                  <ButtonLoader
-                    type="secondary"
-                    size="tiny"
-                    disabled={source === ''}
-                    onClick={async setLoaderStatus => {
-                      setLoaderStatus(Status.LOADING);
-                      const { url, ...options } = jukiApiManager.API_V1.problem.submit({
-                        params: { key: problem.key },
-                        body: { language: language as string, source },
-                      });
-                      const response = cleanRequest<ContentResponseType<any>>(
-                        await authorizedRequest(url, options),
-                      );
-                      
-                      if (notifyResponse(response, setLoaderStatus)) {
-                        listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
-                        await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
-                        pushRoute(jukiAppRoutes.JUDGE().problems.view({
-                          key: problem.key,
-                          tab: ProblemTab.MY_SUBMISSIONS,
-                        }));
-                      }
-                    }}
-                  >
-                    <T className="tt-se">submit</T>
-                  </ButtonLoader>
-                </FirstLoginWrapper>
-                <Link
-                  data-tooltip-id="jk-tooltip"
-                  data-tooltip-content="how does it work?"
-                  href="https://www.juki.app/docs?page=2&sub_page=2&focus=ef99389d-f48f-415f-b652-38cac0a065b8"
-                  target="_blank"
-                  className="cr-py"
-                >
-                  <div className="jk-row">
-                    <InfoIIcon circle size="small" />
-                  </div>
-                </Link>
-              </div>
-            );
-          }}
-          // expandPosition={{
-          //   top: 0,
-          //   left: 0,
-          //   width: '100vw',
-          //   height: '100vh',
-          // }}
-        />
-      ),
+      body: <ProblemViewTab
+        problem={problem}
+        key="statement"
+        historyRefs={{ lastLanguageRef, lastSourceRef, submissionTimestampsRef }}
+      />,
     },
   };
   

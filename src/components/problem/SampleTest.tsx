@@ -86,7 +86,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
         <DeleteIcon
           size="small"
           className="cursor-pointer"
-          onClick={() => setSampleCases([ ...sampleCases ].filter((sample, sIndex) => sIndex !== index))}
+          onClick={() => setSampleCases([ ...sampleCases ].filter((_, sIndex) => sIndex !== index))}
         />
       </div>
     </div>

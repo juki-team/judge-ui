@@ -54,7 +54,7 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="wb-bw tt-se">points by problems</T>} />,
       index: 'problem-points',
-      Field: ({ record: { problemPoints }, isCard }) => (
+      Field: ({ record: { problemPoints } }) => (
         <TextField
           text={<>
             <div className="fw-bd" style={{ fontFamily: 'monospace' }}>{problemPoints.toFixed(2)}</div>
@@ -116,9 +116,7 @@ function Ranking() {
     request,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<UserRankResponseDTO>>(
-    ({ pagination: { page, pageSize }, filter, sort }) => (
-      JUDGE_API_V1.RANKING.LIST()
-    ),
+    () => JUDGE_API_V1.RANKING.LIST(),
     { refreshInterval: 5 * 60 * 1000 },
   );
   const [ _, setRender ] = useState(Date.now()); // TODO: Fix the render of DataViewer

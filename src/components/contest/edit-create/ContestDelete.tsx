@@ -14,7 +14,7 @@ interface ProblemStatementProps {
   deleted: boolean,
 }
 
-export const ContestDelete = ({ contestKey, documentOwner, deleted }: ProblemStatementProps) => {
+export const ContestDelete = ({ contestKey, deleted }: ProblemStatementProps) => {
   
   const { notifyResponse } = useJukiNotification();
   const pushRoute = useRouterStore(state => state.pushRoute);

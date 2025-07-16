@@ -85,7 +85,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           </div>
           <div>
             <h3><T className="tt-se">description</T></h3>
-            <div className="text-editor">
+            <div className="text-editor bc-we">
               <MdMathEditor
                 informationButton
                 uploadImageButton
@@ -102,7 +102,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           </div>
           <div>
             <h3><T className="tt-se">input</T></h3>
-            <div className="text-editor">
+            <div className="text-editor bc-we">
               <MdMathEditor
                 informationButton
                 uploadImageButton
@@ -119,7 +119,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           </div>
           <div>
             <h3><T className="tt-se">output</T></h3>
-            <div className="text-editor">
+            <div className="text-editor bc-we">
               <MdMathEditor
                 informationButton
                 uploadImageButton
@@ -151,7 +151,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
                           </div>
                         </div>
                         :
-                        <div className="flex-1 text-editor">
+                        <div className="flex-1 text-editor bc-we">
                           <MdMathEditor
                             informationButton
                             uploadImageButton
@@ -215,7 +215,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
             </div>
           </div>
           <div className="jk-col stretch gap">
-            {(statement.sampleCases || [ { input: '', output: '' } ]).map((sample, index) => (
+            {(statement.sampleCases || [ { input: '', output: '' } ]).map((_, index) => (
               <SampleTest
                 index={index}
                 sampleCases={statement.sampleCases}
@@ -229,7 +229,7 @@ export const ProblemStatement = ({ problem, setProblem, contest }: ProblemStatem
           </div>
           <div>
             <h3><T className="tt-se">note</T></h3>
-            <div className="text-editor">
+            <div className="text-editor bc-we">
               <MdMathEditor
                 informationButton
                 uploadImageButton

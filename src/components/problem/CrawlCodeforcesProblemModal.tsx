@@ -11,7 +11,7 @@ interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
   judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
 }
 
-export const CrawlCodeforcesProblemModal = ({ onClose, isOpen, judge }: CrawlCodeforcesProblemModalProps) => {
+export const CrawlCodeforcesProblemModal = ({ onClose, isOpen }: CrawlCodeforcesProblemModalProps) => {
   
   const [ index, setIndex ] = useState('');
   const [ contestId, setContestId ] = useState('');

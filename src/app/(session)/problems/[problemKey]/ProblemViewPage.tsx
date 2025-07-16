@@ -16,7 +16,7 @@ import { oneTab } from 'helpers';
 import { useCheckAndStartServices, useTrackLastPath } from 'hooks';
 import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
 
-const ContentStatistics = (...props: any[]) => {
+const ContentStatistics = () => {
   return (
     <div>
       <T className="tt-se fw-bd">¡new!</T>&nbsp;<T className="tt-se">explore the statistics of the problem</T>
@@ -69,7 +69,7 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
       {({ data, mutate }) => (
         <TourProvider
           steps={steps}
-          onClickHighlighted={(event, { setIsOpen }) => {
+          onClickHighlighted={(_, { setIsOpen }) => {
             setIsOpen(false);
           }}
           highlightedMaskClassName="testing-abc"

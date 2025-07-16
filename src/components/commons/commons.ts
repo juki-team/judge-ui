@@ -1,6 +1,6 @@
 'use client';
 
-import { MdMathEditorDeprecated } from '@juki-team/base-ui';
+// import { MdMathEditorDeprecated } from '@juki-team/base-ui';
 
 export {
   JukiProviders,
@@ -108,8 +108,8 @@ export {
   DocumentMembersButton,
   BarChart,
   LineChart,
-  // MdMathEditor,
+  MdMathEditor,
   // MdMathEditorDeprecated,
 } from '@juki-team/base-ui';
 
-export const MdMathEditor = MdMathEditorDeprecated;
+// export const MdMathEditor = MdMathEditorDeprecated;

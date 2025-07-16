@@ -250,7 +250,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
             <div className="jk-row right gap">
               <Button type="light" onClick={() => setClarification(null)}><T>cancel</T></Button>
               <ButtonLoader
-                onClick={async (setLoaderStatus, loaderStatus, event) => {
+                onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   let payload = {};
                   if (isJudgeOrAdmin) {

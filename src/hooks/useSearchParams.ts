@@ -30,7 +30,7 @@ export const useSearchParams = () => {
       params.delete(name);
       (Array.isArray(value) ? value : [ value ]).forEach(v => params.append(name, v));
     });
-    updateSearchParams(params, true);
+    updateSearchParams(params, replace);
   }, [ searchParams, updateSearchParams ]);
   
   const deleteSearchParams: DeleteSearchParamsType = useCallback((entries, replace) => {

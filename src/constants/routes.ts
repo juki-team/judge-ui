@@ -40,7 +40,7 @@ export const ROUTES = {
     },
   },
   IDE: {
-    PAGE(tab?: string) {
+    PAGE() {
       return '/' + ROUTES.PARAMS.IDE;
     },
   },
