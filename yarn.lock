@@ -1351,10 +1351,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.1.35":
-  version "1.1.35"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.35/9bdbbcad70b3fd37604303942bfe099a810e188a#9bdbbcad70b3fd37604303942bfe099a810e188a"
-  integrity sha512-fIDIIDgvFjYQYtg2Kfp1eiMAE1j5Q92ueuQZtdFgs+wxWwmcJC8au8oAGD96BDK5nhtDFrFIXUfl2VeUxFMs2Q==
+"@juki-team/base-ui@^1.1.39":
+  version "1.1.39"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.39/d09dfbc3d5b3e17fc79086eb1674d24f431f43d7#d09dfbc3d5b3e17fc79086eb1674d24f431f43d7"
+  integrity sha512-nToWN1fjwP2hprnAn1raoCkhCyFnZA2wxXgyLvo4QKAZ2IFDPIhEw2k52HF6ODI2ktd0Q+feXBlTxpXM0q5e2Q==
   dependencies:
     "@codemirror/autocomplete" "^6.18.6"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1369,7 +1369,7 @@
     "@floating-ui/react" "^0.27.12"
     "@handsontable/react" "^16.0.1"
     "@hookform/resolvers" "^5.1.1"
-    "@juki-team/commons" "^0.0.857"
+    "@juki-team/commons" "^0.0.858"
     "@tanstack/react-virtual" "^3.13.10"
     "@tiptap/core" "^3.0.6"
     "@tiptap/extension-blockquote" "^3.0.6"
@@ -1427,10 +1427,10 @@
     yup "^1.6.1"
     zustand "^5.0.5"
 
-"@juki-team/commons@^0.0.857":
-  version "0.0.857"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.857/3ce1550869588a68859c9d6dbcf71c54777ab081#3ce1550869588a68859c9d6dbcf71c54777ab081"
-  integrity sha512-ZBd0XoyG8nXDmcHMqhhCpbwjIa6jkXHwQ4NuhsvIE6mtBIo0X4IVGA4mh162Ky2bzYHr8MvvPvqyEShaQBfEgw==
+"@juki-team/commons@^0.0.858":
+  version "0.0.858"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.858/c7cbc553ea11e47d391a58c3a39776c107369fe9#c7cbc553ea11e47d391a58c3a39776c107369fe9"
+  integrity sha512-x8fjoTHM9oXXBchivLHsV0u3WUlYk/jy7JErlql41RROIjRtjkfumIMR4AZ0vuqmgeuEux5NVNOxYAqcy+t+tg==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1":
   version "1.2.3"
@@ -2068,6 +2068,11 @@
   integrity sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==
   dependencies:
     "@types/ms" "*"
+
+"@types/dom-to-image@^2.6.7":
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/@types/dom-to-image/-/dom-to-image-2.6.7.tgz#02cfed495b4265cdaf7e92bd840d8c788151fb9a"
+  integrity sha512-me5VbCv+fcXozblWwG13krNBvuEOm6kA5xoa4RrjDJCNFOZSWR3/QLtOXimBHk1Fisq69Gx3JtOoXtg1N1tijg==
 
 "@types/estree-jsx@^1.0.0":
   version "1.0.5"
@@ -3332,6 +3337,11 @@ doctrine@^2.1.0:
   integrity sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==
   dependencies:
     esutils "^2.0.2"
+
+dom-to-image-more@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/dom-to-image-more/-/dom-to-image-more-3.6.0.tgz#76ec03b6e1adaf117c88c72090b2dd3dcfb6532b"
+  integrity sha512-0BB0M9gRRP7znKBNLRAvNyWnkDIzSgMSDcS7WdPDzPnWhW2YJqxUR/dCHiJ2HdCV3K2rVky5Vba8UF31mvrCuQ==
 
 dompurify@^3.1.7:
   version "3.2.6"
