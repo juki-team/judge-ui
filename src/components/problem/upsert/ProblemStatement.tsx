@@ -13,10 +13,10 @@ interface ProblemStatementProps {
 
 export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps) => {
   
-  const { judgeKey, statement } = problem;
+  const { judgeKey, statement, judgeIsExternal } = problem;
   
   const [ language, setLanguage ] = useState<Language>(Language.ES);
-  const [ type, setType ] = useState<'md' | 'html' | 'pdf'>('md');
+  const [ type, setType ] = useState<'md' | 'html' | 'pdf'>(judgeIsExternal ? 'html' : 'md');
   
   const tabs = {
     [Language.ES]: {
@@ -54,11 +54,16 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
           extraNodes={[
             <Select<'md' | 'html' | 'pdf', ReactNode, ReactNode>
               key="selector"
-              options={[
-                { value: 'md', label: <T>Markdown</T> },
-                { value: 'html', label: <T>HTML</T> },
-                { value: 'pdf', label: <T>PDF</T> },
-              ]}
+              options={judgeIsExternal
+                ? [
+                  { value: 'html', label: <T>HTML</T> },
+                  { value: 'pdf', label: <T>PDF</T> },
+                ]
+                : [
+                  { value: 'md', label: <T>Markdown</T> },
+                  { value: 'pdf', label: <T>PDF</T> },
+                ]
+              }
               selectedOption={{ value: type }}
               onChange={({ value }) => {
                 setType(value);

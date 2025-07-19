@@ -342,10 +342,11 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                                   <Modal isOpen onClose={() => setModal(null)} closeIcon>
                                     <div className="jk-pg">
                                       <div>{testCase.testCaseKey}.{keyPut === 'input' ? 'in' : 'out'}</div>
-                                      <CodeViewer
-                                        code={response.content.source} language={CodeLanguage.TEXT}
-                                        style={{ maxHeight: 'calc(var(--100VH) * 0.9)', overflow: 'auto' }}
-                                      />
+                                      <div style={{ height: 'calc(var(--100VH) - 200px)' }}>
+                                        <CodeViewer
+                                          code={response.content.source} language={CodeLanguage.TEXT}
+                                        />
+                                      </div>
                                     </div>
                                   </Modal>,
                                 );
