@@ -33,6 +33,7 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judg
       sampleCases: [],
       note: EMPTY_TEXT_LANGUAGES,
       html: EMPTY_TEXT_LANGUAGES,
+      pdfUrl: EMPTY_TEXT_LANGUAGES,
     },
     tags: [],
     members: {

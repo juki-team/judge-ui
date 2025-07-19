@@ -113,7 +113,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   // ];
   
   const extraNodes = [];
-  if (problem.user?.isManager && !problem.judge?.isExternal) {
+  if (problem.user?.isManager) {
     extraNodes.push(
       <DocumentMembersButton
         documentMembers={problem.members}

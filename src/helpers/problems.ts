@@ -28,6 +28,7 @@ export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO
     sampleCases: entity?.statement?.sampleCases ?? [],
     note: entity?.statement?.note ?? EMPTY_TEXT_LANGUAGES,
     html: entity?.statement?.html ?? EMPTY_TEXT_LANGUAGES,
+    pdfUrl: entity?.statement?.pdfUrl ?? EMPTY_TEXT_LANGUAGES,
   },
   editorial: entity?.editorial ?? EMPTY_TEXT_LANGUAGES,
   costs: {

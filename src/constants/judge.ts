@@ -32,6 +32,9 @@ export const JUDGE_API_V1 = {
     STATISTICS: (key: string, startTimestamp: number, endTimestamp: number) => {
       return `${JUKI_SERVICE_V1_URL}/statistics/problem/${key}?startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`;
     },
+    POST_PDF: () => {
+      return `${JUKI_SERVICE_V1_URL}/problem/statement-pdf`;
+    },
   },
   CONTEST: {
     CREATE: () => {

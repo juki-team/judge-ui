@@ -1351,10 +1351,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.1.39":
-  version "1.1.39"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.39/d09dfbc3d5b3e17fc79086eb1674d24f431f43d7#d09dfbc3d5b3e17fc79086eb1674d24f431f43d7"
-  integrity sha512-nToWN1fjwP2hprnAn1raoCkhCyFnZA2wxXgyLvo4QKAZ2IFDPIhEw2k52HF6ODI2ktd0Q+feXBlTxpXM0q5e2Q==
+"@juki-team/base-ui@^1.1.42":
+  version "1.1.42"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.42/6baa5ffc9b6abbb2a6828c798abd214e7456e9d9#6baa5ffc9b6abbb2a6828c798abd214e7456e9d9"
+  integrity sha512-tcSO81eXkOwmpNSdC0kAqzIFGPqwFgE8Ti1YP0rxZKgA7dHYgWHMPMvOTd6S1Gl6U2DaMXvsMspXG53wNU4nHA==
   dependencies:
     "@codemirror/autocomplete" "^6.18.6"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1369,7 +1369,7 @@
     "@floating-ui/react" "^0.27.12"
     "@handsontable/react" "^16.0.1"
     "@hookform/resolvers" "^5.1.1"
-    "@juki-team/commons" "^0.0.858"
+    "@juki-team/commons" "^0.0.859"
     "@tanstack/react-virtual" "^3.13.10"
     "@tiptap/core" "^3.0.6"
     "@tiptap/extension-blockquote" "^3.0.6"
@@ -1427,10 +1427,10 @@
     yup "^1.6.1"
     zustand "^5.0.5"
 
-"@juki-team/commons@^0.0.858":
-  version "0.0.858"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.858/c7cbc553ea11e47d391a58c3a39776c107369fe9#c7cbc553ea11e47d391a58c3a39776c107369fe9"
-  integrity sha512-x8fjoTHM9oXXBchivLHsV0u3WUlYk/jy7JErlql41RROIjRtjkfumIMR4AZ0vuqmgeuEux5NVNOxYAqcy+t+tg==
+"@juki-team/commons@^0.0.859":
+  version "0.0.859"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.859/f38b5429df2e3fb494551921f6abfc368aa75e8b#f38b5429df2e3fb494551921f6abfc368aa75e8b"
+  integrity sha512-i3TvpxlF/IcdpprqRtd+ESP7zmdTlFWj/uQFHBJXS80UtrBerbVGMTb862qMWlxLuK+RI6i8NHaJHniz8O/Euw==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1":
   version "1.2.3"
