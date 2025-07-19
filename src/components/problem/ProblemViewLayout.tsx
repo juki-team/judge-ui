@@ -119,7 +119,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         documentMembers={problem.members}
         documentOwner={problem.owner}
         documentName={<T>problem</T>}
-        saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM(problem.key)}
+        saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM_MEMBERS(problem.key)}
         reloadDocument={reloadProblem}
         copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
       />,

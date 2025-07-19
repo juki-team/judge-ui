@@ -11,6 +11,9 @@ export const JUDGE_API_V1 = {
     PROBLEM: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/problem/${key}`;
     },
+    PROBLEM_MEMBERS: (key: string) => {
+      return `${JUKI_SERVICE_V1_URL}/problem/${key}/members`;
+    },
     CREATE: () => {
       return `${JUKI_SERVICE_V1_URL}/problem`;
     },
