@@ -11,30 +11,37 @@ export const dynamic = 'force-static';
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   
-  const { title, description } = await getContestMetadata((await searchParams).tab as string);
+  const { tab } = await searchParams;
   
-  return {
-    ...DEFAULT_METADATA,
-    title,
-    description,
-    openGraph: {
-      ...DEFAULT_METADATA.openGraph,
+  if (!!tab) {
+    
+    const { title, description } = await getContestMetadata(tab as string);
+    
+    return {
+      ...DEFAULT_METADATA,
       title,
       description,
-      // images: [
-      //   {
-      //     url: cover,
-      //     width: 400,
-      //     height: 210,
-      //   },
-      // ],
-    },
-    twitter: {
-      ...DEFAULT_METADATA.twitter,
-      title,
-      description,
-    },
-  };
+      openGraph: {
+        ...DEFAULT_METADATA.openGraph,
+        title,
+        description,
+        // images: [
+        //   {
+        //     url: cover,
+        //     width: 400,
+        //     height: 210,
+        //   },
+        // ],
+      },
+      twitter: {
+        ...DEFAULT_METADATA.twitter,
+        title,
+        description,
+      },
+    };
+  }
+  
+  return DEFAULT_METADATA;
 }
 
 export default function Boards() {
