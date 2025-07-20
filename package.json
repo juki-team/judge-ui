@@ -1,7 +1,7 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.20.11",
+  "version": "1.20.12",
   "scripts": {
     "dev": "next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
