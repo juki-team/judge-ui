@@ -10,8 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "pull": "yarn add @juki-team/commons @juki-team/base-ui",
-    "git-push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn version --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f",
-    "deploy": "f() { yarn build && yarn git-push \"${1}\"; }; f"
+    "push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn version --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f"
   },
   "dependencies": {
     "@juki-team/base-ui": "^1.1.46",
