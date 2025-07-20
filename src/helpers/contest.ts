@@ -1,7 +1,14 @@
 import { UpsertContestDTO } from '@juki-team/commons';
+import { jukiApiManager } from 'config';
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'src/constants';
-import { ContestDataResponseDTO, ContestTemplate, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
-import { isGlobalContest, roundTimestamp } from './index';
+import {
+  ContentResponseType,
+  ContestDataResponseDTO,
+  ContestTemplate,
+  UpsertContestDTOUI,
+  UpsertContestProblemDTOUI,
+} from 'types';
+import { cleanRequest, getMetaHeaders, isGlobalContest, roundTimestamp } from './index';
 
 export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertContestDTOUI): UpsertContestDTOUI => {
   const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
@@ -158,3 +165,25 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
     tags: entity.tags ?? [],
   };
 };
+
+export async function getContestMetadata(contestKey: string) {
+  
+  let result;
+  try {
+    const response = await fetch(
+      jukiApiManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url,
+      { headers: getMetaHeaders() });
+    const text = await response.text();
+    result = cleanRequest<ContentResponseType<{
+      title: string,
+      description: string,
+      cover: string
+    }>>(text);
+  } catch (error) {
+    console.error('error on generateMetadata', error);
+  }
+  
+  const { title, description, cover } = result?.success ? result.content : { title: '', description: '', cover: '' };
+  
+  return { title, description, cover };
+}
