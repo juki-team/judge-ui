@@ -1,3 +1,4 @@
+import { DEFAULT_METADATA } from 'config/constants';
 import { getContestMetadata } from 'helpers';
 import type { Metadata } from 'next';
 import ContestViewPage from './ContestViewPage';
@@ -13,19 +14,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { title, description } = await getContestMetadata((await params).contestKey);
   
   return {
+    ...DEFAULT_METADATA,
     title,
     description,
     openGraph: {
-      type: 'website',
+      ...DEFAULT_METADATA.openGraph,
       title,
       description,
-      siteName: 'Juki Judge',
-      url: 'https://judge.juki.app',
       // images: [
       //   {
       //     url: cover,
+      //     width: 400,
+      //     height: 210,
       //   },
       // ],
+    },
+    twitter: {
+      ...DEFAULT_METADATA.twitter,
+      title,
+      description,
     },
   };
 }
