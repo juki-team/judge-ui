@@ -8,6 +8,8 @@ type Props = {
   params: Promise<{ problemKey: string }>
 }
 
+export const dynamic = 'force-static';
+
 async function getMetadata(problemKey: string) {
   
   let result;

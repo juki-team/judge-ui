@@ -6,6 +6,8 @@ type Props = {
   params: Promise<{ contestKey: string }>
 }
 
+export const dynamic = 'force-static';
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   const { title, description } = await getContestMetadata((await params).contestKey);

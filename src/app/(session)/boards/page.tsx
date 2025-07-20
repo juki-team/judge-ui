@@ -6,6 +6,8 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
+export const dynamic = 'force-static';
+
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   
   const { title, description } = await getContestMetadata((await searchParams).tab as string);
