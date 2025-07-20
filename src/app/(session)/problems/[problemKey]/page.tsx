@@ -1,4 +1,5 @@
 import { jukiApiManager } from 'config';
+import { DEFAULT_METADATA } from 'config/constants';
 import { cleanRequest, getMetaHeaders } from 'helpers';
 import type { Metadata } from 'next';
 import { ContentResponseType } from 'types';
@@ -37,14 +38,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { title, description } = await getMetadata((await params).problemKey);
   
   return {
+    ...DEFAULT_METADATA,
     title,
     description,
     openGraph: {
-      type: 'website',
+      ...DEFAULT_METADATA.openGraph,
       title,
       description,
-      siteName: 'Juki Judge',
-      url: 'https://judge.juki.app',
       // images: [
       //   {
       //     url: cover,
@@ -52,6 +52,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       //     height: 210,
       //   },
       // ],
+    },
+    twitter: {
+      ...DEFAULT_METADATA.twitter,
+      title,
+      description,
     },
   };
 }
