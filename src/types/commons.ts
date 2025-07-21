@@ -74,7 +74,6 @@ export type {
   CodeEditorTestCaseType,
   CodeEditorSheetType,
   JkmdSheetType,
-  SourceCodeType,
   CreateFileDTO,
   SqsPropertiesType,
   CompanyResourceSpecificationsResponseDTO,
