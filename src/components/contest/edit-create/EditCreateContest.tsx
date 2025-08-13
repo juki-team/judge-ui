@@ -1,13 +1,12 @@
 'use client';
 
-import { CodeEditor, Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
+import { Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
-import { isGlobalContest, objectDiff, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiNotification, useJukiUI, useRef, useRouterStore, useState } from 'hooks';
+import { isGlobalContest, renderReactNodeOrFunctionP1 } from 'helpers';
+import { useEffect, useJukiUI, useRouterStore, useState } from 'hooks';
 import { memo } from 'react';
 import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
-  CodeLanguage,
   ContestTab,
   EntityState,
   LastPathKey,
@@ -27,7 +26,7 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
   
   const editing = !!contestKey;
   
-  const { addWarningNotification } = useJukiNotification();
+  // const { addWarningNotification } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
   const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest);
   const isGlobal = isGlobalContest(contest.settings);
@@ -36,31 +35,32 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
   useEffect(() => {
     localStorage.removeItem(LS_INITIAL_CONTEST_KEY);
   }, []);
-  const lastContest = useRef(initialContest);
-  useEffect(() => {
-    if (editing && JSON.stringify(initialContest) !== JSON.stringify(lastContest.current)) {
-      const text = JSON.stringify(objectDiff(lastContest.current as object, initialContest), null, 2);
-      const height = text.split('\n').length;
-      addWarningNotification(
-        <div>
-          <>
-            <T className="tt-se">the contest changed</T>,
-            <T>your changes can override other admins</T>
-          </>
-          :
-          <div style={{ height: height * 24 + 'px' }}>
-            <CodeEditor
-              source={text}
-              language={CodeLanguage.JSON}
-              readOnly
-            />
-          </div>
-        </div>,
-      );
-      lastContest.current = initialContest;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ JSON.stringify(initialContest) ]);
+  // TODO:
+  // const lastContest = useRef(initialContest);
+  // useEffect(() => {
+  //   if (editing && JSON.stringify(initialContest) !== JSON.stringify(lastContest.current)) {
+  //     const text = JSON.stringify(objectDiff(lastContest.current as object, initialContest), null, 2);
+  //     const height = text.split('\n').length;
+  //     addWarningNotification(
+  //       <div>
+  //         <>
+  //           <T className="tt-se">the contest changed</T>,
+  //           <T>your changes can override other admins</T>
+  //         </>
+  //         :
+  //         <div style={{ height: height * 24 + 'px' }}>
+  //           <CodeEditor
+  //             source={text}
+  //             language={CodeLanguage.JSON}
+  //             readOnly
+  //           />
+  //         </div>
+  //       </div>,
+  //     );
+  //     lastContest.current = initialContest;
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [ JSON.stringify(initialContest) ]);
   
   const tabHeaders: TabsType<ContestTab> = {};
   if (!isGlobal) {
