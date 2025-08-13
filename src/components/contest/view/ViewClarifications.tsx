@@ -182,9 +182,9 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
           })}
       </div>
       {clarification && (
-        <Modal isOpen={true} onClose={() => setClarification(null)} closeIcon>
+        <Modal isOpen onClose={() => setClarification(null)} closeIcon>
           <div className="jk-pg-md jk-col gap stretch">
-            <h3><T>clarification</T></h3>
+            <h3><T className="tt-se">clarification</T></h3>
             <div className="jk-form-item">
               <InputSelect
                 label={<T className="tt-se">problem</T>}
@@ -226,9 +226,11 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                 </label>
                 <MdMathEditor
                   onChange={answer => setClarification({ ...clarification, answer })}
-                  initialMd={clarification.answer || '\n\n'}
+                  value={clarification.answer || '\n\n'}
                   informationButton
-                  uploadImageButton
+                  enableTextPlain
+                  enableImageUpload
+                  enableIA
                 />
               </div>
             )}

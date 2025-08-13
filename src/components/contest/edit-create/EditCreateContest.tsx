@@ -72,8 +72,10 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
           <MdMathEditor
             key="description-md-math-editor"
             informationButton
-            uploadImageButton
-            initialMd={contest.description}
+            enableTextPlain
+            enableImageUpload
+            enableIA
+            value={contest.description}
             onChange={value => setContest(prevState => (
               { ...prevState, description: value }
             ))}

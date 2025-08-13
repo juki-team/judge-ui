@@ -17,8 +17,10 @@ export const TextLangEdit = ({ text, setText }: {
             body: (
               <MdMathEditor
                 informationButton
-                uploadImageButton
-                initialMd={text?.[Language.ES]}
+                enableTextPlain
+                enableImageUpload
+                enableIA
+                value={text?.[Language.ES]}
                 onChange={value => setText({ ...text, [Language.ES]: value })}
               />
             ),
@@ -33,8 +35,10 @@ export const TextLangEdit = ({ text, setText }: {
             body: (
               <MdMathEditor
                 informationButton
-                uploadImageButton
-                initialMd={text?.[Language.EN]}
+                enableTextPlain
+                enableImageUpload
+                enableIA
+                value={text?.[Language.EN]}
                 onChange={value => setText({ ...text, [Language.EN]: value })}
               />
             ),

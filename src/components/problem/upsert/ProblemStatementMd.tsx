@@ -26,8 +26,10 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
           <MdMathEditor
             key={language}
             informationButton
-            uploadImageButton
-            initialMd={statement.description?.[language]}
+            enableTextPlain
+            enableImageUpload
+            enableIA
+            value={statement.description?.[language]}
             onChange={value => setProblem(prevState => ({
               ...prevState,
               statement: {
@@ -44,8 +46,10 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
           <MdMathEditor
             key={language}
             informationButton
-            uploadImageButton
-            initialMd={statement.input?.[language]}
+            enableTextPlain
+            enableImageUpload
+            enableIA
+            value={statement.input?.[language]}
             onChange={value => setProblem(prevState => ({
               ...prevState,
               statement: {
@@ -62,8 +66,10 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
           <MdMathEditor
             key={language}
             informationButton
-            uploadImageButton
-            initialMd={statement.output?.[language]}
+            enableTextPlain
+            enableImageUpload
+            enableIA
+            value={statement.output?.[language]}
             onChange={value => setProblem(prevState => ({
               ...prevState,
               statement: {
@@ -94,8 +100,10 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
                     <div className="flex-1 text-editor bc-we">
                       <MdMathEditor
                         informationButton
-                        uploadImageButton
-                        initialMd={pointsByGroup.description?.[language]}
+                        enableTextPlain
+                        enableImageUpload
+                        enableIA
+                        value={pointsByGroup.description?.[language]}
                         onChange={value => setProblem(prevState => ({
                           ...prevState,
                           settings: {
@@ -173,8 +181,10 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
           <MdMathEditor
             key={language}
             informationButton
-            uploadImageButton
-            initialMd={statement.note?.[language]}
+            enableTextPlain
+            enableImageUpload
+            enableIA
+            value={statement.note?.[language]}
             onChange={value => setProblem(prevState => ({
               ...prevState,
               statement: {
