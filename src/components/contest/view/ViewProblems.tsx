@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiUI, useRouterStore } from 'hooks';
+import { useJukiNotification, useJukiUI } from 'hooks';
 import React, { useMemo } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
@@ -29,9 +29,8 @@ import {
 
 export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
-  const { problems = {}, user } = contest;
+  const { problems = {}, user, key: contestKey } = contest;
   const { isManager, isAdministrator } = user || {};
-  const contestKey = useRouterStore(state => state.routeParams.contestKey);
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isManager || isAdministrator;
@@ -63,14 +62,14 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>key</T>} />,
       index: 'id',
-      Field: ({ record: { judge: { key: judgeKey, isMain, name, isExternal }, key, url } }) => (
+      Field: ({ record: { judge: { key: judgeKey, isMain, name, isExternal }, key, externalUrl } }) => (
         <TextField
           text={
             isJudgeOrAdmin || contest.isEndless || contest.isPast
               ? (
                 <Link
                   href={isExternal
-                    ? url
+                    ? externalUrl
                     : isMain
                       ? jukiAppRoutes.JUDGE().problems.view({ key })
                       : jukiAppRoutes.JUDGE(`https://${judgeKey}.jukijudge.com`).problems.view({ key })
@@ -104,7 +103,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>name</T>} />,
       index: 'name',
-      Field: ({ record: { name, index, key } }) => (
+      Field: ({ record: { name, index, key, judge } }) => (
         <Field className="jk-col">
           <Link
             href={jukiAppRoutes.JUDGE().contests.view({
@@ -115,7 +114,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
           >
             <div className="link fw-bd">{name}</div>
           </Link>
-          {isJudgeOrAdmin && (
+          {isJudgeOrAdmin && judge.isSubmitSupported && (
             <ButtonLoader
               onClick={async (setLoaderStatus) => {
                 setLoaderStatus(Status.LOADING);
@@ -144,6 +143,34 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
               type="light"
             >
               <T className="tt-se">rejudge problem</T>
+            </ButtonLoader>
+          )}
+          {isJudgeOrAdmin && !judge.isSubmitSupported && (
+            <ButtonLoader
+              onClick={async (setLoaderStatus) => {
+                setLoaderStatus(Status.LOADING);
+                const result = cleanRequest<ContentResponseType<{}>>(
+                  await authorizedRequest(
+                    JUDGE_API_V1.CONTEST.PROBLEM_RETRIEVE(contestKey as string, key),
+                    { method: HTTPMethod.POST },
+                  ),
+                );
+                if (result.success) {
+                  addSuccessNotification(
+                    <div><T>retrieving submissions</T></div>,
+                  );
+                  setLoaderStatus(Status.SUCCESS);
+                } else {
+                  addErrorNotification(
+                    <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
+                  );
+                  setLoaderStatus(Status.ERROR);
+                }
+              }}
+              size="tiny"
+              type="light"
+            >
+              <T className="tt-se">retrieve new submissions</T>
             </ButtonLoader>
           )}
         </Field>

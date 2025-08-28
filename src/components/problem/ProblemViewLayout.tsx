@@ -123,18 +123,23 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         reloadDocument={reloadProblem}
         copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
       />,
-      <Button
-        data-tooltip-id="jk-tooltip"
-        data-tooltip-content="only submissions that are not in a contest will be judged"
-        data-tooltip-t-class-name="tt-se"
-        size="small"
-        icon={<AutorenewIcon />}
-        onClick={() => setIsOpenRejudgeModal(true)}
-        responsiveMobile
-        type="light"
-      >
-        <T className="tt-se">rejudge</T>
-      </Button>,
+    );
+    if (!problem.judge.isExternal) {
+      extraNodes.push(<Button
+          data-tooltip-id="jk-tooltip"
+          data-tooltip-content="only submissions that are not in a contest will be judged"
+          data-tooltip-t-class-name="tt-se"
+          size="small"
+          icon={<AutorenewIcon />}
+          onClick={() => setIsOpenRejudgeModal(true)}
+          responsiveMobile
+          type="light"
+        >
+          <T className="tt-se">rejudge</T>
+        </Button>,
+      );
+    }
+    extraNodes.push(
       <Link href={jukiAppRoutes.JUDGE().problems.edit({ key: problem.key as string })}>
         <Button
           size="small"
@@ -192,7 +197,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         </h2>
         <div className="jk-tag bc-hl tx-s">{problem.judge?.name}</div>
         <ProblemInfo problem={problem} />
-        {problem.user.isManager && <InfoTestCases problem={problem} />}
+        {problem.user.isManager && !problem.judge.isExternal && <InfoTestCases problem={problem} />}
         <ProblemStatus {...problem.user} />
       </div>
     </TwoContentLayout>

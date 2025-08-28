@@ -90,6 +90,9 @@ export type {
   EntityCompanySummaryListResponseDTO,
   StatisticsProblemResponseDTO,
   StatisticsDateType,
+  ObjectIdType,
+  WebSocketResponseEventDTO,
+  SubscribeProblemCrawledWebSocketEventDTO,
 } from '@juki-team/commons';
 export { Period, NotificationType, QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/types';
 

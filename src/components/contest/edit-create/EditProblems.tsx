@@ -286,7 +286,6 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           color: problem.color,
           startTimestamp: problem.startTimestamp,
           endTimestamp: problem.endTimestamp,
-          url: '',
           tags: problem.tags,
           company: problem.company,
         };
@@ -426,7 +425,6 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       judge: problem.judge,
                       startTimestamp: contest.settings.startTimestamp,
                       endTimestamp: contest.settings.endTimestamp,
-                      url: '',
                       tags: problem.tags,
                       company: problem.company,
                     };

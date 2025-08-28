@@ -45,11 +45,10 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen }: CrawlCodeforces
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V1.problem.crawlStatement({
+            const { url, ...options } = jukiApiManager.API_V1.problem.crawl({
               body: {
                 judgeKey: Judge.CODEFORCES,
-                contestId,
-                index,
+                key: `${contestId}-${index}`,
               },
             });
             const response = cleanRequest<ContentResponseType<{ key: string }>>(

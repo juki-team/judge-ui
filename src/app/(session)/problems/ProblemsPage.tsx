@@ -43,6 +43,7 @@ import {
   QueryParam,
   ReactNode,
 } from 'types';
+import { CrawlLeetCodeProblemModal } from '../../../components/problem/CrawlLeetCodeProblemModal';
 
 const JUDGE_C: { [key in Judge]: string } = {
   [Judge.CUSTOMER]: 'c',
@@ -54,6 +55,7 @@ const JUDGE_C: { [key in Judge]: string } = {
   [Judge.CODECHEF]: 'h',
   [Judge.TOPCODER]: 't',
   [Judge.JV_UMSA]: 'm',
+  [Judge.LEETCODE]: 'l',
 };
 
 export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
@@ -75,6 +77,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     label: judge.name,
   }));
   const { components: { Link } } = useJukiUI();
+  const userIsLogged = useUserStore(state => state.user.isLogged);
   
   const firstJudgeKey = judges[0]?.value;
   useEffect(() => {
@@ -130,35 +133,40 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     );
   }
   const [ modal, setModal ] = useState<ReactNode>(null);
-  if (isExternal) {
+  if (isExternal && userIsLogged) {
     extraNodes.push(
-      <div className="jk-row gap">
-        {modal}
-        <ButtonLoader
-          size="small"
-          icon={<PlusIcon />}
-          responsiveMobile
-          onClick={() => {
-            if (judgeKey === Judge.CODEFORCES) {
-              setModal(<CrawlCodeforcesProblemModal isOpen judge={Judge.CODEFORCES} onClose={() => setModal(null)} />);
-            }
-            if (judgeKey === Judge.JV_UMSA) {
-              setModal(<CrawlJvumsaProblemModal isOpen onClose={() => setModal(null)} />);
-            }
-            if (judgeKey === Judge.CODEFORCES_GYM) {
-              setModal(
-                <CrawlCodeforcesProblemModal
-                  isOpen
-                  judge={Judge.CODEFORCES_GYM}
-                  onClose={() => setModal(null)}
-                />,
-              );
-            }
-          }}
-        >
-          <T className="tt-se">crawl</T>
-        </ButtonLoader>
-      </div>,
+      <ButtonLoader
+        size="small"
+        icon={<PlusIcon />}
+        responsiveMobile
+        onClick={() => {
+          if (judgeKey === Judge.CODEFORCES) {
+            setModal(<CrawlCodeforcesProblemModal isOpen judge={Judge.CODEFORCES} onClose={() => setModal(null)} />);
+          }
+          if (judgeKey === Judge.JV_UMSA) {
+            setModal(<CrawlJvumsaProblemModal isOpen onClose={() => setModal(null)} />);
+          }
+          if (judgeKey === Judge.CODEFORCES_GYM) {
+            setModal(
+              <CrawlCodeforcesProblemModal
+                isOpen
+                judge={Judge.CODEFORCES_GYM}
+                onClose={() => setModal(null)}
+              />,
+            );
+          }
+          if (judgeKey === Judge.LEETCODE) {
+            setModal(
+              <CrawlLeetCodeProblemModal
+                isOpen
+                onClose={() => setModal(null)}
+              />,
+            );
+          }
+        }}
+      >
+        <T className="tt-se">crawl</T>
+      </ButtonLoader>,
     );
   }
   
@@ -189,6 +197,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
       ))}
     >
       <div className="jk-row space-between extend pn-re">
+        {modal}
         <div className="jk-row gap">
           <h1><T className="tt-se">problems</T></h1>
           {isExternal && (

@@ -16,6 +16,7 @@ export {
   getJudgeKeyOfProblemJudgeKey,
   isGlobalContest,
   getParamsOfUserKey,
+  isProblemCrawledWebSocketResponseEventDTO,
 } from '@juki-team/commons';
 
 export {

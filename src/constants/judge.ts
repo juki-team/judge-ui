@@ -73,6 +73,9 @@ export const JUDGE_API_V1 = {
     UNLOCK_SCOREBOARD: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/unlock-scoreboard`;
     },
+    PROBLEM_RETRIEVE: (contestKey: string, problemJudgeKey: string) => {
+      return `${JUKI_SERVICE_V1_URL}/contest/${contestKey}/problem/${problemJudgeKey}/retrieve`;
+    },
   },
   REJUDGE: {
     PROBLEM_COUNT: (problemJudgeKey: string) => {

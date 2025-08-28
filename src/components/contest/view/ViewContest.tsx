@@ -417,8 +417,9 @@ export function ContestView({ contest, reloadContest }: {
           {contest.name}
         </h2>
         <Popover
-          content={<div className="jk-pg-sm">{literal}</div>}
+          content={<div>{literal}</div>}
           placement="bottom"
+          popoverClassName="bc-we jk-br-ie elevation-1 jk-pg-xsm"
         >
           <div className={`jk-tag tt-ue tx-s ${tagBc} screen md lg`}>
             <T className="ws-np">{statusLabel}</T>
