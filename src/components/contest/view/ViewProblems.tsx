@@ -57,7 +57,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       ),
       sort: { compareFn: () => (recordA, recordB) => lettersToIndex(recordB.index) - lettersToIndex(recordA.index) },
       cardPosition: isJudgeOrAdmin ? 'topLeft' : 'top',
-      minWidth: 48,
+      minWidth: 110,
     },
     {
       head: <TextHeadCell text={<T>key</T>} />,
@@ -76,29 +76,24 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
                   }
                   target="_blank"
                 >
-                  <div className="jk-row gap link tx-s">
-                    <div className="fw-bd cr-g3 jk-col">
-                      {!isMain ? name : ''}
-                      <div>{key}</div>
-                    </div>
-                    <OpenInNewIcon size="tiny" />
+                  <div className="link tx-t fw-bd jk-col">
+                    {!isMain && <div>{name}</div>}
+                    <div>{key}&nbsp;<OpenInNewIcon size="tiny" /></div>
                   </div>
                 </Link>
               ) : (
-                <div className="jk-row gap link tx-s">
-                  <div className="fw-bd cr-g3 jk-col">
-                    {!isMain ? name : ''}
-                    <div>{key}</div>
-                  </div>
+                <div className="tx-t fw-bd jk-col">
+                  {!isMain && <div>{name}</div>}
+                  <div>{key}</div>
                 </div>
               )
           }
-          label={<T>id</T>}
+          label={<T>key</T>}
         />
       ),
       sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
       cardPosition: 'topRight',
-      minWidth: 48,
+      minWidth: 128,
     },
     {
       head: <TextHeadCell text={<T>name</T>} />,
@@ -177,7 +172,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       ),
       sort: { compareFn: () => (recordA, recordB) => recordB.name.localeCompare(recordA.name) },
       cardPosition: 'center',
-      minWidth: 128,
+      minWidth: 256,
     },
     {
       head: <TextHeadCell text={<T>points</T>} />,
@@ -187,7 +182,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       ),
       sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
       cardPosition: 'bottomLeft',
-      minWidth: 64,
+      minWidth: 128,
     },
     {
       head: <TextHeadCell text={<T>success rate</T>} />,
@@ -206,7 +201,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
         },
       },
       cardPosition: 'bottomRight',
-      minWidth: 64,
+      minWidth: 128,
     },
   ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest.isEndless, contest.isPast, Link, contestKey, addSuccessNotification, addErrorNotification ]);
   const data = Object.values(problems);

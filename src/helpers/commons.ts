@@ -17,6 +17,7 @@ export {
   isGlobalContest,
   getParamsOfUserKey,
   isProblemCrawledWebSocketResponseEventDTO,
+  getDocumentAccess,
 } from '@juki-team/commons';
 
 export {

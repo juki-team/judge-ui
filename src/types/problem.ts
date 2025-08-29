@@ -1,5 +1,5 @@
 import {
-  DocumentMembersResponseDTO,
+  EntityMembersResponseDTO,
   EntityState,
   Judge,
   UpsertProblemDTO,
@@ -11,7 +11,7 @@ export type KeyFileType = 'input' | 'output';
 export interface UpsertProblemUIDTO extends Omit<UpsertProblemDTO, 'members'> {
   judgeKey: Judge | string,
   judgeIsExternal: boolean,
-  members: DocumentMembersResponseDTO,
+  members: EntityMembersResponseDTO,
   owner: UserCompanyBasicInfoResponseDTO,
   state: EntityState,
 }

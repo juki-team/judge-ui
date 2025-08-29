@@ -1,5 +1,5 @@
-import { EntityAccess, EntityState, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
-import { EMPTY_TEXT_LANGUAGES } from './commons';
+import { EntityState, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
+import { EMPTY_ENTITY_MEMBERS, EMPTY_TEXT_LANGUAGES } from './commons';
 
 export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judgeIsExternal }: {
   nickname: string,
@@ -36,11 +36,7 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judg
       pdfUrl: EMPTY_TEXT_LANGUAGES,
     },
     tags: [],
-    members: {
-      access: EntityAccess.PRIVATE,
-      managers: {},
-      spectators: {},
-    },
+    members: EMPTY_ENTITY_MEMBERS(),
     owner: { nickname, imageUrl, company: { key: companyKey } },
     costs: {
       unlockEditorial: 0,

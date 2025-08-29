@@ -19,7 +19,7 @@ import {
   TwoContentLayout,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
-import { oneTab, toFilterUrl, toSortUrl } from 'helpers';
+import { getDocumentAccess, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
   useFetcher,
@@ -95,10 +95,10 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
       {
         head: 'access',
         index: 'access',
-        Field: ({ record: { members: { access } } }) => (
+        Field: ({ record: { members } }) => (
           <TextField
             className="jk-row"
-            text={<T className="tt-se">{ENTITY_ACCESS[access].label}</T>}
+            text={<T className="tt-se">{ENTITY_ACCESS[getDocumentAccess({ members })].label}</T>}
             label={<T className="tt-se">type</T>}
           />
         ),

@@ -1,8 +1,7 @@
 'use client';
 
 import { Button, DataViewer, FullscreenExitIcon, FullscreenIcon, T, Timer } from 'components';
-import { contestStateMap } from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiUI, useUserStore } from 'hooks';
+import { useDataViewerRequester, useI18nStore, useJukiUI } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   getNicknameColumn,
@@ -18,7 +17,7 @@ import {
   QueryParam,
   ScoreboardResponseDTO,
 } from 'types';
-import { getContestTimeLiteral } from '../commons';
+import { FullScreenScoreboard } from './FullScreenScoreboard';
 import { ScoreboardResponseDTOFocus } from './types';
 
 export const ViewDynamicScoreboard = ({ contest, onClose }: {
@@ -26,10 +25,8 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
   onClose: () => void,
 }) => {
   
-  const companyName = useUserStore(state => state.company.name);
-  const companyImageUrl = useUserStore(state => state.company.imageUrl);
   const contestKey = contest.key;
-  const { viewPortSize, components: { Link, Image } } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
@@ -151,53 +148,10 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
   ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, onClose, reloadRef, request, setLoaderStatusRef ]);
   
   if (fullscreen) {
-    const literal = getContestTimeLiteral(contest);
-    const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
-    const statusLabel = contestStateMap[key].label;
-    const tagBc = contestStateMap[key].bc;
-    const allLiteralLabel = contest.isEndless
-      ? <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-        <T>{statusLabel}</T></div>
-      : <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-        <T>{statusLabel}</T>,&nbsp;{literal}</div>;
-    
     return (
-      <div className="jk-full-screen-overlay">
-        <div className="jk-row bc-pd" style={{ padding: 'var(--pad-xt)' }}>
-          <Image
-            src={companyImageUrl}
-            alt={companyName}
-            height={viewPortSize === 'md' ? 40 : 46}
-            width={viewPortSize === 'md' ? 80 : 92}
-          />
-        </div>
-        <div className="jk-pg-md">
-          <div className="bc-wea">
-            <div className="jk-row nowrap gap extend">
-              <h2
-                style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
-                  textAlign: 'center',
-                }}
-              >
-                {contest.name}
-              </h2>
-            </div>
-            <div className="jk-row extend">{allLiteralLabel}</div>
-          </div>
-          <div
-            style={{
-              width: '100%',
-              height: 'calc(var(--100VH) - 170px)',
-            }}
-          >
-            {score}
-          </div>
-        </div>
-      </div>
+      <FullScreenScoreboard contest={contest}>
+        {score}
+      </FullScreenScoreboard>
     );
   }
   

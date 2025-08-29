@@ -3,6 +3,7 @@
 import {
   ButtonLoader,
   ContentCopyIcon,
+  contestAccessProps,
   EditIcon,
   EditViewMembers,
   FirstLoginWrapper,
@@ -31,7 +32,7 @@ import {
   useUserStore,
 } from 'hooks';
 import React from 'react';
-import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
+import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
   CodeLanguage,
@@ -46,6 +47,7 @@ import {
   TabsType,
   UpsertContestDTOUI,
 } from 'types';
+import { DocumentMembersButton } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewScoreboard } from './ViewScoreboard';
@@ -146,7 +148,14 @@ export function ContestView({ contest, reloadContest }: {
             key="problem-view"
             problem={{
               ...problem,
-              user: { isOwner: false, isManager: false, tried: false, isSpectator: false, solved: false },
+              user: {
+                isOwner: false,
+                isAdministrator: false,
+                isManager: false,
+                tried: false,
+                isSpectator: false,
+                solved: false,
+              },
               state: EntityState.RELEASED,
             }}
             infoPlacement="name"
@@ -306,6 +315,7 @@ export function ContestView({ contest, reloadContest }: {
   }
   
   const extraNodes = [];
+  
   if (viewPortSize === 'hg') {
     extraNodes.push(
       <div className={`jk-row nowrap jk-tag ${tagBc}`} key="status-label">
@@ -340,6 +350,19 @@ export function ContestView({ contest, reloadContest }: {
       </ButtonLoader>,
     );
   }
+  
+  extraNodes.push(
+    <DocumentMembersButton
+      isAdministrator={contest.user.isAdministrator}
+      members={contest.members}
+      documentOwner={contest.owner}
+      documentName={<T>contest</T>}
+      saveUrl={JUDGE_API_V1.CONTEST.CONTEST_MEMBERS(contest.key)}
+      reloadDocument={reloadContest}
+      copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').contests.view({ key: contest.key })}
+      {...contestAccessProps(false)}
+    />,
+  );
   
   if (isAdministrator) {
     extraNodes.push(

@@ -12,8 +12,6 @@ export {
   ScopeData,
   UserRole,
   TeamRole,
-  ContestRole,
-  ProblemRole,
   ContestStatus,
   CourseRole,
   SubmissionRunStatus,
@@ -34,6 +32,7 @@ export {
 } from '@juki-team/commons';
 
 export type {
+  EntityMembersDTO,
   ContestProblemBasicDataResponseDTO,
   VirtualUserResponseDTO,
   CompanyResponseDTO,

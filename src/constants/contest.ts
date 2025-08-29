@@ -5,7 +5,7 @@ import {
   UpsertContestDTOUI,
   UserCompanyBasicInfoResponseDTO,
 } from 'types';
-import { EMPTY_ENTITY_MEMBERS } from './index';
+import { EMPTY_ENTITY_MEMBERS } from './commons';
 
 export const FIVE_HOURS = 1000 * 60 * 60 * 5;
 export const ONE_HOUR = 1000 * 60 * 60;

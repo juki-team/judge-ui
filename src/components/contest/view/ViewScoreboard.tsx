@@ -12,14 +12,8 @@ import {
   T,
 } from 'components';
 import { jukiApiManager } from 'config';
-import {
-  authorizedRequest,
-  cleanRequest,
-  contestStateMap,
-  downloadDataTableAsCsvFile,
-  downloadSheetDataAsXlsxFile,
-} from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiNotification, useJukiUI, useUserStore } from 'hooks';
+import { authorizedRequest, cleanRequest, downloadDataTableAsCsvFile, downloadSheetDataAsXlsxFile } from 'helpers';
+import { useDataViewerRequester, useI18nStore, useJukiNotification, useJukiUI } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
@@ -33,8 +27,8 @@ import {
   ScoreboardResponseDTO,
   Status,
 } from 'types';
-import { getContestTimeLiteral } from '../commons';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
+import { FullScreenScoreboard } from './FullScreenScoreboard';
 import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
 
 interface DownloadButtonProps {
@@ -82,8 +76,11 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
   return (
     <Select
       disabled={disabled}
-      options={[ { value: 'csv', label: <T>as csv</T> }, { value: 'xlsx', label: <T>as xlsx</T> } ]}
-      selectedOption={{ value: 'x', label: <T>download</T> }}
+      options={[
+        { value: 'csv', label: <T className="tt-se">as csv</T> },
+        { value: 'xlsx', label: <T className="tt-se">as xlsx</T> },
+      ]}
+      selectedOption={{ value: 'x', label: <T className="tt-se">download</T> }}
       onChange={({ value }) => {
         switch (value) {
           case 'csv':
@@ -103,19 +100,17 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
           default:
         }
       }}
-      className="jk-border-radius-inline jk-button light tiny"
+      className="jk-br-ie jk-button light tiny"
     />
   );
 };
 
 export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataResponseDTO, mutate: KeyedMutator<any> }) => {
   
-  const companyName = useUserStore(state => state.company.name);
-  const companyImageUrl = useUserStore(state => state.company.imageUrl);
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
-  const { viewPortSize, components: { Link, Image } } = useJukiUI();
+  const { viewPortSize, components: { Link } } = useJukiUI();
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
@@ -165,6 +160,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
             data-tooltip-content="scoreboard frozen"
             data-tooltip-t-class-name="ws-np"
             className="cr-io"
+            key="frozen"
           >
             <AcUnitIcon />
           </div>
@@ -175,81 +171,74 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
             data-tooltip-content="scoreboard on quiet time"
             data-tooltip-t-class-name="ws-np"
             className="cr-er"
+            key="quiet"
           >
             <ManufacturingIcon />
           </div>
         ),
         ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
-          <div className="jk-row">
-            <Button
-              size="tiny"
-              type="light"
-              disabled={isLoading}
-              onClick={() => setUnfrozen(!unfrozen)}
-            >
-              <T>{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
-            </Button>
-          </div>
+          <Button
+            size="tiny"
+            type="light"
+            disabled={isLoading}
+            onClick={() => setUnfrozen(!unfrozen)}
+            key="unfrozen"
+          >
+            <T>{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
+          </Button>
         ),
         (contest?.user?.isAdministrator) && (
-          <div className="jk-row">
-            <ButtonLoader
-              size="tiny"
-              type="light"
-              disabled={isLoading}
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                    contest?.settings.locked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contestKey as string) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contestKey as string),
-                    { method: HTTPMethod.POST },
-                  ),
-                );
-                await mutate();
-                notifyResponse(response, setLoaderStatus);
-              }}
-            >
-              <T>{contest?.settings.locked ? 'unlock' : 'lock'}</T>
-            </ButtonLoader>
-          </div>
+          <ButtonLoader
+            size="tiny"
+            type="light"
+            disabled={isLoading}
+            onClick={async (setLoaderStatus) => {
+              setLoaderStatus(Status.LOADING);
+              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                  contest?.settings.locked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contestKey as string) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contestKey as string),
+                  { method: HTTPMethod.POST },
+                ),
+              );
+              await mutate();
+              notifyResponse(response, setLoaderStatus);
+            }}
+            key="unlock"
+          >
+            <T className="tt-se">{contest?.settings.locked ? 'unlock' : 'lock'}</T>
+          </ButtonLoader>
         ),
         (contest?.user?.isAdministrator || contest?.user?.isManager) && (
-          <div className="jk-row">
-            <ButtonLoader
-              size="tiny"
-              type="light"
-              disabled={isLoading}
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const {
-                  url,
-                  ...options
-                } = jukiApiManager.API_V1.contest.recalculateScoreboard({ params: { key: contest.key } });
-                const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
-                if (notifyResponse(response, setLoaderStatus)) {
-                  reload();
-                }
-              }}
-            >
-              <T>recalculate</T>
-            </ButtonLoader>
-          </div>
+          <ButtonLoader
+            size="tiny"
+            type="light"
+            disabled={isLoading}
+            onClick={async (setLoaderStatus) => {
+              setLoaderStatus(Status.LOADING);
+              const {
+                url,
+                ...options
+              } = jukiApiManager.API_V1.contest.recalculateScoreboard({ params: { key: contest.key } });
+              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
+              if (notifyResponse(response, setLoaderStatus)) {
+                reload();
+              }
+            }}
+            key="recalculate"
+          >
+            <T className="tt-se">recalculate</T>
+          </ButtonLoader>
         ),
-        <div className="jk-row" key="download">
-          <DownloadButton data={data} contest={contest} disabled={isLoading} />
-        </div>,
-        ...((contest.user.isAdministrator || contest.user.isManager || !contest.settings.locked) && !contest.isEndless && !contest.isFuture
-          ? [
-            <Button
-              key="dynamic"
-              onClick={() => setDynamic(true)}
-              size="tiny"
-              type="light"
-            >
-              <T>dynamic</T>
-            </Button>,
-          ]
-          : [])
-        ,
+        <DownloadButton key="download" data={data} contest={contest} disabled={isLoading} />,
+        ((contest.user.isAdministrator || contest.user.isManager || !contest.settings.locked) && !contest.isEndless && !contest.isFuture && (
+          <Button
+            key="dynamic"
+            onClick={() => setDynamic(true)}
+            size="tiny"
+            type="light"
+          >
+            <T className="tt-se">dynamic</T>
+          </Button>
+        )),
         <div
           data-tooltip-id="jk-tooltip"
           data-tooltip-content={fullscreen ? 'exit full screen' : 'go to fullscreen'}
@@ -272,53 +261,10 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
   const onClose = useCallback(() => setDynamic(false), []);
   
   if (fullscreen) {
-    const literal = getContestTimeLiteral(contest);
-    const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
-    const statusLabel = contestStateMap[key].label;
-    const tagBc = contestStateMap[key].bc;
-    const allLiteralLabel = contest.isEndless
-      ? <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-        <T>{statusLabel}</T></div>
-      : <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-        <T>{statusLabel}</T>,&nbsp;{literal}</div>;
-    
     return (
-      <div className="jk-full-screen-overlay">
-        <div className="jk-row bc-pd" style={{ padding: 'var(--pad-xt)' }}>
-          <Image
-            src={companyImageUrl}
-            alt={companyName}
-            height={viewPortSize === 'md' ? 40 : 46}
-            width={viewPortSize === 'md' ? 80 : 92}
-          />
-        </div>
-        <div className="jk-pg-md">
-          <div className="bc-wea">
-            <div className="jk-row nowrap gap extend">
-              <h2
-                style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  width: 'calc(100vw - var(--pad-md) - var(--pad-md))',
-                  textAlign: 'center',
-                }}
-              >
-                {contest.name}
-              </h2>
-            </div>
-            <div className="jk-row extend">{allLiteralLabel}</div>
-          </div>
-          <div
-            style={{
-              width: '100%',
-              height: 'calc(var(--100VH) - 170px)',
-            }}
-          >
-            {score}
-          </div>
-        </div>
-      </div>
+      <FullScreenScoreboard contest={contest}>
+        {score}
+      </FullScreenScoreboard>
     );
   }
   

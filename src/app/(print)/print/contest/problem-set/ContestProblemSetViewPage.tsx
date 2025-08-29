@@ -20,7 +20,14 @@ export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataRes
           <ProblemView
             problem={{
               ...problem,
-              user: { isOwner: false, isManager: false, tried: false, isSpectator: false, solved: false },
+              user: {
+                isOwner: false,
+                isAdministrator: false,
+                isManager: false,
+                tried: false,
+                isSpectator: false,
+                solved: false,
+              },
               state: EntityState.RELEASED,
             }}
             infoPlacement="none"

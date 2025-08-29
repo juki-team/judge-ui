@@ -76,6 +76,9 @@ export const JUDGE_API_V1 = {
     PROBLEM_RETRIEVE: (contestKey: string, problemJudgeKey: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${contestKey}/problem/${problemJudgeKey}/retrieve`;
     },
+    CONTEST_MEMBERS: (key: string) => {
+      return `${JUKI_SERVICE_V1_URL}/contest/${key}/members`;
+    },
   },
   REJUDGE: {
     PROBLEM_COUNT: (problemJudgeKey: string) => {

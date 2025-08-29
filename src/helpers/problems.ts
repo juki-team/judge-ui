@@ -1,11 +1,18 @@
 import { EMPTY_TEXT_LANGUAGES } from 'src/constants';
-import { EntityAccess, ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
+import { ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 
 export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO => ({
   members: {
-    access: entity?.members?.access ?? EntityAccess.PRIVATE,
+    rankAdministrators: entity.members.rankAdministrators,
+    administrators: entity?.members?.administrators ? Object.keys(entity.members.administrators) : [],
+    rankManagers: entity.members.rankManagers,
     managers: entity?.members?.managers ? Object.keys(entity.members.managers) : [],
+    rankGuests: entity.members.rankGuests,
+    guests: entity?.members?.guests ? Object.keys(entity.members.guests) : [],
+    rankSpectators: entity.members.rankSpectators,
     spectators: entity?.members?.spectators ? Object.keys(entity.members.spectators) : [],
+    rankParticipants: entity.members.rankParticipants,
+    participants: entity?.members?.participants ? Object.keys(entity.members.participants) : [],
   },
   name: entity?.name || '',
   shortname: entity?.shortname || '',

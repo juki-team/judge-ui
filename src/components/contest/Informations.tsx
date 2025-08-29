@@ -22,16 +22,29 @@ export const QuietInformation = (props: InformationProps) => {
   );
 };
 
-export const CAN_SEE_CONTEST = 'can see the problems, the scoreboard, the submission list and the clarifications';
+const CAN_SEE_CONTEST = 'can see the problems, the scoreboard, the submission list, and the clarifications';
+const CAN_PARTICIPANT = 'can submit solutions to the problems and send clarifications if the contest allows it';
+const CAN_JUDGE = 'can view source codes at any stage of the contest and can rejudge submissions if necessary';
+const CAN_REGISTER = 'can register for the contest';
+const CAN_EDIT = 'can edit any parameter of the contest';
 
 export const GuestInformationContent = () => (
   <>
     <T className="tt-se">
-      {`a guest ${CAN_SEE_CONTEST}.`}
+      a guest:
     </T>
-    <T className="tt-se">
-      a guest can register for the contest.
-    </T>
+    <ul>
+      <li>
+        <T className="tt-se">
+          {CAN_SEE_CONTEST}
+        </T>
+      </li>
+      <li>
+        <T className="tt-se">
+          {CAN_REGISTER}
+        </T>
+      </li>
+    </ul>
   </>
 );
 
@@ -44,9 +57,18 @@ export const GuestInformation = (props: InformationProps) => {
 };
 
 export const SpectatorInformationContent = () => (
-  <T className="tt-se">
-    {`a spectator ${CAN_SEE_CONTEST}.`}
-  </T>
+  <>
+    <T className="tt-se">
+      a viewer:
+    </T>
+    <ul>
+      <li>
+        <T className="tt-se">
+          {CAN_SEE_CONTEST}
+        </T>
+      </li>
+    </ul>
+  </>
 );
 
 export const SpectatorInformation = (props: InformationProps) => {
@@ -60,11 +82,20 @@ export const SpectatorInformation = (props: InformationProps) => {
 export const ContestantInformationContent = () => (
   <>
     <T className="tt-se">
-      {`a contestant ${CAN_SEE_CONTEST}.`}
+      a contestant:
     </T>
-    <T className="tt-se">
-      a contestant can submit solutions on the problems.
-    </T>
+    <ul>
+      <li>
+        <T className="tt-se">
+          {CAN_SEE_CONTEST}
+        </T>
+      </li>
+      <li>
+        <T className="tt-se">
+          {CAN_PARTICIPANT}
+        </T>
+      </li>
+    </ul>
   </>
 );
 
@@ -79,17 +110,25 @@ export const ContestantInformation = (props: InformationProps) => {
 export const JudgeInformationContent = () => (
   <>
     <T className="tt-se">
-      {`a judge ${CAN_SEE_CONTEST}.`}
+      a judge:
     </T>
-    <T className="tt-se">
-      a judge can view source codes at any stage of the contest.
-    </T>
-    <T className="tt-se">
-      a judge can rejudge submissions if necessary.
-    </T>
-    <T className="tt-se">
-      the person who creates the contest is judge by default.
-    </T>
+    <ul>
+      <li>
+        <T className="tt-se">
+          {CAN_SEE_CONTEST}
+        </T>
+      </li>
+      <li>
+        <T className="tt-se">
+          {CAN_PARTICIPANT}
+        </T>
+      </li>
+      <li>
+        <T className="tt-se">
+          {CAN_JUDGE}
+        </T>
+      </li>
+    </ul>
   </>
 );
 
@@ -104,11 +143,30 @@ export const JudgeInformation = (props: InformationProps) => {
 export const AdminInformationContent = () => (
   <>
     <T className="tt-se">
-      a administrator can change the parameters of the contest and see everything related to the contest.
+      an administrator:
     </T>
-    <T className="tt-se">
-      the person who creates the contest is administrator by default.
-    </T>
+    <ul>
+      <li>
+        <T className="tt-se">
+          {CAN_SEE_CONTEST}
+        </T>
+      </li>
+      <li>
+        <T className="tt-se">
+          {CAN_PARTICIPANT}
+        </T>
+      </li>
+      <li>
+        <T className="tt-se">
+          {CAN_JUDGE}
+        </T>
+      </li>
+      <li>
+        <T className="tt-se">
+          {CAN_EDIT}
+        </T>
+      </li>
+    </ul>
   </>
 );
 

@@ -3,19 +3,82 @@
 import {
   AdminInformationContent,
   ContestantInformationContent,
-  DocumentCustomMembersContent,
+  DocumentMembersContent,
   GuestInformationContent,
   JudgeInformationContent,
   SpectatorInformationContent,
 } from 'components';
 import React from 'react';
+import { EntityAccess } from 'types';
 import { EditViewMembersContestProps } from '../types';
+
+export const contestAccessProps = (readOnly: boolean) => ({
+  administrators: {
+    closeable: true,
+    description: (
+      <div style={{ maxWidth: 256 }} className="jk-pg-xsm">
+        <AdminInformationContent />
+      </div>
+    ),
+    readOnly,
+  },
+  managers: {
+    name: 'judges',
+    description: (
+      <div style={{ maxWidth: 256 }} className="jk-pg-xsm">
+        <JudgeInformationContent />
+      </div>
+    ),
+    readOnly,
+  },
+  participants: {
+    closeable: true,
+    name: 'contestants',
+    description: (
+      <div style={{ maxWidth: 256 }} className="jk-pg-xsm">
+        <ContestantInformationContent />
+      </div>
+    ),
+    readOnly,
+  },
+  guests: {
+    closeable: true,
+    description: (
+      <div style={{ maxWidth: 256 }} className="jk-pg-xsm">
+        <GuestInformationContent />
+      </div>
+    ),
+    readOnly,
+  },
+  spectators: {
+    description: (
+      <div style={{ maxWidth: 256 }} className="jk-pg-xsm">
+        <SpectatorInformationContent />
+      </div>
+    ),
+    readOnly,
+  },
+  entityAccess: {
+    [EntityAccess.PRIVATE]: {
+      description: 'the contest will have the owner as its only administrator, and administrators, judges, participants, guests or viewers cannot be assigned',
+    },
+    [EntityAccess.RESTRICTED]: {
+      description: 'the contest will have the owner as its administrator, and administrators, judges, participants, guests or viewers can be assigned',
+    },
+    [EntityAccess.PUBLIC]: {
+      description: 'the contest will have the owner as its administrator and all users as viewers, and administrators, judges, participants or guests can be assigned',
+    },
+    [EntityAccess.EXPOSED]: {
+      description: 'the contest will have the owner as its administrator and all users as viewers and judges, and administrators, participants or guests can be assigned',
+    },
+  },
+});
 
 export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestProps) => {
   
   return (
     <div className="bc-we jk-br-ie jk-pg-sm">
-      <DocumentCustomMembersContent
+      <DocumentMembersContent
         members={contest.members}
         setMembers={setContest ? (setStateAction) => {
           if (typeof setStateAction === 'function') {
@@ -25,50 +88,7 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
           }
         } : undefined}
         documentOwner={contest.owner}
-        administrators={{
-          description: (
-            <div style={{ maxWidth: 200 }}>
-              <AdminInformationContent />
-            </div>
-          ),
-          readOnly: !setContest,
-        }}
-        managers={{
-          name: 'judges',
-          description: (
-            <div style={{ maxWidth: 200 }}>
-              <JudgeInformationContent />
-            </div>
-          ),
-          readOnly: !setContest,
-        }}
-        participants={{
-          name: 'contestants',
-          description: (
-            <div style={{ maxWidth: 200 }}>
-              <ContestantInformationContent />
-            </div>
-          ),
-          readOnly: !setContest,
-        }}
-        guests={{
-          description: (
-            <div style={{ maxWidth: 200 }}>
-              <GuestInformationContent />
-            </div>
-          ),
-          closeable: true,
-          readOnly: !setContest,
-        }}
-        spectators={{
-          description: (
-            <div style={{ maxWidth: 200 }}>
-              <SpectatorInformationContent />
-            </div>
-          ),
-          closeable: true,
-          readOnly: !setContest,
-        }}
+        {...contestAccessProps(!setContest)}
       />
     </div>
   );

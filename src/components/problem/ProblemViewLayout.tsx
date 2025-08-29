@@ -16,6 +16,7 @@ import {
   TabsType,
 } from 'types';
 import { InfoTestCases } from './InfoTestCases';
+import { problemAccessProps } from './ProblemAccess';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatistics } from './ProblemStatistics';
 import { ProblemStatus } from './ProblemStatus';
@@ -113,17 +114,19 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   // ];
   
   const extraNodes = [];
-  if (problem.user?.isManager) {
-    extraNodes.push(
-      <DocumentMembersButton
-        documentMembers={problem.members}
-        documentOwner={problem.owner}
-        documentName={<T>problem</T>}
-        saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM_MEMBERS(problem.key)}
-        reloadDocument={reloadProblem}
-        copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
-      />,
-    );
+  extraNodes.push(
+    <DocumentMembersButton
+      isAdministrator={problem.user.isAdministrator}
+      members={problem.members}
+      documentOwner={problem.owner}
+      documentName={<T>problem</T>}
+      saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM_MEMBERS(problem.key)}
+      reloadDocument={reloadProblem}
+      copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
+      {...problemAccessProps}
+    />,
+  );
+  if (problem.user?.isAdministrator) {
     if (!problem.judge.isExternal) {
       extraNodes.push(<Button
           data-tooltip-id="jk-tooltip"

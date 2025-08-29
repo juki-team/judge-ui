@@ -35,7 +35,6 @@ const NicknameField = ({
   return (
     <Field
       className={classNames('jk-row center gap', {
-        'own': nickname === userNickname,
         highlight: !!focus?.length,
       })}
     >
@@ -43,7 +42,7 @@ const NicknameField = ({
       <UserNicknameLink nickname={nickname} companyKey={companyKey}>
         <div
           className={classNames('jk-border-radius ', {
-            'bc-py cr-we fw-br': nickname === userNickname,
+            'bc-py cr-we fw-br jk-pg-xsm': nickname === userNickname,
             'link': nickname !== userNickname,
           })}
         >
