@@ -79,9 +79,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
     <div
       data-tooltip-id="jk-tooltip"
       data-tooltip-content={`${problem.index}. ${problem.name}`}
-      data-tooltip-t-class-name="ws-np"
-      className="jk-col extend fw-bd is-first-accepted"
-      style={{ '--balloon-color': problem.color } as CSSProperties}
+      className="jk-col extend fw-bd"
     >
       <Link
         href={jukiAppRoutes.JUDGE().contests.view({
@@ -89,8 +87,12 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
           tab: ContestTab.PROBLEMS,
           subTab: problem.index,
         })}
+        className="jk-row gap"
       >
         {problem.index}
+        <div className="jk-row" style={{ color: problem.color }}>
+          <BalloonIcon color="red" size="small" />
+        </div>
       </Link>
     </div>
   ),
