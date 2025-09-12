@@ -1,5 +1,6 @@
 'use client';
 
+import { isSubmissionsCrawlWebSocketResponseEventDTO } from '@juki-team/commons';
 import {
   ButtonLoader,
   CheckIcon,
@@ -13,8 +14,8 @@ import {
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiUI } from 'hooks';
-import React, { useMemo } from 'react';
+import { useEffect, useJukiNotification, useJukiUI, useMemo, useUserStore, useWebsocketStore } from 'hooks';
+import React from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
   ContentResponseType,
@@ -22,18 +23,218 @@ import {
   ContestTab,
   DataViewerHeadersType,
   HTTPMethod,
+  ObjectIdType,
   QueryParam,
   Status,
   SubmissionRunStatus,
+  SubscribeSubmissionsCrawlWebSocketEventDTO,
+  WebSocketActionEvent,
+  WebSocketResponseEventDTO,
 } from 'types';
+
+interface ProblemNameFieldProps {
+  problem: ContestDataResponseDTO['problems'][string],
+  contestKey: string,
+  isJudgeOrAdmin: boolean,
+}
+
+const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFieldProps) => {
+  
+  const { components: { Link } } = useJukiUI();
+  const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
+  const websocket = useWebsocketStore(store => store.websocket);
+  const userSessionId = useUserStore(state => state.user.sessionId);
+  const [ dataCrawled, setDataCrawled ] = React.useState<{
+    [key: string]: { submitId: string, isNewSubmission: boolean, submissionsCount: number }[]
+  }>({});
+  const submissionsCount = Object.values(dataCrawled).reduce((sum, data) => sum + data[0]?.submissionsCount, 0);
+  const newSubmissions = Object.values(dataCrawled)
+    .flat()
+    .reduce((sum, { isNewSubmission }) => sum + +isNewSubmission, 0);
+  const oldSubmissions = Object.values(dataCrawled)
+    .flat()
+    .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
+  
+  useEffect(() => {
+    
+    if (!isJudgeOrAdmin) {
+      return;
+    }
+    
+    const fun = (data: WebSocketResponseEventDTO) => {
+      if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+        setDataCrawled(prevState => ({
+          ...prevState,
+          [data.content.userKey]: [
+            ...(prevState[data.content.userKey] || []),
+            {
+              submitId: data.content.submitId,
+              isNewSubmission: data.content.isNewSubmission,
+              submissionsCount: data.content.submissionsCount,
+            },
+          ],
+        }));
+      }
+    };
+    
+    const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
+      event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+      sessionId: userSessionId as ObjectIdType,
+      contestKey,
+      problemKey: problem.key,
+    };
+    websocket.send(event, fun);
+    
+    return () => {
+      const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
+        event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+        sessionId: userSessionId as ObjectIdType,
+        contestKey,
+        problemKey: problem.key,
+      };
+      websocket.unsubscribe(event, fun);
+    };
+  }, [ websocket, contestKey, userSessionId, isJudgeOrAdmin, problem.key ]);
+  
+  return (
+    <Field className="jk-col nowrap">
+      <Link
+        href={jukiAppRoutes.JUDGE().contests.view({
+          key: contestKey as string,
+          tab: ContestTab.PROBLEMS,
+          subTab: problem.index,
+        })}
+      >
+        <div className="link fw-bd">{problem.name}</div>
+      </Link>
+      {isJudgeOrAdmin && problem.judge.isSubmitSupported && (
+        <ButtonLoader
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            const result = cleanRequest<ContentResponseType<{
+              listCount: number,
+              status: SubmissionRunStatus.RECEIVED
+            }>>(
+              await authorizedRequest(
+                JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, problem.key),
+                { method: HTTPMethod.POST },
+              ),
+            );
+            if (result.success) {
+              addSuccessNotification(
+                <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
+              );
+              setLoaderStatus(Status.SUCCESS);
+            } else {
+              addErrorNotification(
+                <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
+              );
+              setLoaderStatus(Status.ERROR);
+            }
+          }}
+          size="tiny"
+          type="light"
+        >
+          <T className="tt-se">rejudge problem</T>
+        </ButtonLoader>
+      )}
+      {isJudgeOrAdmin && !problem.judge.isSubmitSupported && (
+        <ButtonLoader
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            setDataCrawled({});
+            const result = cleanRequest<ContentResponseType<{}>>(
+              await authorizedRequest(
+                JUDGE_API_V1.CONTEST.PROBLEM_RETRIEVE(contestKey as string, problem.key),
+                { method: HTTPMethod.POST },
+              ),
+            );
+            notifyResponse(result, setLoaderStatus);
+          }}
+          size="tiny"
+          type="light"
+        >
+          <T className="tt-se">retrieve new submissions</T>
+          {!!Object.values(dataCrawled).length && (
+            <>
+              &nbsp;
+              (
+              <span className="cr-ss" data-tooltip-id="jk-tooltip" data-tooltip-content="new retrieved submissions">
+                {newSubmissions}
+              </span>
+              ,
+              &nbsp;
+              <span data-tooltip-id="jk-tooltip" data-tooltip-content="old retrieved submissions">
+                {oldSubmissions}
+              </span>
+              &nbsp;/&nbsp;
+              <span data-tooltip-id="jk-tooltip" data-tooltip-content="total retrieved submissions">
+                {submissionsCount}
+              </span>
+              )
+            </>
+          )}
+        </ButtonLoader>
+      )}
+    </Field>
+  );
+};
 
 export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
-  const { problems = {}, user, key: contestKey } = contest;
+  const { problems, user, key: contestKey } = contest;
   const { isManager, isAdministrator } = user || {};
-  const { addSuccessNotification, addErrorNotification } = useJukiNotification();
+  const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isManager || isAdministrator;
+  const websocket = useWebsocketStore(store => store.websocket);
+  const userSessionId = useUserStore(state => state.user.sessionId);
+  const [ dataCrawled, setDataCrawled ] = React.useState<{
+    [key: string]: { [key: string]: { submitId: string, isNewSubmission: boolean }[] }
+  }>({});
+  useEffect(() => {
+    
+    if (!isManager) {
+      return;
+    }
+    
+    const fun = (data: WebSocketResponseEventDTO) => {
+      if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+        setDataCrawled(prevState => ({
+          ...prevState,
+          [data.content.problemKey]: {
+            ...prevState[data.content.problemKey],
+            [data.content.userKey]: [
+              ...(prevState[data.content.problemKey]?.[data.content.userKey] || []),
+              { submitId: data.content.submitId, isNewSubmission: data.content.isNewSubmission },
+            ],
+          },
+        }));
+      }
+    };
+    
+    for (const problemKey of Object.keys(problems)) {
+      const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
+        event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+        sessionId: userSessionId as ObjectIdType,
+        contestKey,
+        problemKey,
+      };
+      websocket.send(event, fun);
+    }
+    
+    return () => {
+      for (const problemKey of Object.keys(problems)) {
+        const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
+          event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+          sessionId: userSessionId as ObjectIdType,
+          contestKey,
+          problemKey,
+        };
+        websocket.unsubscribe(event, fun);
+      }
+    };
+  }, [ websocket, contestKey, problems, userSessionId, isManager ]);
   
   const columns = useMemo(() => [
     {
@@ -98,77 +299,8 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>name</T>} />,
       index: 'name',
-      Field: ({ record: { name, index, key, judge } }) => (
-        <Field className="jk-col">
-          <Link
-            href={jukiAppRoutes.JUDGE().contests.view({
-              key: contestKey as string,
-              tab: ContestTab.PROBLEMS,
-              subTab: index,
-            })}
-          >
-            <div className="link fw-bd">{name}</div>
-          </Link>
-          {isJudgeOrAdmin && judge.isSubmitSupported && (
-            <ButtonLoader
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const result = cleanRequest<ContentResponseType<{
-                  listCount: number,
-                  status: SubmissionRunStatus.RECEIVED
-                }>>(
-                  await authorizedRequest(
-                    JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, key),
-                    { method: HTTPMethod.POST },
-                  ),
-                );
-                if (result.success) {
-                  addSuccessNotification(
-                    <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
-                  );
-                  setLoaderStatus(Status.SUCCESS);
-                } else {
-                  addErrorNotification(
-                    <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
-                  );
-                  setLoaderStatus(Status.ERROR);
-                }
-              }}
-              size="tiny"
-              type="light"
-            >
-              <T className="tt-se">rejudge problem</T>
-            </ButtonLoader>
-          )}
-          {isJudgeOrAdmin && !judge.isSubmitSupported && (
-            <ButtonLoader
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const result = cleanRequest<ContentResponseType<{}>>(
-                  await authorizedRequest(
-                    JUDGE_API_V1.CONTEST.PROBLEM_RETRIEVE(contestKey as string, key),
-                    { method: HTTPMethod.POST },
-                  ),
-                );
-                if (result.success) {
-                  addSuccessNotification(
-                    <div><T>retrieving submissions</T></div>,
-                  );
-                  setLoaderStatus(Status.SUCCESS);
-                } else {
-                  addErrorNotification(
-                    <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
-                  );
-                  setLoaderStatus(Status.ERROR);
-                }
-              }}
-              size="tiny"
-              type="light"
-            >
-              <T className="tt-se">retrieve new submissions</T>
-            </ButtonLoader>
-          )}
-        </Field>
+      Field: ({ record }) => (
+        <ProblemNameField problem={record} contestKey={contestKey} isJudgeOrAdmin={isJudgeOrAdmin} />
       ),
       sort: { compareFn: () => (recordA, recordB) => recordB.name.localeCompare(recordA.name) },
       cardPosition: 'center',
@@ -203,7 +335,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       cardPosition: 'bottomRight',
       minWidth: 128,
     },
-  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest.isEndless, contest.isPast, Link, contestKey, addSuccessNotification, addErrorNotification ]);
+  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest.isEndless, contest.isPast, Link, contestKey, dataCrawled, addSuccessNotification, addErrorNotification, notifyResponse ]);
   const data = Object.values(problems);
   
   return (

@@ -83,7 +83,6 @@ export {
   getProblemOwnerHeader,
   getProblemTagsHeader,
   getProblemTypeHeader,
-  DocumentCustomMembersContent,
   getContestStatusHeader,
   JukiLoadingLayout,
   TabsInlineBody,

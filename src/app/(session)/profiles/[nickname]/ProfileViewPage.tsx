@@ -1,33 +1,22 @@
 'use client';
 
-import { ProfileSubmissions, T, UserViewLayout } from 'components';
-import { useUserStore } from 'hooks';
-import { KeyedMutator, ProfileTab, UserProfileResponseDTO } from 'types';
+import { FetcherLayer, PageNotFound, UserViewLayout } from 'components';
+import { jukiApiManager } from 'config';
+import { ContentResponseType, UserProfileResponseDTO } from 'types';
 
-interface ProfileViewLayoutProps {
-  profile: UserProfileResponseDTO,
-  reloadProfile: KeyedMutator<any>,
+interface ProfileViewPageProps {
+  nickname: string,
 }
 
-export function ProfileViewPage({ profile, reloadProfile }: ProfileViewLayoutProps) {
-  
-  const userNickname = useUserStore(state => state.user.nickname);
-  
-  const tabHeaders = {
-    [ProfileTab.SUBMISSIONS]: {
-      key: ProfileTab.SUBMISSIONS,
-      header: userNickname === profile.nickname
-        ? <T className="tt-ce ws-np">my submissions</T>
-        : <T className="tt-ce ws-np">submissions</T>,
-      body: <ProfileSubmissions />,
-    },
-  };
-  
+export function ProfileViewPage({ nickname }: ProfileViewPageProps) {
   return (
-    <UserViewLayout
-      user={profile}
-      reloadUser={reloadProfile}
-      extraTabs={tabHeaders}
-    />
+    <FetcherLayer<ContentResponseType<UserProfileResponseDTO>>
+      url={nickname ? jukiApiManager.API_V1.user.getProfile({ params: { nickname: nickname as string } }).url : null}
+      errorView={<PageNotFound />}
+    >
+      {({ data, mutate }) => (
+        <UserViewLayout user={data.content} reloadUser={mutate} />
+      )}
+    </FetcherLayer>
   );
 }

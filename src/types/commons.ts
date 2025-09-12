@@ -92,6 +92,7 @@ export type {
   ObjectIdType,
   WebSocketResponseEventDTO,
   SubscribeProblemCrawledWebSocketEventDTO,
+  SubscribeSubmissionsCrawlWebSocketEventDTO,
 } from '@juki-team/commons';
 export { Period, NotificationType, QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/types';
 
