@@ -14,8 +14,8 @@ import {
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
-import { useEffect, useJukiNotification, useJukiUI, useMemo, useUserStore, useWebsocketStore } from 'hooks';
-import React from 'react';
+import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketStore } from 'hooks';
+import React, { useCallback } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
   ContentResponseType,
@@ -44,10 +44,10 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const websocket = useWebsocketStore(store => store.websocket);
   const userSessionId = useUserStore(state => state.user.sessionId);
-  const [ dataCrawled, setDataCrawled ] = React.useState<{
-    [key: string]: { submitId: string, isNewSubmission: boolean, submissionsCount: number }[]
+  const [ dataCrawled, setDataCrawled ] = useState<{
+    [key: string]: { submitId: string, isNewSubmission: boolean }[]
   }>({});
-  const submissionsCount = Object.values(dataCrawled).reduce((sum, data) => sum + data[0]?.submissionsCount, 0);
+  const [ submissionsCount, setSubmissionsCount ] = useState(0);
   const newSubmissions = Object.values(dataCrawled)
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +isNewSubmission, 0);
@@ -55,14 +55,16 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
   
-  useEffect(() => {
-    
-    if (!isJudgeOrAdmin) {
-      return;
-    }
-    
-    const fun = (data: WebSocketResponseEventDTO) => {
-      if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+  const event: SubscribeSubmissionsCrawlWebSocketEventDTO = useMemo(() => ({
+    event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+    sessionId: userSessionId as ObjectIdType,
+    contestKey,
+    problemKey: problem.key,
+  }), [ contestKey, problem.key, userSessionId ]);
+  
+  const fun = useCallback((data: WebSocketResponseEventDTO) => {
+    if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+      if (data.content.submitId) {
         setDataCrawled(prevState => ({
           ...prevState,
           [data.content.userKey]: [
@@ -70,31 +72,15 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
             {
               submitId: data.content.submitId,
               isNewSubmission: data.content.isNewSubmission,
-              submissionsCount: data.content.submissionsCount,
             },
           ],
         }));
+      } else {
+        console.log({ data });
+        setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
       }
-    };
-    
-    const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
-      event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
-      sessionId: userSessionId as ObjectIdType,
-      contestKey,
-      problemKey: problem.key,
-    };
-    websocket.send(event, fun);
-    
-    return () => {
-      const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
-        event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
-        sessionId: userSessionId as ObjectIdType,
-        contestKey,
-        problemKey: problem.key,
-      };
-      websocket.unsubscribe(event, fun);
-    };
-  }, [ websocket, contestKey, userSessionId, isJudgeOrAdmin, problem.key ]);
+    }
+  }, []);
   
   return (
     <Field className="jk-col nowrap">
@@ -142,7 +128,10 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
         <ButtonLoader
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
+            websocket.unsubscribe(event, fun);
+            websocket.send(event, fun);
             setDataCrawled({});
+            setSubmissionsCount(0);
             const result = cleanRequest<ContentResponseType<{}>>(
               await authorizedRequest(
                 JUDGE_API_V1.CONTEST.PROBLEM_RETRIEVE(contestKey as string, problem.key),
@@ -187,54 +176,6 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isManager || isAdministrator;
-  const websocket = useWebsocketStore(store => store.websocket);
-  const userSessionId = useUserStore(state => state.user.sessionId);
-  const [ dataCrawled, setDataCrawled ] = React.useState<{
-    [key: string]: { [key: string]: { submitId: string, isNewSubmission: boolean }[] }
-  }>({});
-  useEffect(() => {
-    
-    if (!isManager) {
-      return;
-    }
-    
-    const fun = (data: WebSocketResponseEventDTO) => {
-      if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
-        setDataCrawled(prevState => ({
-          ...prevState,
-          [data.content.problemKey]: {
-            ...prevState[data.content.problemKey],
-            [data.content.userKey]: [
-              ...(prevState[data.content.problemKey]?.[data.content.userKey] || []),
-              { submitId: data.content.submitId, isNewSubmission: data.content.isNewSubmission },
-            ],
-          },
-        }));
-      }
-    };
-    
-    for (const problemKey of Object.keys(problems)) {
-      const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
-        event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
-        sessionId: userSessionId as ObjectIdType,
-        contestKey,
-        problemKey,
-      };
-      websocket.send(event, fun);
-    }
-    
-    return () => {
-      for (const problemKey of Object.keys(problems)) {
-        const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
-          event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
-          sessionId: userSessionId as ObjectIdType,
-          contestKey,
-          problemKey,
-        };
-        websocket.unsubscribe(event, fun);
-      }
-    };
-  }, [ websocket, contestKey, problems, userSessionId, isManager ]);
   
   const columns = useMemo(() => [
     {
@@ -335,7 +276,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       cardPosition: 'bottomRight',
       minWidth: 128,
     },
-  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest.isEndless, contest.isPast, Link, contestKey, dataCrawled, addSuccessNotification, addErrorNotification, notifyResponse ]);
+  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest.isEndless, contest.isPast, Link, contestKey, addSuccessNotification, addErrorNotification, notifyResponse ]);
   const data = Object.values(problems);
   
   return (

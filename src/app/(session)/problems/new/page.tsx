@@ -2,7 +2,7 @@
 
 import { CreateEntityLayout, EditCreateProblem, PageNotFound } from 'components';
 import { jukiAppRoutes } from 'config';
-import { getJudgeKeyOfProblemJudgeKey, toUpsertProblemDTO } from 'helpers';
+import { toUpsertProblemDTO } from 'helpers';
 import { useMemo, useRouterStore, useUserStore } from 'hooks';
 import { JUDGE_API_V1, PROBLEM_DEFAULT } from 'src/constants';
 import { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
@@ -34,7 +34,7 @@ function ProblemCreate() {
       Cmp={EditCreateProblem}
       createApiURL={JUDGE_API_V1.PROBLEM.CREATE}
       listRoute={jukiAppRoutes.JUDGE().problems.list}
-      viewRoute={(entityKey) => jukiAppRoutes.JUDGE().problems.view({ key: getJudgeKeyOfProblemJudgeKey(entityKey).key })}
+      viewRoute={(entityKey) => jukiAppRoutes.JUDGE().problems.view({ key: entityKey })}
       toEntityUpsert={toUpsertProblemDTO}
     />
   );

@@ -13,7 +13,6 @@ export {
   getRandomString,
   mex,
   contentResponse,
-  getJudgeKeyOfProblemJudgeKey,
   isGlobalContest,
   getParamsOfUserKey,
   isProblemCrawledWebSocketResponseEventDTO,
