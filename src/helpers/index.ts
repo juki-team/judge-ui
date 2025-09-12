@@ -1,5 +1,4 @@
-import { ButtonLoaderOnClickType, Judge, Status } from 'types';
-import { getProblemJudgeKey } from './commons';
+import { ButtonLoaderOnClickType, Status } from 'types';
 
 export const buttonLoaderLink = (fun: (() => Promise<any>) | (() => any)): ButtonLoaderOnClickType => async (setLoader) => {
   setLoader(Status.LOADING);
@@ -11,13 +10,6 @@ export const roundTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
   date.setSeconds(0, 0);
   return date.getTime();
-};
-
-export const getSimpleProblemJudgeKey = (judge: Judge, key: string, force?: boolean) => {
-  if (judge === Judge.CUSTOMER || force) {
-    return key;
-  }
-  return getProblemJudgeKey(judge, key);
 };
 
 export const disableOutOfRange = (date: Date, start: Date, end: Date) => ({

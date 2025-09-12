@@ -45,19 +45,6 @@ import {
 } from 'types';
 import { CrawlLeetCodeProblemModal } from '../../../components/problem/CrawlLeetCodeProblemModal';
 
-const JUDGE_C: { [key in Judge]: string } = {
-  [Judge.CUSTOMER]: 'c',
-  [Judge.JUKI_JUDGE]: 'j',
-  [Judge.CODEFORCES]: 'f',
-  [Judge.CODEFORCES_GYM]: 'g',
-  [Judge.UVA_ONLINE_JUDGE]: 'u',
-  [Judge.AT_CODER]: 'a',
-  [Judge.CODECHEF]: 'h',
-  [Judge.TOPCODER]: 't',
-  [Judge.JV_UMSA]: 'm',
-  [Judge.LEETCODE]: 'l',
-};
-
 export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   
   useTrackLastPath(LastPathKey.PROBLEMS);
@@ -71,7 +58,9 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     value: tag,
     label: <T>{tag}</T>,
   })), [ data, judgeKey ]);
-  const isExternal = useMemo(() => data?.success ? (data.content.find(j => j.key === judgeKey)?.isExternal ?? true) : true, [ data, judgeKey ]);
+  const isExternal = data?.success ? (data.content.find(j => j.key === judgeKey)?.isExternal ?? true) : true;
+  const keyPrefix = data?.success ? (data.content.find(j => j.key === judgeKey)?.keyPrefix ?? '*') : '*';
+  
   const judges = (data?.success ? data.content : []).map(judge => ({
     value: judge.key,
     label: judge.name,
@@ -185,7 +174,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
               },
             }).url;
           }}
-          name={QueryParam.PROBLEMS_TABLE + (JUDGE_C[judgeKey] || '')}
+          name={QueryParam.PROBLEMS_TABLE + keyPrefix}
           refreshInterval={60000}
           extraNodes={extraNodes}
           cards={{ height: 192, expanded: true }}
