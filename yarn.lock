@@ -1652,10 +1652,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.1.121":
-  version "1.1.121"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.121/0876b8d1c8045d970636db96bd32f19fda8ff15f#0876b8d1c8045d970636db96bd32f19fda8ff15f"
-  integrity sha512-VdB9M449NhrMVqwNSWbLphCn3TNAN14YzPgP4w8VwXKUwV6GfTUQYhQAenj+XTQmqTA2eNaqi0A8q0eeL2lRGw==
+"@juki-team/base-ui@^1.1.122":
+  version "1.1.122"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.122/5925608971fff685746f25af252577ae1343ad55#5925608971fff685746f25af252577ae1343ad55"
+  integrity sha512-gyKRt3L5JTdoHbV8ajyNK9p1LXuRvr0iNUZsdxXA2aXItxenNf1nJuQKyL0m7UPu9Rk/7nWff6ES5JPPNYdTlQ==
   dependencies:
     "@codemirror/autocomplete" "^6.18.7"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1671,7 +1671,7 @@
     "@floating-ui/react" "^0.27.16"
     "@handsontable/react" "^16.0.1"
     "@hookform/resolvers" "^5.2.1"
-    "@juki-team/commons" "^0.0.918"
+    "@juki-team/commons" "^0.0.919"
     "@milkdown/crepe" "^7.15.5"
     "@milkdown/kit" "^7.15.5"
     "@milkdown/plugin-prism" "^7.15.5"
@@ -1714,11 +1714,6 @@
     xlsx "^0.18.5"
     yup "^1.7.0"
     zustand "^5.0.8"
-
-"@juki-team/commons@^0.0.918":
-  version "0.0.918"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.918/d96ac0ecd26ea501c66e961b7288470901ff8a60#d96ac0ecd26ea501c66e961b7288470901ff8a60"
-  integrity sha512-Q/Z60ju1+/IwlHnpifenBZHqEEdEl8JIzOfHM6SB1ToqIhlGfkRwcK0lPh21whzyOF4igeRT7aK09TUqNsGV5w==
 
 "@juki-team/commons@^0.0.919":
   version "0.0.919"
