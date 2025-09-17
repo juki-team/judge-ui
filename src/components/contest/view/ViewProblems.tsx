@@ -1,5 +1,6 @@
 'use client';
 
+import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { isSubmissionsCrawlWebSocketResponseEventDTO } from '@juki-team/commons';
 import {
   ButtonLoader,
@@ -16,13 +17,12 @@ import { jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
 import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketStore } from 'hooks';
 import React, { useCallback } from 'react';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
+import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
   ContestTab,
   DataViewerHeadersType,
-  HTTPMethod,
   ObjectIdType,
   QueryParam,
   Status,
@@ -59,7 +59,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
     event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
     sessionId: userSessionId as ObjectIdType,
     contestKey,
-    problemKey: problem.key,
+    problemKeys: problem.key,
   }), [ contestKey, problem.key, userSessionId ]);
   
   const fun = useCallback((data: WebSocketResponseEventDTO) => {
@@ -76,7 +76,6 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
           ],
         }));
       } else {
-        console.log({ data });
         setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
       }
     }
@@ -97,15 +96,15 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
         <ButtonLoader
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const result = cleanRequest<ContentResponseType<{
-              listCount: number,
-              status: SubmissionRunStatus.RECEIVED
-            }>>(
-              await authorizedRequest(
-                JUDGE_API_V1.REJUDGE.CONTEST_PROBLEM(contestKey as string, problem.key),
-                { method: HTTPMethod.POST },
-              ),
-            );
+            const { url, ...options } = jukiApiManager.API_V1.contest.problem.rejudge({
+              params: {
+                key: contestKey,
+                problemKey: problem.key,
+              },
+            });
+            const result = cleanRequest<
+              ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>
+            >(await authorizedRequest(url, options));
             if (result.success) {
               addSuccessNotification(
                 <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
@@ -132,12 +131,13 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
             websocket.send(event, fun);
             setDataCrawled({});
             setSubmissionsCount(0);
-            const result = cleanRequest<ContentResponseType<{}>>(
-              await authorizedRequest(
-                JUDGE_API_V1.CONTEST.PROBLEM_RETRIEVE(contestKey as string, problem.key),
-                { method: HTTPMethod.POST },
-              ),
-            );
+            const { url, ...options } = jukiApiManager.API_V1.contest.problem.retrieve({
+              params: {
+                key: contestKey,
+                problemKey: problem.key,
+              },
+            });
+            const result = cleanRequest<ContentResponseType<{}>>(await authorizedRequest(url, options));
             notifyResponse(result, setLoaderStatus);
           }}
           size="tiny"

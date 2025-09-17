@@ -1,5 +1,6 @@
 'use client';
 
+import { isSubmissionsCrawlWebSocketResponseEventDTO, SEPARATOR_TOKEN } from '@juki-team/commons';
 import {
   getSubmissionContestProblemHeader,
   getSubmissionDateHeader,
@@ -13,9 +14,20 @@ import {
   T,
 } from 'components';
 import { jukiApiManager } from 'config';
-import { getParamsOfUserKey, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useMemo, usePreload, useRef, useUserStore } from 'hooks';
+import { authorizedRequest, cleanRequest, getParamsOfUserKey, toFilterUrl, toSortUrl } from 'helpers';
 import {
+  useFetcher,
+  useJukiNotification,
+  useMemo,
+  usePreload,
+  useRef,
+  useState,
+  useUserStore,
+  useWebsocketStore,
+} from 'hooks';
+import React, { useCallback } from 'react';
+import {
+  ContentResponseType,
   ContentsResponseType,
   ContestDataResponseDTO,
   DataViewerHeadersType,
@@ -23,10 +35,104 @@ import {
   DataViewerToolbarProps,
   JudgeSummaryListResponseDTO,
   LanguagesByJudge,
+  ObjectIdType,
   QueryParam,
+  Status,
   SubmissionSummaryListResponseDTO,
+  SubscribeSubmissionsCrawlWebSocketEventDTO,
+  WebSocketActionEvent,
+  WebSocketResponseEventDTO,
 } from 'types';
+import { ButtonLoader } from '../../index';
 
+const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
+  
+  const websocket = useWebsocketStore(store => store.websocket);
+  const userSessionId = useUserStore(state => state.user.sessionId);
+  const [ dataCrawled, setDataCrawled ] = useState<{
+    [key: string]: { submitId: string, isNewSubmission: boolean }[]
+  }>({});
+  const [ submissionsCount, setSubmissionsCount ] = useState(0);
+  const { notifyResponse } = useJukiNotification();
+  
+  const problemKeys = Object.values(contest.problems).map(problem => problem.key).join(SEPARATOR_TOKEN);
+  const contestKey = contest.key;
+  const event: SubscribeSubmissionsCrawlWebSocketEventDTO = useMemo(() => ({
+    event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+    sessionId: userSessionId as ObjectIdType,
+    contestKey,
+    problemKeys,
+  }), [ contestKey, problemKeys, userSessionId ]);
+  
+  const fun = useCallback((data: WebSocketResponseEventDTO) => {
+    if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+      if (data.content.submitId) {
+        setDataCrawled(prevState => ({
+          ...prevState,
+          [data.content.userKey]: [
+            ...(prevState[data.content.userKey] || []),
+            {
+              submitId: data.content.submitId,
+              isNewSubmission: data.content.isNewSubmission,
+            },
+          ],
+        }));
+      } else {
+        setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
+      }
+    }
+  }, []);
+  
+  const newSubmissions = Object.values(dataCrawled)
+    .flat()
+    .reduce((sum, { isNewSubmission }) => sum + +isNewSubmission, 0);
+  const oldSubmissions = Object.values(dataCrawled)
+    .flat()
+    .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
+  
+  return (
+    <ButtonLoader
+      key="retrieve"
+      onClick={async (setLoaderStatus) => {
+        setLoaderStatus(Status.LOADING);
+        websocket.unsubscribe(event, fun);
+        websocket.send(event, fun);
+        setDataCrawled({});
+        setSubmissionsCount(0);
+        const { url, ...options } = jukiApiManager.API_V1.contest.retrieve({
+          params: {
+            key: contestKey,
+          },
+        });
+        const result = cleanRequest<ContentResponseType<{}>>(await authorizedRequest(url, options));
+        notifyResponse(result, setLoaderStatus);
+      }}
+      size="tiny"
+      type="light"
+    >
+      <T className="tt-se">retrieve submissions</T>
+      {!!Object.values(dataCrawled).length && (
+        <>
+          &nbsp;
+          (
+          <span className="cr-ss" data-tooltip-id="jk-tooltip" data-tooltip-content="new retrieved submissions">
+                {newSubmissions}
+              </span>
+          ,
+          &nbsp;
+          <span data-tooltip-id="jk-tooltip" data-tooltip-content="old retrieved submissions">
+                {oldSubmissions}
+              </span>
+          &nbsp;/&nbsp;
+          <span data-tooltip-id="jk-tooltip" data-tooltip-content="total retrieved submissions">
+                {submissionsCount}
+              </span>
+          )
+        </>
+      )}
+    </ButtonLoader>
+  );
+};
 export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
@@ -129,8 +235,10 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     return downloads;
   }, [ contest.key, contest.name, contest.user.isAdministrator, contest.user.isManager ]);
   
+  const hasNotSubmitSupported = Object.values(contest.problems).some(problem => !problem.judge.isSubmitSupported);
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
+      extraNodes={hasNotSubmitSupported ? [ <RetrieveButton key="retrieve-button" contest={contest} /> ] : []}
       rows={{ height: 80 }}
       cards={{ width: 272, expanded: true }}
       headers={columns}

@@ -1652,10 +1652,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.1.119":
-  version "1.1.119"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.119/4fe55ce6c1ce74278e7c4b8ed824844ecf7e30ef#4fe55ce6c1ce74278e7c4b8ed824844ecf7e30ef"
-  integrity sha512-n0J38kXiKI+dV8Hvv5EM6PyjHvPiKvZrlP3D6hxgcKfS/LW6E7kKvrK0PTBgIM2SKVgEN/Q8dWk+3RWqq18KUQ==
+"@juki-team/base-ui@^1.1.121":
+  version "1.1.121"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.1.121/0876b8d1c8045d970636db96bd32f19fda8ff15f#0876b8d1c8045d970636db96bd32f19fda8ff15f"
+  integrity sha512-VdB9M449NhrMVqwNSWbLphCn3TNAN14YzPgP4w8VwXKUwV6GfTUQYhQAenj+XTQmqTA2eNaqi0A8q0eeL2lRGw==
   dependencies:
     "@codemirror/autocomplete" "^6.18.7"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1671,7 +1671,7 @@
     "@floating-ui/react" "^0.27.16"
     "@handsontable/react" "^16.0.1"
     "@hookform/resolvers" "^5.2.1"
-    "@juki-team/commons" "^0.0.917"
+    "@juki-team/commons" "^0.0.918"
     "@milkdown/crepe" "^7.15.5"
     "@milkdown/kit" "^7.15.5"
     "@milkdown/plugin-prism" "^7.15.5"
@@ -1715,10 +1715,15 @@
     yup "^1.7.0"
     zustand "^5.0.8"
 
-"@juki-team/commons@^0.0.917":
-  version "0.0.917"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.917/99c0fdbef2fa6b82a27faecb3d805796b41be9ee#99c0fdbef2fa6b82a27faecb3d805796b41be9ee"
-  integrity sha512-VjsfELWsU7VCFrBo3n8psX8VBxFnKYqAcVdTyRGf8O17TD0u3R1lHgSnmp7Ilwd20Nwq1DrEPDOQQmIYNQQ+vg==
+"@juki-team/commons@^0.0.918":
+  version "0.0.918"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.918/d96ac0ecd26ea501c66e961b7288470901ff8a60#d96ac0ecd26ea501c66e961b7288470901ff8a60"
+  integrity sha512-Q/Z60ju1+/IwlHnpifenBZHqEEdEl8JIzOfHM6SB1ToqIhlGfkRwcK0lPh21whzyOF4igeRT7aK09TUqNsGV5w==
+
+"@juki-team/commons@^0.0.919":
+  version "0.0.919"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.919/5af85db605b24c236b63ff94a79a6da798efb4dc#5af85db605b24c236b63ff94a79a6da798efb4dc"
+  integrity sha512-XqZsjPldXgCny8Zq59MgPE2CxrgstoMBMlfTAhSoBSllHDEwBvcZU7FP7fw1zvD0pes390pMEvKBTsxu8mgtsA==
 
 "@lezer/common@^0.15.0", "@lezer/common@^0.15.5":
   version "0.15.12"
