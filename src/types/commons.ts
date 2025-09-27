@@ -94,7 +94,8 @@ export type {
   SubscribeProblemCrawledWebSocketEventDTO,
   SubscribeSubmissionsCrawlWebSocketEventDTO,
 } from '@juki-team/commons';
-export { Period, NotificationType, QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/types';
+
+export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';
 
 export type {
   IconProps,
@@ -119,7 +120,6 @@ export type {
   SortableItem,
   TwoContentLayoutProps,
   TwoContentSectionProps,
-  TFunction,
   MenuType,
   DataViewerHeadersType,
   FilterSelectOfflineType,
@@ -158,3 +158,4 @@ export type { PropsWithChildren, ReactNode, FC } from 'react';
 export type { AppProps } from 'next/app';
 export type { NextApiRequest, NextApiResponse } from 'next';
 export type { KeyedMutator } from 'swr';
+export type  { TFunction } from 'i18next';

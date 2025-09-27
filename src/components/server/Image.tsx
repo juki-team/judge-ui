@@ -5,14 +5,26 @@ import { FC, ImageCmpProps } from 'types';
 export const Image: FC<ImageCmpProps> = ({ src, className, alt, height, width, style }) => {
   
   if (src) {
+    if (width && height) {
+      return (
+        <ImageComp
+          src={src}
+          className={className}
+          alt={alt}
+          height={height}
+          width={width}
+          style={style}
+        />
+      );
+    }
+    
     return (
       <ImageComp
         src={src}
         className={className}
         alt={alt}
-        height={height}
-        width={width}
-        style={style}
+        fill
+        style={{ objectFit: 'contain' }}
       />
     );
   }

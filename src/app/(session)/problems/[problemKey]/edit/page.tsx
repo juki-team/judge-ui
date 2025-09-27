@@ -1,6 +1,6 @@
 'use client';
 
-import { EditCreateProblem, FetcherLayer, PageNotFound, UpdateEntityLayout } from 'components';
+import { EditCreateProblem, EntityUpdateLayout, FetcherLayer, PageNotFound } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { toUpsertProblemDTO } from 'helpers';
 import { useRouterStore } from 'hooks';
@@ -46,7 +46,7 @@ function ProblemEdit() {
       {({ data }) => {
         if (data.success && data.content.user.isManager) {
           return (
-            <UpdateEntityLayout
+            <EntityUpdateLayout
               entity={toUpsertProblemUIDTO(data.content)}
               entityKey={data.content.key}
               Cmp={EditCreateProblem}

@@ -1,6 +1,6 @@
 'use client';
 
-import { CreateEntityLayout, EditCreateProblem, PageNotFound } from 'components';
+import { EditCreateProblem, EntityCreateLayout, PageNotFound } from 'components';
 import { jukiAppRoutes } from 'config';
 import { toUpsertProblemDTO } from 'helpers';
 import { useMemo, useRouterStore, useUserStore } from 'hooks';
@@ -29,7 +29,7 @@ function ProblemCreate() {
   }
   
   return (
-    <CreateEntityLayout<UpsertProblemUIDTO, UpsertProblemDTO, {}>
+    <EntityCreateLayout<UpsertProblemUIDTO, UpsertProblemDTO, {}>
       newEntity={newEntity}
       Cmp={EditCreateProblem}
       createApiURL={JUDGE_API_V1.PROBLEM.CREATE}

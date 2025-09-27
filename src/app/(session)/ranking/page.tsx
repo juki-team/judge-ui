@@ -1,6 +1,6 @@
 'use client';
 
-import { DataViewer, Field, T, TextField, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
+import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { oneTab } from 'helpers';
 import { useDataViewerRequester, useEffect, useJukiUI, useMemo, useState } from 'hooks';
@@ -55,7 +55,7 @@ function Ranking() {
       head: <TextHeadCell text={<T className="wb-bw tt-se">points by problems</T>} />,
       index: 'problem-points',
       Field: ({ record: { problemPoints } }) => (
-        <TextField
+        <FieldText
           text={<>
             <div className="fw-bd" style={{ fontFamily: 'monospace' }}>{problemPoints.toFixed(2)}</div>
             &nbsp;<T>pts.</T>
@@ -71,7 +71,7 @@ function Ranking() {
     //   head: <TextHeadCell text={<T className="wb-bw tt-se">points by competitions</T>} />,
     //   index: 'contest-points',
     //   field: ({ record: { competitionPoints }, isCard }) => (
-    //     <TextField
+    //     <FieldText
     //       text={<>
     //         <div className="fw-bd">{competitionPoints?.toFixed(2)}</div>
     //         &nbsp;<T>pts.</T>

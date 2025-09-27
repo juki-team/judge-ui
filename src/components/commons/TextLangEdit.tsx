@@ -1,13 +1,16 @@
 'use client';
 
-import { FlagEnImage, FlagEsImage, MdMathEditor, Tabs } from 'components';
-import React from 'react';
+import { MdMathEditor, Tabs } from 'components';
+import { useJukiUI } from 'hooks';
 import { Language, TextLanguageType } from 'types';
 
 export const TextLangEdit = ({ text, setText }: {
   text: TextLanguageType,
   setText: (text: TextLanguageType) => void
 }) => {
+  
+  const { components: { Image } } = useJukiUI();
+  
   return (
     <div className="text-editor">
       <Tabs
@@ -26,7 +29,13 @@ export const TextLangEdit = ({ text, setText }: {
             ),
             header: (
               <div className="jk-row nowrap">
-                Español <div style={{ width: 50, height: 24 }}><FlagEsImage /></div>
+                Español <div style={{ width: 50, height: 24 }}>
+                <Image
+                  alt="ES image"
+                  fill
+                  src="https://images.juki.pub/assets/image-es.png"
+                />
+              </div>
               </div>
             ),
           },
@@ -44,7 +53,13 @@ export const TextLangEdit = ({ text, setText }: {
             ),
             header: (
               <div className="jk-row nowrap">
-                English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div>
+                English <div style={{ width: 50, height: 24 }}>
+                <Image
+                  alt="US image"
+                  fill
+                  src="https://images.juki.pub/assets/image-us.png"
+                />
+              </div>
               </div>
             ),
           },

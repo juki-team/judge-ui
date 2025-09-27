@@ -1,6 +1,6 @@
 'use client';
 
-import { JukiCourtImage, MdMathViewer, T } from 'components';
+import { MdMathViewer, T } from 'components';
 import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY } from 'config/constants';
 import { useJukiUI, useUserStore } from 'hooks';
@@ -27,7 +27,9 @@ export default function Home() {
             <h3><T className="tt-se">competitive programmers home</T></h3>
             <p>{companyName} judge <T>is designed to make people improve their programming skills</T></p>
           </div>
-          <div className=""><JukiCourtImage /></div>
+          <div className="pn-re wh-100" style={{ height: 256 }}>
+            <Image src="https://images.juki.pub/assets/juki-image-judge.png" alt="Juki as judge" fill />
+          </div>
         </div>
       </div>
       <div className="jk-col nowrap center top extend gap pn-re jk-pg-lg" style={{ maxWidth: width }}>

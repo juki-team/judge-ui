@@ -17,11 +17,11 @@ import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from '
 import { useDateFormat, useI18nStore, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
 import React from 'react';
 import { CODE_LANGUAGE, JUDGE_API_V1 } from 'src/constants';
-import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
   HTTPMethod,
+  KeyedMutator,
   ProfileSetting,
   QueryParamKey,
   SetLoaderStatusOnClickType,

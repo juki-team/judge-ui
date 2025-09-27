@@ -17,17 +17,17 @@ module.exports = withPlugins([
     enabled: process.env.ANALYZE === 'true',
   }),
 ], {
-  webpack: config => {
-    config.resolve.fallback = {
-      fs: false,
-      child_process: false,
-      tls: false,
-      bufferutil: false,
-      'utf-8-validate': false,
-    };
-    
-    return config;
-  },
+  // webpack: config => {
+  //   config.resolve.fallback = {
+  //     fs: false,
+  //     child_process: false,
+  //     tls: false,
+  //     bufferutil: false,
+  //     'utf-8-validate': false,
+  //   };
+  //
+  //   return config;
+  // },
   publicRuntimeConfig: {
     version,
   },

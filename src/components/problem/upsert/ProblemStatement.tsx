@@ -1,6 +1,7 @@
 'use client';
 
-import { CodeEditor, FlagEnImage, FlagEsImage, Input, Select, T, TabsInline } from 'components';
+import { CodeEditor, Input, Select, T, TabsInline } from 'components';
+import { useJukiUI } from 'hooks';
 import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { CodeLanguage, Language, UpsertProblemUIDTO } from 'types';
 import { ProblemStatementMd } from './ProblemStatementMd';
@@ -17,18 +18,34 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
   
   const [ language, setLanguage ] = useState<Language>(Language.ES);
   const [ type, setType ] = useState<'md' | 'html' | 'pdf'>(judgeIsExternal ? 'html' : 'md');
+  const { components: { Image } } = useJukiUI();
   
   const tabs = {
     [Language.ES]: {
       key: Language.ES,
       header: (
-        <div className="jk-row nowrap">Español <div style={{ width: 50, height: 24 }}><FlagEsImage /></div></div>
+        <div className="jk-row nowrap">Español <div style={{ width: 50, height: 24 }}>
+          <Image
+            alt="ES image"
+            fill
+            src="https://images.juki.pub/assets/image-es.png"
+          />
+        </div>
+        </div>
       ),
     },
     [Language.EN]: {
       key: Language.EN,
       header: (
-        <div className="jk-row nowrap">English <div style={{ width: 50, height: 24 }}><FlagEnImage /></div></div>
+        <div className="jk-row nowrap">English
+          <div style={{ width: 50, height: 24 }}>
+            <Image
+              alt="US image"
+              fill
+              src="https://images.juki.pub/assets/image-us.png"
+            />
+          </div>
+        </div>
       ),
     },
   };

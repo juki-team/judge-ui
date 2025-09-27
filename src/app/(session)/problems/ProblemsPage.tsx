@@ -5,6 +5,7 @@ import {
   ButtonLoader,
   CrawlCodeforcesProblemModal,
   CrawlJvumsaProblemModal,
+  FieldText,
   getProblemKeyHeader,
   getProblemModeHeader,
   getProblemNameHeader,
@@ -15,7 +16,6 @@ import {
   PlusIcon,
   Select,
   T,
-  TextField,
   TwoContentLayout,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
@@ -85,7 +85,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
         head: 'access',
         index: 'access',
         Field: ({ record: { members } }) => (
-          <TextField
+          <FieldText
             className="jk-row"
             text={<T className="tt-se">{ENTITY_ACCESS[getDocumentAccess({ members })].label}</T>}
             label={<T className="tt-se">type</T>}

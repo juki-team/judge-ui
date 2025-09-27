@@ -2,12 +2,12 @@
 
 import {
   EditCreateContest,
+  EntityUpdateLayout,
   FetcherLayer,
   LinkLastPath,
   PageNotFound,
   T,
   TwoContentLayout,
-  UpdateEntityLayout,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
@@ -37,7 +37,7 @@ function ContestEdit() {
       {({ data }) => {
         if (data.content.user.isAdministrator || data.content.user.isManager) {
           return (
-            <UpdateEntityLayout
+            <EntityUpdateLayout
               entity={toUpsertContestDTOUI(data.content)}
               entityKey={data.content.key}
               Cmp={EditCreateContest}

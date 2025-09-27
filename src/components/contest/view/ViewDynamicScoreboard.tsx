@@ -134,7 +134,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
           <Timer
             currentTimestamp={currentTimestamp}
             interval={0}
-            laps={2}
+            type="hours-minutes"
             literal
           />
         </div>,

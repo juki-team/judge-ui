@@ -7,6 +7,7 @@ import {
   JukiProviders,
   NavigationBar,
   NewVersionAvailable,
+  PresentationToolButtons,
   SubmissionModal,
   T,
   UserPreviewModal,
@@ -62,15 +63,12 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
   const preloaders = usePreloadComponents();
   
-  const loadingBasic = preloaders.atoms && preloaders.atomsIconsGoogle && preloaders.atomsIconsSigns && preloaders.atomsIconsSpecials && preloaders.atomsImages
-    && preloaders.molecules
-    && preloaders.organisms
-    && preloaders.templates;
+  const loadingBasic = preloaders.atoms && preloaders.molecules && preloaders.organisms;
   
   const app = (
     <SWRConfig
       value={{
-        revalidateIfStale: true,
+        revalidateIfStale: true, // when back to pages
         revalidateOnFocus: false,
         revalidateOnReconnect: true,
       }}
@@ -94,6 +92,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         <UserProvider>
           <NavigationBar>
             {Children.toArray(children)}
+            <PresentationToolButtons />
             <SponsoredByTag />
           </NavigationBar>
         </UserProvider>

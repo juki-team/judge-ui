@@ -8,9 +8,9 @@ import {
   CloseIcon,
   DataViewer,
   Field,
+  FieldText,
   OpenInNewIcon,
   T,
-  TextField,
   TextHeadCell,
 } from 'components';
 import { jukiAppRoutes } from 'config';
@@ -205,7 +205,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       head: <TextHeadCell text={<T>key</T>} />,
       index: 'id',
       Field: ({ record: { judge: { key: judgeKey, isMain, name, isExternal }, key, externalUrl } }) => (
-        <TextField
+        <FieldText
           text={
             isJudgeOrAdmin || contest.isEndless || contest.isPast
               ? (
@@ -251,7 +251,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       head: <TextHeadCell text={<T>points</T>} />,
       index: 'points',
       Field: ({ record: { points } }) => (
-        <TextField text={points} label={<T className="tt-se">points</T>} />
+        <FieldText text={points} label={<T className="tt-se">points</T>} />
       ),
       sort: { compareFn: () => (recordA, recordB) => recordB.points - recordA.points },
       cardPosition: 'bottomLeft',
@@ -261,7 +261,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       head: <TextHeadCell text={<T>success rate</T>} />,
       index: 'success-rate',
       Field: ({ record: { totalAttempts, totalSuccess } }) => (
-        <TextField
+        <FieldText
           text={totalAttempts ? (totalSuccess / totalAttempts * 100).toFixed(1) + ' %' : '-'}
           label={<T className="tt-se">success rate</T>}
         />

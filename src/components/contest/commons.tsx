@@ -24,7 +24,7 @@ export const getContestTimeLiteral = (contest: ContestDataResponseDTO) => {
             ? <T className="ws-np">ends ago</T>
             : <T className="ws-np">stars in</T>}
         &nbsp;
-        <div><Timer currentTimestamp={timeInterval} laps={2} interval={-1000} literal /></div>
+        <div><Timer currentTimestamp={timeInterval} type="hours-minutes" interval={-1000} literal /></div>
       </>
     );
 };

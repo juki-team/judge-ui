@@ -199,7 +199,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 <Timer
                   currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
                   interval={0}
-                  laps={6}
+                  type="weeks-days-hours-minutes-seconds"
                   literal
                   ignoreLeadingZeros
                   ignoreTrailingZeros
@@ -271,7 +271,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 <Timer
                   currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
                   interval={0}
-                  laps={6}
+                  type="weeks-days-hours-minutes-seconds"
                   literal
                   ignoreLeadingZeros
                   ignoreTrailingZeros
@@ -343,7 +343,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 <Timer
                   currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
                   interval={0}
-                  laps={6}
+                  type="weeks-days-hours-minutes-seconds"
                   literal
                   ignoreLeadingZeros
                   ignoreTrailingZeros

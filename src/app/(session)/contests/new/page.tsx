@@ -1,6 +1,6 @@
 'use client';
 
-import { CreateEntityLayout, EditCreateContest, PageNotFound } from 'components';
+import { EditCreateContest, EntityCreateLayout, PageNotFound } from 'components';
 import { jukiAppRoutes } from 'config';
 import { isStringJson, toUpsertContestDTO } from 'helpers';
 import { useMemo, useUserStore } from 'hooks';
@@ -29,7 +29,7 @@ function ContestCreate() {
   }
   
   return (
-    <CreateEntityLayout<UpsertContestDTOUI, UpsertContestDTO, {}>
+    <EntityCreateLayout<UpsertContestDTOUI, UpsertContestDTO, {}>
       newEntity={newEntity}
       Cmp={EditCreateContest}
       createApiURL={JUDGE_API_V1.CONTEST.CREATE}
