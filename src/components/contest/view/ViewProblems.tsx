@@ -185,7 +185,7 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
         <Field className="jk-row">
           <div>
             <div
-              className={'fw-br problem-index bc-g6 jk-border-radius-inline pn-re' +
+              className={'fw-br problem-index bc-g6 jk-br-ie pn-re' +
                 (myAttempts ? (mySuccess ? ' accepted' : ' wrong') : '')}
             >
               {!!myAttempts && (mySuccess ? <CheckIcon size="small" /> : <CloseIcon size="small" />)}

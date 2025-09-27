@@ -41,7 +41,7 @@ const NicknameField = ({
       <Image src={imageUrl} className="jk-user-profile-img large" alt={nickname} height={38} width={38} />
       <UserNicknameLink nickname={nickname} companyKey={companyKey}>
         <div
-          className={classNames('jk-border-radius ', {
+          className={classNames('jk-br ', {
             'bc-py cr-we fw-br jk-pg-xsm': nickname === userNickname,
             'link': nickname !== userNickname,
           })}

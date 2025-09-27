@@ -34,14 +34,14 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
   return (
     <div className="jk-row stretch gap">
       <div className="jk-row block stretch gap flex-1">
-        <div className="jk-row nowrap left stretch gap bc-we jk-border-radius-inline">
+        <div className="jk-row nowrap left stretch gap bc-we jk-br-ie">
           {editable ? (
             <TextArea
               value={sample.input || ''}
               onChange={value => setSample(prevState => ({ ...prevState, input: value }))}
             />
           ) : (
-            <div className="sample-text-content jk-border-radius-inline">
+            <div className="sample-text-content jk-br-ie">
               <div className="jk-row gap sample-text-icons">
                 <div
                   data-tooltip-id="jk-tooltip"
@@ -55,14 +55,14 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
             </div>
           )}
         </div>
-        <div className="jk-row nowrap left stretch gap bc-we jk-border-radius-inline">
+        <div className="jk-row nowrap left stretch gap bc-we jk-br-ie">
           {editable ? (
             <TextArea
               value={sample.output || ''}
               onChange={value => setSample(prevState => ({ ...prevState, output: value }))}
             />
           ) : (
-            <div className="sample-text-content jk-border-radius-inline">
+            <div className="sample-text-content jk-br-ie">
               <div className="jk-row gap sample-text-icons">
                 <div
                   data-tooltip-id="jk-tooltip"

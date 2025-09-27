@@ -91,7 +91,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
           ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
             return (
-              <div className="elevation-1 jk-pg-md jk-border-radius-inline pn-re bc-we" key={clarification.key}>
+              <div className="elevation-1 jk-pg-md jk-br-ie pn-re bc-we" key={clarification.key}>
                 {isJudgeOrAdmin && (
                   <div style={{ position: 'absolute', top: 0, right: 0 }}>
                     <Button

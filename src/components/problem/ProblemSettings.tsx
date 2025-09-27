@@ -274,7 +274,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             <Modal isOpen={open} onClose={onCloseModal}>
               <div className="jk-pg-md jk-col gap nowrap">
                 <div
-                  className="jk-border-radius-inline"
+                  className="jk-br-ie"
                   style={{
                     height: 'calc(var(--vh) * 100 - 200px)',
                     width: '100%',
