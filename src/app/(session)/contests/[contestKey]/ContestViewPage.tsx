@@ -42,7 +42,7 @@ export default function ContestViewPage({ contestKey }: { contestKey: string }) 
           // breadcrumbs={breadcrumbs}
           loading
         >
-          <h2>
+          <h2 className="line-height-1">
             {contestKey}
           </h2>
         </TwoContentLayout>
@@ -63,7 +63,7 @@ export default function ContestViewPage({ contestKey }: { contestKey: string }) 
             </PageNotFound>,
           )}
         >
-          <h2><T>contest not found</T></h2>
+          <h2 className="line-height-1"><T>contest not found</T></h2>
         </TwoContentLayout>
       }
     >

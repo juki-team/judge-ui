@@ -436,6 +436,7 @@ export function ContestView({ contest, reloadContest }: {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
           }}
+          className="line-height-1"
         >
           {contest.name}
         </h2>

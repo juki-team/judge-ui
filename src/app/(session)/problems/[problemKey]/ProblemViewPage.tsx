@@ -41,7 +41,7 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
       url={jukiApiManager.API_V1.problem.getData({ params: { key: problemKey as string } }).url}
       loadingView={
         <TwoContentLayout loading>
-          <h2>
+          <h2 className="line-height-1">
             {problemKey}
           </h2>
         </TwoContentLayout>
@@ -62,7 +62,7 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
             </PageNotFound>,
           )}
         >
-          <h2><T>problem not found</T></h2>
+          <h2 className="line-height-1"><T>problem not found</T></h2>
         </TwoContentLayout>
       }
     >

@@ -121,96 +121,103 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             }}
           />
         </div>
-        {!competition && !isGlobal && (
-          <div className="jk-row left gap nowrap">
-            <div className="fw-bd tt-se tx-xl cr-py"><T>start date</T>:</div>
-            <InputDate
-              type="year-month-day-hours-minutes"
-              date={startDate}
-              baseDate={startDate}
-              isSelected={isSelected}
-              onDatePick={(date) => setContest(prevState => adjustContest({
-                ...prevState,
-                settings: { ...prevState.settings, startTimestamp: date.getTime() },
-              }, prevState))}
-              todayButton
-            />
-          </div>
-        )}
-        {!competition && !isGlobal && (
-          <div className="jk-col left stretch">
-            <div className="jk-row gap left extend">
-              <div className="fw-bd tt-se tx-xl cr-py"><T>duration</T></div>
-              <InputToggle
-                checked={checks.duration}
-                size="tiny"
-                onChange={(value) => setChecks(prevState => ({ ...prevState, duration: value }))}
-                leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.duration })}>date</T>}
-                rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.duration })}>minutes</T>}
-              />
-            </div>
-            {checks.duration ? (
-              <div className="jk-row left gap">
-                <T className="tt-se">ends within</T>
-                <Input
-                  type="number"
-                  size="auto"
-                  value={(contest.settings.endTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
-                  onChange={value => setContest(prevState => adjustContest({
-                    ...prevState,
-                    settings: {
-                      ...prevState.settings,
-                      endTimestamp: prevState.settings.startTimestamp + (value * 1000 * 60),
-                    },
-                  }, prevState))}
-                />
-                <T>minutes of the start of the contest</T>
+      </div>
+      {!competition && !isGlobal && (
+        <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
+          <div className="jk-row gap">
+            <div className="jk-col left stretch">
+              <div className="jk-row left gap nowrap">
+                <div className="fw-bd tt-se tx-xl cr-py"><T>start date</T></div>
               </div>
-            ) : (
               <div className="jk-row left gap">
-                <T className="tt-se">ends on date</T>
                 <InputDate
                   type="year-month-day-hours-minutes"
-                  date={endDate}
-                  baseDate={endDate}
+                  date={startDate}
+                  baseDate={startDate}
                   isSelected={isSelected}
-                  isDisabled={(date) => ({
-                    year: date.isYearBefore(startDate),
-                    month: date.isMonthBefore(startDate),
-                    day: date.isDayBefore(startDate),
-                    hours: date.isHoursBefore(startDate),
-                    minutes: date.isMinutesBefore(startDate),
-                    seconds: date.isSecondsBefore(startDate),
-                    milliseconds: date.isMillisecondsBefore(startDate),
-                  })}
                   onDatePick={(date) => setContest(prevState => adjustContest({
                     ...prevState,
-                    settings: {
-                      ...prevState.settings,
-                      endTimestamp: date.getTime(),
-                    },
+                    settings: { ...prevState.settings, startTimestamp: date.getTime() },
                   }, prevState))}
                   todayButton
                 />
               </div>
-            )}
-            <div className="jk-row left">
-              <div className="jk-col left">
-                <Timer
-                  currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
-                  interval={0}
-                  type="weeks-days-hours-minutes-seconds"
-                  literal
-                  ignoreLeadingZeros
-                  ignoreTrailingZeros
+            </div>
+            <div className="jk-col left stretch">
+              <div className="jk-row gap left">
+                <div className="fw-bd tt-se tx-xl cr-py">
+                  {checks.duration ? <T>ends within</T> : <T>end date</T>}
+                </div>
+                <InputToggle
+                  checked={checks.duration}
+                  size="tiny"
+                  onChange={(value) => setChecks(prevState => ({ ...prevState, duration: value }))}
+                  leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.duration })}>date</T>}
+                  rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.duration })}>minutes</T>}
                 />
               </div>
-              &nbsp;
-              <T>of the start of the contest</T>
+              {checks.duration ? (
+                <div className="jk-row left">
+                  <Input
+                    type="number"
+                    size="auto"
+                    value={(contest.settings.endTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                    onChange={value => setContest(prevState => adjustContest({
+                      ...prevState,
+                      settings: {
+                        ...prevState.settings,
+                        endTimestamp: prevState.settings.startTimestamp + (value * 1000 * 60),
+                      },
+                    }, prevState))}
+                  />
+                  &nbsp;
+                  <T>minutes of the start of the contest</T>
+                </div>
+              ) : (
+                <div className="jk-row left gap">
+                  <InputDate
+                    type="year-month-day-hours-minutes"
+                    date={endDate}
+                    baseDate={endDate}
+                    isSelected={isSelected}
+                    isDisabled={(date) => ({
+                      year: date.isYearBefore(startDate),
+                      month: date.isMonthBefore(startDate),
+                      day: date.isDayBefore(startDate),
+                      hours: date.isHoursBefore(startDate),
+                      minutes: date.isMinutesBefore(startDate),
+                      seconds: date.isSecondsBefore(startDate),
+                      milliseconds: date.isMillisecondsBefore(startDate),
+                    })}
+                    onDatePick={(date) => setContest(prevState => adjustContest({
+                      ...prevState,
+                      settings: {
+                        ...prevState.settings,
+                        endTimestamp: date.getTime(),
+                      },
+                    }, prevState))}
+                    todayButton
+                  />
+                </div>
+              )}
             </div>
           </div>
-        )}
-        {!competition && !isGlobal && (
+          <div className="jk-row left">
+            <T className="tt-se tx-s">duration</T>:&nbsp;
+            <Timer
+              currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
+              interval={0}
+              type="weeks-days-hours-minutes-seconds"
+              literal
+              ignoreLeadingZeros
+              ignoreTrailingZeros
+              className="fw-lt tx-s"
+            />
+          </div>
+        </div>
+      )}
+      {!competition && !isGlobal && (
+        <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
           <div className="jk-col left stretch">
             <div className="jk-row left extend gap">
               <div className="jk-row gap">
@@ -266,7 +273,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 />
               </div>
             )}
-            <div className="jk-row left">
+            <div className="jk-row left fw-lt tx-s">
               <div className="jk-col left">
                 <Timer
                   currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
@@ -281,8 +288,6 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               <T>of the start of the contest</T>
             </div>
           </div>
-        )}
-        {!competition && !isGlobal && (
           <div className="jk-col left stretch">
             <div className="jk-row left extend gap">
               <div className="jk-row gap">
@@ -338,7 +343,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 />
               </div>
             )}
-            <div className="jk-row left">
+            <div className="jk-row left tx-s fw-lt">
               <div className="jk-col left">
                 <Timer
                   currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
@@ -353,8 +358,10 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               <T>of the start of the contest</T>
             </div>
           </div>
-        )}
-        {!competition && !isGlobal && (
+        </div>
+      )}
+      {!competition && !isGlobal && (
+        <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
           <div className="jk-row left gap">
             <div className="fw-bd tt-se tx-xl cr-py"><T>penalty</T>:</div>
             <div className="jk-row gap left">
@@ -370,8 +377,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               <T>minutes of penalty by incorrect answer</T>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       {!isGlobal && (
         <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
           <div className="jk-row left gap nowrap">

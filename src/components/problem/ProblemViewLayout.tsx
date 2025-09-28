@@ -195,8 +195,8 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       />
       {/*<CustomHead title={problem.name} />*/}
       <div className="jk-row gap left">
-        <h2>
-          {(problem.shortname ? `[${problem.shortname}] ` : '') + problem.name}&nbsp;
+        <h2 className="jk-row line-height-1">
+          {!!problem.shortname && <div className="tx-m">{`[${problem.shortname}] `}&nbsp;</div>} {problem.name}&nbsp;
         </h2>
         <div className="jk-tag bc-hl tx-s">{problem.judge?.name}</div>
         <ProblemInfo problem={problem} />
