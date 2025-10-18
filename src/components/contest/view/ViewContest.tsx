@@ -229,7 +229,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
     );
   }
   
-  if (userCanCreateContest && contest.isPast) {
+  if (userCanCreateContest && (contest.isPast || contest.user.isAdministrator || contest.user.isManager)) {
     extraNodes.push(
       <ButtonLoader
         size="small"
