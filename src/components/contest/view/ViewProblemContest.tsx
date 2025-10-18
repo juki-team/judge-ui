@@ -31,7 +31,7 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: {
   const mutate = useMutate();
   const { components: { Link } } = useJukiUI();
   
-  if (problem.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length > 0) {
+  if (!contest.isPast && problem.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length > 0) {
     return (
       <div className="jk-pg jk-br-ie jk-row bc-we">
         <ProblemRequisites problem={problem} reloadContest={reloadContest} contest={contest} />

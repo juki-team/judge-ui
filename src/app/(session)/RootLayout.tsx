@@ -7,7 +7,6 @@ import {
   JukiProviders,
   NavigationBar,
   NewVersionAvailable,
-  PresentationToolButtons,
   SubmissionModal,
   T,
   UserPreviewModal,
@@ -97,7 +96,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         <UserProvider>
           <NavigationBar>
             {Children.toArray(children)}
-            <PresentationToolButtons />
+            {/*<PresentationToolButtons />*/}
             <SponsoredByTag />
             <UserTrack />
           </NavigationBar>
