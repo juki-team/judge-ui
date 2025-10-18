@@ -48,6 +48,7 @@ import {
 import { DocumentMembersButton } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
+import { ViewEvents } from './ViewEvents';
 import { ViewProblemContest } from './ViewProblemContest';
 import { ViewScoreboard } from './ViewScoreboard';
 import { ViewSubmissions } from './ViewSubmissions';
@@ -205,6 +206,13 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
       header: <T className="tt-ce">members</T>,
       body: (
         <EditViewMembers key="members" contest={contest as unknown as UpsertContestDTOUI} />
+      ),
+    };
+    tabHeaders[ContestTab.EVENTS] = {
+      key: ContestTab.EVENTS,
+      header: <T className="tt-ce">events</T>,
+      body: (
+        <ViewEvents key="events" contest={contest} />
       ),
     };
   }
