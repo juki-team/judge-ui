@@ -73,14 +73,7 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
             const response = cleanRequest<ContentResponseType<{ key: string }>>(
               await authorizedRequest(url, options),
             );
-            if (notifyResponse(response)) {
-              const event: SubscribeProblemCrawledWebSocketEventDTO = {
-                event: WebSocketActionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
-                sessionId: userSessionId as ObjectIdType,
-                problemKey: `PL-${slug}`,
-              };
-              websocket.send(event);
-            }
+            notifyResponse(response);
           }}
         >
           <T>crawl</T>

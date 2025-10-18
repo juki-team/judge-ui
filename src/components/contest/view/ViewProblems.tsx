@@ -130,7 +130,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
             websocket.unsubscribe(event, fun);
-            websocket.send(event, fun);
+            websocket.subscribe(event, fun);
             setDataCrawled({});
             setSubmissionsCount(0);
             const { url, ...options } = jukiApiManager.API_V1.contest.problem.retrieve({
