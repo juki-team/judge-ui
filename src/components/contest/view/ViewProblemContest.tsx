@@ -107,7 +107,12 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: {
                   listenSubmission({
                     id: response.content.submitId,
                     problem: { name: problem.name },
-                    contest: { name: contest.name, problemIndex: problem.index },
+                    contest: {
+                      name: contest.name,
+                      problemIndex: problem.index,
+                      isFrozenTime: contest.isFrozenTime,
+                      isQuietTime: contest.isQuietTime,
+                    },
                   }, true);
                   pushRoute(jukiAppRoutes.JUDGE().contests.view({
                     key: contest.key,

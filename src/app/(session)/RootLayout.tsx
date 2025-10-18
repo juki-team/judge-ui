@@ -13,7 +13,7 @@ import {
   UserPreviewModal,
 } from 'components';
 import { JUKI_APP_COMPANY_KEY, JUKI_SOCKET_BASE_URL, NODE_ENV, ROUTES } from 'config/constants';
-import { useJukiUI, usePreloadComponents, useUserStore, useWebsocketStore } from 'hooks';
+import { useJukiUI, usePreloadComponents, useUserStore, useUserTrack, useWebsocketStore } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React, { Children, PropsWithChildren, useEffect } from 'react';
@@ -47,6 +47,11 @@ const initialLastPath = {
   [LastPathKey.SECTION_PROBLEM]: '/problems',
   [LastPathKey.BOARDS]: ROUTES.BOARDS.PAGE(),
   [LastPathKey.SECTION_HELP]: `/help`,
+};
+
+const UserTrack = () => {
+  useUserTrack();
+  return null;
 };
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
@@ -94,6 +99,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
             {Children.toArray(children)}
             <PresentationToolButtons />
             <SponsoredByTag />
+            <UserTrack />
           </NavigationBar>
         </UserProvider>
         <Analytics key="analytics" />

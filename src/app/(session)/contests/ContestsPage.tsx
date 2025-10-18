@@ -10,8 +10,8 @@ import {
   T,
   TwoContentLayout,
 } from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
-import { useEffect, usePreload, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
+import { jukiAppRoutes } from 'config';
+import { useEffect, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
 import { ContestsTab, ContestSummaryListResponseDTO, LastPathKey, PagedDataViewerProps, TabsType } from 'types';
 
 export function ContestsPage({ tab }: { tab?: ContestsTab }) {
@@ -19,10 +19,8 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   useTrackLastPath(LastPathKey.CONTESTS);
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   
-  const preload = usePreload();
   const setSearchParams = useRouterStore(state => state.setSearchParams);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
-  const companyKey = useUserStore(state => state.company?.key);
   useEffect(() => {
     if (!tab || ![
       ContestsTab.ALL,
@@ -44,9 +42,6 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   const props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>> = {
     refreshInterval: 60000,
     cards: { width: 320, expanded: true },
-    onRecordRender: ({ data, index }) => {
-      void preload(jukiApiManager.API_V1.contest.getData({ params: { key: data[index].key, companyKey } }).url);
-    },
     extraNodes,
   };
   
