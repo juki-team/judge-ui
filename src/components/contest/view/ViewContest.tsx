@@ -90,7 +90,7 @@ export function ContestView({ contest, reloadContest }: {
     return () => {
       websocket.unsubscribe(event, fun);
     };
-  }, [ contestKey, userSessionId, websocket, reloadContest ]);
+  }, [ contestKey, userSessionId, websocket, reloadContest, mutate ]);
   
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({

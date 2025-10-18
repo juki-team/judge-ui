@@ -178,7 +178,7 @@ export const ViewProblems = ({ contest, reloadContest }: {
   
   const { problems, user, key: contestKey } = contest;
   const { isManager, isAdministrator } = user || {};
-  const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
+  const { notifyResponse } = useJukiNotification();
   const { viewPortSize, components: { Link } } = useJukiUI();
   const isJudgeOrAdmin = isManager || isAdministrator;
   
@@ -288,7 +288,7 @@ export const ViewProblems = ({ contest, reloadContest }: {
       cardPosition: 'bottomRight',
       minWidth: 128,
     },
-  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest.isEndless, contest.isPast, Link, contestKey, addSuccessNotification, addErrorNotification, notifyResponse ]);
+  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest, Link, contestKey, reloadContest ]);
   const data = Object.values(problems);
   
   return (

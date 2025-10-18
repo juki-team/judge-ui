@@ -2,7 +2,7 @@
 
 import { CheckIcon, CloseIcon, T, Timer } from 'components';
 import { classNames } from 'helpers';
-import { KeyedMutator } from 'swr';
+import { type KeyedMutator } from 'swr';
 import {
   ContestDataResponseDTO,
   ContestProblemBlockedByType,
@@ -61,10 +61,11 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
           })}
         >
           <T className="tt-se">prerequisites</T>:&nbsp;
-          {prerequisites.map(prerequisite => {
+          {prerequisites.map((prerequisite, index) => {
             const isUnmet = blockedBy?.some(block => block.type === ContestProblemBlockedByType.UNMET_PREREQUISITES && block.details?.problemIndex === prerequisite.problemIndex);
             return (
               <div
+                key={index}
                 data-tooltip-id="jk-tooltip"
                 data-tooltip-content={isUnmet
                   ? (prerequisite.type === ContestProblemPrerequisiteType.INDIVIDUALLY ? 'you have to solve this problem to enable the problem' : 'someone has to solve this problem to enable the problem')
@@ -78,8 +79,8 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
           })}
         </div>
       )}
-      {blockedBy.filter(b => b.type !== ContestProblemBlockedByType.UNMET_PREREQUISITES).map(block => (
-        <div>
+      {blockedBy.filter(b => b.type !== ContestProblemBlockedByType.UNMET_PREREQUISITES).map((block, index) => (
+        <div key={index}>
           {block.type === ContestProblemBlockedByType.START_TIME_IN_THE_FUTURE && (
             <div className="jk-row br-hl jk-br-ie jk-pg-xsm tx-t bc-wl">
               <T className="tt-se">problem will be released in</T>&nbsp;

@@ -237,8 +237,8 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
       {withPrerequisites && (
         <div className="jk-row" style={{ width: 100 }}>
           <div>
-            {problem.prerequisites?.map(prerequisite => (
-              <div className="jk-row gap tx-s">
+            {problem.prerequisites?.map((prerequisite, index) => (
+              <div className="jk-row gap tx-s" key={index}>
                 <div
                   style={{ color: contestProblems.find(p => p.index === prerequisite.problemIndex)?.color }}
                   className="cursor-pointer"
@@ -358,7 +358,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
     }
-  }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, withTime ]);
+  }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, withTime, setContest ]);
   const isTypePrerequisiteIndividually = typePrerequisite === ContestProblemPrerequisiteType.INDIVIDUALLY;
   
   return (
