@@ -15,16 +15,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, cleanRequest, getParamsOfUserKey, toFilterUrl, toSortUrl } from 'helpers';
-import {
-  useFetcher,
-  useJukiNotification,
-  useMemo,
-  usePreload,
-  useRef,
-  useState,
-  useUserStore,
-  useWebsocketStore,
-} from 'hooks';
+import { useFetcher, useJukiNotification, useMemo, useRef, useState, useUserStore, useWebsocketStore } from 'hooks';
 import React, { useCallback } from 'react';
 import {
   ContentResponseType,
@@ -193,7 +184,6 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
   ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, userNickname, companyKey ]);
-  const preload = usePreload();
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   
   const downloads = useMemo(() => {
@@ -258,12 +248,8 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
       }}
       name={QueryParam.STATUS_TABLE}
       toRow={submission => submission}
-      refreshInterval={60000}
       getRowKey={({ data, index }) => data[index].submitId}
       downloads={downloads}
-      onRecordRender={({ data, index }) => {
-        void preload(jukiApiManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);
-      }}
     />
   );
 };

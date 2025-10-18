@@ -13,14 +13,16 @@ import {
   ProblemSelector,
   SortableItems,
   T,
+  Timer,
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames, disableOutOfRange, getJudgeOrigin, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
-import { useEffect, useJukiUI, useRef, useState, useUserStore } from 'hooks';
+import { useEffect, useJukiUI, useStableState, useUserStore } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { PALLETE } from 'src/constants';
 import {
   ContestProblemBasicDataResponseDTO,
+  ContestProblemPrerequisiteType,
   SortableItem,
   SortableItemComponent,
   UpsertContestDTOUI,
@@ -29,8 +31,10 @@ import {
 import { EditContestProps } from '../types';
 
 export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDTO, {
-  setProblems: Dispatch<SetStateAction<SortableItem<ContestProblemBasicDataResponseDTO>[]>>,
+  setContest: Dispatch<SetStateAction<UpsertContestDTOUI>>,
   withTime: number,
+  withPrerequisites: boolean,
+  withMaxAcceptedUsers: boolean,
   contest: UpsertContestDTOUI,
   contestEndDate: Date,
   contestStartDate: Date,
@@ -38,14 +42,34 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
 }> = ({ item: { value: problem }, style, listeners, attributes, setNodeRef, isDragging, index, props }) => {
   
   const {
-    setProblems,
+    setContest,
     withTime,
+    withPrerequisites,
+    withMaxAcceptedUsers,
     contest,
     contestEndDate,
     contestStartDate,
   } = props!;
   
   const { components: { Link } } = useJukiUI();
+  
+  const setProblemProp = (props: Partial<UpsertContestProblemDTOUI>) => {
+    setContest(prevState => {
+      const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+      for (const p of Object.values(prevState.problems)) {
+        problems[p.key] = { ...p };
+        if (p.key === problem.key) {
+          problems[p.key] = { ...p, ...props };
+        }
+      }
+      
+      return {
+        ...prevState,
+        problems,
+      };
+    });
+  };
+  const contestProblems = Object.values(contest.problems);
   
   return (
     <div
@@ -66,37 +90,30 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
       <div className="jk-row" style={{ width: 40 }}>
         {indexToLetters(index + 1)}
       </div>
-      <div className="jk-col center gap" style={{ flex: 1 }}>
-        <div className="jk-row gap">
+      <div className="jk-col center gap stretch" style={{ flex: 1 }}>
+        <div className="jk-row gap left">
+          {problem.judge.name}
+        </div>
+        <div className="jk-row gap left">
           <Link
             href={jukiAppRoutes.JUDGE(getJudgeOrigin(problem.company.key)).problems.view({ key: problem.key })}
             target="_blank"
-            className="link jk-row tx-s"
+            className="link jk-row tx-t"
             style={{ fontFamily: 'monospace' }}
           >
             {problem.key}&nbsp;
-            <div className="jk-row"><OpenInNewIcon size="small" /></div>
+            <div className="jk-row"><OpenInNewIcon size="tiny" /></div>
           </Link>
-          {problem.name}
+          <span className="fw-bd">{problem.name}</span>
         </div>
-        <div className="jk-row gap">
+        <div className="jk-row gap left">
           {problem.tags.map(tag => (
             <div key={tag} className="jk-tag bc-hl">{tag}</div>
           ))}
         </div>
       </div>
       <div className="jk-row" style={{ width: 40 }}>
-        <InputColor
-          onChange={(props) => {
-            setProblems(prevState => prevState.map(p => {
-              if (p.key === problem.key) {
-                const value: ContestProblemBasicDataResponseDTO = { ...p.value, color: props.hex };
-                return { ...p, value };
-              }
-              return p;
-            }));
-          }}
-        >
+        <InputColor onChange={(props) => setProblemProp({ color: props.hex })}>
           <div style={{ color: problem.color }} className="cursor-pointer"><BalloonIcon /></div>
         </InputColor>
       </div>
@@ -105,150 +122,164 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
           type="number"
           expand
           value={problem.points}
-          onChange={(props) => {
-            setProblems(prevState => prevState.map(p => {
-              if (p.key === problem.key) {
-                const value = { ...p.value, points: Math.max(props, 1) };
-                return { ...p, value };
-              }
-              return p;
-            }));
-          }}
+          onChange={(props) => setProblemProp({ points: Math.max(props, 1) })}
         />
       </div>
-      {withTime === 1 && (
-        <div className="jk-row left gap" style={{ width: 100 }}>
-          <Input
-            type="number"
-            value={(problem.startTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
-            onChange={v => {
-              setProblems(prevState => prevState.map(p => {
-                if (p.key === problem.key) {
-                  const value = {
-                    ...p.value,
-                    startTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(
-                        contest.settings.startTimestamp,
-                        roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
-                      ),
+      <div className="jk-row left gap" style={{ width: 192 }}>
+        {withTime === 1 && (
+          <>
+            <Input
+              type="number"
+              disabled={withPrerequisites}
+              label={<T className="tx-t tt-se">starts at the minute</T>}
+              value={(problem.startTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+              onChange={v => {
+                setProblemProp({
+                  startTimestamp: Math.min(
+                    contest.settings.endTimestamp,
+                    Math.max(
+                      contest.settings.startTimestamp,
+                      roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
                     ),
-                  };
-                  return { ...p, value };
+                  ),
+                });
+              }}
+              expand
+            />
+            <Input
+              label={<T className="tx-t tt-se">ends at the minute</T>}
+              type="number"
+              disabled={withPrerequisites}
+              value={(problem.endTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+              onChange={v => {
+                setProblemProp({
+                  endTimestamp: Math.min(
+                    contest.settings.endTimestamp,
+                    Math.max(
+                      problem.startTimestamp,
+                      roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
+                    ),
+                  ),
+                });
+              }}
+              expand
+            />
+          </>
+        )}
+        {withTime === 2 && (
+          <>
+            <T className="tx-t tt-se">starts on the date</T>
+            <InputDate
+              type="year-month-day-hours-minutes"
+              disabled={withPrerequisites}
+              date={new Date(problem.startTimestamp)}
+              isSelected={(date) => (
+                {
+                  day: date.isWithinInterval({
+                    start: new Date(problem.startTimestamp).startOfDay(),
+                    end: new Date(problem.endTimestamp).endOfDay(),
+                  }),
                 }
-                return p;
-              }));
-            }}
-            expand
+              )}
+              isDisabled={(date) => disableOutOfRange(date, contestStartDate, contestEndDate)}
+              baseDate={new Date(problem.startTimestamp)}
+              onDatePick={(date) => {
+                setProblemProp({
+                  startTimestamp: Math.min(
+                    contest.settings.endTimestamp,
+                    Math.max(contest.settings.startTimestamp, roundTimestamp(date.getTime())),
+                  ),
+                });
+              }}
+              twoLines
+              extend
+            />
+            <T className="tx-t tt-se">ends on the date</T>
+            <InputDate
+              type="year-month-day-hours-minutes"
+              disabled={withPrerequisites}
+              date={new Date(problem.endTimestamp)}
+              isSelected={(date) => (
+                {
+                  day: date.isWithinInterval({
+                    start: new Date(problem.startTimestamp).startOfDay(),
+                    end: new Date(problem.endTimestamp).endOfDay(),
+                  }),
+                }
+              )}
+              isDisabled={(date) => disableOutOfRange(date, new Date(problem.startTimestamp), contestEndDate)}
+              baseDate={new Date(problem.endTimestamp)}
+              onDatePick={(date) => {
+                setProblemProp({
+                  endTimestamp: Math.min(
+                    contest.settings.endTimestamp,
+                    Math.max(problem.startTimestamp, roundTimestamp(date.getTime())),
+                  ),
+                });
+              }}
+              twoLines
+              extend
+            />
+          </>
+        )}
+        <div className="jk-row tx-t">
+          <T className="tt-se">duration</T>:&nbsp;
+          <Timer
+            currentTimestamp={problem.endTimestamp - problem.startTimestamp}
+            literal
+            interval={0}
+            ignoreTrailingZeros
+            ignoreLeadingZeros
+            type="weeks-days-hours-minutes"
           />
         </div>
-      )}
-      {withTime === 2 && (
-        <div className="jk-row left gap" style={{ width: 200 }}>
-          <InputDate
-            type="year-month-day-hours-minutes"
-            date={new Date(problem.startTimestamp)}
-            isSelected={(date) => (
-              {
-                day: date.isWithinInterval({
-                  start: new Date(problem.startTimestamp).startOfDay(),
-                  end: new Date(problem.endTimestamp).endOfDay(),
-                }),
-              }
-            )}
-            isDisabled={(date) => disableOutOfRange(date, contestStartDate, contestEndDate)}
-            baseDate={new Date(problem.startTimestamp)}
-            onDatePick={(date) => {
-              setProblems(prevState => prevState.map(p => {
-                if (p.key === problem.key) {
-                  const value = {
-                    ...p.value,
-                    startTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(contest.settings.startTimestamp, roundTimestamp(date.getTime())),
-                    ),
-                  };
-                  return { ...p, value };
-                }
-                return p;
-              }));
-            }}
-            twoLines
-            extend
-          />
-        </div>
-      )}
-      {withTime === 1 && (
-        <div className="jk-row left gap" style={{ width: 100 }}>
-          <Input
-            type="number"
-            value={(problem.endTimestamp - problem.startTimestamp) / (1000 * 60)}
-            onChange={v => {
-              setProblems(prevState => prevState.map(p => {
-                if (p.key === problem.key) {
-                  const value = {
-                    ...p.value,
-                    endTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(
-                        problem.startTimestamp,
-                        roundTimestamp(problem.startTimestamp + (v * 1000 * 60)),
-                      ),
-                    ),
-                  };
-                  return { ...p, value };
-                }
-                return p;
-              }));
-            }}
-            expand
-          />
-        </div>
-      )}
-      {withTime === 2 && (
-        <div className="jk-row left gap" style={{ width: 200 }}>
-          <InputDate
-            type="year-month-day-hours-minutes"
-            date={new Date(problem.endTimestamp)}
-            isSelected={(date) => (
-              {
-                day: date.isWithinInterval({
-                  start: new Date(problem.startTimestamp).startOfDay(),
-                  end: new Date(problem.endTimestamp).endOfDay(),
-                }),
-              }
-            )}
-            isDisabled={(date) => disableOutOfRange(date, new Date(problem.startTimestamp), contestEndDate)}
-            baseDate={new Date(problem.endTimestamp)}
-            onDatePick={(date) => {
-              setProblems(prevState => prevState.map(p => {
-                if (p.key === problem.key) {
-                  const value = {
-                    ...p.value,
-                    endTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(problem.startTimestamp, roundTimestamp(date.getTime())),
-                    ),
-                  };
-                  return { ...p, value };
-                }
-                return p;
-              }));
-            }}
-            twoLines
-            extend
-          />
-        </div>
-      )}
-      <div className="jk-row" style={{ width: 150 }}>
-        {problem.judge.name}
       </div>
+      {withPrerequisites && (
+        <div className="jk-row" style={{ width: 100 }}>
+          <div>
+            {problem.prerequisites?.map(prerequisite => (
+              <div className="jk-row gap tx-s">
+                <div
+                  style={{ color: contestProblems.find(p => p.index === prerequisite.problemIndex)?.color }}
+                  className="cursor-pointer"
+                >
+                  <BalloonIcon />
+                </div>
+                <div className="fw-bd">{contestProblems.find(p => p.index === prerequisite.problemIndex)?.index}</div>
+                {contestProblems.find(p => p.index === prerequisite.problemIndex)?.name}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {withMaxAcceptedUsers && (
+        <div className="jk-row" style={{ width: 60 }}>
+          <Input
+            type="number"
+            value={problem.maxAcceptedUsers}
+            expand
+            onChange={value => setProblemProp({ maxAcceptedUsers: +value || 0 })}
+          />
+        </div>
+      )}
       <div className="jk-row" style={{ width: 30 }}>
         <DeleteIcon
           className="cursor-pointer"
-          onClick={() => setProblems(prevState => (
-            prevState.filter(p => p.key !== problem.key)
-          ))}
+          onClick={() => {
+            setContest(prevState => {
+              const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+              for (const p of Object.values(prevState.problems)) {
+                if (p.key !== problem.key) {
+                  problems[p.key] = { ...p };
+                }
+              }
+              
+              return {
+                ...prevState,
+                problems,
+              };
+            });
+          }}
         />
       </div>
     </div>
@@ -256,21 +287,32 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
 };
 
 export const EditProblems = ({ contest, setContest }: EditContestProps) => {
-  
   let withTimeRestriction = false;
+  let withPrerequisites = false;
+  let withMaxAcceptedUsers = false;
+  let typePrerequisite = ContestProblemPrerequisiteType.INDIVIDUALLY;
+  let delayPrerequisites = 0;
   Object.values(contest.problems).forEach(problem => {
     if (problem.startTimestamp !== contest.settings.startTimestamp
       || problem.endTimestamp !== contest.settings.endTimestamp) {
       withTimeRestriction = true;
     }
-  });
-  const [ withTime, setWithTime ] = useState(withTimeRestriction ? 1 : 0);
-  const companyName = useUserStore(state => state.company.name);
-  useEffect(() => {
-    if (withTimeRestriction && withTime === 0) {
-      setWithTime(1);
+    if (problem.prerequisites?.length > 0) {
+      withPrerequisites = true;
     }
-  }, [ withTimeRestriction, withTime ]);
+    if (problem.maxAcceptedUsers > 0) {
+      withMaxAcceptedUsers = true;
+    }
+    if (problem.prerequisites?.[0]?.type === ContestProblemPrerequisiteType.CONTEST) {
+      typePrerequisite = ContestProblemPrerequisiteType.CONTEST;
+    } else {
+      typePrerequisite = ContestProblemPrerequisiteType.INDIVIDUALLY;
+    }
+    delayPrerequisites = problem.prerequisites?.[0]?.delay || 0;
+  });
+  const [ withTime, setWithTime ] = useStableState(withTimeRestriction ? 1 : 0);
+  
+  const companyName = useUserStore(state => state.company.name);
   const contestStartDate = useMemo(() => new Date(contest.settings.startTimestamp), [ contest.settings.startTimestamp ]);
   const contestEndDate = useMemo(() => new Date(contest.settings.endTimestamp), [ contest.settings.endTimestamp ]);
   const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDTOUI }) => {
@@ -288,6 +330,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           endTimestamp: problem.endTimestamp,
           tags: problem.tags,
           company: problem.company,
+          prerequisites: problem.prerequisites,
+          maxAcceptedUsers: problem.maxAcceptedUsers,
         };
         return {
           key: problem.key,
@@ -295,74 +339,165 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
   }, []);
-  const [ problems, setProblems ] = useState<SortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
+  const [ problems ] = useStableState<SortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
   useEffect(() => {
-    setProblems(prevState => prevState.map(problem => {
-      const value: ContestProblemBasicDataResponseDTO = { ...problem.value };
-      if (!withTime) {
-        value.startTimestamp = contest.settings.startTimestamp;
-        value.endTimestamp = contest.settings.endTimestamp;
-      }
-      return { ...problem, value };
-    }));
-  }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, withTime ]);
-  const lastContest = useRef(contest);
-  useEffect(() => {
-    if (JSON.stringify(contest) !== JSON.stringify(lastContest.current)) {
-      setProblems(parseProblems(contest.problems));
-      lastContest.current = contest;
-    }
-  }, [ contest, parseProblems ]);
-  useEffect(() => {
-    setContest(prevState => {
-      const problemsObj: { [key: string]: UpsertContestProblemDTOUI } = {};
-      problems.forEach((problem, index) => {
-        problemsObj[problem.value.key] = {
-          key: problem.value.key + '',
-          index: indexToLetters(index + 1),
-          judge: problem.value.judge,
-          name: problem.value.name,
-          points: problem.value.points,
-          color: problem.value.color,
-          startTimestamp: problem.value.startTimestamp,
-          endTimestamp: problem.value.endTimestamp,
-          tags: problem.value.tags,
-          company: problem.value.company,
+    if (!withTime) {
+      setContest(prevState => {
+        const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+        for (const problem of Object.values(prevState.problems)) {
+          problems[problem.key] = {
+            ...problem,
+            startTimestamp: contest.settings.startTimestamp,
+            endTimestamp: contest.settings.endTimestamp,
+          };
+        }
+        
+        return {
+          ...prevState,
+          problems,
         };
       });
-      return {
-        ...prevState,
-        problems: problemsObj,
-      };
-    });
-  }, [ problems, setContest ]);
+    }
+  }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, withTime ]);
+  const isTypePrerequisiteIndividually = typePrerequisite === ContestProblemPrerequisiteType.INDIVIDUALLY;
   
   return (
     <div className="jk-col top nowrap gap stretch bc-we jk-br-ie jk-pg-sm">
-      <div className="jk-col left gap stretch">
+      <div className={classNames('jk-row left gap', { disabled: withPrerequisites })}>
+        <div className="tt-se tx-xl"><T>problems with period time restriction</T></div>
+        <InputToggle
+          size="small"
+          checked={!!withTime}
+          disabled={withPrerequisites}
+          onChange={value => setWithTime(value ? 1 : 0)}
+          leftLabel={<T className={classNames('tt-se', { 'fw-bd': !withTime })}>no</T>}
+          rightLabel={<T className={classNames('tt-se', { 'fw-bd': !!withTime })}>yes</T>}
+        />
+      </div>
+      <div className="jk-col stretch">
         <div className="jk-row left gap">
-          <div className="fw-bd tt-se tx-xl cr-py"><T>problems with period time restriction</T></div>
+          <div className="tt-se tx-xl"><T>problems with prerequisite restriction</T></div>
           <InputToggle
             size="small"
-            checked={!!withTime}
-            onChange={value => setWithTime(value ? 1 : 0)}
-            leftLabel={<T className={classNames('tt-se', { 'fw-bd': !withTime })}>no</T>}
-            rightLabel={<T className={classNames('tt-se', { 'fw-bd': !!withTime })}>yes</T>}
+            checked={withPrerequisites}
+            onChange={value => {
+              setContest(prevState => {
+                const problems = Object.values(prevState.problems);
+                const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                for (const problem of problems) {
+                  if (value) {
+                    const preIndex = indexToLetters(lettersToIndex(problem.index) - 1);
+                    const preProblem = problems.find(p => p.index === preIndex);
+                    newProblems[problem.key] = {
+                      ...newProblems[problem.key],
+                      prerequisites: preProblem ? [ {
+                        problemIndex: preIndex,
+                        type: isTypePrerequisiteIndividually ? ContestProblemPrerequisiteType.INDIVIDUALLY : ContestProblemPrerequisiteType.CONTEST,
+                        delay: delayPrerequisites,
+                      } ] : [],
+                    };
+                  } else {
+                    newProblems[problem.key] = {
+                      ...newProblems[problem.key],
+                      prerequisites: [],
+                    };
+                  }
+                }
+                return {
+                  ...prevState,
+                  problems: newProblems,
+                };
+              });
+            }}
+            leftLabel={<T className={classNames('tt-se', { 'fw-bd': !withPrerequisites })}>no</T>}
+            rightLabel={<T className={classNames('tt-se', { 'fw-bd': withPrerequisites })}>yes</T>}
           />
         </div>
-        {!!withTime && (
-          <div className="jk-col  gap left stretch">
-            <div><T>Set a the time start relative to start of contest and the duration to resolve for each
-              problem</T>:
-            </div>
-            <InputToggle
-              checked={withTime === 1}
-              onChange={(value) => setWithTime(value ? 1 : 2)}
-              leftLabel={<T className={classNames('tt-se', { 'fw-bd': withTime === 2 })}>date</T>}
-              rightLabel={<T className={classNames('tt-se', { 'fw-bd': withTime === 1 })}>minutes</T>}
-            />
-          </div>
-        )}
+        <div className={classNames('jk-row left jk-pg-l', { disabled: !withPrerequisites })}>
+          <T className="tt-se">the requirements must be met</T>:&nbsp;
+          <InputToggle
+            size="small"
+            disabled={!withPrerequisites}
+            checked={isTypePrerequisiteIndividually}
+            onChange={value => {
+              setContest(prevState => {
+                const problems = Object.values(prevState.problems);
+                const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                for (const problem of problems) {
+                  newProblems[problem.key] = {
+                    ...newProblems[problem.key],
+                    prerequisites: newProblems[problem.key].prerequisites.map(prerequisite => ({
+                      ...prerequisite,
+                      type: value ? ContestProblemPrerequisiteType.INDIVIDUALLY : ContestProblemPrerequisiteType.CONTEST,
+                    })),
+                  };
+                }
+                return {
+                  ...prevState,
+                  problems: newProblems,
+                };
+              });
+            }}
+            leftLabel={
+              <T className={classNames('tt-se', { 'fw-bd': !isTypePrerequisiteIndividually })}>by any participant</T>
+            }
+            rightLabel={<T className={classNames('tt-se', { 'fw-bd': isTypePrerequisiteIndividually })}>individually
+              per user</T>}
+          />
+        </div>
+        <div className={classNames('jk-row left jk-pg-l', { disabled: !withPrerequisites })}>
+          <T className="tt-se">enable problem after</T>&nbsp;
+          <Input
+            size="auto"
+            disabled={!withPrerequisites}
+            value={delayPrerequisites / 1000}
+            onChange={value => {
+              setContest(prevState => {
+                const problems = Object.values(prevState.problems);
+                const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                for (const problem of problems) {
+                  newProblems[problem.key] = {
+                    ...newProblems[problem.key],
+                    prerequisites: newProblems[problem.key].prerequisites.map(prerequisite => ({
+                      ...prerequisite,
+                      delay: (+value * 1000) || 0,
+                    })),
+                  };
+                }
+                return {
+                  ...prevState,
+                  problems: newProblems,
+                };
+              });
+            }}
+          />&nbsp;
+          <T>seconds of meeting prerequisites</T>
+        </div>
+      </div>
+      <div className="jk-row left gap">
+        <div className="tt-se tx-xl"><T>problems with a maximum number of accepted submissions</T></div>
+        <InputToggle
+          size="small"
+          checked={withMaxAcceptedUsers}
+          onChange={value => {
+            setContest(prevState => {
+              const problems = Object.values(prevState.problems);
+              const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+              for (const problem of problems) {
+                newProblems[problem.key] = {
+                  ...newProblems[problem.key],
+                  maxAcceptedUsers: value ? 1 : 0,
+                };
+              }
+              return {
+                ...prevState,
+                problems: newProblems,
+              };
+            });
+          }}
+          leftLabel={<T className={classNames('tt-se', { 'fw-bd': !withMaxAcceptedUsers })}>no</T>}
+          rightLabel={<T className={classNames('tt-se', { 'fw-bd': withMaxAcceptedUsers })}>yes</T>}
+        />
       </div>
       <div className="jk-col stretch">
         <div className="jk-row left jk-table-inline-header">
@@ -374,25 +509,53 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             <div><T className="tt-se">id</T> <T className="tt-se">name</T></div>
           </div>
           <div className="jk-row" style={{ width: 40, color: '#164066' }}><BalloonIcon /></div>
-          <div className="jk-row fw-bd tt-se" style={{ width: 100 }}><T>points</T></div>
+          <div className="jk-row fw-bd tt-se" style={{ width: 100 }}><T className="tt-se">points</T></div>
           {!!withTime && (
             <>
-              <div className="jk-row fw-bd tt-se" style={{ width: withTime === 1 ? 100 : 200 }}>
-                <T>{withTime === 1 ? 'start minutes' : 'start date'}</T>
-              </div>
-              <div className="jk-row fw-bd tt-se" style={{ width: withTime === 1 ? 100 : 200 }}>
-                <T>{withTime === 1 ? 'duration minutes' : 'end date'}</T>
+              <div
+                className="jk-row fw-bd tt-se" style={{ width: 192 }}
+                data-tooltip-id="jk-tooltip"
+                data-tooltip-content="set a start and end date for resolving each problem"
+              >
+                <T className="tt-se">duration</T>
+                <InputToggle
+                  checked={withTime === 1}
+                  size="tiny"
+                  onChange={(value) => setWithTime(value ? 1 : 2)}
+                  leftLabel={<T className={classNames('tt-se tx-t fw-rr', { 'fw-bd': withTime === 2 })}>date</T>}
+                  rightLabel={<T className={classNames('tt-se tx-t fw-rr', { 'fw-bd': withTime === 1 })}>minutes</T>}
+                />
               </div>
             </>
           )}
-          <div className="jk-row fw-bd tt-se" style={{ width: 150 }}><T>judge</T></div>
+          {withPrerequisites && (
+            <div style={{ width: 100 }}>
+              <T className="tt-se">prerequisites</T>
+            </div>
+          )}
+          {withMaxAcceptedUsers && (
+            <div className="jk-row" style={{ width: 60 }}>
+              <T className="tt-se">max users</T>
+            </div>
+          )}
           <div style={{ width: 30 }} />
         </div>
         <div className="jk-col stretch">
           <SortableItems
             items={problems}
-            setItems={setProblems}
-            props={{ setProblems, withTime, contest, contestEndDate, contestStartDate, companyName }}
+            onChange={(items) => {
+              console.log({ items });
+            }}
+            props={{
+              setContest,
+              withTime,
+              contest,
+              contestEndDate,
+              contestStartDate,
+              companyName,
+              withPrerequisites,
+              withMaxAcceptedUsers,
+            }}
             Cmp={RowProblem}
           />
         </div>
@@ -416,24 +579,28 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                         ...PALLETE.CLAROS.filter(color => !problems.some(p => p.value.color === color.color)),
                       ];
                     }
-                    const value: ContestProblemBasicDataResponseDTO = {
-                      name: problem.name,
-                      index: '',
-                      key: problem.key,
-                      color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
-                      points: 1,
-                      judge: problem.judge,
-                      startTimestamp: contest.settings.startTimestamp,
-                      endTimestamp: contest.settings.endTimestamp,
-                      tags: problem.tags,
-                      company: problem.company,
-                    };
-                    setProblems(prevState => (
-                      [
+                    setContest(prevState => {
+                      const problems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                      problems[problem.key] = {
+                        name: problem.name,
+                        index: indexToLetters(Object.keys(problems).length + 1),
+                        key: problem.key,
+                        color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
+                        points: 1,
+                        judge: problem.judge,
+                        startTimestamp: contest.settings.startTimestamp,
+                        endTimestamp: contest.settings.endTimestamp,
+                        tags: problem.tags,
+                        company: problem.company,
+                        prerequisites: [],
+                        maxAcceptedUsers: 0,
+                      };
+                      
+                      return {
                         ...prevState,
-                        { key: problem.key, value },
-                      ]
-                    ));
+                        problems,
+                      };
+                    });
                   }
                 }}
               />

@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useMemo, usePreload, useUserStore } from 'hooks';
+import { useFetcher, useMemo, useUserStore } from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -53,7 +53,6 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
       getSubmissionMemoryHeader(),
     ];
   }, [ languages, problem.user.isManager ]);
-  const preload = usePreload();
   
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
@@ -73,9 +72,6 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
       name={QueryParam.MY_STATUS_TABLE}
       toRow={submission => submission}
       refreshInterval={60000}
-      onRecordRender={({ data, index }) => {
-        void preload(jukiApiManager.API_V1.submission.getData({ params: { id: data[index].submitId } }).url);
-      }}
     />
   );
 };

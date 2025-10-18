@@ -18,6 +18,7 @@ export {
   isProblemCrawledWebSocketResponseEventDTO,
   getDocumentAccess,
   cleanRequest,
+  isSubmissionsCrawlWebSocketResponseEventDTO,
 } from '@juki-team/commons';
 
 export {

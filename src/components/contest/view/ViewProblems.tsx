@@ -1,7 +1,6 @@
 'use client';
 
 import { jukiApiManager } from '@juki-team/base-ui/settings';
-import { isSubmissionsCrawlWebSocketResponseEventDTO } from '@juki-team/commons';
 import {
   ButtonLoader,
   CheckIcon,
@@ -14,13 +13,15 @@ import {
   TextHeadCell,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { authorizedRequest, cleanRequest, lettersToIndex } from 'helpers';
+import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
 import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketStore } from 'hooks';
 import React, { useCallback } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
+import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
+  ContestProblemBlockedByType,
   ContestTab,
   DataViewerHeadersType,
   ObjectIdType,
@@ -31,6 +32,7 @@ import {
   WebSocketActionEvent,
   WebSocketResponseEventDTO,
 } from 'types';
+import { ProblemRequisites } from './ProblemRequisites';
 
 interface ProblemNameFieldProps {
   problem: ContestDataResponseDTO['problems'][string],
@@ -82,7 +84,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
   }, []);
   
   return (
-    <Field className="jk-col nowrap">
+    <div className="jk-col nowrap">
       <Link
         href={jukiAppRoutes.JUDGE().contests.view({
           key: contestKey as string,
@@ -165,11 +167,14 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
           )}
         </ButtonLoader>
       )}
-    </Field>
+    </div>
   );
 };
 
-export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) => {
+export const ViewProblems = ({ contest, reloadContest }: {
+  contest: ContestDataResponseDTO,
+  reloadContest: KeyedMutator<any>
+}) => {
   
   const { problems, user, key: contestKey } = contest;
   const { isManager, isAdministrator } = user || {};
@@ -204,34 +209,36 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
     {
       head: <TextHeadCell text={<T>key</T>} />,
       index: 'id',
-      Field: ({ record: { judge: { key: judgeKey, isMain, name, isExternal }, key, externalUrl } }) => (
-        <FieldText
-          text={
-            isJudgeOrAdmin || contest.isEndless || contest.isPast
-              ? (
-                <Link
-                  href={isExternal
-                    ? externalUrl
-                    : isMain
-                      ? jukiAppRoutes.JUDGE().problems.view({ key })
-                      : jukiAppRoutes.JUDGE(`https://${judgeKey}.jukijudge.com`).problems.view({ key })
-                  }
-                  target="_blank"
-                >
-                  <div className="link tx-t fw-bd jk-col">
-                    {!isMain && <div>{name}</div>}
-                    <div>{key}&nbsp;<OpenInNewIcon size="tiny" /></div>
-                  </div>
-                </Link>
-              ) : (
-                <div className="tx-t fw-bd jk-col">
-                  {!isMain && <div>{name}</div>}
-                  <div>{key}</div>
-                </div>
-              )
-          }
-          label={<T>key</T>}
-        />
+      Field: ({
+                record: {
+                  judge: { key: judgeKey, isMain, name, isExternal },
+                  key,
+                  externalUrl,
+                },
+              }) => (
+        <Field className="jk-row">
+          {(isJudgeOrAdmin || contest.isEndless || contest.isPast) ? (
+            <Link
+              href={isExternal
+                ? externalUrl
+                : isMain
+                  ? jukiAppRoutes.JUDGE().problems.view({ key })
+                  : jukiAppRoutes.JUDGE(`https://${judgeKey}.jukijudge.com`).problems.view({ key })
+              }
+              target="_blank"
+            >
+              <div className="link tx-t fw-bd jk-col">
+                {!isMain && <div>{name}</div>}
+                <div>{key}&nbsp;<OpenInNewIcon size="tiny" /></div>
+              </div>
+            </Link>
+          ) : (
+            <div className="tx-t fw-bd jk-col">
+              {!isMain && <div>{name}</div>}
+              <div>{key}</div>
+            </div>
+          )}
+        </Field>
       ),
       sort: { compareFn: () => (recordA, recordB) => +recordB.key - +recordA.key },
       cardPosition: 'topRight',
@@ -241,7 +248,12 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
       head: <TextHeadCell text={<T>name</T>} />,
       index: 'name',
       Field: ({ record }) => (
-        <ProblemNameField problem={record} contestKey={contestKey} isJudgeOrAdmin={isJudgeOrAdmin} />
+        <Field className="jk-col nowrap gap">
+          {(isJudgeOrAdmin || record.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length === 0) && (
+            <ProblemNameField problem={record} contestKey={contestKey} isJudgeOrAdmin={isJudgeOrAdmin} />
+          )}
+          <ProblemRequisites problem={record} reloadContest={reloadContest} contest={contest} />
+        </Field>
       ),
       sort: { compareFn: () => (recordA, recordB) => recordB.name.localeCompare(recordA.name) },
       cardPosition: 'center',
@@ -281,9 +293,28 @@ export const ViewProblems = ({ contest }: { contest: ContestDataResponseDTO }) =
   
   return (
     <DataViewer<ContestDataResponseDTO['problems'][string]>
+      extraNodes={isJudgeOrAdmin ? [
+        <ButtonLoader
+          key="recalculate-prerequisites"
+          onClick={async (setLoaderStatus) => {
+            setLoaderStatus(Status.LOADING);
+            const { url, ...options } = jukiApiManager.API_V1.contest.recalculatePrerequisites({
+              params: {
+                key: contestKey,
+              },
+            });
+            const result = cleanRequest<ContentResponseType<{}>>(await authorizedRequest(url, options));
+            notifyResponse(result, setLoaderStatus);
+          }}
+          size="tiny"
+          type="light"
+        >
+          <T className="tt-se">recalculate prerequisites</T>
+        </ButtonLoader>,
+      ] : []}
       headers={columns}
       data={data}
-      rows={{ height: 70 }}
+      rows={{ height: 128 }}
       rowsView={viewPortSize !== 'sm'}
       name={QueryParam.CONTEST_PROBLEMS_TABLE + '-' + contest.key}
       getRecordStyle={({ data, index, isCard }) => {

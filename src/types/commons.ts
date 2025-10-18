@@ -29,6 +29,8 @@ export {
   EntityState,
   WebSocketActionEvent,
   CodeLanguage,
+  ContestProblemPrerequisiteType,
+  ContestProblemBlockedByType,
 } from '@juki-team/commons';
 
 export type {

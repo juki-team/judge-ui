@@ -21,14 +21,12 @@ export const CONTEST_DEFAULT = (owner: UserCompanyBasicInfoResponseDTO, initialC
     state: EntityState.RELEASED,
     owner,
     name: '',
-    description: `# \\textAlign=center Bienvenido
+    description: `# Bienvenido
 
-\\textAlign=center
 Este concurso esta enfocado para estudiantes de primer año de Informática o carreras afines.
 
 ## Contenido
 
-\\textAlign=justify
 En este concurso podrás encontrar problemas de Grafos y Estructura de Datos. Para tener un buen desempeño en el concurso necesitarás conocimientos en:
 
 * [Segment Tree](https://cp-algorithms.com/data_structures/segment_tree.html)

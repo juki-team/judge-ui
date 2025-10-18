@@ -1,61 +1,61 @@
 'use client';
 
 import {
+  isContestChangesWebSocketResponseEventDTO,
+  SubscribeContestChangesWebSocketEventDTO,
+} from '@juki-team/commons';
+import {
   ButtonLoader,
   ContentCopyIcon,
   contestAccessProps,
   EditIcon,
   EditViewMembers,
-  FirstLoginWrapper,
-  InfoIIcon,
   NavigateBeforeIcon,
   NavigateNextIcon,
   Popover,
-  ProblemView,
-  SpectatorInformation,
   T,
+  Timer,
   TwoContentLayout,
   ViewOverview,
   ViewProblems,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, cleanRequest, contestStateMap, isGlobalContest, toUpsertContestDTOUI } from 'helpers';
+import { authorizedRequest, contestStateMap, toUpsertContestDTOUI } from 'helpers';
 import {
   useEffect,
   useI18nStore,
-  useJukiNotification,
-  useJukiTask,
   useJukiUI,
   useMutate,
   useRouterStore,
   useTrackLastPath,
   useUserStore,
+  useWebsocketStore,
 } from 'hooks';
 import React from 'react';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
-  CodeLanguage,
-  ContentResponseType,
   ContestDataResponseDTO,
   ContestTab,
-  EntityState,
   LastPathKey,
-  ProblemTab,
+  ObjectIdType,
   ProfileSetting,
   Status,
   TabsType,
   UpsertContestDTOUI,
+  WebSocketActionEvent,
+  WebSocketResponseEventDTO,
 } from 'types';
 import { DocumentMembersButton } from '../../index';
 import { getContestTimeLiteral } from '../commons';
 import { ViewClarifications } from './ViewClarifications';
+import { ViewProblemContest } from './ViewProblemContest';
 import { ViewScoreboard } from './ViewScoreboard';
 import { ViewSubmissions } from './ViewSubmissions';
 
 export function ContestView({ contest, reloadContest }: {
   contest: ContestDataResponseDTO,
-  reloadContest: KeyedMutator<any>
+  reloadContest: KeyedMutator<any>,
 }) {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
@@ -67,10 +67,30 @@ export function ContestView({ contest, reloadContest }: {
   const { viewPortSize, components: { Link } } = useJukiUI();
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
-  const { listenSubmission } = useJukiTask();
   const mutate = useMutate();
-  const { addWarningNotification, notifyResponse } = useJukiNotification();
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
+  const websocket = useWebsocketStore(store => store.websocket);
+  const userSessionId = useUserStore(state => state.user.sessionId);
+  
+  useEffect(() => {
+    const event: SubscribeContestChangesWebSocketEventDTO = {
+      event: WebSocketActionEvent.SUBSCRIBE_CONTEST_CHANGES,
+      sessionId: userSessionId as ObjectIdType,
+      contestKey: contestKey,
+    };
+    const fun = (data: WebSocketResponseEventDTO) => {
+      if (isContestChangesWebSocketResponseEventDTO(data)) {
+        void mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/contest`, 'g'));
+        void mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
+      }
+    };
+    
+    void websocket.subscribe(event, fun);
+    
+    return () => {
+      websocket.unsubscribe(event, fun);
+    };
+  }, [ contestKey, userSessionId, websocket, reloadContest ]);
   
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
@@ -83,9 +103,7 @@ export function ContestView({ contest, reloadContest }: {
     void authorizedRequest(url, options);
   }, [ contest.key, userPreferredLanguage ]);
   
-  const {
-    user: { isAdministrator, isManager, isParticipant, isGuest, isSpectator },
-  } = contest;
+  const { user: { isAdministrator, isManager } } = contest;
   const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
   const statusLabel = contestStateMap[key].label;
   const tagBc = contestStateMap[key].bc;
@@ -112,7 +130,6 @@ export function ContestView({ contest, reloadContest }: {
   
   const canViewContest = isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless;
   
-  const isGlobal = isGlobalContest(contest.settings);
   if (canViewContest) {
     if (problemArrayIndex !== -1) {
       const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
@@ -144,130 +161,7 @@ export function ContestView({ contest, reloadContest }: {
           </div>
         ),
         body: (
-          <ProblemView
-            key="problem-view"
-            problem={{
-              ...problem,
-              user: {
-                isOwner: false,
-                isAdministrator: false,
-                isManager: false,
-                tried: false,
-                isSpectator: false,
-                solved: false,
-              },
-              state: EntityState.RELEASED,
-            }}
-            infoPlacement="name"
-            withoutDownloadButtons
-            codeEditorStoreKey={contest.key + '/' + problem.key}
-            codeEditorCenterButtons={({ files, currentFileName }) => {
-              const { source = '', language = CodeLanguage.TEXT } = files[currentFileName] || {};
-              const validSubmit = (
-                <ButtonLoader
-                  type="secondary"
-                  size="tiny"
-                  disabled={source === ''}
-                  onClick={async setLoaderStatus => {
-                    setLoaderStatus(Status.LOADING);
-                    let response;
-                    if (isGlobal) {
-                      const { url, ...options } = jukiApiManager.API_V1.problem.submit({
-                        params: {
-                          key: problem.key,
-                        }, body: { language: language as string, source },
-                      });
-                      response = cleanRequest<ContentResponseType<any>>(
-                        await authorizedRequest(url, options),
-                      );
-                    } else {
-                      const { url, ...options } = jukiApiManager.API_V1.contest.submit({
-                        params: {
-                          key: contest.key,
-                          problemKey: problem.key,
-                        }, body: { language: language as string, source },
-                      });
-                      response = cleanRequest<ContentResponseType<any>>(
-                        await authorizedRequest(url, options),
-                      );
-                    }
-                    
-                    if (notifyResponse(response, setLoaderStatus)) {
-                      if (isGlobal) {
-                        listenSubmission({
-                          id: response.content.submitId,
-                          problem: { name: problem.name },
-                        }, true);
-                        pushRoute(jukiAppRoutes.JUDGE().problems.view({
-                          key: problem.key,
-                          tab: ProblemTab.MY_SUBMISSIONS,
-                        }));
-                      } else {
-                        listenSubmission({
-                          id: response.content.submitId,
-                          problem: { name: problem.name },
-                          contest: { name: contest.name, problemIndex },
-                        }, true);
-                        pushRoute(jukiAppRoutes.JUDGE().contests.view({
-                          key: contestKey,
-                          tab: ContestTab.SUBMISSIONS,
-                          subTab: problemIndex,
-                        }));
-                        await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
-                      }
-                    }
-                  }}
-                >
-                  {(isAdministrator || isManager) && !isGlobal
-                    ? <T className="tt-se">submit as judge</T>
-                    : <T className="tt-se">submit</T>}
-                </ButtonLoader>
-              );
-              if (isAdministrator || isManager || isParticipant) {
-                return (
-                  <div className="jk-row gap">
-                    <FirstLoginWrapper>
-                      {validSubmit}
-                    </FirstLoginWrapper>
-                    <Link
-                      data-tooltip-id="jk-tooltip"
-                      data-tooltip-content="how does it work?"
-                      href="https://www.juki.app/docs?page=2&sub_page=2&focus=ef99389d-f48f-415f-b652-38cac0a065b8"
-                      target="_blank"
-                      className="cr-py"
-                    >
-                      <div className="jk-row">
-                        <InfoIIcon circle size="small" />
-                      </div>
-                    </Link>
-                  </div>
-                );
-              }
-              if (isGuest) {
-                return (
-                  <ButtonLoader
-                    type="secondary"
-                    size="tiny"
-                    onClick={() => {
-                      addWarningNotification(<T className="tt-se">to submit, first register</T>);
-                      pushRoute(jukiAppRoutes.JUDGE().contests.view({
-                        key: contestKey,
-                        tab: ContestTab.OVERVIEW,
-                        subTab: problemIndex,
-                      }));
-                    }}
-                  >
-                    <T className="tt-se">submit</T>
-                  </ButtonLoader>
-                );
-              }
-              if (isSpectator) {
-                return <SpectatorInformation />;
-              }
-              
-              return null;
-            }}
-          />
+          <ViewProblemContest problem={problem} contest={contest} reloadContest={reloadContest} />
         ),
       };
     } else {
@@ -278,7 +172,7 @@ export function ContestView({ contest, reloadContest }: {
             <T className="tt-ce ws-np">problems</T>
           </div>
         ),
-        body: <ViewProblems key="problems-view" contest={contest} />,
+        body: <ViewProblems key="problems-view" contest={contest} reloadContest={reloadContest} />,
       };
     }
     tabHeaders[ContestTab.SCOREBOARD] = {
@@ -445,8 +339,17 @@ export function ContestView({ contest, reloadContest }: {
           placement="bottom"
           popoverClassName="bc-we jk-br-ie elevation-1 jk-pg-xsm"
         >
-          <div className={`jk-tag tt-ue tx-s ${tagBc} screen md lg`}>
-            <T className="ws-np">{statusLabel}</T>
+          <div className={`jk-tag tx-s cr-we ${tagBc} screen md lg jk-row`}>
+            <T className="ws-np tt-se">{statusLabel}</T>,&nbsp;
+            <Timer
+              currentTimestamp={Date.now() - contest.settings.startTimestamp}
+              interval={1000}
+              type="weeks-days-hours-minutes"
+              abbreviated
+              ignoreLeadingZeros
+              ignoreTrailingZeros
+              literal
+            />
           </div>
         </Popover>
       </div>

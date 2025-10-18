@@ -106,6 +106,8 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
       endTimestamp: problem.endTimestamp,
       tags: problem.tags,
       company: problem.company,
+      prerequisites: problem.prerequisites,
+      maxAcceptedUsers: problem.maxAcceptedUsers,
     };
   });
   
@@ -132,6 +134,8 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
       key: problem.key,
       points: problem.points,
       startTimestamp: problem.startTimestamp,
+      prerequisites: problem.prerequisites?.map(prerequisite => ({ ...prerequisite })) || [],
+      maxAcceptedUsers: problem.maxAcceptedUsers || 0,
     };
   }
   

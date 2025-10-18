@@ -131,7 +131,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
       extraNodes.push(<Button
           data-tooltip-id="jk-tooltip"
           data-tooltip-content="only submissions that are not in a contest will be judged"
-          data-tooltip-t-class-name="tt-se"
           size="small"
           icon={<AutorenewIcon />}
           onClick={() => setIsOpenRejudgeModal(true)}

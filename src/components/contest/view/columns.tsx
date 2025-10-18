@@ -113,13 +113,20 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
                 ${problemData.isFirstAccepted ? `<div class="fw-bd cr-ss tx-s"><span class="tt-se">${t('first accepted')}</span></div>` : ''}
               </div>
             `}
-            style={{ color: problem.color, '--balloon-color': problem.color } as CSSProperties}
+            style={{
+              color: problem.color,
+              '--balloon-color': problem.color,
+              opacity: !!problem.maxAcceptedUsers && problemData && problemData?.indexAccepted >= problem.maxAcceptedUsers ? 0.2 : undefined,
+            } as CSSProperties}
             className={classNames({ 'is-first-accepted': problemData.isFirstAccepted })}
           >
             <BalloonIcon percent={(problemData.points / problem.points) * 100} />
           </div>
         )}
-        <div className="jk-row nowrap">
+        <div
+          className="jk-row nowrap"
+          style={{ opacity: !!problem.maxAcceptedUsers && problemData && problemData?.indexAccepted >= problem.maxAcceptedUsers ? 0.2 : undefined }}
+        >
           <div className="tx-xs">{problemData?.attempts || '-'}</div>
           {!isEndless && (
             <>

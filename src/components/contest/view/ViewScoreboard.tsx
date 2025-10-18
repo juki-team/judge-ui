@@ -136,9 +136,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
     setLoaderStatusRef,
     reload,
     reloadRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
-    () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen), { refreshInterval: 60000 },
-  );
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen));
   useEffect(() => {
     reload();
   }, [ reload, unfrozen ]);
