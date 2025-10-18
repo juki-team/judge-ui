@@ -115,7 +115,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 type="secondary"
                 expand
               >
-                <T>{userIsLogged ? 'enroll' : 'sign in'}</T>
+                <T className="tt-se">{userIsLogged ? 'enroll' : 'sign in'}</T>
               </ButtonLoader>
             </div>
           </div>

@@ -22,6 +22,7 @@ import {
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, contestStateMap, toUpsertContestDTOUI } from 'helpers';
 import {
+  useCallback,
   useEffect,
   useI18nStore,
   useJukiUI,
@@ -31,9 +32,7 @@ import {
   useUserStore,
   useWebsocketStore,
 } from 'hooks';
-import React from 'react';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
-import { KeyedMutator } from 'swr';
 import {
   ContestDataResponseDTO,
   ContestTab,
@@ -53,10 +52,7 @@ import { ViewProblemContest } from './ViewProblemContest';
 import { ViewScoreboard } from './ViewScoreboard';
 import { ViewSubmissions } from './ViewSubmissions';
 
-export function ContestView({ contest, reloadContest }: {
-  contest: ContestDataResponseDTO,
-  reloadContest: KeyedMutator<any>,
-}) {
+export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const pushRoute = useRouterStore(state => state.pushRoute);
@@ -72,6 +68,12 @@ export function ContestView({ contest, reloadContest }: {
   const websocket = useWebsocketStore(store => store.websocket);
   const userSessionId = useUserStore(state => state.user.sessionId);
   
+  const reloadContest = useCallback(async () => {
+    console.info('reloading all contest');
+    await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/contest`, 'g'));
+    await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
+  }, [ mutate ]);
+  
   useEffect(() => {
     const event: SubscribeContestChangesWebSocketEventDTO = {
       event: WebSocketActionEvent.SUBSCRIBE_CONTEST_CHANGES,
@@ -80,8 +82,7 @@ export function ContestView({ contest, reloadContest }: {
     };
     const fun = (data: WebSocketResponseEventDTO) => {
       if (isContestChangesWebSocketResponseEventDTO(data)) {
-        void mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/contest`, 'g'));
-        void mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
+        void reloadContest();
       }
     };
     
@@ -341,15 +342,31 @@ export function ContestView({ contest, reloadContest }: {
         >
           <div className={`jk-tag tx-s cr-we ${tagBc} screen md lg jk-row`}>
             <T className="ws-np tt-se">{statusLabel}</T>,&nbsp;
-            <Timer
-              currentTimestamp={Date.now() - contest.settings.startTimestamp}
-              interval={1000}
-              type="weeks-days-hours-minutes"
-              abbreviated
-              ignoreLeadingZeros
-              ignoreTrailingZeros
-              literal
-            />
+            {Date.now() - contest.settings.startTimestamp < 0
+              ? (
+                <Timer
+                  currentTimestamp={contest.settings.startTimestamp - Date.now()}
+                  interval={-1000}
+                  type="weeks-days-hours-minutes-seconds"
+                  abbreviated
+                  ignoreLeadingZeros
+                  ignoreTrailingZeros
+                  literal
+                  onTimeout={reloadContest}
+                />
+              ) : (
+                <Timer
+                  currentTimestamp={Date.now() - contest.settings.startTimestamp}
+                  interval={1000}
+                  type="weeks-days-hours-minutes-seconds"
+                  abbreviated
+                  ignoreLeadingZeros
+                  ignoreTrailingZeros
+                  literal
+                  onTimeout={reloadContest}
+                />
+              )}
+          
           </div>
         </Popover>
       </div>

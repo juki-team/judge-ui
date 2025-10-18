@@ -67,8 +67,8 @@ export default function ContestViewPage({ contestKey }: { contestKey: string }) 
         </TwoContentLayout>
       }
     >
-      {({ data: { content: contest }, mutate }) => {
-        return <ContestView contest={contest} reloadContest={mutate} />;
+      {({ data: { content: contest } }) => {
+        return <ContestView contest={contest} />;
       }}
     </FetcherLayer>
   );

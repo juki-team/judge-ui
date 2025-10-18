@@ -114,8 +114,8 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
           {block.type === ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED && (
             <div
               className={classNames('jk-row br-hl jk-br-ie jk-pg-xsm tx-t', {
-                'bc-sl': problem.myIndexAccepted < problem.maxAcceptedUsers,
-                'bc-wl': !(problem.myIndexAccepted < problem.maxAcceptedUsers),
+                'bc-sl': problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers,
+                'bc-wl': !(problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers),
               })}
             >
               <T className="tt-se">max accepted submissions achieved</T>:&nbsp;
