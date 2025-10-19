@@ -33,6 +33,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
                 interval={0}
                 type="weeks-days-hours-minutes-seconds"
                 ignoreLeadingZeros
+                ignoreTrailingZeros
                 literal
                 abbreviated
               />
@@ -46,6 +47,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
                 interval={0}
                 type="weeks-days-hours-minutes-seconds"
                 ignoreLeadingZeros
+                ignoreTrailingZeros
                 literal
                 abbreviated
               />
@@ -86,13 +88,13 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
               <T className="tt-se">problem will be released in</T>&nbsp;
               <Timer
                 currentTimestamp={startTimestamp - Date.now()}
-                interval={-1000}
+                interval={-100}
                 ignoreLeadingZeros
                 ignoreTrailingZeros
-                type="weeks-days-hours-minutes-seconds"
+                type="weeks-days-hours-minutes-seconds-milliseconds"
                 literal
                 abbreviated
-                onTimeout={() => reloadContest()}
+                onTimeout={reloadContest}
               />
             </div>
           )}
@@ -107,7 +109,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
                 type="weeks-days-hours-minutes"
                 literal
                 abbreviated
-                onTimeout={() => reloadContest()}
+                onTimeout={reloadContest}
               />
             </div>
           )}

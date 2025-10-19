@@ -1,32 +1,26 @@
-import { Portal, T } from 'components';
-import { contestStateMap } from 'helpers';
+'use client';
+
+import { Portal } from 'components';
 import { useJukiUI, useResizeDetector, useUserStore } from 'hooks';
 import { PropsWithChildren } from 'react';
 import { ContestDataResponseDTO } from 'types';
-import { getContestTimeLiteral } from '../commons';
+import { ContestTimeTimer } from './ContestTimeTimer';
 
-export const FullScreenScoreboard = ({ contest, children }: PropsWithChildren<{ contest: ContestDataResponseDTO }>) => {
+export const FullScreenScoreboard = ({ contest, children, reloadContest }: PropsWithChildren<{
+  contest: ContestDataResponseDTO,
+  reloadContest: () => Promise<void>
+}>) => {
   
   const { viewPortSize, components: { Image } } = useJukiUI();
   const companyName = useUserStore(state => state.company.name);
   const companyImageUrl = useUserStore(state => state.company.imageUrl);
-  
-  const literal = getContestTimeLiteral(contest);
-  const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
-  const statusLabel = contestStateMap[key].label;
-  const tagBc = contestStateMap[key].bc;
-  const allLiteralLabel = contest.isEndless
-    ? <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-      <T>{statusLabel}</T></div>
-    : <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-      <T>{statusLabel}</T>,&nbsp;{literal}</div>;
   
   const { height = 0, ref } = useResizeDetector();
   
   return (
     <Portal>
       <div className="jk-overlay jk-overlay-backdrop">
-        <div className="jk-full-screen-overlay elevation-1 jk-br-ie ow-hn jk-col stretch top nowrap">
+        <div className="jk-full-screen-overlay elevation-1 ow-hn jk-col stretch top nowrap wh-100 ht-100">
           <div className="jk-col stretch" ref={ref}>
             <div className="jk-row bc-pd jk-pg-xsm">
               <Image
@@ -49,7 +43,9 @@ export const FullScreenScoreboard = ({ contest, children }: PropsWithChildren<{ 
                 {contest.name}
               </h2>
             </div>
-            <div className="jk-row extend jk-pg-sm-rl">{allLiteralLabel}</div>
+            <div className="jk-row extend jk-pg-sm-rl">
+              <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
+            </div>
           </div>
           <div
             className="jk-pg-sm-rl"

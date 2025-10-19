@@ -20,10 +20,13 @@ import {
 import { FullScreenScoreboard } from './FullScreenScoreboard';
 import { ScoreboardResponseDTOFocus } from './types';
 
-export const ViewDynamicScoreboard = ({ contest, onClose }: {
+interface ViewDynamicScoreboardProps {
   contest: ContestDataResponseDTO,
   onClose: () => void,
-}) => {
+  reloadContest: () => Promise<void>,
+}
+
+export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewDynamicScoreboardProps) => {
   
   const contestKey = contest.key;
   const { viewPortSize, components: { Link } } = useJukiUI();
@@ -149,7 +152,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose }: {
   
   if (fullscreen) {
     return (
-      <FullScreenScoreboard contest={contest}>
+      <FullScreenScoreboard contest={contest} reloadContest={reloadContest}>
         {score}
       </FullScreenScoreboard>
     );

@@ -39,7 +39,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
   contestEndDate: Date,
   contestStartDate: Date,
   companyName: string
-}> = ({ item: { value: problem }, style, listeners, attributes, setNodeRef, isDragging, index, props }) => {
+}> = ({ item: { value: problem }, style, listeners, attributes, setNodeRef, isDragging, props }) => {
   
   const {
     setContest,
@@ -88,7 +88,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
         </div>
       </div>
       <div className="jk-row" style={{ width: 40 }}>
-        {indexToLetters(index + 1)}
+        {problem.index}
       </div>
       <div className="jk-col center gap stretch" style={{ flex: 1 }}>
         <div className="jk-row gap left">
@@ -318,9 +318,9 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDTOUI }) => {
     return Object.values(problems)
       .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
-      .map((problem) => {
+      .map((problem, index) => {
         const value: ContestProblemBasicDataResponseDTO = {
-          index: problem.index,
+          index: indexToLetters(index + 1),
           key: problem.key,
           judge: problem.judge,
           name: problem.name,
@@ -360,6 +360,47 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     }
   }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, withTime, setContest ]);
   const isTypePrerequisiteIndividually = typePrerequisite === ContestProblemPrerequisiteType.INDIVIDUALLY;
+  const fixOrder = useCallback((problems: UpsertContestDTOUI['problems']) => {
+    const newProblems = Object.values(problems)
+      .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
+      .map((problem, index, problems) => {
+        const problemIndex = indexToLetters(index + 1);
+        const preIndex = indexToLetters(index);
+        const preProblem = problems[index];
+        
+        const prerequisites = preProblem && index > 0 ? [ {
+          problemIndex: preIndex,
+          type: isTypePrerequisiteIndividually ? ContestProblemPrerequisiteType.INDIVIDUALLY : ContestProblemPrerequisiteType.CONTEST,
+          delay: delayPrerequisites,
+        } ] : [];
+        
+        const value: ContestProblemBasicDataResponseDTO = {
+          index: problemIndex,
+          key: problem.key,
+          judge: problem.judge,
+          name: problem.name,
+          points: problem.points,
+          color: problem.color,
+          startTimestamp: problem.startTimestamp,
+          endTimestamp: problem.endTimestamp,
+          tags: problem.tags,
+          company: problem.company,
+          prerequisites,
+          maxAcceptedUsers: problem.maxAcceptedUsers,
+        };
+        return value;
+      });
+    const response: UpsertContestDTOUI['problems'] = {};
+    for (const problem of newProblems) {
+      response[problem.key] = problem;
+    }
+    
+    return response;
+  }, [ delayPrerequisites, isTypePrerequisiteIndividually ]);
+  
+  useEffect(() => {
+    setContest(prevState => ({ ...prevState, problems: fixOrder(prevState.problems) }));
+  }, [ Object.keys(contest.problems).length, fixOrder, setContest ]);
   
   return (
     <div className="jk-col top nowrap gap stretch bc-we jk-br-ie jk-pg-sm">
@@ -545,6 +586,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             items={problems}
             onChange={(items) => {
               console.log({ items });
+              setContest({ ...contest, problems: fixOrder(contest.problems) });
             }}
             props={{
               setContest,

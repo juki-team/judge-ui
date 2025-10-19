@@ -12,15 +12,13 @@ import {
   EditViewMembers,
   NavigateBeforeIcon,
   NavigateNextIcon,
-  Popover,
   T,
-  Timer,
   TwoContentLayout,
   ViewOverview,
   ViewProblems,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, contestStateMap, toUpsertContestDTOUI } from 'helpers';
+import { authorizedRequest, toUpsertContestDTOUI } from 'helpers';
 import {
   useCallback,
   useEffect,
@@ -28,7 +26,6 @@ import {
   useJukiUI,
   useMutate,
   useRouterStore,
-  useTrackLastPath,
   useUserStore,
   useWebsocketStore,
 } from 'hooks';
@@ -36,7 +33,6 @@ import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
   ContestDataResponseDTO,
   ContestTab,
-  LastPathKey,
   ObjectIdType,
   ProfileSetting,
   Status,
@@ -46,7 +42,7 @@ import {
   WebSocketResponseEventDTO,
 } from 'types';
 import { DocumentMembersButton } from '../../index';
-import { getContestTimeLiteral } from '../commons';
+import { ContestTimeTimer } from './ContestTimeTimer';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewEvents } from './ViewEvents';
 import { ViewProblemContest } from './ViewProblemContest';
@@ -55,7 +51,6 @@ import { ViewSubmissions } from './ViewSubmissions';
 
 export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   
-  useTrackLastPath(LastPathKey.SECTION_CONTEST);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const searchParams = useRouterStore(state => state.searchParams);
   const contestKey = contest.key;
@@ -106,16 +101,6 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   }, [ contest.key, userPreferredLanguage ]);
   
   const { user: { isAdministrator, isManager } } = contest;
-  const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
-  const statusLabel = contestStateMap[key].label;
-  const tagBc = contestStateMap[key].bc;
-  const literal = getContestTimeLiteral(contest);
-  
-  const allLiteralLabel = contest.isEndless
-    ? <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-      <T>{statusLabel}</T></div>
-    : <div className={`jk-row center extend nowrap jk-tag ${tagBc}`}>
-      <T>{statusLabel}</T>,&nbsp;{literal}</div>;
   
   const tabHeaders: TabsType<ContestTab> = {
     [ContestTab.OVERVIEW]: {
@@ -180,7 +165,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
     tabHeaders[ContestTab.SCOREBOARD] = {
       key: ContestTab.SCOREBOARD,
       header: <T className="tt-ce ws-np">scoreboard</T>,
-      body: <ViewScoreboard key="scoreboard" contest={contest} mutate={reloadContest} />,
+      body: <ViewScoreboard key="scoreboard" contest={contest} reloadContest={reloadContest} />,
     };
   }
   
@@ -220,13 +205,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   const extraNodes = [];
   
   if (viewPortSize === 'hg') {
-    extraNodes.push(
-      <div className={`jk-row nowrap jk-tag ${tagBc}`} key="status-label">
-        {contest.isEndless
-          ? <T className="ws-np">{statusLabel}</T>
-          : <><T className="ws-np">{statusLabel}</T>,&nbsp;{literal}</>}
-      </div>,
-    );
+    extraNodes.push(<ContestTimeTimer contest={contest} reloadContest={reloadContest} />);
   }
   
   if (userCanCreateContest && (contest.isPast || contest.user.isAdministrator || contest.user.isManager)) {
@@ -238,7 +217,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
           const { name, ...parsedContest } = toUpsertContestDTOUI(contest);
           localStorage.setItem(LS_INITIAL_CONTEST_KEY, JSON.stringify({
             ...parsedContest,
-            key: `${key}-${t('copy')}`,
+            key: `${contest.key}-${t('copy')}`,
             name: `${name} (${t('COPY')})`,
           }));
           pushRoute(jukiAppRoutes.JUDGE().contests.new());
@@ -343,42 +322,13 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
         >
           {contest.name}
         </h2>
-        <Popover
-          content={<div>{literal}</div>}
-          placement="bottom"
-          popoverClassName="bc-we jk-br-ie elevation-1 jk-pg-xsm"
-        >
-          <div className={`jk-tag tx-s cr-we ${tagBc} screen md lg jk-row`}>
-            <T className="ws-np tt-se">{statusLabel}</T>,&nbsp;
-            {Date.now() - contest.settings.startTimestamp < 0
-              ? (
-                <Timer
-                  currentTimestamp={contest.settings.startTimestamp - Date.now()}
-                  interval={-1000}
-                  type="weeks-days-hours-minutes-seconds"
-                  abbreviated
-                  ignoreLeadingZeros
-                  ignoreTrailingZeros
-                  literal
-                  onTimeout={reloadContest}
-                />
-              ) : (
-                <Timer
-                  currentTimestamp={Date.now() - contest.settings.startTimestamp}
-                  interval={1000}
-                  type="weeks-days-hours-minutes-seconds"
-                  abbreviated
-                  ignoreLeadingZeros
-                  ignoreTrailingZeros
-                  literal
-                  onTimeout={reloadContest}
-                />
-              )}
-          
-          </div>
-        </Popover>
+        {viewPortSize === 'md' || viewPortSize === 'lg' && (
+          <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
+        )}
       </div>
-      <div className="screen sm jk-row extend">{allLiteralLabel}</div>
+      {viewPortSize === 'sm' && (
+        <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
+      )}
     </TwoContentLayout>
   );
 }

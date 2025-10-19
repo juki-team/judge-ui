@@ -22,7 +22,6 @@ import {
   ContestDataResponseDTO,
   DataViewerHeadersType,
   HTTPMethod,
-  KeyedMutator,
   QueryParam,
   ScoreboardResponseDTO,
   Status,
@@ -105,7 +104,12 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
   );
 };
 
-export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataResponseDTO, mutate: KeyedMutator<any> }) => {
+interface ViewScoreboardProps {
+  contest: ContestDataResponseDTO,
+  reloadContest: () => Promise<void>,
+}
+
+export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) => {
   
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
@@ -197,7 +201,7 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
                   { method: HTTPMethod.POST },
                 ),
               );
-              await mutate();
+              await reloadContest();
               notifyResponse(response, setLoaderStatus);
             }}
             key="unlock"
@@ -255,19 +259,19 @@ export const ViewScoreboard = ({ contest, mutate }: { contest: ContestDataRespon
       reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, mutate, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);
+  ), [ columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, notifyResponse, reload, reloadContest, reloadRef, request, setLoaderStatusRef, unfrozen ]);
   const onClose = useCallback(() => setDynamic(false), []);
   
   if (fullscreen) {
     return (
-      <FullScreenScoreboard contest={contest}>
+      <FullScreenScoreboard contest={contest} reloadContest={reloadContest}>
         {score}
       </FullScreenScoreboard>
     );
   }
   
   if (dynamic) {
-    return <ViewDynamicScoreboard contest={contest} onClose={onClose} />;
+    return <ViewDynamicScoreboard contest={contest} onClose={onClose} reloadContest={reloadContest} />;
   }
   
   return score;

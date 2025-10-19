@@ -41,4 +41,6 @@ export {
   JUKI_METADATA,
   MONTH_NAMES,
   CODE_LANGUAGE,
+  ONE_MINUTE,
+  ONE_SECOND,
 } from '@juki-team/commons';
