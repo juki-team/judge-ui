@@ -26,7 +26,7 @@ export const NotificationWarningModal = () => {
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <div className="jk-pg jk-col gap">
         <h3><T className="tt-se">sorry, the code editor and judging are down</T></h3>
-        <T className="tt-se">a large portion of AWS services are on AWS us-east-1, and us-east-1 is down</T>
+        <T className="tt-se">a large portion of Juki App services are on AWS us-east-1, and us-east-1 is down</T>
         <div className="image-slider">
           <button className="slider-btn left" onClick={prevImage}>
             ◀
