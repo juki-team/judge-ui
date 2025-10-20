@@ -11,16 +11,17 @@ import {
   T,
   UserPreviewModal,
 } from 'components';
-import { JUKI_APP_COMPANY_KEY, JUKI_SOCKET_BASE_URL, NODE_ENV, ROUTES } from 'config/constants';
-import { useJukiUI, usePreloadComponents, useUserStore, useUserTrack, useWebsocketStore } from 'hooks';
+import { JUKI_APP_COMPANY_KEY, NODE_ENV, ROUTES } from 'config/constants';
+import { useJukiUI, usePreloadComponents, useUserStore, useUserTrack } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
-import React, { Children, PropsWithChildren, useEffect } from 'react';
+import React, { Children, PropsWithChildren } from 'react';
 import { UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
+import { NotificationWarningModal } from './NotificationWarningModal';
 
 const SponsoredByTag = () => {
   
@@ -54,12 +55,6 @@ const UserTrack = () => {
 };
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
-  
-  const websocket = useWebsocketStore(store => store.websocket);
-  
-  useEffect(() => {
-    websocket.setSocketServiceUrl(JUKI_SOCKET_BASE_URL);
-  }, [ websocket ]);
   
   const { isLoadingRoute, push, replace, refresh } = useRouter();
   const routeParams = useParams();
@@ -105,7 +100,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <UserPreviewModal key="user-preview-modal" />
         <SubmissionModal key="submission-modal" />
-        {/*<JukiSocketAlert />*/}
+        <NotificationWarningModal />
       </JukiProviders>
     </SWRConfig>
   );

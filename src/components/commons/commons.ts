@@ -95,7 +95,6 @@ export {
   getSubmissionRejudgeHeader,
   getSubmissionNicknameHeader,
   NewVersionAvailable,
-  JukiSocketAlert,
   SubmissionModal,
   JukiI18nProvider,
   UserViewLayout,

@@ -14,8 +14,8 @@ import {
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketStore } from 'hooks';
-import React, { useCallback } from 'react';
+import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketSub } from 'hooks';
+import React from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
@@ -29,8 +29,7 @@ import {
   Status,
   SubmissionRunStatus,
   SubscribeSubmissionsCrawlWebSocketEventDTO,
-  WebSocketActionEvent,
-  WebSocketResponseEventDTO,
+  WebSocketSubscriptionEvent,
 } from 'types';
 import { ProblemRequisites } from './ProblemRequisites';
 
@@ -44,7 +43,6 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
   
   const { components: { Link } } = useJukiUI();
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
-  const websocket = useWebsocketStore(store => store.websocket);
   const userSessionId = useUserStore(state => state.user.sessionId);
   const [ dataCrawled, setDataCrawled ] = useState<{
     [key: string]: { submitId: string, isNewSubmission: boolean }[]
@@ -58,13 +56,14 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
   
   const event: SubscribeSubmissionsCrawlWebSocketEventDTO = useMemo(() => ({
-    event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
     sessionId: userSessionId as ObjectIdType,
     contestKey,
     problemKeys: problem.key,
   }), [ contestKey, problem.key, userSessionId ]);
   
-  const fun = useCallback((data: WebSocketResponseEventDTO) => {
+  useWebsocketSub(event, (message) => {
+    const data = message;
     if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
       if (data.content.submitId) {
         setDataCrawled(prevState => ({
@@ -81,7 +80,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
         setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
       }
     }
-  }, []);
+  });
   
   return (
     <div className="jk-col nowrap">
@@ -129,8 +128,6 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
         <ButtonLoader
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            websocket.unsubscribe(event, fun);
-            websocket.subscribe(event, fun);
             setDataCrawled({});
             setSubmissionsCount(0);
             const { url, ...options } = jukiApiManager.API_V1.contest.problem.retrieve({

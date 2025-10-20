@@ -27,10 +27,10 @@ export {
   EntityAccess,
   EntityMembersRank,
   EntityState,
-  WebSocketActionEvent,
   CodeLanguage,
   ContestProblemPrerequisiteType,
   ContestProblemBlockedByType,
+  WebSocketSubscriptionEvent,
 } from '@juki-team/commons';
 
 export type {
@@ -95,6 +95,7 @@ export type {
   WebSocketResponseEventDTO,
   SubscribeProblemCrawledWebSocketEventDTO,
   SubscribeSubmissionsCrawlWebSocketEventDTO,
+  SubscribeContestChangesWebSocketEventDTO,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';

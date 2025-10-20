@@ -1,10 +1,6 @@
 'use client';
 
 import {
-  isContestChangesWebSocketResponseEventDTO,
-  SubscribeContestChangesWebSocketEventDTO,
-} from '@juki-team/commons';
-import {
   ButtonLoader,
   ContentCopyIcon,
   contestAccessProps,
@@ -18,7 +14,7 @@ import {
   ViewProblems,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, toUpsertContestDTOUI } from 'helpers';
+import { authorizedRequest, isContestChangesWebSocketResponseEventDTO, toUpsertContestDTOUI } from 'helpers';
 import {
   useCallback,
   useEffect,
@@ -27,19 +23,19 @@ import {
   useMutate,
   useRouterStore,
   useUserStore,
-  useWebsocketStore,
+  useWebsocketSub,
 } from 'hooks';
-import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
+import { JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
   ContestDataResponseDTO,
   ContestTab,
   ObjectIdType,
   ProfileSetting,
   Status,
+  SubscribeContestChangesWebSocketEventDTO,
   TabsType,
   UpsertContestDTOUI,
-  WebSocketActionEvent,
-  WebSocketResponseEventDTO,
+  WebSocketSubscriptionEvent,
 } from 'types';
 import { DocumentMembersButton } from '../../index';
 import { ContestTimeTimer } from './ContestTimeTimer';
@@ -61,33 +57,25 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   const t = useI18nStore(state => state.i18n.t);
   const mutate = useMutate();
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
-  const websocket = useWebsocketStore(store => store.websocket);
   const userSessionId = useUserStore(state => state.user.sessionId);
   
   const reloadContest = useCallback(async () => {
     console.info('reloading all contest');
-    await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/contest`, 'g'));
-    await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
+    await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`, 'g'));
+    await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
   }, [ mutate ]);
   
-  useEffect(() => {
-    const event: SubscribeContestChangesWebSocketEventDTO = {
-      event: WebSocketActionEvent.SUBSCRIBE_CONTEST_CHANGES,
-      sessionId: userSessionId as ObjectIdType,
-      contestKey: contestKey,
-    };
-    const fun = (data: WebSocketResponseEventDTO) => {
-      if (isContestChangesWebSocketResponseEventDTO(data)) {
-        void reloadContest();
-      }
-    };
-    
-    void websocket.subscribe(event, fun);
-    
-    return () => {
-      websocket.unsubscribe(event, fun);
-    };
-  }, [ contestKey, userSessionId, websocket, reloadContest, mutate ]);
+  const event: SubscribeContestChangesWebSocketEventDTO = {
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
+    sessionId: userSessionId as ObjectIdType,
+    contestKey: contestKey,
+  };
+  useWebsocketSub(event, (message) => {
+    const data = message.data;
+    if (isContestChangesWebSocketResponseEventDTO(data)) {
+      void reloadContest();
+    }
+  });
   
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({

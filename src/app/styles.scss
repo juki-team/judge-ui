@@ -193,3 +193,56 @@ html {
   width: 100% !important;
   height: 100% !important;
 }
+
+//
+.image-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.slider-image {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease-in-out;
+}
+
+.slider-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #333333;
+  padding: 0.5rem;
+  user-select: none;
+}
+
+.slider-btn:hover {
+  color: #007BFF;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  margin: 0 5px;
+  background-color: #BBBBBB;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #333333;
+}
+
+//

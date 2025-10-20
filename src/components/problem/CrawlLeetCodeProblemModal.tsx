@@ -3,8 +3,8 @@
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isProblemCrawledWebSocketResponseEventDTO } from 'helpers';
-import { useJukiNotification, useRouterStore, useUserStore, useWebsocketStore } from 'hooks';
-import { useEffect, useState } from 'react';
+import { useJukiNotification, useRouterStore, useUserStore, useWebsocketSub } from 'hooks';
+import { useState } from 'react';
 import {
   BasicModalProps,
   ContentResponseType,
@@ -12,8 +12,7 @@ import {
   ObjectIdType,
   Status,
   SubscribeProblemCrawledWebSocketEventDTO,
-  WebSocketActionEvent,
-  WebSocketResponseEventDTO,
+  WebSocketSubscriptionEvent,
 } from 'types';
 
 interface CrawlLeetCodeProblemModalProps extends BasicModalProps {
@@ -23,29 +22,21 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
   
   const [ slug, setSlug ] = useState('');
   const { notifyResponse } = useJukiNotification();
-  const websocket = useWebsocketStore(store => store.websocket);
   const userSessionId = useUserStore(state => state.user.sessionId);
   const pushRoute = useRouterStore(store => store.pushRoute);
   
-  useEffect(() => {
-    const problemKey = `PL-${slug}`;
-    const event: SubscribeProblemCrawledWebSocketEventDTO = {
-      event: WebSocketActionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
-      sessionId: userSessionId as ObjectIdType,
-      problemKey,
-    };
-    const fun = (data: WebSocketResponseEventDTO) => {
-      if (isProblemCrawledWebSocketResponseEventDTO(data)) {
-        void pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: problemKey }));
-      }
-    };
-    
-    void websocket.subscribe(event, fun);
-    
-    return () => {
-      websocket.unsubscribe(event, fun);
-    };
-  }, [ pushRoute, slug, userSessionId, websocket ]);
+  const problemKey = `PL-${slug}`;
+  const event: SubscribeProblemCrawledWebSocketEventDTO = {
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
+    sessionId: userSessionId as ObjectIdType,
+    problemKey,
+  };
+  useWebsocketSub(event, (message) => {
+    const data = message.data;
+    if (isProblemCrawledWebSocketResponseEventDTO(data)) {
+      void pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: problemKey }));
+    }
+  });
   
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>

@@ -58,7 +58,7 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen }: CrawlCodeforces
               // TODO:
               // const problemKey = `PC-${contestId}-${index}`;
               // jukiApiManager.SOCKET.send({
-              //   event: WebSocketActionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
+              //   event: WebSocketSubscriptionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
               //   sessionId: userSessionId,
               //   problemKey,
               // }, () => {

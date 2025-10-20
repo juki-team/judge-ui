@@ -1,10 +1,10 @@
 import { ONE_MINUTE } from '@juki-team/commons';
 import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, T } from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
+import { jukiApiManager } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useJukiTask, useJukiUI, useMutate, useRouterStore } from 'hooks';
+import { useJukiNotification, useJukiUI } from 'hooks';
 import { RefObject } from 'react';
-import { CodeLanguage, ContentResponseType, ProblemDataResponseDTO, ProblemTab, Status } from 'types';
+import { CodeLanguage, ContentResponseType, ProblemDataResponseDTO, Status } from 'types';
 
 interface ProblemViewTabProps {
   problem: ProblemDataResponseDTO,
@@ -20,11 +20,8 @@ export const ProblemViewTab = ({
                                  historyRefs: { lastLanguageRef, lastSourceRef, submissionTimestampsRef },
                                }: ProblemViewTabProps) => {
   
-  const pushRoute = useRouterStore(state => state.pushRoute);
   const { notifyResponse, addWarningNotification } = useJukiNotification();
   const { components: { Link } } = useJukiUI();
-  const { listenSubmission } = useJukiTask();
-  const mutate = useMutate();
   
   return (
     <ProblemView
@@ -81,14 +78,15 @@ export const ProblemViewTab = ({
                     await authorizedRequest(url, options),
                   );
                   
-                  if (notifyResponse(response, setLoaderStatus)) {
-                    listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
-                    await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
-                    pushRoute(jukiAppRoutes.JUDGE().problems.view({
-                      key: problem.key,
-                      tab: ProblemTab.MY_SUBMISSIONS,
-                    }));
-                  }
+                  notifyResponse(response, setLoaderStatus);
+                  // if (notifyResponse(response, setLoaderStatus)) {
+                  //   listenSubmission({ id: response.content.submitId, problem: { name: problem.name } }, true);
+                  //   await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
+                  //   pushRoute(jukiAppRoutes.JUDGE().problems.view({
+                  //     key: problem.key,
+                  //     tab: ProblemTab.MY_SUBMISSIONS,
+                  //   }));
+                  // }
                 }}
               >
                 <T className="tt-se">submit</T>

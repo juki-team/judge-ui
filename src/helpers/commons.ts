@@ -19,6 +19,7 @@ export {
   getDocumentAccess,
   cleanRequest,
   isSubmissionsCrawlWebSocketResponseEventDTO,
+  isContestChangesWebSocketResponseEventDTO,
 } from '@juki-team/commons';
 
 export {

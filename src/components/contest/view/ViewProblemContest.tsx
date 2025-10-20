@@ -3,7 +3,7 @@
 import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, SpectatorInformation, T } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isGlobalContest } from 'helpers';
-import { useJukiNotification, useJukiTask, useJukiUI, useMutate, useRouterStore } from 'hooks';
+import { useJukiNotification, useJukiUI, useRouterStore } from 'hooks';
 import React from 'react';
 import { KeyedMutator } from 'swr';
 import {
@@ -14,21 +14,20 @@ import {
   ContestProblemDataResponseDTO,
   ContestTab,
   EntityState,
-  ProblemTab,
   Status,
 } from 'types';
 import { ProblemRequisites } from './ProblemRequisites';
 
-export const ViewProblemContest = ({ problem, contest, reloadContest }: {
+interface ViewProblemContestProps {
   problem: ContestProblemDataResponseDTO,
   contest: ContestDataResponseDTO,
   reloadContest: KeyedMutator<any>,
-}) => {
+}
+
+export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProblemContestProps) => {
   
-  const { listenSubmission } = useJukiTask();
   const { addWarningNotification, notifyResponse } = useJukiNotification();
   const pushRoute = useRouterStore(state => state.pushRoute);
-  const mutate = useMutate();
   const { components: { Link } } = useJukiUI();
   
   if (!contest.isPast && problem.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length > 0) {
@@ -92,36 +91,36 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: {
                   await authorizedRequest(url, options),
                 );
               }
-              
-              if (notifyResponse(response, setLoaderStatus)) {
-                if (isGlobal) {
-                  listenSubmission({
-                    id: response.content.submitId,
-                    problem: { name: problem.name },
-                  }, true);
-                  pushRoute(jukiAppRoutes.JUDGE().problems.view({
-                    key: problem.key,
-                    tab: ProblemTab.MY_SUBMISSIONS,
-                  }));
-                } else {
-                  listenSubmission({
-                    id: response.content.submitId,
-                    problem: { name: problem.name },
-                    contest: {
-                      name: contest.name,
-                      problemIndex: problem.index,
-                      isFrozenTime: contest.isFrozenTime,
-                      isQuietTime: contest.isQuietTime,
-                    },
-                  }, true);
-                  pushRoute(jukiAppRoutes.JUDGE().contests.view({
-                    key: contest.key,
-                    tab: ContestTab.SUBMISSIONS,
-                    subTab: problem.index,
-                  }));
-                  await mutate(new RegExp(`${jukiApiManager.SERVICE_API_V1_URL}/submission`, 'g'));
-                }
-              }
+              notifyResponse(response, setLoaderStatus);
+              // if (notifyResponse(response, setLoaderStatus)) {
+              //   if (isGlobal) {
+              //     listenSubmission({
+              //       id: response.content.submitId,
+              //       problem: { name: problem.name },
+              //     }, true);
+              //     pushRoute(jukiAppRoutes.JUDGE().problems.view({
+              //       key: problem.key,
+              //       tab: ProblemTab.MY_SUBMISSIONS,
+              //     }));
+              //   } else {
+              //     listenSubmission({
+              //       id: response.content.submitId,
+              //       problem: { name: problem.name },
+              //       contest: {
+              //         name: contest.name,
+              //         problemIndex: problem.index,
+              //         isFrozenTime: contest.isFrozenTime,
+              //         isQuietTime: contest.isQuietTime,
+              //       },
+              //     }, true);
+              //     pushRoute(jukiAppRoutes.JUDGE().contests.view({
+              //       key: contest.key,
+              //       tab: ContestTab.SUBMISSIONS,
+              //       subTab: problem.index,
+              //     }));
+              //     await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
+              //   }
+              // }
             }}
           >
             {(isAdministrator || isManager) && !isGlobal

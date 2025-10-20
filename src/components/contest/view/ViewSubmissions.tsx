@@ -15,8 +15,8 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, cleanRequest, getParamsOfUserKey, toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useJukiNotification, useMemo, useRef, useState, useUserStore, useWebsocketStore } from 'hooks';
-import React, { useCallback } from 'react';
+import { useFetcher, useJukiNotification, useMemo, useRef, useState, useUserStore, useWebsocketSub } from 'hooks';
+import React from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -31,14 +31,12 @@ import {
   Status,
   SubmissionSummaryListResponseDTO,
   SubscribeSubmissionsCrawlWebSocketEventDTO,
-  WebSocketActionEvent,
-  WebSocketResponseEventDTO,
+  WebSocketSubscriptionEvent,
 } from 'types';
 import { ButtonLoader } from '../../index';
 
 const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
-  const websocket = useWebsocketStore(store => store.websocket);
   const userSessionId = useUserStore(state => state.user.sessionId);
   const [ dataCrawled, setDataCrawled ] = useState<{
     [key: string]: { submitId: string, isNewSubmission: boolean }[]
@@ -49,13 +47,14 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   const problemKeys = Object.values(contest.problems).map(problem => problem.key).join(SEPARATOR_TOKEN);
   const contestKey = contest.key;
   const event: SubscribeSubmissionsCrawlWebSocketEventDTO = useMemo(() => ({
-    event: WebSocketActionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
     sessionId: userSessionId as ObjectIdType,
     contestKey,
     problemKeys,
   }), [ contestKey, problemKeys, userSessionId ]);
   
-  const fun = useCallback((data: WebSocketResponseEventDTO) => {
+  useWebsocketSub(event, (message) => {
+    const data = message.data;
     if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
       if (data.content.submitId) {
         setDataCrawled(prevState => ({
@@ -72,7 +71,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
         setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
       }
     }
-  }, []);
+  });
   
   const newSubmissions = Object.values(dataCrawled)
     .flat()
@@ -86,8 +85,6 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
       key="retrieve"
       onClick={async (setLoaderStatus) => {
         setLoaderStatus(Status.LOADING);
-        websocket.unsubscribe(event, fun);
-        websocket.subscribe(event, fun);
         setDataCrawled({});
         setSubmissionsCount(0);
         const { url, ...options } = jukiApiManager.API_V1.contest.retrieve({
