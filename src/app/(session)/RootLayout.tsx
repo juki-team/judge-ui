@@ -21,7 +21,6 @@ import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
-import { NotificationWarningModal } from './NotificationWarningModal';
 
 const SponsoredByTag = () => {
   
@@ -100,7 +99,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <UserPreviewModal key="user-preview-modal" />
         <SubmissionModal key="submission-modal" />
-        <NotificationWarningModal />
+        {/*<NotificationWarningModal />*/}
       </JukiProviders>
     </SWRConfig>
   );

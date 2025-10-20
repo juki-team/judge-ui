@@ -26,7 +26,6 @@ export const ProblemViewTab = ({
   return (
     <ProblemView
       problem={problem}
-      withoutName
       infoPlacement="name"
       codeEditorStoreKey={problem.key}
       codeEditorCenterButtons={({ files, currentFileName }) => {

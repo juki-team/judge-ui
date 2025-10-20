@@ -1,7 +1,16 @@
 'use client';
 
 import { useTour } from '@reactour/tour';
-import { AutorenewIcon, Button, DocumentMembersButton, EditIcon, ProblemInfo, T, TwoContentLayout } from 'components';
+import {
+  AutorenewIcon,
+  Button,
+  DocumentMembersButton,
+  EditIcon,
+  LinkLastPath,
+  ProblemInfo,
+  T,
+  TwoContentLayout,
+} from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest } from 'helpers';
@@ -14,6 +23,7 @@ import {
   ProblemTab,
   ProfileSetting,
   TabsType,
+  TwoContentLayoutProps,
 } from 'types';
 import { InfoTestCases } from './InfoTestCases';
 import { problemAccessProps } from './ProblemAccess';
@@ -24,15 +34,16 @@ import { ProblemSubmissions } from './ProblemSubmissions';
 import { ProblemViewTab } from './ProblemViewTab';
 import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
 
-export const ProblemViewLayout = ({ problem, reloadProblem }: {
+interface ProblemViewLayoutProps {
   problem: ProblemDataResponseDTO,
   reloadProblem: KeyedMutator<any>,
-}) => {
-  
-  const { setIsOpen } = useTour();
+}
+
+export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutProps) => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
   
+  const { setIsOpen } = useTour();
   useEffect(() => {
     void authorizedRequest(JUDGE_API_V1.STATISTICS.PROBLEM(problem.key), { method: HTTPMethod.POST });
   }, [ problem.key ]);
@@ -54,6 +65,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
   const lastSourceRef = useRef('');
   const lastLanguageRef = useRef('');
   const submissionTimestampsRef = useRef<number[]>([]);
+  const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
   
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.problem.statementToPdf({
@@ -96,22 +108,24 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     body: <ProblemStatistics problem={problem} />,
   };
   
-  // const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = ({ selectedTabKey }) => [
-  //   <LinkLastPath
-  //     lastPathKey={LastPathKey.PROBLEMS}
-  //     key="problems"
-  //   >
-  //     <T className="tt-se">problems</T>
-  //   </LinkLastPath>,
-  //   <Link
-  //     href={jukiAppRoutes.JUDGE().problems.view({ key: problem.key })}
-  //     className="link"
-  //     key="problem.name"
-  //   >
-  //     <div className="ws-np">{problem.name}</div>
-  //   </Link>,
-  //   renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
-  // ];
+  const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = () => [
+    <LinkLastPath
+      lastPathKey={LastPathKey.PROBLEMS}
+      key="problems"
+    >
+      <T className="tt-se">problems</T>
+    </LinkLastPath>,
+    <div className="jk-row gap left cr-th" key="problem-name">
+      <div className="jk-row">
+        <div>{problem.name}</div>
+        {!!problem.shortname && <div className="jk-row cr-thl tx-s">&nbsp;{`(${problem.shortname})`}&nbsp;</div>}
+      </div>
+      <div className="jk-tag bc-hl tx-t">{problem.judge?.name}</div>
+      <ProblemInfo problem={problem} size="small" />
+      {problem.user.isManager && !problem.judge.isExternal && <InfoTestCases problem={problem} size="small" />}
+      <ProblemStatus {...problem.user} size="small" />
+    </div>,
+  ];
   
   const extraNodes = [];
   extraNodes.push(
@@ -177,12 +191,10 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
     // );
   }
   
-  const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
-  
   return (
     <TwoContentLayout
       tabs={tabs}
-      // breadcrumbs={breadcrumbs}
+      breadcrumbs={breadcrumbs}
       tabButtons={extraNodes}
       selectedTabKey={problemTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
@@ -192,16 +204,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: {
         onClose={() => setIsOpenRejudgeModal(false)}
         problemKey={problem.key}
       />
-      {/*<CustomHead title={problem.name} />*/}
-      <div className="jk-row gap left">
-        <h2 className="jk-row line-height-1">
-          {!!problem.shortname && <div className="tx-m">{`[${problem.shortname}] `}&nbsp;</div>} {problem.name}&nbsp;
-        </h2>
-        <div className="jk-tag bc-hl tx-s">{problem.judge?.name}</div>
-        <ProblemInfo problem={problem} />
-        {problem.user.isManager && !problem.judge.isExternal && <InfoTestCases problem={problem} />}
-        <ProblemStatus {...problem.user} />
-      </div>
     </TwoContentLayout>
   );
 };

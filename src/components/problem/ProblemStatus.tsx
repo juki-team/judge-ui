@@ -1,11 +1,14 @@
 import { CheckIcon, PendingActionsIcon } from 'components';
 import { IconProps } from 'types';
 
-export const ProblemStatus = ({ solved, tried, size }: {
+interface ProblemStatusProps {
   solved: boolean,
   tried: boolean,
-  size?: IconProps['size']
-}) => {
+  size?: IconProps['size'],
+}
+
+export const ProblemStatus = ({ solved, tried, size }: ProblemStatusProps) => {
+  
   return solved ? (
     <div
       data-tooltip-id="jk-tooltip"

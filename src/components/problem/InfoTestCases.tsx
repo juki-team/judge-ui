@@ -1,9 +1,9 @@
 import { InfoIIcon, Popover, SpinIcon, T } from 'components';
 import { jukiApiManager } from 'config';
 import { useFetcher } from 'hooks';
-import { ContentResponseType, ProblemDataResponseDTO, ProblemTestCasesResponseDTO } from 'types';
+import { ContentResponseType, IconProps, ProblemDataResponseDTO, ProblemTestCasesResponseDTO } from 'types';
 
-export const InfoTestCases = ({ problem }: { problem: ProblemDataResponseDTO }) => {
+export const InfoTestCases = ({ problem, size }: { problem: ProblemDataResponseDTO, size?: IconProps['size'] }) => {
   
   const {
     data,
@@ -31,8 +31,8 @@ export const InfoTestCases = ({ problem }: { problem: ProblemDataResponseDTO }) 
     >
       <div className="jk-row link">
         {isLoading
-          ? <SpinIcon />
-          : <InfoIIcon circle />}
+          ? <SpinIcon size={size} />
+          : <InfoIIcon circle size={size} />}
       </div>
     </Popover>
   );
