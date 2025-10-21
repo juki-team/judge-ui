@@ -43,4 +43,5 @@ export {
   getHeaders,
   getMetaHeaders,
   showOfDateDisplayType,
+  getKeyWebSocketEventDTO,
 } from '@juki-team/base-ui/helpers';

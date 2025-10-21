@@ -42,5 +42,6 @@ export {
   MONTH_NAMES,
   CODE_LANGUAGE,
   ONE_MINUTE,
+  SEPARATOR_TOKEN,
   ONE_SECOND,
 } from '@juki-team/commons';

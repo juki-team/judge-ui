@@ -1,6 +1,5 @@
 'use client';
 
-import { jukiApiManager } from '@juki-team/base-ui/settings';
 import {
   ButtonLoader,
   CheckIcon,
@@ -12,10 +11,10 @@ import {
   T,
   TextHeadCell,
 } from 'components';
-import { jukiAppRoutes } from 'config';
+import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketSub } from 'hooks';
-import React from 'react';
+import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketSubStore } from 'hooks';
+import React, { useEffect } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
@@ -55,32 +54,34 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
   
-  const event: SubscribeSubmissionsCrawlWebSocketEventDTO = useMemo(() => ({
-    event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
-    sessionId: userSessionId as ObjectIdType,
-    contestKey,
-    problemKeys: problem.key,
-  }), [ contestKey, problem.key, userSessionId ]);
+  const subscribeToEvent = useWebsocketSubStore(store => store.subscribeToEvent);
   
-  useWebsocketSub(event, (message) => {
-    const data = message;
-    if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
-      if (data.content.submitId) {
-        setDataCrawled(prevState => ({
-          ...prevState,
-          [data.content.userKey]: [
-            ...(prevState[data.content.userKey] || []),
-            {
-              submitId: data.content.submitId,
-              isNewSubmission: data.content.isNewSubmission,
-            },
-          ],
-        }));
-      } else {
-        setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
+  useEffect(() => {
+    const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
+      event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+      sessionId: userSessionId as ObjectIdType,
+      contestKey,
+      problemKeys: problem.key,
+    };
+    return subscribeToEvent(event, ({ data }) => {
+      if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+        if (data.content.submitId) {
+          setDataCrawled(prevState => ({
+            ...prevState,
+            [data.content.userKey]: [
+              ...(prevState[data.content.userKey] || []),
+              {
+                submitId: data.content.submitId,
+                isNewSubmission: data.content.isNewSubmission,
+              },
+            ],
+          }));
+        } else {
+          setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
+        }
       }
-    }
-  });
+    });
+  }, [ contestKey, problem.key, subscribeToEvent, userSessionId ]);
   
   return (
     <div className="jk-col nowrap">

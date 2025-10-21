@@ -23,7 +23,7 @@ import {
   useMutate,
   useRouterStore,
   useUserStore,
-  useWebsocketSub,
+  useWebsocketSubStore,
 } from 'hooks';
 import { JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
@@ -65,17 +65,20 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
     await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
   }, [ mutate ]);
   
-  const event: SubscribeContestChangesWebSocketEventDTO = {
-    event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
-    sessionId: userSessionId as ObjectIdType,
-    contestKey: contestKey,
-  };
-  useWebsocketSub(event, (message) => {
-    const data = message.data;
-    if (isContestChangesWebSocketResponseEventDTO(data)) {
-      void reloadContest();
-    }
-  });
+  const subscribeToEvent = useWebsocketSubStore(store => store.subscribeToEvent);
+  
+  useEffect(() => {
+    const event: SubscribeContestChangesWebSocketEventDTO = {
+      event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
+      sessionId: userSessionId as ObjectIdType,
+      contestKey: contestKey,
+    };
+    return subscribeToEvent(event, ({ data }) => {
+      if (isContestChangesWebSocketResponseEventDTO(data)) {
+        void reloadContest();
+      }
+    });
+  }, [ contestKey, reloadContest, subscribeToEvent, userSessionId ]);
   
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
