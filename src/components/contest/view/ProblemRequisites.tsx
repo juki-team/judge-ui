@@ -10,11 +10,13 @@ import {
   ContestProblemPrerequisiteType,
 } from 'types';
 
-export const ProblemRequisites = ({ problem, reloadContest, contest }: {
+interface ProblemRequisitesProps {
   problem: ContestProblemDataResponseDTO,
   reloadContest: KeyedMutator<any>,
   contest: ContestDataResponseDTO,
-}) => {
+}
+
+export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRequisitesProps) => {
   
   const { prerequisites, blockedBy, startTimestamp, endTimestamp } = problem;
   
@@ -39,7 +41,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: {
               />
             </div>
           )}
-          {problem.endTimestamp !== contest.settings.startTimestamp && (
+          {problem.endTimestamp !== contest.settings.endTimestamp && (
             <div className="jk-row center">
               <T className="tt-se">ends at the minute</T>:&nbsp;
               <Timer

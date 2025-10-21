@@ -25,6 +25,7 @@ import {
   useUserStore,
   useWebsocketStore,
 } from 'hooks';
+import { ReactNode } from 'react';
 import { JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
   ContestDataResponseDTO,
@@ -252,73 +253,48 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
     );
   }
   
-  // const breadcrumbs: ReactNode[] = [
-  //   <Link
-  //     href={jukiAppRoutes.JUDGE().contests.list()}
-  //     className="link"
-  //     key="contest.name"
-  //   >
-  //     <T className="tt-se">contests</T>
-  //   </Link>,
-  //   <Link
-  //     href={jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab: ContestTab.OVERVIEW, subTab: problemIndex })}
-  //     className="link"
-  //     key="contest.name"
-  //   >
-  //     <div className="ws-np">{contest.name}</div>
-  //   </Link>,
-  // ];
-  // if (contestTab === ContestTab.PROBLEMS && problemArrayIndex !== -1) {
-  //   breadcrumbs.push(
-  //     <Link
-  //       href={jukiAppRoutes.JUDGE().contests.view({
-  //         key: contestKey,
-  //         tab: ContestTab.PROBLEMS,
-  //       })}
-  //       className="link"
-  //     >
-  //       <T className="tt-se">problems</T>
-  //     </Link>,
-  //   );
-  //   breadcrumbs.push(<div>{problemIndex}</div>);
-  // } else {
-  //   breadcrumbs.push(renderReactNodeOrFunctionP1(tabHeaders[contestTab]?.header, { selectedTabKey: contestTab }));
-  // }
+  const breadcrumbs: ReactNode[] = [
+    <Link
+      href={jukiAppRoutes.JUDGE().contests.list()}
+      className="link"
+      key="contests"
+    >
+      <T className="tt-se">contests</T>
+    </Link>,
+    <div className="jk-row gap left cr-th" key="contest-name">
+      <div>
+        {contest.name}
+      </div>
+      {(viewPortSize === 'md' || viewPortSize === 'lg') && (
+        <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
+      )}
+    </div>,
+  ];
   
   return (
     <TwoContentLayout
-      // breadcrumbs={breadcrumbs}
+      breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
       tabButtons={extraNodes}
       selectedTabKey={contestTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}
     >
-      {/*<CustomHead title={contest.name} />*/}
-      <div className="jk-row nowrap gap extend left">
-        {/*{viewPortSize !== 'sm' && (*/}
-        {/*  <>*/}
-        {/*    <LinkLastPath lastPathKey={LastPathKey.CONTESTS} key="contests">*/}
-        {/*      <T className="tt-se">contests</T>*/}
-        {/*    </LinkLastPath>*/}
-        {/*    /*/}
-        {/*  </>*/}
-        {/*)}*/}
-        <h2
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-          className="line-height-1"
-        >
-          {contest.name}
-        </h2>
-        {viewPortSize === 'md' || viewPortSize === 'lg' && (
-          <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
-        )}
-      </div>
       {viewPortSize === 'sm' && (
-        <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
+        <>
+          <div className="jk-row nowrap gap extend left">
+            <h2
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+              className="line-height-1"
+            >
+              {contest.name}{viewPortSize}
+            </h2>
+          </div>
+          <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
+        </>
       )}
     </TwoContentLayout>
   );
