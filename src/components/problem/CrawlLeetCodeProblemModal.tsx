@@ -3,7 +3,7 @@
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isProblemCrawledWebSocketResponseEventDTO } from 'helpers';
-import { useJukiNotification, useRouterStore, useUserStore, useWebsocketSubStore } from 'hooks';
+import { useJukiNotification, useRouterStore, useUserStore, useWebsocketStore } from 'hooks';
 import { useEffect, useState } from 'react';
 import {
   BasicModalProps,
@@ -27,7 +27,7 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
   
   const problemKey = `PL-${slug}`;
   
-  const subscribeToEvent = useWebsocketSubStore(store => store.subscribeToEvent);
+  const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);
   
   useEffect(() => {
     const event: SubscribeProblemCrawledWebSocketEventDTO = {

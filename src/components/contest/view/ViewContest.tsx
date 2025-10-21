@@ -23,7 +23,7 @@ import {
   useMutate,
   useRouterStore,
   useUserStore,
-  useWebsocketSubStore,
+  useWebsocketStore,
 } from 'hooks';
 import { JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
@@ -65,7 +65,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
     await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
   }, [ mutate ]);
   
-  const subscribeToEvent = useWebsocketSubStore(store => store.subscribeToEvent);
+  const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);
   
   useEffect(() => {
     const event: SubscribeContestChangesWebSocketEventDTO = {

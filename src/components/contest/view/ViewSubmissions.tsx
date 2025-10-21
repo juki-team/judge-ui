@@ -22,7 +22,7 @@ import {
   toFilterUrl,
   toSortUrl,
 } from 'helpers';
-import { useFetcher, useJukiNotification, useMemo, useRef, useState, useUserStore, useWebsocketSubStore } from 'hooks';
+import { useFetcher, useJukiNotification, useMemo, useRef, useState, useUserStore, useWebsocketStore } from 'hooks';
 import React, { useEffect } from 'react';
 import {
   ContentResponseType,
@@ -54,7 +54,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   const problemKeys = Object.values(contest.problems).map(problem => problem.key).join(SEPARATOR_TOKEN);
   const contestKey = contest.key;
   
-  const subscribeToEvent = useWebsocketSubStore(store => store.subscribeToEvent);
+  const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);
   
   useEffect(() => {
     const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {

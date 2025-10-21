@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketSubStore } from 'hooks';
+import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketStore } from 'hooks';
 import React, { useEffect } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import { KeyedMutator } from 'swr';
@@ -54,7 +54,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
   
-  const subscribeToEvent = useWebsocketSubStore(store => store.subscribeToEvent);
+  const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);
   
   useEffect(() => {
     const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
