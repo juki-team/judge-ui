@@ -38,6 +38,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
                 ignoreTrailingZeros
                 literal
                 abbreviated
+                maxSplit={2}
               />
             </div>
           )}
@@ -52,6 +53,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
                 ignoreTrailingZeros
                 literal
                 abbreviated
+                maxSplit={2}
               />
             </div>
           )}
@@ -97,6 +99,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
                 literal
                 abbreviated
                 onTimeout={reloadContest}
+                maxSplit={2}
               />
             </div>
           )}
@@ -112,6 +115,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
                 literal
                 abbreviated
                 onTimeout={reloadContest}
+                maxSplit={2}
               />
             </div>
           )}
