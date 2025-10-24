@@ -3,7 +3,7 @@
 import { MdMathViewer, T } from 'components';
 import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY } from 'config/constants';
-import { useJukiUI, useUserStore } from 'hooks';
+import { useUIStore, useUserStore } from 'hooks';
 import { ProfileSetting } from 'types';
 import { BOARDS_INFO, CONTESTS_INFO, IDE_INFO, PROBLEMS_INFO } from './text';
 
@@ -12,7 +12,8 @@ export default function Home() {
   const companyKey = useUserStore(state => state.company.key);
   const companyName = useUserStore(state => state.company.name);
   const preferredLanguage = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
-  const { components: { Link, Image }, viewPortWidth } = useJukiUI();
+  const { Link, Image } = useUIStore(store => store.components);
+  const viewPortWidth = useUIStore(store => store.viewPortWidth);
   const width = Math.max(Math.min(viewPortWidth, 1024), 512);
   
   return (

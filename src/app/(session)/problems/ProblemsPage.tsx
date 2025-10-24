@@ -23,11 +23,11 @@ import { getDocumentAccess, oneTab, toFilterUrl, toSortUrl } from 'helpers';
 import {
   useEffect,
   useFetcher,
-  useJukiUI,
   useMemo,
   useRouterStore,
   useState,
   useTrackLastPath,
+  useUIStore,
   useUserStore,
 } from 'hooks';
 import { ENTITY_ACCESS } from 'src/constants';
@@ -63,7 +63,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     value: judge.key,
     label: judge.name,
   }));
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   const userIsLogged = useUserStore(state => state.user.isLogged);
   
   const firstJudgeKey = judges[0]?.value;

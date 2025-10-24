@@ -7,10 +7,10 @@ import {
   useDataViewerRequester,
   useFetcher,
   useI18nStore,
-  useJukiUI,
   useMemo,
   useRouterStore,
   useTrackLastPath,
+  useUIStore,
   useUserStore,
 } from 'hooks';
 import { CSSProperties } from 'react';
@@ -43,7 +43,8 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   }).url);
   const contestData = contestResponse?.success ? contestResponse.content : null;
   const userCanAdministrateServices = useUserStore(state => state.user.permissions.services.administrate);
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
+  const viewPortSize = useUIStore(store => store.viewPortSize);
   const t = useI18nStore(state => state.i18n.t);
   const contestTags = JSON.stringify(contest.tags ?? []);
   

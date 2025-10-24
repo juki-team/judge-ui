@@ -14,7 +14,7 @@ import {
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest } from 'helpers';
-import { useEffect, useJukiUI, useRef, useRouterStore, useState, useTrackLastPath, useUserStore } from 'hooks';
+import { useEffect, useRef, useRouterStore, useState, useTrackLastPath, useUIStore, useUserStore } from 'hooks';
 import {
   HTTPMethod,
   KeyedMutator,
@@ -60,7 +60,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutP
   const userSessionId = useUserStore(state => state.user.sessionId);
   const userLang = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   
   const lastSourceRef = useRef('');
   const lastLanguageRef = useRef('');
@@ -130,6 +130,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutP
   const extraNodes = [];
   extraNodes.push(
     <DocumentMembersButton
+      key="problem-members"
       isAdministrator={problem.user.isAdministrator}
       members={problem.members}
       documentOwner={problem.owner}
@@ -143,6 +144,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutP
   if (problem.user?.isAdministrator) {
     if (!problem.judge.isExternal) {
       extraNodes.push(<Button
+          key="problem-rejudge"
           data-tooltip-id="jk-tooltip"
           data-tooltip-content="only submissions that are not in a contest will be judged"
           size="small"
@@ -156,7 +158,7 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutP
       );
     }
     extraNodes.push(
-      <Link href={jukiAppRoutes.JUDGE().problems.edit({ key: problem.key as string })}>
+      <Link key="problem-edit" href={jukiAppRoutes.JUDGE().problems.edit({ key: problem.key as string })}>
         <Button
           size="small"
           icon={<EditIcon />}

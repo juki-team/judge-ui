@@ -1,5 +1,6 @@
 'use client';
 
+import { MultiProgressBar } from '@juki-team/base-ui';
 import {
   AddIcon,
   Button,
@@ -23,7 +24,7 @@ import {
   isEndlessContest,
   isGlobalContest,
 } from 'helpers';
-import { useState } from 'hooks';
+import { useI18nStore, useState } from 'hooks';
 import React from 'react';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
@@ -52,11 +53,18 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       }, '[]'),
     };
   };
-  
+  const { t } = useI18nStore(store => store.i18n);
   const competition = isEndlessContest(contest);
   const isGlobal = isGlobalContest(contest.settings);
   
   const contestTemplate = getContestTemplate(contest);
+  const contestDuration = Math.max(contest.settings.endTimestamp - contest.settings.startTimestamp, 0);
+  const quietDuration = Math.max(contest.settings.endTimestamp - contest.settings.quietTimestamp, 0);
+  const frozenDuration = Math.max(contest.settings.quietTimestamp - contest.settings.frozenTimestamp, 0);
+  
+  const quietPercentage = quietDuration === 0 ? 0 : Math.min(80, Math.max(10, quietDuration * 100 / contestDuration));
+  const frozenPercentage = quietDuration === 0 ? 0 : Math.min(80, Math.max(10, frozenDuration * 100 / contestDuration));
+  const durationPercentage = 100 - quietPercentage - frozenPercentage;
   
   return (
     <div className="jk-col left top stretch gap nowrap">
@@ -124,8 +132,19 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       </div>
       {!competition && !isGlobal && (
         <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
-          <div className="jk-row gap">
-            <div className="jk-col left stretch">
+          <MultiProgressBar
+            progress={[
+              // { label: t('start date'), percentage: 2, color: 'black' },
+              { label: t('normal time'), percentage: durationPercentage, color: 'var(--t-color-success)' },
+              // { label: t('frozen date'), percentage: 2, color: 'black' },
+              { label: t('frozen time'), percentage: frozenPercentage, color: 'var(--t-color-info-light)' },
+              // { label: t('quiet date'), percentage: 2, color: 'black' },
+              { label: t('quiet time'), percentage: quietPercentage, color: 'var(--t-color-info-dark)' },
+              // { label: t('end date'), percentage: 2, color: 'black' },
+            ]}
+          />
+          <div className="jk-row gap top space-between">
+            <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row left gap nowrap">
                 <div className="fw-bd tt-se tx-xl cr-py"><T>start date</T></div>
               </div>
@@ -143,10 +162,178 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 />
               </div>
             </div>
-            <div className="jk-col left stretch">
+            <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
+              <div className="jk-row left extend gap">
+                <div className="jk-row gap">
+                  <div className="fw-bd tt-se tx-xl cr-py"><T>frozen time</T></div>
+                  <FrozenInformation />
+                </div>
+                <InputToggle
+                  checked={checks.frozen}
+                  size="tiny"
+                  onChange={(value) => setChecks(prevState => ({ ...prevState, frozen: value }))}
+                  leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.frozen })}>date</T>}
+                  rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.frozen })}>minutes</T>}
+                />
+              </div>
+              {checks.frozen ? (
+                <div className="jk-row left gap">
+                  <T className="tt-se">_at</T>
+                  <Input
+                    type="number"
+                    size="auto"
+                    value={(contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                    onChange={value => setContest(prevState => adjustContest({
+                      ...prevState,
+                      settings: {
+                        ...prevState.settings,
+                        frozenTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
+                      },
+                    }, prevState))}
+                  />
+                  <T>minutes</T>
+                </div>
+              ) : (
+                <div className="jk-row left gap">
+                  <InputDate
+                    type="year-month-day-hours-minutes"
+                    date={new Date(contest.settings.frozenTimestamp)}
+                    isSelected={(date) => ({
+                      day: date.isWithinInterval({
+                        start: frozenDate.startOfDay(),
+                        end: frozenDate.endOfDay(),
+                      }, '[]'),
+                    })}
+                    isDisabled={(date) => disableOutOfRange(date, startDate, endDate)}
+                    baseDate={new Date(contest.settings.frozenTimestamp)}
+                    onDatePick={(date) => setContest(prevState => adjustContest({
+                      ...prevState,
+                      settings: {
+                        ...prevState.settings,
+                        frozenTimestamp: date.getTime(),
+                      },
+                    }, prevState))}
+                    todayButton
+                  />
+                </div>
+              )}
+              <div className="jk-row left fw-lt tx-s">
+                <T className="tt-se">_at</T>&nbsp;
+                <div className="jk-col left">
+                  <Timer
+                    currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
+                    interval={0}
+                    type="weeks-days-hours-minutes-seconds"
+                    literal
+                    ignoreLeadingZeros
+                    ignoreTrailingZeros
+                  />
+                </div>
+              </div>
+              <div className="jk-row left tx-s fw-lt">
+                <T className="tt-se">duration</T>:&nbsp;
+                <div className="jk-col left">
+                  <Timer
+                    currentTimestamp={frozenDuration}
+                    interval={0}
+                    type="weeks-days-hours-minutes-seconds"
+                    literal
+                    ignoreLeadingZeros
+                    ignoreTrailingZeros
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
+              <div className="jk-row left extend gap">
+                <div className="jk-row gap">
+                  <div className="fw-bd tt-se tx-xl cr-py"><T>quiet time</T></div>
+                  <QuietInformation />
+                </div>
+                <InputToggle
+                  checked={checks.quiet}
+                  size="tiny"
+                  onChange={(value) => setChecks(prevState => ({ ...prevState, quiet: value }))}
+                  leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.quiet })}>date</T>}
+                  rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.quiet })}>minutes</T>}
+                />
+              </div>
+              {checks.quiet ? (
+                <div className="jk-row left gap">
+                  <T className="tt-se">_at</T>
+                  <Input
+                    type="number"
+                    size="auto"
+                    value={(contest.settings.quietTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                    onChange={value => setContest(prevState => ({
+                      ...prevState,
+                      settings: {
+                        ...prevState.settings,
+                        quietTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
+                      },
+                    }))}
+                  />
+                  <T>minutes</T>
+                </div>
+              ) : (
+                <div className="jk-row left gap">
+                  <InputDate
+                    type="year-month-day-hours-minutes"
+                    date={new Date(contest.settings.quietTimestamp)}
+                    isSelected={(date) => ({
+                      day: date.isWithinInterval({
+                        start: quietDate.startOfDay(),
+                        end: quietDate.endOfDay(),
+                      }, '[]'),
+                    })}
+                    isDisabled={(date) => disableOutOfRange(date, frozenDate, endDate)}
+                    baseDate={new Date(contest.settings.quietTimestamp)}
+                    onDatePick={(date) => setContest(prevState => ({
+                      ...prevState,
+                      settings: {
+                        ...prevState.settings,
+                        quietTimestamp: date.getTime(),
+                      },
+                    }))}
+                    todayButton
+                  />
+                </div>
+              )}
+              {!!quietDuration ? (
+                <>
+                  <div className="jk-row left tx-s fw-lt">
+                    <T className="tt-se">_at</T>&nbsp;
+                    <div className="jk-col left">
+                      <Timer
+                        currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
+                        interval={0}
+                        type="weeks-days-hours-minutes-seconds"
+                        literal
+                        ignoreLeadingZeros
+                        ignoreTrailingZeros
+                      />
+                    </div>
+                  </div>
+                  <div className="jk-row left tx-s fw-lt">
+                    <T className="tt-se">duration</T>:&nbsp;
+                    <div className="jk-col left">
+                      <Timer
+                        currentTimestamp={quietDuration}
+                        interval={0}
+                        type="weeks-days-hours-minutes-seconds"
+                        literal
+                        ignoreLeadingZeros
+                        ignoreTrailingZeros
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : <T className="tt-se tx-s fw-lt">there is not quiet time</T>}
+            </div>
+            <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row gap left">
                 <div className="fw-bd tt-se tx-xl cr-py">
-                  {checks.duration ? <T>ends within</T> : <T>end date</T>}
+                  <T>end time</T>
                 </div>
                 <InputToggle
                   checked={checks.duration}
@@ -158,6 +345,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               </div>
               {checks.duration ? (
                 <div className="jk-row left">
+                  <T className="tt-se">_at</T>
                   <Input
                     type="number"
                     size="auto"
@@ -171,7 +359,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     }, prevState))}
                   />
                   &nbsp;
-                  <T>minutes of the start of the contest</T>
+                  <T>minutes</T>
                 </div>
               ) : (
                 <div className="jk-row left gap">
@@ -200,162 +388,31 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   />
                 </div>
               )}
-            </div>
-          </div>
-          <div className="jk-row left">
-            <T className="tt-se tx-s">duration</T>:&nbsp;
-            <Timer
-              currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
-              interval={0}
-              type="weeks-days-hours-minutes-seconds"
-              literal
-              ignoreLeadingZeros
-              ignoreTrailingZeros
-              className="fw-lt tx-s"
-            />
-          </div>
-        </div>
-      )}
-      {!competition && !isGlobal && (
-        <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
-          <div className="jk-col left stretch">
-            <div className="jk-row left extend gap">
-              <div className="jk-row gap">
-                <div className="fw-bd tt-se tx-xl cr-py"><T>frozen</T></div>
-                <FrozenInformation /></div>
-              <InputToggle
-                checked={checks.frozen}
-                size="tiny"
-                onChange={(value) => setChecks(prevState => ({ ...prevState, frozen: value }))}
-                leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.frozen })}>date</T>}
-                rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.frozen })}>minutes</T>}
-              />
-            </div>
-            {checks.frozen ? (
-              <div className="jk-row left gap">
-                <T className="tt-se">frozen within</T>
-                <Input
-                  type="number"
-                  size="auto"
-                  value={(contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
-                  onChange={value => setContest(prevState => adjustContest({
-                    ...prevState,
-                    settings: {
-                      ...prevState.settings,
-                      frozenTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
-                    },
-                  }, prevState))}
-                />
-                <T>minutes of the start of the contest</T>
+              <div className="jk-row left tx-s fw-lt">
+                <T className="tt-se">_at</T>&nbsp;
+                <div className="jk-col left">
+                  <Timer
+                    currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
+                    interval={0}
+                    type="weeks-days-hours-minutes-seconds"
+                    literal
+                    ignoreLeadingZeros
+                    ignoreTrailingZeros
+                  />
+                </div>
               </div>
-            ) : (
-              <div className="jk-row left gap">
-                <T className="tt-se">frozen on date</T>
-                <InputDate
-                  type="year-month-day-hours-minutes"
-                  date={new Date(contest.settings.frozenTimestamp)}
-                  isSelected={(date) => ({
-                    day: date.isWithinInterval({
-                      start: frozenDate.startOfDay(),
-                      end: frozenDate.endOfDay(),
-                    }, '[]'),
-                  })}
-                  isDisabled={(date) => disableOutOfRange(date, startDate, endDate)}
-                  baseDate={new Date(contest.settings.frozenTimestamp)}
-                  onDatePick={(date) => setContest(prevState => adjustContest({
-                    ...prevState,
-                    settings: {
-                      ...prevState.settings,
-                      frozenTimestamp: date.getTime(),
-                    },
-                  }, prevState))}
-                  todayButton
-                />
-              </div>
-            )}
-            <div className="jk-row left fw-lt tx-s">
-              <div className="jk-col left">
+              <div className="jk-row left tx-s fw-lt">
+                <T className="tt-se tx-s">duration</T>:&nbsp;
                 <Timer
-                  currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
+                  currentTimestamp={contestDuration}
                   interval={0}
                   type="weeks-days-hours-minutes-seconds"
                   literal
                   ignoreLeadingZeros
                   ignoreTrailingZeros
+                  className="fw-lt tx-s"
                 />
               </div>
-              &nbsp;
-              <T>of the start of the contest</T>
-            </div>
-          </div>
-          <div className="jk-col left stretch">
-            <div className="jk-row left extend gap">
-              <div className="jk-row gap">
-                <div className="fw-bd tt-se tx-xl cr-py"><T>quiet</T></div>
-                <QuietInformation /></div>
-              <InputToggle
-                checked={checks.quiet}
-                size="tiny"
-                onChange={(value) => setChecks(prevState => ({ ...prevState, quiet: value }))}
-                leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.quiet })}>date</T>}
-                rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.quiet })}>minutes</T>}
-              />
-            </div>
-            {checks.quiet ? (
-              <div className="jk-row left gap">
-                <T className="tt-se">quiet within</T>
-                <Input
-                  type="number"
-                  size="auto"
-                  value={(contest.settings.quietTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
-                  onChange={value => setContest(prevState => ({
-                    ...prevState,
-                    settings: {
-                      ...prevState.settings,
-                      quietTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
-                    },
-                  }))}
-                />
-                <T>minutes of the start of the contest</T>
-              </div>
-            ) : (
-              <div className="jk-row left gap">
-                <T className="tt-se">quiet on date</T>
-                <InputDate
-                  type="year-month-day-hours-minutes"
-                  date={new Date(contest.settings.quietTimestamp)}
-                  isSelected={(date) => ({
-                    day: date.isWithinInterval({
-                      start: quietDate.startOfDay(),
-                      end: quietDate.endOfDay(),
-                    }, '[]'),
-                  })}
-                  isDisabled={(date) => disableOutOfRange(date, frozenDate, endDate)}
-                  baseDate={new Date(contest.settings.quietTimestamp)}
-                  onDatePick={(date) => setContest(prevState => ({
-                    ...prevState,
-                    settings: {
-                      ...prevState.settings,
-                      quietTimestamp: date.getTime(),
-                    },
-                  }))}
-                  todayButton
-                />
-              </div>
-            )}
-            <div className="jk-row left tx-s fw-lt">
-              <div className="jk-col left">
-                <Timer
-                  currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
-                  interval={0}
-                  type="weeks-days-hours-minutes-seconds"
-                  literal
-                  ignoreLeadingZeros
-                  ignoreTrailingZeros
-                />
-              </div>
-              &nbsp;
-              <T>of the start of the contest</T>
             </div>
           </div>
         </div>

@@ -18,7 +18,7 @@ import {
   UserNicknameLink,
 } from 'components';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useFetcher, useJukiNotification, useJukiUI } from 'hooks';
+import { useDateFormat, useFetcher, useJukiNotification, useUIStore } from 'hooks';
 import React, { useState } from 'react';
 import { JUDGE_API_V1 } from 'src/constants';
 import { ContentResponseType, ContestDataResponseDTO, HTTPMethod, Status } from 'types';
@@ -36,7 +36,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
   }>(null);
   const { notifyResponse } = useJukiNotification();
   const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(contest.key));
-  const { components: { Image } } = useJukiUI();
+  const { Image } = useUIStore(store => store.components);
   const isJudgeOrAdmin = isManager || isAdministrator;
   
   return (

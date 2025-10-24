@@ -2,11 +2,11 @@
 
 import { Button, PlusIcon, T } from 'components';
 import { jukiAppRoutes } from 'config';
-import { useJukiUI } from 'hooks';
+import { useUIStore } from 'hooks';
 
 export const CreateContestButton = () => {
   
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   
   return (
     <Link href={jukiAppRoutes.JUDGE().contests.new()}>

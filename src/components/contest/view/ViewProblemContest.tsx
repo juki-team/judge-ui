@@ -3,7 +3,7 @@
 import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, SpectatorInformation, T } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isGlobalContest } from 'helpers';
-import { useJukiNotification, useJukiUI, useRouterStore } from 'hooks';
+import { useJukiNotification, useRouterStore, useUIStore } from 'hooks';
 import React from 'react';
 import { KeyedMutator } from 'swr';
 import {
@@ -28,7 +28,7 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
   
   const { addWarningNotification, notifyResponse } = useJukiNotification();
   const pushRoute = useRouterStore(state => state.pushRoute);
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   
   if (!contest.isPast && problem.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length > 0) {
     return (

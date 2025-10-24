@@ -1,7 +1,7 @@
 'use client';
 
 import { Portal } from 'components';
-import { useJukiUI, useResizeDetector, useUserStore } from 'hooks';
+import { useResizeDetector, useUIStore, useUserStore } from 'hooks';
 import { PropsWithChildren } from 'react';
 import { ContestDataResponseDTO } from 'types';
 import { ContestTimeTimer } from './ContestTimeTimer';
@@ -11,7 +11,8 @@ export const FullScreenScoreboard = ({ contest, children, reloadContest }: Props
   reloadContest: () => Promise<void>
 }>) => {
   
-  const { viewPortSize, components: { Image } } = useJukiUI();
+  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const { Image } = useUIStore(store => store.components);
   const companyName = useUserStore(state => state.company.name);
   const companyImageUrl = useUserStore(state => state.company.imageUrl);
   

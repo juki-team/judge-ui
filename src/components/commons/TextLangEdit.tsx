@@ -1,15 +1,17 @@
 'use client';
 
 import { MdMathEditor, Tabs } from 'components';
-import { useJukiUI } from 'hooks';
+import { useUIStore } from 'hooks';
 import { Language, TextLanguageType } from 'types';
 
-export const TextLangEdit = ({ text, setText }: {
+interface TextLangEditProps {
   text: TextLanguageType,
-  setText: (text: TextLanguageType) => void
-}) => {
+  setText: (text: TextLanguageType) => void,
+}
+
+export const TextLangEdit = ({ text, setText }: TextLangEditProps) => {
   
-  const { components: { Image } } = useJukiUI();
+  const { Image } = useUIStore(store => store.components);
   
   return (
     <div className="text-editor">

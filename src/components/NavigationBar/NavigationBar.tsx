@@ -11,7 +11,7 @@ import {
   TrophyIcon,
 } from 'components';
 import { jukiAppRoutes } from 'config';
-import { useJukiUI, useRouterStore, useUserStore } from 'hooks';
+import { useRouterStore, useUIStore, useUserStore } from 'hooks';
 import React, { PropsWithChildren } from 'react';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'src/constants';
 import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
@@ -20,7 +20,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   
   const pathname = useRouterStore(state => state.pathname);
   const pushRoute = useRouterStore(state => state.pushRoute);
-  const { components: { Link, Image } } = useJukiUI();
+  const { Link, Image } = useUIStore(store => store.components);
   const companyKey = useUserStore(state => state.company.key);
   const userNickname = useUserStore(state => state.user.nickname);
   const userPreferredTheme = useUserStore(state => state.user.settings[ProfileSetting.THEME]);

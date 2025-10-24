@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useJukiNotification, useJukiUI, useMemo, useState, useUserStore, useWebsocketStore } from 'hooks';
+import { useJukiNotification, useMemo, useState, useUIStore, useUserStore, useWebsocketStore } from 'hooks';
 import React, { useEffect } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import { KeyedMutator } from 'swr';
@@ -40,7 +40,7 @@ interface ProblemNameFieldProps {
 
 const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFieldProps) => {
   
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const userSessionId = useUserStore(state => state.user.sessionId);
   const [ dataCrawled, setDataCrawled ] = useState<{
@@ -169,15 +169,18 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
   );
 };
 
-export const ViewProblems = ({ contest, reloadContest }: {
+interface ViewProblemsProps {
   contest: ContestDataResponseDTO,
-  reloadContest: KeyedMutator<any>
-}) => {
+  reloadContest: KeyedMutator<any>,
+}
+
+export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
   
   const { problems, user, key: contestKey } = contest;
   const { isManager, isAdministrator } = user || {};
   const { notifyResponse } = useJukiNotification();
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
+  const viewPortSize = useUIStore(store => store.viewPortSize);
   const isJudgeOrAdmin = isManager || isAdministrator;
   
   const columns = useMemo(() => [

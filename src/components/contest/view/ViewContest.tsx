@@ -1,5 +1,6 @@
 'use client';
 
+import { consoleInfo } from '@juki-team/commons';
 import {
   ButtonLoader,
   ContentCopyIcon,
@@ -19,9 +20,9 @@ import {
   useCallback,
   useEffect,
   useI18nStore,
-  useJukiUI,
   useMutate,
   useRouterStore,
+  useUIStore,
   useUserStore,
   useWebsocketStore,
 } from 'hooks';
@@ -53,7 +54,8 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   const contestKey = contest.key;
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const { Link } = useUIStore(store => store.components);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
   const mutate = useMutate();
@@ -61,7 +63,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   const userSessionId = useUserStore(state => state.user.sessionId);
   
   const reloadContest = useCallback(async () => {
-    console.info('reloading all contest');
+    consoleInfo('reloading all contest');
     await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`, 'g'));
     await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
   }, [ mutate ]);
@@ -197,12 +199,13 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   const extraNodes = [];
   
   if (viewPortSize === 'hg') {
-    extraNodes.push(<ContestTimeTimer contest={contest} reloadContest={reloadContest} />);
+    extraNodes.push(<ContestTimeTimer key="contest-timer" contest={contest} reloadContest={reloadContest} />);
   }
   
   if (userCanCreateContest && (contest.isPast || contest.user.isAdministrator || contest.user.isManager)) {
     extraNodes.push(
       <ButtonLoader
+        key="contest-copy"
         size="small"
         onClick={async setLoaderStatus => {
           setLoaderStatus(Status.LOADING);
@@ -218,7 +221,6 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
         icon={<ContentCopyIcon />}
         responsiveMobile
         type="light"
-        key="copy"
       >
         <T className="ws-np tt-se">copy</T>
       </ButtonLoader>,
@@ -227,6 +229,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   
   extraNodes.push(
     <DocumentMembersButton
+      key="contest-members"
       isAdministrator={contest.user.isAdministrator}
       members={contest.members}
       documentOwner={contest.owner}
@@ -240,7 +243,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   
   if (isAdministrator) {
     extraNodes.push(
-      <Link href={jukiAppRoutes.JUDGE().contests.edit({ key: contestKey })}>
+      <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contestKey })}>
         <ButtonLoader
           size="small"
           icon={<EditIcon />}

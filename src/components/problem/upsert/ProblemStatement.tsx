@@ -1,7 +1,7 @@
 'use client';
 
 import { CodeEditor, Input, Select, T, TabsInline } from 'components';
-import { useJukiUI } from 'hooks';
+import { useUIStore } from 'hooks';
 import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { CodeLanguage, Language, UpsertProblemUIDTO } from 'types';
 import { ProblemStatementMd } from './ProblemStatementMd';
@@ -18,7 +18,7 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
   
   const [ language, setLanguage ] = useState<Language>(Language.ES);
   const [ type, setType ] = useState<'md' | 'html' | 'pdf'>(judgeIsExternal ? 'html' : 'md');
-  const { components: { Image } } = useJukiUI();
+  const { Image } = useUIStore(store => store.components);
   
   const tabs = {
     [Language.ES]: {

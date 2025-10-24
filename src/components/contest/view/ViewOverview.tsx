@@ -14,7 +14,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
-import { useDateFormat, useI18nStore, useJukiNotification, useJukiUI, useRouterStore, useUserStore } from 'hooks';
+import { useDateFormat, useI18nStore, useJukiNotification, useRouterStore, useUIStore, useUserStore } from 'hooks';
 import React from 'react';
 import { CODE_LANGUAGE, JUDGE_API_V1 } from 'src/constants';
 import {
@@ -41,7 +41,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
   const appendSearchParams = useRouterStore(state => state.appendSearchParams);
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse, addWarningNotification } = useJukiNotification();
-  const { viewPortSize } = useJukiUI();
+  const viewPortSize = useUIStore(store => store.viewPortSize);
   const t = useI18nStore(state => state.i18n.t);
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   

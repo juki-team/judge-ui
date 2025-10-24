@@ -12,11 +12,10 @@ import {
   UserPreviewModal,
 } from 'components';
 import { JUKI_APP_COMPANY_KEY, NODE_ENV, ROUTES } from 'config/constants';
-import { useJukiUI, usePreloadComponents, useUserStore, useUserTrack } from 'hooks';
+import { usePreloadComponents, useUIStore, useUserStore } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React, { Children, PropsWithChildren } from 'react';
-import { UserProvider } from 'store';
 import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
@@ -25,7 +24,7 @@ import { useSearchParams } from '../../hooks/useSearchParams';
 const SponsoredByTag = () => {
   
   const companyKey = useUserStore(state => state.company.key);
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   
   if (companyKey === JUKI_APP_COMPANY_KEY) {
     return null;
@@ -46,11 +45,6 @@ const initialLastPath = {
   [LastPathKey.SECTION_PROBLEM]: '/problems',
   [LastPathKey.BOARDS]: ROUTES.BOARDS.PAGE(),
   [LastPathKey.SECTION_HELP]: `/help`,
-};
-
-const UserTrack = () => {
-  useUserTrack();
-  return null;
 };
 
 export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
@@ -87,14 +81,11 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         }}
         initialLastPath={initialLastPath}
       >
-        <UserProvider>
-          <NavigationBar>
-            {Children.toArray(children)}
-            {/*<PresentationToolButtons />*/}
-            <SponsoredByTag />
-            <UserTrack />
-          </NavigationBar>
-        </UserProvider>
+        <NavigationBar>
+          {Children.toArray(children)}
+          {/*<PresentationToolButtons />*/}
+          <SponsoredByTag />
+        </NavigationBar>
         <Analytics key="analytics" />
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <UserPreviewModal key="user-preview-modal" />

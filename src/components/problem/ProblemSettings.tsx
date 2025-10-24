@@ -41,11 +41,13 @@ import {
   UpsertProblemUIDTO,
 } from 'types';
 
-export const Tags = ({ tags, judgeKey, onChange }: {
+interface TagsProps {
   tags: string[],
   onChange: (newTags: string[]) => void,
-  judgeKey: string
-}) => {
+  judgeKey: string,
+}
+
+export const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
   
   const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO>>(jukiApiManager.API_V1.judge.getData({ params: { key: judgeKey } }).url);
   

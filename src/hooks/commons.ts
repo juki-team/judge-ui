@@ -1,7 +1,6 @@
 export {
   useOutsideAlerter,
   useJukiUser,
-  useJukiUI,
   useFetcher,
   usePrevious,
   useDataViewerRequester,
@@ -19,6 +18,7 @@ export {
   useStableState,
   useUserTrack,
   useWebsocketStore,
+  useUIStore,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export { useEffect, useRef, useState, useMemo, useCallback } from 'react';

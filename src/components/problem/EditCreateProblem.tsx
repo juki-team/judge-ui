@@ -3,7 +3,7 @@
 import { LinkLastPath, ProblemStatement, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEntityDiff, useJukiUI, useRouterStore } from 'hooks';
+import { useEntityDiff, useRouterStore, useUIStore } from 'hooks';
 import React, { useState } from 'react';
 import { EntityState, LastPathKey, ProblemTab, TabsType, UpsertComponentEntityProps, UpsertProblemUIDTO } from 'types';
 import { Input } from '../index';
@@ -20,7 +20,7 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
   const editing = !!problemJudgeKey;
   const [ problem, setProblem ] = useState(initialProblem);
   useEntityDiff(initialProblem, true);
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   const searchParams = useRouterStore(state => state.searchParams);
   const tab = searchParams.get('tab') as ProblemTab || ProblemTab.STATEMENT;
   

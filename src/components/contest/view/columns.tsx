@@ -1,7 +1,7 @@
 import { BalloonIcon, Field, UserNicknameLink } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames } from 'helpers';
-import { useJukiUI, useUserStore } from 'hooks';
+import { useUIStore, useUserStore } from 'hooks';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
 import {
   ContestProblemDataResponseDTO,
@@ -31,7 +31,8 @@ const NicknameField = ({
                        }: TableHeadFieldProps<ScoreboardResponseDTOFocus>) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
-  const { components: { Image } } = useJukiUI();
+  const { Image } = useUIStore(store => store.components);
+  
   return (
     <Field
       className={classNames('jk-row center gap', {

@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, cleanRequest, downloadDataTableAsCsvFile, downloadSheetDataAsXlsxFile } from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiNotification, useJukiUI } from 'hooks';
+import { useDataViewerRequester, useI18nStore, useJukiNotification, useUIStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
 import {
@@ -114,7 +114,8 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
-  const { viewPortSize, components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
+  const viewPortSize = useUIStore(store => store.viewPortSize);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {

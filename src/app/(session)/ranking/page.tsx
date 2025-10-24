@@ -3,13 +3,13 @@
 import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { oneTab } from 'helpers';
-import { useDataViewerRequester, useEffect, useJukiUI, useMemo, useState } from 'hooks';
+import { useDataViewerRequester, useEffect, useMemo, useState, useUIStore } from 'hooks';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {
   
-  const { viewPortSize } = useJukiUI();
-  const { components: { Image } } = useJukiUI();
+  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const { Image } = useUIStore(store => store.components);
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {
       head: 'position',

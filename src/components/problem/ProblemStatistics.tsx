@@ -3,7 +3,7 @@
 import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
-import { useFetcher, useI18nStore, useJukiUI } from 'hooks';
+import { useFetcher, useI18nStore, useUIStore } from 'hooks';
 import { i18n } from 'i18next';
 import React, { useState } from 'react';
 import type { ContentType } from 'recharts/types/component/Tooltip';
@@ -93,7 +93,8 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
     data,
   } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now));
   const t = useI18nStore(store => store.i18n.t);
-  const { viewPortHeight, viewPortSize } = useJukiUI();
+  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortHeight = useUIStore(store => store.viewPortHeight);
   const [ dateType, setDateType ] = useState<StatisticsDateKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};

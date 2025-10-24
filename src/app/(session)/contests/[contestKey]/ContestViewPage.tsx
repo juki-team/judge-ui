@@ -20,7 +20,7 @@ export default function ContestViewPage({ contestKey }: { contestKey: string }) 
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   useCheckAndStartServices();
-  // const { components: { Link } } = useJukiUI();
+  // const { Link } = useUIStore(store => store.components);
   const companyKey = useUserStore(state => state.company.key);
   
   // const breadcrumbs = [

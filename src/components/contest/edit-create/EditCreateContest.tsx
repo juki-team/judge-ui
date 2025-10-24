@@ -3,7 +3,7 @@
 import { Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
 import { isGlobalContest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useJukiUI, useRouterStore, useState } from 'hooks';
+import { useEffect, useRouterStore, useState, useUIStore } from 'hooks';
 import { memo } from 'react';
 import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
@@ -27,7 +27,7 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
   const editing = !!contestKey;
   
   // const { addWarningNotification } = useJukiNotification();
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest);
   const isGlobal = isGlobalContest(contest.settings);
   const searchParams = useRouterStore(store => store.searchParams);

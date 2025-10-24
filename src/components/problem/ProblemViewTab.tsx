@@ -2,7 +2,7 @@ import { ONE_MINUTE } from '@juki-team/commons';
 import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, T } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useJukiUI } from 'hooks';
+import { useJukiNotification, useUIStore } from 'hooks';
 import { RefObject } from 'react';
 import { CodeLanguage, ContentResponseType, ProblemDataResponseDTO, Status } from 'types';
 
@@ -21,7 +21,7 @@ export const ProblemViewTab = ({
                                }: ProblemViewTabProps) => {
   
   const { notifyResponse, addWarningNotification } = useJukiNotification();
-  const { components: { Link } } = useJukiUI();
+  const { Link } = useUIStore(store => store.components);
   
   return (
     <ProblemView
