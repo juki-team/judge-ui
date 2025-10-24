@@ -1,16 +1,16 @@
 'use client';
 
 import { Button, CodeViewer, DateLiteral, Modal, T, UserChip } from 'components';
-import React from 'react';
+import { useState } from 'react';
 import { CodeLanguage, ContestDataResponseDTO } from 'types';
 
 export const ViewEvents = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
-  const [ selectedDetails, setSelectedDetails ] = React.useState<Record<string, any> | null>(null);
+  const [ selectedDetails, setSelectedDetails ] = useState<Record<string, any> | null>(null);
   
   return (
     <div className="jk-row stretch left jk-pg-md nowrap jk-pg bc-we jk-br-ie">
-      <div className="jk-col gap left">
+      <div className="jk-col gap left stretch">
         {contest.events
           ?.sort((a, b) => b.timestamp - a.timestamp)
           .map(({ action, details, user, timestamp }, index) => (

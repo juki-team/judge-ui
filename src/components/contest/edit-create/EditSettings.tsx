@@ -62,8 +62,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const quietDuration = Math.max(contest.settings.endTimestamp - contest.settings.quietTimestamp, 0);
   const frozenDuration = Math.max(contest.settings.quietTimestamp - contest.settings.frozenTimestamp, 0);
   
-  const quietPercentage = quietDuration === 0 ? 0 : Math.min(80, Math.max(10, quietDuration * 100 / contestDuration));
-  const frozenPercentage = quietDuration === 0 ? 0 : Math.min(80, Math.max(10, frozenDuration * 100 / contestDuration));
+  const quietPercentage = quietDuration * contestDuration === 0 ? 0 : Math.min(80, Math.max(10, quietDuration * 100 / contestDuration));
+  const frozenPercentage = frozenDuration * contestDuration === 0 ? 0 : Math.min(80, Math.max(10, frozenDuration * 100 / contestDuration));
   const durationPercentage = 100 - quietPercentage - frozenPercentage;
   
   return (
@@ -217,32 +217,38 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   />
                 </div>
               )}
-              <div className="jk-row left fw-lt tx-s">
-                <T className="tt-se">_at</T>&nbsp;
-                <div className="jk-col left">
-                  <Timer
-                    currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
-                    interval={0}
-                    type="weeks-days-hours-minutes-seconds"
-                    literal
-                    ignoreLeadingZeros
-                    ignoreTrailingZeros
-                  />
-                </div>
-              </div>
-              <div className="jk-row left tx-s fw-lt">
-                <T className="tt-se">duration</T>:&nbsp;
-                <div className="jk-col left">
-                  <Timer
-                    currentTimestamp={frozenDuration}
-                    interval={0}
-                    type="weeks-days-hours-minutes-seconds"
-                    literal
-                    ignoreLeadingZeros
-                    ignoreTrailingZeros
-                  />
-                </div>
-              </div>
+              {!!frozenDuration ? (
+                <>
+                  {contest.settings.frozenTimestamp - contest.settings.startTimestamp > 0 ? (
+                    <div className="jk-row left fw-lt tx-s">
+                      <T className="tt-se">_at</T>&nbsp;
+                      <div className="jk-col left">
+                        <Timer
+                          currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
+                          interval={0}
+                          type="weeks-days-hours-minutes-seconds"
+                          literal
+                          ignoreLeadingZeros
+                          ignoreTrailingZeros
+                        />
+                      </div>
+                    </div>
+                  ) : <T className="tt-se tx-s fw-lt cr-er">at the beginning</T>}
+                  <div className="jk-row left tx-s fw-lt">
+                    <T className="tt-se">duration</T>:&nbsp;
+                    <div className="jk-col left">
+                      <Timer
+                        currentTimestamp={frozenDuration}
+                        interval={0}
+                        type="weeks-days-hours-minutes-seconds"
+                        literal
+                        ignoreLeadingZeros
+                        ignoreTrailingZeros
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : <T className="tt-se tx-s fw-lt cr-wg">there is not frozen time</T>}
             </div>
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row left extend gap">
@@ -301,19 +307,21 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               )}
               {!!quietDuration ? (
                 <>
-                  <div className="jk-row left tx-s fw-lt">
-                    <T className="tt-se">_at</T>&nbsp;
-                    <div className="jk-col left">
-                      <Timer
-                        currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
-                        interval={0}
-                        type="weeks-days-hours-minutes-seconds"
-                        literal
-                        ignoreLeadingZeros
-                        ignoreTrailingZeros
-                      />
+                  {contest.settings.quietTimestamp - contest.settings.startTimestamp > 0 ? (
+                    <div className="jk-row left tx-s fw-lt">
+                      <T className="tt-se">_at</T>&nbsp;
+                      <div className="jk-col left">
+                        <Timer
+                          currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
+                          interval={0}
+                          type="weeks-days-hours-minutes-seconds"
+                          literal
+                          ignoreLeadingZeros
+                          ignoreTrailingZeros
+                        />
+                      </div>
                     </div>
-                  </div>
+                  ) : <T className="tt-se tx-s fw-lt cr-er">at the beginning</T>}
                   <div className="jk-row left tx-s fw-lt">
                     <T className="tt-se">duration</T>:&nbsp;
                     <div className="jk-col left">
@@ -328,7 +336,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     </div>
                   </div>
                 </>
-              ) : <T className="tt-se tx-s fw-lt">there is not quiet time</T>}
+              ) : <T className="tt-se tx-s fw-lt cr-wg">there is not quiet time</T>}
             </div>
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row gap left">
@@ -345,7 +353,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               </div>
               {checks.duration ? (
                 <div className="jk-row left">
-                  <T className="tt-se">_at</T>
+                  <T className="tt-se">_at</T>&nbsp;
                   <Input
                     type="number"
                     size="auto"
@@ -388,31 +396,35 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   />
                 </div>
               )}
-              <div className="jk-row left tx-s fw-lt">
-                <T className="tt-se">_at</T>&nbsp;
-                <div className="jk-col left">
-                  <Timer
-                    currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
-                    interval={0}
-                    type="weeks-days-hours-minutes-seconds"
-                    literal
-                    ignoreLeadingZeros
-                    ignoreTrailingZeros
-                  />
-                </div>
-              </div>
-              <div className="jk-row left tx-s fw-lt">
-                <T className="tt-se tx-s">duration</T>:&nbsp;
-                <Timer
-                  currentTimestamp={contestDuration}
-                  interval={0}
-                  type="weeks-days-hours-minutes-seconds"
-                  literal
-                  ignoreLeadingZeros
-                  ignoreTrailingZeros
-                  className="fw-lt tx-s"
-                />
-              </div>
+              {!!contestDuration ? (
+                <>
+                  <div className="jk-row left tx-s fw-lt">
+                    <T className="tt-se">_at</T>&nbsp;
+                    <div className="jk-col left">
+                      <Timer
+                        currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
+                        interval={0}
+                        type="weeks-days-hours-minutes-seconds"
+                        literal
+                        ignoreLeadingZeros
+                        ignoreTrailingZeros
+                      />
+                    </div>
+                  </div>
+                  <div className="jk-row left tx-s fw-lt">
+                    <T className="tt-se tx-s">duration</T>:&nbsp;
+                    <Timer
+                      currentTimestamp={contestDuration}
+                      interval={0}
+                      type="weeks-days-hours-minutes-seconds"
+                      literal
+                      ignoreLeadingZeros
+                      ignoreTrailingZeros
+                      className="fw-lt tx-s"
+                    />
+                  </div>
+                </>
+              ) : <T className="tt-se tx-s cr-er">the is no contest time</T>}
             </div>
           </div>
         </div>

@@ -145,6 +145,7 @@ export type {
   DataViewerRequestPropsType,
   DataViewerToolbarProps,
   TimeDisplayType,
+  CodeViewerProps,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

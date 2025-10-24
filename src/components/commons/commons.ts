@@ -4,6 +4,7 @@
 
 export {
   JukiProviders,
+  Client,
   SubmitView,
   TwoActionModal,
   Breadcrumbs,

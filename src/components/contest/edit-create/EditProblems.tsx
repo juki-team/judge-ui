@@ -323,12 +323,42 @@ const getContestPrerequisitesData = (contest: UpsertContestDTOUI) => {
   };
 };
 
+const cutDate = (timestamp: number) => {
+  const rounded = new Date(timestamp);
+  rounded.setSeconds(0, 0);
+  return rounded.getTime();
+};
+
 const fixOrder = (contest: UpsertContestDTOUI) => {
   const {
     delayPrerequisites,
     isTypePrerequisiteIndividually,
     withPrerequisites,
   } = getContestPrerequisitesData(contest);
+  const response: UpsertContestDTOUI = {
+    ...contest,
+    settings: {
+      ...contest.settings,
+      startTimestamp: Math.max(0, cutDate(contest.settings.startTimestamp)),
+      endTimestamp: cutDate(contest.settings.endTimestamp),
+      frozenTimestamp: cutDate(contest.settings.frozenTimestamp),
+      quietTimestamp: cutDate(contest.settings.quietTimestamp),
+    },
+  };
+  
+  response.settings = {
+    ...contest.settings,
+    endTimestamp: Math.max(contest.settings.endTimestamp, contest.settings.startTimestamp),
+  };
+  response.settings = {
+    ...contest.settings,
+    frozenTimestamp: Math.min(Math.max(contest.settings.frozenTimestamp, contest.settings.startTimestamp), contest.settings.endTimestamp),
+  };
+  response.settings = {
+    ...contest.settings,
+    quietTimestamp: Math.min(Math.max(contest.settings.quietTimestamp, contest.settings.frozenTimestamp), contest.settings.endTimestamp),
+  };
+  
   const newProblems = Object.values(contest.problems)
     .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
     .map((problem, index, problems) => {
@@ -349,8 +379,8 @@ const fixOrder = (contest: UpsertContestDTOUI) => {
         name: problem.name,
         points: problem.points,
         color: problem.color,
-        startTimestamp: problem.startTimestamp,
-        endTimestamp: problem.endTimestamp,
+        startTimestamp: cutDate(problem.startTimestamp),
+        endTimestamp: cutDate(problem.endTimestamp),
         tags: problem.tags,
         company: problem.company,
         prerequisites,
@@ -358,7 +388,7 @@ const fixOrder = (contest: UpsertContestDTOUI) => {
       };
       return value;
     });
-  const response: UpsertContestDTOUI = { ...contest };
+  
   for (const problem of newProblems) {
     response.problems[problem.key] = problem;
   }

@@ -4,7 +4,7 @@ import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, SpectatorInfor
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isGlobalContest } from 'helpers';
 import { useJukiNotification, useRouterStore, useUIStore } from 'hooks';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { KeyedMutator } from 'swr';
 import {
   CodeLanguage,
@@ -46,6 +46,14 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
   return (
     <ProblemView
       key="problem-view"
+      contest={{
+        index: problem.index,
+        color: problem.color,
+      }}
+      languages={problem.judge.isExternal
+        ? []
+        : contest.settings.languages.map((language) => ({ value: language, label: language as ReactNode }))
+      }
       problem={{
         ...problem,
         user: {
