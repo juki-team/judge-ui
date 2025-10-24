@@ -66,7 +66,7 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
   }
   
   return (
-    <div className={`jk-tag tx-s cr-we ${tagBc} jk-row nowrap`}>
+    <div className={`jk-tag tx-s cr-we ${tagBc} jk-row nowrap fw-rr`}>
       {contest.isEndless
         ? <T className="ws-np tt-se">endless</T>
         : (
