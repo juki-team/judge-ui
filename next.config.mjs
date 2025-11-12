@@ -1,9 +1,10 @@
-import { version } from './package.json' with { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 import withPlugins from 'next-compose-plugins';
 // import { Language } from '@juki-team/commons';
 import PWA from 'next-pwa';
 import BundleAnalyzer from '@next/bundle-analyzer';
 
+const { version } = pkg;
 const isDev = process.env.NODE_ENV !== 'production';
 
 const nextConfig = withPlugins([
