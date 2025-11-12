@@ -4,11 +4,14 @@ const { Language } = require('@juki-team/commons'); // required
 const PWA = require('next-pwa');
 const BundleAnalyzer = require('@next/bundle-analyzer');
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 module.exports = withPlugins([
   PWA({
     dest: 'public',
-    disable: process.env.NODE_ENV === 'development',
-    // register: true,
+    disable: isDev,
+    register: true,
+    skipWaiting: true,
     // scope: '/app',
     sw: 'service-worker.js',
     importScripts: [ '/worker.js' ],

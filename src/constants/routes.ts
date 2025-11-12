@@ -60,6 +60,7 @@ export const DEFAULT_METADATA: Metadata = {
   description: 'Juki Judge is designed to make people improve their programming skills',
   applicationName: 'Juki Judge',
   keywords: [ 'Juki Judge' ],
+  manifest: '/manifest.json',
   formatDetection: {
     email: false,
     address: false,
@@ -95,6 +96,7 @@ export const DEFAULT_METADATA: Metadata = {
     },
   },
   appleWebApp: {
+    capable: true,
     title: 'Juki Judge',
     statusBarStyle: 'default',
     startupImage: [
