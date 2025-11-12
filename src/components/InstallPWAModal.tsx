@@ -3,7 +3,7 @@
 import { Button, Modal, T } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, cleanRequest, consoleError, consoleInfo } from 'helpers';
-import { useCallback, useEffect, useState } from 'hooks';
+import { useCallback, useEffect, useRouterStore, useState } from 'hooks';
 import { ContentsResponseType } from 'types';
 
 type BeforeInstallPromptEvent = Event & {
@@ -16,6 +16,7 @@ export function InstallPWAModal() {
   const [ supportsInstall, setSupportsInstall ] = useState(false);
   const [ deferredPrompt, setDeferredPrompt ] = useState<BeforeInstallPromptEvent | null>(null);
   const [ isInstalled, setIsInstalled ] = useState(false);
+  const isLoadingRoute = useRouterStore(store => store.isLoadingRoute);
   
   useEffect(() => {
     const onBeforeInstallPrompt = (e: Event) => {
@@ -37,7 +38,7 @@ export function InstallPWAModal() {
       window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt);
       window.removeEventListener('appinstalled', onAppInstalled);
     };
-  }, []);
+  }, [ isLoadingRoute ]);
   
   const handleInstall = useCallback(async () => {
     if (!deferredPrompt) return;
