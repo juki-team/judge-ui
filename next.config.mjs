@@ -1,4 +1,4 @@
-import { version } from './package.json';
+import { version } from './package.json' with { type: 'json' };
 import withPlugins from 'next-compose-plugins';
 // import { Language } from '@juki-team/commons';
 import PWA from 'next-pwa';
