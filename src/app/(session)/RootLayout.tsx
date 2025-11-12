@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import {
   ErrorBoundary,
   Image,
+  InstallPWAModal,
   JukiProviders,
   NavigationBar,
   NewVersionAvailable,
@@ -90,6 +91,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <UserPreviewModal key="user-preview-modal" />
         <SubmissionModal key="submission-modal" />
+        <InstallPWAModal key="install-pwa-modal" />
         {/*<NotificationWarningModal />*/}
       </JukiProviders>
     </SWRConfig>

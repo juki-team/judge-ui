@@ -20,6 +20,8 @@ export {
   cleanRequest,
   isSubmissionsCrawlWebSocketResponseEventDTO,
   isContestChangesWebSocketResponseEventDTO,
+  consoleError,
+  consoleInfo,
 } from '@juki-team/commons';
 
 export {
