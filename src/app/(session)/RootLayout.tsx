@@ -95,5 +95,5 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
     </SWRConfig>
   );
   
-  return NODE_ENV === 'development' ? app : <ErrorBoundary reload={refresh}>{app}</ErrorBoundary>;
+  return NODE_ENV !== 'production' ? app : <ErrorBoundary reload={refresh}>{app}</ErrorBoundary>;
 };
