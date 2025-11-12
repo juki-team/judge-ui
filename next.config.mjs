@@ -1,12 +1,12 @@
-const { version } = require('./package.json');
-const { withPlugins, optional } = require('next-compose-plugins');
-const { Language } = require('@juki-team/commons'); // required
-const PWA = require('next-pwa');
-const BundleAnalyzer = require('@next/bundle-analyzer');
+import { version } from './package.json';
+import withPlugins from 'next-compose-plugins';
+// import { Language } from '@juki-team/commons';
+import PWA from 'next-pwa';
+import BundleAnalyzer from '@next/bundle-analyzer';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-module.exports = withPlugins([
+const nextConfig = withPlugins([
   PWA({
     dest: 'public',
     disable: isDev,
@@ -76,3 +76,5 @@ module.exports = withPlugins([
     ];
   },
 });
+
+export default nextConfig;
