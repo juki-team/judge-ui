@@ -385,6 +385,7 @@ const fixOrder = (contest: UpsertContestDTOUI) => {
         company: problem.company,
         prerequisites,
         maxAcceptedUsers: problem.maxAcceptedUsers,
+        group: '',
       };
       return value;
     });
@@ -427,6 +428,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           company: problem.company,
           prerequisites: problem.prerequisites,
           maxAcceptedUsers: problem.maxAcceptedUsers,
+          group: '',
         };
         return {
           key: problem.key,
@@ -700,6 +702,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                         company: problem.company,
                         prerequisites: [],
                         maxAcceptedUsers: 0,
+                        group: '',
                       };
                       
                       return {

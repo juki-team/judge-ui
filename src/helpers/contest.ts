@@ -108,6 +108,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
       company: problem.company,
       prerequisites: problem.prerequisites,
       maxAcceptedUsers: problem.maxAcceptedUsers,
+      group: problem.group || '',
     };
   });
   
@@ -120,6 +121,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertCon
     tags: Array.isArray(contest.tags) ? contest.tags : [],
     owner: contest.owner,
     state: contest.state,
+    groups: contest.groups || {},
   };
 };
 
@@ -136,6 +138,7 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
       startTimestamp: problem.startTimestamp,
       prerequisites: problem.prerequisites?.map(prerequisite => ({ ...prerequisite })) || [],
       maxAcceptedUsers: problem.maxAcceptedUsers || 0,
+      group: problem.group || '',
     };
   }
   
@@ -167,6 +170,7 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
       endTimestamp: entity.settings?.endTimestamp ?? 0,
     },
     tags: entity.tags ?? [],
+    groups: entity.groups ?? {},
   };
 };
 

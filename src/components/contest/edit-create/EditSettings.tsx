@@ -130,7 +130,18 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       </div>
       {!competition && !isGlobal && (
         <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
-          <ContestTimeProgress contest={{ ...contest, isLive: false }} />
+          <ContestTimeProgress
+            contest={{
+              ...contest,
+              isLive: false,
+              isFrozenTime: false,
+              isQuietTime: false,
+              isEndless: false,
+              isPast: false,
+              isFuture: false,
+              isGlobal: false,
+            }}
+          />
           <div className="jk-row gap top space-between tx-s">
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row left gap nowrap">

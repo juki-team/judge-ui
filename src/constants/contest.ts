@@ -64,6 +64,7 @@ Oscar Arias | Problem Setter`,
     },
     members: EMPTY_ENTITY_MEMBERS(),
     tags: [],
+    groups: {},
     ...initialContest,
   };
 };
