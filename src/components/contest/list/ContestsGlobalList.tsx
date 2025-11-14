@@ -1,6 +1,6 @@
 'use client';
 
-import { getContestDateHeader, getContestNameHeader, getContestStatusHeader, PagedDataViewer } from 'components';
+import { getContestNameHeader, PagedDataViewer } from 'components';
 import { jukiApiManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useUserStore } from 'hooks';
@@ -13,15 +13,14 @@ import {
   QueryParam,
 } from 'types';
 
-export const ContestsAllList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
+export const ContestsGlobalList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
   
   const companyKey = useUserStore(state => state.company.key);
-  const columns = useMemo(() => [
-    getContestStatusHeader(),
+  const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     getContestNameHeader(),
-    getContestDateHeader(),
+    // getContestDateHeader(),
     // getContestContestantsHeader(),
-  ] as DataViewerHeadersType<ContestSummaryListResponseDTO>[], []);
+  ], []);
   
   return (
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
@@ -31,12 +30,17 @@ export const ContestsAllList = (props: Partial<PagedDataViewerProps<ContestSumma
           params: {
             page,
             pageSize,
-            filterUrl: toFilterUrl({ ...filter, companyKeys: companyKey, state: EntityState.RELEASED }),
+            filterUrl: toFilterUrl({
+              ...filter,
+              companyKeys: companyKey,
+              state: EntityState.RELEASED,
+              global: 'true',
+            }),
             sortUrl: toSortUrl(sort),
           },
         }).url
       )}
-      name={QueryParam.ALL_CONTESTS_TABLE}
+      name={QueryParam.GLOBAL_CONTESTS_TABLE}
       {...props}
     />
   );

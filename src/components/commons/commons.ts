@@ -5,6 +5,8 @@
 export {
   JukiProviders,
   Client,
+  ProgressMultiBar,
+  ProgressSlide,
   SubmitView,
   TwoActionModal,
   Breadcrumbs,

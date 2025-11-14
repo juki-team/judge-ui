@@ -32,6 +32,20 @@
   .jk-table-view-tools {
     flex-direction: row;
   }
+  
+  &.is-quiet {
+    .jk-view-container {
+      box-shadow: 0 0 6px var(--t-color-info-dark);
+      outline: 6px var(--t-color-info-light);
+    }
+  }
+  
+  &.is-frozen {
+    .jk-view-container {
+      box-shadow: 0 0 6px var(--t-color-info-light);
+      outline: 6px var(--t-color-info-light);
+    }
+  }
 }
 
 .contest-overview {

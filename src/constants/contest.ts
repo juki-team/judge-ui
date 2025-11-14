@@ -54,7 +54,7 @@ Oscar Arias | Problem Setter`,
     settings: {
       clarifications: true,
       numberJudgeValidations: 0,
-      languages: [ CodeLanguage.CPP17, CodeLanguage.JAVA, CodeLanguage.PYTHON3 ],
+      languages: [ CodeLanguage.C_11, CodeLanguage.CPP_20, CodeLanguage.JAVA_21, CodeLanguage.PYTHON_PYPY_3, CodeLanguage.JAVASCRIPT_NODE_JS_22 ],
       penalty: 20,
       timeToSolve: 0,
       startTimestamp: now.getTime(),

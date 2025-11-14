@@ -1,18 +1,11 @@
 'use client';
 
-import {
-  ContestsAllList,
-  ContestsEndlessList,
-  ContestsLiveList,
-  ContestsPastList,
-  ContestsUpcomingList,
-  CreateContestButton,
-  T,
-  TwoContentLayout,
-} from 'components';
+import { CreateContestButton, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
 import { useEffect, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
 import { ContestsTab, ContestSummaryListResponseDTO, LastPathKey, PagedDataViewerProps, TabsType } from 'types';
+import { ContestsClassicList } from '../../../components/contest/list/ContestsClassicList';
+import { ContestsGlobalList } from '../../../components/contest/list/ContestsGlobalList';
 
 export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   
@@ -23,13 +16,10 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   useEffect(() => {
     if (!tab || ![
-      ContestsTab.ALL,
-      ContestsTab.ENDLESS,
-      ContestsTab.LIVE,
-      ContestsTab.UPCOMING,
-      ContestsTab.PAST,
+      ContestsTab.COLLECTIONS,
+      ContestsTab.CLASSICS,
     ].includes(tab)) {
-      setSearchParams({ name: 'tab', value: ContestsTab.ALL }, true);
+      setSearchParams({ name: 'tab', value: ContestsTab.COLLECTIONS }, true);
     }
   }, [ tab, setSearchParams ]);
   
@@ -46,30 +36,20 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   };
   
   const tabs: TabsType<ContestsTab> = {
-    [ContestsTab.ALL]: {
-      body: <ContestsAllList {...props} />,
-      key: ContestsTab.ALL,
-      header: <T className="tt-se ws-np">all</T>,
+    // [ContestsTab.ALL]: {
+    //   body: <ContestsAllList {...props} />,
+    //   key: ContestsTab.ALL,
+    //   header: <T className="tt-se ws-np">all</T>,
+    // },
+    [ContestsTab.COLLECTIONS]: {
+      body: <ContestsGlobalList  {...props} />,
+      key: ContestsTab.COLLECTIONS,
+      header: <T className="tt-se ws-np">collections</T>,
     },
-    [ContestsTab.ENDLESS]: {
-      body: <ContestsEndlessList  {...props} />,
-      key: ContestsTab.ENDLESS,
-      header: <T className="tt-se ws-np">endless</T>,
-    },
-    [ContestsTab.LIVE]: {
-      body: <ContestsLiveList {...props} />,
-      key: ContestsTab.LIVE,
-      header: <T className="tt-se ws-np">live</T>,
-    },
-    [ContestsTab.UPCOMING]: {
-      body: <ContestsUpcomingList {...props} />,
-      key: ContestsTab.UPCOMING,
-      header: <T className="tt-se ws-np">upcoming</T>,
-    },
-    [ContestsTab.PAST]: {
-      body: <ContestsPastList {...props} />,
-      key: ContestsTab.PAST,
-      header: <T className="tt-se ws-np">past</T>,
+    [ContestsTab.CLASSICS]: {
+      body: <ContestsClassicList {...props} />,
+      key: ContestsTab.CLASSICS,
+      header: <T className="tt-se ws-np">classics</T>,
     },
   };
   

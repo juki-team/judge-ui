@@ -8,6 +8,8 @@ export enum QueryParam {
   // contests
   ALL_CONTESTS_TABLE = 'act',
   ENDLESS_CONTESTS_TABLE = 'ect',
+  GLOBAL_CONTESTS_TABLE = 'gct',
+  CLASSIC_CONTESTS_TABLE = 'cct',
   LIVE_CONTESTS_TABLE = 'lct',
   UPCOMING_CONTESTS_TABLE = 'uct',
   PAST_CONTESTS_TABLE = 'pct',
@@ -22,6 +24,8 @@ export enum QueryParam {
 export enum ContestsTab {
   ALL = 'all',
   ENDLESS = 'endless',
+  COLLECTIONS = 'collections',
+  CLASSICS = 'classics',
   LIVE = 'live',
   UPCOMING = 'upcoming',
   PAST = 'past',

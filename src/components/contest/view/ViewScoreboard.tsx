@@ -1,18 +1,14 @@
 'use client';
 
-import {
-  AcUnitIcon,
-  Button,
-  ButtonLoader,
-  DataViewer,
-  FullscreenExitIcon,
-  FullscreenIcon,
-  ManufacturingIcon,
-  Select,
-  T,
-} from 'components';
+import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, Select, T } from 'components';
 import { jukiApiManager } from 'config';
-import { authorizedRequest, cleanRequest, downloadDataTableAsCsvFile, downloadSheetDataAsXlsxFile } from 'helpers';
+import {
+  authorizedRequest,
+  classNames,
+  cleanRequest,
+  downloadDataTableAsCsvFile,
+  downloadSheetDataAsXlsxFile,
+} from 'helpers';
 import { useDataViewerRequester, useI18nStore, useJukiNotification, useUIStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
@@ -21,7 +17,6 @@ import {
   ContentsResponseType,
   ContestDataResponseDTO,
   DataViewerHeadersType,
-  HTTPMethod,
   QueryParam,
   ScoreboardResponseDTO,
   Status,
@@ -157,28 +152,6 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
       extraNodes={[
-        !unfrozen && contest?.isFrozenTime && (
-          <div
-            data-tooltip-id="jk-tooltip"
-            data-tooltip-content="scoreboard frozen"
-            data-tooltip-t-class-name="ws-np"
-            className="cr-io"
-            key="frozen"
-          >
-            <AcUnitIcon />
-          </div>
-        ),
-        !unfrozen && contest?.isQuietTime && (
-          <div
-            data-tooltip-id="jk-tooltip"
-            data-tooltip-content="scoreboard on quiet time"
-            data-tooltip-t-class-name="ws-np"
-            className="cr-er"
-            key="quiet"
-          >
-            <ManufacturingIcon />
-          </div>
-        ),
         ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
           <Button
             size="tiny"
@@ -187,28 +160,8 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
             onClick={() => setUnfrozen(!unfrozen)}
             key="unfrozen"
           >
-            <T>{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
+            <T className="tt-se">{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
           </Button>
-        ),
-        (contest?.user?.isAdministrator) && (
-          <ButtonLoader
-            size="tiny"
-            type="light"
-            disabled={isLoading}
-            onClick={async (setLoaderStatus) => {
-              setLoaderStatus(Status.LOADING);
-              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                  contest?.settings.locked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contestKey as string) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contestKey as string),
-                  { method: HTTPMethod.POST },
-                ),
-              );
-              await reloadContest();
-              notifyResponse(response, setLoaderStatus);
-            }}
-            key="unlock"
-          >
-            <T className="tt-se">{contest?.settings.locked ? 'unlock' : 'lock'}</T>
-          </ButtonLoader>
         ),
         (contest?.user?.isAdministrator || contest?.user?.isManager) && (
           <ButtonLoader
@@ -256,11 +209,18 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       ]}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
-      className="contest-scoreboard"
+      className={classNames('contest-scoreboard', {
+        'is-frozen': !unfrozen && contest.isFrozenTime && !contest.isQuietTime,
+        'is-quiet': !unfrozen && contest.isQuietTime,
+      })}
+      groups={contest.isGlobal ? contest.tags.map(tag => ({
+        key: tag,
+        label: <div className="jk-row fw-bd">{tag}</div>,
+      })) : undefined}
       reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, contest, contestKey, data, fullscreen, handleFullscreen, isLoading, notifyResponse, reload, reloadContest, reloadRef, request, setLoaderStatusRef, unfrozen ]);
+  ), [ columns, contest, data, fullscreen, handleFullscreen, isLoading, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);
   const onClose = useCallback(() => setDynamic(false), []);
   
   if (fullscreen) {

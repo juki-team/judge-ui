@@ -13,7 +13,7 @@ import {
   QueryParam,
 } from 'types';
 
-export const ContestsAllList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
+export const ContestsClassicList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
   
   const companyKey = useUserStore(state => state.company.key);
   const columns = useMemo(() => [
@@ -36,7 +36,7 @@ export const ContestsAllList = (props: Partial<PagedDataViewerProps<ContestSumma
           },
         }).url
       )}
-      name={QueryParam.ALL_CONTESTS_TABLE}
+      name={QueryParam.CLASSIC_CONTESTS_TABLE}
       {...props}
     />
   );

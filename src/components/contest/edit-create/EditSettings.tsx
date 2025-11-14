@@ -1,6 +1,5 @@
 'use client';
 
-import { MultiProgressBar } from '@juki-team/base-ui';
 import {
   AddIcon,
   Button,
@@ -24,7 +23,7 @@ import {
   isEndlessContest,
   isGlobalContest,
 } from 'helpers';
-import { useI18nStore, useState } from 'hooks';
+import { useState } from 'hooks';
 import React from 'react';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
@@ -36,6 +35,7 @@ import {
 } from 'src/constants';
 import { ContestTemplate, EntityMembersRank } from 'types';
 import { EditContestProps } from '../types';
+import { ContestTimeProgress } from '../view/ContestTimeProgress';
 
 export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
@@ -53,18 +53,16 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       }, '[]'),
     };
   };
-  const { t } = useI18nStore(store => store.i18n);
   const competition = isEndlessContest(contest);
   const isGlobal = isGlobalContest(contest.settings);
   
   const contestTemplate = getContestTemplate(contest);
   const contestDuration = Math.max(contest.settings.endTimestamp - contest.settings.startTimestamp, 0);
-  const quietDuration = Math.max(contest.settings.endTimestamp - contest.settings.quietTimestamp, 0);
   const frozenDuration = Math.max(contest.settings.quietTimestamp - contest.settings.frozenTimestamp, 0);
+  const quietDuration = Math.max(contest.settings.endTimestamp - contest.settings.quietTimestamp, 0);
   
-  const quietPercentage = quietDuration * contestDuration === 0 ? 0 : Math.min(80, Math.max(10, quietDuration * 100 / contestDuration));
-  const frozenPercentage = frozenDuration * contestDuration === 0 ? 0 : Math.min(80, Math.max(10, frozenDuration * 100 / contestDuration));
-  const durationPercentage = 100 - quietPercentage - frozenPercentage;
+  const frozenAtMinutes = (contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (1000 * 60);
+  const quietAtMinutes = (contest.settings.quietTimestamp - contest.settings.startTimestamp) / (1000 * 60);
   
   return (
     <div className="jk-col left top stretch gap nowrap">
@@ -132,18 +130,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       </div>
       {!competition && !isGlobal && (
         <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
-          <MultiProgressBar
-            progress={[
-              // { label: t('start date'), percentage: 2, color: 'black' },
-              { label: t('normal time'), percentage: durationPercentage, color: 'var(--t-color-success)' },
-              // { label: t('frozen date'), percentage: 2, color: 'black' },
-              { label: t('frozen time'), percentage: frozenPercentage, color: 'var(--t-color-info-light)' },
-              // { label: t('quiet date'), percentage: 2, color: 'black' },
-              { label: t('quiet time'), percentage: quietPercentage, color: 'var(--t-color-info-dark)' },
-              // { label: t('end date'), percentage: 2, color: 'black' },
-            ]}
-          />
-          <div className="jk-row gap top space-between">
+          <ContestTimeProgress contest={{ ...contest, isLive: false }} />
+          <div className="jk-row gap top space-between tx-s">
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row left gap nowrap">
                 <div className="fw-bd tt-se tx-xl cr-py"><T>start date</T></div>
@@ -172,8 +160,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   checked={checks.frozen}
                   size="tiny"
                   onChange={(value) => setChecks(prevState => ({ ...prevState, frozen: value }))}
-                  leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.frozen })}>date</T>}
-                  rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.frozen })}>minutes</T>}
+                  leftLabel={<T className={classNames('tt-se tx-t', { 'fw-bd': !checks.frozen })}>date</T>}
+                  rightLabel={<T className={classNames('tt-se tx-t', { 'fw-bd': checks.frozen })}>minutes</T>}
                 />
               </div>
               {checks.frozen ? (
@@ -182,7 +170,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   <Input
                     type="number"
                     size="auto"
-                    value={(contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                    value={frozenAtMinutes}
                     onChange={value => setContest(prevState => adjustContest({
                       ...prevState,
                       settings: {
@@ -248,7 +236,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     </div>
                   </div>
                 </>
-              ) : <T className="tt-se tx-s fw-lt cr-wg">there is not frozen time</T>}
+              ) : frozenAtMinutes === 0
+                ? <T className="tt-se tx-s fw-lt cr-er">frozen time starts at the beginning</T>
+                : <T className="tt-se tx-s fw-lt cr-wg">there is not frozen time</T>}
             </div>
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row left extend gap">
@@ -260,8 +250,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   checked={checks.quiet}
                   size="tiny"
                   onChange={(value) => setChecks(prevState => ({ ...prevState, quiet: value }))}
-                  leftLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': !checks.quiet })}>date</T>}
-                  rightLabel={<T className={classNames('tt-se tx-s', { 'fw-bd': checks.quiet })}>minutes</T>}
+                  leftLabel={<T className={classNames('tt-se tx-t', { 'fw-bd': !checks.quiet })}>date</T>}
+                  rightLabel={<T className={classNames('tt-se tx-t', { 'fw-bd': checks.quiet })}>minutes</T>}
                 />
               </div>
               {checks.quiet ? (
@@ -270,12 +260,13 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   <Input
                     type="number"
                     size="auto"
-                    value={(contest.settings.quietTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                    value={quietAtMinutes}
                     onChange={value => setContest(prevState => ({
                       ...prevState,
                       settings: {
                         ...prevState.settings,
                         quietTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
+                        frozenTimestamp: Math.min(contest.settings.frozenTimestamp, contest.settings.startTimestamp + (value * 1000 * 60)),
                       },
                     }))}
                   />
@@ -321,7 +312,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                         />
                       </div>
                     </div>
-                  ) : <T className="tt-se tx-s fw-lt cr-er">at the beginning</T>}
+                  ) : quietAtMinutes === 0
+                    ? <T className="tt-se tx-s fw-lt cr-er">quiet time starts at the beginning</T>
+                    : <T className="tt-se tx-s fw-lt cr-wg">there is not quiet time</T>}
                   <div className="jk-row left tx-s fw-lt">
                     <T className="tt-se">duration</T>:&nbsp;
                     <div className="jk-col left">

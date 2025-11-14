@@ -96,6 +96,7 @@ export type {
   SubscribeProblemCrawledWebSocketEventDTO,
   SubscribeSubmissionsCrawlWebSocketEventDTO,
   SubscribeContestChangesWebSocketEventDTO,
+  ContestTimeData,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';

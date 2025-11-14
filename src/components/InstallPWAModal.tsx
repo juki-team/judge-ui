@@ -44,7 +44,6 @@ export function InstallPWAModal() {
     if (!deferredPrompt) return;
     await deferredPrompt.prompt();
     const result = await deferredPrompt.userChoice;
-    console.log({ result });
     const token = jukiApiManager.getToken();
     const { url, ...options } = jukiApiManager.API_V1.log.info({
       body: {

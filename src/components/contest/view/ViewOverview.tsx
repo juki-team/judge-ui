@@ -185,7 +185,26 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
               ))}
             </div>
           </div>
-          <div className="jk-col bc-we jk-br-ie jk-pg-sm">
+          <div className="jk-col gap bc-we jk-br-ie jk-pg-sm">
+            {contest?.user?.isAdministrator && contest.isPast && (
+              <ButtonLoader
+                size="tiny"
+                type="secondary"
+                onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
+                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                      contest?.settings.locked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contest.key) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contest.key),
+                      { method: HTTPMethod.POST },
+                    ),
+                  );
+                  await reloadContest?.();
+                  notifyResponse(response, setLoaderStatus);
+                }}
+                key="unlock"
+              >
+                <T className="tt-se">{contest?.settings.locked ? 'unlock' : 'lock'}</T>
+              </ButtonLoader>
+            )}
             <ButtonLoader
               key="download-contest-problemset"
               onClick={async (setLoaderStatus) => {

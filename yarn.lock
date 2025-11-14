@@ -1632,10 +1632,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.2.128":
-  version "1.2.128"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.2.128/b3462bde4689fa3c5528ce1509a9fad337fd73fc#b3462bde4689fa3c5528ce1509a9fad337fd73fc"
-  integrity sha512-MGWyypOYqLC+x7NzGSKnWcHtcm7Zys/Gy4G1b+ES4ZJwNQYM5fFFZSuoHx2Ncy7YbYi5HrbrMrnRYp8DmnQPMg==
+"@juki-team/base-ui@^1.2.144":
+  version "1.2.144"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.2.144/899f743004df08e1679981b7386481cf15c42f17#899f743004df08e1679981b7386481cf15c42f17"
+  integrity sha512-ygDyv/u87Sx4aMIQSOdxzDKYtEu2R6wase7Ba8aWzi7Ceyq7QBfdFeUzJi8tKc1d8PMhfjhIB9mAe8EiXNK1FA==
   dependencies:
     "@codemirror/autocomplete" "^6.19.1"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1651,7 +1651,7 @@
     "@floating-ui/react" "^0.27.16"
     "@handsontable/react-wrapper" "^16.1.1"
     "@hookform/resolvers" "^5.2.2"
-    "@juki-team/commons" "^0.0.974"
+    "@juki-team/commons" "^0.0.980"
     "@milkdown/crepe" "^7.17.1"
     "@milkdown/kit" "^7.17.1"
     "@milkdown/react" "^7.17.1"
@@ -1668,13 +1668,13 @@
     highlight.js "^11.11.1"
     i18n-iso-countries "^7.14.0"
     i18next "^25.6.2"
-    katex "^0.16.22"
+    katex "^0.16.25"
     libphonenumber-js "^1.12.26"
     microdiff "^1.5.0"
     motion "^12.23.24"
     react-color "^2.19.3"
     react-device-detect "^2.2.3"
-    react-hook-form "^7.63.0"
+    react-hook-form "^7.66.0"
     react-image-crop "^11.0.10"
     react-markdown "^10.1.0"
     react-resize-detector "^12.3.0"
@@ -1690,10 +1690,10 @@
     yup "^1.7.1"
     zustand "^5.0.8"
 
-"@juki-team/commons@^0.0.974":
-  version "0.0.974"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.974/9d9d7e5ffd454f1769fcba22e27dd0a8e30f5967#9d9d7e5ffd454f1769fcba22e27dd0a8e30f5967"
-  integrity sha512-/e4+u2CsomKpu5jG5OAKM4fVBTIJ1yFcnESQq3gUKOBSY9UEFxPfQV6XNugdiTSNtAkfTmd1zq5zan7JJvA+hA==
+"@juki-team/commons@^0.0.980":
+  version "0.0.980"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.980/80281bc9c075baebbb080b7cf912b7457c89e085#80281bc9c075baebbb080b7cf912b7457c89e085"
+  integrity sha512-LMoalBqsHfScJQn0quhpPXIbIomzxYN5bf7r52KyjSlJ66WCSxg3t0cXKtO3Nb8nm7QnId62j5BdNNouUIPohQ==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.0.3", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1":
   version "1.2.3"
@@ -6041,10 +6041,17 @@ jsonpointer@^5.0.0:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-katex@^0.16.0, katex@^0.16.22, katex@^0.16.9:
+katex@^0.16.0, katex@^0.16.9:
   version "0.16.22"
   resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.22.tgz#d2b3d66464b1e6d69e6463b28a86ced5a02c5ccd"
   integrity sha512-XCHRdUw4lf3SKBaJe4EvgqIuWwkPSo9XoeO8GjQW94Bp7TWv9hNhzZjZ+OH9yf1UmLygb7DIT5GSFQiyt16zYg==
+  dependencies:
+    commander "^8.3.0"
+
+katex@^0.16.25:
+  version "0.16.25"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.25.tgz#61699984277e3bdb3e89e0e446b83cd0a57d87db"
+  integrity sha512-woHRUZ/iF23GBP1dkDQMh1QBad9dmr8/PAwNA54VrSOVYgI12MAcE14TqnDdQOdzyEonGzMepYnqBMYdsoAr8Q==
   dependencies:
     commander "^8.3.0"
 
@@ -7741,10 +7748,10 @@ react-dom@^19.1.1:
   dependencies:
     scheduler "^0.26.0"
 
-react-hook-form@^7.63.0:
-  version "7.63.0"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.63.0.tgz#ff601754989bdd5cfc19fcbb02a3c0d4fbb29284"
-  integrity sha512-ZwueDMvUeucovM2VjkCf7zIHcs1aAlDimZu2Hvel5C5907gUzMpm4xCrQXtRzCvsBqFjonB4m3x4LzCFI1ZKWA==
+react-hook-form@^7.66.0:
+  version "7.66.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.66.0.tgz#1a09ea9d0ebb3bdda5073b08a486538d37d9c0d4"
+  integrity sha512-xXBqsWGKrY46ZqaHDo+ZUYiMUgi8suYu5kdrS20EG8KiL7VRQitEbNjm+UcrDYrNi1YLyfpmAeGjCZYXLT9YBw==
 
 react-image-crop@^11.0.10:
   version "11.0.10"

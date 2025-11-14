@@ -39,11 +39,11 @@ export {
   toSortUrl,
   oneTab,
   getStatementData,
-  contestStateMap,
   downloadUrlAsFile,
   getJudgeOrigin,
   getHeaders,
   getMetaHeaders,
   showOfDateDisplayType,
   getKeyWebSocketEventDTO,
+  getContestState,
 } from '@juki-team/base-ui/helpers';

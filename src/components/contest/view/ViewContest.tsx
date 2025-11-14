@@ -26,7 +26,7 @@ import {
   useUserStore,
   useWebsocketStore,
 } from 'hooks';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
   ContestDataResponseDTO,
@@ -40,6 +40,7 @@ import {
   WebSocketSubscriptionEvent,
 } from 'types';
 import { DocumentMembersButton } from '../../index';
+import { ContestTimeProgress } from './ContestTimeProgress';
 import { ContestTimeTimer } from './ContestTimeTimer';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewEvents } from './ViewEvents';
@@ -298,6 +299,19 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
           </div>
           <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
         </>
+      )}
+      {!contest.isEndless && !contest.isGlobal && (
+        <div
+          style={{
+            width: 'calc(100% - var(--pad-md) - var(--pad-md))',
+            bottom: -10,
+            left: 'var(--pad-md)',
+            position: 'absolute',
+          }}
+          className="display-on-hover-8"
+        >
+          <ContestTimeProgress contest={contest} reloadContest={reloadContest} />
+        </div>
       )}
     </TwoContentLayout>
   );

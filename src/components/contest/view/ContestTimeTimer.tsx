@@ -2,14 +2,13 @@
 
 import { SpinIcon, T, Timer } from 'components';
 import { ONE_MINUTE, ONE_SECOND } from 'config/constants';
-import { contestStateMap } from 'helpers';
-import { useMemo } from 'hooks';
-import React, { useEffect, useState } from 'react';
-import { ContestDataResponseDTO, TimeDisplayType } from 'types';
+import { getContestState } from 'helpers';
+import { useEffect, useMemo, useState } from 'hooks';
+import { ContestTimeData, TimeDisplayType } from 'types';
 
 interface ContestTimeTimerProps {
-  contest: ContestDataResponseDTO,
-  reloadContest: () => void,
+  contest: ContestTimeData,
+  reloadContest?: () => void,
 }
 
 export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerProps) => {
@@ -54,8 +53,6 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
   
   const [ loadingTimer, setLoadingTimer ] = useState(false);
   const [ _, setTrigger ] = useState(0);
-  const key = [ contest.isPast, contest.isLive, contest.isFuture, contest.isEndless ].toString();
-  const tagBc = contestStateMap[key].bc;
   useEffect(() => {
     const interval = setInterval(() => setTrigger(Date.now()), ONE_MINUTE);
     return () => {
@@ -64,43 +61,45 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
   }, []);
   useEffect(() => {
     setLoadingTimer(false);
-  }, [ key ]);
+  }, [ contest.isGlobal, contest.isEndless, contest.isPast, contest.isLive, contest.isFuture ]);
   
   if (loadingTimer) {
     return <SpinIcon />;
   }
   
   return (
-    <div className={`jk-tag tx-s cr-we ${tagBc} jk-row nowrap fw-rr`}>
-      {contest.isEndless
-        ? <T className="ws-np tt-se">endless</T>
-        : (
-          <>
-            {contest.isLive
-              ? <T className="ws-np tt-se">ends in</T>
-              : contest.isPast
-                ? <T className="ws-np tt-se">ends ago</T>
-                : <T className="ws-np tt-se">stars in</T>}
-            &nbsp;
-            <div className="ws-np">
-              <Timer
-                key={type + interval + timeInterval}
-                currentTimestamp={timeInterval}
-                type={type}
-                interval={interval}
-                literal
-                ignoreTrailingZeros
-                ignoreLeadingZeros
-                abbreviated
-                maxSplit={2}
-                onTimeout={() => {
-                  setLoadingTimer(true);
-                  void reloadContest();
-                }}
-              />
-            </div>
-          </>
-        )}
+    <div className={`jk-tag tx-s cr-we ${getContestState(contest).bc} jk-row nowrap fw-rr`}>
+      {contest.isGlobal
+        ? <T className="ws-np tt-se">global</T>
+        : contest.isEndless
+          ? <T className="ws-np tt-se">endless</T>
+          : (
+            <>
+              {contest.isLive
+                ? <T className="ws-np tt-se">ends in</T>
+                : contest.isPast
+                  ? <T className="ws-np tt-se">ends ago</T>
+                  : <T className="ws-np tt-se">stars in</T>}
+              &nbsp;
+              <div className="ws-np">
+                <Timer
+                  key={type + interval + timeInterval}
+                  currentTimestamp={timeInterval}
+                  type={type}
+                  interval={interval}
+                  literal
+                  ignoreTrailingZeros
+                  ignoreLeadingZeros
+                  abbreviated
+                  maxSplit={2}
+                  onTimeout={() => {
+                    setLoadingTimer(true);
+                    void reloadContest?.();
+                  }}
+                />
+              </div>
+            </>
+          )}
     </div>
   );
 };
