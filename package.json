@@ -13,8 +13,8 @@
     "push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn version --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f"
   },
   "dependencies": {
-    "@juki-team/base-ui": "^1.2.144",
-    "@juki-team/commons": "^0.0.980",
+    "@juki-team/base-ui": "^1.2.155",
+    "@juki-team/commons": "^0.0.981",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.5.0",
     "dom-to-image-more": "^3.7.1",

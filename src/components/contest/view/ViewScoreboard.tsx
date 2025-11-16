@@ -120,10 +120,11 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       getPointsColumn(viewPortSize, contest.isEndless || contest.isGlobal),
     ];
     
-    if (contest?.problems) {
-      for (const problem of Object.values(contest?.problems)) {
-        base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless || contest.isGlobal, problem, t));
-      }
+    for (const problem of Object.values(contest?.problems ?? {})) {
+      base.push({
+        ...getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless || contest.isGlobal, problem, t),
+        group: problem.group,
+      });
     }
     return base;
   }, [ viewPortSize, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
@@ -213,10 +214,10 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
         'is-frozen': !unfrozen && contest.isFrozenTime && !contest.isQuietTime,
         'is-quiet': !unfrozen && contest.isQuietTime,
       })}
-      groups={contest.isGlobal ? contest.tags.map(tag => ({
-        key: tag,
-        label: <div className="jk-row fw-bd">{tag}</div>,
-      })) : undefined}
+      groups={Object.values(contest.groups).map(({ value, label }) => ({
+        value,
+        label: <div className="jk-row fw-bd">{label}</div>,
+      }))}
       reloadRef={reloadRef}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />

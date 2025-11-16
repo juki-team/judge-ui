@@ -26,5 +26,5 @@ export enum ContestTemplate {
   CLASSIC = 'CLASSIC',
   ENDLESS = 'ENDLESS',
   GLOBAL = 'GLOBAL',
-  CUSTOM = 'CUSTOM',
+  CUSTOMIZED = 'CUSTOMIZED',
 }

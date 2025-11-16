@@ -31,13 +31,13 @@ export const TextLangEdit = ({ text, setText }: TextLangEditProps) => {
             ),
             header: (
               <div className="jk-row nowrap">
-                Español <div style={{ width: 50, height: 24 }}>
+                Español&nbsp;
                 <Image
                   alt="ES image"
-                  fill
                   src="https://images.juki.pub/assets/image-es.png"
+                  width={50}
+                  height={24}
                 />
-              </div>
               </div>
             ),
           },
@@ -55,13 +55,13 @@ export const TextLangEdit = ({ text, setText }: TextLangEditProps) => {
             ),
             header: (
               <div className="jk-row nowrap">
-                English <div style={{ width: 50, height: 24 }}>
+                English&nbsp;
                 <Image
                   alt="US image"
-                  fill
                   src="https://images.juki.pub/assets/image-us.png"
+                  width={50}
+                  height={24}
                 />
-              </div>
               </div>
             ),
           },

@@ -11,6 +11,7 @@ import {
   OpenInNewIcon,
   PlusIcon,
   ProblemSelector,
+  Select,
   SortableItems,
   T,
   Timer,
@@ -71,6 +72,8 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
   };
   const contestProblems = Object.values(contest.problems);
   const getPreProblem = (prerequisite: UpsertContestDTOUI['problems'][string]['prerequisites'][number]) => contestProblems.find(p => p.index === prerequisite.problemIndex);
+  const withGroups = !!Object.values(contest.groups).length;
+  
   return (
     <div
       key={problem.key}
@@ -264,6 +267,16 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
           />
         </div>
       )}
+      {withGroups && (
+        <div className="jk-row tx-s" style={{ width: 80 }}>
+          <Select
+            containerWidth="child"
+            options={Object.values(contest.groups).map(group => ({ value: group.value, label: group.label }))}
+            selectedOption={{ value: problem.group }}
+            onChange={({ value }) => setProblemProp({ group: value })}
+          />
+        </div>
+      )}
       <div className="jk-row" style={{ width: 30 }}>
         <DeleteIcon
           className="cursor-pointer"
@@ -330,11 +343,7 @@ const cutDate = (timestamp: number) => {
 };
 
 const fixOrder = (contest: UpsertContestDTOUI) => {
-  const {
-    delayPrerequisites,
-    isTypePrerequisiteIndividually,
-    withPrerequisites,
-  } = getContestPrerequisitesData(contest);
+  const prerequisitesData = getContestPrerequisitesData(contest);
   const response: UpsertContestDTOUI = {
     ...contest,
     settings: {
@@ -362,32 +371,7 @@ const fixOrder = (contest: UpsertContestDTOUI) => {
   const newProblems = Object.values(contest.problems)
     .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
     .map((problem, index, problems) => {
-      const problemIndex = indexToLetters(index + 1);
-      const preIndex = indexToLetters(index);
-      const preProblem = problems[index];
-      
-      const prerequisites = withPrerequisites && preProblem && index > 0 ? [ {
-        problemIndex: preIndex,
-        type: isTypePrerequisiteIndividually ? ContestProblemPrerequisiteType.INDIVIDUALLY : ContestProblemPrerequisiteType.CONTEST,
-        delay: delayPrerequisites,
-      } ] : [];
-      
-      const value: ContestProblemBasicDataResponseDTO = {
-        index: problemIndex,
-        key: problem.key,
-        judge: problem.judge,
-        name: problem.name,
-        points: problem.points,
-        color: problem.color,
-        startTimestamp: cutDate(problem.startTimestamp),
-        endTimestamp: cutDate(problem.endTimestamp),
-        tags: problem.tags,
-        company: problem.company,
-        prerequisites,
-        maxAcceptedUsers: problem.maxAcceptedUsers,
-        group: '',
-      };
-      return value;
+      return fixProblem(problem, index, problems, prerequisitesData);
     });
   
   for (const problem of newProblems) {
@@ -395,6 +379,44 @@ const fixOrder = (contest: UpsertContestDTOUI) => {
   }
   
   return response;
+};
+
+const fixProblem = (
+  problem: UpsertContestProblemDTOUI,
+  index: number,
+  problems: UpsertContestProblemDTOUI[],
+  { delayPrerequisites, isTypePrerequisiteIndividually, withPrerequisites }: {
+    delayPrerequisites: number,
+    isTypePrerequisiteIndividually: boolean,
+    withPrerequisites: boolean,
+  },
+) => {
+  const problemIndex = indexToLetters(index + 1);
+  const preIndex = indexToLetters(index);
+  const preProblem = problems[index];
+  
+  const prerequisites = withPrerequisites && preProblem && index > 0 ? [ {
+    problemIndex: preIndex,
+    type: isTypePrerequisiteIndividually ? ContestProblemPrerequisiteType.INDIVIDUALLY : ContestProblemPrerequisiteType.CONTEST,
+    delay: delayPrerequisites,
+  } ] : [];
+  
+  const value: ContestProblemBasicDataResponseDTO = {
+    index: problemIndex,
+    key: problem.key,
+    judge: problem.judge,
+    name: problem.name,
+    points: problem.points,
+    color: problem.color,
+    startTimestamp: cutDate(problem.startTimestamp),
+    endTimestamp: cutDate(problem.endTimestamp),
+    tags: problem.tags,
+    company: problem.company,
+    prerequisites,
+    maxAcceptedUsers: problem.maxAcceptedUsers,
+    group: problem.group ?? '',
+  };
+  return value;
 };
 
 export const EditProblems = ({ contest, setContest }: EditContestProps) => {
@@ -414,28 +436,18 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDTOUI }) => {
     return Object.values(problems)
       .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
-      .map((problem, index) => {
-        const value: ContestProblemBasicDataResponseDTO = {
-          index: indexToLetters(index + 1),
-          key: problem.key,
-          judge: problem.judge,
-          name: problem.name,
-          points: problem.points,
-          color: problem.color,
-          startTimestamp: problem.startTimestamp,
-          endTimestamp: problem.endTimestamp,
-          tags: problem.tags,
-          company: problem.company,
-          prerequisites: problem.prerequisites,
-          maxAcceptedUsers: problem.maxAcceptedUsers,
-          group: '',
-        };
+      .map((problem, index, problems) => {
+        const problemV = fixProblem(problem, index, problems, {
+          delayPrerequisites,
+          isTypePrerequisiteIndividually,
+          withPrerequisites,
+        });
         return {
           key: problem.key,
-          value,
+          value: problemV,
         };
       });
-  }, []);
+  }, [ delayPrerequisites, isTypePrerequisiteIndividually, withPrerequisites ]);
   const [ problems ] = useStableState<SortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
   useEffect(() => {
     if (!withTime) {
@@ -463,6 +475,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
       setContest(newContest);
     }
   }, [ contest, setContest ]);
+  
+  const withGroups = !!Object.values(contest.groups).length;
   
   return (
     <div className="jk-col top nowrap gap stretch bc-we jk-br-ie jk-pg-sm">
@@ -639,6 +653,11 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           {withMaxAcceptedUsers && (
             <div className="jk-row" style={{ width: 60 }}>
               <T className="tt-se">max users</T>
+            </div>
+          )}
+          {withGroups && (
+            <div className="jk-row" style={{ width: 60 }}>
+              <T className="tt-se">group</T>
             </div>
           )}
           <div style={{ width: 30 }} />

@@ -31,7 +31,9 @@ const NicknameField = ({
                        }: TableHeadFieldProps<ScoreboardResponseDTOFocus>) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
+  const userCompanyKey = useUserStore(state => state.company.key);
   const { Image } = useUIStore(store => store.components);
+  const me = nickname === userNickname && companyKey === userCompanyKey;
   
   return (
     <Field
@@ -42,12 +44,15 @@ const NicknameField = ({
       <Image src={imageUrl} className="jk-user-profile-img large" alt={nickname} height={38} width={38} />
       <UserNicknameLink nickname={nickname} companyKey={companyKey}>
         <div
-          className={classNames('jk-br ', {
-            'bc-py cr-we fw-br jk-pg-xsm': nickname === userNickname,
-            'link': nickname !== userNickname,
+          className={classNames('jk-br jk-col', {
+            'bc-py cr-we fw-br jk-pg-xsm': me,
+            'link': !me,
           })}
         >
           {nickname}
+          {userCompanyKey !== companyKey && (
+            <div className="jk-tag bc-hl tx-t" style={{ padding: '1px 2px' }}>{companyKey}</div>
+          )}
         </div>
       </UserNicknameLink>
     </Field>

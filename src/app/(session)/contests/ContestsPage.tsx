@@ -16,10 +16,10 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   useEffect(() => {
     if (!tab || ![
-      ContestsTab.COLLECTIONS,
+      ContestsTab.GLOBALS,
       ContestsTab.CLASSICS,
     ].includes(tab)) {
-      setSearchParams({ name: 'tab', value: ContestsTab.COLLECTIONS }, true);
+      setSearchParams({ name: 'tab', value: ContestsTab.GLOBALS }, true);
     }
   }, [ tab, setSearchParams ]);
   
@@ -41,10 +41,10 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
     //   key: ContestsTab.ALL,
     //   header: <T className="tt-se ws-np">all</T>,
     // },
-    [ContestsTab.COLLECTIONS]: {
+    [ContestsTab.GLOBALS]: {
       body: <ContestsGlobalList  {...props} />,
-      key: ContestsTab.COLLECTIONS,
-      header: <T className="tt-se ws-np">collections</T>,
+      key: ContestsTab.GLOBALS,
+      header: <T className="tt-se ws-np">globals</T>,
     },
     [ContestsTab.CLASSICS]: {
       body: <ContestsClassicList {...props} />,

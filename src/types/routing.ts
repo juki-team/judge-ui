@@ -24,7 +24,7 @@ export enum QueryParam {
 export enum ContestsTab {
   ALL = 'all',
   ENDLESS = 'endless',
-  COLLECTIONS = 'collections',
+  GLOBALS = 'globals',
   CLASSICS = 'classics',
   LIVE = 'live',
   UPCOMING = 'upcoming',

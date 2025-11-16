@@ -32,8 +32,8 @@ const SponsoredByTag = () => {
   }
   
   return (
-    <div className="sponsored-by">
-      <T>sponsored by</T>&nbsp;
+    <div className="sponsored-by bc-pd cr-pt">
+      <T className="tt-se">sponsored by</T>&nbsp;
       <Link href="https://juki.app" target="_blank" rel="noreferrer">Juki.app</Link>
     </div>
   );

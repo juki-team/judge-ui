@@ -111,7 +111,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
       ] : []}
       headers={columns}
       groups={contest.isGlobal ? contest.tags.map(tag => ({
-        key: tag,
+        value: tag,
         label: <div className="jk-row fw-bd">{tag}</div>,
       })) : undefined}
       data={data}

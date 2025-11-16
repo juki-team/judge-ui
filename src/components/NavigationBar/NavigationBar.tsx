@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  AssignmentIcon,
-  CodeIcon,
-  LeaderboardIcon,
-  LibraryBooksIcon,
-  LinkLastPath,
-  MainMenu,
-  T,
-  TrophyIcon,
-} from 'components';
+import { AssignmentIcon, CodeIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, TrophyIcon } from 'components';
 import { jukiAppRoutes } from 'config';
 import { useRouterStore, useUIStore, useUserStore } from 'hooks';
 import React, { PropsWithChildren } from 'react';
@@ -27,7 +18,7 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
   const isContestsPage = ('/' + pathname).includes('//contest');
   const isProblemsPage = ('/' + pathname).includes('//problem');
   const isRankingPage = ('/' + pathname).includes('//ranking');
-  const isBoardsPage = ('/' + pathname).includes('//board');
+  // const isBoardsPage = ('/' + pathname).includes('//board');
   const isIDEPage = ('/' + pathname).includes('//ide');
   const backPah = isContestsPage ? jukiAppRoutes.JUDGE().contests.list()
     : isProblemsPage
@@ -80,19 +71,19 @@ export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
         ),
       },
     );
-    menu.push(
-      {
-        label: <T className="tt-se">boards</T>,
-        tooltipLabel: 'boards',
-        icon: <LibraryBooksIcon />,
-        selected: isBoardsPage,
-        menuItemWrapper: ({ children }) => (
-          <LinkLastPath lastPathKey={LastPathKey.BOARDS}>
-            {children}
-          </LinkLastPath>
-        ),
-      },
-    );
+    // menu.push(
+    //   {
+    //     label: <T className="tt-se">boards</T>,
+    //     tooltipLabel: 'boards',
+    //     icon: <LibraryBooksIcon />,
+    //     selected: isBoardsPage,
+    //     menuItemWrapper: ({ children }) => (
+    //       <LinkLastPath lastPathKey={LastPathKey.BOARDS}>
+    //         {children}
+    //       </LinkLastPath>
+    //     ),
+    //   },
+    // );
   }
   
   menu.push(

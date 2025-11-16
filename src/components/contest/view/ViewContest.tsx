@@ -164,13 +164,11 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
     };
   }
   
-  if (canViewContest && !contest.isGlobal) {
-    tabHeaders[ContestTab.SUBMISSIONS] = {
-      key: ContestTab.SUBMISSIONS,
-      header: <T className="tt-ce ws-np">submissions</T>,
-      body: <ViewSubmissions key="submissions" contest={contest} />,
-    };
-  }
+  tabHeaders[ContestTab.SUBMISSIONS] = {
+    key: ContestTab.SUBMISSIONS,
+    header: <T className="tt-ce ws-np">submissions</T>,
+    body: <ViewSubmissions key="submissions" contest={contest} />,
+  };
   
   if (contest.settings.clarifications && !contest.isGlobal) {
     tabHeaders[ContestTab.CLARIFICATIONS] = {
@@ -180,7 +178,7 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
     };
   }
   
-  if ((isAdministrator || isManager || contest.isPast || contest.isEndless) && !contest.isGlobal) {
+  if ((isAdministrator || isManager || contest.isPast || contest.isEndless || contest.isGlobal)) {
     tabHeaders[ContestTab.MEMBERS] = {
       key: ContestTab.MEMBERS,
       header: <T className="tt-ce">members</T>,

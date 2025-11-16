@@ -11,7 +11,7 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
-import { isGlobalContest, oneTab, toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
+import { oneTab, toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
 import { ContentResponseType, ContestDataResponseDTO, LastPathKey } from 'types';
 
 export function ContestEditPage({ contestKey }: { contestKey: string }) {
@@ -39,12 +39,7 @@ export function ContestEditPage({ contestKey }: { contestKey: string }) {
               entityKey={data.content.key}
               Cmp={EditCreateContest}
               viewRoute={(entityKey) => jukiAppRoutes.JUDGE().contests.view({ key: entityKey })}
-              updateApiURL={(entity) => {
-                if (isGlobalContest(entity.settings)) {
-                  return JUDGE_API_V1.CONTEST.GLOBAL;
-                }
-                return JUDGE_API_V1.CONTEST.CONTEST;
-              }}
+              updateApiURL={() => JUDGE_API_V1.CONTEST.CONTEST}
               viewApiURL={entityKey => jukiApiManager.API_V1.contest.getData({ params: { key: entityKey } }).url}
               toEntityUpsert={toUpsertContestDTO}
             />

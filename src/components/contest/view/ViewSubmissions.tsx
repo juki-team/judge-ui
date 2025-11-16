@@ -182,7 +182,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }
             })),
         },
       },
-      onlyProblem: true,
+      contest: { key: contest.key },
     }),
     getSubmissionDateHeader(),
     getSubmissionVerdictHeader(),

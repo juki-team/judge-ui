@@ -69,15 +69,15 @@ Oscar Arias | Problem Setter`,
   };
 };
 
-export const CONTEST_TEMPLATE: {
-  [key in ContestTemplate]: {
-    value: ContestTemplate,
-    label: string,
-    description: string
-  }
-} = {
-  [ContestTemplate.CUSTOM]: { value: ContestTemplate.CUSTOM, label: 'custom', description: 'custom' },
-  [ContestTemplate.CLASSIC]: { value: ContestTemplate.CLASSIC, label: 'classic', description: 'classic' },
-  [ContestTemplate.ENDLESS]: { value: ContestTemplate.ENDLESS, label: 'endless', description: 'endless' },
-  [ContestTemplate.GLOBAL]: { value: ContestTemplate.GLOBAL, label: 'global', description: 'global' },
-};
+export const CONTEST_TEMPLATE: (isAdminServices: boolean) => ({
+  value: ContestTemplate,
+  label: string,
+  description: string,
+}[]) = (isAdminServices) => [
+  { value: ContestTemplate.CUSTOMIZED, label: 'customized', description: 'customized' },
+  { value: ContestTemplate.CLASSIC, label: 'classic', description: 'classic' },
+  { value: ContestTemplate.ENDLESS, label: 'endless', description: 'endless' },
+  ...(isAdminServices
+    ? [ { value: ContestTemplate.GLOBAL, label: 'global', description: 'global' } ]
+    : []),
+];

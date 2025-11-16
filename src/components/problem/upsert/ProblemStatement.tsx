@@ -24,27 +24,27 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
     [Language.ES]: {
       key: Language.ES,
       header: (
-        <div className="jk-row nowrap">Español <div style={{ width: 50, height: 24 }}>
+        <div className="jk-row nowrap jk-pg-xsm-tb">Español&nbsp;
           <Image
             alt="ES image"
-            fill
+            // fill
             src="https://images.juki.pub/assets/image-es.png"
+            width={50}
+            height={24}
           />
-        </div>
         </div>
       ),
     },
     [Language.EN]: {
       key: Language.EN,
       header: (
-        <div className="jk-row nowrap">English
-          <div style={{ width: 50, height: 24 }}>
-            <Image
-              alt="US image"
-              fill
-              src="https://images.juki.pub/assets/image-us.png"
-            />
-          </div>
+        <div className="jk-row nowrap jk-pg-xsm-tb">English&nbsp;
+          <Image
+            alt="US image"
+            src="https://images.juki.pub/assets/image-us.png"
+            width={50}
+            height={24}
+          />
         </div>
       ),
     },
@@ -66,6 +66,7 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
       <div className="jk-row">
         <TabsInline<Language>
           tabs={tabs}
+          tickStyle="background"
           onChange={(language) => setLanguage(language)}
           selectedTabKey={language}
           extraNodes={[

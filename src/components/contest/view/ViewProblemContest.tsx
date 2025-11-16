@@ -100,6 +100,7 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
                 );
               }
               notifyResponse(response, setLoaderStatus);
+              await reloadContest();
               // if (notifyResponse(response, setLoaderStatus)) {
               //   if (isGlobal) {
               //     listenSubmission({

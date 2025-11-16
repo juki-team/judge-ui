@@ -89,7 +89,7 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
   if (isGlobalContest(contest.settings)) {
     return ContestTemplate.GLOBAL;
   }
-  return ContestTemplate.CUSTOM;
+  return ContestTemplate.CUSTOMIZED;
 };
 
 export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertContestDTOUI => {

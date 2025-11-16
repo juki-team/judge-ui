@@ -1,9 +1,8 @@
 'use client';
 
-import { getContestNameHeader, PagedDataViewer } from 'components';
+import { getContestNameHeader, getContestTagsHeader, PagedDataViewer } from 'components';
 import { jukiApiManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useUserStore } from 'hooks';
 import { useMemo } from 'react';
 import {
   ContestSummaryListResponseDTO,
@@ -15,11 +14,11 @@ import {
 
 export const ContestsGlobalList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
   
-  const companyKey = useUserStore(state => state.company.key);
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     getContestNameHeader(),
     // getContestDateHeader(),
     // getContestContestantsHeader(),
+    getContestTagsHeader([]),
   ], []);
   
   return (
@@ -32,7 +31,6 @@ export const ContestsGlobalList = (props: Partial<PagedDataViewerProps<ContestSu
             pageSize,
             filterUrl: toFilterUrl({
               ...filter,
-              companyKeys: companyKey,
               state: EntityState.RELEASED,
               global: 'true',
             }),

@@ -97,6 +97,7 @@ export {
   getSubmissionProblemHeader,
   getSubmissionRejudgeHeader,
   getSubmissionNicknameHeader,
+  getContestTagsHeader,
   NewVersionAvailable,
   SubmissionModal,
   JukiI18nProvider,

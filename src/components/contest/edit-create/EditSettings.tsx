@@ -4,6 +4,7 @@ import {
   AddIcon,
   Button,
   DeleteIcon,
+  EditIcon,
   FrozenInformation,
   Input,
   InputDate,
@@ -23,7 +24,7 @@ import {
   isEndlessContest,
   isGlobalContest,
 } from 'helpers';
-import { useState } from 'hooks';
+import { useState, useUserStore } from 'hooks';
 import React from 'react';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
@@ -33,14 +34,18 @@ import {
   MAX_DATE,
   MIN_DATE,
 } from 'src/constants';
-import { ContestTemplate, EntityMembersRank } from 'types';
+import { ContestTemplate, EntityMembersRank, UpsertContestDTOUI } from 'types';
+import { v4 } from 'uuid';
 import { EditContestProps } from '../types';
 import { ContestTimeProgress } from '../view/ContestTimeProgress';
+import { NewGroup } from './NewGroup';
 
 export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   
+  const isAdminServices = useUserStore(store => store.user.permissions.services.administrate);
   const [ checks, setChecks ] = useState({ duration: true, frozen: true, quiet: true });
   const [ newTag, setNewTag ] = useState('');
+  const [ group, setGroup ] = useState<UpsertContestDTOUI['groups'][string] | null>(null);
   const startDate = new Date(contest.settings.startTimestamp);
   const endDate = new Date(contest.settings.endTimestamp);
   const frozenDate = new Date(contest.settings.frozenTimestamp);
@@ -70,9 +75,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
         <div className="jk-row left gap nowrap">
           <T className="fw-bd tt-se tx-xl cr-py">template</T>:&nbsp;
           <Select
-            options={Object.values(CONTEST_TEMPLATE).map(template => ({
+            options={CONTEST_TEMPLATE(isAdminServices).map(template => ({
               value: template.value,
-              label: <T>{template.label}</T>,
+              label: <T className="tt-se">{template.label}</T>,
             }))}
             selectedOption={{ value: contestTemplate }}
             onChange={({ value }) => {
@@ -110,7 +115,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     guests: {},
                   },
                 }, prevState));
-              } else if (value === ContestTemplate.CLASSIC || value === ContestTemplate.CUSTOM) {
+              } else if (value === ContestTemplate.CLASSIC || value === ContestTemplate.CUSTOMIZED) {
                 const contestDefault = CONTEST_DEFAULT(contest.owner);
                 setContest(prevState => adjustContest({
                   ...prevState,
@@ -498,40 +503,88 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
           </div>
         </div>
       )}
-      {isGlobal && (
-        <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
-          <div className="jk-row nowrap gap extend left">
-            <div className="jk-row left nowrap">
-              <T className="tt-se fw-bd">tags</T>&nbsp;<span className="fw-bd">:</span>&nbsp;
-              <div className="jk-row gap">
-                {contest.tags.map(tag => (
-                  <div key={tag} className="jk-tag info jk-row">
-                    {tag}&nbsp;
-                    <DeleteIcon
-                      size="small"
-                      onClick={() => {
-                        setContest(prevState => ({
-                          ...prevState,
-                          tags: prevState.tags.filter(t => tag !== t),
-                        }));
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
+        <div className="jk-row nowrap gap extend left">
+          <div className="jk-row left nowrap">
+            <T className="tt-se fw-bd">tags</T>&nbsp;<span className="fw-bd">:</span>&nbsp;
+            <div className="jk-row gap">
+              {contest.tags.map(tag => (
+                <div key={tag} className="jk-tag info jk-row">
+                  {tag}&nbsp;
+                  <DeleteIcon
+                    size="small"
+                    onClick={() => {
+                      setContest(prevState => ({
+                        ...prevState,
+                        tags: prevState.tags.filter(t => tag !== t),
+                      }));
+                    }}
+                  />
+                </div>
+              ))}
             </div>
-            <Input value={newTag} onChange={setNewTag} />
-            <Button
-              onClick={() => {
-                setContest(prevState => ({
-                  ...prevState,
-                  tags: Array.from(new Set([ ...prevState.tags, newTag ])),
-                }));
-              }}
-              icon={<AddIcon />}
-            />
           </div>
+          <Input value={newTag} onChange={setNewTag} />
+          <Button
+            disabled={!newTag}
+            onClick={() => {
+              setContest(prevState => ({
+                ...prevState,
+                tags: Array.from(new Set([ ...prevState.tags, newTag ])),
+              }));
+              setNewTag('');
+            }}
+            icon={<AddIcon />}
+          />
         </div>
+      </div>
+      <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
+        <div className="jk-row nowrap gap extend left">
+          <div className="jk-row left nowrap">
+            <T className="tt-se fw-bd">groups</T>&nbsp;<span className="fw-bd">:</span>&nbsp;
+            <div className="jk-row gap">
+              {Object.values(contest.groups).map(({ value, label, color }) => (
+                <div key={value} className="jk-tag info jk-row" style={{ backgroundColor: color }}>
+                  {label}&nbsp;
+                  <EditIcon
+                    size="small"
+                    onClick={() => setGroup({ value, label, color })}
+                  />
+                  <DeleteIcon
+                    size="small"
+                    onClick={() => {
+                      setContest(prevState => ({
+                        ...prevState,
+                        groups: Object.fromEntries(Object.values(contest.groups).filter(group => group.value !== value).map(group => [ group.value, group ])),
+                      }));
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+          <Button
+            onClick={() => setGroup({ value: v4(), label: '', color: '' })}
+            icon={<AddIcon />}
+          />
+        </div>
+      </div>
+      {group && (
+        <NewGroup
+          isOpen={!!group}
+          onSave={(group) => {
+            setContest(prevState => ({
+              ...prevState,
+              groups: {
+                ...prevState.groups,
+                [group.value]: group,
+              },
+            }));
+            setGroup(null);
+          }}
+          onClose={() => setGroup(null)}
+          group={group}
+        />
       )}
       {/*<div className="jk-divider" />*/}
       {/*<T>number judge validations</T>*/}
