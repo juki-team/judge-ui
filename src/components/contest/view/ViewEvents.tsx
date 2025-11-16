@@ -1,17 +1,40 @@
 'use client';
 
-import { Button, CodeViewer, DateLiteral, Modal, T, UserChip } from 'components';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { Button, ButtonLoader, CodeViewer, DateLiteral, LineLoader, Modal, T, UserChip } from 'components';
+import { useFetcher } from 'hooks';
 import { useState } from 'react';
-import { CodeLanguage, ContestDataResponseDTO } from 'types';
+import { CodeLanguage, ContentsResponseType, ContestDataResponseDTO, Status } from 'types';
 
 export const ViewEvents = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   const [ selectedDetails, setSelectedDetails ] = useState<Record<string, any> | null>(null);
+  const {
+    data,
+    isLoading,
+    mutate,
+    isValidating,
+  } = useFetcher<ContentsResponseType<ContestDataResponseDTO['events'][number]>>(jukiApiManager.API_V1.contest.getEvents({ params: { key: contest.key } }).url);
+  
+  const events = data?.success ? data.contents : [];
   
   return (
-    <div className="jk-row stretch left jk-pg-md nowrap jk-pg bc-we jk-br-ie">
+    <div className="jk-col gap stretch left jk-pg-md nowrap jk-pg bc-we jk-br-ie">
+      {isLoading || isValidating && <LineLoader />}
+      <div className="jk-row">
+        <ButtonLoader
+          type="light"
+          onClick={async (setLoader) => {
+            setLoader(Status.LOADING);
+            await mutate();
+            setLoader(Status.SUCCESS);
+          }}
+        >
+          <T className="tt-se">reload</T>
+        </ButtonLoader>
+      </div>
       <div className="jk-col gap left stretch">
-        {contest.events
+        {events
           ?.sort((a, b) => b.timestamp - a.timestamp)
           .map(({ action, details, user, timestamp }, index) => (
             <div key={index} className="jk-col gap left stretch">

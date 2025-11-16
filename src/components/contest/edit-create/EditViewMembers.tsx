@@ -2,17 +2,22 @@
 
 import {
   AdminInformationContent,
+  Button,
   ContestantInformationContent,
   DocumentMembersContent,
   GuestInformationContent,
   JudgeInformationContent,
+  Modal,
   SpectatorInformationContent,
+  T,
+  UserChip,
+  VisibilityIcon,
 } from 'components';
-import React from 'react';
-import { EntityAccess } from 'types';
+import React, { useState } from 'react';
+import { BasicModalProps, DocumentMemberResponseDTO, EntityAccess } from 'types';
 import { EditViewMembersContestProps } from '../types';
 
-export const contestAccessProps = (readOnly: boolean) => ({
+export const contestAccessProps = (readOnly: boolean, onViewMember?: (member: DocumentMemberResponseDTO) => void) => ({
   administrators: {
     closeable: true,
     description: (
@@ -40,6 +45,19 @@ export const contestAccessProps = (readOnly: boolean) => ({
       </div>
     ),
     readOnly,
+    renderMember: (member: DocumentMemberResponseDTO) => {
+      return (
+        <div className="jk-row gap">
+          <UserChip
+            imageUrl={member.imageUrl}
+            nickname={member.nickname}
+            key={member.nickname}
+            companyKey={member.company.key}
+          />
+          {onViewMember && <VisibilityIcon onClick={() => onViewMember(member)} />}
+        </div>
+      );
+    },
   },
   guests: {
     closeable: true,
@@ -76,6 +94,8 @@ export const contestAccessProps = (readOnly: boolean) => ({
 
 export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestProps) => {
   
+  const [ viewMember, setViewMember ] = useState<DocumentMemberResponseDTO | null>(null);
+  
   return (
     <div className="bc-we jk-br-ie jk-pg-sm">
       <DocumentMembersContent
@@ -88,8 +108,34 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
           }
         } : undefined}
         documentOwner={contest.owner}
-        {...contestAccessProps(!setContest)}
+        {...contestAccessProps(!setContest, setViewMember)}
       />
+      {viewMember && <ViewMemberModal isOpen onClose={() => setViewMember(null)} member={viewMember} />}
     </div>
+  );
+};
+
+interface ViewMemberModalProps extends BasicModalProps {
+  member: DocumentMemberResponseDTO,
+}
+
+const ViewMemberModal = ({ member, ...modalProps }: ViewMemberModalProps) => {
+  
+  return (
+    <Modal {...modalProps}>
+      <div className="jk-col gap jk-pg">
+        <div className="jk-row left">
+          <UserChip
+            imageUrl={member.imageUrl}
+            nickname={member.nickname}
+            key={member.nickname}
+            companyKey={member.company.key}
+          />
+        </div>
+        <div>
+          <Button onClick={modalProps.onClose}><T>close</T></Button>
+        </div>
+      </div>
+    </Modal>
   );
 };

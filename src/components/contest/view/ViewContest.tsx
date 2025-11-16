@@ -65,8 +65,8 @@ export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
   
   const reloadContest = useCallback(async () => {
     consoleInfo('reloading all contest');
-    await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`, 'g'));
-    await mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
+    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`, 'g'));
+    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
   }, [ mutate ]);
   
   const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);

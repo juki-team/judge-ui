@@ -106,7 +106,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
   Field: ({ record: { problems, focus } }) => {
     const problemData = problems[problem.key];
     return (
-      <Field className={classNames('jk-row center nowrap', { highlight: !!focus?.includes(problem.key) })}>
+      <Field className={classNames('jk-row center nowrap', { 'cell-score-highlight': !!focus?.includes(problem.key) })}>
         {(problemData?.success || !!problemData?.points) && (
           <div
             data-tooltip-id="jk-tooltip"
