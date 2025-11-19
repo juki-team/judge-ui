@@ -12,7 +12,6 @@ import {
   MdMathViewer,
   Modal,
   NotificationsActiveIcon,
-  Popover,
   ScheduleIcon,
   T,
   UserNicknameLink,
@@ -21,9 +20,10 @@ import { authorizedRequest, classNames, cleanRequest } from 'helpers';
 import { useDateFormat, useFetcher, useJukiNotification, useUIStore } from 'hooks';
 import React, { useState } from 'react';
 import { JUDGE_API_V1 } from 'src/constants';
-import { ContentResponseType, ContestDataResponseDTO, HTTPMethod, Status } from 'types';
+import { ContentResponseType, HTTPMethod, Status } from 'types';
+import { ContestDataUI } from './types';
 
-export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDTO }) => {
+export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
   
   const { dtf } = useDateFormat();
   const { isAdministrator, isParticipant, isManager } = contest.user;
@@ -91,7 +91,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
           ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
             return (
-              <div className="elevation-1 jk-pg-md jk-br-ie pn-re bc-we" key={clarification.key}>
+              <div className="jk-pg-md jk-br-ie pn-re bc-we jk-col gap stretch" key={clarification.key}>
                 {isJudgeOrAdmin && (
                   <div style={{ position: 'absolute', top: 0, right: 0 }}>
                     <Button
@@ -114,8 +114,8 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                     </Button>
                   </div>
                 )}
-                <div className="jk-row left gap">
-                  <div className="tx-h fw-bd cr-py">{clarification.question}</div>
+                <div className="tx-h fw-bd cr-py bc-hl jk-pg-xsm jk-br-ie">{clarification.question}</div>
+                <div className="jk-row left gap tx-s">
                   <div className="jk-row gap">
                     <div
                       data-tooltip-id="jk-tooltip"
@@ -125,24 +125,24 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                     >
                       <ScheduleIcon className="cr-py" size="small" />
                     </div>
-                    <Popover
-                      content={
-                        <UserNicknameLink nickname={clarification.questionUserNickname}>
-                          <div className="link tx-s ws-np">{clarification.questionUserNickname}</div>
-                        </UserNicknameLink>
-                      }
+                    <UserNicknameLink
+                      nickname={clarification.questionUser.nickname}
+                      companyKey={clarification.questionUser.company.key}
                     >
-                      <div className="jk-row">
-                        <UserNicknameLink nickname={clarification.questionUserNickname}>
-                          <Image
-                            src={clarification.questionUserImageUrl}
-                            alt={clarification.questionUserNickname}
-                            width={24}
-                            height={24}
-                          />
-                        </UserNicknameLink>
+                      <div
+                        className="jk-row"
+                        data-tooltip-id="jk-tooltip"
+                        data-tooltip-content={clarification.questionUser.nickname}
+                      >
+                        <Image
+                          src={clarification.questionUser.imageUrl}
+                          alt={clarification.questionUser.nickname}
+                          className="jk-user-profile-img small elevation-1"
+                          width={24}
+                          height={24}
+                        />
                       </div>
-                    </Popover>
+                    </UserNicknameLink>
                   </div>
                   <div className="jk-row nowrap gap">
                     <div className="jk-tag primary-light">
@@ -156,10 +156,17 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataResponseDT
                           </span>
                         </div>}
                     </div>
-                    <div className="jk-tag gray-6">
-                      {clarification.public ? <T>public</T> : isJudgeOrAdmin ? <T>only for the user</T> :
-                        <T>only for you</T>}</div>
-                    {!clarification.answerTimestamp && <div className="jk-tag error"><T>not answered yet</T></div>}
+                    <div className="jk-tag bc-hl">
+                      {clarification.public
+                        ? <T className="tt-se">public</T>
+                        : isJudgeOrAdmin
+                          ? <T className="tt-se">only for the user</T> :
+                          <T className="tt-se">only for you</T>
+                      }
+                    </div>
+                    {!clarification.answerTimestamp && (
+                      <div className="jk-tag bc-er cr-we"><T className="tt-se">not answered yet</T></div>
+                    )}
                   </div>
                 </div>
                 {!!clarification.answerTimestamp && (

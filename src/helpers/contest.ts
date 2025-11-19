@@ -1,13 +1,8 @@
 import { UpsertContestDTO } from '@juki-team/commons';
 import { jukiApiManager } from 'config';
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'src/constants';
-import {
-  ContentResponseType,
-  ContestDataResponseDTO,
-  ContestTemplate,
-  UpsertContestDTOUI,
-  UpsertContestProblemDTOUI,
-} from 'types';
+import { ContentResponseType, ContestTemplate, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
+import { ContestDataUI } from '../components/contest/view/types';
 import { cleanRequest, getMetaHeaders, isGlobalContest, roundTimestamp } from './index';
 
 export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertContestDTOUI): UpsertContestDTOUI => {
@@ -92,7 +87,7 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
   return ContestTemplate.CUSTOMIZED;
 };
 
-export const toUpsertContestDTOUI = (contest: ContestDataResponseDTO): UpsertContestDTOUI => {
+export const toUpsertContestDTOUI = (contest: ContestDataUI): UpsertContestDTOUI => {
   const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
   Object.values(contest.problems).forEach(problem => {
     problems[problem.key] = {

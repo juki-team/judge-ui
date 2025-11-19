@@ -103,10 +103,18 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
     </div>
   ),
   index: problem.index,
-  Field: ({ record: { problems, focus } }) => {
+  Field: ({ record: { problems, focus, diff } }) => {
     const problemData = problems[problem.key];
+    const problemFocus = focus?.find(({ problemKey }) => problemKey === problem.key);
+    const problemDiff = diff?.find(({ problemKey }) => problemKey === problem.key);
+    
     return (
-      <Field className={classNames('jk-row center nowrap', { 'cell-score-highlight': !!focus?.includes(problem.key) })}>
+      <Field
+        className={classNames('jk-row center nowrap', {
+          'cell-score-highlight': !!problemFocus,
+        })}
+        style={{ '--color': problemFocus?.success ? 'var(--t-color-success)' : !!problemFocus?.points ? 'var(--t-color-success-light)' : 'var(--t-color-error-light)' } as CSSProperties}
+      >
         {(problemData?.success || !!problemData?.points) && (
           <div
             data-tooltip-id="jk-tooltip"
@@ -130,7 +138,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
           </div>
         )}
         <div
-          className="jk-row nowrap"
+          className={classNames('jk-row nowrap')}
           style={{ opacity: !!problem.maxAcceptedUsers && problemData && problemData?.indexAccepted >= problem.maxAcceptedUsers ? 0.2 : undefined }}
         >
           <div className="tx-xs">{problemData?.attempts || '-'}</div>
@@ -138,6 +146,15 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
             <>
               <span className="cr-g3">/</span>
               <div className="tx-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
+            </>
+          )}
+          {!!problemDiff && (
+            <>
+              &nbsp;
+              <div className="cell-score-highlight-diff jk-tag tx-s">
+                ?&nbsp;
+                {problemDiff?.pendingAttempts}
+              </div>
             </>
           )}
         </div>

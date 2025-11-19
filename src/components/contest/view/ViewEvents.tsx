@@ -4,7 +4,7 @@ import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { Button, ButtonLoader, CodeViewer, DateLiteral, LineLoader, Modal, T, UserChip } from 'components';
 import { useFetcher } from 'hooks';
 import { useState } from 'react';
-import { CodeLanguage, ContentsResponseType, ContestDataResponseDTO, Status } from 'types';
+import { CodeLanguage, ContentResponseType, ContestDataResponseDTO, ContestEventsResponseDTO, Status } from 'types';
 
 export const ViewEvents = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
@@ -14,9 +14,9 @@ export const ViewEvents = ({ contest }: { contest: ContestDataResponseDTO }) => 
     isLoading,
     mutate,
     isValidating,
-  } = useFetcher<ContentsResponseType<ContestDataResponseDTO['events'][number]>>(jukiApiManager.API_V1.contest.getEvents({ params: { key: contest.key } }).url);
+  } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(jukiApiManager.API_V1.contest.getDataEvents({ params: { key: contest.key } }).url);
   
-  const events = data?.success ? data.contents : [];
+  const events = data?.success ? data.content.events : [];
   
   return (
     <div className="jk-col gap stretch left jk-pg-md nowrap jk-pg bc-we jk-br-ie">

@@ -68,14 +68,27 @@
 }
 
 .cell-score-highlight {
-  animation-name: test;
-  animation-duration: 5s;
+  animation-name: score-highlight;
+  animation-duration: 2s;
+  animation-iteration-count: 5;
+  
+  @keyframes score-highlight {
+    0% {background-color: transparent; }
+    50% {background-color: var(--color, --t-color-accent); }
+    100% {background-color: transparent; }
+  }
 }
 
-@keyframes test {
-  0% {background-color: transparent; }
-  50% {background-color: var(--t-color-accent-light); }
-  100% {background-color: transparent; }
+.cell-score-highlight-diff {
+  animation-name: score-highlight-diff;
+  animation-duration: 400ms;
+  animation-iteration-count: infinite;
+}
+
+@keyframes score-highlight-diff {
+  0% { background-color: var(--t-color-accent-light); }
+  50% { background-color: var(--t-color-accent); }
+  100% { background-color: var(--t-color-accent-light); }
 }
 
 .is-first-accepted {

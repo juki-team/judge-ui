@@ -29,7 +29,6 @@ import {
 import React, { ReactNode } from 'react';
 import { JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import {
-  ContestDataResponseDTO,
   ContestTab,
   ObjectIdType,
   ProfileSetting,
@@ -42,13 +41,14 @@ import {
 import { DocumentMembersButton } from '../../index';
 import { ContestTimeProgress } from './ContestTimeProgress';
 import { ContestTimeTimer } from './ContestTimeTimer';
+import { ContestDataUI } from './types';
 import { ViewClarifications } from './ViewClarifications';
 import { ViewEvents } from './ViewEvents';
 import { ViewProblemContest } from './ViewProblemContest';
 import { ViewScoreboard } from './ViewScoreboard';
 import { ViewSubmissions } from './ViewSubmissions';
 
-export function ContestView({ contest }: { contest: ContestDataResponseDTO, }) {
+export function ContestView({ contest }: { contest: ContestDataUI, }) {
   
   const pushRoute = useRouterStore(state => state.pushRoute);
   const searchParams = useRouterStore(state => state.searchParams);

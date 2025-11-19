@@ -41,6 +41,7 @@ import {
   WebSocketSubscriptionEvent,
 } from 'types';
 import { ButtonLoader } from '../../index';
+import { ContestDataUI } from './types';
 
 const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
@@ -131,7 +132,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
     </ButtonLoader>
   );
 };
-export const ViewSubmissions = ({ contest }: { contest: ContestDataResponseDTO }) => {
+export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
   const companyKey = useUserStore(state => state.company.key);

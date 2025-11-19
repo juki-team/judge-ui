@@ -98,6 +98,9 @@ export type {
   SubscribeContestChangesWebSocketEventDTO,
   ContestTimeData,
   DocumentMemberResponseDTO,
+  ContestEventsResponseDTO,
+  ContestMembersResponseDTO,
+  ContestClarificationsResponseDTO,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';
