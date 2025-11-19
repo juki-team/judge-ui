@@ -53,13 +53,16 @@ export function ContestEditPage({ contestKey }: { contestKey: string }) {
 
 const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
   const companyKey = useUserStore(state => state.company.key);
-  const { data: dataEvents } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
+  const { data: dataEvents, isLoading: isLoadingEvents } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
     jukiApiManager.API_V1.contest.getDataEvents({ params: { key: contest.key, companyKey } }).url,
   );
-  const { data: dataMembers } = useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
+  const { data: dataMembers, isLoading: isLoadingMembers } = useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
     jukiApiManager.API_V1.contest.getDataMembers({ params: { key: contest.key, companyKey } }).url,
   );
-  const { data: dataClarifications } = useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
+  const {
+    data: dataClarifications,
+    isLoading: isLoadingClarifications,
+  } = useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
     jukiApiManager.API_V1.contest.getDataClarifications({ params: { key: contest.key, companyKey } }).url,
   );
   
@@ -78,6 +81,10 @@ const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
       clarifications: dataClarifications?.success ? dataClarifications.content.clarifications : [],
     };
   }, [ contest, dataEvents, dataMembers, dataClarifications ]);
+  
+  if (isLoadingEvents || isLoadingMembers || isLoadingClarifications) {
+    return null;
+  }
   
   return (
     <EntityUpdateLayout

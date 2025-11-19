@@ -8,7 +8,7 @@ import {
 
 export interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTO {
   focus?: { problemKey: string, success: boolean, points: number }[],
-  diff?: { problemKey: string, pendingAttempts: number }[],
+  diff?: { problemKey: string, pendingAttempts: number, focus: boolean }[],
 }
 
 export type ContestDataUI =

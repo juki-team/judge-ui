@@ -151,7 +151,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
           {!!problemDiff && (
             <>
               &nbsp;
-              <div className="cell-score-highlight-diff jk-tag tx-s">
+              <div className={classNames('cell-score-highlight-diff jk-tag bc-hl tx-s', { 'focus cr-we': problemDiff?.focus })}>
                 ?&nbsp;
                 {problemDiff?.pendingAttempts}
               </div>

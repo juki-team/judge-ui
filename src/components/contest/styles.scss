@@ -80,12 +80,14 @@
 }
 
 .cell-score-highlight-diff {
-  animation-name: score-highlight-diff;
-  animation-duration: 400ms;
-  animation-iteration-count: infinite;
+  &.focus {
+    animation-name: score-highlight-diff-focus;
+    animation-duration: 400ms;
+    animation-iteration-count: infinite;
+  }
 }
 
-@keyframes score-highlight-diff {
+@keyframes score-highlight-diff-focus {
   0% { background-color: var(--t-color-accent-light); }
   50% { background-color: var(--t-color-accent); }
   100% { background-color: var(--t-color-accent-light); }

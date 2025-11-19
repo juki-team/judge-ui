@@ -94,6 +94,33 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       setData(prevState => {
         const prevByUsers: { [key: string]: ScoreboardResponseDTO } = {};
         prevState.forEach(user => prevByUsers[getKeyUser(user.user)] = user);
+        const nextBoard = (response.content[index + 1]?.content || []).map(scoreboard => {
+          const finalUserScoreboard = scoreboardResponseFinal.find(s =>
+            getKeyUser(s.user) === getKeyUser(scoreboard.user),
+          );
+          const focus: ScoreboardResponseDTOFocus['focus'] = [];
+          const diff: ScoreboardResponseDTOFocus['diff'] = [];
+          const problemKeys = new Set([ ...Object.keys(scoreboard.problems), ...Object.keys(finalUserScoreboard?.problems ?? {}) ]);
+          for (const problemKey of Array.from(problemKeys)) {
+            const problem = scoreboard.problems[problemKey];
+            if (JSON.stringify(problem) !== JSON.stringify(prevByUsers[getKeyUser(scoreboard.user)]?.problems[problemKey])) {
+              focus.push({ problemKey, success: problem?.success || false, points: problem?.points || 0 });
+            }
+            const finalProblem = finalUserScoreboard?.problems[problemKey];
+            if (JSON.stringify(Object.entries(problem || {}).sort()) !== JSON.stringify(Object.entries(finalProblem || {}).sort())) {
+              diff.push({
+                problemKey,
+                pendingAttempts: (finalProblem?.attempts ?? 0) - (problem?.attempts ?? 0),
+                focus: false,
+              });
+            }
+          }
+          return {
+            ...scoreboard,
+            focus,
+            diff,
+          };
+        });
         return response.content[index].content.map(scoreboard => {
           const finalUserScoreboard = scoreboardResponseFinal.find(s =>
             getKeyUser(s.user) === getKeyUser(scoreboard.user),
@@ -108,7 +135,16 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
             }
             const finalProblem = finalUserScoreboard?.problems[problemKey];
             if (JSON.stringify(Object.entries(problem || {}).sort()) !== JSON.stringify(Object.entries(finalProblem || {}).sort())) {
-              diff.push({ problemKey, pendingAttempts: (finalProblem?.attempts ?? 0) - (problem?.attempts ?? 0) });
+              const currentDiff = {
+                problemKey,
+                pendingAttempts: (finalProblem?.attempts ?? 0) - (problem?.attempts ?? 0),
+                focus: false,
+              };
+              const nextFocus = nextBoard.find(b => getKeyUser(b.user) === getKeyUser(scoreboard.user))?.focus?.find(d => d.problemKey === problemKey);
+              diff.push({
+                ...currentDiff,
+                focus: !!nextFocus,
+              });
             }
           }
           return {
@@ -151,16 +187,16 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
         </div>,
         <div className="jk-row gap" key="buttons">
           <Button size="tiny" type="light" onClick={() => setIndex(0)}>
-            <T>start</T>
+            <T className="tt-se">start</T>
           </Button>
           <Button size="tiny" onClick={() => setIndex(prevState => Math.max(prevState - 1, 0))}>
-            <T>back</T>
+            <T className="tt-se">back</T>
           </Button>
           <Button size="tiny" onClick={() => setIndex(prevState => Math.min(prevState + 1, max))}>
-            <T>next</T>
+            <T className="tt-se">next</T>
           </Button>
           <Button size="tiny" type="light" onClick={() => setIndex(max)}>
-            <T>end</T>
+            <T className="tt-se">end</T>
           </Button>
         </div>,
         <div key="date" className="tx-s">
@@ -192,9 +228,10 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       setLoaderStatusRef={setLoaderStatusRef}
       className="contest-scoreboard"
       reloadRef={reloadRef}
+      getRecordKey={({ data, index }) => getKeyUser(data?.[index]?.user)}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, onClose, reloadRef, request, setLoaderStatusRef ]);
+  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, onClose, reloadRef, request, setLoaderStatusRef, reload, contest?.key, notifyResponse ]);
   
   if (fullscreen) {
     return (

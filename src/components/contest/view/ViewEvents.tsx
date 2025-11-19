@@ -1,40 +1,30 @@
 'use client';
 
-import { jukiApiManager } from '@juki-team/base-ui/settings';
-import { Button, ButtonLoader, CodeViewer, DateLiteral, LineLoader, Modal, T, UserChip } from 'components';
-import { useFetcher } from 'hooks';
-import { useState } from 'react';
-import { CodeLanguage, ContentResponseType, ContestDataResponseDTO, ContestEventsResponseDTO, Status } from 'types';
+import { Button, CodeViewer, DateLiteral, Modal, T, UserChip } from 'components';
+import { useState } from 'hooks';
+import { CodeLanguage } from 'types';
+import { ContestDataUI } from './types';
 
-export const ViewEvents = ({ contest }: { contest: ContestDataResponseDTO }) => {
+export const ViewEvents = ({ contest }: { contest: ContestDataUI }) => {
   
   const [ selectedDetails, setSelectedDetails ] = useState<Record<string, any> | null>(null);
-  const {
-    data,
-    isLoading,
-    mutate,
-    isValidating,
-  } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(jukiApiManager.API_V1.contest.getDataEvents({ params: { key: contest.key } }).url);
-  
-  const events = data?.success ? data.content.events : [];
   
   return (
     <div className="jk-col gap stretch left jk-pg-md nowrap jk-pg bc-we jk-br-ie">
-      {isLoading || isValidating && <LineLoader />}
-      <div className="jk-row">
-        <ButtonLoader
-          type="light"
-          onClick={async (setLoader) => {
-            setLoader(Status.LOADING);
-            await mutate();
-            setLoader(Status.SUCCESS);
-          }}
-        >
-          <T className="tt-se">reload</T>
-        </ButtonLoader>
-      </div>
+      {/*<div className="jk-row">*/}
+      {/*  <ButtonLoader*/}
+      {/*    type="light"*/}
+      {/*    onClick={async (setLoader) => {*/}
+      {/*      setLoader(Status.LOADING);*/}
+      {/*      await mutate();*/}
+      {/*      setLoader(Status.SUCCESS);*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <T className="tt-se">reload</T>*/}
+      {/*  </ButtonLoader>*/}
+      {/*</div>*/}
       <div className="jk-col gap left stretch">
-        {events
+        {contest.events
           ?.sort((a, b) => b.timestamp - a.timestamp)
           .map(({ action, details, user, timestamp }, index) => (
             <div key={index} className="jk-col gap left stretch">
