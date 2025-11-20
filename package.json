@@ -17,23 +17,22 @@
     "@juki-team/commons": "^0.0.983",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.5.0",
-    "dom-to-image-more": "^3.7.1",
-    "next": "^15.5.4",
+    "next": "15.5.6",
     "next-compose-plugins": "^2.2.1",
     "next-pwa": "^5.6.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.5.4",
     "@types/dom-to-image": "^2.6.7",
-    "@types/react": "^19.1.14",
-    "@types/react-dom": "^19.1.9",
-    "eslint": "^9.36.0",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.1",
     "eslint-config-next": "^15.5.4",
     "local-ssl-proxy": "^2.0.5",
-    "sass": "^1.93.2",
-    "typescript": "^5.9.2"
+    "sass": "^1.94.2",
+    "typescript": "^5.9.3"
   },
   "resolutions": {
     "@types/minimatch": "^5.0.0"
