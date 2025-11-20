@@ -8,6 +8,7 @@ import {
   cleanRequest,
   downloadDataTableAsCsvFile,
   downloadSheetDataAsXlsxFile,
+  getUserKey,
 } from 'helpers';
 import { useDataViewerRequester, useI18nStore, useJukiNotification, useUIStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -219,6 +220,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
         label: <div className="jk-row fw-bd">{label}</div>,
       }))}
       reloadRef={reloadRef}
+      getRecordKey={({ data, index }) => getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key)}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   ), [ columns, contest, data, fullscreen, handleFullscreen, isLoading, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);

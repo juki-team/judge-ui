@@ -19,7 +19,7 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
       ContestsTab.GLOBALS,
       ContestsTab.CLASSICS,
     ].includes(tab)) {
-      setSearchParams({ name: 'tab', value: ContestsTab.GLOBALS }, true);
+      setSearchParams({ name: 'tab', value: ContestsTab.CLASSICS }, true);
     }
   }, [ tab, setSearchParams ]);
   
@@ -41,15 +41,15 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
     //   key: ContestsTab.ALL,
     //   header: <T className="tt-se ws-np">all</T>,
     // },
-    [ContestsTab.GLOBALS]: {
-      body: <ContestsGlobalList  {...props} />,
-      key: ContestsTab.GLOBALS,
-      header: <T className="tt-se ws-np">globals</T>,
-    },
     [ContestsTab.CLASSICS]: {
       body: <ContestsClassicList {...props} />,
       key: ContestsTab.CLASSICS,
       header: <T className="tt-se ws-np">classics</T>,
+    },
+    [ContestsTab.GLOBALS]: {
+      body: <ContestsGlobalList  {...props} />,
+      key: ContestsTab.GLOBALS,
+      header: <T className="tt-se ws-np">globals</T>,
     },
   };
   

@@ -11,8 +11,10 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 };
 
+const LOCAL_STORAGE_KEY = 'jk-seen-install-pwa-modal';
+
 export function InstallPWAModal() {
-  const [ isOpen, setIsOpen ] = useState(true);
+  const [ isOpen, setIsOpen ] = useState(!localStorage.getItem(LOCAL_STORAGE_KEY));
   const [ supportsInstall, setSupportsInstall ] = useState(false);
   const [ deferredPrompt, setDeferredPrompt ] = useState<BeforeInstallPromptEvent | null>(null);
   const [ isInstalled, setIsInstalled ] = useState(false);
@@ -89,7 +91,13 @@ export function InstallPWAModal() {
             >
               <T className="tt-se">how to install on iOS</T>
             </Button>
-            <Button type="text" onClick={() => setIsOpen(false)}>
+            <Button
+              type="text"
+              onClick={() => {
+                setIsOpen(false);
+                localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
+              }}
+            >
               <T className="tt-se">{`I'm fine, I'll just view it on my mobile`}</T>
             </Button>
           </div>

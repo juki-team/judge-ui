@@ -1,9 +1,8 @@
 'use client';
 
-import { getUserKey } from '@juki-team/commons';
 import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, T, Timer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest } from 'helpers';
+import { authorizedRequest, cleanRequest, getUserKey } from 'helpers';
 import { useDataViewerRequester, useFetcher, useI18nStore, useJukiNotification, useUIStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -72,13 +71,6 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     reloadRef,
   } = useDataViewerRequester<ContentResponseType<{ content: ScoreboardResponseDTO[], timestamp: number }[]>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key),
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      refreshInterval: 0,
-      refreshWhenHidden: false,
-      revalidateOnMount: false,
-    },
   );
   useEffect(() => {
     reload();

@@ -22,6 +22,7 @@ export {
   isContestChangesWebSocketResponseEventDTO,
   consoleError,
   consoleInfo,
+  getUserKey,
 } from '@juki-team/commons';
 
 export {
