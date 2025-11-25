@@ -53,7 +53,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const routeParams = useParams();
   const pathname = usePathname();
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
-  const preloaders = usePreloadComponents();
+  const preloaders = usePreloadComponents(2000);
   
   const loadingBasic = preloaders.atoms && preloaders.molecules && preloaders.organisms;
   
