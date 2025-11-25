@@ -1,42 +1,30 @@
-'use client';
-
-import { JukiI18nInitializer } from 'components';
-import { useEffect, useI18nStore } from 'hooks';
-import { useSearchParams } from 'next/navigation';
+import { UserStoreProvider } from 'components';
+import { jukiApiManager } from 'config';
+import { EMPTY_COMPANY, EMPTY_USER } from 'config/constants';
 import { ReactNode } from 'react';
 import './styles.scss';
-import { Theme } from 'types';
+import { ContentResponseType, PingResponseDTO } from 'types';
+import { get } from '../../helpers/fetch';
+import { Initializer } from './Initializer';
 
-export default function Layout({ children }: { children: ReactNode }) {
+const getInitialUsers = async () => {
   
-  const searchParams = useSearchParams();
-  const changeLanguage = useI18nStore(state => state.changeLanguage);
+  const session = await get<ContentResponseType<PingResponseDTO>>(jukiApiManager.API_V2.auth.ping().url);
   
-  const language = searchParams.get('language');
-  useEffect(() => {
-    if (language) {
-      changeLanguage(language);
-    }
-  }, [ changeLanguage, language ]);
-  
-  const theme = searchParams.get('theme');
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.querySelector('body')?.classList.remove('jk-theme-dark');
-      document.querySelector('body')?.classList.remove('jk-theme-light');
-      if (theme === Theme.DARK) {
-        document.querySelector('body')?.classList.add('jk-theme-dark');
-      } else {
-        document.querySelector('body')?.classList.add('jk-theme-light');
-      }
-    }
-  }, [ theme ]);
-  
+  return {
+    user: session?.success ? session?.content.user : EMPTY_USER,
+    company: session?.success ? session?.content.company : EMPTY_COMPANY,
+    isLoading: false,
+  };
+};
+
+export default async function Layout({ children }: { children: ReactNode }) {
   return (
-    <JukiI18nInitializer>
+    <UserStoreProvider initialUser={await getInitialUsers()}>
+      <Initializer />
       <div id="juki-app" style={{ overflow: 'auto' }}>
         {children}
       </div>
-    </JukiI18nInitializer>
+    </UserStoreProvider>
   );
 }

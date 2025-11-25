@@ -22,8 +22,6 @@ const getInitialUsers = async () => {
 
 export default async function Layout({ children }: { children: ReactNode }) {
   
-  await new Promise(resolve => setTimeout(resolve, 5000));
-  
   return (
     <UserStoreProvider initialUser={await getInitialUsers()}>
       <UserLoader />
