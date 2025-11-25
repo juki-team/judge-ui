@@ -65,6 +65,13 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
   const problem = data?.success ? data.content : fallbackData;
   
+  const reloadRoute = useRouterStore(store => store.reloadRoute);
+  useEffect(() => {
+    if (!data?.success) {
+      reloadRoute();
+    }
+  }, [ data?.success, reloadRoute ]);
+  
   const { setIsOpen } = useTour();
   useEffect(() => {
     void authorizedRequest(JUDGE_API_V1.STATISTICS.PROBLEM(problem.key), { method: HTTPMethod.POST });

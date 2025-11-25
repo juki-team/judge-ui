@@ -111,4 +111,5 @@ export {
   FieldText,
   UserStoreProvider,
   JukiI18nInitializer,
+  LoginUser,
 } from '@juki-team/base-ui';
