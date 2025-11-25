@@ -98,7 +98,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
         setLoaderStatus(Status.LOADING);
         setDataCrawled({});
         setSubmissionsCount(0);
-        const { url, ...options } = jukiApiManager.API_V1.contest.retrieve({
+        const { url, ...options } = jukiApiManager.API_V2.contest.retrieve({
           params: {
             key: contestKey,
           },
@@ -136,7 +136,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
   const companyKey = useUserStore(state => state.company.key);
-  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V1.judge.getSummaryList().url);
+  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V2.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
@@ -200,7 +200,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
         label: <T className="tt-se">download as csv</T>,
         value: 'csv',
         getUrl: ({ filter, sort }: DataViewerRequestPropsType) => (
-          jukiApiManager.API_V1.submission.getExportSummaryList({
+          jukiApiManager.API_V2.submission.getExportSummaryList({
             params: {
               page: 1,
               pageSize: 1000000,
@@ -217,7 +217,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
         label: <T className="tt-se">download as zip with source codes</T>,
         value: 'complete',
         getUrl: ({ filter, sort }: DataViewerRequestPropsType) => (
-          jukiApiManager.API_V1.submission.getExportSummaryList({
+          jukiApiManager.API_V2.submission.getExportSummaryList({
             params: {
               page: 1,
               pageSize: 1000000,
@@ -245,7 +245,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
           filter,
           sort,
         };
-        return jukiApiManager.API_V1.submission.getSummaryList({
+        return jukiApiManager.API_V2.submission.getSummaryList({
           params: {
             page,
             pageSize,

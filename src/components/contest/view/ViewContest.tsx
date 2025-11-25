@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { consoleInfo } from '@juki-team/commons';
 import {
   ButtonLoader,
@@ -55,7 +56,7 @@ export function ContestView({ contest }: { contest: ContestDataUI, }) {
   const contestKey = contest.key;
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const { Link } = useUIStore(store => store.components);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
@@ -88,7 +89,6 @@ export function ContestView({ contest }: { contest: ContestDataUI, }) {
     const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
       params: {
         key: contest.key,
-        token: jukiApiManager.getToken(),
         language: userPreferredLanguage,
       },
     });

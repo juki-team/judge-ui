@@ -11,7 +11,7 @@ interface ProfileViewPageProps {
 export function ProfileViewPage({ nickname }: ProfileViewPageProps) {
   return (
     <FetcherLayer<ContentResponseType<UserProfileResponseDTO>>
-      url={nickname ? jukiApiManager.API_V1.user.getProfile({ params: { nickname: nickname as string } }).url : null}
+      url={nickname ? jukiApiManager.API_V2.user.getProfile({ params: { nickname: nickname as string } }).url : null}
       errorView={<PageNotFound />}
     >
       {({ data, mutate }) => (

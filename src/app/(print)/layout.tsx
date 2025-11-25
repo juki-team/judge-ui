@@ -1,6 +1,6 @@
 'use client';
 
-import { JukiI18nProvider } from 'components';
+import { JukiI18nInitializer } from 'components';
 import { useEffect, useI18nStore } from 'hooks';
 import { useSearchParams } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -33,10 +33,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [ theme ]);
   
   return (
-    <JukiI18nProvider>
+    <JukiI18nInitializer>
       <div id="juki-app" style={{ overflow: 'auto' }}>
         {children}
       </div>
-    </JukiI18nProvider>
+    </JukiI18nInitializer>
   );
 }

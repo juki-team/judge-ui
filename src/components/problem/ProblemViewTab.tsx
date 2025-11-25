@@ -69,7 +69,7 @@ export const ProblemViewTab = ({
                   lastLanguageRef.current = language as string;
                   
                   setLoaderStatus(Status.LOADING);
-                  const { url, ...options } = jukiApiManager.API_V1.problem.submit({
+                  const { url, ...options } = jukiApiManager.API_V2.problem.submit({
                     params: { key: problem.key },
                     body: { language: language as string, source },
                   });

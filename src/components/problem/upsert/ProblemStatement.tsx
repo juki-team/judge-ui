@@ -27,7 +27,6 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
         <div className="jk-row nowrap jk-pg-xsm-tb">Español&nbsp;
           <Image
             alt="ES image"
-            // fill
             src="https://images.juki.pub/assets/image-es.png"
             width={50}
             height={24}

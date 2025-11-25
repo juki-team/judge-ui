@@ -49,7 +49,7 @@ interface TagsProps {
 
 export const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
   
-  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO>>(jukiApiManager.API_V1.judge.getData({ params: { key: judgeKey } }).url);
+  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO>>(jukiApiManager.API_V2.judge.getData({ params: { key: judgeKey } }).url);
   
   const allTags = Array.from(new Set([ ...(data?.success ? data.content.problemTags : []), ...tags ]));
   

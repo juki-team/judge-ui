@@ -45,7 +45,7 @@ export default function ContestViewPage({ contestKey }: { contestKey: string }) 
   
   return (
     <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
-      url={jukiApiManager.API_V1.contest.getData({ params: { key: contestKey as string, companyKey } }).url}
+      url={jukiApiManager.API_V2.contest.getData({ params: { key: contestKey as string, companyKey } }).url}
       loadingView={
         <TwoContentLayout
           // breadcrumbs={breadcrumbs}
@@ -86,13 +86,13 @@ export default function ContestViewPage({ contestKey }: { contestKey: string }) 
 const ContestDataView = ({ contest }: { contest: ContestDataResponseDTO }) => {
   const companyKey = useUserStore(state => state.company.key);
   const { data: dataEvents } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
-    jukiApiManager.API_V1.contest.getDataEvents({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.API_V2.contest.getDataEvents({ params: { key: contest.key, companyKey } }).url,
   );
   const { data: dataMembers } = useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
-    jukiApiManager.API_V1.contest.getDataMembers({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.API_V2.contest.getDataMembers({ params: { key: contest.key, companyKey } }).url,
   );
   const { data: dataClarifications } = useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
-    jukiApiManager.API_V1.contest.getDataClarifications({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: contest.key, companyKey } }).url,
   );
   
   const contestData: ContestDataUI = useMemo(() => {

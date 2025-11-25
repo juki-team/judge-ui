@@ -8,10 +8,9 @@ import {
   JukiProviders,
   NavigationBar,
   NewVersionAvailable,
-  SubmissionModal,
   T,
-  UserPreviewModal,
 } from 'components';
+import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY, NODE_ENV, ROUTES } from 'config/constants';
 import { usePreloadComponents, useUIStore, useUserStore } from 'hooks';
 import Link from 'next/link';
@@ -81,6 +80,8 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
           isLoadingRoute: isLoadingRoute || !loadingBasic,
         }}
         initialLastPath={initialLastPath}
+        multiCompanies={false}
+        onSeeMyProfile={(nickname) => push(jukiAppRoutes.JUDGE().profiles.view({ nickname }))}
       >
         <NavigationBar>
           {Children.toArray(children)}
@@ -89,8 +90,6 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         </NavigationBar>
         <Analytics key="analytics" />
         <NewVersionAvailable apiVersionUrl="/api/version" />
-        <UserPreviewModal key="user-preview-modal" />
-        <SubmissionModal key="submission-modal" />
         <InstallPWAModal key="install-pwa-modal" />
         {/*<NotificationWarningModal />*/}
       </JukiProviders>

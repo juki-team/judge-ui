@@ -174,7 +174,7 @@ export async function getContestMetadata(contestKey: string) {
   let result;
   try {
     const response = await fetch(
-      jukiApiManager.API_V1.contest.getMetadata({ params: { key: contestKey } }).url,
+      jukiApiManager.API_V2.contest.getMetadata({ params: { key: contestKey } }).url,
       { headers: getMetaHeaders() });
     const text = await response.text();
     result = cleanRequest<ContentResponseType<{

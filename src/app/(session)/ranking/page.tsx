@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { oneTab } from 'helpers';
@@ -8,7 +9,7 @@ import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankRespon
 
 function Ranking() {
   
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const { Image } = useUIStore(store => store.components);
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {

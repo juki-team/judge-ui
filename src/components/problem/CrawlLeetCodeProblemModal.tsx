@@ -59,7 +59,7 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V1.problem.crawl({
+            const { url, ...options } = jukiApiManager.API_V2.problem.crawl({
               body: {
                 judgeKey: Judge.LEETCODE,
                 key: slug,

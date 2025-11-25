@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { MdMathViewer, T } from 'components';
 import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY } from 'config/constants';
@@ -13,7 +14,7 @@ export default function Home() {
   const companyName = useUserStore(state => state.company.name);
   const preferredLanguage = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
   const { Link, Image } = useUIStore(store => store.components);
-  const viewPortWidth = useUIStore(store => store.viewPortWidth);
+  const viewPortWidth = usePageStore(store => store.viewPort.width);
   const width = Math.max(Math.min(viewPortWidth, 1024), 512);
   
   return (

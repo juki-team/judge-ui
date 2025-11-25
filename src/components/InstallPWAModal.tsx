@@ -2,8 +2,8 @@
 
 import { Button, Modal, T } from 'components';
 import { jukiApiManager } from 'config';
-import { authorizedRequest, cleanRequest, consoleError, consoleInfo } from 'helpers';
-import { useCallback, useEffect, useRouterStore, useState } from 'hooks';
+import { authorizedRequest, cleanRequest, consoleError, consoleInfo, getVisitorSessionId } from 'helpers';
+import { useCallback, useEffect, useRouterStore, useState, useUserStore } from 'hooks';
 import { ContentsResponseType } from 'types';
 
 type BeforeInstallPromptEvent = Event & {
@@ -14,11 +14,12 @@ type BeforeInstallPromptEvent = Event & {
 const LOCAL_STORAGE_KEY = 'jk-seen-install-pwa-modal';
 
 export function InstallPWAModal() {
-  const [ isOpen, setIsOpen ] = useState(!localStorage.getItem(LOCAL_STORAGE_KEY));
+  const [ isOpen, setIsOpen ] = useState(typeof localStorage !== 'undefined' ? !localStorage.getItem(LOCAL_STORAGE_KEY) : true);
   const [ supportsInstall, setSupportsInstall ] = useState(false);
   const [ deferredPrompt, setDeferredPrompt ] = useState<BeforeInstallPromptEvent | null>(null);
   const [ isInstalled, setIsInstalled ] = useState(false);
   const isLoadingRoute = useRouterStore(store => store.isLoadingRoute);
+  const { isMobile } = useUserStore(store => store.device);
   
   useEffect(() => {
     const onBeforeInstallPrompt = (e: Event) => {
@@ -46,11 +47,10 @@ export function InstallPWAModal() {
     if (!deferredPrompt) return;
     await deferredPrompt.prompt();
     const result = await deferredPrompt.userChoice;
-    const token = jukiApiManager.getToken();
-    const { url, ...options } = jukiApiManager.API_V1.log.info({
+    const { url, ...options } = jukiApiManager.API_V2.log.info({
       body: {
         location,
-        token,
+        visitorSessionId: getVisitorSessionId(),
         infoName: 'Juki Judge App installed',
         infoMessage: JSON.stringify(result),
       },
@@ -63,7 +63,6 @@ export function InstallPWAModal() {
         infoName: 'Juki Judge App installed',
         infoMessage: result,
         location,
-        token,
         response,
       });
     }
@@ -92,13 +91,13 @@ export function InstallPWAModal() {
               <T className="tt-se">how to install on iOS</T>
             </Button>
             <Button
-              type="text"
+              type="light"
               onClick={() => {
                 setIsOpen(false);
                 localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
               }}
             >
-              <T className="tt-se">{`I'm fine, I'll just view it on my mobile`}</T>
+              <T className="tt-se">{`I'm fine, I'll just view it on my ${isMobile ? 'mobile' : 'PC'}`}</T>
             </Button>
           </div>
         </Modal>
@@ -118,8 +117,15 @@ export function InstallPWAModal() {
         >
           <T className="tt-ce">install app</T>
         </Button>
-        <Button type="text" onClick={() => setIsOpen(false)}>
-          <T className="tt-se">{`I'm fine, I'll just view it on my mobile`}</T>
+        <Button
+          type="light"
+          size="small"
+          onClick={() => {
+            setIsOpen(false);
+            localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
+          }}
+        >
+          <T className="tt-se">{`I'm fine, I'll just view it on my ${isMobile ? 'mobile' : 'PC'}`}</T>
         </Button>
       </div>
     </Modal>

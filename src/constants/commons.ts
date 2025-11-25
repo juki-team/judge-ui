@@ -2,7 +2,11 @@ import { Language, TextLanguageType } from 'types';
 
 export const EMPTY_TEXT_LANGUAGES: TextLanguageType = { [Language.ES]: '', [Language.EN]: '' };
 
-export { ALPHANUMERIC_DASH_UNDERSCORE_REGEX, DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
+export {
+  ALPHANUMERIC_DASH_UNDERSCORE_REGEX,
+  DEFAULT_DATA_VIEWER_PROPS,
+  EMPTY_COMPANY, EMPTY_USER,
+} from '@juki-team/base-ui/constants';
 
 export {
   ERROR,
@@ -36,4 +40,5 @@ export {
   ONE_MINUTE,
   SEPARATOR_TOKEN,
   ONE_SECOND,
+  HEADER_JUKI_FORWARDED_HOST,
 } from '@juki-team/commons';

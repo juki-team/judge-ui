@@ -80,7 +80,7 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
               setLoaderStatus(Status.LOADING);
               let response;
               if (isGlobal) {
-                const { url, ...options } = jukiApiManager.API_V1.problem.submit({
+                const { url, ...options } = jukiApiManager.API_V2.problem.submit({
                   params: {
                     key: problem.key,
                   }, body: { language: language as string, source },
@@ -89,7 +89,7 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
                   await authorizedRequest(url, options),
                 );
               } else {
-                const { url, ...options } = jukiApiManager.API_V1.contest.submit({
+                const { url, ...options } = jukiApiManager.API_V2.contest.submit({
                   params: {
                     key: contest.key,
                     problemKey: problem.key,

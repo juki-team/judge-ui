@@ -1,8 +1,8 @@
-import { SpinIcon } from 'components';
+import { JukiI18nInitializer } from 'components';
 import { DEFAULT_METADATA } from 'config/constants';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 import './styles.scss';
 import '@juki-team/base-ui/styles.css';
 
@@ -21,7 +21,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
     <html lang="en" className={inter.variable}>
     <body className="jk-theme-light">
     <iframe
-      style={{ display: 'none' }} src="https://juki.app/jk-cross.html"
+      style={{ display: 'none' }} src="https://www.juki.app/jk-cross.html"
       className="juki-iframe-cross-domain"
     />
     <iframe
@@ -32,9 +32,8 @@ export default async function Layout({ children }: { children: ReactNode }) {
       style={{ display: 'none' }} src="https://coach.juki.app/jk-cross.html"
       className="juki-iframe-cross-domain"
     />
-    <Suspense fallback={<SpinIcon />}>
-      {children}
-    </Suspense>
+    {children}
+    <JukiI18nInitializer />
     </body>
     </html>
   );

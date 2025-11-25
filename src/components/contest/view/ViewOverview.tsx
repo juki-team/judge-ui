@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import {
   AdminInformation,
   ButtonLoader,
@@ -14,7 +15,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
-import { useDateFormat, useI18nStore, useJukiNotification, useRouterStore, useUIStore, useUserStore } from 'hooks';
+import { useDateFormat, useI18nStore, useJukiNotification, useRouterStore, useUserStore } from 'hooks';
 import React from 'react';
 import { CODE_LANGUAGE, JUDGE_API_V1 } from 'src/constants';
 import {
@@ -41,7 +42,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
   const appendSearchParams = useRouterStore(state => state.appendSearchParams);
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse, addWarningNotification } = useJukiNotification();
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const t = useI18nStore(state => state.i18n.t);
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
@@ -212,7 +213,6 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
                   params: {
                     key: contest.key,
-                    token: jukiApiManager.getToken(),
                     language: userPreferredLanguage,
                   },
                 });

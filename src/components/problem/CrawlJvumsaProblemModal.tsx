@@ -41,7 +41,7 @@ export const CrawlJvumsaProblemModal = ({ onClose, isOpen }: BasicModalProps) =>
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
       <div className="jk-col gap jk-pg-md">
-        <FetcherLayer<ContentResponseType<JudgeDataResponseDTO>> url={jukiApiManager.API_V1.judge.getData({ params: { key: Judge.JV_UMSA as string } }).url}>
+        <FetcherLayer<ContentResponseType<JudgeDataResponseDTO>> url={jukiApiManager.API_V2.judge.getData({ params: { key: Judge.JV_UMSA as string } }).url}>
           {({ data: { content } }) => (
             <Content judge={content} />
           )}

@@ -13,7 +13,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     
     const { key, jukiSessionId } = (await searchParams) as { key: string, jukiSessionId: string };
     
-    const { url } = jukiApiManager.API_V1.contest.getData({ params: { key } });
+    const { url } = jukiApiManager.API_V2.contest.getData({ params: { key } });
     const response = await fetch(url, { headers: getHeaders(jukiSessionId) });
     const text = await response.text();
     const result = cleanRequest<ContentResponseType<ContestDataResponseDTO>>(text);

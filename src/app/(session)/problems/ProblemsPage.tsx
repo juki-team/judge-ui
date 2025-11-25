@@ -51,7 +51,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   
   const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
   const setSearchParams = useRouterStore(state => state.setSearchParams);
-  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiManager.API_V1.company.getJudgeList().url);
+  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiManager.API_V2.company.getJudgeList().url);
   const tags = useMemo(() => (data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : []).map(tag => ({
     value: tag,
     label: <T>{tag}</T>,
@@ -163,7 +163,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-            return jukiApiManager.API_V1.problem.getSummaryList({
+            return jukiApiManager.API_V2.problem.getSummaryList({
               params: {
                 page,
                 pageSize,

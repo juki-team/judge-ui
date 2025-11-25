@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, T, Timer } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, getUserKey } from 'helpers';
@@ -38,7 +39,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   
   const contestKey = contest.key;
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const {

@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, Select, T } from 'components';
 import { jukiApiManager } from 'config';
 import {
@@ -111,7 +112,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
@@ -175,7 +176,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
               const {
                 url,
                 ...options
-              } = jukiApiManager.API_V1.contest.recalculateScoreboard({ params: { key: contest.key } });
+              } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key } });
               const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
               if (notifyResponse(response, setLoaderStatus)) {
                 reload();

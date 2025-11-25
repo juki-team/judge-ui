@@ -38,7 +38,7 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
-      url={jukiApiManager.API_V1.problem.getData({ params: { key: problemKey as string } }).url}
+      url={jukiApiManager.API_V2.problem.getData({ params: { key: problemKey as string } }).url}
       loadingView={
         <TwoContentLayout loading>
           <h2 className="line-height-1">
@@ -66,7 +66,7 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
         </TwoContentLayout>
       }
     >
-      {({ data, mutate }) => (
+      {({ data }) => (
         <TourProvider
           steps={steps}
           onClickHighlighted={(_, { setIsOpen }) => {
@@ -79,7 +79,7 @@ export default function ProblemViewPage({ problemKey }: { problemKey: string }) 
           showNavigation={false}
           showCloseButton={false}
         >
-          <ProblemViewLayout problem={data.content} reloadProblem={mutate} />
+          <ProblemViewLayout problem={data.content} /*reloadProblem={mutate}*/ />
         </TourProvider>
       )}
     </FetcherLayer>

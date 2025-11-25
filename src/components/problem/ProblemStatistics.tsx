@@ -1,9 +1,10 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
-import { useFetcher, useI18nStore, useUIStore } from 'hooks';
+import { useFetcher, useI18nStore } from 'hooks';
 import { i18n } from 'i18next';
 import React, { useState } from 'react';
 import type { ContentType } from 'recharts/types/component/Tooltip';
@@ -93,8 +94,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
     data,
   } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now));
   const t = useI18nStore(store => store.i18n.t);
-  const viewPortSize = useUIStore(store => store.viewPortSize);
-  const viewPortHeight = useUIStore(store => store.viewPortHeight);
+  const { size: viewPortSize, height: viewPortHeight } = usePageStore(store => store.viewPort);
   const [ dateType, setDateType ] = useState<StatisticsDateKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};

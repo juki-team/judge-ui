@@ -27,7 +27,7 @@ export const ContestsAllList = (props: Partial<PagedDataViewerProps<ContestSumma
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        jukiApiManager.API_V1.contest.getSummaryList({
+        jukiApiManager.API_V2.contest.getSummaryList({
           params: {
             page,
             pageSize,

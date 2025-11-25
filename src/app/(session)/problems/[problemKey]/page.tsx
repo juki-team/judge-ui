@@ -1,41 +1,38 @@
+import {
+  AssignmentIcon,
+  Button,
+  LinkLastPath,
+  PageNotFound,
+  ProblemViewLayout,
+  T,
+  TwoContentLayout,
+} from 'components';
 import { jukiApiManager } from 'config';
 import { DEFAULT_METADATA } from 'config/constants';
-import { cleanRequest, getMetaHeaders } from 'helpers';
+import { oneTab } from 'helpers';
 import type { Metadata } from 'next';
-import { ContentResponseType } from 'types';
-import ProblemViewPage from './ProblemViewPage';
+import { ContentResponseType, LastPathKey, MetadataResponseDTO, ProblemDataResponseDTO } from 'types';
+import { get } from '../../../../helpers/fetch';
+import { ProblemTour } from './ProblemTour';
 
 type Props = {
   params: Promise<{ problemKey: string }>
 }
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
-async function getMetadata(problemKey: string) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  
+  const problemKey = (await params).problemKey;
   
   let result;
   try {
-    const response = await fetch(
-      jukiApiManager.API_V1.problem.getMetadata({ params: { key: problemKey } }).url,
-      { headers: getMetaHeaders() });
-    const text = await response.text();
-    result = cleanRequest<ContentResponseType<{
-      title: string,
-      description: string,
-      cover: string
-    }>>(text);
+    result = await get<ContentResponseType<MetadataResponseDTO>>(jukiApiManager.API_V2.problem.getMetadata({ params: { key: problemKey } }).url);
   } catch (error) {
     console.error('error on generateMetadata', error);
   }
   
-  const { title, description, cover } = result?.success ? result.content : { title: '', description: '', cover: '' };
-  
-  return { title, description, cover };
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  
-  const { title, description } = await getMetadata((await params).problemKey);
+  const { title, description } = result?.success ? result.content : { title: '', description: '' };
   
   return {
     ...DEFAULT_METADATA,
@@ -61,9 +58,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function ProblemViewPage({ params }: Props) {
   
   const problemKey = (await params).problemKey;
   
-  return <ProblemViewPage problemKey={problemKey} />;
-}
+  const problemResponse = await get<ContentResponseType<ProblemDataResponseDTO>>(jukiApiManager.API_V2.problem.getData({ params: { key: problemKey as string } }).url);
+  
+  if (problemResponse.success) {
+    return (
+      <ProblemTour>
+        <ProblemViewLayout problem={problemResponse.content} />
+      </ProblemTour>
+    );
+  }
+  
+  return (
+    <TwoContentLayout
+      // breadcrumbs={breadcrumbs}
+      tabs={oneTab(
+        <PageNotFound>
+          <p>
+            <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
+          </p>
+          <LinkLastPath lastPathKey={LastPathKey.PROBLEMS}>
+            <Button icon={<AssignmentIcon />} type="light">
+              <T className="tt-se">go to problem list</T>
+            </Button>
+          </LinkLastPath>
+        </PageNotFound>,
+      )}
+    >
+      <h2><T>problem not found</T></h2>
+    </TwoContentLayout>
+  );
+};

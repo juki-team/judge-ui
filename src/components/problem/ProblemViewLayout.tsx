@@ -1,11 +1,13 @@
 'use client';
 
+import { ContentResponseType } from '@juki-team/commons';
 import { useTour } from '@reactour/tour';
 import {
   AutorenewIcon,
   Button,
   DocumentMembersButton,
   EditIcon,
+  LineLoader,
   LinkLastPath,
   ProblemInfo,
   T,
@@ -13,11 +15,21 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest } from 'helpers';
-import { useEffect, useRef, useRouterStore, useState, useTrackLastPath, useUIStore, useUserStore } from 'hooks';
+import { authorizedRequest, contentResponse } from 'helpers';
+import {
+  useCheckAndStartServices,
+  useEffect,
+  useFetcher,
+  useRef,
+  useRouterStore,
+  useState,
+  useTrackLastPath,
+  useUIStore,
+  useUserStore,
+} from 'hooks';
+import { CSSProperties } from 'react';
 import {
   HTTPMethod,
-  KeyedMutator,
   LastPathKey,
   ProblemDataResponseDTO,
   ProblemTab,
@@ -36,12 +48,22 @@ import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
 
 interface ProblemViewLayoutProps {
   problem: ProblemDataResponseDTO,
-  reloadProblem: KeyedMutator<any>,
 }
 
-export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutProps) => {
+export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutProps) => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
+  useCheckAndStartServices();
+  
+  const {
+    data,
+    isLoading,
+    isValidating,
+    mutate: reloadProblem,
+  } = useFetcher<ContentResponseType<ProblemDataResponseDTO>>(
+    jukiApiManager.API_V2.problem.getData({ params: { key: fallbackData.key as string } }).url,
+    { fallbackData: contentResponse('fallback data', fallbackData) });
+  const problem = data?.success ? data.content : fallbackData;
   
   const { setIsOpen } = useTour();
   useEffect(() => {
@@ -71,7 +93,6 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutP
     const { url, ...options } = jukiApiManager.API_V2.export.problem.statementToPdf({
       params: {
         key: problem.key,
-        token: userSessionId,
         language: userLang,
       },
     });
@@ -201,6 +222,12 @@ export const ProblemViewLayout = ({ problem, reloadProblem }: ProblemViewLayoutP
       selectedTabKey={problemTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
     >
+      {(isLoading || isValidating) && (
+        <LineLoader style={{ '--line-loader-color': 'var(--t-color-info-light)' } as CSSProperties} delay={1} />
+      )}
+      {!data?.success && (
+        <LineLoader style={{ '--line-loader-color': 'var(--t-color-error)' } as CSSProperties} delay={1} />
+      )}
       <RejudgeConfirmationModal
         isOpen={isOpenRejudgeModal}
         onClose={() => setIsOpenRejudgeModal(false)}

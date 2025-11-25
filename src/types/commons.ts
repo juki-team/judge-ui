@@ -101,6 +101,7 @@ export type {
   ContestEventsResponseDTO,
   ContestMembersResponseDTO,
   ContestClarificationsResponseDTO,
+  MetadataResponseDTO,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';

@@ -8,7 +8,7 @@ export const InfoTestCases = ({ problem, size }: { problem: ProblemDataResponseD
   const {
     data,
     isLoading,
-  } = useFetcher<ContentResponseType<ProblemTestCasesResponseDTO>>(jukiApiManager.API_V1.problem.getTestCases({ params: { key: problem.key } }).url);
+  } = useFetcher<ContentResponseType<ProblemTestCasesResponseDTO>>(jukiApiManager.API_V2.problem.getTestCases({ params: { key: problem.key } }).url);
   
   const testCases = data?.success ? data.content : [];
   

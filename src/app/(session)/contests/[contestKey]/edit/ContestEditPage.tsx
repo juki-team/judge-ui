@@ -38,7 +38,7 @@ export function ContestEditPage({ contestKey }: { contestKey: string }) {
   
   return (
     <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
-      url={jukiApiManager.API_V1.contest.getData({ params: { key: contestKey as string } }).url}
+      url={jukiApiManager.API_V2.contest.getData({ params: { key: contestKey as string } }).url}
       errorView={Error}
     >
       {({ data }) => {
@@ -54,16 +54,16 @@ export function ContestEditPage({ contestKey }: { contestKey: string }) {
 const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
   const companyKey = useUserStore(state => state.company.key);
   const { data: dataEvents, isLoading: isLoadingEvents } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
-    jukiApiManager.API_V1.contest.getDataEvents({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.API_V2.contest.getDataEvents({ params: { key: contest.key, companyKey } }).url,
   );
   const { data: dataMembers, isLoading: isLoadingMembers } = useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
-    jukiApiManager.API_V1.contest.getDataMembers({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.API_V2.contest.getDataMembers({ params: { key: contest.key, companyKey } }).url,
   );
   const {
     data: dataClarifications,
     isLoading: isLoadingClarifications,
   } = useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
-    jukiApiManager.API_V1.contest.getDataClarifications({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: contest.key, companyKey } }).url,
   );
   
   const contestData: ContestDataUI = useMemo(() => {
@@ -93,7 +93,7 @@ const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
       Cmp={EditCreateContest}
       viewRoute={(entityKey) => jukiAppRoutes.JUDGE().contests.view({ key: entityKey })}
       updateApiURL={() => JUDGE_API_V1.CONTEST.CONTEST}
-      viewApiURL={entityKey => jukiApiManager.API_V1.contest.getData({ params: { key: entityKey } }).url}
+      viewApiURL={entityKey => jukiApiManager.API_V2.contest.getData({ params: { key: entityKey } }).url}
       toEntityUpsert={toUpsertContestDTO}
     />
   );

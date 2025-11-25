@@ -26,7 +26,7 @@ import {
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {
   
-  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V1.judge.getSummaryList().url);
+  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V2.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
@@ -61,7 +61,7 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDT
       cards={{ expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        jukiApiManager.API_V1.submission.getSummaryList({
+        jukiApiManager.API_V2.submission.getSummaryList({
           params: {
             page,
             pageSize,

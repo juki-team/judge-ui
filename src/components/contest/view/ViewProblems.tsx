@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import {
   ButtonLoader,
   CheckIcon,
@@ -98,7 +99,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
         <ButtonLoader
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V1.contest.problem.rejudge({
+            const { url, ...options } = jukiApiManager.API_V2.contest.problem.rejudge({
               params: {
                 key: contestKey,
                 problemKey: problem.key,
@@ -131,7 +132,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
             setLoaderStatus(Status.LOADING);
             setDataCrawled({});
             setSubmissionsCount(0);
-            const { url, ...options } = jukiApiManager.API_V1.contest.problem.retrieve({
+            const { url, ...options } = jukiApiManager.API_V2.contest.problem.retrieve({
               params: {
                 key: contestKey,
                 problemKey: problem.key,
@@ -180,7 +181,7 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
   const { isManager, isAdministrator } = user || {};
   const { notifyResponse } = useJukiNotification();
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const isJudgeOrAdmin = isManager || isAdministrator;
   
   const columns = useMemo(() => [
@@ -299,7 +300,7 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
           key="recalculate-prerequisites"
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V1.contest.recalculatePrerequisites({
+            const { url, ...options } = jukiApiManager.API_V2.contest.recalculatePrerequisites({
               params: {
                 key: contestKey,
               },

@@ -524,7 +524,7 @@ interface ProblemTestCasesProps {
 export const ProblemTestCases = ({ problem, problemJudgeKey }: ProblemTestCasesProps) => {
   return (
     <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>
-      url={jukiApiManager.API_V1.problem.getTestCases({ params: { key: problemJudgeKey } }).url}
+      url={jukiApiManager.API_V2.problem.getTestCases({ params: { key: problemJudgeKey } }).url}
       // errorView={<Custom404 />}
       options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}
     >

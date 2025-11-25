@@ -40,7 +40,7 @@ function ProblemEdit() {
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
-      url={jukiApiManager.API_V1.problem.getData({ params: { key: problemKey as string } }).url}
+      url={jukiApiManager.API_V2.problem.getData({ params: { key: problemKey as string } }).url}
       errorView={<PageNotFound />}
     >
       {({ data }) => {
@@ -52,7 +52,7 @@ function ProblemEdit() {
               Cmp={EditCreateProblem}
               viewRoute={(entityKey) => jukiAppRoutes.JUDGE().problems.view({ key: entityKey })}
               updateApiURL={() => JUDGE_API_V1.PROBLEM.PROBLEM}
-              viewApiURL={entityKey => jukiApiManager.API_V1.problem.getData({ params: { key: entityKey } }).url}
+              viewApiURL={entityKey => jukiApiManager.API_V2.problem.getData({ params: { key: entityKey } }).url}
               toEntityUpsert={toUpsertProblemDTO}
             />
           );

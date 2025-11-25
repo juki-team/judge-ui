@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { Portal } from 'components';
 import { useResizeDetector, useUIStore, useUserStore } from 'hooks';
 import { PropsWithChildren } from 'react';
@@ -11,7 +12,7 @@ export const FullScreenScoreboard = ({ contest, children, reloadContest }: Props
   reloadContest: () => Promise<void>
 }>) => {
   
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const { Image } = useUIStore(store => store.components);
   const companyName = useUserStore(state => state.company.name);
   const companyImageUrl = useUserStore(state => state.company.imageUrl);

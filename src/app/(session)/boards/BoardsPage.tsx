@@ -1,5 +1,6 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import { Button, DataViewer, T, TwoContentLayout } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { toFilterUrl } from 'helpers';
@@ -36,7 +37,7 @@ import {
 
 const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => {
   
-  const { data: contestResponse } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(jukiApiManager.API_V1.contest.getData({
+  const { data: contestResponse } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(jukiApiManager.API_V2.contest.getData({
     params: {
       key: contest.key,
     },
@@ -44,7 +45,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   const contestData = contestResponse?.success ? contestResponse.content : null;
   const userCanAdministrateServices = useUserStore(state => state.user.permissions.services.administrate);
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = useUIStore(store => store.viewPortSize);
+  const viewPortSize = usePageStore(store => store.viewPort.size);
   const t = useI18nStore(state => state.i18n.t);
   const contestTags = JSON.stringify(contest.tags ?? []);
   
@@ -130,7 +131,7 @@ export function BoardsPage() {
   
   useTrackLastPath(LastPathKey.BOARDS);
   
-  const { data: globalContestsData } = useFetcher<ContentsResponseType<ContestSummaryListResponseDTO>>(jukiApiManager.API_V1.contest.getSummaryList({
+  const { data: globalContestsData } = useFetcher<ContentsResponseType<ContestSummaryListResponseDTO>>(jukiApiManager.API_V2.contest.getSummaryList({
     params: {
       page: 1,
       pageSize: 100,
