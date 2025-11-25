@@ -62,7 +62,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     mutate: reloadProblem,
   } = useFetcher<ContentResponseType<ProblemDataResponseDTO>>(
     jukiApiManager.API_V2.problem.getData({ params: { key: fallbackData.key as string } }).url,
-    { fallbackData: contentResponse('fallback data', fallbackData) });
+    { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
   const problem = data?.success ? data.content : fallbackData;
   
   const { setIsOpen } = useTour();
