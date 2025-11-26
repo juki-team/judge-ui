@@ -5,6 +5,8 @@ import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
 import './styles.scss';
 import '@juki-team/base-ui/styles.scss';
+import '@milkdown/crepe/theme/common/style.css';
+import '@milkdown/crepe/theme/frame.css';
 
 const inter = Inter({
   weight: [ '100', '200', '300', '500', '700' ],
