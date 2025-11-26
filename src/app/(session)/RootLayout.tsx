@@ -20,6 +20,7 @@ import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
+import { ToolButtons } from './ToolButtons';
 
 const SponsoredByTag = () => {
   
@@ -85,8 +86,8 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
       >
         <NavigationBar>
           {Children.toArray(children)}
-          {/*<PresentationToolButtons />*/}
           <SponsoredByTag />
+          <ToolButtons />
         </NavigationBar>
         <Analytics key="analytics" />
         <NewVersionAvailable apiVersionUrl="/api/version" />
