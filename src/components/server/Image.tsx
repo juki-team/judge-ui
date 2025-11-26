@@ -14,6 +14,7 @@ export const Image: FC<ImageCmpProps> = ({ src, className, alt, height, width, s
           height={height}
           width={width}
           style={style}
+          fetchPriority="high"
         />
       );
     }
@@ -25,6 +26,7 @@ export const Image: FC<ImageCmpProps> = ({ src, className, alt, height, width, s
         alt={alt}
         fill
         style={{ objectFit: 'contain' }}
+        fetchPriority="high"
       />
     );
   }
