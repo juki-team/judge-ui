@@ -191,7 +191,8 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
     getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.members.participants, contest.problems, contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, languages, userNickname, companyKey ]);
+  ], [ contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, contest.members.participants, contest.problems, contest.key, userNickname, languages, companyKey ]);
+  
   const lastGetUrl = useRef({ filter: {}, sort: {} });
   
   const downloads = useMemo(() => {

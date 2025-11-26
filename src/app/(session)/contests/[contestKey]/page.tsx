@@ -7,7 +7,7 @@ type Props = {
   params: Promise<{ contestKey: string }>
 }
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
