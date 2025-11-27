@@ -1,15 +1,6 @@
-'use client';
-
 import { jukiAppRoutes } from 'config';
-import { useEffect, useRouterStore } from 'hooks';
+import { redirect } from 'next/navigation';
 
-export default function Page() {
-  
-  const replaceRoute = useRouterStore(state => state.replaceRoute);
-  
-  useEffect(() => {
-    void replaceRoute(jukiAppRoutes.JUDGE().contests.list());
-  }, [ replaceRoute ]);
-  
-  return null;
+export default async function Page() {
+  redirect(jukiAppRoutes.JUDGE().contests.list());
 }

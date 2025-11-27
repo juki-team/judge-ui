@@ -3,7 +3,7 @@
 import { T } from 'components';
 import { useUserStore } from 'hooks';
 import { AnimatePresence, motion } from 'motion/react';
-import { CSSProperties, useEffect, useState } from 'react';
+import { type CSSProperties, useEffect, useState } from 'react';
 
 export const UserLoader = () => {
   const user = useUserStore(state => state.user);
@@ -12,7 +12,7 @@ export const UserLoader = () => {
     if (user.sessionId) {
       const timeout = setTimeout(() => {
         setShowLoader(false);
-      }, 200);
+      }, 1500);
       return () => {
         clearTimeout(timeout);
       };

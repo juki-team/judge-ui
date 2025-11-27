@@ -19,6 +19,7 @@ export {
   useUserTrack,
   useWebsocketStore,
   useUIStore,
+  usePageStore,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export { useEffect, useRef, useState, useMemo, useCallback } from 'react';

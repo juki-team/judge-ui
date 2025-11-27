@@ -1,13 +1,13 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
-import { consoleInfo } from '@juki-team/commons';
 import {
   ButtonLoader,
   ContentCopyIcon,
   contestAccessProps,
+  DocumentMembersButton,
   EditIcon,
   EditViewMembers,
+  LineLoader,
   NavigateBeforeIcon,
   NavigateNextIcon,
   T,
@@ -16,21 +16,37 @@ import {
   ViewProblems,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, isContestChangesWebSocketResponseEventDTO, toUpsertContestDTOUI } from 'helpers';
+import { EMPTY_ENTITY_MEMBERS, JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'config/constants';
+import {
+  authorizedRequest,
+  consoleInfo,
+  contentResponse,
+  isContestChangesWebSocketResponseEventDTO,
+  toUpsertContestDTOUI,
+} from 'helpers';
 import {
   useCallback,
   useEffect,
+  useFetcher,
   useI18nStore,
+  useMemo,
   useMutate,
+  usePageStore,
   useRouterStore,
+  useTrackLastPath,
   useUIStore,
   useUserStore,
   useWebsocketStore,
 } from 'hooks';
-import React, { ReactNode } from 'react';
-import { JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'src/constants';
+import { type CSSProperties, type ReactNode } from 'react';
 import {
+  ContentResponseType,
+  ContestClarificationsResponseDTO,
+  ContestDataResponseDTO,
+  ContestEventsResponseDTO,
+  ContestMembersResponseDTO,
   ContestTab,
+  LastPathKey,
   ObjectIdType,
   ProfileSetting,
   Status,
@@ -39,7 +55,6 @@ import {
   UpsertContestDTOUI,
   WebSocketSubscriptionEvent,
 } from 'types';
-import { DocumentMembersButton } from '../../index';
 import { ContestTimeProgress } from './ContestTimeProgress';
 import { ContestTimeTimer } from './ContestTimeTimer';
 import { ContestDataUI } from './types';
@@ -49,7 +64,64 @@ import { ViewProblemContest } from './ViewProblemContest';
 import { ViewScoreboard } from './ViewScoreboard';
 import { ViewSubmissions } from './ViewSubmissions';
 
-export function ContestView({ contest }: { contest: ContestDataUI, }) {
+export function ContestViewLayout({ contest: fallbackData }: { contest: ContestDataResponseDTO }) {
+  
+  useTrackLastPath(LastPathKey.SECTION_CONTEST);
+  
+  const companyKey = useUserStore(state => state.company.key);
+  
+  const {
+    data: dataContest,
+    isLoading: isLoadingContest,
+    isValidating: isValidatingContest,
+  } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(
+    jukiApiManager.API_V2.contest.getData({ params: { key: fallbackData.key as string, companyKey } }).url,
+    { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
+  const contestReponse = dataContest?.success ? dataContest.content : fallbackData;
+  
+  const reloadRoute = useRouterStore(store => store.reloadRoute);
+  useEffect(() => {
+    if (!dataContest?.success) {
+      reloadRoute();
+    }
+  }, [ dataContest?.success, reloadRoute ]);
+  const {
+    data: dataEvents,
+    isLoading: isLoadingEvents,
+    isValidating: isValidatingEvents,
+  } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
+    jukiApiManager.API_V2.contest.getDataEvents({ params: { key: fallbackData.key, companyKey } }).url,
+  );
+  const {
+    data: dataMembers,
+    isLoading: isLoadingMembers,
+    isValidating: isValidatingMembers,
+  } = useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
+    jukiApiManager.API_V2.contest.getDataMembers({ params: { key: fallbackData.key, companyKey } }).url,
+  );
+  const {
+    data: dataClarifications,
+    isLoading: isLoadingClarifications,
+    isValidating: isValidatingClarifications,
+  } = useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
+    jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: fallbackData.key, companyKey } }).url,
+  );
+  
+  const contest: ContestDataUI = useMemo(() => {
+    return {
+      ...contestReponse,
+      events: dataEvents?.success ? dataEvents.content.events : [],
+      members: dataMembers?.success ? dataMembers.content.members : {
+        ...EMPTY_ENTITY_MEMBERS(),
+        administrators: {},
+        managers: {},
+        guests: {},
+        spectators: {},
+        participants: {},
+      },
+      clarifications: dataClarifications?.success ? dataClarifications.content.clarifications : [],
+    };
+  }, [ contestReponse, dataEvents, dataMembers, dataClarifications ]);
   
   const pushRoute = useRouterStore(state => state.pushRoute);
   const searchParams = useRouterStore(state => state.searchParams);
@@ -281,6 +353,12 @@ export function ContestView({ contest }: { contest: ContestDataUI, }) {
       selectedTabKey={contestTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}
     >
+      {(isLoadingContest || isValidatingContest || isLoadingEvents || isValidatingEvents || isLoadingMembers || isValidatingMembers || isLoadingClarifications || isValidatingClarifications) && (
+        <LineLoader style={{ '--line-loader-color': 'var(--cr-io-lt)' } as CSSProperties} delay={1} />
+      )}
+      {!dataContest?.success && (
+        <LineLoader style={{ '--line-loader-color': 'var(--cr-er)' } as CSSProperties} delay={1} />
+      )}
       {viewPortSize === 'sm' && (
         <>
           <div className="jk-row nowrap gap extend left">

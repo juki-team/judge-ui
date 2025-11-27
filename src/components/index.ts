@@ -4,3 +4,5 @@ export * from './contest';
 export * from './problem';
 export * from './server';
 export * from './InstallPWAModal';
+export * from './StylesLazy';
+export * from './ToolButtons';

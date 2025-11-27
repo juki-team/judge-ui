@@ -7,7 +7,7 @@ import { useMemo, useUserStore } from 'hooks';
 import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
 import { UpsertContestDTO, UpsertContestDTOUI } from 'types';
 
-function ContestCreate() {
+export default function ContestsNewPage() {
   
   const {
     nickname,
@@ -39,5 +39,3 @@ function ContestCreate() {
     />
   );
 }
-
-export default ContestCreate;

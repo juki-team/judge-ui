@@ -1,5 +1,6 @@
-import { EMPTY_TEXT_LANGUAGES } from 'src/constants';
-import { ProblemScoringMode, ProblemType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
+import { EMPTY_TEXT_LANGUAGES } from 'config/constants';
+import type { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
+import { ProblemScoringMode, ProblemType } from 'types';
 
 export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO => ({
   members: {

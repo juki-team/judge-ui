@@ -72,9 +72,6 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
   }, [ data?.success, reloadRoute ]);
   
   const { setIsOpen } = useTour();
-  useEffect(() => {
-    void authorizedRequest(JUDGE_API_V1.STATISTICS.PROBLEM(problem.key), { method: HTTPMethod.POST });
-  }, [ problem.key ]);
   
   useEffect(() => {
     const hasSeen = localStorage.getItem('jk-seen-problem-statistics-tour');
@@ -95,6 +92,9 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
   const submissionTimestampsRef = useRef<number[]>([]);
   const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
   
+  useEffect(() => {
+    void authorizedRequest(JUDGE_API_V1.STATISTICS.PROBLEM(problem.key), { method: HTTPMethod.POST });
+  }, [ problem.key ]);
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.problem.statementToPdf({
       params: {

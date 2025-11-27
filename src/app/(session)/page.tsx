@@ -3,10 +3,9 @@
 import { usePageStore } from '@juki-team/base-ui';
 import { MdMathViewer, T } from 'components';
 import { jukiAppRoutes } from 'config';
-import { JUKI_APP_COMPANY_KEY } from 'config/constants';
+import { BOARDS_INFO, CONTESTS_INFO, IDE_INFO, JUKI_APP_COMPANY_KEY, PROBLEMS_INFO } from 'config/constants';
 import { useUIStore, useUserStore } from 'hooks';
 import { ProfileSetting } from 'types';
-import { BOARDS_INFO, CONTESTS_INFO, IDE_INFO, PROBLEMS_INFO } from './text';
 
 export default function Home() {
   

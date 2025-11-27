@@ -9,6 +9,7 @@ import {
   NavigationBar,
   NewVersionAvailable,
   T,
+  ToolButtons,
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY, NODE_ENV, ROUTES } from 'config/constants';
@@ -20,7 +21,6 @@ import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
-import { ToolButtons } from './ToolButtons';
 
 const SponsoredByTag = () => {
   

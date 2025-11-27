@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-const Styles = dynamic(() => import('./Styles'), {
+const Styles = dynamic(() => import('./server/Styles'), {
   ssr: false,
   loading: () => null,
 });

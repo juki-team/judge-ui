@@ -1,22 +1,21 @@
 'use client';
 
-import { FetcherLayer, PageNotFound, UserViewLayout } from 'components';
+import { UserViewLayout } from 'components';
 import { jukiApiManager } from 'config';
+import { contentResponse } from 'helpers';
+import { useFetcher } from 'hooks';
 import { ContentResponseType, UserProfileResponseDTO } from 'types';
 
-interface ProfileViewPageProps {
-  nickname: string,
-}
-
-export function ProfileViewPage({ nickname }: ProfileViewPageProps) {
-  return (
-    <FetcherLayer<ContentResponseType<UserProfileResponseDTO>>
-      url={nickname ? jukiApiManager.API_V2.user.getProfile({ params: { nickname: nickname as string } }).url : null}
-      errorView={<PageNotFound />}
-    >
-      {({ data, mutate }) => (
-        <UserViewLayout user={data.content} reloadUser={mutate} />
-      )}
-    </FetcherLayer>
-  );
+export function ProfileViewPage({ profile: fallbackData }: { profile: UserProfileResponseDTO }) {
+  
+  const {
+    data: dataContest,
+    mutate,
+  } = useFetcher<ContentResponseType<UserProfileResponseDTO>>(
+    jukiApiManager.API_V2.user.getProfile({ params: { nickname: fallbackData.nickname } }).url,
+    { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
+  const user = dataContest?.success ? dataContest.content : fallbackData;
+  
+  return <UserViewLayout user={user} reloadUser={mutate} />;
+  
 }

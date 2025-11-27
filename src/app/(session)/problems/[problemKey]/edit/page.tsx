@@ -1,11 +1,11 @@
 'use client';
 
-import { EditCreateProblem, EntityUpdateLayout, FetcherLayer, PageNotFound } from 'components';
+import { EditCreateProblem, EntityUpdateLayout, FetcherLayer, ProblemNotFoundCard } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
+import { JUDGE_API_V1 } from 'config/constants';
 import { toUpsertProblemDTO } from 'helpers';
 import { useRouterStore } from 'hooks';
-import { JUDGE_API_V1 } from 'src/constants';
-import { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
+import type { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
 
 function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUIDTO {
   return {
@@ -41,7 +41,7 @@ function ProblemEdit() {
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
       url={jukiApiManager.API_V2.problem.getData({ params: { key: problemKey as string } }).url}
-      errorView={<PageNotFound />}
+      errorView={<ProblemNotFoundCard />}
     >
       {({ data }) => {
         if (data.success && data.content.user.isManager) {
@@ -57,7 +57,7 @@ function ProblemEdit() {
             />
           );
         }
-        return <PageNotFound />;
+        return <ProblemNotFoundCard />;
       }}
     </FetcherLayer>
   );

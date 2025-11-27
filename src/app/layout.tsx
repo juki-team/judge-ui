@@ -1,11 +1,10 @@
-import { JukiI18nInitializer } from 'components';
+import { JukiI18nInitializer, StylesLazy } from 'components';
 import { DEFAULT_METADATA } from 'config/constants';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
 import './styles.scss';
 import '@juki-team/base-ui/styles.scss';
-import { StylesLazy } from './StylesLazy';
 
 const inter = Inter({
   weight: [ '100', '200', '300', '500', '700' ],

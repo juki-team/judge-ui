@@ -1,8 +1,8 @@
-import { UpsertContestDTO } from '@juki-team/commons';
 import { jukiApiManager } from 'config';
-import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'src/constants';
-import { ContentResponseType, ContestTemplate, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
-import { ContestDataUI } from '../components/contest/view/types';
+import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
+import type { ContentResponseType, UpsertContestDTO, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
+import { ContestTemplate } from 'types';
+import type { ContestDataUI } from '../components/contest/view/types';
 import { cleanRequest, getMetaHeaders, isGlobalContest, roundTimestamp } from './index';
 
 export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertContestDTOUI): UpsertContestDTOUI => {

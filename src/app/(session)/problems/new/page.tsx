@@ -7,7 +7,7 @@ import { useMemo, useRouterStore, useUserStore } from 'hooks';
 import { JUDGE_API_V1, PROBLEM_DEFAULT } from 'src/constants';
 import { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 
-function ProblemCreate() {
+export default function ProblemsNewPage() {
   
   const companyKey = useUserStore(state => state.company.key);
   const userImageUrl = useUserStore(state => state.user.imageUrl);
@@ -39,5 +39,3 @@ function ProblemCreate() {
     />
   );
 }
-
-export default ProblemCreate;

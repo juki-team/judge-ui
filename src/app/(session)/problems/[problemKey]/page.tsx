@@ -1,13 +1,9 @@
-import { LinkLastPath, ProblemViewLayout, T, TwoContentLayout } from 'components';
+import { ProblemNotFoundCard, ProblemTour, ProblemViewLayout, TwoContentLayout } from 'components';
 import { jukiApiManager } from 'config';
 import { DEFAULT_METADATA } from 'config/constants';
-import { oneTab } from 'helpers';
+import { get, oneTab } from 'helpers';
 import type { Metadata } from 'next';
-import Image from 'next/image';
-import { ContentResponseType, LastPathKey, MetadataResponseDTO, ProblemDataResponseDTO } from 'types';
-import { get } from '../../../../helpers/fetch';
-import { ButtonLogin } from './ButtonLogin';
-import { ProblemTour } from './ProblemTour';
+import { ContentResponseType, MetadataResponseDTO, ProblemDataResponseDTO } from 'types';
 
 type Props = {
   params: Promise<{ problemKey: string }>
@@ -19,12 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   const problemKey = (await params).problemKey;
   
-  let result;
-  try {
-    result = await get<ContentResponseType<MetadataResponseDTO>>(jukiApiManager.API_V2.problem.getMetadata({ params: { key: problemKey } }).url);
-  } catch (error) {
-    console.error('error on generateMetadata', error);
-  }
+  const result = await get<ContentResponseType<MetadataResponseDTO>>(jukiApiManager.API_V2.problem.getMetadata({ params: { key: problemKey } }).url);
   
   const { title, description } = result?.success ? result.content : { title: '', description: '' };
   
@@ -66,33 +57,5 @@ export default async function ProblemViewPage({ params }: Props) {
     );
   }
   
-  return (
-    <TwoContentLayout
-      tabs={oneTab(
-        <div className="jk-row ht-100">
-          <div className="jk-col jk-br-ie gap bc-we jk-pg elevation-1">
-            <h3 className="tt-se"><T>problem not found</T></h3>
-            <Image
-              alt="Juki surprised image"
-              className="image-border"
-              height={140}
-              width={280}
-              style={{ objectFit: 'contain' }}
-              src="https://images.juki.pub/assets/juki-image-surprised.png"
-            />
-            <p>
-              <T className="tt-se">the problem does not exist or you do not have permissions to view it</T>
-            </p>
-            <p>
-              <LinkLastPath lastPathKey={LastPathKey.PROBLEMS}>
-                <T className="tt-se fw-bd">go to problem list</T>
-              </LinkLastPath>
-            </p>
-            <ButtonLogin />
-          </div>
-        </div>,
-      )}
-    >
-    </TwoContentLayout>
-  );
+  return <TwoContentLayout tabs={oneTab(<ProblemNotFoundCard />)} />;
 };

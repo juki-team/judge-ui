@@ -1,11 +1,3 @@
-import { ButtonLoaderOnClickType, Status } from 'types';
-
-export const buttonLoaderLink = (fun: (() => Promise<any>) | (() => any)): ButtonLoaderOnClickType => async (setLoader) => {
-  setLoader(Status.LOADING);
-  await fun();
-  setLoader(Status.SUCCESS);
-};
-
 export const roundTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
   date.setSeconds(0, 0);
@@ -40,5 +32,6 @@ export const disableOutOfRange = (date: Date, start: Date, end: Date) => ({
 });
 
 export * from './commons';
+export * from './fetch';
 export * from './contest';
 export * from './problems';

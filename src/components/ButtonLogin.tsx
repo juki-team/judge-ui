@@ -1,8 +1,8 @@
 'use client';
 
-import { LoginUser } from 'components';
 import { jukiAppRoutes } from 'config';
 import { useRouterStore, useUserStore } from 'hooks';
+import { LoginUser } from './index';
 
 export const ButtonLogin = () => {
   const pushRoute = useRouterStore(store => store.pushRoute);

@@ -10,7 +10,6 @@ export default function IDEPage() {
   
   return (
     <div className="jk-pg-md" style={{ width: '100%', height: '100%' }}>
-      
       <UserCodeEditor
         storeKey="*"
         languages={RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES.map(language => ({

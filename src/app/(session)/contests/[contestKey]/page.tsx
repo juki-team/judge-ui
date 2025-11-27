@@ -1,7 +1,9 @@
+import { ContestNotFoundCard, ContestViewLayout, TwoContentLayout } from 'components';
+import { jukiApiManager } from 'config';
 import { DEFAULT_METADATA } from 'config/constants';
-import { getContestMetadata } from 'helpers';
+import { get, oneTab } from 'helpers';
 import type { Metadata } from 'next';
-import ContestViewPage from './ContestViewPage';
+import { ContentResponseType, ContestDataResponseDTO, MetadataResponseDTO } from 'types';
 
 type Props = {
   params: Promise<{ contestKey: string }>
@@ -11,7 +13,11 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
-  const { title, description } = await getContestMetadata((await params).contestKey);
+  const contestKey = (await params).contestKey;
+  
+  const result = await get<ContentResponseType<MetadataResponseDTO>>(jukiApiManager.API_V2.contest.getMetadata({ params: { key: contestKey } }).url);
+  
+  const { title, description } = result?.success ? result.content : { title: '', description: '' };
   
   return {
     ...DEFAULT_METADATA,
@@ -41,5 +47,13 @@ export default async function Page({ params }: Props) {
   
   const { contestKey } = await params;
   
-  return <ContestViewPage contestKey={contestKey} />;
+  const contestResponse = await get<ContentResponseType<ContestDataResponseDTO>>(jukiApiManager.API_V2.contest.getData({ params: { key: contestKey } }).url);
+  
+  if (contestResponse.success) {
+    return (
+      <ContestViewLayout contest={contestResponse.content} />
+    );
+  }
+  
+  return <TwoContentLayout tabs={oneTab(<ContestNotFoundCard />)} />;
 }
