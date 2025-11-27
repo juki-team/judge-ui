@@ -11,8 +11,8 @@ export default function Loading() {
         <div
           className="dot-flashing"
           style={{
-            '--dot-flashing-color': 'var(--t-color-primary-text)',
-            '--dot-flashing-color-light': 'var(--t-color-primary-light)',
+            '--dot-flashing-color': 'var(--cr-py-tx)',
+            '--dot-flashing-color-light': 'var(--cr-pl)',
             '--dot-flashing-size': '10px',
           } as CSSProperties}
         />

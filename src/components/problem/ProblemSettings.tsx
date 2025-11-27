@@ -280,7 +280,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                   style={{
                     height: 'calc(var(--vh) * 100 - 200px)',
                     width: '100%',
-                    border: '1px solid var(--t-color-gray-6)',
+                    border: '1px solid var(--cr-gy-6)',
                   }}
                 >
                   <UserCodeEditor

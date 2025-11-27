@@ -41,12 +41,12 @@
 .alert-modal-json-viewer {
   max-height: calc(var(--100VH) - 300px);
   overflow: auto;
-  border: 1px solid var(--t-color-gray-4);
+  border: 1px solid var(--cr-gy-4);
 }
 
 .cr-io {
   .jk-tag {
-    color: var(--t-color-info);
+    color: var(--cr-io);
   }
 }
 
@@ -59,10 +59,10 @@
 .group-info-details {
   padding: 0 var(--pad);
   box-sizing: border-box;
-  border-left: 1px solid var(--t-color-gray-5);
-  border-right: 1px solid var(--t-color-gray-5);
-  // border-bottom: 1px solid var(--t-color-gray-5);
-  background-color: var(--t-color-white-2);
+  border-left: 1px solid var(--cr-gy-5);
+  border-right: 1px solid var(--cr-gy-5);
+  // border-bottom: 1px solid var(--cr-gy-5);
+  background-color: var(--cr-we-dk);
   
   .jk-table-inline-row {
     border-left: 0;
@@ -86,7 +86,7 @@
 .jk-theme-light {
   .CODEFORCES-statement, .CODEFORCES_GYM-statement {
     .header .title {
-      color: var(--t-color-primary-dark);
+      color: var(--cr-pd);
     }
   }
 }
@@ -94,13 +94,13 @@
 .jk-theme-dark {
   .CODEFORCES-statement, .CODEFORCES_GYM-statement {
     .header .title {
-      color: var(--t-color-primary);
+      color: var(--cr-py);
     }
   }
 }
 
 .CODEFORCES-h3 {
-  color: var(--t-color-primary-dark);
+  color: var(--cr-pd);
   font-weight: var(--weight-bold);
   line-height: var(--line-height-head);
   font-size: var(--font-size-h3);
@@ -108,9 +108,9 @@
 
 .CODEFORCES-content {
   //@extend .br-g6;
-  border: 1px solid var(--t-color-gray-6);
+  border: 1px solid var(--cr-gy-6);
   //@extend .bc-we;
-  background-color: var(--t-color-white);
+  background-color: var(--cr-we);
   //@extend .jk-pg-sm;
   padding: var(--pad-sm);
   //@extend .jk-border-radius-inline;
@@ -183,10 +183,10 @@
     
     .input, .output {
       .title {
-        color: var(--t-color-primary-dark);
+        color: var(--cr-pd);
         font-weight: var(--weight-bold);
-        line-height: var(--text-large-height);
-        font-size: var(--text-large-size);
+        line-height: var(--tx-h-l);
+        font-size: var(--tx-s-l);
         
         .input-output-copier {
           display: none;
@@ -296,10 +296,10 @@
     top: 0;
     left: -8px;
     pointer-events: none;
-    box-shadow: inset 0px -1px 2px 1px var(--t-color-highlight), inset 0px 1px 2px 1px var(--t-color-highlight);
+    box-shadow: inset 0px -1px 2px 1px var(--cr-ht), inset 0px 1px 2px 1px var(--cr-ht);
   }
 }
 
 .jk-button.bc-er {
-  --button-background-color: var(--t-color-error);
+  --button-background-color: var(--cr-er);
 }

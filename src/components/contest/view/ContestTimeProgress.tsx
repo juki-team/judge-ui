@@ -69,7 +69,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
               </div>
             ),
             percentage: normalPercentage,
-            color: 'var(--t-color-success)',
+            color: 'var(--cr-ss)',
           },
           {
             label: (
@@ -94,7 +94,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
               </div>
             ),
             percentage: frozenPercentage,
-            color: 'var(--t-color-info-light)',
+            color: 'var(--cr-io-lt)',
           },
           {
             label: (
@@ -119,7 +119,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
               </div>
             ),
             percentage: quietPercentage,
-            color: 'var(--t-color-info-dark)',
+            color: 'var(--cr-io-dk)',
           },
         ]}
         points={[
@@ -131,7 +131,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
               </div>
             ),
             percentage: 0,
-            color: 'var(--t-color-success)',
+            color: 'var(--cr-ss)',
           },
           {
             label: (
@@ -143,7 +143,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
               </div>
             ),
             percentage: normalPercentage,
-            color: 'var(--t-color-info-light)',
+            color: 'var(--cr-io-lt)',
           },
           {
             label: (
@@ -153,7 +153,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
               </div>
             ),
             percentage: normalPercentage + frozenPercentage,
-            color: 'var(--t-color-info-dark)',
+            color: 'var(--cr-io-dk)',
           },
           {
             label: (
@@ -163,7 +163,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
               </div>
             ),
             percentage: 100,
-            color: 'var(--t-color-black)',
+            color: 'var(--cr-bk)',
           },
           ...(withLivePointer ? [
             {
@@ -178,7 +178,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
                 </div>
               ),
               percentage: nowPercentage,
-              color: 'var(--t-color-error)',
+              color: 'var(--cr-er)',
             },
           ] : []),
         ]}
@@ -190,7 +190,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
           height={8}
           color="rgba(255, 255, 255, 0.3)"
           // color="rgba(235, 87, 87, 0.3)"
-          // color="var(--t-color-error-light)"
+          // color="var(--cr-er-lt)"
         />
       )}
     </>

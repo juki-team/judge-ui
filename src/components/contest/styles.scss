@@ -12,7 +12,7 @@
   &.wrong, &.accepted {
     .jk-icon {
       border-radius: 50%;
-      color: var(--t-color-white);
+      color: var(--cr-we);
       position: absolute;
       top: -6px;
       right: -6px;
@@ -20,11 +20,11 @@
   }
   
   &.wrong .jk-icon {
-    background-color: var(--t-color-error);
+    background-color: var(--cr-er);
   }
   
   &.accepted .jk-icon {
-    background-color: var(--t-color-success);
+    background-color: var(--cr-ss);
   }
 }
 
@@ -35,15 +35,15 @@
   
   &.is-quiet {
     .jk-view-container {
-      box-shadow: 0 0 6px var(--t-color-info-dark);
-      outline: 6px var(--t-color-info-light);
+      box-shadow: 0 0 6px var(--cr-io-dk);
+      outline: 6px var(--cr-io-lt);
     }
   }
   
   &.is-frozen {
     .jk-view-container {
-      box-shadow: 0 0 6px var(--t-color-info-light);
-      outline: 6px var(--t-color-info-light);
+      box-shadow: 0 0 6px var(--cr-io-lt);
+      outline: 6px var(--cr-io-lt);
     }
   }
 }
@@ -74,7 +74,7 @@
   
   @keyframes score-highlight {
     0% {background-color: transparent; }
-    50% {background-color: var(--color, --t-color-accent); }
+    50% {background-color: var(--color, --cr-at); }
     100% {background-color: transparent; }
   }
 }
@@ -88,18 +88,18 @@
 }
 
 @keyframes score-highlight-diff-focus {
-  0% { background-color: var(--t-color-accent-light); }
-  50% { background-color: var(--t-color-accent); }
-  100% { background-color: var(--t-color-accent-light); }
+  0% { background-color: var(--cr-at-lt); }
+  50% { background-color: var(--cr-at); }
+  100% { background-color: var(--cr-at-lt); }
 }
 
 .is-first-accepted {
   > .jk-icon {
-    filter: drop-shadow(0px 1px 1px var(--t-color-white)) drop-shadow(1px 0px 1px var(--t-color-white)) drop-shadow(0px -1px 1px var(--t-color-white)) drop-shadow(-1px 0px 1px var(--t-color-white)) drop-shadow(0px 0px 2px var(--balloon-color)) drop-shadow(0px 0px 1px var(--balloon-color));
+    filter: drop-shadow(0px 1px 1px var(--cr-we)) drop-shadow(1px 0px 1px var(--t-color-white)) drop-shadow(0px -1px 1px var(--t-color-white)) drop-shadow(-1px 0px 1px var(--t-color-white)) drop-shadow(0px 0px 2px var(--balloon-color)) drop-shadow(0px 0px 1px var(--balloon-color));
   }
   
   > a {
-    filter: drop-shadow(0px 0px 1px var(--t-color-white)) drop-shadow(0px 0px 2px var(--balloon-color));
-    //color: var(--t-color-white);
+    filter: drop-shadow(0px 0px 1px var(--cr-we)) drop-shadow(0px 0px 2px var(--balloon-color));
+    //color: var(--cr-we);
   }
 }

@@ -70,14 +70,14 @@ li > * {
 .sheet-page {
   > div > div > .jk-md-math-viewer-layout {
     width: 100%;
-    background-color: var(--t-color-white);
+    background-color: var(--cr-we);
     //@extend .jk-border-radius-inline;
     padding: 0 var(--pad-t);
     box-sizing: border-box;
   }
   
   .jk-md-math-editor-layout {
-    background-color: var(--t-color-white);
+    background-color: var(--cr-we);
     width: 100%;
     min-height: 48px;
   }
@@ -254,7 +254,7 @@ html {
   
   &:hover {
     opacity: 1;
-    background: var(--t-color-white-light);
+    background: var(--cr-we-lt);
     border-radius: var(--border-radius-inline);
     padding: 6px;
     height: initial;

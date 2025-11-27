@@ -229,10 +229,10 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
     >
       {(isLoading || isValidating) && (
-        <LineLoader style={{ '--line-loader-color': 'var(--t-color-info-light)' } as CSSProperties} delay={1} />
+        <LineLoader style={{ '--line-loader-color': 'var(--cr-io-lt)' } as CSSProperties} delay={1} />
       )}
       {!data?.success && (
-        <LineLoader style={{ '--line-loader-color': 'var(--t-color-error)' } as CSSProperties} delay={1} />
+        <LineLoader style={{ '--line-loader-color': 'var(--cr-er)' } as CSSProperties} delay={1} />
       )}
       <RejudgeConfirmationModal
         isOpen={isOpenRejudgeModal}

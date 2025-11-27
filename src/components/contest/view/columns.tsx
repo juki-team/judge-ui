@@ -113,7 +113,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
         className={classNames('jk-row center nowrap', {
           'cell-score-highlight': !!problemFocus,
         })}
-        style={{ '--color': problemFocus?.success ? 'var(--t-color-success)' : !!problemFocus?.points ? 'var(--t-color-success-light)' : 'var(--t-color-error-light)' } as CSSProperties}
+        style={{ '--color': problemFocus?.success ? 'var(--cr-ss)' : !!problemFocus?.points ? 'var(--t-color-success-light)' : 'var(--t-color-error-light)' } as CSSProperties}
       >
         {(problemData?.success || !!problemData?.points) && (
           <div

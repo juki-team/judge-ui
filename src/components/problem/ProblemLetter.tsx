@@ -5,9 +5,9 @@ export const ProblemLetter = ({ color, index, style }: { color: string, index: s
     <div className="jk-row jk-tag" style={{ backgroundColor: color, ...style }}>
       <p
         style={{
-          textShadow: 'var(--t-color-white) 0px 1px 2px, var(--t-color-white) 0px -1px 2px, ' +
-            'var(--t-color-white) 1px 0px 2px, var(--t-color-white) -1px 0px 2px',
-          color: 'var(--t-color-gray-1)',
+          textShadow: 'var(--cr-we) 0px 1px 2px, var(--cr-we) 0px -1px 2px, ' +
+            'var(--cr-we) 1px 0px 2px, var(--cr-we) -1px 0px 2px',
+          color: 'var(--cr-gy-1)',
         }}
       >
         {index}

@@ -81,7 +81,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
       className={classNames('jk-row left jk-table-inline-row bc-we', { 'elevation-1': isDragging })}
       style={{
         ...style,
-        borderTop: isDragging ? '1px solid var(--t-color-gray-5)' : undefined,
+        borderTop: isDragging ? '1px solid var(--cr-gy-5)' : undefined,
       }}
       {...attributes}
     >
