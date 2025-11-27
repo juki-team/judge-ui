@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { oneTab } from 'helpers';
-import { useCheckAndStartServices, useTrackLastPath } from 'hooks';
+import { useTrackLastPath } from 'hooks';
 import { ContentResponseType, LastPathKey, ProblemDataResponseDTO } from 'types';
 
 const ContentStatistics = () => {
@@ -34,7 +34,7 @@ const steps = [
 export default function ProblemViewPage({ problemKey }: { problemKey: string }) {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  useCheckAndStartServices();
+  // useCheckAndStartServices();
   
   return (
     <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>

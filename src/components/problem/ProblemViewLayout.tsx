@@ -17,7 +17,6 @@ import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, contentResponse } from 'helpers';
 import {
-  useCheckAndStartServices,
   useEffect,
   useFetcher,
   useRef,
@@ -53,7 +52,7 @@ interface ProblemViewLayoutProps {
 export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutProps) => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  useCheckAndStartServices();
+  // useCheckAndStartServices();
   
   const {
     data,

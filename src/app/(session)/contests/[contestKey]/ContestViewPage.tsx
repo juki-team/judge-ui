@@ -13,7 +13,7 @@ import {
 import { jukiApiManager } from 'config';
 import { EMPTY_ENTITY_MEMBERS } from 'config/constants';
 import { oneTab } from 'helpers';
-import { useCheckAndStartServices, useFetcher, useMemo, useTrackLastPath, useUserStore } from 'hooks';
+import { useFetcher, useMemo, useTrackLastPath, useUserStore } from 'hooks';
 import React from 'react';
 import {
   ContentResponseType,
@@ -28,7 +28,7 @@ import { ContestDataUI } from '../../../../components/contest/view/types';
 export default function ContestViewPage({ contestKey }: { contestKey: string }) {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  useCheckAndStartServices();
+  // useCheckAndStartServices();
   // const { Link } = useUIStore(store => store.components);
   const companyKey = useUserStore(state => state.company.key);
   
