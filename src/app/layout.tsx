@@ -1,11 +1,11 @@
 import { JukiI18nInitializer } from 'components';
 import { DEFAULT_METADATA } from 'config/constants';
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
 import './styles.scss';
 import '@juki-team/base-ui/styles.scss';
-import '@juki-team/base-ui/vendor-styles.scss';
 
 const inter = Inter({
   weight: [ '100', '200', '300', '500', '700' ],
@@ -15,6 +15,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = DEFAULT_METADATA;
+
+const StylesLazy = dynamic(() => import('./Styles'), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default async function Layout({ children }: { children: ReactNode }) {
   
@@ -35,6 +40,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
     />
     {children}
     <JukiI18nInitializer />
+    <StylesLazy />
     </body>
     </html>
   );
