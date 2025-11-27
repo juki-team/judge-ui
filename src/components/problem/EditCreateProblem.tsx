@@ -1,6 +1,6 @@
 'use client';
 
-import { LinkLastPath, ProblemStatement, T, TwoContentLayout } from 'components';
+import { LinkLastPath, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
 import { useEntityDiff, useRouterStore, useUIStore } from 'hooks';
@@ -12,6 +12,7 @@ import { ProblemDelete } from './ProblemDelete';
 import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemSettings } from './ProblemSettings';
 import { ProblemTestCases } from './ProblemTestCases';
+import { ProblemStatement } from './upsert';
 
 export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProblemUIDTO, ProblemTab>) => {
   

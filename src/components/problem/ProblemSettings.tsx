@@ -9,7 +9,6 @@ import {
   Modal,
   MultiSelect,
   PlusIcon,
-  ProblemScoringModeInformation,
   Select,
   T,
   UserCodeEditor,
@@ -27,7 +26,7 @@ import {
 } from 'config/constants';
 import { classNames } from 'helpers';
 import { useFetcher } from 'hooks';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   CodeLanguage,
   ContentResponseType,
@@ -40,6 +39,7 @@ import {
   SubmissionRunStatus,
   UpsertProblemUIDTO,
 } from 'types';
+import { ProblemScoringModeInformation } from './Informations';
 
 interface TagsProps {
   tags: string[],
