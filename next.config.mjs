@@ -1,25 +1,24 @@
 import pkg from './package.json' with { type: 'json' };
 import withPlugins from 'next-compose-plugins';
 // import { Language } from '@juki-team/commons';
-import PWA from 'next-pwa';
-import BundleAnalyzer from '@next/bundle-analyzer';
+// import BundleAnalyzer from '@next/bundle-analyzer';
 
 const { version } = pkg;
-const isDev = process.env.NODE_ENV !== 'production';
+// const isDev = process.env.NODE_ENV !== 'production';
 
 const nextConfig = withPlugins([
-  PWA({
-    dest: 'public',
-    disable: isDev,
-    register: true,
-    skipWaiting: true,
-    // scope: '/app',
-    sw: 'service-worker.js',
-    importScripts: [ '/worker.js' ],
-  }),
-  BundleAnalyzer({
-    enabled: process.env.ANALYZE === 'true',
-  }),
+  // PWA({
+  //   dest: 'public',
+  //   disable: isDev,
+  //   register: true,
+  //   skipWaiting: true,
+  //   // scope: '/app',
+  //   sw: 'service-worker.js',
+  //   importScripts: [ '/worker.js' ],
+  // }),
+  // BundleAnalyzer({
+  //   enabled: process.env.ANALYZE === 'true',
+  // }),
 ], {
   // webpack: config => {
   //   config.resolve.fallback = {

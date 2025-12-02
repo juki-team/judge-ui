@@ -8,35 +8,37 @@
     "build": "next build",
     "build:analyze": "ANALYZE=true yarn build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "pull": "yarn add @juki-team/commons @juki-team/base-ui",
     "push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn version --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",
-    "@juki-team/base-ui": "^1.2.218",
-    "@juki-team/commons": "^0.0.989",
+    "@juki-team/base-ui": "^1.2.222",
+    "@juki-team/commons": "^0.0.990",
     "@reactour/tour": "^3.8.0",
-    "@vercel/analytics": "^1.5.0",
+    "@vercel/analytics": "^1.6.0",
     "motion": "^12.23.24",
-    "next": "^15.5.6",
+    "next": "16.0.6",
     "next-compose-plugins": "^2.2.1",
     "next-pwa": "^5.6.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "swr": "^2.3.6"
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "swr": "^2.3.7"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^15.5.6",
-    "@types/react": "^19.2.6",
-    "@types/react-dom": "^19.2.3",
+    "@next/bundle-analyzer": "16.0.6",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "eslint": "^9.39.1",
-    "eslint-config-next": "^15.5.6",
+    "eslint-config-next": "16.0.6",
     "local-ssl-proxy": "^2.0.5",
     "sass": "^1.94.2",
     "typescript": "^5.9.3"
   },
   "resolutions": {
-    "@types/minimatch": "^5.0.0"
+    "@types/minimatch": "^5.0.0",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3"
   }
 }

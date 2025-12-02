@@ -1,7 +1,8 @@
 import { contentResponse } from '@juki-team/commons';
-import getConfig from 'next/config';
+import pkg from '../../../../package.json';
+
+const { version } = pkg;
 
 export function GET() {
-  const { publicRuntimeConfig } = getConfig();
-  return Response.json(contentResponse('ok', { version: publicRuntimeConfig?.version }));
+  return Response.json(contentResponse('ok', { version }));
 }
