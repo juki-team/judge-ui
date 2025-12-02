@@ -1,5 +1,5 @@
 import { DocumentMembersContent, T } from 'components';
-import React, { Dispatch, SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 import { EntityAccess, EntityMembersResponseDTO, UserCompanyBasicInfoResponseDTO } from 'types';
 
 interface ProblemStatementProps {

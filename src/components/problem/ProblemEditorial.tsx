@@ -2,7 +2,6 @@
 
 import { MdMathViewer, TextLangEdit } from 'components';
 import { useUserStore } from 'hooks';
-import React from 'react';
 import { ProfileSetting, TextLanguageType } from 'types';
 
 interface ProblemStatementProps {

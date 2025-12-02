@@ -3,8 +3,7 @@
 import { LinkLastPath, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
 import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEntityDiff, useRouterStore, useUIStore } from 'hooks';
-import React, { useState } from 'react';
+import { useEntityDiff, useRouterStore, useState, useUIStore } from 'hooks';
 import { EntityState, LastPathKey, ProblemTab, TabsType, UpsertComponentEntityProps, UpsertProblemUIDTO } from 'types';
 import { Input } from '../index';
 import { ProblemAccess } from './ProblemAccess';

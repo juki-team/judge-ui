@@ -2,8 +2,8 @@ import { ContentResponseType } from '@juki-team/commons';
 import { ButtonLoader, Input, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification } from 'hooks';
-import React, { Dispatch, SetStateAction } from 'react';
+import { useJukiNotification, useState } from 'hooks';
+import { type Dispatch, type SetStateAction } from 'react';
 import { HTTPMethod, Language, Status, UpsertProblemUIDTO } from 'types';
 
 interface ProblemStatementPdfProps {
@@ -15,7 +15,7 @@ interface ProblemStatementPdfProps {
 export const ProblemStatementPdf = ({ problem, setProblem, language }: ProblemStatementPdfProps) => {
   
   const { addErrorNotification, addSuccessNotification } = useJukiNotification();
-  const [ file, setFile ] = React.useState<FileList[number] | null>(null);
+  const [ file, setFile ] = useState<FileList[number] | null>(null);
   
   return (
     <div className="jk-col nowrap">

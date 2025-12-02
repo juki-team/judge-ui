@@ -14,8 +14,7 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useJukiNotification, useMemo, useState, useUIStore, useUserStore, useWebsocketStore } from 'hooks';
-import React, { useEffect } from 'react';
+import { useEffect, useJukiNotification, useMemo, useState, useUIStore, useUserStore, useWebsocketStore } from 'hooks';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {

@@ -3,11 +3,11 @@
 import { AssignmentIcon, CodeIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, TrophyIcon } from 'components';
 import { jukiAppRoutes } from 'config';
 import { useRouterStore, useUIStore, useUserStore } from 'hooks';
-import React, { PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'src/constants';
 import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
-export const NavigationBar = ({ children }: PropsWithChildren<{}>) => {
+export const NavigationBar = ({ children }: PropsWithChildren) => {
   
   const pathname = useRouterStore(state => state.pathname);
   const pushRoute = useRouterStore(state => state.pushRoute);

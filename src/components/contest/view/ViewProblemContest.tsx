@@ -4,7 +4,7 @@ import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, SpectatorInfor
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isGlobalContest } from 'helpers';
 import { useJukiNotification, useRouterStore, useUIStore } from 'hooks';
-import React, { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { KeyedMutator } from 'swr';
 import {
   CodeLanguage,

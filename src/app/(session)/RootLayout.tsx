@@ -16,7 +16,7 @@ import { JUKI_APP_COMPANY_KEY, NODE_ENV, ROUTES } from 'config/constants';
 import { usePreloadComponents, useUIStore, useUserStore } from 'hooks';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
-import React, { Children, PropsWithChildren } from 'react';
+import { Children, type PropsWithChildren } from 'react';
 import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';

@@ -17,8 +17,7 @@ import {
   UserNicknameLink,
 } from 'components';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useFetcher, useJukiNotification, useUIStore } from 'hooks';
-import React, { useState } from 'react';
+import { useDateFormat, useFetcher, useJukiNotification, useState, useUIStore } from 'hooks';
 import { JUDGE_API_V1 } from 'src/constants';
 import { ContentResponseType, HTTPMethod, Status } from 'types';
 import { ContestDataUI } from './types';

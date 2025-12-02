@@ -2,7 +2,7 @@
 
 import { MdMathEditor, MdMathViewer, PlusIcon, T } from 'components';
 import { useUserStore } from 'hooks';
-import React, { Dispatch, SetStateAction } from 'react';
+import { type Dispatch, type  SetStateAction } from 'react';
 import { Language, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
 import { SampleTest } from '../SampleTest';
 

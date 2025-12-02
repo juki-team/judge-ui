@@ -13,7 +13,7 @@ import {
   UserChip,
   VisibilityIcon,
 } from 'components';
-import React, { useState } from 'react';
+import { useState } from 'hooks';
 import { BasicModalProps, DocumentMemberResponseDTO, EntityAccess } from 'types';
 import { EditViewMembersContestProps } from '../types';
 

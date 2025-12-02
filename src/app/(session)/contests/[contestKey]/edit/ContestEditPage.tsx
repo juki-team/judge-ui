@@ -13,7 +13,6 @@ import { jukiApiManager, jukiAppRoutes } from 'config';
 import { EMPTY_ENTITY_MEMBERS, JUDGE_API_V1 } from 'config/constants';
 import { oneTab, toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
 import { useFetcher, useMemo, useUserStore } from 'hooks';
-import React from 'react';
 import {
   ContentResponseType,
   ContestClarificationsResponseDTO,

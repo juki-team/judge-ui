@@ -25,7 +25,6 @@ import {
   isGlobalContest,
 } from 'helpers';
 import { useState, useUserStore } from 'hooks';
-import React from 'react';
 import {
   ACCEPTED_PROGRAMMING_LANGUAGES,
   CODE_LANGUAGE,

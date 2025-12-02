@@ -16,7 +16,6 @@ import {
 import { jukiApiManager } from 'config';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
 import { useDateFormat, useI18nStore, useJukiNotification, useRouterStore, useUserStore } from 'hooks';
-import React from 'react';
 import { CODE_LANGUAGE, JUDGE_API_V1 } from 'src/constants';
 import {
   ContentResponseType,

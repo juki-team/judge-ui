@@ -1,7 +1,7 @@
 'use client';
 
 import { DeleteIcon, EditIcon, InfoIIcon, SaveIcon, TextArea } from 'components';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'hooks';
 import { ProblemSampleCasesType } from 'types';
 
 interface SampleTestProps {

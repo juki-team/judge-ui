@@ -1,8 +1,8 @@
 'use client';
 
 import { CodeEditor, Input, Select, T, TabsInline } from 'components';
-import { useUIStore } from 'hooks';
-import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
+import { useState, useUIStore } from 'hooks';
+import { type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { CodeLanguage, Language, UpsertProblemUIDTO } from 'types';
 import { ProblemStatementMd } from './ProblemStatementMd';
 import { ProblemStatementPdf } from './ProblemStatementPdf';
