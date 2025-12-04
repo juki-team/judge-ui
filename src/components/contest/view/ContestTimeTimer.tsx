@@ -68,7 +68,6 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
     return <SpinIcon />;
   }
   
-  console.log({ type, interval, timeInterval });
   return (
     <div className={`jk-tag tx-s cr-we ${getContestState(contest).bc} jk-row nowrap fw-rr`}>
       {contest.isGlobal
