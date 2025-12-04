@@ -14,31 +14,29 @@
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",
-    "@juki-team/base-ui": "^1.2.222",
+    "@juki-team/base-ui": "^1.2.226",
     "@juki-team/commons": "^0.0.990",
     "@reactour/tour": "^3.8.0",
-    "@vercel/analytics": "^1.6.0",
-    "motion": "^12.23.24",
-    "next": "16.0.6",
+    "@vercel/analytics": "^1.6.1",
+    "motion": "^12.23.25",
+    "next": "^16.0.7",
     "next-compose-plugins": "^2.2.1",
     "next-pwa": "^5.6.0",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "swr": "^2.3.7"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "16.0.6",
+    "@next/bundle-analyzer": "^16.0.7",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.39.1",
-    "eslint-config-next": "16.0.6",
+    "eslint-config-next": "^16.0.7",
     "local-ssl-proxy": "^2.0.5",
     "sass": "^1.94.2",
     "typescript": "^5.9.3"
   },
   "resolutions": {
-    "@types/minimatch": "^5.0.0",
-    "@types/react": "19.2.7",
-    "@types/react-dom": "19.2.3"
+    "@types/minimatch": "^5.0.0"
   }
 }

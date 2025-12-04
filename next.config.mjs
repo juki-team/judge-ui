@@ -1,9 +1,9 @@
-import pkg from './package.json' with { type: 'json' };
+// import pkg from './package.json' with { type: 'json' };
 import withPlugins from 'next-compose-plugins';
 // import { Language } from '@juki-team/commons';
 // import BundleAnalyzer from '@next/bundle-analyzer';
 
-const { version } = pkg;
+// const { version } = pkg;
 // const isDev = process.env.NODE_ENV !== 'production';
 
 const nextConfig = withPlugins([
@@ -31,9 +31,9 @@ const nextConfig = withPlugins([
   //
   //   return config;
   // },
-  publicRuntimeConfig: {
-    version,
-  },
+  // publicRuntimeConfig: {
+  //   version,
+  // },
   // output:"standalone",
   // i18n: {
   //   locales: [ Language.EN.toLowerCase(), Language.ES.toLowerCase() ],
