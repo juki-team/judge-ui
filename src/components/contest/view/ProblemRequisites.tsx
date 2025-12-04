@@ -1,7 +1,8 @@
 'use client';
 
-import { CheckIcon, CloseIcon, T, Timer } from 'components';
+import { CheckIcon, CloseIcon, T, Timer, TimerDisplay } from 'components';
 import { classNames } from 'helpers';
+import { useState } from 'react';
 import { type KeyedMutator } from 'swr';
 import {
   ContestDataResponseDTO,
@@ -23,6 +24,8 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
   const { user: { isAdministrator, isManager } } = contest;
   
   const hasUnmetPrerequisites = blockedBy?.some(block => block.type === ContestProblemBlockedByType.UNMET_PREREQUISITES);
+  const [ now ] = useState(new Date());
+  
   return (
     <div className="jk-col gap">
       {(isAdministrator || isManager) && (
@@ -30,9 +33,8 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
           {problem.startTimestamp !== contest.settings.startTimestamp && (
             <div className="jk-row center">
               <T className="tt-se">starts at the minute</T>:&nbsp;
-              <Timer
-                currentTimestamp={problem.startTimestamp - contest.settings.startTimestamp}
-                interval={0}
+              <TimerDisplay
+                counter={problem.startTimestamp - contest.settings.startTimestamp}
                 type="weeks-days-hours-minutes-seconds"
                 ignoreLeadingZeros
                 ignoreTrailingZeros
@@ -45,9 +47,8 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
           {problem.endTimestamp !== contest.settings.endTimestamp && (
             <div className="jk-row center">
               <T className="tt-se">ends at the minute</T>:&nbsp;
-              <Timer
-                currentTimestamp={problem.endTimestamp - contest.settings.startTimestamp}
-                interval={0}
+              <TimerDisplay
+                counter={problem.endTimestamp - contest.settings.startTimestamp}
                 type="weeks-days-hours-minutes-seconds"
                 ignoreLeadingZeros
                 ignoreTrailingZeros
@@ -91,11 +92,11 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
             <div className="jk-row br-hl jk-br-ie jk-pg-xsm tx-t bc-wl">
               <T className="tt-se">problem will be released in</T>&nbsp;
               <Timer
-                currentTimestamp={startTimestamp - Date.now()}
-                interval={-100}
+                remaining={startTimestamp - now.getTime()}
+                interval={-1000}
                 ignoreLeadingZeros
                 ignoreTrailingZeros
-                type="weeks-days-hours-minutes-seconds-milliseconds"
+                type="weeks-days-hours-minutes-seconds"
                 literal
                 abbreviated
                 onTimeout={reloadContest}
@@ -107,7 +108,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
             <div className="jk-row br-hl jk-br-ie jk-pg-xsm tx-t bc-wl">
               <T className="tt-se">problem was closed ago</T>&nbsp;
               <Timer
-                currentTimestamp={Date.now() - endTimestamp}
+                remaining={now.getTime() - endTimestamp}
                 interval={1000}
                 ignoreLeadingZeros
                 ignoreTrailingZeros

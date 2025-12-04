@@ -5,9 +5,8 @@ import {
   ProgressSlide,
   QuietInformation,
   T,
-  Timer,
+  TimerDisplay,
 } from 'components';
-import { ONE_MINUTE } from 'config/constants';
 import { useEffect, useState } from 'hooks';
 import { ContestTimeData } from 'types';
 import { ContestTimeTimer } from './ContestTimeTimer';
@@ -30,14 +29,14 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
-      if (contest.isLive) {
-        reloadContest?.();
-      }
-    }, ONE_MINUTE);
+      // if (contest.isLive) {
+      //   reloadContest?.();
+      // }
+    }, (contestDuration / 1000));
     return () => {
       clearInterval(interval);
     };
-  }, [ reloadContest, contest.isLive ]);
+  }, [ reloadContest, contest.isLive, contestDuration ]);
   const nowDuration = Math.max(now.getTime() - contest.settings.startTimestamp, 0);
   const nowPercentage = Math.min(Math.max(nowDuration * 100 / contestDuration, 0), 100);
   
@@ -56,9 +55,8 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
                 <div className="jk-row left">
                   <T className="tt-se">duration</T>:&nbsp;
                   <div className="jk-col left">
-                    <Timer
-                      currentTimestamp={normalDuration}
-                      interval={0}
+                    <TimerDisplay
+                      counter={normalDuration}
                       type="weeks-days-hours-minutes-seconds"
                       literal
                       ignoreLeadingZeros
@@ -81,9 +79,8 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
                 <div className="jk-row left">
                   <T className="tt-se">duration</T>:&nbsp;
                   <div className="jk-col left">
-                    <Timer
-                      currentTimestamp={frozenDuration}
-                      interval={0}
+                    <TimerDisplay
+                      counter={frozenDuration}
                       type="weeks-days-hours-minutes-seconds"
                       literal
                       ignoreLeadingZeros
@@ -106,9 +103,8 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
                 <div className="jk-row left">
                   <T className="tt-se">duration</T>:&nbsp;
                   <div className="jk-col left">
-                    <Timer
-                      currentTimestamp={quietDuration}
-                      interval={0}
+                    <TimerDisplay
+                      counter={quietDuration}
                       type="weeks-days-hours-minutes-seconds"
                       literal
                       ignoreLeadingZeros

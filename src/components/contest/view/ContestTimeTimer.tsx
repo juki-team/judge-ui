@@ -3,7 +3,7 @@
 import { SpinIcon, T, Timer } from 'components';
 import { ONE_MINUTE, ONE_SECOND } from 'config/constants';
 import { getContestState } from 'helpers';
-import { useEffect, useMemo, useState } from 'hooks';
+import { useEffect, useJukiNotification, useMemo, useState } from 'hooks';
 import { ContestTimeData, TimeDisplayType } from 'types';
 
 interface ContestTimeTimerProps {
@@ -13,6 +13,7 @@ interface ContestTimeTimerProps {
 
 export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerProps) => {
   
+  const { addWarningNotification } = useJukiNotification();
   const { type, interval, timeInterval } = useMemo(() => {
     let timeInterval = 0;
     let interval = 100;
@@ -67,6 +68,7 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
     return <SpinIcon />;
   }
   
+  console.log({ type, interval, timeInterval });
   return (
     <div className={`jk-tag tx-s cr-we ${getContestState(contest).bc} jk-row nowrap fw-rr`}>
       {contest.isGlobal
@@ -83,8 +85,9 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
               &nbsp;
               <div className="ws-np">
                 <Timer
+                  // timerKey="contest-timer"
                   key={type + interval + timeInterval}
-                  currentTimestamp={timeInterval}
+                  remaining={timeInterval}
                   type={type}
                   interval={interval}
                   literal
@@ -95,6 +98,7 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
                   onTimeout={() => {
                     setLoadingTimer(true);
                     void reloadContest?.();
+                    addWarningNotification(<T className="tt-se">reloading contest</T>);
                   }}
                 />
               </div>

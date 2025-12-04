@@ -112,4 +112,5 @@ export {
   UserStoreProvider,
   JukiI18nInitializer,
   LoginUser,
+  TimerDisplay,
 } from '@juki-team/base-ui';

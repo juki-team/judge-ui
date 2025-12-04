@@ -1,10 +1,9 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
-import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, T, Timer } from 'components';
+import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, T, TimerDisplay } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, getUserKey } from 'helpers';
-import { useDataViewerRequester, useFetcher, useI18nStore, useJukiNotification, useUIStore } from 'hooks';
+import { useDataViewerRequester, useFetcher, useI18nStore, useJukiNotification, usePageStore, useUIStore } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   getNicknameColumn,
@@ -193,9 +192,8 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
           </Button>
         </div>,
         <div key="date" className="tx-s">
-          <Timer
-            currentTimestamp={currentTimestamp}
-            interval={0}
+          <TimerDisplay
+            counter={currentTimestamp}
             type="hours-minutes"
             literal
           />

@@ -14,7 +14,7 @@ import {
   Select,
   SortableItems,
   T,
-  Timer,
+  TimerDisplay,
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames, disableOutOfRange, getJudgeOrigin, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
@@ -228,10 +228,9 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
           )}
           <div className="jk-row tx-t">
             <T className="tt-se">duration</T>:&nbsp;
-            <Timer
-              currentTimestamp={problem.endTimestamp - problem.startTimestamp}
+            <TimerDisplay
+              counter={problem.endTimestamp - problem.startTimestamp}
               literal
-              interval={0}
               ignoreTrailingZeros
               ignoreLeadingZeros
               type="weeks-days-hours-minutes"

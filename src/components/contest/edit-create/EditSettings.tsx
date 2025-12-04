@@ -13,7 +13,7 @@ import {
   QuietInformation,
   Select,
   T,
-  Timer,
+  TimerDisplay,
   WarningIcon,
 } from 'components';
 import {
@@ -226,9 +226,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     <div className="jk-row left fw-lt tx-s">
                       <T className="tt-se">_at</T>&nbsp;
                       <div className="jk-col left">
-                        <Timer
-                          currentTimestamp={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
-                          interval={0}
+                        <TimerDisplay
+                          counter={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
                           type="weeks-days-hours-minutes-seconds"
                           literal
                           ignoreLeadingZeros
@@ -240,9 +239,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   <div className="jk-row left tx-s fw-lt">
                     <T className="tt-se">duration</T>:&nbsp;
                     <div className="jk-col left">
-                      <Timer
-                        currentTimestamp={frozenDuration}
-                        interval={0}
+                      <TimerDisplay
+                        counter={frozenDuration}
                         type="weeks-days-hours-minutes-seconds"
                         literal
                         ignoreLeadingZeros
@@ -317,9 +315,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     <div className="jk-row left tx-s fw-lt">
                       <T className="tt-se">_at</T>&nbsp;
                       <div className="jk-col left">
-                        <Timer
-                          currentTimestamp={contest.settings.quietTimestamp - contest.settings.startTimestamp}
-                          interval={0}
+                        <TimerDisplay
+                          counter={contest.settings.quietTimestamp - contest.settings.startTimestamp}
                           type="weeks-days-hours-minutes-seconds"
                           literal
                           ignoreLeadingZeros
@@ -333,9 +330,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   <div className="jk-row left tx-s fw-lt">
                     <T className="tt-se">duration</T>:&nbsp;
                     <div className="jk-col left">
-                      <Timer
-                        currentTimestamp={quietDuration}
-                        interval={0}
+                      <TimerDisplay
+                        counter={quietDuration}
                         type="weeks-days-hours-minutes-seconds"
                         literal
                         ignoreLeadingZeros
@@ -409,9 +405,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   <div className="jk-row left tx-s fw-lt">
                     <T className="tt-se">_at</T>&nbsp;
                     <div className="jk-col left">
-                      <Timer
-                        currentTimestamp={contest.settings.endTimestamp - contest.settings.startTimestamp}
-                        interval={0}
+                      <TimerDisplay
+                        counter={contest.settings.endTimestamp - contest.settings.startTimestamp}
                         type="weeks-days-hours-minutes-seconds"
                         literal
                         ignoreLeadingZeros
@@ -421,9 +416,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   </div>
                   <div className="jk-row left tx-s fw-lt">
                     <T className="tt-se tx-s">duration</T>:&nbsp;
-                    <Timer
-                      currentTimestamp={contestDuration}
-                      interval={0}
+                    <TimerDisplay
+                      counter={contestDuration}
                       type="weeks-days-hours-minutes-seconds"
                       literal
                       ignoreLeadingZeros
