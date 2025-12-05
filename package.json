@@ -1,7 +1,7 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.24.1",
+  "version": "1.24.2",
   "scripts": {
     "dev": "caddy run --config Caddyfile & next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",
-    "@juki-team/base-ui": "^1.2.234",
+    "@juki-team/base-ui": "^1.2.235",
     "@juki-team/commons": "^0.0.990",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.6.1",

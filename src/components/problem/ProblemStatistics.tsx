@@ -93,7 +93,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
     data,
   } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now));
   const t = useI18nStore(store => store.i18n.t);
-  const { size: viewPortSize, height: viewPortHeight } = usePageStore(store => store.viewPort);
+  const { screen: viewPortScreen, height: viewPortHeight } = usePageStore(store => store.viewPort);
   const [ dateType, setDateType ] = useState<StatisticsDateKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};
@@ -102,7 +102,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
   const verdictsData = [];
   const dateData = [];
   
-  const oneColumn = viewPortHeight < 900 || viewPortSize === 'sm';
+  const oneColumn = viewPortHeight < 900 || viewPortScreen === 'sm';
   
   const sum = Object.values(languagesStats).reduce((sum, language) => sum + language.value, 0);
   for (const { label, value } of Object.values(languagesStats)) {
