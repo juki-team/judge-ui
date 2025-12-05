@@ -1,7 +1,7 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.24.2",
+  "version": "1.24.3",
   "scripts": {
     "dev": "caddy run --config Caddyfile & next dev -p 3070",
     "dev:ssl": "next dev -p 3001 & local-ssl-proxy --source 3000 --target 3001",
