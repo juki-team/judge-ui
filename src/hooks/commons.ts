@@ -20,6 +20,7 @@ export {
   useWebsocketStore,
   useUIStore,
   usePageStore,
+  useSubscribe,
 } from '@juki-team/base-ui';
 export { useResizeDetector } from 'react-resize-detector';
 export { useEffect, useRef, useState, useMemo, useCallback } from 'react';

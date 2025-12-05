@@ -35,10 +35,10 @@ import {
   useMutate,
   usePageStore,
   useRouterStore,
+  useSubscribe,
   useTrackLastPath,
   useUIStore,
   useUserStore,
-  useWebsocketStore,
 } from 'hooks';
 import { type CSSProperties, type ReactNode } from 'react';
 import {
@@ -49,7 +49,6 @@ import {
   ContestMembersResponseDTO,
   ContestTab,
   LastPathKey,
-  ObjectIdType,
   ProfileSetting,
   Status,
   SubscribeContestChangesWebSocketEventDTO,
@@ -136,7 +135,6 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
   const t = useI18nStore(state => state.i18n.t);
   const mutate = useMutate();
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
-  const userSessionId = useUserStore(state => state.user.sessionId);
   
   const reloadContest = useCallback(async () => {
     consoleInfo('reloading all contest');
@@ -144,20 +142,18 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
     void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
   }, [ mutate ]);
   
-  const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);
-  
-  useEffect(() => {
-    const event: SubscribeContestChangesWebSocketEventDTO = {
-      event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
-      sessionId: userSessionId as ObjectIdType,
-      contestKey: contestKey,
-    };
-    return subscribeToEvent(event, ({ data }) => {
+  const event: Omit<SubscribeContestChangesWebSocketEventDTO, 'clientId'> = {
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
+    contestKey: contestKey,
+  };
+  useSubscribe(
+    event,
+    (data) => {
       if (isContestChangesWebSocketResponseEventDTO(data)) {
         void reloadContest();
       }
-    });
-  }, [ contestKey, reloadContest, subscribeToEvent, userSessionId ]);
+    },
+  );
   
   useEffect(() => {
     const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({

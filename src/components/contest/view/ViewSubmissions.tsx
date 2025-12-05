@@ -22,16 +22,7 @@ import {
   toFilterUrl,
   toSortUrl,
 } from 'helpers';
-import {
-  useEffect,
-  useFetcher,
-  useJukiNotification,
-  useMemo,
-  useRef,
-  useState,
-  useUserStore,
-  useWebsocketStore,
-} from 'hooks';
+import { useFetcher, useJukiNotification, useMemo, useState, useSubscribe, useUserStore } from 'hooks';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -41,7 +32,6 @@ import {
   DataViewerToolbarProps,
   JudgeSummaryListResponseDTO,
   LanguagesByJudge,
-  ObjectIdType,
   QueryParam,
   Status,
   SubmissionSummaryListResponseDTO,
@@ -53,7 +43,6 @@ import { ContestDataUI } from './types';
 
 const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
-  const userSessionId = useUserStore(state => state.user.sessionId);
   const [ dataCrawled, setDataCrawled ] = useState<{
     [key: string]: { submitId: string, isNewSubmission: boolean }[]
   }>({});
@@ -63,16 +52,14 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   const problemKeys = Object.values(contest.problems).map(problem => problem.key).join(SEPARATOR_TOKEN);
   const contestKey = contest.key;
   
-  const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);
-  
-  useEffect(() => {
-    const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
-      event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
-      sessionId: userSessionId as ObjectIdType,
-      contestKey,
-      problemKeys,
-    };
-    return subscribeToEvent(event, ({ data }) => {
+  const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDTO, 'clientId'> = {
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+    contestKey,
+    problemKeys,
+  };
+  useSubscribe(
+    event,
+    (data) => {
       if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
         if (data.content.submitId) {
           setDataCrawled(prevState => ({
@@ -89,8 +76,8 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
           setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
         }
       }
-    });
-  }, [ contestKey, problemKeys, subscribeToEvent, userSessionId ]);
+    },
+  );
   
   const newSubmissions = Object.values(dataCrawled)
     .flat()
@@ -201,8 +188,6 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
     getSubmissionMemoryHeader(),
   ], [ contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, contest.members.participants, contest.problems, contest.key, userNickname, languages, companyKey ]);
   
-  const lastGetUrl = useRef({ filter: {}, sort: {} });
-  
   const downloads = useMemo(() => {
     const downloads: DataViewerToolbarProps<SubmissionSummaryListResponseDTO>['downloads'] = [
       {
@@ -250,10 +235,6 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
       cards={{ width: 272, expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-        lastGetUrl.current = {
-          filter,
-          sort,
-        };
         return jukiApiManager.API_V2.submission.getSummaryList({
           params: {
             page,

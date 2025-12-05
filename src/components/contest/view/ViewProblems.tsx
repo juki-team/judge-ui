@@ -14,7 +14,7 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useEffect, useJukiNotification, useMemo, useState, useUIStore, useUserStore, useWebsocketStore } from 'hooks';
+import { useJukiNotification, useMemo, useState, useSubscribe, useUIStore } from 'hooks';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
 import { KeyedMutator } from 'swr';
 import {
@@ -23,7 +23,6 @@ import {
   ContestProblemBlockedByType,
   ContestTab,
   DataViewerHeadersType,
-  ObjectIdType,
   QueryParam,
   Status,
   SubmissionRunStatus,
@@ -42,7 +41,6 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
   
   const { Link } = useUIStore(store => store.components);
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
-  const userSessionId = useUserStore(state => state.user.sessionId);
   const [ dataCrawled, setDataCrawled ] = useState<{
     [key: string]: { submitId: string, isNewSubmission: boolean }[]
   }>({});
@@ -54,16 +52,14 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
   
-  const subscribeToEvent = useWebsocketStore(store => store.subscribeToEvent);
-  
-  useEffect(() => {
-    const event: SubscribeSubmissionsCrawlWebSocketEventDTO = {
-      event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
-      sessionId: userSessionId as ObjectIdType,
-      contestKey,
-      problemKeys: problem.key,
-    };
-    return subscribeToEvent(event, ({ data }) => {
+  const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDTO, 'clientId'> = {
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
+    contestKey,
+    problemKeys: problem.key,
+  };
+  useSubscribe(
+    event,
+    (data) => {
       if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
         if (data.content.submitId) {
           setDataCrawled(prevState => ({
@@ -80,8 +76,8 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
           setSubmissionsCount(prevState => prevState + data.content.submissionsCount);
         }
       }
-    });
-  }, [ contestKey, problem.key, subscribeToEvent, userSessionId ]);
+    },
+  );
   
   return (
     <div className="jk-col nowrap">
