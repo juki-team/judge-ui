@@ -112,14 +112,14 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize),
-      getPointsColumn(viewPortSize, contest.isEndless || contest.isGlobal),
+      getNicknameColumn(viewPortScreen),
+      getPointsColumn(viewPortScreen, contest.isEndless || contest.isGlobal),
     ];
     
     for (const problem of Object.values(contest?.problems ?? {})) {
@@ -129,7 +129,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       });
     }
     return base;
-  }, [ viewPortSize, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortScreen, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {

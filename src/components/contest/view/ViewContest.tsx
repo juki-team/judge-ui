@@ -1,16 +1,18 @@
 'use client';
 
 import {
-  ButtonLoader,
-  ContentCopyIcon,
   contestAccessProps,
   DocumentMembersButton,
   EditIcon,
   EditViewMembers,
+  FileCopyIcon,
   LineLoader,
   NavigateBeforeIcon,
   NavigateNextIcon,
+  ShareIcon,
   T,
+  TabsInlineButton,
+  TabsInlineButtonLoader,
   TwoContentLayout,
   ViewOverview,
   ViewProblems,
@@ -128,7 +130,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
   const contestKey = contest.key;
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const { isSmallScreen, isMediumScreen, isHugeScreen, isLargeScreen } = usePageStore(store => store.viewPort);
   const { Link } = useUIStore(store => store.components);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
@@ -201,7 +203,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
       tabHeaders[ContestTab.PROBLEMS] = {
         key: ContestTab.PROBLEMS,
         header: (
-          <div className="jk-row gap nowrap">
+          <div className="jk-row gap nowrap left">
             <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key, tab: ContestTab.PROBLEMS })}>
               <T className="tt-ce ws-np clickable jk-br-ie" style={{ padding: '2px 4px' }}>problems</T>
             </Link>
@@ -222,7 +224,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
       tabHeaders[ContestTab.PROBLEMS] = {
         key: ContestTab.PROBLEMS,
         header: (
-          <div className="jk-row gap nowrap">
+          <div className="jk-row gap nowrap left">
             <T className="tt-ce ws-np">problems</T>
           </div>
         ),
@@ -269,15 +271,14 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
   
   const extraNodes = [];
   
-  if (viewPortSize === 'hg') {
+  if (isHugeScreen) {
     extraNodes.push(<ContestTimeTimer key="contest-timer" contest={contest} reloadContest={reloadContest} />);
   }
   
   if (userCanCreateContest && (contest.isPast || contest.user.isAdministrator || contest.user.isManager)) {
     extraNodes.push(
-      <ButtonLoader
+      <TabsInlineButtonLoader
         key="contest-copy"
-        size="small"
         onClick={async setLoaderStatus => {
           setLoaderStatus(Status.LOADING);
           const { name, ...parsedContest } = toUpsertContestDTOUI(contest);
@@ -289,12 +290,10 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
           pushRoute(jukiAppRoutes.JUDGE().contests.new());
           setLoaderStatus(Status.SUCCESS);
         }}
-        icon={<ContentCopyIcon />}
-        responsiveMobile
+        icon={<FileCopyIcon />}
         type="light"
-      >
-        <T className="ws-np tt-se">copy</T>
-      </ButtonLoader>,
+        label="copy"
+      />,
     );
   }
   
@@ -309,20 +308,15 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
       reloadDocument={reloadContest}
       copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').contests.view({ key: contest.key })}
       {...contestAccessProps(false)}
-    />,
+    >
+      <TabsInlineButton icon={<ShareIcon />} label="share" />
+    </DocumentMembersButton>,
   );
   
   if (isAdministrator) {
     extraNodes.push(
-      <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contestKey })}>
-        <ButtonLoader
-          size="small"
-          icon={<EditIcon />}
-          responsiveMobile
-          key="edit"
-        >
-          <T className="tt-se">edit</T>
-        </ButtonLoader>
+      <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contestKey })} className="jk-row">
+        <TabsInlineButton icon={<EditIcon />} label="edit" />
       </Link>,
     );
   }
@@ -339,7 +333,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
       <div>
         {contest.name}
       </div>
-      {(viewPortSize === 'md' || viewPortSize === 'lg') && (
+      {(isMediumScreen || isLargeScreen) && (
         <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
       )}
     </div>,
@@ -352,6 +346,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
       tabButtons={extraNodes}
       selectedTabKey={contestTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}
+      tabsInlineClassName={isSmallScreen ? 'tx-s' : ''}
     >
       {(isLoadingContest || isValidatingContest || isLoadingEvents || isValidatingEvents || isLoadingMembers || isValidatingMembers || isLoadingClarifications || isValidatingClarifications) && (
         <LineLoader style={{ '--line-loader-color': 'var(--cr-io-lt)' } as CSSProperties} delay={1} />
@@ -359,7 +354,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
       {!dataContest?.success && (
         <LineLoader style={{ '--line-loader-color': 'var(--cr-er)' } as CSSProperties} delay={1} />
       )}
-      {viewPortSize === 'sm' && (
+      {isSmallScreen && (
         <>
           <div className="jk-row nowrap gap extend left">
             <h2
@@ -370,7 +365,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
               }}
               className="line-height-1"
             >
-              {contest.name}{viewPortSize}
+              {contest.name}
             </h2>
           </div>
           <ContestTimeTimer contest={contest} reloadContest={reloadContest} />

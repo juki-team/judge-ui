@@ -180,7 +180,7 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
   const { isManager, isAdministrator } = user || {};
   const { notifyResponse } = useJukiNotification();
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const isJudgeOrAdmin = isManager || isAdministrator;
   
   const columns = useMemo(() => [
@@ -316,7 +316,7 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
       headers={columns}
       data={data}
       rows={{ height: 128 }}
-      rowsView={viewPortSize !== 'sm'}
+      rowsView={!isSmallScreen}
       name={QueryParam.CONTEST_PROBLEMS_TABLE + '-' + contest.key}
       getRecordStyle={({ data, index, isCard }) => {
         if (isCard) {

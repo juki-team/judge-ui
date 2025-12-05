@@ -41,7 +41,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
   const appendSearchParams = useRouterStore(state => state.appendSearchParams);
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse, addWarningNotification } = useJukiNotification();
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const t = useI18nStore(state => state.i18n.t);
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
@@ -60,8 +60,8 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
   return (
     <div
       className={classNames('contest-overview gap nowrap left stretch', {
-        'jk-row': viewPortSize !== 'sm',
-        'jk-col': viewPortSize === 'sm',
+        'jk-row': !isSmallScreen,
+        'jk-col': isSmallScreen,
       })}
       style={{ height: 'auto' }}
     >

@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",
-    "@juki-team/base-ui": "^1.2.228",
+    "@juki-team/base-ui": "^1.2.234",
     "@juki-team/commons": "^0.0.990",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.6.1",

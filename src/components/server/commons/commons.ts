@@ -100,4 +100,6 @@ export {
   TimerIcon,
   AddReactionIcon,
   VoidIcon,
+  FileCopyIcon,
+  ShareIcon,
 } from '@juki-team/base-ui/server-components';

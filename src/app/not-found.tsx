@@ -10,7 +10,7 @@ export default function NotFound() {
   const router = useRouter();
   
   useEffect(() => {
-    setTimeout(() => router.replace(jukiAppRoutes.COACH().home()), 200);
+    setTimeout(() => router.replace(jukiAppRoutes.COACH().home()), 1000);
   }, [ router ]);
   
   return (

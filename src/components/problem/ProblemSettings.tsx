@@ -60,7 +60,6 @@ export const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
         <div
           data-tooltip-id="jk-tooltip"
           data-tooltip-content="to add new tags contact to the administrator"
-          data-tooltip-t-class-name="tt-se"
           className="jk-row"
         >
           <InfoIIcon circle size="small" />

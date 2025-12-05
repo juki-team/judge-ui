@@ -5,7 +5,8 @@ export const EMPTY_TEXT_LANGUAGES: TextLanguageType = { [Language.ES]: '', [Lang
 export {
   ALPHANUMERIC_DASH_UNDERSCORE_REGEX,
   DEFAULT_DATA_VIEWER_PROPS,
-  EMPTY_COMPANY, EMPTY_USER,
+  EMPTY_COMPANY,
+  EMPTY_USER,
 } from '@juki-team/base-ui/constants';
 
 export {

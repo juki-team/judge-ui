@@ -1,6 +1,5 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
 import { Button, DataViewer, T, TwoContentLayout } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { toFilterUrl } from 'helpers';
@@ -9,6 +8,7 @@ import {
   useFetcher,
   useI18nStore,
   useMemo,
+  usePageStore,
   useRouterStore,
   useTrackLastPath,
   useUIStore,
@@ -45,7 +45,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   const contestData = contestResponse?.success ? contestResponse.content : null;
   const userCanAdministrateServices = useUserStore(state => state.user.permissions.services.administrate);
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const t = useI18nStore(state => state.i18n.t);
   const contestTags = JSON.stringify(contest.tags ?? []);
   
@@ -53,8 +53,8 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     
     const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize),
-      getPointsColumn(viewPortSize, true),
+      getNicknameColumn(viewPortScreen),
+      getPointsColumn(viewPortScreen, true),
     ];
     
     const tags = JSON.parse(contestTags);
@@ -87,7 +87,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
       });
     }
     return base;
-  }, [ viewPortSize, contestData?.problems, Link, contest.key, t, contestTags ]);
+  }, [ viewPortScreen, contestData?.problems, Link, contest.key, t, contestTags ]);
   
   const {
     data: response,
@@ -116,7 +116,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
         label: <div className="jk-row fw-bd">{tag}</div>,
       })) : undefined}
       data={data}
-      rowsView={viewPortSize !== 'sm'}
+      rowsView={viewPortScreen !== 'sm'}
       rows={{ height: 68 }}
       request={request}
       name={QueryParam.RANKING_TABLE}

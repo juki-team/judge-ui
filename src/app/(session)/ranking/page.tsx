@@ -4,12 +4,12 @@ import { usePageStore } from '@juki-team/base-ui';
 import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { oneTab } from 'helpers';
-import { useDataViewerRequester, useEffect, useMemo, useState, useUIStore } from 'hooks';
+import { useDataViewerRequester, useMemo, useUIStore } from 'hooks';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {
   
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const { Image } = useUIStore(store => store.components);
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
     {
@@ -50,7 +50,7 @@ function Ranking() {
       filter: { type: 'text-auto' },
       cardPosition: 'top',
       minWidth: 300,
-      sticky: viewPortSize !== 'sm',
+      sticky: !isSmallScreen,
     },
     {
       head: <TextHeadCell text={<T className="wb-bw tt-se">points by problems</T>} />,
@@ -110,7 +110,7 @@ function Ranking() {
       cardPosition: 'bottom',
       minWidth: 200,
     },
-  ], [ Image, viewPortSize ]);
+  ], [ Image, isSmallScreen ]);
   
   const {
     data: response,
@@ -120,10 +120,6 @@ function Ranking() {
     () => JUDGE_API_V1.RANKING.LIST(),
     { refreshInterval: 5 * 60 * 1000 },
   );
-  const [ _, setRender ] = useState(Date.now()); // TODO: Fix the render of DataViewer
-  useEffect(() => {
-    setTimeout(() => setRender(Date.now()), 100);
-  }, [ response ]);
   
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
   
@@ -133,7 +129,7 @@ function Ranking() {
         <DataViewer<UserRankResponseDTO>
           headers={columns}
           data={data}
-          rowsView={viewPortSize !== 'sm'}
+          rowsView={!isSmallScreen}
           rows={{ height: 68 }}
           request={request}
           name={QueryParam.RANKING_TABLE}

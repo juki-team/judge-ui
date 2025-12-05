@@ -12,7 +12,7 @@ export const FullScreenScoreboard = ({ contest, children, reloadContest }: Props
   reloadContest: () => Promise<void>
 }>) => {
   
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const isSmallMediumScreen = usePageStore(store => store.viewPort.isSmallScreen || store.viewPort.isMediumScreen);
   const { Image } = useUIStore(store => store.components);
   const companyName = useUserStore(state => state.company.name);
   const companyImageUrl = useUserStore(state => state.company.imageUrl);
@@ -28,8 +28,8 @@ export const FullScreenScoreboard = ({ contest, children, reloadContest }: Props
               <Image
                 src={companyImageUrl}
                 alt={companyName}
-                height={viewPortSize === 'md' ? 40 : 46}
-                width={viewPortSize === 'md' ? 80 : 92}
+                height={isSmallMediumScreen ? 40 : 46}
+                width={isSmallMediumScreen ? 80 : 92}
               />
             </div>
             <div className="jk-row nowrap gap extend jk-pg-sm-rl">

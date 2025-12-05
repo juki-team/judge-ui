@@ -1,9 +1,6 @@
-// import pkg from './package.json' with { type: 'json' };
 import withPlugins from 'next-compose-plugins';
-// import { Language } from '@juki-team/commons';
 // import BundleAnalyzer from '@next/bundle-analyzer';
 
-// const { version } = pkg;
 // const isDev = process.env.NODE_ENV !== 'production';
 
 const nextConfig = withPlugins([
@@ -20,25 +17,6 @@ const nextConfig = withPlugins([
   //   enabled: process.env.ANALYZE === 'true',
   // }),
 ], {
-  // webpack: config => {
-  //   config.resolve.fallback = {
-  //     fs: false,
-  //     child_process: false,
-  //     tls: false,
-  //     bufferutil: false,
-  //     'utf-8-validate': false,
-  //   };
-  //
-  //   return config;
-  // },
-  // publicRuntimeConfig: {
-  //   version,
-  // },
-  // output:"standalone",
-  // i18n: {
-  //   locales: [ Language.EN.toLowerCase(), Language.ES.toLowerCase() ],
-  //   defaultLocale: Language.EN.toLowerCase(),
-  // },
   images: {
     remotePatterns: [
       {
@@ -52,15 +30,6 @@ const nextConfig = withPlugins([
         pathname: '/public/user/image/**',
       },
     ],
-  },
-  async redirects() {
-    return [
-      // {
-      //   source: '/admin',
-      //   destination: '/admin/users-management',
-      //   permanent: true,
-      // },
-    ];
   },
   async headers() {
     return [

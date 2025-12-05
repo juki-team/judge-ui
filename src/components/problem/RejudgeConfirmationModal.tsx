@@ -1,6 +1,6 @@
 'use client';
 
-import { AutorenewIcon, Button, ButtonLoader, Modal, SpinIcon, T } from 'components';
+import { Button, ButtonLoader, Modal, SpinIcon, T } from 'components';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useFetcher, useJukiNotification } from 'hooks';
 import { JUDGE_API_V1 } from 'src/constants';
@@ -38,15 +38,13 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
           <T>submissions that were made outside of a contest</T>,&nbsp;
           <T>Are you sure you want to rejudge all of those submissions?</T>
         </div>
-        <div className="jk-row gap right">
+        <div className="jk-row-col gap right wh-100">
           <Button type="light" onClick={props.onClose}>
             <T className="tt-se">cancel</T>
           </Button>
           <ButtonLoader
             data-tooltip-id="jk-tooltip"
             data-tooltip-content="only submissions that are not in a contest will be judged"
-            data-tooltip-t-class-name="tt-se"
-            icon={<AutorenewIcon />}
             onClick={async setLoaderStatus => {
               setLoaderStatus(Status.LOADING);
               const result = cleanRequest<ContentResponseType<{
@@ -58,15 +56,15 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
                 ),
               );
               if (result.success) {
-                addSuccessNotification(<div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;
-                  <T>submissions</T></div>);
+                addSuccessNotification(
+                  <div><T>rejudging</T>&nbsp;{result.content.listCount}&nbsp;<T>submissions</T></div>,
+                );
                 setLoaderStatus(Status.SUCCESS);
                 props.onClose();
               } else {
-                addErrorNotification(<T
-                  className="tt-se"
-                >{result.message ||
-                  'something went wrong, please try again later'}</T>);
+                addErrorNotification(
+                  <T className="tt-se">{result.message || 'something went wrong, please try again later'}</T>,
+                );
                 setLoaderStatus(Status.ERROR);
               }
             }}

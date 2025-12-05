@@ -4,13 +4,13 @@ import { ContentResponseType } from '@juki-team/commons';
 import { useTour } from '@reactour/tour';
 import {
   AutorenewIcon,
-  Button,
   DocumentMembersButton,
   EditIcon,
   LineLoader,
   LinkLastPath,
   ProblemInfo,
   T,
+  TabsInlineButton,
   TwoContentLayout,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
@@ -19,6 +19,7 @@ import { authorizedRequest, contentResponse } from 'helpers';
 import {
   useEffect,
   useFetcher,
+  usePageStore,
   useRef,
   useRouterStore,
   useState,
@@ -36,6 +37,7 @@ import {
   TabsType,
   TwoContentLayoutProps,
 } from 'types';
+import { ShareIcon } from '../index';
 import { InfoTestCases } from './InfoTestCases';
 import { problemAccessProps } from './ProblemAccess';
 import { ProblemMySubmissions } from './ProblemMySubmissions';
@@ -52,7 +54,6 @@ interface ProblemViewLayoutProps {
 export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutProps) => {
   
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  // useCheckAndStartServices();
   
   const {
     data,
@@ -86,6 +87,9 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
   const userLang = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
   const [ isOpenRejudgeModal, setIsOpenRejudgeModal ] = useState(false);
   const { Link } = useUIStore(store => store.components);
+  const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
+  const isMediumScreen = usePageStore(store => store.viewPort.isMediumScreen);
+  const isSmallMediumScreen = isSmallScreen || isMediumScreen;
   
   const lastSourceRef = useRef('');
   const lastLanguageRef = useRef('');
@@ -166,33 +170,27 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       reloadDocument={reloadProblem}
       copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
       {...problemAccessProps}
-    />,
+    >
+      <TabsInlineButton icon={<ShareIcon />} label="share" />
+    </DocumentMembersButton>,
   );
   if (problem.user?.isAdministrator) {
     if (!problem.judge.isExternal) {
-      extraNodes.push(<Button
+      extraNodes.push(
+        <TabsInlineButton
           key="problem-rejudge"
-          data-tooltip-id="jk-tooltip"
-          data-tooltip-content="only submissions that are not in a contest will be judged"
-          size="small"
+          data-tooltip-content={`${isSmallMediumScreen ? 'rejudge, ' : ''}only submissions that are not in a contest will be judged`}
           icon={<AutorenewIcon />}
           onClick={() => setIsOpenRejudgeModal(true)}
-          responsiveMobile
           type="light"
+          label="rejudge"
         >
-          <T className="tt-se">rejudge</T>
-        </Button>,
+        </TabsInlineButton>,
       );
     }
     extraNodes.push(
       <Link key="problem-edit" href={jukiAppRoutes.JUDGE().problems.edit({ key: problem.key as string })}>
-        <Button
-          size="small"
-          icon={<EditIcon />}
-          responsiveMobile
-        >
-          <T className="tt-se">edit</T>
-        </Button>
+        <TabsInlineButton icon={<EditIcon />} label="edit" />
       </Link>,
     );
   } else if (problem.judge?.isExternal && userIsLogged) {
@@ -227,6 +225,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       tabButtons={extraNodes}
       selectedTabKey={problemTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().problems.view({ key: problem.key, tab })}
+      tabsInlineClassName={isSmallScreen ? 'tx-s' : ''}
     >
       {(isLoading || isValidating) && (
         <LineLoader style={{ '--line-loader-color': 'var(--cr-io-lt)' } as CSSProperties} delay={1} />

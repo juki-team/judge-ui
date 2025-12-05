@@ -38,7 +38,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   
   const contestKey = contest.key;
   const { Link } = useUIStore(store => store.components);
-  const viewPortSize = usePageStore(store => store.viewPort.size);
+  const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const {
@@ -51,8 +51,8 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       getPositionColumn(),
-      getNicknameColumn(viewPortSize),
-      getPointsColumn(viewPortSize, contest.isEndless),
+      getNicknameColumn(viewPortScreen),
+      getPointsColumn(viewPortScreen, contest.isEndless),
     ];
     
     if (contest?.problems) {
@@ -61,7 +61,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       }
     }
     return base;
-  }, [ viewPortSize, contest.isEndless, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortScreen, contest.isEndless, contest?.problems, Link, contestKey, t ]);
   
   const {
     data: response,

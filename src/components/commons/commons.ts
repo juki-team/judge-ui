@@ -1,7 +1,5 @@
 'use client';
 
-// import { MdMathEditorDeprecated } from '@juki-team/base-ui';
-
 export {
   JukiProviders,
   Client,
@@ -113,4 +111,8 @@ export {
   JukiI18nInitializer,
   LoginUser,
   TimerDisplay,
+  UserLoaderLayout,
+  ApplicationLoaderLayout,
+  TabsInlineButtonLoader,
+  TabsInlineButton,
 } from '@juki-team/base-ui';
