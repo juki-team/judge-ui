@@ -182,6 +182,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     >
       <div className="jk-row space-between extend pn-re">
         {modal}
+        {/*<ScreenshotFrames />*/}
         <div className="jk-row gap">
           <h1><T className="tt-se">problems</T></h1>
           {isExternal && (

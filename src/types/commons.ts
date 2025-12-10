@@ -31,6 +31,7 @@ export {
   ContestProblemPrerequisiteType,
   ContestProblemBlockedByType,
   WebSocketSubscriptionEvent,
+  WebSocketMessageEvent,
 } from '@juki-team/commons';
 
 export type {
@@ -102,6 +103,7 @@ export type {
   ContestMembersResponseDTO,
   ContestClarificationsResponseDTO,
   MetadataResponseDTO,
+  UserTrackScreenshotWebSocketEventDTO,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';
