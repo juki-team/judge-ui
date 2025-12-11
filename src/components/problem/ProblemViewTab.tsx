@@ -1,6 +1,6 @@
-import { ONE_MINUTE } from '@juki-team/commons';
 import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, T } from 'components';
 import { jukiApiManager } from 'config';
+import { ONE_MINUTE } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useUIStore } from 'hooks';
 import { RefObject } from 'react';

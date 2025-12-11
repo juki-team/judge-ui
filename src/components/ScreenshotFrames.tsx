@@ -1,9 +1,15 @@
 'use client';
 
+import { usePageStore } from '@juki-team/base-ui';
 import domToImage from 'dom-to-image-more';
-import { useRouterStore, useUserStore, useWebsocketStore } from 'hooks';
-import { useEffect } from 'react';
-import { UserTrackScreenshotWebSocketEventDTO, WebSocketMessageEvent } from 'types';
+import { isClientTrackWebSocketResponseEventDTO } from 'helpers';
+import { useSubscribe, useUserStore, useWebsocketStore } from 'hooks';
+import {
+  ClientTrackScreenshotWebSocketEventDTO,
+  SubscribeClientTrackWebSocketEventDTO,
+  WebSocketMessageEvent,
+  WebSocketSubscriptionEvent,
+} from 'types';
 
 const toPng = async () => {
   const cmThemeNode = document.querySelector('#juki-app');
@@ -11,11 +17,13 @@ const toPng = async () => {
     return;
   }
   try {
-    const scale = 0.8;
+    const targetWidth = 320;
+    const scale = targetWidth / cmThemeNode.clientWidth;
+    const targetHeight = cmThemeNode.clientHeight * scale;
     return await domToImage.toJpeg(cmThemeNode, {
       quality: 0.3,
-      width: 320,
-      height: cmThemeNode.clientHeight * scale,
+      width: targetWidth,
+      height: targetHeight,
       style: {
         transform: `scale(${scale})`,
         transformOrigin: 'top left',
@@ -29,29 +37,28 @@ const toPng = async () => {
 export const ScreenshotFrames = () => {
   
   const clientId = useUserStore(store => store.clientId);
-  const origin = useRouterStore(store => store.origin);
-  const pathname = useRouterStore(store => store.pathname);
-  const searchParams = useRouterStore(store => store.searchParams);
   const channelPublishMessages = useWebsocketStore(store => store.channelPublishMessages);
   
-  useEffect(() => {
-    const cb = async () => {
-      const screenshot = await toPng();
-      console.log({ screenshot });
-      const event: UserTrackScreenshotWebSocketEventDTO = {
-        clientId,
-        event: WebSocketMessageEvent.USER_TRACK_SCREENSHOT,
-        href: `${origin}${pathname}?${searchParams.toString()}`,
-        screenshot,
-      };
-      void channelPublishMessages?.publish('', event);
-    };
-    cb();
-    const t = setInterval(cb, 2000);
-    return () => {
-      clearInterval(t);
-    };
-  }, [ channelPublishMessages, clientId, origin, pathname, searchParams ]);
+  const storePageStore = usePageStore();
+  console.log({ storePageStore }, storePageStore.isFocus, storePageStore.isVisible, storePageStore.isOnline);
+  const event: Omit<SubscribeClientTrackWebSocketEventDTO, 'clientId'> = {
+    event: WebSocketSubscriptionEvent.SUBSCRIBE_CLIENT_TRACK,
+  };
+  useSubscribe(event, async (data) => {
+    console.log('>>>> data', { data });
+    if (isClientTrackWebSocketResponseEventDTO(data)) {
+      console.log('if', { data });
+      if (data.screenshot) {
+        const screenshot = await toPng();
+        const event: ClientTrackScreenshotWebSocketEventDTO = {
+          clientId,
+          event: WebSocketMessageEvent.CLIENT_TRACK_SCREENSHOT,
+          screenshot,
+        };
+        void channelPublishMessages?.publish('', event);
+      }
+    }
+  });
   
   return null;
 };

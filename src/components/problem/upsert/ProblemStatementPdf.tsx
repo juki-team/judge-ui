@@ -1,10 +1,9 @@
-import { ContentResponseType } from '@juki-team/commons';
 import { ButtonLoader, Input, T } from 'components';
 import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useState } from 'hooks';
 import { type Dispatch, type SetStateAction } from 'react';
-import { HTTPMethod, Language, Status, UpsertProblemUIDTO } from 'types';
+import { ContentResponseType, HTTPMethod, Language, Status, UpsertProblemUIDTO } from 'types';
 
 interface ProblemStatementPdfProps {
   problem: UpsertProblemUIDTO,

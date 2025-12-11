@@ -1630,10 +1630,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.2.244":
-  version "1.2.244"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.2.244/3bc110d68675e2bebd72404e0867bca72671e2b6#3bc110d68675e2bebd72404e0867bca72671e2b6"
-  integrity sha512-cI//5Do8awLqAHyPLPQWoCj6KiOC9N/4vIiC97cjKADZFJ44y32rdtCXoolINDvxBD0io2h62SFrqsidSzjdtA==
+"@juki-team/base-ui@^1.2.247":
+  version "1.2.247"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.2.247/a1629a21851c8dd24a0dd8899cfe7994519d63f0#a1629a21851c8dd24a0dd8899cfe7994519d63f0"
+  integrity sha512-vBMvbLAxoiPbtj3wmyqmlkCCpasoqoyQTwioY2bVwY2CKCCpDqZcAr77IZY430U/m8p21BFoVj6O3s06ztSGXg==
   dependencies:
     "@codemirror/autocomplete" "^6.20.0"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1649,7 +1649,7 @@
     "@floating-ui/react" "^0.27.16"
     "@handsontable/react-wrapper" "^16.2.0"
     "@hookform/resolvers" "^5.2.2"
-    "@juki-team/commons" "^0.0.995"
+    "@juki-team/commons" "^0.0.1003"
     "@milkdown/crepe" "^7.17.2"
     "@milkdown/kit" "^7.17.2"
     "@milkdown/react" "^7.17.2"
@@ -1688,15 +1688,10 @@
     yup "^1.7.1"
     zustand "^5.0.9"
 
-"@juki-team/commons@^0.0.995":
-  version "0.0.995"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.995/8cd82574c876ffa628977331b92081196929f004#8cd82574c876ffa628977331b92081196929f004"
-  integrity sha512-VG7vxGdo7F8l05tyTIzrQTcJuoeSjVPfj+LrJbtJyUlV4w+YGGLdDmEDNLTN3G1wQgi3cTvT8vKf53DiG7IZqg==
-
-"@juki-team/commons@^0.0.998":
-  version "0.0.998"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.998/111b9f500f880c75fa88e3376499c23ac366c936#111b9f500f880c75fa88e3376499c23ac366c936"
-  integrity sha512-c4IILAAChG1TLFZs0aLsdlBKW7lLJUejVU48/Vfu19QXe7ZBx+CTnWUe4NPqbCCmYySCUKKiNNnNTjVz4THikw==
+"@juki-team/commons@^0.0.1003":
+  version "0.0.1003"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.1003/1f585a42da0ae9bd748290a242722c0003726e7f#1f585a42da0ae9bd748290a242722c0003726e7f"
+  integrity sha512-oJPhocIhl8PHSfQaTRaxE9OTpEr3Ipc4RjKIyj0ss6UZegu66ARQ7lkl63do9WysE1z9m7PE7J/GJ2P0aQsIJg==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.0.3", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1", "@lezer/common@^1.3.0":
   version "1.3.0"

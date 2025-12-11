@@ -1,9 +1,8 @@
 'use client';
 
-import { useInjectTheme } from '@juki-team/base-ui';
-import { Theme } from '@juki-team/commons';
-import { useEffect, useI18nStore } from 'hooks';
+import { useEffect, useI18nStore, useInjectTheme } from 'hooks';
 import { useSearchParams } from 'next/navigation';
+import { Theme } from 'types';
 
 export const Initializer = () => {
   

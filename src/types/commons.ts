@@ -103,7 +103,10 @@ export type {
   ContestMembersResponseDTO,
   ContestClarificationsResponseDTO,
   MetadataResponseDTO,
-  UserTrackScreenshotWebSocketEventDTO,
+  SubscribeClientTrackWebSocketEventDTO,
+  ClientTrackLocationWebSocketEventDTO,
+  ClientTrackScreenshotWebSocketEventDTO,
+  ClientTrackDeviceWebSocketEventDTO,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';

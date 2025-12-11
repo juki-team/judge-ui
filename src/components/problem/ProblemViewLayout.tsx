@@ -1,6 +1,5 @@
 'use client';
 
-import { ContentResponseType } from '@juki-team/commons';
 import { useTour } from '@reactour/tour';
 import {
   AutorenewIcon,
@@ -29,6 +28,7 @@ import {
 } from 'hooks';
 import { CSSProperties } from 'react';
 import {
+  ContentResponseType,
   HTTPMethod,
   LastPathKey,
   ProblemDataResponseDTO,

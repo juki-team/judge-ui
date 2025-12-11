@@ -21,6 +21,7 @@ export {
   consoleError,
   consoleInfo,
   getUserKey,
+  isClientTrackWebSocketResponseEventDTO,
 } from '@juki-team/commons';
 
 export {
