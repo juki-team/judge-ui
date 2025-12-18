@@ -12,7 +12,12 @@ export function ProfileViewPage({ profile: fallbackData }: { profile: UserProfil
     data: dataContest,
     mutate,
   } = useFetcher<ContentResponseType<UserProfileResponseDTO>>(
-    jukiApiManager.API_V2.user.getProfile({ params: { nickname: fallbackData.nickname } }).url,
+    jukiApiManager.API_V2.user.getProfile({
+      params: {
+        nickname: fallbackData.nickname,
+        companyKey: fallbackData.company?.key,
+      },
+    }).url,
     { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
   const user = dataContest?.success ? dataContest.content : fallbackData;
   

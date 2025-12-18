@@ -2,6 +2,7 @@
 
 import { AssignmentIcon, CodeIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, TrophyIcon } from 'components';
 import { jukiAppRoutes } from 'config';
+import { getUserKey } from 'helpers';
 import { useRouterStore, useUIStore, useUserStore } from 'hooks';
 import { type PropsWithChildren } from 'react';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'src/constants';
@@ -101,7 +102,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
   
   return (
     <MainMenu
-      onSeeMyProfile={(nickname) => pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname }))}
+      onSeeMyProfile={(nickname, companykey) => pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname: getUserKey(nickname, companykey) }))}
       menu={menu}
       profileSelected={pathname.includes('/profiles/')}
       onBack={pathname !== backPah ? () => {

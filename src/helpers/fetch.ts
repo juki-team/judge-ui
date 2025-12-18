@@ -26,7 +26,7 @@ export const get = async <T extends ContentResponseType<any> | ContentsResponseT
     };
     
     return cleanRequest<T>(
-      await getAuthorizedRequest(url, {
+      await getAuthorizedRequest(encodeURI(url), {
         headers: customHeaders,
       }),
     );
