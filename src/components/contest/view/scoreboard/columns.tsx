@@ -11,7 +11,7 @@ import {
   TableHeadFieldProps,
   TFunction,
 } from 'types';
-import { ScoreboardResponseDTOFocus } from './types';
+import { ScoreboardResponseDTOFocus } from '../types';
 
 export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
   head: '#',

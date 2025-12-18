@@ -176,13 +176,12 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
           refreshInterval={60000}
           extraNodes={extraNodes}
           cards={{ height: 192, expanded: true }}
-          dependencies={[ judgeKey ]}
+          deps={[ judgeKey as string ]}
         />
       ))}
     >
       <div className="jk-row space-between extend pn-re">
         {modal}
-        {/*<ScreenshotFrames />*/}
         <div className="jk-row gap">
           <h1><T className="tt-se">problems</T></h1>
           {isExternal && (

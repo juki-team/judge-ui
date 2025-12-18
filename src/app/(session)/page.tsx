@@ -1,10 +1,9 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
 import { MdMathViewer, T } from 'components';
 import { jukiAppRoutes } from 'config';
 import { BOARDS_INFO, CONTESTS_INFO, IDE_INFO, JUKI_APP_COMPANY_KEY, PROBLEMS_INFO } from 'config/constants';
-import { useUIStore, useUserStore } from 'hooks';
+import { usePageStore, useUIStore, useUserStore } from 'hooks';
 import { ProfileSetting } from 'types';
 
 export default function Home() {
@@ -20,7 +19,9 @@ export default function Home() {
     <div className="jk-col gap center">
       <div className="jk-col gap jk-pg-lg nowrap extend stretch  pn-re bc-we" style={{ width: '100%' }}>
         <h1 className="jk-pg-t ta-cr">
-          <T className="tt-se">welcome to</T>&nbsp;<span className="fw-br cr-sy ws-np">{companyName}</span>&nbsp;
+          <T className="tt-se">welcome to</T>&nbsp;
+          <span className="fw-br cr-sy ws-np">{companyName}</span>
+          &nbsp;
           <span className="fw-br cr-py">judge</span>
         </h1>
         <div className="jk-row pn-re">

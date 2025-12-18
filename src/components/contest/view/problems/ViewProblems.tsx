@@ -1,6 +1,5 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
 import {
   ButtonLoader,
   CheckIcon,
@@ -13,9 +12,9 @@ import {
   TextHeadCell,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
+import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
 import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useJukiNotification, useMemo, useState, useSubscribe, useUIStore } from 'hooks';
-import { DEFAULT_DATA_VIEWER_PROPS } from 'src/constants';
+import { useJukiNotification, useMemo, usePageStore, useState, useSubscribe, useUIStore } from 'hooks';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
@@ -29,7 +28,7 @@ import {
   SubscribeSubmissionsCrawlWebSocketEventDTO,
   WebSocketSubscriptionEvent,
 } from 'types';
-import { ProblemRequisites } from './ProblemRequisites';
+import { ProblemRequisites } from '../ProblemRequisites';
 
 interface ProblemNameFieldProps {
   problem: ContestDataResponseDTO['problems'][string],

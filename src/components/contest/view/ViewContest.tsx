@@ -14,25 +14,13 @@ import {
   TabsInlineButton,
   TabsInlineButtonLoader,
   TwoContentLayout,
-  ViewOverview,
-  ViewProblems,
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
-import { EMPTY_ENTITY_MEMBERS, JUDGE_API_V1, JUKI_SERVICE_V2_URL, LS_INITIAL_CONTEST_KEY } from 'config/constants';
+import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
+import { authorizedRequest, isContestChangesWebSocketResponseEventDTO, toUpsertContestDTOUI } from 'helpers';
 import {
-  authorizedRequest,
-  consoleInfo,
-  contentResponse,
-  isContestChangesWebSocketResponseEventDTO,
-  toUpsertContestDTOUI,
-} from 'helpers';
-import {
-  useCallback,
   useEffect,
-  useFetcher,
   useI18nStore,
-  useMemo,
-  useMutate,
   usePageStore,
   useRouterStore,
   useSubscribe,
@@ -42,11 +30,6 @@ import {
 } from 'hooks';
 import { type CSSProperties, type ReactNode } from 'react';
 import {
-  ContentResponseType,
-  ContestClarificationsResponseDTO,
-  ContestDataResponseDTO,
-  ContestEventsResponseDTO,
-  ContestMembersResponseDTO,
   ContestTab,
   LastPathKey,
   ProfileSetting,
@@ -56,73 +39,22 @@ import {
   UpsertContestDTOUI,
   WebSocketSubscriptionEvent,
 } from 'types';
+import { ViewClarifications } from './clarifications/ViewClarifications';
+import { useContest } from './ContestDataProvider';
 import { ContestTimeProgress } from './ContestTimeProgress';
 import { ContestTimeTimer } from './ContestTimeTimer';
-import { ContestDataUI } from './types';
-import { ViewClarifications } from './ViewClarifications';
-import { ViewEvents } from './ViewEvents';
-import { ViewProblemContest } from './ViewProblemContest';
-import { ViewScoreboard } from './ViewScoreboard';
-import { ViewSubmissions } from './ViewSubmissions';
+import { ViewEvents } from './events/ViewEvents';
+import { ViewOverview } from './overview/ViewOverview';
+import { ViewProblemContest } from './problem/ViewProblemContest';
+import { ViewProblems } from './problems/ViewProblems';
+import { ViewScoreboard } from './scoreboard/ViewScoreboard';
+import { ViewSubmissions } from './submissions/ViewSubmissions';
 
-export function ContestViewLayout({ contest: fallbackData }: { contest: ContestDataResponseDTO }) {
+export function ContestViewLayout() {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   
-  const companyKey = useUserStore(state => state.company.key);
-  
-  const {
-    data: dataContest,
-    isLoading: isLoadingContest,
-    isValidating: isValidatingContest,
-  } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(
-    jukiApiManager.API_V2.contest.getData({ params: { key: fallbackData.key as string, companyKey } }).url,
-    { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
-  const contestReponse = dataContest?.success ? dataContest.content : fallbackData;
-  
-  const reloadRoute = useRouterStore(store => store.reloadRoute);
-  useEffect(() => {
-    if (!dataContest?.success) {
-      reloadRoute();
-    }
-  }, [ dataContest?.success, reloadRoute ]);
-  const {
-    data: dataEvents,
-    isLoading: isLoadingEvents,
-    isValidating: isValidatingEvents,
-  } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
-    jukiApiManager.API_V2.contest.getDataEvents({ params: { key: fallbackData.key, companyKey } }).url,
-  );
-  const {
-    data: dataMembers,
-    isLoading: isLoadingMembers,
-    isValidating: isValidatingMembers,
-  } = useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
-    jukiApiManager.API_V2.contest.getDataMembers({ params: { key: fallbackData.key, companyKey } }).url,
-  );
-  const {
-    data: dataClarifications,
-    isLoading: isLoadingClarifications,
-    isValidating: isValidatingClarifications,
-  } = useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
-    jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: fallbackData.key, companyKey } }).url,
-  );
-  
-  const contest: ContestDataUI = useMemo(() => {
-    return {
-      ...contestReponse,
-      events: dataEvents?.success ? dataEvents.content.events : [],
-      members: dataMembers?.success ? dataMembers.content.members : {
-        ...EMPTY_ENTITY_MEMBERS(),
-        administrators: {},
-        managers: {},
-        guests: {},
-        spectators: {},
-        participants: {},
-      },
-      clarifications: dataClarifications?.success ? dataClarifications.content.clarifications : [],
-    };
-  }, [ contestReponse, dataEvents, dataMembers, dataClarifications ]);
+  const { contest, isValidatingAny, isLoadingAny, reloadContest, isSuccess } = useContest();
   
   const pushRoute = useRouterStore(state => state.pushRoute);
   const searchParams = useRouterStore(state => state.searchParams);
@@ -130,17 +62,10 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
   const { isSmallScreen, isMediumScreen, isHugeScreen, isLargeScreen } = usePageStore(store => store.viewPort);
-  const { Link } = useUIStore(store => store.components);
+  const Link = useUIStore(store => store.components.Link);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
-  const mutate = useMutate();
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
-  
-  const reloadContest = useCallback(async () => {
-    consoleInfo('reloading all contest');
-    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`, 'g'));
-    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
-  }, [ mutate ]);
   
   const event: Omit<SubscribeContestChangesWebSocketEventDTO, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
@@ -265,7 +190,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
     };
   }
   
-  const extraNodes = [];
+  const extraNodes: ReactNode[] = [];
   
   if (isHugeScreen) {
     extraNodes.push(<ContestTimeTimer key="contest-timer" contest={contest} reloadContest={reloadContest} />);
@@ -311,7 +236,7 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
   
   if (isAdministrator) {
     extraNodes.push(
-      <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contestKey })} className="jk-row">
+      <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contest.key })} className="jk-row">
         <TabsInlineButton icon={<EditIcon />} label="edit" />
       </Link>,
     );
@@ -339,15 +264,16 @@ export function ContestViewLayout({ contest: fallbackData }: { contest: ContestD
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
+      // tabs={{}}
       tabButtons={extraNodes}
       selectedTabKey={contestTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}
       tabsInlineClassName={isSmallScreen ? 'tx-s' : ''}
     >
-      {(isLoadingContest || isValidatingContest || isLoadingEvents || isValidatingEvents || isLoadingMembers || isValidatingMembers || isLoadingClarifications || isValidatingClarifications) && (
+      {(isLoadingAny || isValidatingAny) && (
         <LineLoader style={{ '--line-loader-color': 'var(--cr-io-lt)' } as CSSProperties} delay={1} />
       )}
-      {!dataContest?.success && (
+      {!isSuccess && (
         <LineLoader style={{ '--line-loader-color': 'var(--cr-er)' } as CSSProperties} delay={1} />
       )}
       {isSmallScreen && (

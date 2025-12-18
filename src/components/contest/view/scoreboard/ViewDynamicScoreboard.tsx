@@ -4,13 +4,7 @@ import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, T
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest, getUserKey } from 'helpers';
 import { useDataViewerRequester, useFetcher, useI18nStore, useJukiNotification, usePageStore, useUIStore } from 'hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  getNicknameColumn,
-  getPointsColumn,
-  getPositionColumn,
-  getProblemScoreboardColumn,
-} from 'src/components/contest/view/columns';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -21,8 +15,9 @@ import {
   ScoreboardResponseDTO,
   Status,
 } from 'types';
+import { ScoreboardResponseDTOFocus } from '../types';
+import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
-import { ScoreboardResponseDTOFocus } from './types';
 
 interface ViewDynamicScoreboardProps {
   contest: ContestDataResponseDTO,
@@ -67,16 +62,11 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     data: response,
     request,
     setLoaderStatusRef,
-    reload,
-    reloadRef,
   } = useDataViewerRequester<ContentResponseType<{ content: ScoreboardResponseDTO[], timestamp: number }[]>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key),
   );
-  useEffect(() => {
-    reload();
-  }, [ reload ]);
+  const [ trigger, setTrigger ] = useState(0);
   const [ index, setIndex ] = useState(0);
-  
   const [ data, setData ] = useState<ScoreboardResponseDTOFocus[]>([]);
   const [ timestamp, setTimestamp ] = useState(0);
   const { notifyResponse } = useJukiNotification();
@@ -151,78 +141,79 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   }, [ index, response, scoreboardResponseFinal ]);
   const max = (response?.success ? response.content : []).length - 1;
   
-  const handleFullscreen = useCallback(() => setFullscreen(prevState => !prevState), []);
-  
   const currentTimestamp = timestamp - contest.settings.startTimestamp;
   
-  const score = useMemo(() => (
+  const extraNodes = useMemo(() => [
+    <Button key="exit" onClick={onClose} size="tiny" type="secondary">
+      <T className="tt-se">exit</T>
+    </Button>,
+    <div
+      data-tooltip-id="jk-tooltip"
+      data-tooltip-content={fullscreen ? 'exit full screen' : 'go to fullscreen'}
+      data-tooltip-t-class-name="ws-np"
+      className="jk-row"
+      key="fullscreen"
+    >
+      {fullscreen
+        ?
+        <FullscreenExitIcon className="clickable jk-br-ie" onClick={() => setFullscreen(prevState => !prevState)} />
+        : <FullscreenIcon className="clickable jk-br-ie" onClick={() => setFullscreen(prevState => !prevState)} />}
+    </div>,
+    <div className="jk-row gap" key="buttons">
+      <Button size="tiny" type="light" onClick={() => setIndex(0)}>
+        <T className="tt-se">start</T>
+      </Button>
+      <Button size="tiny" onClick={() => setIndex(prevState => Math.max(prevState - 1, 0))}>
+        <T className="tt-se">back</T>
+      </Button>
+      <Button size="tiny" onClick={() => setIndex(prevState => Math.min(prevState + 1, max))}>
+        <T className="tt-se">next</T>
+      </Button>
+      <Button size="tiny" type="light" onClick={() => setIndex(max)}>
+        <T className="tt-se">end</T>
+      </Button>
+    </div>,
+    <div key="date" className="tx-s">
+      <TimerDisplay
+        counter={currentTimestamp}
+        type="hours-minutes"
+        literal
+      />
+    </div>,
+    <ButtonLoader
+      key="recalculate"
+      type="secondary"
+      size="tiny"
+      onClick={async (setLoaderStatus) => {
+        setLoaderStatus(Status.LOADING);
+        const response = cleanRequest<ContentResponseType<string>>(
+          await authorizedRequest(JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD_HISTORY(contest?.key), { method: HTTPMethod.POST }),
+        );
+        if (notifyResponse(response, setLoaderStatus)) {
+          setTrigger(Date.now());
+        }
+      }}
+    >
+      <T className="tt-se">recalculate</T>
+    </ButtonLoader>,
+  ], [ contest?.key, currentTimestamp, fullscreen, max, notifyResponse, onClose ]);
+  
+  const score = (
     <DataViewer<ScoreboardResponseDTOFocus>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
-      extraNodes={[
-        <Button key="exit" onClick={onClose} size="tiny" type="secondary">
-          <T className="tt-se">exit</T>
-        </Button>,
-        <div
-          data-tooltip-id="jk-tooltip"
-          data-tooltip-content={fullscreen ? 'exit full screen' : 'go to fullscreen'}
-          data-tooltip-t-class-name="ws-np"
-          className="jk-row"
-          key="fullscreen"
-        >
-          {fullscreen
-            ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
-            : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
-        </div>,
-        <div className="jk-row gap" key="buttons">
-          <Button size="tiny" type="light" onClick={() => setIndex(0)}>
-            <T className="tt-se">start</T>
-          </Button>
-          <Button size="tiny" onClick={() => setIndex(prevState => Math.max(prevState - 1, 0))}>
-            <T className="tt-se">back</T>
-          </Button>
-          <Button size="tiny" onClick={() => setIndex(prevState => Math.min(prevState + 1, max))}>
-            <T className="tt-se">next</T>
-          </Button>
-          <Button size="tiny" type="light" onClick={() => setIndex(max)}>
-            <T className="tt-se">end</T>
-          </Button>
-        </div>,
-        <div key="date" className="tx-s">
-          <TimerDisplay
-            counter={currentTimestamp}
-            type="hours-minutes"
-            literal
-          />
-        </div>,
-        <ButtonLoader
-          key="recalculate"
-          type="secondary"
-          size="tiny"
-          onClick={async (setLoaderStatus) => {
-            setLoaderStatus(Status.LOADING);
-            const response = cleanRequest<ContentResponseType<string>>(
-              await authorizedRequest(JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD_HISTORY(contest?.key), { method: HTTPMethod.POST }),
-            );
-            if (notifyResponse(response, setLoaderStatus)) {
-              reload();
-            }
-          }}
-        >
-          <T className="tt-se">recalculate</T>
-        </ButtonLoader>,
-      ]}
+      extraNodes={extraNodes}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
       className="contest-scoreboard"
-      reloadRef={reloadRef}
       getRecordKey={({ data, index }) => getKeyUser(data?.[index]?.user)}
+      deps={[ trigger ]}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, currentTimestamp, data, fullscreen, handleFullscreen, max, onClose, reloadRef, request, setLoaderStatusRef, reload, contest?.key, notifyResponse ]);
+  );
   
   if (fullscreen) {
     return (

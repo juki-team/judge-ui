@@ -1,8 +1,8 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
 import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, Select, T } from 'components';
 import { jukiApiManager } from 'config';
+import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import {
   authorizedRequest,
   classNames,
@@ -11,9 +11,8 @@ import {
   downloadSheetDataAsXlsxFile,
   getUserKey,
 } from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiNotification, useUIStore } from 'hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'src/constants';
+import { useDataViewerRequester, useI18nStore, useJukiNotification, usePageStore, useUIStore } from 'hooks';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -129,7 +128,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       });
     }
     return base;
-  }, [ viewPortScreen, contest.isEndless, contest.isGlobal, contest?.problems, Link, contestKey, t ]);
+  }, [ viewPortScreen, contest, Link, contestKey, t ]);
   
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
@@ -137,94 +136,98 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
     request,
     isLoading,
     setLoaderStatusRef,
-    reload,
-    reloadRef,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen));
-  useEffect(() => {
-    reload();
-  }, [ reload, unfrozen ]);
+  const [ trigger, setTrigger ] = useState(0);
+  
   const data: ScoreboardResponseDTO[] = useMemo(() => (response?.success ? response.contents : []), [ response ]);
   
   const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
   
-  const score = useMemo(() => (
+  const extraNodes = useMemo(() => [
+    ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
+      <Button
+        size="tiny"
+        type="light"
+        disabled={isLoading}
+        onClick={() => setUnfrozen(!unfrozen)}
+        key="unfrozen"
+      >
+        <T className="tt-se">{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
+      </Button>
+    ),
+    (contest?.user?.isAdministrator || contest?.user?.isManager) && (
+      <ButtonLoader
+        size="tiny"
+        type="light"
+        disabled={isLoading}
+        onClick={async (setLoaderStatus) => {
+          setLoaderStatus(Status.LOADING);
+          const {
+            url,
+            ...options
+          } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key } });
+          const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
+          if (notifyResponse(response, setLoaderStatus)) {
+            setTrigger(Date.now());
+          }
+        }}
+        key="recalculate"
+      >
+        <T className="tt-se">recalculate</T>
+      </ButtonLoader>
+    ),
+    <DownloadButton key="download" data={data} contest={contest} disabled={isLoading} />,
+    ((contest.user.isAdministrator || contest.user.isManager || !contest.settings.locked) && !contest.isEndless && !contest.isFuture && (
+      <Button
+        key="dynamic"
+        onClick={() => setDynamic(true)}
+        size="tiny"
+        type="light"
+      >
+        <T className="tt-se">dynamic</T>
+      </Button>
+    )),
+    <div
+      data-tooltip-id="jk-tooltip"
+      data-tooltip-content={fullscreen ? 'exit full screen' : 'go to fullscreen'}
+      data-tooltip-t-class-name="ws-np"
+      className="jk-row"
+      key="fullscreen"
+    >
+      {fullscreen
+        ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
+        : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
+    </div>,
+  ], [ contest, data, fullscreen, handleFullscreen, isLoading, notifyResponse, unfrozen ]);
+  
+  const groups = useMemo(
+    () => Object
+      .values(contest.groups)
+      .map(({ value, label }) => ({ value, label: <div className="jk-row fw-bd">{label}</div> })),
+    [ contest.groups ],
+  );
+  
+  const score = (
     <DataViewer<ScoreboardResponseDTO>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
       request={request}
       name={QueryParam.SCOREBOARD_TABLE}
-      extraNodes={[
-        ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
-          <Button
-            size="tiny"
-            type="light"
-            disabled={isLoading}
-            onClick={() => setUnfrozen(!unfrozen)}
-            key="unfrozen"
-          >
-            <T className="tt-se">{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
-          </Button>
-        ),
-        (contest?.user?.isAdministrator || contest?.user?.isManager) && (
-          <ButtonLoader
-            size="tiny"
-            type="light"
-            disabled={isLoading}
-            onClick={async (setLoaderStatus) => {
-              setLoaderStatus(Status.LOADING);
-              const {
-                url,
-                ...options
-              } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key } });
-              const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
-              if (notifyResponse(response, setLoaderStatus)) {
-                reload();
-              }
-            }}
-            key="recalculate"
-          >
-            <T className="tt-se">recalculate</T>
-          </ButtonLoader>
-        ),
-        <DownloadButton key="download" data={data} contest={contest} disabled={isLoading} />,
-        ((contest.user.isAdministrator || contest.user.isManager || !contest.settings.locked) && !contest.isEndless && !contest.isFuture && (
-          <Button
-            key="dynamic"
-            onClick={() => setDynamic(true)}
-            size="tiny"
-            type="light"
-          >
-            <T className="tt-se">dynamic</T>
-          </Button>
-        )),
-        <div
-          data-tooltip-id="jk-tooltip"
-          data-tooltip-content={fullscreen ? 'exit full screen' : 'go to fullscreen'}
-          data-tooltip-t-class-name="ws-np"
-          className="jk-row"
-          key="fullscreen"
-        >
-          {fullscreen
-            ? <FullscreenExitIcon className="clickable jk-br-ie" onClick={handleFullscreen} />
-            : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
-        </div>,
-      ]}
+      extraNodes={extraNodes}
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
       className={classNames('contest-scoreboard', {
         'is-frozen': !unfrozen && contest.isFrozenTime && !contest.isQuietTime,
         'is-quiet': !unfrozen && contest.isQuietTime,
       })}
-      groups={Object.values(contest.groups).map(({ value, label }) => ({
-        value,
-        label: <div className="jk-row fw-bd">{label}</div>,
-      }))}
-      reloadRef={reloadRef}
+      groups={groups}
       getRecordKey={({ data, index }) => getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key)}
+      deps={[ unfrozen, trigger ]}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
-  ), [ columns, contest, data, fullscreen, handleFullscreen, isLoading, notifyResponse, reload, reloadRef, request, setLoaderStatusRef, unfrozen ]);
+  );
+  
   const onClose = useCallback(() => setDynamic(false), []);
   
   if (fullscreen) {

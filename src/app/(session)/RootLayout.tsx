@@ -93,6 +93,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <InstallPWAModal key="install-pwa-modal" />
         {/*<NotificationWarningModal />*/}
+        {/*<ScreenshotFrames />*/}
       </JukiProviders>
     </SWRConfig>
   );

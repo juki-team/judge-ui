@@ -1630,10 +1630,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.3.2":
-  version "1.3.2"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.3.2/2592c64e9dce8cfed49421aa67927d971ad36e70#2592c64e9dce8cfed49421aa67927d971ad36e70"
-  integrity sha512-IdhKyKyjUAAWTjVCrwHAlncqa1H4CVpuHx+rBK4AxcQyhBSmZhlX/7GpIMxR4gs5CCPjYjYnuLSnMJQpeOeazA==
+"@juki-team/base-ui@^1.3.8":
+  version "1.3.8"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.3.8/2111e37c1df4c6f5c0029f7f66c0508194c43ecc#2111e37c1df4c6f5c0029f7f66c0508194c43ecc"
+  integrity sha512-RDVue6wxyZL8HlcKeHknWwZzPB46cPQfVK+NqNm/fg6L8nRoM9w2lC+KscBA55Xy7ZNkjZZYylhZRTeckAdvwA==
   dependencies:
     "@codemirror/autocomplete" "^6.20.0"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1694,6 +1694,11 @@
   version "0.0.1011"
   resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.1011/2a721959469ef5b2b6d4d7a7b1744f711db77428#2a721959469ef5b2b6d4d7a7b1744f711db77428"
   integrity sha512-9dzgbSMfFnEPTFbPKb6OFXp3dYNQLPsveWKHFuRE83AXkVGmb+m2czYlyb3Zj1xGEwdRa7hIWVREHAQ9IMRK8w==
+
+"@juki-team/commons@^0.0.1013":
+  version "0.0.1013"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.1013/c2ed01709443753278d716bbb96c9de6f69f46c1#c2ed01709443753278d716bbb96c9de6f69f46c1"
+  integrity sha512-YsmpZD2q9K6kueUTYoGKoXnCAKXqRhr2a02ILi9Mt6FlfrFmcECJC6JHeyU3di3N3kmg/ByNfa2p7pvaaD4qUQ==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.0.3", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1", "@lezer/common@^1.3.0":
   version "1.3.0"

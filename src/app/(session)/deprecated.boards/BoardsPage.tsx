@@ -33,7 +33,7 @@ import {
   getPointsColumn,
   getPositionColumn,
   getProblemScoreboardColumn,
-} from '../../../components/contest/view/columns';
+} from '../../../components/contest/view/scoreboard/columns';
 
 const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => {
   

@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { JukiIcon } from './JukiIcon';
+import { JukiChristmasIcon } from './JukiChristmasIcon';
 
 export const size = {
   width: 32,
@@ -9,5 +9,5 @@ export const size = {
 export const contentType = 'image/png';
 
 export default function Icon() {
-  return new ImageResponse(<JukiIcon />, { ...size });
+  return new ImageResponse(<JukiChristmasIcon />, { ...size });
 }

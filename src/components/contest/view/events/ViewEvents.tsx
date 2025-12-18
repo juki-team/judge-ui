@@ -3,7 +3,7 @@
 import { Button, CodeViewer, DateLiteral, Modal, T, UserChip } from 'components';
 import { useState } from 'hooks';
 import { CodeLanguage } from 'types';
-import { ContestDataUI } from './types';
+import { ContestDataUI } from '../types';
 
 export const ViewEvents = ({ contest }: { contest: ContestDataUI }) => {
   

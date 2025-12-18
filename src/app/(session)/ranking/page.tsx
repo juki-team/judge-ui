@@ -1,10 +1,9 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
 import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { oneTab } from 'helpers';
-import { useDataViewerRequester, useMemo, useUIStore } from 'hooks';
+import { useDataViewerRequester, useMemo, usePageStore, useUIStore } from 'hooks';
 import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
 
 function Ranking() {
@@ -91,7 +90,8 @@ function Ranking() {
       index: 'country-city',
       Field: ({ record: { country, city } }) => (
         <Field className="jk-row center">
-          {city}{city ? <>,&nbsp;</> : ''}<span className="fw-bd">{country}</span>
+          {city}{city ? <>,&nbsp;</> : ''}
+          <span className="fw-bd">{country}</span>
         </Field>
       ),
       filter: { type: 'text-auto', getValue: ({ record: { country, city } }) => country + city },

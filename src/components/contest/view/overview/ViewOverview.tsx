@@ -1,6 +1,5 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
 import {
   AdminInformation,
   ButtonLoader,
@@ -14,9 +13,9 @@ import {
   T,
 } from 'components';
 import { jukiApiManager } from 'config';
+import { CODE_LANGUAGE, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
-import { useDateFormat, useI18nStore, useJukiNotification, useRouterStore, useUserStore } from 'hooks';
-import { CODE_LANGUAGE, JUDGE_API_V1 } from 'src/constants';
+import { useDateFormat, useI18nStore, useJukiNotification, usePageStore, useRouterStore, useUserStore } from 'hooks';
 import {
   ContentResponseType,
   ContestDataResponseDTO,
@@ -224,9 +223,9 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                     setLoaderStatus(Status.SUCCESS);
                     return addWarningNotification(
                       <div className="jk-col stretch" style={{ width: '100%' }}>
-                    <span className="tt-se">
-                      <T>{response.message}</T>
-                    </span>
+                        <span className="tt-se">
+                          <T>{response.message}</T>
+                        </span>
                       </div>,
                     );
                   }

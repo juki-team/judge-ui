@@ -1,8 +1,6 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
-import domToImage from 'dom-to-image-more';
-import { isClientTrackWebSocketResponseEventDTO } from 'helpers';
+import { consoleInfo, isClientTrackWebSocketResponseEventDTO } from 'helpers';
 import { useSubscribe, useUserStore, useWebsocketStore } from 'hooks';
 import {
   ClientTrackScreenshotWebSocketEventDTO,
@@ -12,22 +10,27 @@ import {
 } from 'types';
 
 const toPng = async () => {
+  if (typeof window === 'undefined') {
+    return;
+  }
   const cmThemeNode = document.querySelector('#juki-app');
   if (!cmThemeNode) {
     return;
   }
   try {
-    const targetWidth = 320;
-    const scale = targetWidth / cmThemeNode.clientWidth;
-    const targetHeight = cmThemeNode.clientHeight * scale;
+    const { default: domToImage } = await import('dom-to-image-more');
+    
+    // const targetWidth = 1024;
+    // const scale = targetWidth / cmThemeNode.clientWidth;
+    // const targetHeight = cmThemeNode.clientHeight * scale;
     return await domToImage.toJpeg(cmThemeNode, {
-      quality: 0.3,
-      width: targetWidth,
-      height: targetHeight,
-      style: {
-        transform: `scale(${scale})`,
-        transformOrigin: 'top left',
-      },
+      quality: 0.2,
+      // width: targetWidth,
+      // height: targetHeight,
+      // style: {
+      //   transform: `scale(${scale})`,
+      //   transformOrigin: 'top left',
+      // },
     });
   } catch (error) {
     console.error('Error al capturar imagen:', error);
@@ -39,16 +42,14 @@ export const ScreenshotFrames = () => {
   const clientId = useUserStore(store => store.clientId);
   const channelPublishMessages = useWebsocketStore(store => store.channelPublishMessages);
   
-  const storePageStore = usePageStore();
-  console.log({ storePageStore }, storePageStore.isFocus, storePageStore.isVisible, storePageStore.isOnline);
   const event: Omit<SubscribeClientTrackWebSocketEventDTO, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_CLIENT_TRACK,
   };
+  
   useSubscribe(event, async (data) => {
-    console.log('>>>> data', { data });
     if (isClientTrackWebSocketResponseEventDTO(data)) {
-      console.log('if', { data });
       if (data.screenshot) {
+        consoleInfo('screenshot start!');
         const screenshot = await toPng();
         const event: ClientTrackScreenshotWebSocketEventDTO = {
           clientId,

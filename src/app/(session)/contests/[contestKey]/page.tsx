@@ -4,6 +4,7 @@ import { DEFAULT_METADATA } from 'config/constants';
 import { get, oneTab } from 'helpers';
 import type { Metadata } from 'next';
 import { ContentResponseType, ContestDataResponseDTO, MetadataResponseDTO } from 'types';
+import { ContestDataProvider } from '../../../../components/contest/view/ContestDataProvider';
 
 type Props = {
   params: Promise<{ contestKey: string }>
@@ -51,7 +52,9 @@ export default async function Page({ params }: Props) {
   
   if (contestResponse.success) {
     return (
-      <ContestViewLayout contest={contestResponse.content} />
+      <ContestDataProvider fallbackData={contestResponse.content}>
+        <ContestViewLayout />
+      </ContestDataProvider>
     );
   }
   

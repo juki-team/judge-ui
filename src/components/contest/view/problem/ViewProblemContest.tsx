@@ -16,7 +16,7 @@ import {
   EntityState,
   Status,
 } from 'types';
-import { ProblemRequisites } from './ProblemRequisites';
+import { ProblemRequisites } from '../ProblemRequisites';
 
 interface ViewProblemContestProps {
   problem: ContestProblemDataResponseDTO,

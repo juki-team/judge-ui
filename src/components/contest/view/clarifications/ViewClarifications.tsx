@@ -16,11 +16,11 @@ import {
   T,
   UserNicknameLink,
 } from 'components';
+import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, classNames, cleanRequest } from 'helpers';
 import { useDateFormat, useFetcher, useJukiNotification, useState, useUIStore } from 'hooks';
-import { JUDGE_API_V1 } from 'src/constants';
 import { ContentResponseType, HTTPMethod, Status } from 'types';
-import { ContestDataUI } from './types';
+import { ContestDataUI } from '../types';
 
 export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
   
@@ -203,7 +203,8 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                       label: <>
                         <span
                           className="fw-bd"
-                        >{problem.index}</span> - {problem.name} ({problem.judge.key} {problem.key})
+                        >{problem.index}</span>
+                        - {problem.name} ({problem.judge.key} {problem.key})
                       </>,
                     }))),
                 ]}

@@ -1,10 +1,9 @@
 'use client';
 
-import { usePageStore } from '@juki-team/base-ui';
 import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
-import { useFetcher, useI18nStore, useState } from 'hooks';
+import { useFetcher, useI18nStore, usePageStore, useState } from 'hooks';
 import { i18n } from 'i18next';
 import type { ContentType } from 'recharts/types/component/Tooltip';
 import { ContentResponseType, DateLiteralProps, ProblemDataResponseDTO, StatisticsProblemResponseDTO } from 'types';

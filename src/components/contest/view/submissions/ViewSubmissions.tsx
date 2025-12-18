@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  ButtonLoader,
   getSubmissionContestProblemHeader,
   getSubmissionDateHeader,
   getSubmissionLanguageHeader,
@@ -38,8 +39,7 @@ import {
   SubscribeSubmissionsCrawlWebSocketEventDTO,
   WebSocketSubscriptionEvent,
 } from 'types';
-import { ButtonLoader } from '../../index';
-import { ContestDataUI } from './types';
+import { ContestDataUI } from '../types';
 
 const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
@@ -110,23 +110,24 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
           &nbsp;
           (
           <span className="cr-ss" data-tooltip-id="jk-tooltip" data-tooltip-content="new retrieved submissions">
-                {newSubmissions}
-              </span>
+            {newSubmissions}
+          </span>
           ,
           &nbsp;
           <span data-tooltip-id="jk-tooltip" data-tooltip-content="old retrieved submissions">
-                {oldSubmissions}
-              </span>
+            {oldSubmissions}
+          </span>
           &nbsp;/&nbsp;
           <span data-tooltip-id="jk-tooltip" data-tooltip-content="total retrieved submissions">
-                {submissionsCount}
-              </span>
+            {submissionsCount}
+          </span>
           )
         </>
       )}
     </ButtonLoader>
   );
 };
+
 export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
@@ -228,6 +229,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
   }, [ contest.key, contest.name, contest.user.isAdministrator, contest.user.isManager ]);
   
   const hasNotSubmitSupported = Object.values(contest.problems).some(problem => !problem.judge.isSubmitSupported);
+  
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
       extraNodes={hasNotSubmitSupported ? [ <RetrieveButton key="retrieve-button" contest={contest} /> ] : []}
@@ -245,7 +247,6 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
         }).url;
       }}
       name={QueryParam.STATUS_TABLE}
-      toRow={submission => submission}
       getRowKey={({ data, index }) => data[index].submitId}
       downloads={downloads}
     />
