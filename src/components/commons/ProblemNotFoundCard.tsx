@@ -1,5 +1,7 @@
-import { LinkLastPath, NotFoundCard, T } from 'components';
+'use client';
+
 import { LastPathKey } from 'types';
+import { LinkLastPath, NotFoundCard, T } from '../index';
 
 export const ProblemNotFoundCard = () => (
   <NotFoundCard

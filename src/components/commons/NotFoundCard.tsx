@@ -1,3 +1,5 @@
+'use client';
+
 import { T } from 'components';
 import Image from 'next/image';
 import { PropsWithChildren } from 'react';
@@ -10,7 +12,7 @@ interface NotFoundCardProps {
 
 export const NotFoundCard = ({ title, description, children }: PropsWithChildren<NotFoundCardProps>) => (
   <div className="jk-row ht-100">
-    <div className="jk-col jk-br-ie gap bc-we jk-pg elevation-1">
+    <div className="jk-col jk-br-ie gap bc-we jk-pg">
       <h3 className="tt-se"><T>{title}</T></h3>
       <Image
         alt="Juki surprised image"

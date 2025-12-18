@@ -1,3 +1,5 @@
+'use client';
+
 import { LinkLastPath, NotFoundCard, T } from 'components';
 import { LastPathKey } from 'types';
 
