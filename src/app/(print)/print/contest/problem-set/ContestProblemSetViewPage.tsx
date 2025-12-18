@@ -8,12 +8,7 @@ export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataRes
   
   return (
     <>
-      <ViewOverview
-        contest={contest}
-        reloadContest={async () => {
-        }}
-        forPrinting
-      />
+      <ViewOverview contest={contest} forPrinting />
       <div className="page-break" />
       {Object.values(contest.problems).map(problem => (
         <Fragment key={problem.key}>
