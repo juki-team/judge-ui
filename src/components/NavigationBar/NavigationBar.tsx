@@ -101,10 +101,9 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
   
   return (
     <MainMenu
-      onSeeMyProfile={(nickname, companyKey) => pushRoute(jukiAppRoutes.JUDGE().profiles.view({
-        nickname: nickname,
-        companyKey,
-      }))}
+      onSeeMyProfile={(nickname, companyKey) => (
+        pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname: nickname, companyKey }))
+      )}
       menu={menu}
       profileSelected={pathname.includes('/profiles/')}
       onBack={pathname !== backPah ? () => {

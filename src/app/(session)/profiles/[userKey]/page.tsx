@@ -12,7 +12,7 @@ export default async function Page({ params }: Props) {
   
   const { userKey } = await params;
   const { userNickname, userCompanyKey } = getParamsOfUserKey(decodeURIComponent(userKey));
-  console.log({ userKey, userNickname, userCompanyKey });
+  
   const profileResponse = await get<ContentResponseType<UserProfileResponseDTO>>(jukiApiManager.API_V2.user.getProfile({
     params: {
       nickname: userNickname,
@@ -20,12 +20,6 @@ export default async function Page({ params }: Props) {
     },
   }).url);
   
-  console.log(profileResponse, jukiApiManager.API_V2.user.getProfile({
-    params: {
-      nickname: userNickname,
-      companyKey: userCompanyKey,
-    },
-  }));
   if (profileResponse.success) {
     return (
       <ProfileViewPage profile={profileResponse.content} />
