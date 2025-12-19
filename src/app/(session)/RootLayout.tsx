@@ -61,9 +61,12 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
   const app = (
     <SWRConfig
       value={{
-        revalidateIfStale: true, // when back to pages
-        revalidateOnFocus: false,
+        revalidateOnFocus: true,
         revalidateOnReconnect: true,
+        revalidateIfStale: true,
+        focusThrottleInterval: 10_000,
+        dedupingInterval: 2_000,
+        // revalidateOnMount: true
       }}
     >
       <JukiProviders
