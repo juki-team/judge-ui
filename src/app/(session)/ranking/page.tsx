@@ -29,10 +29,10 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="tt-se">nickname</T>} className="left" />,
       index: 'nickname',
-      Field: ({ record: { nickname, imageUrl }, isCard, recordIndex }) => (
+      Field: ({ record: { nickname, imageUrl, company }, isCard, recordIndex }) => (
         <Field className="jk-row link fw-bd gap">
           {isCard && <div className="fw-br jk-pg-sm">{recordIndex + 1}</div>}
-          <UserNicknameLink nickname={nickname}>
+          <UserNicknameLink nickname={nickname} companyKey={company.key}>
             <div className="jk-row flex-1 gap left">
               <Image
                 src={imageUrl}

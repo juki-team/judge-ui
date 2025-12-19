@@ -82,16 +82,16 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
         }}
         initialLastPath={initialLastPath}
         multiCompanies={false}
-        onSeeMyProfile={(nickname) => push(jukiAppRoutes.JUDGE().profiles.view({ nickname }))}
+        onSeeMyProfile={(nickname, companyKey) => push(jukiAppRoutes.JUDGE().profiles.view({ nickname, companyKey }))}
       >
         <NavigationBar>
           {Children.toArray(children)}
           <SponsoredByTag />
           <ToolButtons />
         </NavigationBar>
-        <Analytics key="analytics" />
+        <Analytics />
         <NewVersionAvailable apiVersionUrl="/api/version" />
-        <InstallPWAModal key="install-pwa-modal" />
+        <InstallPWAModal />
         {/*<NotificationWarningModal />*/}
         {/*<ScreenshotFrames />*/}
       </JukiProviders>

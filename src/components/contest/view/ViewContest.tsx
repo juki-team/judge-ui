@@ -30,6 +30,7 @@ import {
 } from 'hooks';
 import { type CSSProperties, type ReactNode } from 'react';
 import {
+  ContestsTab,
   ContestTab,
   LastPathKey,
   ProfileSetting,
@@ -244,7 +245,7 @@ export function ContestViewLayout() {
   
   const breadcrumbs: ReactNode[] = [
     <Link
-      href={jukiAppRoutes.JUDGE().contests.list()}
+      href={jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.CLASSICS })}
       className="link"
       key="contests"
     >

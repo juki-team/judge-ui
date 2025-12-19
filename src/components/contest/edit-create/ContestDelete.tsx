@@ -5,7 +5,7 @@ import { jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useRouterStore } from 'hooks';
 import { JUDGE_API_V1 } from 'src/constants';
-import { ContentResponseType, HTTPMethod, Status, UserCompanyBasicInfoResponseDTO } from 'types';
+import { ContentResponseType, ContestsTab, HTTPMethod, Status, UserCompanyBasicInfoResponseDTO } from 'types';
 
 interface ProblemStatementProps {
   documentOwner: UserCompanyBasicInfoResponseDTO,
@@ -42,7 +42,7 @@ export const ContestDelete = ({ contestKey, deleted }: ProblemStatementProps) =>
               method: HTTPMethod.DELETE,
             }));
           if (notifyResponse(response, setLoaderStatus)) {
-            pushRoute({ pathname: jukiAppRoutes.JUDGE().contests.list() });
+            pushRoute({ pathname: jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.CLASSICS }) });
           }
         }}
         className="bc-er"

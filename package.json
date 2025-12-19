@@ -15,7 +15,7 @@
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.0",
     "@juki-team/base-ui": "^1.3.14",
-    "@juki-team/commons": "^0.0.1015",
+    "@juki-team/commons": "^0.0.1016",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.6.1",
     "motion": "^12.23.26",
@@ -25,7 +25,6 @@
     "swr": "^2.3.8"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.0.10",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.39.2",

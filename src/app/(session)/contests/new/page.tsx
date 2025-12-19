@@ -5,7 +5,7 @@ import { jukiAppRoutes } from 'config';
 import { isStringJson, toUpsertContestDTO } from 'helpers';
 import { useMemo, useUserStore } from 'hooks';
 import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'src/constants';
-import { UpsertContestDTO, UpsertContestDTOUI } from 'types';
+import { ContestsTab, UpsertContestDTO, UpsertContestDTOUI } from 'types';
 
 export default function ContestsNewPage() {
   
@@ -33,7 +33,7 @@ export default function ContestsNewPage() {
       newEntity={newEntity}
       Cmp={EditCreateContest}
       createApiURL={JUDGE_API_V1.CONTEST.CREATE}
-      listRoute={jukiAppRoutes.JUDGE().contests.list}
+      listRoute={() => jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.CLASSICS })}
       viewRoute={(entityKey) => jukiAppRoutes.JUDGE().contests.view({ key: entityKey })}
       toEntityUpsert={toUpsertContestDTO}
     />

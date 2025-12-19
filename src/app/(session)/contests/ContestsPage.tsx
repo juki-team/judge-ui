@@ -57,7 +57,7 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
     <TwoContentLayout
       tabs={tabs}
       selectedTabKey={tab}
-      getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().contests.list() + `?tab=${tab}`}
+      getHrefOnTabChange={(tab) => jukiAppRoutes.JUDGE().contests.list({ tab })}
     >
       <h1><T className="tt-se">contests</T></h1>
     </TwoContentLayout>
