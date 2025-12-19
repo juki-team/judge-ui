@@ -109,7 +109,7 @@ export type {
   ClientTrackDeviceWebSocketEventDTO,
 } from '@juki-team/commons';
 
-export { QueryParamKey, ProblemTab, ContestTab, ProfileTab } from '@juki-team/base-ui/enums';
+export { QueryParamKey, ProblemTab, ContestTab, ProfileTab, ContestsTab } from '@juki-team/base-ui/enums';
 
 export type {
   IconProps,

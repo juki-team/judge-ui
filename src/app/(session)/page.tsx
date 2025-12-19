@@ -2,13 +2,12 @@
 
 import { MdMathViewer, T } from 'components';
 import { jukiAppRoutes } from 'config';
-import { BOARDS_INFO, CONTESTS_INFO, IDE_INFO, JUKI_APP_COMPANY_KEY, PROBLEMS_INFO } from 'config/constants';
+import { BOARDS_INFO, CONTESTS_INFO, IDE_INFO, PROBLEMS_INFO } from 'config/constants';
 import { usePageStore, useUIStore, useUserStore } from 'hooks';
-import { ProfileSetting } from 'types';
+import { ContestsTab, ProfileSetting } from 'types';
 
 export default function Home() {
   
-  const companyKey = useUserStore(state => state.company.key);
   const companyName = useUserStore(state => state.company.name);
   const preferredLanguage = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
   const { Link, Image } = useUIStore(store => store.components);
@@ -56,7 +55,10 @@ export default function Home() {
             </div>
           </div>
         </Link>
-        <Link href={jukiAppRoutes.JUDGE().contests.list()} className="jk-br-ie hoverable-elevation jk-pg bc-we">
+        <Link
+          href={jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.CLASSICS })}
+          className="jk-br-ie hoverable-elevation jk-pg bc-we"
+        >
           <div className="jk-row-col nowrap gap jk-pg-xsm jk-br-ie">
             <div className="bc-we jk-br-ie jk-pg-xsm">
               <h2><T className="tt-se">participate in contests or create your own</T></h2>
@@ -72,24 +74,25 @@ export default function Home() {
             </div>
           </div>
         </Link>
-        {companyKey === JUKI_APP_COMPANY_KEY && (
-          <Link href={jukiAppRoutes.JUDGE().boards.page()} className="jk-br-ie hoverable-elevation jk-pg bc-we">
-            <div className="jk-row-col nowrap gap jk-pg-xsm jk-br-ie">
-              <div className="jk-row">
-                <Image
-                  height={width * 0.2}
-                  width={width * 0.3}
-                  alt="Juki Boards"
-                  src="https://images.juki.pub/r/bbaa4fae-ebf2-4bbc-a2e5-a2af3044f6f5.png"
-                />
-              </div>
-              <div className="bc-we jk-br-ie jk-pg-xsm">
-                <h2><T className="tt-se">challenge others in open and ongoing competitions</T></h2>
-                <MdMathViewer source={BOARDS_INFO[preferredLanguage]} />
-              </div>
+        <Link
+          href={jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.GLOBALS })}
+          className="jk-br-ie hoverable-elevation jk-pg bc-we"
+        >
+          <div className="jk-row-col nowrap gap jk-pg-xsm jk-br-ie">
+            <div className="jk-row">
+              <Image
+                height={width * 0.2}
+                width={width * 0.3}
+                alt="Juki Boards"
+                src="https://images.juki.pub/r/bbaa4fae-ebf2-4bbc-a2e5-a2af3044f6f5.png"
+              />
             </div>
-          </Link>
-        )}
+            <div className="bc-we jk-br-ie jk-pg-xsm">
+              <h2><T className="tt-se">challenge others in open and ongoing competitions</T></h2>
+              <MdMathViewer source={BOARDS_INFO[preferredLanguage]} />
+            </div>
+          </div>
+        </Link>
         <Link href={jukiAppRoutes.JUDGE().ide.page()} className="jk-br-ie hoverable-elevation jk-pg bc-we">
           <div className="jk-row-col nowrap gap jk-pg-xsm jk-br-ie">
             <div className="bc-we jk-br-ie jk-pg-xsm">

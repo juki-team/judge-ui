@@ -30,9 +30,9 @@ Desde rondas al estilo ICPC hasta concursos educativos, el juez ofrece una exper
 };
 
 export const BOARDS_INFO = {
-  [Language.EN]: `Explore the global, no-deadline contests available in the Boards section.
+  [Language.EN]: `Explore the global, no-deadline contests available in the contests section.
 Here, you can solve problems from past competitions at any time, compete against other users, and climb the rankings.`,
-  [Language.ES]: `Explora los concursos globales sin fecha límite disponibles en la sección de tableros.
+  [Language.ES]: `Explora los concursos globales sin fecha límite disponibles en la sección de concursos.
 Aquí podrás resolver problemas de competencias pasadas en cualquier momento, competir contra otros usuarios y escalar posiciones en el ranking.`,
 };
 

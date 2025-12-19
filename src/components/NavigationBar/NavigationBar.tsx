@@ -2,11 +2,10 @@
 
 import { AssignmentIcon, CodeIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, TrophyIcon } from 'components';
 import { jukiAppRoutes } from 'config';
-import { getUserKey } from 'helpers';
 import { useRouterStore, useUIStore, useUserStore } from 'hooks';
 import { type PropsWithChildren } from 'react';
 import { JUKI_APP_COMPANY_KEY, ROUTES } from 'src/constants';
-import { LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
+import { ContestsTab, LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren) => {
   
@@ -20,7 +19,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
   const isRankingPage = ('/' + pathname).includes('//ranking');
   // const isBoardsPage = ('/' + pathname).includes('//board');
   const isIDEPage = ('/' + pathname).includes('//ide');
-  const backPah = isContestsPage ? jukiAppRoutes.JUDGE().contests.list()
+  const backPah = isContestsPage ? jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.CLASSICS })
     : isProblemsPage
       ? jukiAppRoutes.JUDGE().problems.list()
       : '/';
@@ -102,7 +101,10 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
   
   return (
     <MainMenu
-      onSeeMyProfile={(nickname, companykey) => pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname: getUserKey(nickname, companykey) }))}
+      onSeeMyProfile={(nickname, companyKey) => pushRoute(jukiAppRoutes.JUDGE().profiles.view({
+        nickname: nickname,
+        companyKey,
+      }))}
       menu={menu}
       profileSelected={pathname.includes('/profiles/')}
       onBack={pathname !== backPah ? () => {

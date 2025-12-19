@@ -20,13 +20,3 @@ export enum QueryParam {
   // problems
   JUDGE = 'judge',
 }
-
-export enum ContestsTab {
-  ALL = 'all',
-  ENDLESS = 'endless',
-  GLOBALS = 'globals',
-  CLASSICS = 'classics',
-  LIVE = 'live',
-  UPCOMING = 'upcoming',
-  PAST = 'past',
-}
