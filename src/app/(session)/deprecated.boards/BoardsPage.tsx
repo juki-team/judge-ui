@@ -118,7 +118,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
       data={data}
       rowsView={viewPortScreen !== 'sm'}
       rows={{ height: 68 }}
-      request={request}
+      requestRef={request}
       name={QueryParam.RANKING_TABLE}
       setLoaderStatusRef={setLoaderStatusRef}
       cards={{ height: 240, expanded: true }}
