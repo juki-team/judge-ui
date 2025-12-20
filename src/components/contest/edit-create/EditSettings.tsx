@@ -168,7 +168,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row left extend gap">
                 <div className="jk-row gap">
-                  <div className="fw-bd tt-se tx-xl cr-py"><T>frozen time</T></div>
+                  <div className="fw-bd tt-se tx-xl cr-py"><T>frozen period</T></div>
                   <FrozenInformation />
                 </div>
                 <InputToggle
@@ -250,13 +250,13 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   </div>
                 </>
               ) : frozenAtMinutes === 0
-                ? <T className="tt-se tx-s fw-lt cr-er">frozen time starts at the beginning</T>
-                : <T className="tt-se tx-s fw-lt cr-wg">there is not frozen time</T>}
+                ? <T className="tt-se tx-s fw-lt cr-er">frozen period starts at the beginning</T>
+                : <T className="tt-se tx-s fw-lt cr-wg">there is not frozen period</T>}
             </div>
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row left extend gap">
                 <div className="jk-row gap">
-                  <div className="fw-bd tt-se tx-xl cr-py"><T>quiet time</T></div>
+                  <div className="fw-bd tt-se tx-xl cr-py"><T>quiet period</T></div>
                   <QuietInformation />
                 </div>
                 <InputToggle
@@ -325,8 +325,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                       </div>
                     </div>
                   ) : quietAtMinutes === 0
-                    ? <T className="tt-se tx-s fw-lt cr-er">quiet time starts at the beginning</T>
-                    : <T className="tt-se tx-s fw-lt cr-wg">there is not quiet time</T>}
+                    ? <T className="tt-se tx-s fw-lt cr-er">quiet period starts at the beginning</T>
+                    : <T className="tt-se tx-s fw-lt cr-wg">there is not quiet period</T>}
                   <div className="jk-row left tx-s fw-lt">
                     <T className="tt-se">duration</T>:&nbsp;
                     <div className="jk-col left">
@@ -340,7 +340,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     </div>
                   </div>
                 </>
-              ) : <T className="tt-se tx-s fw-lt cr-wg">there is not quiet time</T>}
+              ) : <T className="tt-se tx-s fw-lt cr-wg">there is not quiet period</T>}
             </div>
             <div className="jk-col left stretch br-hl jk-br-ie jk-pg-xsm">
               <div className="jk-row gap left">
@@ -499,7 +499,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row nowrap gap extend left">
           <div className="jk-row left nowrap">
-            <T className="tt-se fw-bd">tags</T>&nbsp;<span className="fw-bd">:</span>&nbsp;
+            <T className="tt-se fw-bd">tags</T>&nbsp;
+            <span className="fw-bd">:</span>
+            &nbsp;
             <div className="jk-row gap">
               {contest.tags.map(tag => (
                 <div key={tag} className="jk-tag info jk-row">
@@ -534,7 +536,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row nowrap gap extend left">
           <div className="jk-row left nowrap">
-            <T className="tt-se fw-bd">groups</T>&nbsp;<span className="fw-bd">:</span>&nbsp;
+            <T className="tt-se fw-bd">groups</T>&nbsp;
+            <span className="fw-bd">:</span>
+            &nbsp;
             <div className="jk-row gap">
               {Object.values(contest.groups).map(({ value, label, color }) => (
                 <div key={value} className="jk-tag info jk-row" style={{ backgroundColor: color }}>

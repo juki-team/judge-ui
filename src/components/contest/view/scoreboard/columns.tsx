@@ -110,7 +110,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
     
     return (
       <Field
-        className={classNames('jk-row center nowrap', {
+        className={classNames('jk-row center nowrap active-on-hover', {
           'cell-score-highlight': !!problemFocus,
         })}
         style={{ '--color': problemFocus?.success ? 'var(--cr-ss)' : !!problemFocus?.points ? 'var(--t-color-success-light)' : 'var(--t-color-error-light)' } as CSSProperties}
@@ -124,7 +124,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
                   ${problemData?.success ? problemData.points : `${+problemData.points.toFixed(2)} / ${problem.points}`}
                   ${problem?.points === 1 ? t('point') : t('points')}
                 </div>
-                ${problemData.isFirstAccepted ? `<div class="fw-bd cr-ss tx-s"><span class="tt-se">${t('first accepted')}</span></div>` : ''}
+                ${problemData?.isFirstAccepted ? `<div class="fw-bd cr-ss tx-s"><span class="tt-se">${t('first accepted')}</span></div>` : ''}
               </div>
             `}
             style={{
@@ -132,20 +132,39 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
               '--balloon-color': problem.color,
               opacity: !!problem.maxAcceptedUsers && problemData && problemData?.indexAccepted >= problem.maxAcceptedUsers ? 0.2 : undefined,
             } as CSSProperties}
-            className={classNames({ 'is-first-accepted': problemData.isFirstAccepted })}
+            className={classNames('pn-re', { 'is-first-accepted': problemData.isFirstAccepted })}
           >
             <BalloonIcon percent={(problemData.points / problem.points) * 100} />
+            {typeof problemData?.indexAccepted === 'number' && (
+              <div
+                className="tx-t pn-ae fw-lr cr-g3 to-active-on-hover"
+                style={{
+                  right: 2,
+                  bottom: 0,
+                  lineHeight: 1,
+                }}
+              >
+                {problemData?.indexAccepted + 1}
+              </div>
+            )}
           </div>
         )}
         <div
           className={classNames('jk-row nowrap')}
           style={{ opacity: !!problem.maxAcceptedUsers && problemData && problemData?.indexAccepted >= problem.maxAcceptedUsers ? 0.2 : undefined }}
         >
-          <div className="tx-xs">{problemData?.attempts || '-'}</div>
+          <div className="tx-s">{problemData?.attempts || '-'}</div>
           {!isEndless && (
             <>
-              <span className="cr-g3">/</span>
-              <div className="tx-xs">{problemData?.penalty ? Math.round(problemData?.penalty) : '-'}</div>
+              <span className="tx-s">/</span>
+              <div className="tx-s">
+                {problemData?.penalty
+                  ? <>
+                    {Math.floor(problemData.penalty)}
+                    <span className="tx-t cr-g3 to-active-on-hover">.{Math.floor((problemData.penalty - Math.floor(problemData.penalty)) * 1000).padEnd(3, '0')}</span>
+                  </>
+                  : '-'}
+              </div>
             </>
           )}
           {!!problemDiff && (

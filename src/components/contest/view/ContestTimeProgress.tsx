@@ -73,7 +73,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
             label: (
               <div className="jk-col jk-pg-xsm">
                 <div className="jk-row">
-                  <T className="tt-se fw-bd">frozen time</T>&nbsp;
+                  <T className="tt-se fw-bd">frozen period</T>&nbsp;
                   <FrozenInformation />
                 </div>
                 <div className="jk-row left">
@@ -97,7 +97,7 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
             label: (
               <div className="jk-col jk-pg-xsm">
                 <div className="jk-row">
-                  <T className="tt-se fw-bd">quiet time</T>&nbsp;
+                  <T className="tt-se fw-bd">quiet period</T>&nbsp;
                   <QuietInformation />
                 </div>
                 <div className="jk-row left">
@@ -169,8 +169,8 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
                   <DateLiteral date={now} />
                   <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
                   {contest.isQuietTime
-                    ? <T className="tt-se cr-id fw-bd">quiet time</T>
-                    : contest.isFrozenTime && <T className="tt-se cr-io fw-bd">frozen time</T>}
+                    ? <T className="tt-se cr-id fw-bd">quiet period</T>
+                    : contest.isFrozenTime && <T className="tt-se cr-io fw-bd">frozen period</T>}
                 </div>
               ),
               percentage: nowPercentage,

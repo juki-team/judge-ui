@@ -56,7 +56,7 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/register`;
     },
     SCOREBOARD: (key: string, unfrozen: boolean) => {
-      return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard?${unfrozen ? 'state=unfrozen' : ''}`;
+      return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard${unfrozen ? '?state=unfrozen' : ''}`;
     },
     SCOREBOARD_HISTORY: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard-history`;

@@ -107,6 +107,7 @@ export type {
   ClientTrackLocationWebSocketEventDTO,
   ClientTrackScreenshotWebSocketEventDTO,
   ClientTrackDeviceWebSocketEventDTO,
+  ScoreboardHistoryResponseDTO,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab, ContestsTab } from '@juki-team/base-ui/enums';

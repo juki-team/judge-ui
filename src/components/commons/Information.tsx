@@ -1,13 +1,14 @@
 'use client';
 
 import { ExclamationIcon, Popover } from 'components';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 
 export interface InformationProps {
   filledCircle?: boolean,
+  icon?: ReactNode,
 }
 
-export const Information = ({ children, filledCircle }: PropsWithChildren<InformationProps>) => {
+export const Information = ({ children, filledCircle, icon }: PropsWithChildren<InformationProps>) => {
   return (
     <Popover
       popoverClassName="bc-we jk-br-ie elevation-1 jk-pg-xsm"
@@ -18,9 +19,9 @@ export const Information = ({ children, filledCircle }: PropsWithChildren<Inform
       }
     >
       <div className="jk-row">
-        {filledCircle
+        {icon ?? (filledCircle
           ? <ExclamationIcon rotate={180} filledCircle size="small" />
-          : <ExclamationIcon rotate={180} circle size="small" />}
+          : <ExclamationIcon rotate={180} circle size="small" />)}
       </div>
     </Popover>
   );

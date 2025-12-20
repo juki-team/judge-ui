@@ -3,6 +3,7 @@ import { Information, InformationProps, T } from '../index';
 export const FrozenInformation = (props: InformationProps) => {
   return (
     <Information {...props}>
+      <T className="tt-se fw-bd">frozen period</T>
       <T className="tt-se">
         in this period the scoreboard is not updated but the contestant will still be able to know the verdict of
         his submissions
@@ -14,6 +15,7 @@ export const FrozenInformation = (props: InformationProps) => {
 export const QuietInformation = (props: InformationProps) => {
   return (
     <Information {...props}>
+      <T className="tt-se fw-bd">quiet period</T>
       <T className="tt-se">
         in this period the scoreboard is not updated and the contestant will not be able to know the verdict of his
         submissions

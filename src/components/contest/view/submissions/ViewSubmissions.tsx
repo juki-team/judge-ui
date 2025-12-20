@@ -247,7 +247,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
         }).url;
       }}
       name={QueryParam.STATUS_TABLE}
-      getRowKey={({ data, index }) => data[index].submitId}
+      getRecordKey={({ data, index }) => data[index].submitId}
       downloads={downloads}
     />
   );

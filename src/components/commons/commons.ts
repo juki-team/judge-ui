@@ -116,3 +116,4 @@ export {
   TabsInlineButtonLoader,
   TabsInlineButton,
 } from '@juki-team/base-ui';
+export * from './Pagination';

@@ -1,6 +1,6 @@
 'use client';
 
-import { SpinIcon, T, Timer } from 'components';
+import { AcUnitIcon, FrozenInformation, LockIcon, QuietInformation, SpinIcon, T, Timer } from 'components';
 import { ONE_MINUTE, ONE_SECOND } from 'config/constants';
 import { getContestState } from 'helpers';
 import { useEffect, useJukiNotification, useMemo, useState } from 'hooks';
@@ -69,40 +69,59 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
   }
   
   return (
-    <div className={`jk-tag tx-s cr-we ${getContestState(contest).bc} jk-row nowrap fw-rr`}>
-      {contest.isGlobal
-        ? <T className="ws-np tt-se">global</T>
-        : contest.isEndless
-          ? <T className="ws-np tt-se">endless</T>
-          : (
-            <>
-              {contest.isLive
-                ? <T className="ws-np tt-se">ends in</T>
-                : contest.isPast
-                  ? <T className="ws-np tt-se">ends ago</T>
-                  : <T className="ws-np tt-se">stars in</T>}
-              &nbsp;
-              <div className="ws-np">
-                <Timer
-                  // timerKey="contest-timer"
-                  key={type + interval + timeInterval}
-                  remaining={timeInterval}
-                  type={type}
-                  interval={interval}
-                  literal
-                  ignoreTrailingZeros
-                  ignoreLeadingZeros
-                  abbreviated
-                  maxSplit={2}
-                  onTimeout={() => {
-                    setLoadingTimer(true);
-                    void reloadContest?.();
-                    addWarningNotification(<T className="tt-se">reloading contest</T>);
-                  }}
-                />
-              </div>
-            </>
-          )}
-    </div>
+    <>
+      <div className={`jk-tag tx-s cr-we ${getContestState(contest).bc} jk-row nowrap fw-rr`}>
+        {contest.isGlobal
+          ? <T className="ws-np tt-se">global</T>
+          : contest.isEndless
+            ? <T className="ws-np tt-se">endless</T>
+            : (
+              <>
+                {contest.isLive
+                  ? <T className="ws-np tt-se">ends in</T>
+                  : contest.isPast
+                    ? <T className="ws-np tt-se">ends ago</T>
+                    : <T className="ws-np tt-se">stars in</T>}
+                &nbsp;
+                <div className="ws-np">
+                  <Timer
+                    // timerKey="contest-timer"
+                    key={type + interval + timeInterval}
+                    remaining={timeInterval}
+                    type={type}
+                    interval={interval}
+                    literal
+                    ignoreTrailingZeros
+                    ignoreLeadingZeros
+                    abbreviated
+                    maxSplit={2}
+                    onTimeout={() => {
+                      setLoadingTimer(true);
+                      void reloadContest?.();
+                      addWarningNotification(<T className="tt-se">reloading contest</T>);
+                    }}
+                  />
+                </div>
+              </>
+            )}
+      </div>
+      {contest.isQuietTime ?
+        <QuietInformation
+          icon={
+            <div className="jk-row jk-tag bc-el">
+              <LockIcon size="small" filledCircle className="cr-el" />
+            </div>
+          }
+        />
+        : contest.isFrozenTime && (
+        <FrozenInformation
+          icon={
+            <div className="jk-row jk-tag bc-io">
+              <AcUnitIcon size="small" filledCircle className="cr-io" />
+            </div>
+          }
+        />
+      )}
+    </>
   );
 };
