@@ -156,7 +156,14 @@ export function ContestViewLayout() {
     tabHeaders[ContestTab.SCOREBOARD] = {
       key: ContestTab.SCOREBOARD,
       header: <T className="tt-ce ws-np">scoreboard</T>,
-      body: <ViewNewScoreboard key="scoreboard" contest={contest} reloadContest={reloadContest} />,
+      body: (
+        <ViewNewScoreboard
+          key="scoreboard"
+          contest={contest}
+          reloadContest={reloadContest}
+          isTabVisible={contestTab === ContestTab.SCOREBOARD}
+        />
+      ),
     };
   }
   
@@ -304,7 +311,7 @@ export function ContestViewLayout() {
           }}
           className="display-on-hover-8"
         >
-          <ContestTimeProgress contest={contest} reloadContest={reloadContest} />
+          <ContestTimeProgress contest={contest} reloadContest={reloadContest} exact />
         </div>
       )}
     </TwoContentLayout>

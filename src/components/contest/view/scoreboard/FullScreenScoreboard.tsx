@@ -23,28 +23,27 @@ export const FullScreenScoreboard = ({ contest, children, reloadContest }: Props
       <div className="jk-overlay jk-overlay-backdrop">
         <div className="jk-full-screen-overlay elevation-1 ow-hn jk-col stretch top nowrap wh-100 ht-100">
           <div className="jk-col stretch" ref={ref}>
-            <div className="jk-row bc-pd jk-pg-xsm">
+            <div className="jk-row nowrap gap center bc-pd jk-pg-xsm">
               <Image
                 src={companyImageUrl}
                 alt={companyName}
                 height={isSmallMediumScreen ? 40 : 46}
                 width={isSmallMediumScreen ? 80 : 92}
               />
-            </div>
-            <div className="jk-row nowrap gap extend jk-pg-sm-rl">
-              <h2
-                style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  width: 'calc(100vw - (var(--pad-sm) * 2) - (var(--pad-md) * 2))',
-                  textAlign: 'center',
-                }}
-              >
-                {contest.name}
-              </h2>
-            </div>
-            <div className="jk-row extend jk-pg-sm-rl">
+              <div className="jk-row nowrap gap jk-pg-sm-rl cr-pt">
+                <h2
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    // width: 'calc(100vw - (var(--pad-sm) * 2) - (var(--pad-md) * 2))',
+                    textAlign: 'center',
+                  }}
+                  className="cr-pt"
+                >
+                  {contest.name}
+                </h2>
+              </div>
               <ContestTimeTimer contest={contest} reloadContest={reloadContest} />
             </div>
           </div>

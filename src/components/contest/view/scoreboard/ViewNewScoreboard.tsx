@@ -1,13 +1,18 @@
 'use client';
 
 import {
+  AcUnitIcon,
   Button,
   ButtonLoader,
   DataViewer,
+  FrozenInformation,
   FullscreenExitIcon,
   FullscreenIcon,
+  Input,
   InputCheckbox,
+  LockIcon,
   Pagination,
+  QuietInformation,
   Select,
   T,
   TimerDisplay,
@@ -22,7 +27,14 @@ import {
   downloadSheetDataAsXlsxFile,
   getUserKey,
 } from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiNotification, usePageStore, useUIStore } from 'hooks';
+import {
+  useDataViewerRequester,
+  useI18nStore,
+  useJukiNotification,
+  usePageStore,
+  useStableState,
+  useUIStore,
+} from 'hooks';
 import { useCallback, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -33,6 +45,7 @@ import {
   ScoreboardResponseDTO,
   Status,
 } from 'types';
+import { ScoreboardResponseDTOFocus } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
 
@@ -113,6 +126,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
 interface ViewScoreboardProps {
   contest: ContestDataResponseDTO,
   reloadContest: () => Promise<void>,
+  isTabVisible: boolean,
 }
 
 export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) => {
@@ -125,8 +139,8 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
-  const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
+  const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, contest.isEndless || contest.isGlobal),
@@ -150,77 +164,128 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
   } = useDataViewerRequester<ContentResponseType<ScoreboardHistoryResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key));
   const [ trigger, setTrigger ] = useState(0);
   const [ index, setIndex ] = useState(0);
-  const currentTimestamp = 0;
-  const max = Object.values(response?.success ? response.content.userProblemTimelineRefs : {}).flat().length;
-  const data: ScoreboardResponseDTO[] = useMemo(() => {
-    const dataByUsers: Record<string, ScoreboardResponseDTO> = {};
+  const max = Object.values(response?.success ? response.content.timelineEvents : []).length;
+  const { finalTimestamp, data } = useMemo(() => {
+    let finalTimestamp = 0;
+    const finalDataByUsers: Record<string, ScoreboardResponseDTO> = {};
+    let currentDataByUsers: Record<string, ScoreboardResponseDTO> = {};
+    let nextDataByUsers: Record<string, ScoreboardResponseDTO> = {};
+    let prevDataByUsers: Record<string, ScoreboardResponseDTO> = {};
     if (response?.success) {
-      let i = 0;
-      for (const [ userProblemKey, indexes ] of Object.entries(response.content.userProblemTimelineRefs)) {
-        const lastBar = userProblemKey.lastIndexOf('|');
-        const userKey = userProblemKey.slice(0, lastBar);     // "Ivan-Cayllan|juki-app"
-        const problemKey = userProblemKey.slice(lastBar + 1);
+      let i = 1;
+      for (const {
+        userKey,
+        problemKey,
+        attempts,
+        points,
+        success,
+        penalty,
+        indexAccepted,
+        timestamp
+      } of response.content.timelineEvents) {
         
         if (response.content.participants[userKey]) {
-          for (const idx of indexes) {
-            if (dynamic && i > index) {
-              break;
-            }
-            i++;
-            const lastEvent = response.content.timelineEvents[idx];
-            
-            dataByUsers[userKey] = {
-              user: response.content.participants[userKey],
-              totalPenalty: (dataByUsers[userKey]?.totalPenalty ?? 0),
-              totalPoints: (dataByUsers[userKey]?.totalPoints ?? 0),
-              position: -1,
-              problems: {
-                ...(dataByUsers[userKey]?.problems),
-                [problemKey]: {
-                  attempts: lastEvent?.attempts ?? 0,
-                  points: lastEvent?.points ?? 0,
-                  success: lastEvent?.success ?? false,
-                  penalty: lastEvent?.penalty ?? 0,
-                  isFirstAccepted: lastEvent?.indexAccepted === 0,
-                  indexAccepted: lastEvent?.indexAccepted ?? -1,
-                },
+          
+          finalDataByUsers[userKey] = {
+            user: response.content.participants[userKey],
+            totalPenalty: (finalDataByUsers[userKey]?.totalPenalty ?? 0),
+            totalPoints: (finalDataByUsers[userKey]?.totalPoints ?? 0),
+            position: -1,
+            problems: {
+              ...(finalDataByUsers[userKey]?.problems),
+              [problemKey]: {
+                attempts: attempts ?? 0,
+                points: points ?? 0,
+                success: success ?? false,
+                penalty: penalty ?? 0,
+                isFirstAccepted: indexAccepted === 0,
+                indexAccepted: indexAccepted ?? -1,
               },
-            };
+            },
+          };
+          if (dynamic) {
+            if (i === index - 1) {
+              prevDataByUsers = structuredClone(finalDataByUsers);
+            }
+            if (i === index) {
+              currentDataByUsers = structuredClone(finalDataByUsers);
+            }
+            if (i <= index) {
+              finalTimestamp = Math.max(timestamp ?? 0, finalTimestamp);
+            }
+            if (i === index + 1) {
+              nextDataByUsers = structuredClone(finalDataByUsers);
+            }
+          } else {
+            if (i === max - 1) {
+              prevDataByUsers = structuredClone(finalDataByUsers);
+            }
+            finalTimestamp = Math.max(timestamp ?? 0, finalTimestamp);
           }
-        }
-        
-        if (dynamic && i > index) {
-          break;
+          i++;
         }
       }
     }
     
-    const data: ScoreboardResponseDTO[] = Object.values(dataByUsers)
-      .map(scoreUser => {
+    const problemKeys = Object.keys(contest.problems);
+    const dataByUsers = dynamic ? currentDataByUsers : finalDataByUsers;
+    nextDataByUsers = dynamic ? nextDataByUsers : finalDataByUsers;
+    const data: ScoreboardResponseDTOFocus[] = response?.success ? Object.keys(response.content.participants)
+      .map(userKey => {
+        const scoreUser = dataByUsers[userKey] || {
+          user: response.content.participants[userKey],
+          totalPenalty: 0,
+          totalPoints: 0,
+          position: -1,
+          problems: {},
+        };
         let totalPenalty = 0;
         let totalPoints = 0;
-        for (const [ problemKey, problem ] of Object.entries(scoreUser.problems)) {
-          if (contest.problems[problemKey].maxAcceptedUsers) {
-            if (problem.indexAccepted < contest.problems[problemKey].maxAcceptedUsers) {
+        const focus: ScoreboardResponseDTOFocus['focus'] = [];
+        const diff: ScoreboardResponseDTOFocus['diff'] = [];
+        for (const problemKey of problemKeys) {
+          const problem = scoreUser?.problems[problemKey];
+          if (JSON.stringify(problem) !== JSON.stringify(prevDataByUsers[userKey]?.problems[problemKey])) {
+            focus.push({ problemKey, success: problem?.success || false, points: problem?.points || 0 });
+          }
+          const finalProblem = finalDataByUsers[userKey]?.problems[problemKey];
+          if (JSON.stringify(problem) !== JSON.stringify(finalProblem)) {
+            const nextFocus = JSON.stringify(problem) !== JSON.stringify(nextDataByUsers[userKey]?.problems[problemKey]);
+            diff.push({
+              problemKey,
+              pendingAttempts: (finalProblem?.attempts ?? 0) - (problem?.attempts ?? 0),
+              focus: nextFocus,
+            });
+          }
+          if (problem) {
+            if (contest.problems[problemKey].maxAcceptedUsers) {
+              if (problem.indexAccepted < contest.problems[problemKey].maxAcceptedUsers) {
+                totalPenalty += problem.points ? problem.penalty : 0;
+                totalPoints += problem.points;
+              }
+            } else {
               totalPenalty += problem.points ? problem.penalty : 0;
               totalPoints += problem.points;
             }
-          } else {
-            totalPenalty += problem.points ? problem.penalty : 0;
-            totalPoints += problem.points;
           }
         }
         return {
           ...scoreUser,
           totalPenalty,
           totalPoints,
+          focus,
+          diff,
         };
       })
       .sort((a, b) => a.totalPoints === b.totalPoints ? a.totalPenalty - b.totalPenalty : b.totalPoints - a.totalPoints)
-      .map((scoreUser, index) => ({ ...scoreUser, position: index + 1 }));
+      .map((scoreUser, index) => ({ ...scoreUser, position: index + 1 })) : [];
     
-    return data;
-  }, [ contest.problems, dynamic, index, response ]);
+    return { finalTimestamp, data };
+  }, [ contest.problems, dynamic, index, response, max ]);
+  
+  const currentTimestamp = finalTimestamp - contest.settings.startTimestamp;
+  const focusedRow = data.find(({ focus }) => (focus?.length ?? 0) > 0);
+  const [ focusUserKey, setFocusUserKey ] = useStableState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.company.key) : '');
   
   const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
   
@@ -306,7 +371,16 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
         total={max}
         page={index}
         pageSize={1}
-        jumpToPage={setIndex}
+        jumpToPage={(page) => {
+          const focusedRow = data.find(({ diff }) => (diff || []).some(({ focus }) => focus));
+          if (focusedRow) {
+            setFocusUserKey(getUserKey(focusedRow.user.nickname, focusedRow.user.company.key));
+          }
+          setTimeout(() => {
+            setIndex(page);
+            setFocusUserKey('');
+          }, 2000);
+        }}
         onPageSizeChange={() => null}
         isOnToolbar
         key="first-row-pagination"
@@ -314,15 +388,44 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
       <Button size="tiny" type="light" onClick={() => setIndex(max)}>
         <T className="tt-se">end</T>
       </Button>
+      <Input
+        key="slider"
+        type="range"
+        min={1}
+        max={max}
+        step={1}
+        onChange={(value: string) => {
+          const newIndex = Math.max(Math.min(max, +value), 1);
+          setIndex(newIndex);
+          setFocusUserKey('');
+        }}
+      />
     </div>,
-    <div key="date" className="tx-s">
+    <div key="date" className="jk-row gap tx-s jk-br-ie bc-we jk-pg-xsm-l">
       <TimerDisplay
         counter={currentTimestamp}
         type="hours-minutes"
         literal
       />
+      {contest.settings.startTimestamp + currentTimestamp >= contest.settings.quietTimestamp ?
+        <QuietInformation
+          icon={
+            <div className="jk-row jk-tag bc-el">
+              <LockIcon size="tiny" filledCircle className="cr-el" />
+            </div>
+          }
+        />
+        : contest.settings.startTimestamp + currentTimestamp >= contest.settings.frozenTimestamp && (
+        <FrozenInformation
+          icon={
+            <div className="jk-row jk-tag bc-io">
+              <AcUnitIcon size="tiny" filledCircle className="cr-io" />
+            </div>
+          }
+        />
+      )}
     </div>,
-  ], [ fullscreen, index, max, onClose ]);
+  ], [ contest.settings.frozenTimestamp, contest.settings.quietTimestamp, contest.settings.startTimestamp, currentTimestamp, data, fullscreen, index, max, onClose, setFocusUserKey ]);
   
   const groups = useMemo(
     () => Object
@@ -332,7 +435,7 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
   );
   
   const score = (
-    <DataViewer<ScoreboardResponseDTO>
+    <DataViewer<ScoreboardResponseDTOFocus>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
@@ -342,12 +445,27 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
       cardsView={false}
       setLoaderStatusRef={setLoaderStatusRef}
       className={classNames('contest-scoreboard', {
-        'is-frozen': !unfrozen && contest.isFrozenTime && !contest.isQuietTime,
-        'is-quiet': !unfrozen && contest.isQuietTime,
+        'is-frozen': !dynamic && !unfrozen && contest.isFrozenTime && !contest.isQuietTime,
+        'is-quiet': !dynamic && !unfrozen && contest.isQuietTime,
       })}
       groups={groups}
       getRecordKey={({ data, index }) => getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key)}
+      getRecordStyle={({ data, index }) => {
+        const userKey = getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key);
+        if (focusUserKey === userKey) {
+          const dataUser = data[index];
+          if (dataUser?.focus) {
+            const isSuccess = dataUser.focus.some((focus) => focus.success);
+            return {
+              outline: `4px solid ${!dataUser.focus.length ? 'var(--cr-at)' : isSuccess ? 'var(--cr-ss-lt)' : 'var(--cr-er-lt)'}`,
+              borderRadius: 'var(--border-radius-inline)',
+            };
+          }
+        }
+        return {};
+      }}
       deps={[ unfrozen, trigger ]}
+      focusRowKey={focusUserKey}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
@@ -359,10 +477,6 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
       </FullScreenScoreboard>
     );
   }
-  
-  // if (dynamic) {
-  //   return <ViewDynamicScoreboard contest={contest} onClose={onClose} reloadContest={reloadContest} />;
-  // }
   
   return score;
 };

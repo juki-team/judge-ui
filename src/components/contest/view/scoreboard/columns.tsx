@@ -73,7 +73,12 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
   Field: ({ record: { focus, totalPenalty, totalPoints } }) => (
     <Field className={classNames('jk-col center', { highlight: !!focus?.length })}>
       <div className="fw-br cr-py">{+totalPoints.toFixed(2)}</div>
-      {!isEndless && <div className="cr-g4">{+totalPenalty.toFixed(2)}</div>}
+      {!isEndless && (
+        <div className="tx-s" style={{ fontFamily: 'monospace', paddingLeft: '3ch' }}>
+          {Math.floor(+totalPenalty)}
+          <span className="tx-t cr-g5 to-active-on-hover">.{Math.floor((+totalPenalty - Math.floor(+totalPenalty)) * 100).padEnd(2, '0')}</span>
+        </div>
+      )}
     </Field>
   ),
   minWidth: 128,
@@ -110,10 +115,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
     
     return (
       <Field
-        className={classNames('jk-row center nowrap active-on-hover', {
-          'cell-score-highlight': !!problemFocus,
-        })}
-        style={{ '--color': problemFocus?.success ? 'var(--cr-ss)' : !!problemFocus?.points ? 'var(--t-color-success-light)' : 'var(--t-color-error-light)' } as CSSProperties}
+        className={classNames('jk-row center nowrap active-on-hover', {})}
       >
         {(problemData?.success || !!problemData?.points) && (
           <div
@@ -134,24 +136,32 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
             } as CSSProperties}
             className={classNames('pn-re', { 'is-first-accepted': problemData.isFirstAccepted })}
           >
-            <BalloonIcon percent={(problemData.points / problem.points) * 100} />
-            {typeof problemData?.indexAccepted === 'number' && (
-              <div
-                className="tx-t pn-ae fw-lr cr-g3 to-active-on-hover"
-                style={{
-                  right: 2,
-                  bottom: 0,
-                  lineHeight: 1,
-                }}
-              >
-                {problemData?.indexAccepted + 1}
-              </div>
-            )}
+            <BalloonIcon percent={(problemData.points / problem.points) * 100} className="pn-re">
+              {typeof problemData?.indexAccepted === 'number' && (
+                <div
+                  className="tx-vt pn-ae cr-we fw-bd to-active-on-hover"
+                  style={{
+                    top: '35%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    lineHeight: 1,
+                    mixBlendMode: 'difference',
+                    // filter: 'invert(1)',
+                  }}
+                >
+                  {problemData?.indexAccepted + 1}
+                </div>
+              )}
+            </BalloonIcon>
           </div>
         )}
         <div
-          className={classNames('jk-row nowrap')}
-          style={{ opacity: !!problem.maxAcceptedUsers && problemData && problemData?.indexAccepted >= problem.maxAcceptedUsers ? 0.2 : undefined }}
+          className={classNames('jk-row nowrap jk-br-ie', { 'cell-score-highlight': !!problemFocus })}
+          style={{
+            padding: '0 3px',
+            opacity: !!problem.maxAcceptedUsers && problemData && problemData?.indexAccepted >= problem.maxAcceptedUsers ? 0.2 : undefined,
+            ...(problemFocus ? { '--color': problemFocus?.success ? 'var(--cr-ss)' : !!problemFocus?.points ? 'var(--cr-ss-lt)' : 'var(--cr-er-lt)' } : {}),
+          } as CSSProperties}
         >
           <div className="tx-s">{problemData?.attempts || '-'}</div>
           {!isEndless && (
@@ -161,7 +171,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
                 {problemData?.penalty
                   ? <>
                     {Math.floor(problemData.penalty)}
-                    <span className="tx-t cr-g3 to-active-on-hover">.{Math.floor((problemData.penalty - Math.floor(problemData.penalty)) * 1000).padEnd(3, '0')}</span>
+                    <span className="tx-t cr-g5 to-active-on-hover">.{Math.floor((problemData.penalty - Math.floor(problemData.penalty)) * 1000).padEnd(3, '0')}</span>
                   </>
                   : '-'}
               </div>

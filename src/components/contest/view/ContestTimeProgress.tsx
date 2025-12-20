@@ -11,9 +11,10 @@ import { useEffect, useState } from 'hooks';
 import { ContestTimeData } from 'types';
 import { ContestTimeTimer } from './ContestTimeTimer';
 
-export const ContestTimeProgress = ({ contest, reloadContest }: {
+export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
   contest: ContestTimeData,
-  reloadContest?: () => void
+  reloadContest?: () => void,
+  exact?: boolean,
 }) => {
   
   const contestDuration = Math.max(contest.settings.endTimestamp - contest.settings.startTimestamp, 0);
@@ -21,8 +22,8 @@ export const ContestTimeProgress = ({ contest, reloadContest }: {
   const frozenDuration = Math.max(contest.settings.quietTimestamp - contest.settings.frozenTimestamp, 0);
   const quietDuration = Math.max(contest.settings.endTimestamp - contest.settings.quietTimestamp, 0);
   
-  const quietPercentage = quietDuration * contestDuration === 0 ? 0 : Math.min(80, Math.max(10, quietDuration * 100 / contestDuration));
-  const frozenPercentage = frozenDuration * contestDuration === 0 ? 0 : Math.min(80, Math.max(10, frozenDuration * 100 / contestDuration));
+  const quietPercentage = quietDuration * contestDuration === 0 ? 0 : Math.min(exact ? 99 : 80, Math.max(exact ? 1 : 10, quietDuration * 100 / contestDuration));
+  const frozenPercentage = frozenDuration * contestDuration === 0 ? 0 : Math.min(exact ? 99 : 80, Math.max(exact ? 1 : 10, frozenDuration * 100 / contestDuration));
   const normalPercentage = 100 - quietPercentage - frozenPercentage;
   
   const [ now, setNow ] = useState(new Date());
