@@ -342,6 +342,7 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
         : <FullscreenIcon className="clickable jk-br-ie" onClick={handleFullscreen} />}
     </div>,
   ], [ contest, data, fullscreen, handleFullscreen, isLoading, notifyResponse, unfrozen ]);
+  const [ focusDelay, setFocusDelay ] = useState(1000);
   
   const extraNodesDynamic = useMemo(() => [
     <Button key="exit" onClick={onClose} size="tiny" type="secondary">
@@ -379,7 +380,7 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
           setTimeout(() => {
             setIndex(page);
             setFocusUserKey('');
-          }, 2000);
+          }, focusDelay);
         }}
         onPageSizeChange={() => null}
         isOnToolbar
@@ -425,7 +426,22 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
         />
       )}
     </div>,
-  ], [ contest.settings.frozenTimestamp, contest.settings.quietTimestamp, contest.settings.startTimestamp, currentTimestamp, data, fullscreen, index, max, onClose, setFocusUserKey ]);
+    <Input<number>
+      label={<T className="tx-vt ws-np tt-se">revelation delay</T>}
+      key="focus-delay-input"
+      type="number"
+      min={0}
+      max={2000}
+      step={50}
+      value={focusDelay}
+      onChange={(value) => {
+        const v = Math.max(0, Math.min(5000, Number(value) || 0));
+        setFocusDelay(v);
+      }}
+      className="tiny"
+      placeholder="delay ms"
+    />,
+  ], [ contest.settings.frozenTimestamp, contest.settings.quietTimestamp, contest.settings.startTimestamp, currentTimestamp, data, focusDelay, fullscreen, index, max, onClose, setFocusUserKey ]);
   
   const groups = useMemo(
     () => Object
