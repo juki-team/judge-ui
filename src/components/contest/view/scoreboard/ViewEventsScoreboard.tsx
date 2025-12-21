@@ -307,7 +307,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
           const {
             url,
             ...options
-          } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key } });
+          } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key, official: true } });
           const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
           if (notifyResponse(response, setLoaderStatus)) {
             setTrigger(Date.now());
