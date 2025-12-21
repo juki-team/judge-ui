@@ -96,7 +96,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
             )}
           </div>
         </div>
-        {((isAdministrator || isManager || isGuest) && !isParticipant && new Date().getTime() <= contest.settings.endTimestamp) && (
+        {((isAdministrator || isManager || isGuest) && !isParticipant && (contest.isLive || (contest.isPast && contest.settings.upsolvingEnabled))) && (
           <div className="content-side-right-bar-top">
             <div className="jk-row center gap bc-we jk-br-ie jk-pg-sm">
               <div className="jk-row center">
