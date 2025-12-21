@@ -38,7 +38,7 @@ export const ViewEvents = ({ contest }: { contest: ContestDataUI }) => {
                 <div>
                   <DateLiteral date={new Date(timestamp)} />
                 </div>
-                {Object.keys(details).length > 0 && (
+                {contest.user.isAdministrator && Object.keys(details).length > 0 && (
                   <Button onClick={() => setSelectedDetails(details)} size="small" type="light">
                     <T>View details</T>
                   </Button>
