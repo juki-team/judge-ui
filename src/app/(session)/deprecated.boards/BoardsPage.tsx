@@ -97,7 +97,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     // reload,
     // reloadRef,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
-    () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest.key, true), { refreshInterval: 60000 },
+    () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest.key, true, true), { refreshInterval: 60000 },
   );
   
   const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);

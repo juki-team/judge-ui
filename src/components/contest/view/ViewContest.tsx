@@ -48,7 +48,7 @@ import { ViewEvents } from './events/ViewEvents';
 import { ViewOverview } from './overview/ViewOverview';
 import { ViewProblemContest } from './problem/ViewProblemContest';
 import { ViewProblems } from './problems/ViewProblems';
-import { ViewNewScoreboard } from './scoreboard/ViewNewScoreboard';
+import { ViewScoreboard } from './scoreboard/ViewScoreboard';
 import { ViewSubmissions } from './submissions/ViewSubmissions';
 
 export function ContestViewLayout() {
@@ -157,11 +157,10 @@ export function ContestViewLayout() {
       key: ContestTab.SCOREBOARD,
       header: <T className="tt-ce ws-np">scoreboard</T>,
       body: (
-        <ViewNewScoreboard
+        <ViewScoreboard
           key="scoreboard"
           contest={contest}
           reloadContest={reloadContest}
-          isTabVisible={contestTab === ContestTab.SCOREBOARD}
         />
       ),
     };

@@ -192,7 +192,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
-                      contest?.settings.locked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contest.key) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contest.key),
+                      contest?.settings.scoreboardLocked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contest.key) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contest.key),
                       { method: HTTPMethod.POST },
                     ),
                   );
@@ -201,7 +201,26 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 }}
                 key="unlock"
               >
-                <T className="tt-se">{contest?.settings.locked ? 'unlock' : 'lock'}</T>
+                <T className="tt-se">{contest?.settings.scoreboardLocked ? 'unlock scoreboard' : 'lock scoreboard'}</T>
+              </ButtonLoader>
+            )}
+            {contest?.user?.isAdministrator && contest.isPast && (
+              <ButtonLoader
+                size="tiny"
+                type="secondary"
+                onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
+                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                      contest?.settings.upsolvingEnabled ? JUDGE_API_V1.CONTEST.DISABLE_UPSOLVING(contest.key) : JUDGE_API_V1.CONTEST.ENABLE_UPSOLVING(contest.key),
+                      { method: HTTPMethod.POST },
+                    ),
+                  );
+                  await reloadContest?.();
+                  notifyResponse(response, setLoaderStatus);
+                }}
+                key="unlock"
+              >
+                <T className="tt-se">{contest?.settings.upsolvingEnabled ? 'disable upsolving' : 'enable upsolving'}</T>
               </ButtonLoader>
             )}
             <ButtonLoader

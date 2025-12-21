@@ -55,8 +55,8 @@ export const JUDGE_API_V1 = {
     REGISTER: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/register`;
     },
-    SCOREBOARD: (key: string, unfrozen: boolean) => {
-      return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard${unfrozen ? '?state=unfrozen' : ''}`;
+    SCOREBOARD: (key: string, unfrozen: boolean, official: boolean) => {
+      return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard${unfrozen ? '?state=unfrozen' : ''}${official ? (unfrozen ? '&' : '?') + 'official=true' : ''}`;
     },
     SCOREBOARD_HISTORY: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard-history`;
@@ -76,8 +76,11 @@ export const JUDGE_API_V1 = {
     UNLOCK_SCOREBOARD: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/unlock-scoreboard`;
     },
-    PROBLEM_RETRIEVE: (contestKey: string, problemJudgeKey: string) => {
-      return `${JUKI_SERVICE_V1_URL}/contest/${contestKey}/problem/${problemJudgeKey}/retrieve`;
+    DISABLE_UPSOLVING: (key: string) => {
+      return `${JUKI_SERVICE_V1_URL}/contest/${key}/disable-upsolving`;
+    },
+    ENABLE_UPSOLVING: (key: string) => {
+      return `${JUKI_SERVICE_V1_URL}/contest/${key}/enable-upsolving`;
     },
     CONTEST_MEMBERS: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/members`;

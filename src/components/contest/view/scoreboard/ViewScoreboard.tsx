@@ -1,6 +1,15 @@
 'use client';
 
-import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, Select, T } from 'components';
+import {
+  Button,
+  ButtonLoader,
+  DataViewer,
+  FullscreenExitIcon,
+  FullscreenIcon,
+  InputToggle,
+  Select,
+  T,
+} from 'components';
 import { jukiApiManager } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import {
@@ -136,7 +145,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
     request,
     isLoading,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen));
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen, true));
   const [ trigger, setTrigger ] = useState(0);
   
   const data: ScoreboardResponseDTO[] = useMemo(() => (response?.success ? response.contents : []), [ response ]);
@@ -144,16 +153,14 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
   
   const extraNodes = useMemo(() => [
-    ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
-      <Button
+    ((contest?.user?.isAdministrator || contest?.user?.isManager || !contest.settings.scoreboardLocked) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
+      <InputToggle
         size="tiny"
-        type="light"
-        disabled={isLoading}
-        onClick={() => setUnfrozen(!unfrozen)}
-        key="unfrozen"
-      >
-        <T className="tt-se">{unfrozen ? 'view frozen' : 'view unfrozen'}</T>
-      </Button>
+        checked={unfrozen}
+        onChange={setUnfrozen}
+        leftLabel={<div className="tx-t jk-br-ie jk-button tiny light"><T className="tt-se">frozen</T></div>}
+        rightLabel={<div className="tx-t jk-br-ie jk-button tiny light "><T className="tt-se">unfrozen</T></div>}
+      />
     ),
     (contest?.user?.isAdministrator || contest?.user?.isManager) && (
       <ButtonLoader
@@ -166,7 +173,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
             url,
             ...options
           } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key } });
-          const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
+          const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url + '?official=true', options));
           if (notifyResponse(response, setLoaderStatus)) {
             setTrigger(Date.now());
           }
@@ -177,7 +184,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       </ButtonLoader>
     ),
     <DownloadButton key="download" data={data} contest={contest} disabled={isLoading} />,
-    ((contest.user.isAdministrator || contest.user.isManager || !contest.settings.locked) && !contest.isEndless && !contest.isFuture && (
+    ((contest.user.isAdministrator || contest.user.isManager || !contest.settings.scoreboardLocked) && !contest.isEndless && !contest.isFuture && (
       <Button
         key="dynamic"
         onClick={() => setDynamic(true)}

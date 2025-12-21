@@ -126,10 +126,9 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
 interface ViewScoreboardProps {
   contest: ContestDataResponseDTO,
   reloadContest: () => Promise<void>,
-  isTabVisible: boolean,
 }
 
-export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) => {
+export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) => {
   
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
@@ -294,7 +293,7 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
       <InputCheckbox
         className="tx-s bc-hl"
         checked={unfrozen}
-        label={<><T className="tt-se">final scoreboard</T>&nbsp;</>}
+        label={<><T className="tt-se">view final</T>&nbsp;</>}
         onChange={setUnfrozen}
       />
     ),
@@ -320,7 +319,7 @@ export const ViewNewScoreboard = ({ contest, reloadContest }: ViewScoreboardProp
       </ButtonLoader>
     ),
     <DownloadButton key="download" data={data} contest={contest} disabled={isLoading} />,
-    ((contest.user.isAdministrator || contest.user.isManager || !contest.settings.locked) && !contest.isEndless && !contest.isFuture && (
+    ((contest.user.isAdministrator || contest.user.isManager || !contest.settings.scoreboardLocked) && !contest.isEndless && !contest.isFuture && (
       <Button
         key="dynamic"
         onClick={() => setDynamic(true)}
