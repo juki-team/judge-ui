@@ -102,4 +102,5 @@ export {
   VoidIcon,
   FileCopyIcon,
   ShareIcon,
+  FitnessCenterIcon,
 } from '@juki-team/base-ui/server-components';

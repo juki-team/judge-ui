@@ -24,6 +24,17 @@ export const QuietInformation = (props: InformationProps) => {
   );
 };
 
+export const UpsolvingInformation = (props: InformationProps) => {
+  return (
+    <Information {...props}>
+      <T className="tt-se fw-bd">upsolving period</T>
+      <T className="tt-se">
+        in this period the official scoreboard is not updated and the contestant will be able to send submissions
+      </T>
+    </Information>
+  );
+};
+
 const CAN_SEE_CONTEST = 'can see the problems, the scoreboard, the submission list, and the clarifications';
 const CAN_PARTICIPANT = 'can submit solutions to the problems and send clarifications if the contest allows it';
 const CAN_JUDGE = 'can view source codes at any stage of the contest and can rejudge submissions if necessary';

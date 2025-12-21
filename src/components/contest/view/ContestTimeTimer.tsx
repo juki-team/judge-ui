@@ -1,6 +1,16 @@
 'use client';
 
-import { AcUnitIcon, FrozenInformation, LockIcon, QuietInformation, SpinIcon, T, Timer } from 'components';
+import {
+  AcUnitIcon,
+  FitnessCenterIcon,
+  FrozenInformation,
+  LockIcon,
+  QuietInformation,
+  SpinIcon,
+  T,
+  Timer,
+  UpsolvingInformation,
+} from 'components';
 import { ONE_MINUTE, ONE_SECOND } from 'config/constants';
 import { getContestState } from 'helpers';
 import { useEffect, useJukiNotification, useMemo, useState } from 'hooks';
@@ -105,7 +115,7 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
               </>
             )}
       </div>
-      {contest.isQuietTime ?
+      {contest.isLive && contest.isQuietTime ?
         <QuietInformation
           icon={
             <div className="jk-row jk-tag bc-el">
@@ -113,11 +123,20 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
             </div>
           }
         />
-        : contest.isFrozenTime && (
+        : contest.isLive && contest.isFrozenTime && (
         <FrozenInformation
           icon={
             <div className="jk-row jk-tag bc-io">
               <AcUnitIcon size="small" filledCircle className="cr-io" />
+            </div>
+          }
+        />
+      )}
+      {contest.isPast && contest.settings.upsolvingEnabled && (
+        <UpsolvingInformation
+          icon={
+            <div className="jk-row jk-tag bc-ss">
+              <FitnessCenterIcon size="small" filledCircle className="cr-ss" />
             </div>
           }
         />
