@@ -163,6 +163,8 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
       frozenTimestamp: entity.settings?.frozenTimestamp ?? 0,
       quietTimestamp: entity.settings?.quietTimestamp ?? 0,
       endTimestamp: entity.settings?.endTimestamp ?? 0,
+      scoreboardLocked: entity.settings?.scoreboardLocked ?? true,
+      upsolvingEnabled: entity.settings?.upsolvingEnabled ?? false,
     },
     tags: entity.tags ?? [],
     groups: entity.groups ?? {},
