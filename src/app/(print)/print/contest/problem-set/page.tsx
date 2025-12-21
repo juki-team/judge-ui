@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic';
 
+import { HEADER_JUKI_INTERNAL_API_KEY } from '@juki-team/commons';
 import { jukiApiManager } from 'config';
+import { JUKI_INTERNAL_API_KEY } from 'config/constants';
 import { cleanRequest, getHeaders } from 'helpers';
 import { ContentResponseType, ContestDataResponseDTO } from 'types';
 import { ContestProblemSetViewPage } from './ContestProblemSetViewPage';
@@ -14,7 +16,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     const { key, jukiSessionId } = (await searchParams) as { key: string, jukiSessionId: string };
     
     const { url } = jukiApiManager.API_V2.contest.getData({ params: { key } });
-    const response = await fetch(url, { headers: getHeaders(jukiSessionId) });
+    const response = await fetch(url, {
+      headers: {
+        ...getHeaders(jukiSessionId),
+        [HEADER_JUKI_INTERNAL_API_KEY]: JUKI_INTERNAL_API_KEY,
+      },
+    });
     const text = await response.text();
     const result = cleanRequest<ContentResponseType<ContestDataResponseDTO>>(text);
     if (result.success) {
