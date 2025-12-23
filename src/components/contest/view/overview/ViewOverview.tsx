@@ -199,7 +199,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                   await reloadContest?.();
                   notifyResponse(response, setLoaderStatus);
                 }}
-                key="unlock"
+                key="lock-scoreboard"
               >
                 <T className="tt-se">{contest?.settings.scoreboardLocked ? 'unlock scoreboard' : 'lock scoreboard'}</T>
               </ButtonLoader>
@@ -218,7 +218,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                   await reloadContest?.();
                   notifyResponse(response, setLoaderStatus);
                 }}
-                key="unlock"
+                key="upsolving"
               >
                 <T className="tt-se">{contest?.settings.upsolvingEnabled ? 'disable upsolving' : 'enable upsolving'}</T>
               </ButtonLoader>

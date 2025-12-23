@@ -1,5 +1,6 @@
 'use client';
 
+import { ONE_DAY } from '@juki-team/commons';
 import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
@@ -58,8 +59,6 @@ const customizedAxisTick = (angle: number) => function Cmp({ x, y, payload }: { 
   );
 };
 
-type StatisticsDateKey = keyof StatisticsProblemResponseDTO['date'];
-
 const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t: i18n['t']) => {
   
   const {
@@ -86,14 +85,16 @@ const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t:
   );
 };
 
+const groupBy = [ ONE_DAY, ONE_DAY * 30, ONE_DAY * 365 ];
+
 export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO }) => {
   
   const {
     data,
-  } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now));
+  } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
   const t = useI18nStore(store => store.i18n.t);
   const { screen: viewPortScreen, height: viewPortHeight } = usePageStore(store => store.viewPort);
-  const [ dateType, setDateType ] = useState<StatisticsDateKey>('day');
+  const [ dateType, setDateType ] = useState<number>(ONE_DAY);
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};
   const verdictsDate = data?.success ? data.content.date : {} as StatisticsProblemResponseDTO['date'];
@@ -129,22 +130,22 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
   return (
     <div className="jk-col gap top ht-100 stretch nowrap">
       <div className="jk-col gap nowrap flex-1 bc-we jk-pg-sm" style={{ height: '80%' }}>
-        <T className="tt-se fw-bd">statistics by date</T>
+        <T className="tt-se fw-bd">submissions by date</T>
         <div className="jk-row gap">
           {[
-            { key: 'day' as StatisticsDateKey },
-            { key: 'month' as StatisticsDateKey },
-            { key: 'year' as StatisticsDateKey },
-          ].map(({ key }) => (
+            { value: ONE_DAY, label: 'day' },
+            { value: ONE_DAY * 30, label: 'month' },
+            { value: ONE_DAY * 365, label: 'year' },
+          ].map(({ value, label }) => (
             <Button
               size="small"
-              type={dateType === key ? 'primary' : 'light'}
-              key={key}
+              type={dateType === value ? 'primary' : 'light'}
+              key={value}
               onClick={() => {
-                setDateType(key);
+                setDateType(value);
               }}
             >
-              <T className="tt-se">{key}</T>
+              <T className="tt-se">{label}</T>
             </Button>
           ))}
         </div>
@@ -162,7 +163,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
             { 'ht-100 flex-1': !oneColumn, 'wh-100': oneColumn },
           )}
         >
-          <T className="tt-se fw-bd">statistics by language</T>
+          <T className="tt-se fw-bd">submissions by language</T>
           <BarChart
             data={languagesData}
             margin={{ bottom: 150, right: 24, left: 0, top: 16 }}
@@ -176,7 +177,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
             { 'ht-100 flex-1': !oneColumn, 'wh-100': oneColumn },
           )}
         >
-          <T className="tt-se fw-bd">statistics by verdict</T>
+          <T className="tt-se fw-bd">submissions by verdict</T>
           <BarChart
             data={verdictsData}
             margin={{ bottom: 150, right: 24, left: 0, top: 16 }}

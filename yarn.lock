@@ -955,10 +955,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.3.38":
-  version "1.3.38"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.3.38/f3c8aefa83c219395a2d9f3efe55f8c3d760871a#f3c8aefa83c219395a2d9f3efe55f8c3d760871a"
-  integrity sha512-XiVbioGuy3DIxmXVq4x2tR+Gj/LIuzpGz3K8DItPUIt7/R5GXotiRLuxvrtarrMibr0zkX0/qRCPlq2MAnMz7w==
+"@juki-team/base-ui@^1.3.39":
+  version "1.3.39"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.3.39/9d7f3030080e37ea97438d35e170cc1607bb0460#9d7f3030080e37ea97438d35e170cc1607bb0460"
+  integrity sha512-JsturIccIPpkv9Uqt3YEDLv4Ve+MwFuy3YaV7XTkKE3HdAqsB08wt4AIUcOp3JETyhl6Mwn2X9TsfXoImwsHKw==
   dependencies:
     "@codemirror/autocomplete" "^6.20.0"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -974,7 +974,7 @@
     "@floating-ui/react" "^0.27.16"
     "@handsontable/react-wrapper" "^16.2.0"
     "@hookform/resolvers" "^5.2.2"
-    "@juki-team/commons" "^0.0.1032"
+    "@juki-team/commons" "^0.0.1033"
     "@milkdown/crepe" "^7.17.3"
     "@milkdown/kit" "^7.17.3"
     "@milkdown/react" "^7.17.3"
@@ -1015,10 +1015,10 @@
     yup "^1.7.1"
     zustand "^5.0.9"
 
-"@juki-team/commons@^0.0.1032":
-  version "0.0.1032"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.1032/480d992e77d109ee3ce00b1ab48f588e4348b96e#480d992e77d109ee3ce00b1ab48f588e4348b96e"
-  integrity sha512-YHlZI3WG3iqv+GzBdkkwPO4Q6scdgTajc5TA8lrlmZaZuNkf70/DhXZrarqS7aFobkGon/MBrtmddXpozWuyFA==
+"@juki-team/commons@^0.0.1033":
+  version "0.0.1033"
+  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.1033/0b718f895f5dee366ee6554c0aa0c60eba1cef11#0b718f895f5dee366ee6554c0aa0c60eba1cef11"
+  integrity sha512-CpgrFmdngwoQD8Puxl+Ci01UkI8dkzfhEshFHR4hV38JtjqqppHFMUGl9exmwPBqkCxPkJ3ozyvNWyjICNYNQg==
 
 "@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.0.3", "@lezer/common@^1.1.0", "@lezer/common@^1.2.0", "@lezer/common@^1.2.1", "@lezer/common@^1.3.0":
   version "1.4.0"

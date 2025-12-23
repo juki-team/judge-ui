@@ -6,7 +6,9 @@ import {
   ScoreboardResponseDTO,
 } from 'types';
 
-export interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTO {
+export type ScoreboardResponseDTOUI = ScoreboardResponseDTO & { official: boolean };
+
+export interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTOUI {
   focus?: { problemKey: string, success: boolean, points: number }[],
   diff?: { problemKey: string, pendingAttempts: number, focus: boolean }[],
 }

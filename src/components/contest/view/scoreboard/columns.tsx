@@ -1,7 +1,6 @@
-import { BalloonIcon, Field, UserNicknameLink } from 'components';
+import { BalloonIcon, Field, FitnessCenterIcon, Information, T, UserChip } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames } from 'helpers';
-import { useUIStore, useUserStore } from 'hooks';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
 import {
   ContestProblemDataResponseDTO,
@@ -17,7 +16,7 @@ export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTO
   head: '#',
   index: 'position',
   Field: ({ record: { position, focus } }) => (
-    <Field className={classNames('jk-row', { highlight: !!focus?.length })}>{position}</Field>
+    <Field className={classNames('jk-row', { highlight: !!focus?.length })}>{position < 0 ? '' : position}</Field>
   ),
   minWidth: 64,
   sticky: true,
@@ -27,13 +26,9 @@ const NicknameField = ({
                          record: {
                            user: { nickname, imageUrl, company: { key: companyKey } },
                            focus,
+                           official,
                          },
                        }: TableHeadFieldProps<ScoreboardResponseDTOFocus>) => {
-  
-  const userNickname = useUserStore(state => state.user.nickname);
-  const userCompanyKey = useUserStore(state => state.company.key);
-  const { Image } = useUIStore(store => store.components);
-  const me = nickname === userNickname && companyKey === userCompanyKey;
   
   return (
     <Field
@@ -41,20 +36,16 @@ const NicknameField = ({
         highlight: !!focus?.length,
       })}
     >
-      <Image src={imageUrl} className="jk-user-profile-img large" alt={nickname} height={38} width={38} />
-      <UserNicknameLink nickname={nickname} companyKey={companyKey}>
-        <div
-          className={classNames('jk-br jk-col', {
-            'bc-py cr-we fw-br jk-pg-xsm': me,
-            'link': !me,
-          })}
+      <UserChip imageUrl={imageUrl} nickname={nickname} companyKey={companyKey} className="tx-s" />
+      {!official && (
+        <Information
+          icon={
+            <FitnessCenterIcon size="small" className="cr-ss" />
+          }
         >
-          {nickname}
-          {userCompanyKey !== companyKey && (
-            <div className="jk-tag bc-hl tx-t" style={{ padding: '1px 2px' }}>{companyKey}</div>
-          )}
-        </div>
-      </UserNicknameLink>
+          <T className="tt-se">upsolving period</T>
+        </Information>
+      )}
     </Field>
   );
 };

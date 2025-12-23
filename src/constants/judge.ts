@@ -32,8 +32,8 @@ export const JUDGE_API_V1 = {
     TEST_CASE_KEY_FILE: (problemKey: string, testCaseKey: string, keyFile: KeyFileType) => {
       return `${JUKI_SERVICE_V1_URL}/problem/${problemKey}/test-case/${testCaseKey}/key-file/${keyFile}`;
     },
-    STATISTICS: (key: string, startTimestamp: number, endTimestamp: number) => {
-      return `${JUKI_SERVICE_V1_URL}/statistics/problem/${key}?startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}`;
+    STATISTICS: (key: string, startTimestamp: number, endTimestamp: number, groupBy: number[]) => {
+      return `${JUKI_SERVICE_V1_URL}/statistics/problem/${key}?startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}&groupBy=${groupBy.join(',')}`;
     },
     POST_PDF: () => {
       return `${JUKI_SERVICE_V1_URL}/problem/statement-pdf`;
@@ -56,7 +56,7 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/register`;
     },
     SCOREBOARD: (key: string, unfrozen: boolean, official: boolean) => {
-      return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard${unfrozen ? '?state=unfrozen' : ''}${official ? (unfrozen ? '&' : '?') + 'official=true' : ''}`;
+      return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard${official ? '?official=true' : ''}${unfrozen ? `${official ? '&' : '?'}state=unfrozen` : ''}`;
     },
     SCOREBOARD_HISTORY: (key: string) => {
       return `${JUKI_SERVICE_V1_URL}/contest/${key}/scoreboard-history`;
