@@ -274,6 +274,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
           totalPoints,
           focus,
           diff,
+          official: true,
         };
       })
       .sort((a, b) => a.totalPoints === b.totalPoints ? a.totalPenalty - b.totalPenalty : b.totalPoints - a.totalPoints)

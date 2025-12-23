@@ -91,7 +91,6 @@ export type {
   ProblemJudgeSummaryListResponseDTO,
   EntityCompanySummaryListResponseDTO,
   StatisticsProblemResponseDTO,
-  StatisticsDateType,
   ObjectIdType,
   WebSocketResponseEventDTO,
   SubscribeProblemCrawledWebSocketEventDTO,

@@ -34,6 +34,7 @@ import {
   getPositionColumn,
   getProblemScoreboardColumn,
 } from '../../../components/contest/view/scoreboard/columns';
+import { ScoreboardResponseDTOUI } from '../../../components/contest/view/types';
 
 const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => {
   
@@ -49,9 +50,9 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   const t = useI18nStore(state => state.i18n.t);
   const contestTags = JSON.stringify(contest.tags ?? []);
   
-  const columns: DataViewerHeadersType<ScoreboardResponseDTO>[] = useMemo(() => {
+  const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
     
-    const base: DataViewerHeadersType<ScoreboardResponseDTO>[] = [
+    const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, true),
@@ -100,10 +101,11 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest.key, true, true), { refreshInterval: 60000 },
   );
   
-  const data: ScoreboardResponseDTO[] = (response?.success ? response.contents : []);
+  const data: ScoreboardResponseDTOUI[] = useMemo(() => (response?.success ? response.contents : [])
+    .map(d => ({ ...d, official: true })), [ response ]);
   
   return (
-    <DataViewer<ScoreboardResponseDTO>
+    <DataViewer<ScoreboardResponseDTOUI>
       extraNodes={userCanAdministrateServices ? [
         <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key })} key="edit">
           <Button size="tiny" type="light">

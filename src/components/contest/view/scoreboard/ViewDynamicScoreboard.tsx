@@ -15,7 +15,7 @@ import {
   ScoreboardResponseDTO,
   Status,
 } from 'types';
-import { ScoreboardResponseDTOFocus } from '../types';
+import { ScoreboardResponseDTOFocus, ScoreboardResponseDTOUI } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
 
@@ -43,8 +43,8 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     // reload: reloadScoreboardFinal,
   } = useFetcher<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, true, true));
   const scoreboardResponseFinal: ScoreboardResponseDTO[] = useMemo(() => (responseScoreboardFinal?.success ? responseScoreboardFinal.contents : []), [ responseScoreboardFinal ]);
-  const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
+  const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, contest.isEndless),
@@ -74,7 +74,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   useEffect(() => {
     if (response?.success && response.content[index]) {
       setData(prevState => {
-        const prevByUsers: { [key: string]: ScoreboardResponseDTO } = {};
+        const prevByUsers: { [key: string]: ScoreboardResponseDTOUI } = {};
         prevState.forEach(user => prevByUsers[getKeyUser(user.user)] = user);
         const nextBoard = (response.content[index + 1]?.content || []).map(scoreboard => {
           const finalUserScoreboard = scoreboardResponseFinal.find(s =>
@@ -133,6 +133,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
             ...scoreboard,
             focus,
             diff,
+            official: true,
           };
         });
       });
