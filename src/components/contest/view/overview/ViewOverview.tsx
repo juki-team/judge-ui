@@ -185,7 +185,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
             </div>
           </div>
           <div className="jk-col gap bc-we jk-br-ie jk-pg-sm">
-            {contest?.user?.isAdministrator && contest.isPast && (
+            {contest?.user?.isAdministrator && (
               <ButtonLoader
                 size="tiny"
                 type="secondary"

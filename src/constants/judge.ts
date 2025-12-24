@@ -1,4 +1,4 @@
-import { KeyFileType } from 'types';
+import { GroupByTimestampKey, KeyFileType } from 'types';
 import { JUKI_SERVICE_V1_URL } from './settings';
 
 export const JUDGE_API_V1 = {
@@ -32,7 +32,7 @@ export const JUDGE_API_V1 = {
     TEST_CASE_KEY_FILE: (problemKey: string, testCaseKey: string, keyFile: KeyFileType) => {
       return `${JUKI_SERVICE_V1_URL}/problem/${problemKey}/test-case/${testCaseKey}/key-file/${keyFile}`;
     },
-    STATISTICS: (key: string, startTimestamp: number, endTimestamp: number, groupBy: number[]) => {
+    STATISTICS: (key: string, startTimestamp: number, endTimestamp: number, groupBy: GroupByTimestampKey[]) => {
       return `${JUKI_SERVICE_V1_URL}/statistics/problem/${key}?startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}&groupBy=${groupBy.join(',')}`;
     },
     POST_PDF: () => {

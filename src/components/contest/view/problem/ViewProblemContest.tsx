@@ -101,6 +101,11 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
               }
               notifyResponse(response, setLoaderStatus);
               await reloadContest();
+              pushRoute(jukiAppRoutes.JUDGE().contests.view({
+                key: contest.key,
+                tab: ContestTab.SUBMISSIONS,
+                subTab: problem.index,
+              }));
               // if (notifyResponse(response, setLoaderStatus)) {
               //   if (isGlobal) {
               //     listenSubmission({

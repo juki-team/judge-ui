@@ -3,7 +3,7 @@
 import { jukiApiManager } from 'config';
 import { EMPTY_ENTITY_MEMBERS, JUKI_SERVICE_V2_URL } from 'config/constants';
 import { consoleInfo, contentResponse } from 'helpers';
-import { useFetcher, useMutate, useRouterStore } from 'hooks';
+import { useFetcher, useJukiNotification, useMutate, useRef, useRouterStore } from 'hooks';
 import { useCallback, useEffect, useMemo } from 'react';
 import {
   ContentResponseType,
@@ -12,6 +12,7 @@ import {
   ContestEventsResponseDTO,
   ContestMembersResponseDTO,
 } from 'types';
+import { T } from '../../commons';
 import { ContestDataUI } from './types';
 
 export function useContestData(fallbackData: ContestDataResponseDTO, companyKey: string) {
@@ -56,8 +57,8 @@ export function useContestData(fallbackData: ContestDataResponseDTO, companyKey:
   
   const reloadContest = useCallback(async () => {
     consoleInfo('reloading all contest');
-    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`, 'g'));
-    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`, 'g'));
+    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`));
+    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`));
   }, [ mutate ]);
   
   const reloadRoute = useRouterStore(store => store.reloadRoute);
@@ -66,6 +67,26 @@ export function useContestData(fallbackData: ContestDataResponseDTO, companyKey:
       reloadRoute();
     }
   }, [ dataContest?.success, reloadRoute ]);
+  
+  const previousContestRef = useRef(contest);
+  const { addWarningNotification } = useJukiNotification();
+  
+  useEffect(() => {
+    for (const problem of Object.values(contest.problems)) {
+      if (previousContestRef.current?.problems?.[problem.key]?.blockedBy?.length !== problem.blockedBy.length && problem.blockedBy.length === 0) {
+        addWarningNotification(
+          <div className="jk-col jk-pg tx-h fw-bd">
+            <T className="tt-se fw-br">problem unlocked</T>
+            <div className="jk-row">
+              <div className="jk-pg-xsm jk-br-ie bc-ht">{problem.index}</div>
+              &nbsp;{problem.name}
+            </div>
+          </div>,
+        );
+      }
+    }
+    previousContestRef.current = contest;
+  }, [ addWarningNotification, contest ]);
   
   return {
     contest,

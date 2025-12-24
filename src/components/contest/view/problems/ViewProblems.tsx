@@ -244,8 +244,8 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
       head: <TextHeadCell text={<T>name</T>} />,
       index: 'name',
       Field: ({ record }) => (
-        <Field className="jk-col nowrap gap">
-          {(isJudgeOrAdmin || record.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length === 0) && (
+        <Field className="jk-col nowrap">
+          {(isJudgeOrAdmin || contest.isPast || record.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length === 0) && (
             <ProblemNameField problem={record} contestKey={contestKey} isJudgeOrAdmin={isJudgeOrAdmin} />
           )}
           <ProblemRequisites problem={record} reloadContest={reloadContest} contest={contest} />

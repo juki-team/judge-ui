@@ -107,24 +107,22 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
           {block.type === ContestProblemBlockedByType.END_TIME_IN_THE_PAST && (
             <div className="jk-row br-hl jk-br-ie jk-pg-xsm tx-t bc-wl">
               <T className="tt-se">problem was closed ago</T>&nbsp;
-              <Timer
-                remaining={now.getTime() - endTimestamp}
-                interval={1000}
+              <TimerDisplay
+                counter={now.getTime() - endTimestamp}
                 ignoreLeadingZeros
                 ignoreTrailingZeros
                 type="weeks-days-hours-minutes"
                 literal
                 abbreviated
-                onTimeout={reloadContest}
                 maxSplit={2}
               />
             </div>
           )}
           {block.type === ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED && (
             <div
-              className={classNames('jk-row br-hl jk-br-ie jk-pg-xsm tx-t', {
-                'bc-sl': problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers,
-                'bc-wl': !(problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers),
+              className={classNames('jk-row jk-br-ie jk-pg-xsm tx-t fw-bd', {
+                'cr-ss': problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers,
+                'cr-er': !(problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers),
               })}
             >
               <T className="tt-se">max accepted submissions achieved</T>:&nbsp;

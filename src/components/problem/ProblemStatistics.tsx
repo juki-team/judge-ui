@@ -1,13 +1,18 @@
 'use client';
 
-import { ONE_DAY } from '@juki-team/commons';
 import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
 import { useFetcher, useI18nStore, usePageStore, useState } from 'hooks';
 import { i18n } from 'i18next';
 import type { ContentType } from 'recharts/types/component/Tooltip';
-import { ContentResponseType, DateLiteralProps, ProblemDataResponseDTO, StatisticsProblemResponseDTO } from 'types';
+import {
+  ContentResponseType,
+  DateLiteralProps,
+  GroupByTimestampKey,
+  ProblemDataResponseDTO,
+  StatisticsProblemResponseDTO,
+} from 'types';
 
 const now = Date.now();
 
@@ -85,7 +90,7 @@ const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t:
   );
 };
 
-const groupBy = [ ONE_DAY, ONE_DAY * 30, ONE_DAY * 365 ];
+const groupBy: GroupByTimestampKey[] = [ 'day', 'month', 'year' ];
 
 export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO }) => {
   
@@ -94,7 +99,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
   } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
   const t = useI18nStore(store => store.i18n.t);
   const { screen: viewPortScreen, height: viewPortHeight } = usePageStore(store => store.viewPort);
-  const [ dateType, setDateType ] = useState<number>(ONE_DAY);
+  const [ dateType, setDateType ] = useState<GroupByTimestampKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};
   const verdictsDate = data?.success ? data.content.date : {} as StatisticsProblemResponseDTO['date'];
@@ -133,9 +138,9 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
         <T className="tt-se fw-bd">submissions by date</T>
         <div className="jk-row gap">
           {[
-            { value: ONE_DAY, label: 'day' },
-            { value: ONE_DAY * 30, label: 'month' },
-            { value: ONE_DAY * 365, label: 'year' },
+            { value: 'day' as GroupByTimestampKey, label: 'day' },
+            { value: 'month' as GroupByTimestampKey, label: 'month' },
+            { value: 'year' as GroupByTimestampKey, label: 'year' },
           ].map(({ value, label }) => (
             <Button
               size="small"

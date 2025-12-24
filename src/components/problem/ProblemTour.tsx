@@ -26,7 +26,6 @@ export const ProblemTour = ({ children }: PropsWithChildren) => {
       onClickHighlighted={(_, { setIsOpen }) => {
         setIsOpen(false);
       }}
-      highlightedMaskClassName="testing-abc"
       maskClassName="jk-tour-mask"
       disableInteraction
       showBadge={false}

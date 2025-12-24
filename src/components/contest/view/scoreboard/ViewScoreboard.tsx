@@ -194,17 +194,17 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
           if (notifyResponse(response, setLoaderStatus)) {
             setTrigger(Date.now());
           }
-          // setLoaderStatus(Status.LOADING);
-          // {
-          //   const {
-          //     url,
-          //     ...options
-          //   } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key, official: false } });
-          //   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
-          //   if (notifyResponse(response, setLoaderStatus)) {
-          //     setTrigger(Date.now());
-          //   }
-          // }
+          setLoaderStatus(Status.LOADING);
+          {
+            const {
+              url,
+              ...options
+            } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key, official: true } });
+            const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
+            if (notifyResponse(response, setLoaderStatus)) {
+              setTrigger(Date.now());
+            }
+          }
         }}
         key="recalculate"
       >
