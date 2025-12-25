@@ -39,7 +39,6 @@ import {
 import { ShareIcon } from '../index';
 import { InfoTestCases } from './InfoTestCases';
 import { problemAccessProps } from './ProblemAccess';
-import { ProblemMySubmissions } from './ProblemMySubmissions';
 import { ProblemStatistics } from './ProblemStatistics';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
@@ -117,13 +116,13 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     },
   };
   
-  if (userIsLogged) {
-    tabs[ProblemTab.MY_SUBMISSIONS] = {
-      key: ProblemTab.MY_SUBMISSIONS,
-      header: <T className="ws-np tt-ce">my submissions</T>,
-      body: <ProblemMySubmissions problem={problem} key="my-submissions" />,
-    };
-  }
+  // if (userIsLogged) {
+  //   tabs[ProblemTab.MY_SUBMISSIONS] = {
+  //     key: ProblemTab.MY_SUBMISSIONS,
+  //     header: <T className="ws-np tt-ce">my submissions</T>,
+  //     body: <ProblemMySubmissions problem={problem} key="my-submissions" />,
+  //   };
+  // }
   tabs[ProblemTab.SUBMISSIONS] = {
     key: ProblemTab.SUBMISSIONS,
     header: <T className="ws-np tt-ce">submissions</T>,

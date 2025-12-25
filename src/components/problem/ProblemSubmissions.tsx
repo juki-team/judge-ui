@@ -72,6 +72,7 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDT
       )}
       name={QueryParam.STATUS_TABLE}
       toRow={submission => submission}
+      getRecordKey={({ data, index }) => data[index]?.submitId}
       refreshInterval={60000}
     />
   );
