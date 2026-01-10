@@ -46,7 +46,7 @@ export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
   return (
     <>
       <ProgressMultiBar
-        height={8}
+        height={6}
         tooltipPlacement="bottom"
         progress={[
           {

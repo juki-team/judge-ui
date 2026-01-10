@@ -21,6 +21,7 @@ import { SWRConfig } from 'swr';
 import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
+import { UserNotificationProvider } from './UserNotificationsProvider';
 
 const SponsoredByTag = () => {
   
@@ -92,6 +93,7 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
           <SponsoredByTag />
           <ToolButtons />
         </NavigationBar>
+        <UserNotificationProvider />
         <Analytics />
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <InstallPWAModal />

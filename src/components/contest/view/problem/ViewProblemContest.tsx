@@ -187,7 +187,7 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
         return null;
       }}
     >
-      <ProblemRequisites problem={problem} reloadContest={reloadContest} contest={contest} />
+      <ProblemRequisites problem={problem} reloadContest={reloadContest} contest={contest} withOverlay />
     </ProblemView>
   );
 };

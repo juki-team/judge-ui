@@ -1,39 +1,5 @@
-import { Information, InformationProps, T } from '../index';
-
-export const FrozenInformation = (props: InformationProps) => {
-  return (
-    <Information {...props}>
-      <T className="tt-se fw-bd">frozen period</T>
-      <T className="tt-se">
-        in this period the scoreboard is not updated but the contestant will still be able to know the verdict of
-        his submissions
-      </T>
-    </Information>
-  );
-};
-
-export const QuietInformation = (props: InformationProps) => {
-  return (
-    <Information {...props}>
-      <T className="tt-se fw-bd">quiet period</T>
-      <T className="tt-se">
-        in this period the scoreboard is not updated and the contestant will not be able to know the verdict of his
-        submissions
-      </T>
-    </Information>
-  );
-};
-
-export const UpsolvingInformation = (props: InformationProps) => {
-  return (
-    <Information {...props}>
-      <T className="tt-se fw-bd">upsolving period</T>
-      <T className="tt-se">
-        in this period the official scoreboard is not updated and the contestant will be able to send submissions
-      </T>
-    </Information>
-  );
-};
+import { InformationPopoverProps } from 'types';
+import { InformationPopover, T } from '../index';
 
 const CAN_SEE_CONTEST = 'can see the problems, the scoreboard, the submission list, and the clarifications';
 const CAN_PARTICIPANT = 'can submit solutions to the problems and send clarifications if the contest allows it';
@@ -61,11 +27,11 @@ export const GuestInformationContent = () => (
   </>
 );
 
-export const GuestInformation = (props: InformationProps) => {
+export const GuestInformation = (props: InformationPopoverProps) => {
   return (
-    <Information {...props}>
+    <InformationPopover {...props}>
       <GuestInformationContent />
-    </Information>
+    </InformationPopover>
   );
 };
 
@@ -84,11 +50,11 @@ export const SpectatorInformationContent = () => (
   </>
 );
 
-export const SpectatorInformation = (props: InformationProps) => {
+export const SpectatorInformation = (props: InformationPopoverProps) => {
   return (
-    <Information {...props}>
+    <InformationPopover {...props}>
       <SpectatorInformationContent />
-    </Information>
+    </InformationPopover>
   );
 };
 
@@ -112,11 +78,11 @@ export const ContestantInformationContent = () => (
   </>
 );
 
-export const ContestantInformation = (props: InformationProps) => {
+export const ContestantInformation = (props: InformationPopoverProps) => {
   return (
-    <Information {...props}>
+    <InformationPopover {...props}>
       <ContestantInformationContent />
-    </Information>
+    </InformationPopover>
   );
 };
 
@@ -145,11 +111,11 @@ export const JudgeInformationContent = () => (
   </>
 );
 
-export const JudgeInformation = (props: InformationProps) => {
+export const JudgeInformation = (props: InformationPopoverProps) => {
   return (
-    <Information {...props}>
+    <InformationPopover {...props}>
       <JudgeInformationContent />
-    </Information>
+    </InformationPopover>
   );
 };
 
@@ -183,10 +149,10 @@ export const AdminInformationContent = () => (
   </>
 );
 
-export const AdminInformation = (props: InformationProps) => {
+export const AdminInformation = (props: InformationPopoverProps) => {
   return (
-    <Information {...props}>
+    <InformationPopover {...props}>
       <AdminInformationContent />
-    </Information>
+    </InformationPopover>
   );
 };

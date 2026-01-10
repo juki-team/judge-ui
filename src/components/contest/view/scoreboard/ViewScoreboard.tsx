@@ -11,7 +11,14 @@ import {
   downloadSheetDataAsXlsxFile,
   getUserKey,
 } from 'helpers';
-import { useDataViewerRequester, useI18nStore, useJukiNotification, usePageStore, useUIStore } from 'hooks';
+import {
+  useDataViewerRequester,
+  useI18nStore,
+  useJukiNotification,
+  usePageStore,
+  useUIStore,
+  useUserStore,
+} from 'hooks';
 import { useCallback, useMemo, useState } from 'react';
 import {
   ContentResponseType,
@@ -111,6 +118,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contest.key;
+  const user = useUserStore(store => store.user);
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
@@ -264,6 +272,14 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
         getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) + (data?.[index]?.official ? '' : '_')
       )}
       deps={[ unfrozen, trigger ]}
+      getRecordStyle={({
+                         data,
+                         index,
+                       }) => (getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) === getUserKey(user.nickname, user.company.key) ? {
+        borderBottom: '2px solid var(--cr-at)',
+        borderTop: '2px solid var(--cr-at)',
+        borderRadius: 'var(--border-radius-inline)',
+      } : {})}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );

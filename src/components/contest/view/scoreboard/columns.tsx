@@ -1,4 +1,4 @@
-import { BalloonIcon, Field, FitnessCenterIcon, Information, T, UserChip } from 'components';
+import { BalloonIcon, Field, FitnessCenterIcon, InformationPopover, T, UserChip } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames } from 'helpers';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
@@ -38,13 +38,13 @@ const NicknameField = ({
     >
       <UserChip imageUrl={imageUrl} nickname={nickname} companyKey={companyKey} className="tx-s" />
       {!official && (
-        <Information
+        <InformationPopover
           icon={
             <FitnessCenterIcon size="small" className="cr-ss" />
           }
         >
           <T className="tt-se">upsolving period</T>
-        </Information>
+        </InformationPopover>
       )}
     </Field>
   );

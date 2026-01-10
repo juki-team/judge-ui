@@ -108,6 +108,7 @@ export type {
   ClientTrackDeviceWebSocketEventDTO,
   ScoreboardHistoryResponseDTO,
   GroupByTimestampKey,
+  SubscribeUserNotificationWebsocketEventDTO,
 } from '@juki-team/commons';
 
 export { QueryParamKey, ProblemTab, ContestTab, ProfileTab, ContestsTab } from '@juki-team/base-ui/enums';
@@ -158,6 +159,7 @@ export type {
   DataViewerToolbarProps,
   TimeDisplayType,
   CodeViewerProps,
+  InformationPopoverProps,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

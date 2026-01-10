@@ -304,7 +304,7 @@ export function ContestViewLayout() {
         <div
           style={{
             width: 'calc(100% - var(--pad-md) - var(--pad-md))',
-            bottom: -10,
+            bottom: -8,
             left: 'var(--pad-md)',
             position: 'absolute',
           }}

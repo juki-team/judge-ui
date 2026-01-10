@@ -2,7 +2,7 @@
 
 import { CheckIcon, CloseIcon, T, Timer, TimerDisplay } from 'components';
 import { classNames } from 'helpers';
-import { useState } from 'react';
+import { CSSProperties, useState } from 'react';
 import { type KeyedMutator } from 'swr';
 import {
   ContestDataResponseDTO,
@@ -15,9 +15,10 @@ interface ProblemRequisitesProps {
   problem: ContestProblemDataResponseDTO,
   reloadContest: KeyedMutator<any>,
   contest: ContestDataResponseDTO,
+  withOverlay?: boolean,
 }
 
-export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRequisitesProps) => {
+export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay }: ProblemRequisitesProps) => {
   
   const { prerequisites, blockedBy, startTimestamp, endTimestamp } = problem;
   
@@ -32,7 +33,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
         <div className="jk-col tx-t">
           {problem.startTimestamp !== contest.settings.startTimestamp && (
             <div className="jk-row center">
-              <T className="tt-se">starts at the minute</T>:&nbsp;
+              <T className="tt-se">starts at</T>:&nbsp;
               <TimerDisplay
                 counter={problem.startTimestamp - contest.settings.startTimestamp}
                 type="weeks-days-hours-minutes-seconds"
@@ -46,7 +47,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
           )}
           {problem.endTimestamp !== contest.settings.endTimestamp && (
             <div className="jk-row center">
-              <T className="tt-se">ends at the minute</T>:&nbsp;
+              <T className="tt-se">ends at</T>:&nbsp;
               <TimerDisplay
                 counter={problem.endTimestamp - contest.settings.startTimestamp}
                 type="weeks-days-hours-minutes-seconds"
@@ -119,15 +120,36 @@ export const ProblemRequisites = ({ problem, reloadContest, contest }: ProblemRe
             </div>
           )}
           {block.type === ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED && (
-            <div
-              className={classNames('jk-row jk-br-ie jk-pg-xsm tx-t fw-bd', {
-                'cr-ss': problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers,
-                'cr-er': !(problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers),
-              })}
-            >
-              <T className="tt-se">max accepted submissions achieved</T>:&nbsp;
-              {block.details?.totalSuccess} / {block.details?.maxAcceptedUsers}
-            </div>
+            !(problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers) && withOverlay ?
+              <div className="problem-view-overlay-red jk-row">
+                <div
+                  className="jk-col jk-tag bc-ht br-er"
+                  style={{
+                    zIndex: 1,
+                    '--background-color': 'color-mix(in srgb, var(--cr-we) 80%, transparent)',
+                  } as CSSProperties}
+                >
+                  <div
+                    className={classNames('jk-row jk-br-ie jk-pg-xsm tx-t fw-bd', {
+                      'cr-ss': problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers,
+                      'cr-er': !(problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers),
+                    })}
+                  >
+                    <T className="tt-se">max accepted submissions achieved</T>:&nbsp;
+                    {block.details?.totalSuccess} / {block.details?.maxAcceptedUsers}
+                  </div>
+                </div>
+              </div>
+              :
+              <div
+                className={classNames('jk-row jk-br-ie jk-pg-xsm tx-t fw-bd', {
+                  'cr-ss': problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers,
+                  'cr-er': !(problem.myIndexAccepted !== -1 && problem.myIndexAccepted < problem.maxAcceptedUsers),
+                })}
+              >
+                <T className="tt-se">max accepted submissions achieved</T>:&nbsp;
+                {block.details?.totalSuccess} / {block.details?.maxAcceptedUsers}
+              </div>
           )}
         </div>
       ))}

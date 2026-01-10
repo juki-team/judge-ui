@@ -115,5 +115,9 @@ export {
   ApplicationLoaderLayout,
   TabsInlineButtonLoader,
   TabsInlineButton,
+  InformationPopover,
+  FrozenInformation,
+  QuietInformation,
+  UpsolvingInformation,
 } from '@juki-team/base-ui';
 export * from './Pagination';
