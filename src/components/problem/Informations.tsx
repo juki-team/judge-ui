@@ -1,11 +1,11 @@
 'use client';
 
-import { InfoIIcon, InformationProps, Modal, T } from 'components';
+import { InfoIIcon, Modal, T } from 'components';
 import { useState } from 'hooks';
-import { ProblemVerdict } from 'types';
+import { InformationPopoverProps, ProblemVerdict } from 'types';
 import { Verdict } from './Verdict';
 
-export const ProblemScoringModeInformation = ({ filledCircle }: InformationProps) => {
+export const ProblemScoringModeInformation = ({ filledCircle }: InformationPopoverProps) => {
   const [ isOpen, setIsOpen ] = useState(false);
   return (
     <>
