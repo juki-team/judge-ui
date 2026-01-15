@@ -44,14 +44,7 @@ li > * {
 
 .text-editor {
   .jk-md-math-viewer-layout {
-    //@extend .bc-we;
     min-height: 64px;
-  }
-  
-  .jk-md-math-editor-layout {
-    .content-preview {
-      box-sizing: border-box;
-    }
   }
 }
 
@@ -252,5 +245,42 @@ html {
     background: var(--cr-er-lt);
     opacity: 0.2;
     border-radius: var(--border-radius-inline);
+  }
+}
+
+.absolute-bottom-right {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  
+  .content {
+  
+  }
+}
+
+.right-panel {
+  height: calc(var(--100VH) - var(--first-content-section-height) - var(--pad-sm) - var(--pad-sm));
+  position: sticky;
+  top: 0;
+  overflow: auto;
+  @include utils.transition(width);
+}
+
+.vertical-text {
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+}
+
+.ai-chat-messages {
+  .message {
+    max-width: 90%;
+    
+    &.user {
+      align-self: end;
+    }
+    
+    &.chat {
+      align-self: start;
+    }
   }
 }

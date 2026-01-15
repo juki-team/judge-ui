@@ -160,6 +160,7 @@ export type {
   TimeDisplayType,
   CodeViewerProps,
   InformationPopoverProps,
+  MdMathEditorProps,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';

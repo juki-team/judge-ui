@@ -103,4 +103,7 @@ export {
   FileCopyIcon,
   ShareIcon,
   FitnessCenterIcon,
+  RedoIcon,
+  UndoIcon,
+  SmartToyIcon,
 } from '@juki-team/base-ui/server-components';

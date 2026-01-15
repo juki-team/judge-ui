@@ -29,7 +29,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay
   
   return (
     <div className="jk-col gap">
-      {(isAdministrator || isManager) && (
+      {(isAdministrator || isManager) && (problem.startTimestamp !== contest.settings.startTimestamp || problem.endTimestamp !== contest.settings.endTimestamp) && (
         <div className="jk-col tx-t">
           {problem.startTimestamp !== contest.settings.startTimestamp && (
             <div className="jk-row center">

@@ -2,19 +2,41 @@
 
 import { MdMathEditor, MdMathViewer, PlusIcon, T } from 'components';
 import { useUserStore } from 'hooks';
-import { type Dispatch, type  SetStateAction } from 'react';
-import { Language, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
+import { type Dispatch, type  SetStateAction, useState } from 'react';
+import { Language, MdMathEditorProps, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
 import { SampleTest } from '../SampleTest';
 
 interface ProblemStatementMdProps {
   problem: UpsertProblemUIDTO,
   setProblem: Dispatch<SetStateAction<UpsertProblemUIDTO>>,
   language: Language,
+  recordHistory: () => void,
 }
 
-export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemStatementMdProps) => {
+const EditorOnClick = (props: MdMathEditorProps) => {
+  const [ editor, setEditor ] = useState(false);
   
-  const { settings, statement } = problem;
+  if (editor) {
+    return (
+      <MdMathEditor
+        {...props}
+        onBlur={() => setEditor(false)}
+        className="bc-we"
+      />
+    );
+  }
+  
+  return (
+    <div
+      className="jk-pg-xsm jk-br-ie bc-we br-hl"
+      onClick={() => setEditor(true)}
+    >
+      <MdMathViewer source={props.value} />
+    </div>
+  );
+};
+
+export const ProblemStatementMd = ({ problem, setProblem, language, recordHistory }: ProblemStatementMdProps) => {
   
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
@@ -22,69 +44,75 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
     <div className="jk-col stretch" key={language}>
       <div>
         <h3><T className="tt-se">description</T></h3>
-        <div className="text-editor bc-we">
-          <MdMathEditor
+        <div className="text-editor">
+          <EditorOnClick
             key={language}
             informationButton
             enableTextPlain
             enableImageUpload
-            enableIA
-            value={statement.description?.[language]}
-            onChange={value => setProblem(prevState => ({
-              ...prevState,
-              statement: {
-                ...prevState.statement,
-                description: { ...statement.description, [language]: value },
-              },
-            }))}
+            value={problem.statement.description?.[language]}
+            onChange={value => {
+              recordHistory();
+              setProblem(prevState => ({
+                ...prevState,
+                statement: {
+                  ...prevState.statement,
+                  description: { ...prevState.statement.description, [language]: value },
+                },
+              }));
+            }}
           />
         </div>
       </div>
       <div>
         <h3><T className="tt-se">input</T></h3>
-        <div className="text-editor bc-we">
-          <MdMathEditor
+        <div className="text-editor">
+          <EditorOnClick
             key={language}
             informationButton
             enableTextPlain
             enableImageUpload
-            enableIA
-            value={statement.input?.[language]}
-            onChange={value => setProblem(prevState => ({
-              ...prevState,
-              statement: {
-                ...statement,
-                input: { ...statement.input, [language]: value },
-              },
-            }))}
+            value={problem.statement.input?.[language]}
+            onChange={value => {
+              recordHistory();
+              setProblem(prevState => ({
+                ...prevState,
+                statement: {
+                  ...prevState.statement,
+                  input: { ...prevState.statement.input, [language]: value },
+                },
+              }));
+            }}
           />
         </div>
       </div>
       <div>
         <h3><T className="tt-se">output</T></h3>
-        <div className="text-editor bc-we">
-          <MdMathEditor
+        <div className="text-editor">
+          <EditorOnClick
             key={language}
             informationButton
             enableTextPlain
             enableImageUpload
-            enableIA
-            value={statement.output?.[language]}
-            onChange={value => setProblem(prevState => ({
-              ...prevState,
-              statement: {
-                ...statement,
-                output: { ...statement.output, [language]: value },
-              },
-            }))}
+            value={problem.statement.output?.[language]}
+            onChange={value => {
+              recordHistory();
+              setProblem(prevState => ({
+                ...prevState,
+                statement: {
+                  ...prevState.statement,
+                  output: { ...prevState.statement.output, [language]: value },
+                },
+              }));
+            }}
           />
         </div>
       </div>
-      {settings.scoringMode === ProblemScoringMode.SUBTASK && (
+      {problem.settings.scoringMode === ProblemScoringMode.SUBTASK && (
         <div>
           <h3><T className="tt-se">subtasks description</T></h3>
           <div className="jk-col left stretch gap">
-            {Object.values(settings.pointsByGroups).map(pointsByGroup => (
+            {Object.values(problem.settings.pointsByGroups).map(pointsByGroup => (
               <div className="jk-row extend gap" key={pointsByGroup.group}>
                 {pointsByGroup.group !== 0 ? (
                   <>
@@ -98,7 +126,7 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
                     </div>
                     :
                     <div className="flex-1 text-editor bc-we">
-                      <MdMathEditor
+                      <EditorOnClick
                         informationButton
                         enableTextPlain
                         enableImageUpload
@@ -152,46 +180,54 @@ export const ProblemStatementMd = ({ problem, setProblem, language }: ProblemSta
           <PlusIcon
             className="cr-py"
             filledCircle
-            onClick={() => setProblem(prevState => ({
-              ...prevState,
-              statement: {
-                ...statement,
-                sampleCases: [ ...statement.sampleCases, { input: '', output: '' } ],
-              },
-            }))}
+            onClick={() => {
+              recordHistory();
+              setProblem(prevState => ({
+                ...prevState,
+                statement: {
+                  ...prevState.statement,
+                  sampleCases: [ ...prevState.statement.sampleCases, { input: '', output: '' } ],
+                },
+              }));
+            }}
           />
         </div>
       </div>
       <div className="jk-col stretch gap">
-        {(statement.sampleCases || [ { input: '', output: '' } ]).map((_, index) => (
+        {(problem.statement.sampleCases || [ { input: '', output: '' } ]).map((_, index) => (
           <SampleTest
             index={index}
-            sampleCases={statement.sampleCases}
+            sampleCases={problem.statement.sampleCases}
             key={index}
-            setSampleCases={(sampleCases) => setProblem(prevState => ({
-              ...prevState,
-              statement: { ...statement, sampleCases },
-            }))}
+            setSampleCases={(sampleCases) => {
+              recordHistory();
+              setProblem(prevState => ({
+                ...prevState,
+                statement: { ...prevState.statement, sampleCases },
+              }));
+            }}
           />
         ))}
       </div>
       <div>
         <h3><T className="tt-se">note</T></h3>
-        <div className="text-editor bc-we">
-          <MdMathEditor
+        <div className="text-editor">
+          <EditorOnClick
             key={language}
             informationButton
             enableTextPlain
             enableImageUpload
-            enableIA
-            value={statement.note?.[language]}
-            onChange={value => setProblem(prevState => ({
-              ...prevState,
-              statement: {
-                ...statement,
-                note: { ...statement.note, [language]: value },
-              },
-            }))}
+            value={problem.statement.note?.[language]}
+            onChange={value => {
+              recordHistory();
+              setProblem(prevState => ({
+                ...prevState,
+                statement: {
+                  ...prevState.statement,
+                  note: { ...prevState.statement.note, [language]: value },
+                },
+              }));
+            }}
           />
         </div>
       </div>

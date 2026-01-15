@@ -2,6 +2,7 @@ import {
   EntityMembersResponseDTO,
   EntityState,
   Judge,
+  ProblemSampleCasesType,
   UpsertProblemDTO,
   UserCompanyBasicInfoResponseDTO,
 } from './commons';
@@ -18,4 +19,12 @@ export interface UpsertProblemUIDTO extends Omit<UpsertProblemDTO, 'members'> {
 
 export enum PrintMode {
   AS_PROBLEM_SET = 'asProblemSet'
+}
+
+export type StatementDTO = {
+  description: string,
+  input: string,
+  output: string,
+  note: string,
+  sampleCases: ProblemSampleCasesType,
 }

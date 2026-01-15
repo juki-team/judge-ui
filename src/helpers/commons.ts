@@ -44,4 +44,5 @@ export {
   getContestState,
   getAuthorizedRequest,
   getVisitorSessionId,
+  upperFirst,
 } from '@juki-team/base-ui/helpers';

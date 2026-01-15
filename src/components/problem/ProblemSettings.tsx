@@ -64,7 +64,8 @@ export const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
         >
           <InfoIIcon circle size="small" />
         </div>
-        &nbsp;<span className="fw-bd">:</span>
+        &nbsp;
+        <span className="fw-bd">:</span>
       </div>
       <MultiSelect
         options={allTags.map(tag => ({ value: tag, label: <T>{tag}</T> }))}
@@ -128,6 +129,17 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
   
   return (
     <div className="jk-col left stretch gap nowrap">
+      <div className="jk-br-ie bc-we jk-row left jk-pg-sm">
+        <Input
+          value={problem.shortname}
+          label={<T className="tt-se">shortname</T>}
+          labelPlacement="left"
+          onChange={value => setProblem(prevState => ({
+            ...prevState,
+            shortname: value,
+          }))}
+        />
+      </div>
       <div className="jk-col gap left stretch bc-we jk-br-ie jk-pg-sm">
         <div className="jk-row left nowrap gap">
           <div className="fw-bd tt-se"><T>problem scoring mode</T>:</div>
