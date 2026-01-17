@@ -16,7 +16,7 @@ export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTO
   head: '#',
   index: 'position',
   Field: ({ record: { position, focus } }) => (
-    <Field className={classNames('jk-row', { highlight: !!focus?.length })}>{position < 0 ? '' : position}</Field>
+    <Field className={classNames('jk-row top-label', { highlight: !!focus?.length })}>{position < 0 ? '' : position}</Field>
   ),
   minWidth: 64,
   sticky: true,

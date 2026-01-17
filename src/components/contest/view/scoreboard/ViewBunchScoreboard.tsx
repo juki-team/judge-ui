@@ -338,7 +338,6 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
         getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) + (data?.[index]?.official ? '' : '_')
       )}
       deps={[ unfrozen ]}
-      getRecordClassName={() => 'top-label'}
       getRecordStyle={({
                          data,
                          index,
