@@ -284,3 +284,20 @@ html {
     }
   }
 }
+
+.top-label {
+  &::after {
+    content: var(--top-label);
+    top: 0;
+    left: var(--gap);
+    background: var(--top-label-color);
+    z-index: 1;
+    border-radius: 0 0 var(--border-radius-inline) var(--border-radius-inline);
+    height: 16px;
+    position: absolute;
+    font-size: var(--tx-s-t);
+    color: var(--cr-we);
+    line-height: 1.1;
+    padding: 0 var(--gap);
+  }
+}

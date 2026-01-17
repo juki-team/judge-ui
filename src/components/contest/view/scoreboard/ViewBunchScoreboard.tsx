@@ -4,7 +4,7 @@ import { DataViewer, InputToggle, Select, T, useContest } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { classNames, downloadDataTableAsCsvFile, downloadSheetDataAsXlsxFile, getUserKey } from 'helpers';
 import { useDataViewerRequester, useI18nStore, usePageStore, useUIStore, useUserStore } from 'hooks';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ContentsResponseType,
   ContestDataResponseDTO,
@@ -15,7 +15,6 @@ import {
 } from 'types';
 import { BunchScoreboardResponseDTOUI, ScoreboardResponseDTOUI } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
-import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
 
 interface DownloadButtonProps {
   data: ScoreboardResponseDTO[],
@@ -186,14 +185,22 @@ const useScores = (contestsKeys: string[], unfrozen: boolean) => {
   
   const data: BunchScoreboardResponseDTOUI[] = useMemo(() => [
       ...([
-        ...(response1?.success ? response1.contents : []).map(a => ({ ...a, order: 1 })),
-        ...(response2?.success ? response2.contents : []).map(a => ({ ...a, order: 2 })),
-        ...(response3?.success ? response3.contents : []).map(a => ({ ...a, order: 3 })),
-        ...(response4?.success ? response4.contents : []).map(a => ({ ...a, order: 4 })),
-        ...(response5?.success ? response5.contents : []).map(a => ({ ...a, order: 5 })),
-        ...(response6?.success ? response6.contents : []).map(a => ({ ...a, order: 6 })),
-        ...(response7?.success ? response7.contents : []).map(a => ({ ...a, order: 7 })),
-        ...(response8?.success ? response8.contents : []).map(a => ({ ...a, order: 8 })),
+        ...(response1?.success ? response1.contents : [])
+          .map(a => ({ ...a, order: 1, label: 'Grupo 1', color: '#0062FF' })), // Rosa Neón Potente
+        ...(response2?.success ? response2.contents : [])
+          .map(a => ({ ...a, order: 2, label: 'Grupo 2', color: '#FF8800' })), // Naranja Eléctrico
+        ...(response3?.success ? response3.contents : [])
+          .map(a => ({ ...a, order: 3, label: 'Grupo 3', color: '#00B300' })), // Verde Lima Intenso
+        ...(response4?.success ? response4.contents : [])
+          .map(a => ({ ...a, order: 4, label: 'Grupo 4', color: '#00A1FF' })), // Azul Cielo Brillante
+        ...(response5?.success ? response5.contents : [])
+          .map(a => ({ ...a, order: 5, label: 'Grupo 5', color: '#9D00FF' })), // Violeta Eléctrico
+        ...(response6?.success ? response6.contents : [])
+          .map(a => ({ ...a, order: 6, label: 'Grupo 6', color: '#00CEC9' })), // Turquesa Oscuro
+        ...(response7?.success ? response7.contents : [])
+          .map(a => ({ ...a, order: 7, label: 'Grupo 7', color: '#E84393' })), // Fucsia
+        ...(response8?.success ? response8.contents : [])
+          .map(a => ({ ...a, order: 8, label: 'Grupo 8', color: '#2D3436' })), // Carbón (Para resaltar los otros)
       ]).map(d => ({ ...d, official: true })),
       // ...([
       //   ...(responseUnofficial1?.success ? responseUnofficial1.contents : []),
@@ -247,9 +254,8 @@ const useScores = (contestsKeys: string[], unfrozen: boolean) => {
 
 export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
   
-  const { contest, reloadContest } = useContest();
+  const { contest } = useContest();
   
-  const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contestKeys[0];
   const user = useUserStore(store => store.user);
   const { Link } = useUIStore(store => store.components);
@@ -313,9 +319,9 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
     [ contest.groups ],
   );
   
-  const score = (
-    <DataViewer<ScoreboardResponseDTOUI>
-      headers={columns}
+  return (
+    <DataViewer<BunchScoreboardResponseDTOUI>
+      headers={columns as [] as DataViewerHeadersType<BunchScoreboardResponseDTOUI>[]}
       data={data}
       rows={{ height: 68 }}
       requestRef={request}
@@ -332,23 +338,22 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
         getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) + (data?.[index]?.official ? '' : '_')
       )}
       deps={[ unfrozen ]}
+      getRecordClassName={() => 'top-label'}
       getRecordStyle={({
                          data,
                          index,
-                       }) => (getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) === getUserKey(user.nickname, user.company.key) ? {
-        borderBottom: '2px solid var(--cr-at)',
-        borderTop: '2px solid var(--cr-at)',
-        borderRadius: 'var(--border-radius-inline)',
-      } : {})}
+                       }) => ({
+        
+        ...(
+          getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) === getUserKey(user.nickname, user.company.key) ? {
+            borderBottom: '2px solid var(--cr-at)',
+            borderTop: '2px solid var(--cr-at)',
+            borderRadius: 'var(--border-radius-inline)',
+          } : {}),
+        '--top-label': `"${data[index]?.label}"`,
+        '--top-label-color': data[index]?.color,
+      })}
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
-  
-  const onClose = useCallback(() => setDynamic(false), []);
-  
-  if (dynamic) {
-    return <ViewDynamicScoreboard contest={contest} onClose={onClose} reloadContest={reloadContest} />;
-  }
-  
-  return score;
 };

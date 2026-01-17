@@ -4,7 +4,7 @@ import { EMPTY_COMPANY, EMPTY_USER } from 'config/constants';
 import { get } from 'helpers';
 import { type ReactNode } from 'react';
 import type { ContentResponseType, PingResponseDTO } from 'types';
-import { RootLayout } from './RootLayout';
+import { RootLayout } from '../../(session)/RootLayout';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +24,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
   return (
     <UserStoreProvider initialUser={await getInitialUser()}>
       <UserLoaderLayout />
-      <RootLayout withNavBar>
+      <RootLayout withNavBar={false}>
         {children}
       </RootLayout>
     </UserStoreProvider>

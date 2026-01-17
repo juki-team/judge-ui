@@ -54,7 +54,7 @@ const initialLastPath = {
   [LastPathKey.SECTION_HELP]: `/help`,
 };
 
-export const RootLayout = ({ children }: PropsWithChildren) => {
+export const RootLayout = ({ children, withNavBar }: PropsWithChildren<{ withNavBar: boolean }>) => {
   
   const { isLoadingRoute, push, replace, refresh } = useRouter();
   const routeParams = useParams();
@@ -93,11 +93,19 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
         multiCompanies={false}
         onSeeMyProfile={(nickname, companyKey) => push(jukiAppRoutes.JUDGE().profiles.view({ nickname, companyKey }))}
       >
-        <NavigationBar>
-          {Children.toArray(children)}
-          <SponsoredByTag />
-          <ToolButtons />
-        </NavigationBar>
+        {withNavBar ? (
+          <NavigationBar>
+            {Children.toArray(children)}
+            <SponsoredByTag />
+            <ToolButtons />
+          </NavigationBar>
+        ) : (
+          <>
+            {Children.toArray(children)}
+            <SponsoredByTag />
+            <ToolButtons />
+          </>
+        )}
         <UserNotificationProvider />
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <InstallPWAModal />

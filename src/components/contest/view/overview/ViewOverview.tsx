@@ -224,42 +224,44 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 <T className="tt-se">{contest?.settings.upsolvingEnabled ? 'disable upsolving' : 'enable upsolving'}</T>
               </ButtonLoader>
             )}
-            <ButtonLoader
-              key="download-contest-problemset"
-              onClick={async (setLoaderStatus) => {
-                setLoaderStatus(Status.LOADING);
-                const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
-                  params: {
-                    key: contest.key,
-                    language: userPreferredLanguage,
-                  },
-                });
-                const response = cleanRequest<ContentResponseType<{ urlExportedPDF: string }>>(
-                  await authorizedRequest(url, options),
-                );
-                
-                if (response.success) {
-                  if (!response.content.urlExportedPDF) {
+            {!(contest?.isFuture && !contest?.user?.isManager) && (
+              <ButtonLoader
+                key="download-contest-problemset"
+                onClick={async (setLoaderStatus) => {
+                  setLoaderStatus(Status.LOADING);
+                  const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
+                    params: {
+                      key: contest.key,
+                      language: userPreferredLanguage,
+                    },
+                  });
+                  const response = cleanRequest<ContentResponseType<{ urlExportedPDF: string }>>(
+                    await authorizedRequest(url, options),
+                  );
+                  
+                  if (response.success) {
+                    if (!response.content.urlExportedPDF) {
+                      setLoaderStatus(Status.SUCCESS);
+                      return addWarningNotification(
+                        <div className="jk-col stretch" style={{ width: '100%' }}>
+                          <span className="tt-se">
+                            <T>{response.message}</T>
+                          </span>
+                        </div>,
+                      );
+                    }
+                    await downloadUrlAsFile('https://' + response.content.urlExportedPDF, `${contest.name} - ${t('problemset')}`);
                     setLoaderStatus(Status.SUCCESS);
-                    return addWarningNotification(
-                      <div className="jk-col stretch" style={{ width: '100%' }}>
-                        <span className="tt-se">
-                          <T>{response.message}</T>
-                        </span>
-                      </div>,
-                    );
+                  } else {
+                    setLoaderStatus(Status.ERROR);
                   }
-                  await downloadUrlAsFile('https://' + response.content.urlExportedPDF, `${contest.name} - ${t('problemset')}`);
-                  setLoaderStatus(Status.SUCCESS);
-                } else {
-                  setLoaderStatus(Status.ERROR);
-                }
-              }}
-              size="tiny"
-              type="light"
-            >
-              <T className="tt-se">download problemset</T>
-            </ButtonLoader>
+                }}
+                size="tiny"
+                type="light"
+              >
+                <T className="tt-se">download problemset</T>
+              </ButtonLoader>
+            )}
           </div>
         </div>
       </div>

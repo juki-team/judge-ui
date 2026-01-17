@@ -1,4 +1,4 @@
-import { ContestDataProvider, ContestNotFoundCard, TwoContentLayout } from 'components';
+import { ContestDataProvider, ContestNotFoundCard, TwoContentLayout, UserPreviewModal } from 'components';
 import { jukiApiManager } from 'config';
 import { DEFAULT_METADATA } from 'config/constants';
 import { get, oneTab } from 'helpers';
@@ -55,6 +55,7 @@ export default async function Page({ params }: Props) {
     return (
       <ContestDataProvider fallbackData={contestResponse.content}>
         <ViewBunchScoreboard contestKeys={contestsKeys.split(',')} />
+        <UserPreviewModal />
       </ContestDataProvider>
     );
   }

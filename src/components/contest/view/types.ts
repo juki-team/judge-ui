@@ -8,7 +8,12 @@ import {
 
 export type ScoreboardResponseDTOUI = ScoreboardResponseDTO & { official: boolean };
 
-export type BunchScoreboardResponseDTOUI = ScoreboardResponseDTO & { official: boolean, order: number };
+export type BunchScoreboardResponseDTOUI = ScoreboardResponseDTO & {
+  official: boolean,
+  order: number,
+  label: string,
+  color: string
+};
 
 export interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTOUI {
   focus?: { problemKey: string, success: boolean, points: number }[],
