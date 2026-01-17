@@ -68,6 +68,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
         <MdMathViewer
           source={contest?.description}
           className={classNames('jk-pg-md jk-br-ie', { 'bc-we': !forPrinting })}
+          flatView
         />
       </div>
       <div

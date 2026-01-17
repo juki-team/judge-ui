@@ -1,13 +1,13 @@
 import { UserStoreProvider } from 'components';
 import { jukiApiManager } from 'config';
 import { EMPTY_COMPANY, EMPTY_USER } from 'config/constants';
-import { ReactNode } from 'react';
+import { get } from 'helpers';
+import { type PropsWithChildren } from 'react';
 import './styles.scss';
-import { ContentResponseType, PingResponseDTO } from 'types';
-import { get } from '../../helpers/fetch';
+import type { ContentResponseType, PingResponseDTO } from 'types';
 import { Initializer } from './Initializer';
 
-const getInitialUsers = async () => {
+const getInitialUser = async () => {
   
   const session = await get<ContentResponseType<PingResponseDTO>>(jukiApiManager.API_V2.auth.ping().url);
   
@@ -18,9 +18,9 @@ const getInitialUsers = async () => {
   };
 };
 
-export default async function Layout({ children }: { children: ReactNode }) {
+export default async function Layout({ children }: PropsWithChildren) {
   return (
-    <UserStoreProvider initialUser={await getInitialUsers()}>
+    <UserStoreProvider initialUser={await getInitialUser()}>
       <Initializer />
       <div id="juki-app" style={{ overflow: 'auto' }}>
         {children}

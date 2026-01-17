@@ -1,6 +1,5 @@
 'use client';
 
-import { Analytics } from '@vercel/analytics/react';
 import {
   ErrorBoundary,
   Image,
@@ -14,6 +13,7 @@ import {
 import { jukiAppRoutes } from 'config';
 import { JUKI_APP_COMPANY_KEY, NODE_ENV, ROUTES } from 'config/constants';
 import { usePreloadComponents, useUIStore, useUserStore } from 'hooks';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { Children, type PropsWithChildren } from 'react';
@@ -22,6 +22,11 @@ import { LastPathKey } from 'types';
 import { useRouter } from '../../hooks/useRouter';
 import { useSearchParams } from '../../hooks/useSearchParams';
 import { UserNotificationProvider } from './UserNotificationsProvider';
+
+const Analytics = dynamic(
+  () => import('@vercel/analytics/react').then(m => m.Analytics),
+  { ssr: false },
+);
 
 const SponsoredByTag = () => {
   
@@ -49,7 +54,7 @@ const initialLastPath = {
   [LastPathKey.SECTION_HELP]: `/help`,
 };
 
-export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
+export const RootLayout = ({ children }: PropsWithChildren) => {
   
   const { isLoadingRoute, push, replace, refresh } = useRouter();
   const routeParams = useParams();
@@ -94,9 +99,9 @@ export const RootLayout = ({ children }: PropsWithChildren<{}>) => {
           <ToolButtons />
         </NavigationBar>
         <UserNotificationProvider />
-        <Analytics />
         <NewVersionAvailable apiVersionUrl="/api/version" />
         <InstallPWAModal />
+        <Analytics />
         {/*<NotificationWarningModal />*/}
         {/*<ScreenshotFrames />*/}
       </JukiProviders>

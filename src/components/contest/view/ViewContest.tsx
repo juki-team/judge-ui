@@ -271,7 +271,6 @@ export function ContestViewLayout() {
     <TwoContentLayout
       breadcrumbs={breadcrumbs}
       tabs={tabHeaders}
-      // tabs={{}}
       tabButtons={extraNodes}
       selectedTabKey={contestTab}
       getHrefOnTabChange={tab => jukiAppRoutes.JUDGE().contests.view({ key: contestKey, tab, subTab: problemIndex })}

@@ -106,4 +106,5 @@ export {
   RedoIcon,
   UndoIcon,
   SmartToyIcon,
+  DoubleUpIcon,
 } from '@juki-team/base-ui/server-components';

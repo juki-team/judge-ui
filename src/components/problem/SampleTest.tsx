@@ -1,6 +1,6 @@
 'use client';
 
-import { DeleteIcon, EditIcon, InfoIIcon, SaveIcon, TextArea } from 'components';
+import { DeleteIcon, EditIcon, NewlineInfo, SaveIcon, TextArea } from 'components';
 import { useEffect, useState } from 'hooks';
 import { ProblemSampleCasesType } from 'types';
 
@@ -43,13 +43,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
           ) : (
             <div className="sample-text-content jk-br-ie">
               <div className="jk-row gap sample-text-icons">
-                <div
-                  data-tooltip-id="jk-tooltip"
-                  data-tooltip-content={`${sample.input.lastIndexOf('\n') === sample.input.length - 1 ? '' : 'no '}newline at end of file`}
-                  className="cr-th"
-                >
-                  <InfoIIcon circle size="small" />
-                </div>
+                <NewlineInfo text={sample.input} />
               </div>
               <span>{sample.input}</span>
             </div>
@@ -64,13 +58,7 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
           ) : (
             <div className="sample-text-content jk-br-ie">
               <div className="jk-row gap sample-text-icons">
-                <div
-                  data-tooltip-id="jk-tooltip"
-                  data-tooltip-content={`${sample.output.lastIndexOf('\n') === sample.output.length - 1 ? '' : 'no '}newline at end of file`}
-                  className="cr-th"
-                >
-                  <InfoIIcon circle size="small" />
-                </div>
+                <NewlineInfo text={sample.output} />
               </div>
               <span>
                 {sample.output}

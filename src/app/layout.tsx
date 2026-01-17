@@ -2,7 +2,7 @@ import { JukiI18nInitializer, StylesLazy } from 'components';
 import { DEFAULT_METADATA } from 'config/constants';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { ReactNode } from 'react';
+import { type PropsWithChildren } from 'react';
 import './styles.scss';
 import '@juki-team/base-ui/styles.scss';
 
@@ -15,23 +15,11 @@ const inter = Inter({
 
 export const metadata: Metadata = DEFAULT_METADATA;
 
-export default async function Layout({ children }: { children: ReactNode }) {
+export default async function Layout({ children }: PropsWithChildren) {
   
   return (
     <html lang="en" className={inter.variable}>
     <body className="jk-theme-light">
-    <iframe
-      style={{ display: 'none' }} src="https://www.juki.app/jk-cross.html"
-      className="juki-iframe-cross-domain"
-    />
-    <iframe
-      style={{ display: 'none' }} src="https://utils.juki.app/jk-cross.html"
-      className="juki-iframe-cross-domain"
-    />
-    <iframe
-      style={{ display: 'none' }} src="https://coach.juki.app/jk-cross.html"
-      className="juki-iframe-cross-domain"
-    />
     {children}
     <JukiI18nInitializer />
     <StylesLazy />

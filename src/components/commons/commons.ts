@@ -108,7 +108,6 @@ export {
   EntityUpdateLayout,
   FieldText,
   UserStoreProvider,
-  JukiI18nInitializer,
   LoginUser,
   TimerDisplay,
   UserLoaderLayout,
@@ -119,5 +118,6 @@ export {
   FrozenInformation,
   QuietInformation,
   UpsolvingInformation,
+  NewlineInfo,
 } from '@juki-team/base-ui';
 export * from './Pagination';

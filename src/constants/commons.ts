@@ -42,4 +42,5 @@ export {
   SEPARATOR_TOKEN,
   ONE_SECOND,
   HEADER_JUKI_FORWARDED_HOST,
+  HEADER_JUKI_INTERNAL_API_KEY,
 } from '@juki-team/commons';

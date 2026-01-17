@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic';
 
-import { HEADER_JUKI_INTERNAL_API_KEY } from '@juki-team/commons';
 import { jukiApiManager } from 'config';
-import { JUKI_INTERNAL_API_KEY } from 'config/constants';
+import { HEADER_JUKI_INTERNAL_API_KEY, JUKI_INTERNAL_API_KEY } from 'config/constants';
 import { cleanRequest, getHeaders } from 'helpers';
 import { ContentResponseType, ContestDataResponseDTO } from 'types';
 import { ContestProblemSetViewPage } from './ContestProblemSetViewPage';

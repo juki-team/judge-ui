@@ -29,22 +29,22 @@ const SUGGESTIONS = [
   {
     icon: <div>✨</div>,
     label: 'polish narrative',
-    prompt: 'Si ya existe una historia, mejórala para que sea más profesional y fluida. Si no existe, crea una breve narrativa. En ambos casos, mantén la coherencia técnica y usa suggestStatement.',
+    prompt: 'Si ya existe una historia, mejórala para que sea más profesional y fluida. Si no existe, crea una breve narrativa. En ambos casos, mantén la coherencia técnica y sugiere cambios si es necesario.',
   },
   {
     icon: <div>📏</div>,
     label: 'fix formatting',
-    prompt: 'Aplica las reglas de formato y las reglas de estructura del enunciado. Usa suggestStatement.',
+    prompt: 'Revisa las reglas de formato y las reglas de estructura del enunciado. Sugiere cambios si es necesario.',
   },
   {
     icon: <div>🧪</div>,
     label: 'edge cases',
-    prompt: 'Analiza las restricciones y genera sampleCases con valores límite (mínimos/máximos). Usa suggestStatement para integrarlos.',
+    prompt: 'Revisa si los casos de ejemplo son validos analizando las restricciones y genera más casos de ejemplo si fuera necesario (como por ejemplo con valores límite mínimos/máximos).',
   },
   {
     icon: <div>🔍</div>,
     label: 'logic audit',
-    prompt: 'Busca contradicciones o falta de claridad entre la descripción y el input/output. Si hay ambigüedades, corrígelas con suggestStatement.',
+    prompt: 'Busca contradicciones o falta de claridad entre la descripción y el input/output. Si hay ambigüedades, corrígelas si fuera necesario.',
   },
 ];
 
@@ -72,10 +72,12 @@ export const ProblemStatementAiRedactorChat = ({
             input: typeof part?.input?.input === 'string' ? part?.input?.input : statement.input,
             output: typeof part?.input?.output === 'string' ? part?.input?.output : statement.output,
             note: typeof part?.input?.note === 'string' ? part?.input?.note : statement.note,
-            sampleCases: Array.isArray(part?.input?.sampleCases) ? part?.input?.sampleCases.map(sample => ({
-              input: typeof sample?.input === 'string' ? sample?.input : '',
-              output: typeof sample?.output === 'string' ? sample?.output : '',
-            })) : statement.sampleCases,
+            sampleCases: Array.isArray(part?.input?.sampleCases) && part?.input?.sampleCases?.length > 0
+              ? part?.input?.sampleCases.map(sample => ({
+                input: typeof sample?.input === 'string' ? sample?.input : '',
+                output: typeof sample?.output === 'string' ? sample?.output : '',
+              }))
+              : statement.sampleCases,
           });
         }
       }
@@ -113,7 +115,7 @@ export const ProblemStatementAiRedactorChat = ({
                     case 'text':
                       return (
                         <div key={`${message.id}-${i}`}>
-                          <MdMathViewer source={part.text} slideView />
+                          <MdMathViewer source={part.text} flatView />
                         </div>
                       );
                     case 'tool-suggestStatement':

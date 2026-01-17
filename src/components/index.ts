@@ -4,5 +4,6 @@ export * from './contest';
 export * from './problem';
 export * from './server';
 export * from './InstallPWAModal';
+export * from './JukiI18nInitializer';
 export * from './styles';
 export * from './ToolButtons';

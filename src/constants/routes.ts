@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
-import { ProfileTab } from 'types';
+import { type Metadata } from 'next';
+import type { ProfileTab } from 'types';
 
 export const _TAB = ':tab';
 export const _SUB_SUB_TAB = ':subSubTab';

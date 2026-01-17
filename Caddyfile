@@ -3,6 +3,16 @@ judge.local.juki.app:443 {
     reverse_proxy localhost:3070
 }
 
+utils.local.juki.app:443 {
+    tls internal
+    reverse_proxy localhost:3071
+}
+
+coach.local.juki.app:443 {
+    tls internal
+    reverse_proxy localhost:3072
+}
+
 admin.local.juki.app:443 {
     tls internal
     reverse_proxy localhost:3077

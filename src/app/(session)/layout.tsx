@@ -2,13 +2,13 @@ import { UserLoaderLayout, UserStoreProvider } from 'components';
 import { jukiApiManager } from 'config';
 import { EMPTY_COMPANY, EMPTY_USER } from 'config/constants';
 import { get } from 'helpers';
-import { ReactNode } from 'react';
-import { ContentResponseType, PingResponseDTO } from 'types';
+import { type ReactNode } from 'react';
+import type { ContentResponseType, PingResponseDTO } from 'types';
 import { RootLayout } from './RootLayout';
 
 export const dynamic = 'force-dynamic';
 
-const getInitialUsers = async () => {
+const getInitialUser = async () => {
   
   const session = await get<ContentResponseType<PingResponseDTO>>(jukiApiManager.API_V2.auth.ping().url);
   
@@ -22,7 +22,7 @@ const getInitialUsers = async () => {
 export default async function Layout({ children }: { children: ReactNode }) {
   
   return (
-    <UserStoreProvider initialUser={await getInitialUsers()}>
+    <UserStoreProvider initialUser={await getInitialUser()}>
       <UserLoaderLayout />
       <RootLayout>
         {children}

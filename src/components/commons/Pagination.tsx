@@ -1,4 +1,4 @@
-import { DoubleUpIcon, SpinIcon } from '@juki-team/base-ui/server-components';
+import { DoubleUpIcon, SpinIcon } from 'components';
 import { useI18nStore, usePageStore } from 'hooks';
 import { useEffect } from 'react';
 import { classNames } from '../../helpers';

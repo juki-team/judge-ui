@@ -1,4 +1,4 @@
-import { contentResponse } from '@juki-team/commons';
+import { contentResponse } from 'helpers';
 import pkg from '../../../../package.json';
 
 const { version } = pkg;

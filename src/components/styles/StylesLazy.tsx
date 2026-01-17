@@ -15,7 +15,7 @@ export const StylesLazy = () => {
   useEffect(() => {
     setTimeout(() => {
       setRender(true);
-    }, 2000);
+    }, 10000);
   }, []);
   
   if (render) {
