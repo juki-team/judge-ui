@@ -3,14 +3,7 @@
 import { DataViewer, InputToggle, Select, T, useContest } from 'components';
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { classNames, downloadDataTableAsCsvFile, downloadSheetDataAsXlsxFile, getUserKey } from 'helpers';
-import {
-  useDataViewerRequester,
-  useI18nStore,
-  useJukiNotification,
-  usePageStore,
-  useUIStore,
-  useUserStore,
-} from 'hooks';
+import { useDataViewerRequester, useI18nStore, usePageStore, useUIStore, useUserStore } from 'hooks';
 import { useCallback, useMemo, useState } from 'react';
 import {
   ContentsResponseType,
@@ -22,7 +15,6 @@ import {
 } from 'types';
 import { BunchScoreboardResponseDTOUI, ScoreboardResponseDTOUI } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
-import { FullScreenScoreboard } from './FullScreenScoreboard';
 import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
 
 interface DownloadButtonProps {
@@ -257,13 +249,11 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
   
   const { contest, reloadContest } = useContest();
   
-  const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
   const contestKey = contestKeys[0];
   const user = useUserStore(store => store.user);
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
-  const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
   const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
@@ -355,14 +345,6 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
   );
   
   const onClose = useCallback(() => setDynamic(false), []);
-  
-  if (fullscreen) {
-    return (
-      <FullScreenScoreboard contest={contest} reloadContest={reloadContest}>
-        {score}
-      </FullScreenScoreboard>
-    );
-  }
   
   if (dynamic) {
     return <ViewDynamicScoreboard contest={contest} onClose={onClose} reloadContest={reloadContest} />;
