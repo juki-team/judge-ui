@@ -161,6 +161,7 @@ export type {
   CodeViewerProps,
   InformationPopoverProps,
   MdMathEditorProps,
+  DataViewerRequestType,
 } from '@juki-team/base-ui/types';
 
 export type { VirtualItem } from '@tanstack/virtual-core';
