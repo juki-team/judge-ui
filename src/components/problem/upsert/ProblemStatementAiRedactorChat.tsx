@@ -34,7 +34,7 @@ const SUGGESTIONS = [
   {
     icon: <div>📏</div>,
     label: 'fix formatting',
-    prompt: 'Revisa las reglas de formato y las reglas de estructura del enunciado. Sugiere cambios si es necesario.',
+    prompt: 'Revisa:\n  - Las reglas de formato.\n  - Las reglas de estructura del enunciado\n - Los casos de ejemplo.\n\nSugiere cambios si es necesario.',
   },
   {
     icon: <div>🧪</div>,

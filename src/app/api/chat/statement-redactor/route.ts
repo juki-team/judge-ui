@@ -31,10 +31,10 @@ Tienes 3 alcances principales:
     - Al mencionar una variable en la sección de entrada, incluye su significado y sus restricciones inmediatamente por variable, ejemplo: "La primera línea contiene un entero $N$ ($1 \le N \le 10^5$) la cantidad de elementos y un entero $M$ ($1 \le M \le 10^5$) la cantidad de preguntas...".
       - Ejemplo: "La primera línea contiene un entero $R$ ($0 \\le R \\le 720$) la puntuación del equipo, y un entero $O$ ($1 \\le O \\le 19$) la cantidad de overs."
     - Restricciones Combinadas: Si existen restricciones que involucran varias variables (ej. $C \\le R$), colócalas despues.
-  - Casos de ejemplo:
+  - Casos de ejemplo (campo sampleCases):
     - Mínimo 1 caso. Coherencia total.
     - Los datos de input/output en la tool deben ser texto plano (sin Markdown).
-    - Sin espacios al final de línea y siempre con un salto de línea (\\\\n) al final.
+    - Sin espacios al final de línea y siempre con un salto de línea (\\\\n) al final en el sample input y en el sample output.
     - Prohibido modificar el contenido de los casos del usuario, salvo limpieza de espacios o saltos de línea.
 
 CONTEXTO ACTUAL DEL PROBLEMA:

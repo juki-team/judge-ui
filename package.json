@@ -13,15 +13,15 @@
     "push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn version --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f"
   },
   "dependencies": {
-    "@ai-sdk/react": "^3.0.35",
+    "@ai-sdk/react": "^3.0.41",
     "@excalidraw/excalidraw": "^0.18.0",
     "@juki-team/base-ui": "^1.3.69",
     "@juki-team/commons": "^0.0.1054",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.6.1",
-    "ai": "^6.0.33",
-    "motion": "^12.25.0",
-    "next": "^16.1.1",
+    "ai": "^6.0.39",
+    "motion": "^12.26.2",
+    "next": "^16.1.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "swr": "^2.3.8",
@@ -31,7 +31,7 @@
     "@types/react": "^19.2.8",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.1.1",
+    "eslint-config-next": "^16.1.3",
     "next-compose-plugins": "^2.2.1",
     "sass": "^1.97.2",
     "typescript": "^5.9.3"
