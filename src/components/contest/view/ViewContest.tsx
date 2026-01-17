@@ -179,15 +179,14 @@ export function ContestViewLayout() {
       body: <ViewClarifications key="clarifications" contest={contest} />,
     };
   }
-  
+  tabHeaders[ContestTab.MEMBERS] = {
+    key: ContestTab.MEMBERS,
+    header: <T className="tt-ce">members</T>,
+    body: (
+      <EditViewMembers key="members" contest={contest as unknown as UpsertContestDTOUI} />
+    ),
+  };
   if ((isAdministrator || isManager || contest.isPast || contest.isEndless || contest.isGlobal)) {
-    tabHeaders[ContestTab.MEMBERS] = {
-      key: ContestTab.MEMBERS,
-      header: <T className="tt-ce">members</T>,
-      body: (
-        <EditViewMembers key="members" contest={contest as unknown as UpsertContestDTOUI} />
-      ),
-    };
     tabHeaders[ContestTab.EVENTS] = {
       key: ContestTab.EVENTS,
       header: <T className="tt-ce">events</T>,
