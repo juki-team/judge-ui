@@ -259,7 +259,7 @@ html {
 }
 
 .right-panel {
-  height: calc(var(--100VH) - var(--first-content-section-height) - var(--pad-sm) - var(--pad-sm));
+  height: calc(var(--100VH) - var(--first-content-section-height) - var(--pad-sm) - var(--pad-sm) - var(--top-horizontal-menu-height, 0px) - var(--bottom-horizontal-menu-height, 0px));
   position: sticky;
   top: 0;
   overflow: auto;
