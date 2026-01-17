@@ -1,7 +1,7 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.24.29",
+  "version": "1.24.30",
   "scripts": {
     "caddy": "caddy run --config Caddyfile",
     "dev": "next dev -p 3070",
