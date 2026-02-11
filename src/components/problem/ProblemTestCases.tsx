@@ -402,7 +402,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           <div className="jk-row block">
             <ButtonLoader
               disabled={lock}
-              type="secondary"
               icon={<SaveIcon />}
               onClick={async (setLoaderStatus) => {
                 setLock(true);

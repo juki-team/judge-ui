@@ -112,7 +112,6 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 onClick={(setLoader) => userIsLogged
                   ? registerContest(setLoader)
                   : appendSearchParams({ name: QueryParamKey.SIGN_IN, value: '1' })}
-                type="secondary"
                 expand
               >
                 <T className="tt-se">{userIsLogged ? 'enroll' : 'sign in'}</T>
@@ -189,7 +188,6 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
             {contest?.user?.isAdministrator && (
               <ButtonLoader
                 size="tiny"
-                type="secondary"
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
@@ -208,7 +206,6 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
             {contest?.user?.isAdministrator && contest.isPast && (
               <ButtonLoader
                 size="tiny"
-                type="secondary"
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
                   const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(

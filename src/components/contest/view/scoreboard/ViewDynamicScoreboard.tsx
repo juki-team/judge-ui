@@ -145,7 +145,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   const currentTimestamp = timestamp - contest.settings.startTimestamp;
   
   const extraNodes = useMemo(() => [
-    <Button key="exit" onClick={onClose} size="tiny" type="secondary">
+    <Button key="exit" onClick={onClose} size="tiny">
       <T className="tt-se">exit</T>
     </Button>,
     <div
@@ -183,7 +183,6 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     </div>,
     <ButtonLoader
       key="recalculate"
-      type="secondary"
       size="tiny"
       onClick={async (setLoaderStatus) => {
         setLoaderStatus(Status.LOADING);

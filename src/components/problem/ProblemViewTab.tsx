@@ -49,7 +49,6 @@ export const ProblemViewTab = ({
           <div className="jk-row gap">
             <FirstLoginWrapper>
               <ButtonLoader
-                type="secondary"
                 size="tiny"
                 disabled={source === ''}
                 onClick={async setLoaderStatus => {

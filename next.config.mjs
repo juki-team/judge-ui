@@ -1,6 +1,7 @@
 import withPlugins from 'next-compose-plugins';
 
 const nextConfig = withPlugins([], {
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {

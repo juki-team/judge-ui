@@ -18,7 +18,7 @@ import {
 } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames, disableOutOfRange, getJudgeOrigin, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
-import { useEffect, useStableState, useUIStore, useUserStore } from 'hooks';
+import { useEffect, useSyncedState, useUIStore, useUserStore } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { PALLETE } from 'src/constants';
 import {
@@ -427,7 +427,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
     isTypePrerequisiteIndividually,
     delayPrerequisites,
   } = getContestPrerequisitesData(contest);
-  const [ withTime, setWithTime ] = useStableState<0 | 1 | 2>(withTimeRestriction ? 1 : 0);
+  const [ withTime, setWithTime ] = useSyncedState<0 | 1 | 2>(withTimeRestriction ? 1 : 0);
   
   const companyName = useUserStore(state => state.company.name);
   const contestStartDate = useMemo(() => new Date(contest.settings.startTimestamp), [ contest.settings.startTimestamp ]);
@@ -447,7 +447,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
   }, [ delayPrerequisites, isTypePrerequisiteIndividually, withPrerequisites ]);
-  const [ problems ] = useStableState<SortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
+  const [ problems ] = useSyncedState<SortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
   useEffect(() => {
     if (!withTime) {
       setContest(prevState => {

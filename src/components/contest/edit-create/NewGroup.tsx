@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Input, InputColor, Modal, T } from 'components';
-import { useStableState } from 'hooks';
+import { useSyncedState } from 'hooks';
 import { BasicModalProps, UpsertContestDTOUI } from 'types';
 
 type GroupType = UpsertContestDTOUI['groups'][string];
@@ -13,7 +13,7 @@ interface EditGroupProps extends BasicModalProps {
 
 export const NewGroup = ({ group, onSave, isOpen, onClose }: EditGroupProps) => {
   
-  const [ newGroup, setNewGroup ] = useStableState<UpsertContestDTOUI['groups'][string]>(group);
+  const [ newGroup, setNewGroup ] = useSyncedState<UpsertContestDTOUI['groups'][string]>(group);
   
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

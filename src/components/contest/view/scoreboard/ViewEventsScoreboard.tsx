@@ -32,7 +32,7 @@ import {
   useI18nStore,
   useJukiNotification,
   usePageStore,
-  useStableState,
+  useSyncedState,
   useUIStore,
 } from 'hooks';
 import { useCallback, useMemo, useState } from 'react';
@@ -285,7 +285,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
   
   const currentTimestamp = finalTimestamp - contest.settings.startTimestamp;
   const focusedRow = data.find(({ focus }) => (focus?.length ?? 0) > 0);
-  const [ focusUserKey, setFocusUserKey ] = useStableState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.company.key) : '');
+  const [ focusUserKey, setFocusUserKey ] = useSyncedState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.company.key) : '');
   
   const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
   
@@ -345,7 +345,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
   const [ focusDelay, setFocusDelay ] = useState(1000);
   
   const extraNodesDynamic = useMemo(() => [
-    <Button key="exit" onClick={onClose} size="tiny" type="secondary">
+    <Button key="exit" onClick={onClose} size="tiny">
       <T className="tt-se">exit</T>
     </Button>,
     <div

@@ -1,9 +1,7 @@
-'use client';
-
 import { T } from 'components';
 import Image from 'next/image';
 import { PropsWithChildren } from 'react';
-import { ButtonLogin } from '../ButtonLogin';
+import { ButtonLogin } from './ButtonLogin';
 
 interface NotFoundCardProps {
   title: string,

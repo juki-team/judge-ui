@@ -73,7 +73,6 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
         const { source = '', language = CodeLanguage.TEXT } = files[currentFileName] || {};
         const validSubmit = (
           <ButtonLoader
-            type="secondary"
             size="tiny"
             disabled={source === ''}
             onClick={async setLoaderStatus => {
@@ -165,7 +164,6 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
         if (isGuest) {
           return (
             <ButtonLoader
-              type="secondary"
               size="tiny"
               onClick={() => {
                 addWarningNotification(<T className="tt-se">to submit, first register</T>);
