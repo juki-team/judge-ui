@@ -144,7 +144,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
           ].map(({ value, label }) => (
             <Button
               size="small"
-              type={dateType === value ? 'primary' : 'light'}
+              type={dateType === value ? 'accent' : 'light'}
               key={value}
               onClick={() => {
                 setDateType(value);

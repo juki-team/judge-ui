@@ -116,7 +116,13 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
         </div>
       </div>
       <div className="jk-row" style={{ width: 40 }}>
-        <InputColor onChange={(props) => setProblemProp({ color: props.hex })}>
+        <InputColor
+          value={problem.color}
+          onChange={(props) => setProblemProp({ color: props.hex })}
+          size={4}
+          inputClassName="display-none"
+          labelClassName="display-none"
+        >
           <div style={{ color: problem.color }} className="cursor-pointer"><BalloonIcon /></div>
         </InputColor>
       </div>
@@ -267,9 +273,9 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
         </div>
       )}
       {withGroups && (
-        <div className="jk-row tx-s" style={{ width: 80 }}>
+        <div className="jk-row tx-s" style={{ width: 128 }}>
           <Select
-            containerWidth="child"
+            style={{ width: 'auto' }}
             options={Object.values(contest.groups).map(group => ({ value: group.value, label: group.label }))}
             selectedOption={{ value: problem.group }}
             onChange={({ value }) => setProblemProp({ group: value })}
@@ -655,7 +661,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             </div>
           )}
           {withGroups && (
-            <div className="jk-row" style={{ width: 60 }}>
+            <div className="jk-row" style={{ width: 128 }}>
               <T className="tt-se">group</T>
             </div>
           )}
