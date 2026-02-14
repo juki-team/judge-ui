@@ -16,7 +16,7 @@
     "@ably/spaces": "^0.5.2",
     "@ai-sdk/react": "^3.0.81",
     "@excalidraw/excalidraw": "^0.18.0",
-    "@juki-team/base-ui": "^1.4.25",
+    "@juki-team/base-ui": "^1.4.31",
     "@juki-team/commons": "^0.0.1062",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^1.6.1",
@@ -30,7 +30,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/react": "^19.2.13",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "^10.0.0",
     "eslint-config-next": "^16.1.6",

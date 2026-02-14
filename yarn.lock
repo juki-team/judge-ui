@@ -1011,10 +1011,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@juki-team/base-ui@^1.4.25":
-  version "1.4.25"
-  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.4.25/a76835cb737c0247de3eccb60b50f00af76ca493#a76835cb737c0247de3eccb60b50f00af76ca493"
-  integrity sha512-C4lGIZ2pT/oAEIlBEKCR073a++mnXNpI3M75lK7NNQ8bpoDFzMkQB1cc+rcAw4xY95x+6U6Hyz1xRSjT1Cbrgw==
+"@juki-team/base-ui@^1.4.31":
+  version "1.4.31"
+  resolved "https://npm.pkg.github.com/download/@juki-team/base-ui/1.4.31/f20f130c5e38e5aa7fb197ae77b555985b4d5861#f20f130c5e38e5aa7fb197ae77b555985b4d5861"
+  integrity sha512-kogbtJ7icDVSgrgQGz0ZR9JC9fI0hSzg1XM3+sOebL0FOEsRDIUzDt8/qOhFbOY4WIh/UTPjeX2aO77Y2VkLuw==
   dependencies:
     "@codemirror/autocomplete" "^6.20.0"
     "@codemirror/lang-cpp" "^6.0.3"
@@ -1030,7 +1030,7 @@
     "@floating-ui/react" "^0.27.17"
     "@handsontable/react-wrapper" "^16.2.0"
     "@hookform/resolvers" "^5.2.2"
-    "@juki-team/commons" "^0.0.1060"
+    "@juki-team/commons" "^0.0.1062"
     "@milkdown/crepe" "^7.18.0"
     "@milkdown/kit" "^7.18.0"
     "@milkdown/react" "^7.18.0"
@@ -1041,16 +1041,16 @@
     codemirror "^6.0.2"
     countries-and-timezones "^3.8.0"
     diff "^8.0.3"
-    diff2html "^3.4.55"
+    diff2html "^3.4.56"
     dom-to-image-more "^3.7.2"
     handsontable "^16.2.0"
     highlight.js "^11.11.1"
     i18n-iso-countries "^7.14.0"
-    i18next "^25.8.0"
+    i18next "^25.8.5"
     katex "^0.16.28"
-    libphonenumber-js "^1.12.35"
+    libphonenumber-js "^1.12.36"
     microdiff "^1.5.0"
-    motion "^12.29.2"
+    motion "^12.34.0"
     react-color "^2.19.3"
     react-device-detect "^2.2.3"
     react-hook-form "^7.71.1"
@@ -1065,16 +1065,11 @@
     remark-gfm "^4.0.1"
     remark-math "^6.0.0"
     reveal.js "^5.2.1"
-    swr "^2.3.8"
+    swr "^2.4.0"
     uuid "^13.0.0"
     xlsx "^0.18.5"
     yup "^1.7.1"
-    zustand "^5.0.10"
-
-"@juki-team/commons@^0.0.1060":
-  version "0.0.1060"
-  resolved "https://npm.pkg.github.com/download/@juki-team/commons/0.0.1060/f6b3f388046a3520c74c7293ea3c61ca92510d43#f6b3f388046a3520c74c7293ea3c61ca92510d43"
-  integrity sha512-RwzhcVBdzmnssLK7WdkdV/wG6ZOIqJm08A0St+4V4OSWDXwQeF+6S8CmEmTSu+jX83jqdoHY5GBQ7MOIs26PoQ==
+    zustand "^5.0.11"
 
 "@juki-team/commons@^0.0.1062":
   version "0.0.1062"
@@ -3537,25 +3532,20 @@ diacritics@1.3.0:
   resolved "https://registry.yarnpkg.com/diacritics/-/diacritics-1.3.0.tgz#3efa87323ebb863e6696cebb0082d48ff3d6f7a1"
   integrity sha512-wlwEkqcsaxvPJML+rDh/2iS824jbREk6DUMUKkEaSlxdYHeS43cClJtsWglvw2RfeXGm6ohKDqsXteJ5sP5enA==
 
-diff2html@^3.4.55:
-  version "3.4.55"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.55.tgz#7b065d3ca0446b7edd2263d66a865bf9bbd3cea8"
-  integrity sha512-v7vi4Gluu7VtMNiHxZWyfnzRItkNPo1mxBzf2VnzZZccdN3gcl+4ZG8WBA7p4AkhPeeBcDItu9JF91o2HZkhlQ==
+diff2html@^3.4.56:
+  version "3.4.56"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.56.tgz#537aa343e9f1b1ede346909f56eeddb2c780c09f"
+  integrity sha512-u9gfn+BlbHcyO7vItCIC4z49LJDUt31tODzOfAuJ5R1E7IdlRL6KjugcB9zOpejD+XiR+dDZbsnHSQ3g6A/u8A==
   dependencies:
     "@profoundlogic/hogan" "^3.0.4"
-    diff "^7.0.0"
+    diff "^8.0.3"
   optionalDependencies:
-    highlight.js "11.9.0"
+    highlight.js "11.11.1"
 
 diff@^5.0.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-5.2.0.tgz#26ded047cd1179b78b9537d5ef725503ce1ae531"
   integrity sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==
-
-diff@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-7.0.0.tgz#3fb34d387cd76d803f6eebea67b921dab0182a9a"
-  integrity sha512-PJWHUb1RFevKCwaFA9RlG5tCd+FO5iRh9A8HEtkmBH2Li03iJriB6m6JIN4rGz3K3JLawI7/veA1xzRKP6ISBw==
 
 diff@^8.0.3:
   version "8.0.3"
@@ -4116,15 +4106,6 @@ fractional-indexing@3.2.0:
   resolved "https://registry.yarnpkg.com/fractional-indexing/-/fractional-indexing-3.2.0.tgz#1193e63d54ff4e0cbe0c79a9ed6cfbab25d91628"
   integrity sha512-PcOxmqwYCW7O2ovKRU8OoQQj2yqTfEB/yeTYk4gPid6dN5ODRfU1hXd9tTVZzax/0NkO7AxpHykvZnT1aYp/BQ==
 
-framer-motion@^12.31.0:
-  version "12.31.0"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.31.0.tgz#cf31462afa14301c90392439373ede9f8d96d77e"
-  integrity sha512-Tnd0FU05zGRFI3JJmBegXonF1rfuzYeuXd1QSdQ99Ysnppk0yWBWSW2wUsqzRpS5nv0zPNx+y0wtDj4kf0q5RQ==
-  dependencies:
-    motion-dom "^12.30.1"
-    motion-utils "^12.29.2"
-    tslib "^2.4.0"
-
 framer-motion@^12.34.0:
   version "12.34.0"
   resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.34.0.tgz#0cecdf015cc4cbee55bd53130d043137642a5ced"
@@ -4499,12 +4480,7 @@ hermes-parser@^0.25.1:
   dependencies:
     hermes-estree "0.25.1"
 
-highlight.js@11.9.0:
-  version "11.9.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.9.0.tgz#04ab9ee43b52a41a047432c8103e2158a1b8b5b0"
-  integrity sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==
-
-highlight.js@^11.11.1:
+highlight.js@11.11.1, highlight.js@^11.11.1:
   version "11.11.1"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.11.1.tgz#fca06fa0e5aeecf6c4d437239135fabc15213585"
   integrity sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==
@@ -4547,10 +4523,10 @@ i18n-iso-countries@^7.14.0:
   dependencies:
     diacritics "1.3.0"
 
-i18next@^25.8.0:
-  version "25.8.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.8.1.tgz#fb5f417bef6280a07efcf51065a3405efab6ffaa"
-  integrity sha512-nFFxhwcRNggIrkv2hx/xMYVMG7Z8iMUA4ZuH4tgcbZiI0bK1jn3kSDIXNWuQDt1xVAu7mb7Qn82TpH7ZAk/okA==
+i18next@^25.8.5:
+  version "25.8.5"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.8.5.tgz#a40c20d8b43e01033f8871a324dbcae61c5252bd"
+  integrity sha512-TApjhgqQU6P7BQlpCTv6zQuXrYAP9rjYWgx2Nm8dsq+Zg9yJlAz+iR16/w7uVtTlSoULbqPTfqYjMK/DAQI+Ng==
   dependencies:
     "@babel/runtime" "^7.28.4"
 
@@ -4997,7 +4973,7 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libphonenumber-js@^1.12.35:
+libphonenumber-js@^1.12.36:
   version "1.12.36"
   resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.12.36.tgz#3698ba31e77fc4e5d4e3257dedc76f28cb594c35"
   integrity sha512-woWhKMAVx1fzzUnMCyOzglgSgf6/AFHLASdOBcchYCyvWSGWt12imw3iu2hdI5d4dGZRsNWAmWiz37sDKUPaRQ==
@@ -5867,13 +5843,6 @@ moment@2.30.1:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
 
-motion-dom@^12.30.1:
-  version "12.30.1"
-  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.30.1.tgz#407b428cc6e21cbd944f0a4810b19e89a7759fee"
-  integrity sha512-QXB+iFJRzZTqL+Am4a1CRoHdH+0Nq12wLdqQQZZsfHlp9AMt6PA098L/61oVZsDA+Ep3QSGudzpViyRrhYhGcQ==
-  dependencies:
-    motion-utils "^12.29.2"
-
 motion-dom@^12.34.0:
   version "12.34.0"
   resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.34.0.tgz#d1776aaff750e09db66237c66daec31232a4cba8"
@@ -5885,14 +5854,6 @@ motion-utils@^12.29.2:
   version "12.29.2"
   resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-12.29.2.tgz#8fdd28babe042c2456b078ab33b32daa3bf5938b"
   integrity sha512-G3kc34H2cX2gI63RqU+cZq+zWRRPSsNIOjpdl9TN4AQwC4sgwYPl/Q/Obf/d53nOm569T0fYK+tcoSV50BWx8A==
-
-motion@^12.29.2:
-  version "12.31.0"
-  resolved "https://registry.yarnpkg.com/motion/-/motion-12.31.0.tgz#fcdfa50dadcf9623c05ce9a21be8628414dda1a8"
-  integrity sha512-KpZQik3LLFdsiaLdFXQGnty84KcDvvdvBCHSvA9aH+RjQTP6jkJGyngRPSngau13ARUI6TbPphf/Vv/QxwxRJQ==
-  dependencies:
-    framer-motion "^12.31.0"
-    tslib "^2.4.0"
 
 motion@^12.34.0:
   version "12.34.0"
@@ -7187,7 +7148,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-swr@^2.2.5, swr@^2.3.8:
+swr@^2.2.5:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/swr/-/swr-2.3.8.tgz#aa15596321a34e575226a60576bade0b57adf7bf"
   integrity sha512-gaCPRVoMq8WGDcWj9p4YWzCMPHzE0WNl6W8ADIx9c3JBEIdMkJGMzW+uzXvxHMltwcYACr9jP+32H8/hgwMR7w==
@@ -7768,10 +7729,10 @@ zustand@^4.3.2:
   dependencies:
     use-sync-external-store "^1.2.2"
 
-zustand@^5.0.10:
-  version "5.0.10"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.10.tgz#4db510c0c4c25a5f1ae43227b307ddf1641a3210"
-  integrity sha512-U1AiltS1O9hSy3rul+Ub82ut2fqIAefiSuwECWt6jlMVUGejvf+5omLcRBSzqbRagSM3hQZbtzdeRc6QVScXTg==
+zustand@^5.0.11:
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.11.tgz#99f912e590de1ca9ce6c6d1cab6cdb1f034ab494"
+  integrity sha512-fdZY+dk7zn/vbWNCYmzZULHRrss0jx5pPFiOuMZ/5HJN6Yv3u+1Wswy/4MpZEkEGhtNH+pwxZB8OKgUBPzYAGg==
 
 zwitch@^2.0.0:
   version "2.0.4"
