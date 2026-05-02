@@ -2,20 +2,10 @@
 
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
-import {
-  Button,
-  CheckIcon,
-  EditNoteIcon,
-  ErrorIcon,
-  ExclamationIcon,
-  Input,
-  MdMathViewer,
-  SmartToyIcon,
-  SpinIcon,
-  T,
-} from 'components';
-import { classNames, upperFirst } from 'helpers';
-import { useI18nStore, useRef } from 'hooks';
+import { CheckIcon, EditNoteIcon, ErrorIcon, ExclamationIcon, SmartToyIcon, SpinIcon } from '@juki-team/base-ui/server-components';
+import { Button, Input, MdMathViewer, T, useI18nStore } from '@juki-team/base-ui';
+import { classNames, upperFirst } from '@juki-team/base-ui/helpers';
+import { useRef } from 'hooks';
 import { useEffect, useState } from 'react';
 import { StatementDTO } from 'types';
 
@@ -53,7 +43,7 @@ export const ProblemStatementAiRedactorChat = ({
                                                  setStatement,
                                                  recordHistory,
                                                }: ProblemStatementAiRedactorChatProps) => {
-  
+
   const [ isOpen, setIsOpen ] = useState(false);
   const [ input, setInput ] = useState('');
   const { messages, sendMessage, status } = useChat({
@@ -62,7 +52,7 @@ export const ProblemStatementAiRedactorChat = ({
     }),
   });
   const t = useI18nStore(store => store.i18n.t);
-  
+
   useEffect(() => {
     for (const message of messages) {
       for (const part of message.parts as { type: string, input: StatementDTO, state: string }[]) {
@@ -83,16 +73,16 @@ export const ProblemStatementAiRedactorChat = ({
       }
     }
   }, [ messages, setStatement, statement.description, statement.input, statement.note, statement.output, statement.sampleCases ]);
-  
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: 'auto',
       block: 'nearest',
     });
   }, [ messages ]);
-  
+
   return (
     <div
       className={classNames('right-panel jk-br-ie tx-s jk-col gap nowrap stretch', { 'jk-pg-xsm bc-we': isOpen })}
@@ -175,7 +165,7 @@ export const ProblemStatementAiRedactorChat = ({
                   }}
                   icon={sug.icon}
                   size="tiny"
-                  type="light"
+                  type="secondary"
                 >
                   <T className="tt-se">{sug.label}</T>
                 </Button>

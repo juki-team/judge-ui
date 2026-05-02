@@ -1,4 +1,5 @@
-import { Judge, QueryParam } from 'types';
+import { QueryParam } from 'types';
+import { Judge } from '@juki-team/commons/enums';
 import { ProblemsPage } from './ProblemsPage';
 
 type Props = {

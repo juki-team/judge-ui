@@ -1,7 +1,7 @@
 'use client';
 
-import { PageNotFound, T } from 'components';
-import { jukiAppRoutes } from 'config';
+import { PageNotFound, T } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { useEffect } from 'hooks';
 import { useRouter } from 'next/navigation';
 

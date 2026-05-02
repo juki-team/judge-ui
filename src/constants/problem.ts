@@ -1,5 +1,7 @@
-import { EntityState, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
-import { EMPTY_ENTITY_MEMBERS, EMPTY_TEXT_LANGUAGES } from './commons';
+import { UpsertProblemUIDTO } from 'types';
+import { EntityState, ProblemScoringMode, ProblemType } from '@juki-team/commons/enums';
+import { EMPTY_ENTITY_MEMBERS } from '@juki-team/commons/constants';
+import { EMPTY_TEXT_LANGUAGES } from './commons';
 
 export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judgeIsExternal }: {
   nickname: string,

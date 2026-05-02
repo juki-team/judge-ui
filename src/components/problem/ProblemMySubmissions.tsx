@@ -1,32 +1,18 @@
 'use client';
 
-import {
-  getSubmissionContestProblemHeader,
-  getSubmissionDateHeader,
-  getSubmissionLanguageHeader,
-  getSubmissionMemoryHeader,
-  getSubmissionRejudgeHeader,
-  getSubmissionTimeHeader,
-  getSubmissionVerdictHeader,
-  PagedDataViewer,
-} from 'components';
-import { jukiApiManager } from 'config';
-import { toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useMemo, useUserStore } from 'hooks';
-import {
-  ContentsResponseType,
-  DataViewerHeadersType,
-  JudgeSummaryListResponseDTO,
-  LanguagesByJudge,
-  ProblemDataResponseDTO,
-  QueryParam,
-  SubmissionSummaryListResponseDTO,
-} from 'types';
+import { getSubmissionContestProblemHeader, getSubmissionDateHeader, getSubmissionLanguageHeader, getSubmissionMemoryHeader, getSubmissionRejudgeHeader, getSubmissionTimeHeader, getSubmissionVerdictHeader, PagedDataViewer, useFetcher, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { toFilterUrl, toSortUrl } from '@juki-team/base-ui/helpers';
+import { useMemo } from 'hooks';
+import { QueryParam } from 'types';
+import { type DataViewerHeadersType, type LanguagesByJudge } from '@juki-team/base-ui/types';
+import { type JudgeSummaryListResponseDTO, type ProblemDataResponseDTO, type SubmissionSummaryListResponseDTO } from '@juki-team/commons/dto';
+import { type ContentsResponse } from '@juki-team/commons/types';
 
 export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {
-  
+
   const userNickname = useUserStore(state => state.user.nickname);
-  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V2.judge.getSummaryList().url);
+  const { data: judgePublicList } = useFetcher<ContentsResponse<JudgeSummaryListResponseDTO>>(jukiApiManager.apiV2.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
@@ -41,7 +27,7 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
     }
     return result;
   }, [ judgePublicList, problem.judge.key ]);
-  
+
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => {
     return [
       getSubmissionContestProblemHeader(),
@@ -53,14 +39,14 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
       getSubmissionMemoryHeader(),
     ];
   }, [ languages, problem.user.isManager ]);
-  
+
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        jukiApiManager.API_V2.submission.getSummaryList({
+        jukiApiManager.apiV2.submission.getSummaryList({
           params: {
             page,
             pageSize,

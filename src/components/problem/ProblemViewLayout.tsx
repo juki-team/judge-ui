@@ -1,42 +1,21 @@
 'use client';
 
 import { useTour } from '@reactour/tour';
-import {
-  AutorenewIcon,
-  DocumentMembersButton,
-  EditIcon,
-  LineLoader,
-  LinkLastPath,
-  ProblemInfo,
-  T,
-  TabsInlineButton,
-  TwoContentLayout,
-} from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
+import { AutorenewIcon, EditIcon, LineLoader } from '@juki-team/base-ui/server-components';
+import { DocumentMembersButton, LinkLastPath, ProblemInfo, T, TabsInlineButton, TwoContentLayout, useFetcher, usePageStore, useRouterStore, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, contentResponse } from 'helpers';
-import {
-  useEffect,
-  useFetcher,
-  usePageStore,
-  useRef,
-  useRouterStore,
-  useState,
-  useTrackLastPath,
-  useUIStore,
-  useUserStore,
-} from 'hooks';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { type ProblemDataResponseDTO } from '@juki-team/commons/dto';
+import { ProfileSetting } from '@juki-team/commons/enums';
+import { contentResponse } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { useEffect, useRef, useState } from 'hooks';
 import { CSSProperties } from 'react';
-import {
-  ContentResponseType,
-  LastPathKey,
-  ProblemDataResponseDTO,
-  ProblemTab,
-  ProfileSetting,
-  TabsType,
-  TwoContentLayoutProps,
-} from 'types';
-import { ShareIcon } from '../index';
+import { LastPathKey } from 'types';
+import { ProblemTab } from '@juki-team/base-ui/enums';
+import { type TabsType, type TwoContentLayoutProps } from '@juki-team/base-ui/types';
+import { ShareIcon } from '@juki-team/base-ui/server-components';
 import { InfoTestCases } from './InfoTestCases';
 import { problemAccessProps } from './ProblemAccess';
 import { ProblemStatistics } from './ProblemStatistics';
@@ -50,28 +29,28 @@ interface ProblemViewLayoutProps {
 }
 
 export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutProps) => {
-  
+
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  
+
   const {
     data,
     isLoading,
     isValidating,
     mutate: reloadProblem,
-  } = useFetcher<ContentResponseType<ProblemDataResponseDTO>>(
-    jukiApiManager.API_V2.problem.getData({ params: { key: fallbackData.key as string } }).url,
+  } = useFetcher<ContentResponse<ProblemDataResponseDTO>>(
+    jukiApiManager.apiV2.problem.getData({ params: { key: fallbackData.key as string } }).url,
     { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
   const problem = data?.success ? data.content : fallbackData;
-  
+
   const reloadRoute = useRouterStore(store => store.reloadRoute);
   useEffect(() => {
     if (!data?.success) {
       reloadRoute();
     }
   }, [ data?.success, reloadRoute ]);
-  
+
   const { setIsOpen } = useTour();
-  
+
   useEffect(() => {
     const hasSeen = localStorage.getItem('jk-seen-problem-statistics-tour');
     if (!hasSeen) {
@@ -88,14 +67,14 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const isMediumScreen = usePageStore(store => store.viewPort.isMediumScreen);
   const isSmallMediumScreen = isSmallScreen || isMediumScreen;
-  
+
   const lastSourceRef = useRef('');
   const lastLanguageRef = useRef('');
   const submissionTimestampsRef = useRef<number[]>([]);
   const problemTab = (searchParams.get('tab') || ProblemTab.STATEMENT) as ProblemTab;
-  
+
   useEffect(() => {
-    const { url, ...options } = jukiApiManager.API_V2.export.problem.statementToPdf({
+    const { url, ...options } = jukiApiManager.apiV2.export.problem.statementToPdf({
       params: {
         key: problem.key,
         language: userLang,
@@ -103,7 +82,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     });
     void authorizedRequest(url, options);
   }, [ problem.key, userLang, userSessionId ]);
-  
+
   const tabs: TabsType<ProblemTab> = {
     [ProblemTab.STATEMENT]: {
       key: ProblemTab.STATEMENT,
@@ -115,7 +94,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       />,
     },
   };
-  
+
   // if (userIsLogged) {
   //   tabs[ProblemTab.MY_SUBMISSIONS] = {
   //     key: ProblemTab.MY_SUBMISSIONS,
@@ -133,7 +112,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     header: <T className="ws-np tt-ce tab-statistics">statistics</T>,
     body: <ProblemStatistics problem={problem} />,
   };
-  
+
   const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = () => [
     <LinkLastPath
       lastPathKey={LastPathKey.PROBLEMS}
@@ -152,7 +131,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       <ProblemStatus {...problem.user} size="small" />
     </div>,
   ];
-  
+
   const extraNodes = [];
   extraNodes.push(
     <DocumentMembersButton
@@ -177,7 +156,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
           data-tooltip-content={`${isSmallMediumScreen ? 'rejudge, ' : ''}only submissions that are not in a contest will be judged`}
           icon={<AutorenewIcon />}
           onClick={() => setIsOpenRejudgeModal(true)}
-          type="light"
+          type="secondary"
           label="rejudge"
         >
         </TabsInlineButton>,
@@ -193,7 +172,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     // extraNodes.push(
     //   <ButtonLoader
     //     size="small"
-    //     type="light"
+    //     type="secondary"
     //     icon={<AutorenewIcon />}
     //     onClick={async setLoaderStatus => {
     //       setLoaderStatus(Status.LOADING);
@@ -212,7 +191,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     //   </ButtonLoader>,
     // );
   }
-  
+
   return (
     <TwoContentLayout
       tabs={tabs}

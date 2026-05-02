@@ -1,9 +1,11 @@
 'use client';
 
-import { Button, CodeEditor, RedoIcon, Select, T, TabsInline, UndoIcon } from 'components';
-import { useMultiDeepHistory, useState, useUIStore } from 'hooks';
+import { RedoIcon, UndoIcon } from '@juki-team/base-ui/server-components';
+import { Button, CodeEditor, Select, T, TabsInline, useUIStore } from '@juki-team/base-ui';
+import { useMultiDeepHistory, useState } from 'hooks';
 import { type Dispatch, type ReactNode, type SetStateAction } from 'react';
-import { CodeLanguage, Language, UpsertProblemUIDTO } from 'types';
+import { UpsertProblemUIDTO } from 'types';
+import { CodeLanguage, Language } from '@juki-team/commons/enums';
 import { ProblemStatementAiRedactorChat } from './ProblemStatementAiRedactorChat';
 import { ProblemStatementMd } from './ProblemStatementMd';
 import { ProblemStatementPdf } from './ProblemStatementPdf';

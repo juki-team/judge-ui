@@ -1,6 +1,7 @@
 'use client';
 
-import { LinkLastPath, NotFoundCard, T } from 'components';
+import { NotFoundCard } from 'components';
+import { LinkLastPath, T } from '@juki-team/base-ui';
 import { LastPathKey } from 'types';
 
 export const ContestNotFoundCard = () => (

@@ -1,4 +1,4 @@
-import { ContestsTab } from 'types';
+import { ContestsTab } from '@juki-team/base-ui/enums';
 import { ContestsPage } from './ContestsPage';
 
 type Props = {

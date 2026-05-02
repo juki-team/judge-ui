@@ -1,9 +1,12 @@
-import { ProblemNotFoundCard, ProblemTour, ProblemViewLayout, TwoContentLayout } from 'components';
-import { jukiApiManager } from 'config';
+import { ProblemNotFoundCard, ProblemTour, ProblemViewLayout } from 'components';
+import { TwoContentLayout } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { DEFAULT_METADATA } from 'config/constants';
-import { get, oneTab } from 'helpers';
+import { get } from 'helpers';
+import { oneTab } from '@juki-team/base-ui/helpers';
 import { type  Metadata } from 'next';
-import { ContentResponseType, MetadataResponseDTO, ProblemDataResponseDTO } from 'types';
+import { type MetadataResponseDTO, type ProblemDataResponseDTO } from '@juki-team/commons/dto';
+import { type ContentResponse } from '@juki-team/commons/types';
 
 type Props = {
   params: Promise<{ problemKey: string }>
@@ -12,13 +15,13 @@ type Props = {
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  
+
   const problemKey = (await params).problemKey;
-  
-  const result = await get<ContentResponseType<MetadataResponseDTO>>(jukiApiManager.API_V2.problem.getMetadata({ params: { key: problemKey } }).url);
-  
+
+  const result = await get<ContentResponse<MetadataResponseDTO>>(jukiApiManager.apiV2.problem.getMetadata({ params: { key: problemKey } }).url);
+
   const { title, description } = result?.success ? result.content : { title: '', description: '' };
-  
+
   return {
     ...DEFAULT_METADATA,
     title,
@@ -44,11 +47,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProblemViewPage({ params }: Props) {
-  
+
   const problemKey = (await params).problemKey;
-  
-  const problemResponse = await get<ContentResponseType<ProblemDataResponseDTO>>(jukiApiManager.API_V2.problem.getData({ params: { key: problemKey } }).url);
-  
+
+  const problemResponse = await get<ContentResponse<ProblemDataResponseDTO>>(jukiApiManager.apiV2.problem.getData({ params: { key: problemKey } }).url);
+
   if (problemResponse.success) {
     return (
       <ProblemTour>
@@ -56,6 +59,6 @@ export default async function ProblemViewPage({ params }: Props) {
       </ProblemTour>
     );
   }
-  
+
   return <TwoContentLayout tabs={oneTab(<ProblemNotFoundCard />)} />;
 };

@@ -1,6 +1,6 @@
 export * from './ColorsModal';
-export * from './commons';
 export * from './ContestNotFoundCard';
+export * from './Pagination';
 export * from './NotFoundCard';
 export * from './ProblemNotFoundCard';
 export * from './SponsoredByTag';

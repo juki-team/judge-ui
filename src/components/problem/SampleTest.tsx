@@ -1,17 +1,18 @@
 'use client';
 
-import { DeleteIcon, EditIcon, NewlineInfo, SaveIcon, TextArea } from 'components';
+import { DeleteIcon, EditIcon, NewlineInfo, SaveIcon } from '@juki-team/base-ui/server-components';
+import { TextArea } from '@juki-team/base-ui';
 import { useEffect, useState } from 'hooks';
-import { ProblemSampleCasesType } from 'types';
+import { type ProblemSampleCases } from '@juki-team/commons/types';
 
 interface SampleTestProps {
   index: number,
-  sampleCases: ProblemSampleCasesType,
-  setSampleCases: (sampleCases: ProblemSampleCasesType) => void,
+  sampleCases: ProblemSampleCases,
+  setSampleCases: (sampleCases: ProblemSampleCases) => void,
 }
 
 export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestProps) => {
-  
+
   const [ sample, setSample ] = useState(sampleCases?.[index] || { input: '', output: '' });
   const [ editable, setEditable ] = useState(false);
   useEffect(() => {
@@ -23,14 +24,14 @@ export const SampleTest = ({ index, sampleCases, setSampleCases }: SampleTestPro
       return newSampleCase;
     });
   }, [ index, sampleCases ]);
-  
+
   const onSave = () => {
     const newSamples = [ ...sampleCases ];
     newSamples[index] = sample;
     setSampleCases(newSamples);
     setEditable(false);
   };
-  
+
   return (
     <div className="jk-row stretch gap">
       <div className="jk-row block stretch gap flex-1">

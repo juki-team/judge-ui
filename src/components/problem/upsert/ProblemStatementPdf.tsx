@@ -1,9 +1,12 @@
-import { ButtonLoader, Input, T } from 'components';
+import { ButtonLoader, Input, T, useJukiNotification } from '@juki-team/base-ui';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useState } from 'hooks';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { HTTPMethod, Language, Status } from '@juki-team/commons/enums';
+import { cleanRequest } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { useState } from 'hooks';
 import { type Dispatch, type SetStateAction } from 'react';
-import { ContentResponseType, HTTPMethod, Language, Status, UpsertProblemUIDTO } from 'types';
+import { UpsertProblemUIDTO } from 'types';
 
 interface ProblemStatementPdfProps {
   problem: UpsertProblemUIDTO,
@@ -12,10 +15,10 @@ interface ProblemStatementPdfProps {
 }
 
 export const ProblemStatementPdf = ({ problem, setProblem, language }: ProblemStatementPdfProps) => {
-  
+
   const { addErrorNotification, addSuccessNotification } = useJukiNotification();
   const [ file, setFile ] = useState<FileList[number] | null>(null);
-  
+
   return (
     <div className="jk-col nowrap">
       <div className="jk-row gap">
@@ -32,16 +35,16 @@ export const ProblemStatementPdf = ({ problem, setProblem, language }: ProblemSt
           onClick={async (setLoader) => {
             setLoader(Status.LOADING);
             try {
-              const response = cleanRequest<ContentResponseType<{ pdfUrl: string, signedUrl: string }>>(
+              const response = cleanRequest<ContentResponse<{ pdfUrl: string, signedUrl: string }>>(
                 await authorizedRequest(
                   JUDGE_API_V1.PROBLEM.POST_PDF(),
                   { method: HTTPMethod.POST }),
               );
-              
+
               if (!response.success) {
                 throw response;
               }
-              
+
               await fetch(response.content.signedUrl, {
                 method: HTTPMethod.PUT,
                 headers: {

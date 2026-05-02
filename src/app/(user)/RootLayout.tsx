@@ -1,9 +1,10 @@
 'use client';
 
-import { ErrorBoundary, Image, InstallPWAModal, JukiProviders, NewVersionAvailable } from 'components';
-import { jukiAppRoutes } from 'config';
-import { NODE_ENV, ROUTES, SWR_CONFIG } from 'config/constants';
-import { usePreloadComponents } from 'hooks';
+import { Image, InstallPWAModal } from 'components';
+import { ErrorBoundary, JukiProviders, NewVersionAvailable, usePreloadComponents } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { ROUTES } from 'config/constants';
+import { NODE_ENV, SWR_CONFIG } from '@juki-team/base-ui/constants';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
@@ -28,15 +29,16 @@ const initialLastPath = {
 };
 
 export const RootLayout = ({ children }: PropsWithChildren) => {
-  
+
   const { isLoadingRoute, push, replace, refresh } = useRouter();
   const routeParams = useParams();
   const pathname = usePathname();
   const { searchParams, setSearchParams, deleteSearchParams, appendSearchParams } = useSearchParams();
   const preloaders = usePreloadComponents(5000);
-  
+
   const loadingBasic = preloaders.atoms && preloaders.molecules && preloaders.organisms;
-  
+
+  console.log('RootLayout', pathname);
   const app = (
     <SWRConfig value={SWR_CONFIG}>
       <JukiProviders
@@ -66,6 +68,6 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
       </JukiProviders>
     </SWRConfig>
   );
-  
+
   return NODE_ENV !== 'production' ? app : <ErrorBoundary reload={refresh}>{app}</ErrorBoundary>;
 };

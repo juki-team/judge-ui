@@ -1,10 +1,10 @@
 'use client';
 
-import { MdMathViewer, T } from 'components';
-import { jukiAppRoutes } from 'config';
+import { MdMathViewer, T, usePageStore, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { BOARDS_INFO, CONTESTS_INFO, IDE_INFO, PROBLEMS_INFO } from 'config/constants';
-import { usePageStore, useUIStore, useUserStore } from 'hooks';
-import { ContestsTab, ProfileSetting } from 'types';
+import { ContestsTab } from '@juki-team/base-ui/enums';
+import { ProfileSetting } from '@juki-team/commons/enums';
 
 export default function Home() {
   

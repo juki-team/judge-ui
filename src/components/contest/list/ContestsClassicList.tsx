@@ -1,17 +1,13 @@
 'use client';
 
-import { getContestDateHeader, getContestNameHeader, getContestStatusHeader, PagedDataViewer } from 'components';
-import { jukiApiManager } from 'config';
-import { toFilterUrl, toSortUrl } from 'helpers';
-import { useUserStore } from 'hooks';
+import { getContestDateHeader, getContestNameHeader, getContestStatusHeader, PagedDataViewer, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { toFilterUrl, toSortUrl } from '@juki-team/base-ui/helpers';
 import { useMemo } from 'react';
-import {
-  ContestSummaryListResponseDTO,
-  DataViewerHeadersType,
-  EntityState,
-  PagedDataViewerProps,
-  QueryParam,
-} from 'types';
+import { QueryParam } from 'types';
+import { type DataViewerHeadersType, type PagedDataViewerProps } from '@juki-team/base-ui/types';
+import { type ContestSummaryListResponseDTO } from '@juki-team/commons/dto';
+import { EntityState } from '@juki-team/commons/enums';
 
 export const ContestsClassicList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
   
@@ -27,7 +23,7 @@ export const ContestsClassicList = (props: Partial<PagedDataViewerProps<ContestS
     <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
-        jukiApiManager.API_V2.contest.getSummaryList({
+        jukiApiManager.apiV2.contest.getSummaryList({
           params: {
             page,
             pageSize,

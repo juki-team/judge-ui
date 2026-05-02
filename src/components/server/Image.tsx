@@ -1,6 +1,7 @@
 import { SpinIcon } from '@juki-team/base-ui/server-components';
 import ImageComp from 'next/image';
-import { FC, ImageCmpProps } from 'types';
+import { FC } from 'types';
+import { type ImageCmpProps } from '@juki-team/base-ui/types';
 
 export const Image: FC<ImageCmpProps> = ({ src, className, alt, height, width, style }) => {
   

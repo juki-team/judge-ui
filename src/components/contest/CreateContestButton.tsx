@@ -1,8 +1,8 @@
 'use client';
 
-import { Button, PlusIcon, T } from 'components';
-import { jukiAppRoutes } from 'config';
-import { useUIStore } from 'hooks';
+import { PlusIcon } from '@juki-team/base-ui/server-components';
+import { Button, T, useUIStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 
 export const CreateContestButton = () => {
   

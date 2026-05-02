@@ -1,11 +1,15 @@
 'use client';
 
-import { EditCreateContest, EntityCreateLayout, PageNotFound } from 'components';
-import { jukiAppRoutes } from 'config';
+import { EditCreateContest } from 'components';
+import { EntityCreateLayout, PageNotFound, useUserStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { CONTEST_DEFAULT, JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import { isStringJson, toUpsertContestDTO } from 'helpers';
-import { useMemo, useUserStore } from 'hooks';
-import { ContestsTab, UpsertContestDTO, UpsertContestDTOUI } from 'types';
+import { toUpsertContestDTO } from 'helpers';
+import { type UpsertContestDTO } from '@juki-team/commons/dto';
+import { isStringJson } from '@juki-team/commons/helpers';
+import { useMemo } from 'hooks';
+import { UpsertContestDTOUI } from 'types';
+import { ContestsTab } from '@juki-team/base-ui/enums';
 
 export default function ContestsNewPage() {
   

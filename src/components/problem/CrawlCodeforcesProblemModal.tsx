@@ -1,24 +1,27 @@
 'use client';
 
-import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
-import { jukiApiManager } from 'config';
-import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification } from 'hooks';
+import { PlusIcon } from '@juki-team/base-ui/server-components';
+import { ButtonLoader, Input, Modal, T, useJukiNotification } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { Judge, Status } from '@juki-team/commons/enums';
+import { cleanRequest } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
 import { useState } from 'react';
-import { BasicModalProps, ContentResponseType, Judge, Status } from 'types';
+import { type BasicModalProps } from '@juki-team/base-ui/types';
 
 interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
   judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
 }
 
 export const CrawlCodeforcesProblemModal = ({ onClose, isOpen }: CrawlCodeforcesProblemModalProps) => {
-  
+
   const [ index, setIndex ] = useState('');
   const [ contestId, setContestId ] = useState('');
   const { notifyResponse } = useJukiNotification();
   // const pushRoute = useRouterStore(state => state.pushRoute);
   // const userSessionId = useUserStore(state => state.user.sessionId);
-  
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
       <div className="jk-col stretch gap jk-pg">
@@ -45,13 +48,13 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen }: CrawlCodeforces
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V2.problem.crawl({
+            const { url, ...options } = jukiApiManager.apiV2.problem.crawl({
               body: {
                 judgeKey: Judge.CODEFORCES,
                 key: `${contestId}-${index}`,
               },
             });
-            const response = cleanRequest<ContentResponseType<{ key: string }>>(
+            const response = cleanRequest<ContentResponse<{ key: string }>>(
               await authorizedRequest(url, options),
             );
             if (notifyResponse(response)) {

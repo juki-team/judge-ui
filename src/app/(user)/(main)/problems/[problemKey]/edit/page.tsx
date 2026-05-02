@@ -1,11 +1,13 @@
 'use client';
 
-import { EditCreateProblem, EntityUpdateLayout, FetcherLayer, ProblemNotFoundCard } from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
+import { EditCreateProblem, ProblemNotFoundCard } from 'components';
+import { EntityUpdateLayout, FetcherLayer, useRouterStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1 } from 'config/constants';
 import { toUpsertProblemDTO } from 'helpers';
-import { useRouterStore } from 'hooks';
-import type { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
+import type { UpsertProblemUIDTO } from 'types';
+import type { ProblemDataResponseDTO } from '@juki-team/commons/dto';
+import type { ContentResponse } from '@juki-team/commons/types';
 
 function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUIDTO {
   return {
@@ -35,12 +37,12 @@ function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUID
 }
 
 function ProblemEdit() {
-  
+
   const problemKey = useRouterStore(state => state.routeParams.problemKey);
-  
+
   return (
-    <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
-      url={jukiApiManager.API_V2.problem.getData({ params: { key: problemKey as string } }).url}
+    <FetcherLayer<ContentResponse<ProblemDataResponseDTO>>
+      url={jukiApiManager.apiV2.problem.getData({ params: { key: problemKey as string } }).url}
       errorView={<ProblemNotFoundCard />}
     >
       {({ data }) => {
@@ -52,7 +54,7 @@ function ProblemEdit() {
               Cmp={EditCreateProblem}
               viewRoute={(entityKey) => jukiAppRoutes.JUDGE().problems.view({ key: entityKey })}
               updateApiURL={() => JUDGE_API_V1.PROBLEM.PROBLEM}
-              viewApiURL={entityKey => jukiApiManager.API_V2.problem.getData({ params: { key: entityKey } }).url}
+              viewApiURL={entityKey => jukiApiManager.apiV2.problem.getData({ params: { key: entityKey } }).url}
               toEntityUpsert={toUpsertProblemDTO}
             />
           );

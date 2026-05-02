@@ -1,11 +1,7 @@
-import {
-  CodeLanguage,
-  ContestTemplate,
-  EntityState,
-  UpsertContestDTOUI,
-  UserCompanyBasicInfoResponseDTO,
-} from 'types';
-import { EMPTY_ENTITY_MEMBERS } from './commons';
+import { ContestTemplate, UpsertContestDTOUI } from 'types';
+import { type UserOrganizationBasicInfoResponseDTO as UserCompanyBasicInfoResponseDTO } from '@juki-team/commons/dto';
+import { CodeLanguage, EntityState } from '@juki-team/commons/enums';
+import { EMPTY_ENTITY_MEMBERS } from '@juki-team/commons/constants';
 
 export const FIVE_HOURS = 1000 * 60 * 60 * 5;
 export const ONE_HOUR = 1000 * 60 * 60;

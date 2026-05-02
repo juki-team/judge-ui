@@ -1,11 +1,14 @@
 'use client';
 
-import { LinkLastPath, T, TwoContentLayout } from 'components';
-import { jukiAppRoutes } from 'config';
-import { renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEntityDiff, useRouterStore, useState, useUIStore } from 'hooks';
-import { EntityState, LastPathKey, ProblemTab, TabsType, UpsertComponentEntityProps, UpsertProblemUIDTO } from 'types';
-import { Input } from '../index';
+import { LinkLastPath, T, TwoContentLayout, useEntityDiff, useRouterStore, useUIStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { renderReactNodeOrFunctionP1 } from '@juki-team/base-ui/helpers';
+import { useState } from 'hooks';
+import { LastPathKey, UpsertProblemUIDTO } from 'types';
+import { ProblemTab } from '@juki-team/base-ui/enums';
+import { type TabsType, type UpsertComponentEntityProps } from '@juki-team/base-ui/types';
+import { EntityState } from '@juki-team/commons/enums';
+import { Input } from '@juki-team/base-ui';
 import { ProblemAccess } from './ProblemAccess';
 import { ProblemDelete } from './ProblemDelete';
 import { ProblemEditorial } from './ProblemEditorial';

@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, Modal, T } from 'components';
-import { jukiApiManager } from 'config';
-import { authorizedRequest, cleanRequest, consoleError, consoleInfo, getVisitorSessionId } from 'helpers';
-import { useCallback, useEffect, useRouterStore, useState, useUserStore } from 'hooks';
-import { ContentsResponseType } from 'types';
+import { Button, Modal, T, useRouterStore, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { authorizedRequest, getVisitorSessionId } from '@juki-team/base-ui/helpers';
+import { cleanRequest, consoleError, consoleInfo } from '@juki-team/commons/helpers';
+import { type ContentsResponse } from '@juki-team/commons/types';
+import { useCallback, useEffect, useState } from 'hooks';
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -20,34 +21,34 @@ export function InstallPWAModal() {
   const [ isInstalled, setIsInstalled ] = useState(false);
   const isLoadingRoute = useRouterStore(store => store.isLoadingRoute);
   const { isMobile } = useUserStore(store => store.device);
-  
+
   useEffect(() => {
     const onBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setSupportsInstall(true);
     };
-    
+
     const onAppInstalled = () => {
       setIsInstalled(true);
       setSupportsInstall(false);
       setDeferredPrompt(null);
     };
-    
+
     window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt);
     window.addEventListener('appinstalled', onAppInstalled);
-    
+
     return () => {
       window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt);
       window.removeEventListener('appinstalled', onAppInstalled);
     };
   }, [ isLoadingRoute ]);
-  
+
   const handleInstall = useCallback(async () => {
     if (!deferredPrompt) return;
     await deferredPrompt.prompt();
     const result = await deferredPrompt.userChoice;
-    const { url, ...options } = jukiApiManager.API_V2.log.info({
+    const { url, ...options } = jukiApiManager.apiV2.log.info({
       body: {
         location,
         visitorSessionId: getVisitorSessionId(),
@@ -55,7 +56,7 @@ export function InstallPWAModal() {
         infoMessage: JSON.stringify(result),
       },
     });
-    const response = cleanRequest<ContentsResponseType<true>>(await authorizedRequest(url, options));
+    const response = cleanRequest<ContentsResponse<true>>(await authorizedRequest(url, options));
     if (response.success) {
       consoleInfo('Log reported');
     } else {
@@ -69,14 +70,14 @@ export function InstallPWAModal() {
     setDeferredPrompt(null);
     setSupportsInstall(false);
   }, [ deferredPrompt ]);
-  
+
   // iOS no tiene beforeinstallprompt; puedes mostrar guía si detectas iOS
   const isIOS = typeof window !== 'undefined' && /iphone|ipad|ipod/i.test(navigator.userAgent);
-  
+
   if (isInstalled) {
     return null;
   }
-  
+
   if (!supportsInstall) {
     // Opcional: muestra fallback para iOS
     if (isIOS) {
@@ -91,7 +92,7 @@ export function InstallPWAModal() {
               <T className="tt-se">how to install on iOS</T>
             </Button>
             <Button
-              type="light"
+              type="secondary"
               onClick={() => {
                 setIsOpen(false);
                 localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
@@ -105,7 +106,7 @@ export function InstallPWAModal() {
     }
     return null;
   }
-  
+
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <div className="jk-pg jk-col gap">
@@ -118,7 +119,7 @@ export function InstallPWAModal() {
           <T className="tt-ce">install app</T>
         </Button>
         <Button
-          type="light"
+          type="secondary"
           size="small"
           onClick={() => {
             setIsOpen(false);

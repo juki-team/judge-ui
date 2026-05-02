@@ -1,8 +1,8 @@
 'use client';
 
-import { T, TwoContentLayout } from 'components';
-import { ACCEPTED_PROGRAMMING_LANGUAGES, CODE_LANGUAGE } from 'config/constants';
-import { oneTab } from 'helpers';
+import { T, TwoContentLayout } from '@juki-team/base-ui';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, CODE_LANGUAGE } from '@juki-team/commons/constants';
+import { oneTab } from '@juki-team/base-ui/helpers';
 
 export default function Page() {
   

@@ -1,44 +1,16 @@
 'use client';
 
-import {
-  Button,
-  DeleteIcon,
-  InfoIIcon,
-  Input,
-  InputToggle,
-  Modal,
-  MultiSelect,
-  PlusIcon,
-  Select,
-  T,
-  UserCodeEditor,
-} from 'components';
-import { jukiApiManager } from 'config';
-import {
-  ACCEPTED_PROGRAMMING_LANGUAGES,
-  CODE_LANGUAGE,
-  EMPTY_TEXT_LANGUAGES,
-  ONE_HOUR,
-  PROBLEM_MODE,
-  PROBLEM_TYPE,
-  RUNNER_ACCEPTED_PROBLEM_MODES,
-  RUNNER_ACCEPTED_PROBLEM_TYPES,
-} from 'config/constants';
-import { classNames } from 'helpers';
-import { useFetcher } from 'hooks';
+import { DeleteIcon, InfoIIcon, PlusIcon } from '@juki-team/base-ui/server-components';
+import { Button, Input, InputToggle, Modal, MultiSelect, Select, T, UserCodeEditor, useFetcher } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { EMPTY_TEXT_LANGUAGES, ONE_HOUR } from 'config/constants';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, CODE_LANGUAGE, PROBLEM_MODE, PROBLEM_TYPE, RUNNER_ACCEPTED_PROBLEM_MODES, RUNNER_ACCEPTED_PROBLEM_TYPES } from '@juki-team/commons/constants';
+import { type JudgeDataResponseDTO } from '@juki-team/commons/dto';
+import { CodeLanguage, Language, ProblemScoringMode, ProblemType, SubmissionRunStatus } from '@juki-team/commons/enums';
+import { type ContentResponse, type ProblemSettingsByProgrammingLanguage, type ProblemSettingsPointsByGroups } from '@juki-team/commons/types';
+import { classNames } from '@juki-team/base-ui/helpers';
 import { Dispatch, SetStateAction, useState } from 'react';
-import {
-  CodeLanguage,
-  ContentResponseType,
-  JudgeDataResponseDTO,
-  Language,
-  ProblemScoringMode,
-  ProblemSettingsByProgrammingLanguageType,
-  ProblemSettingsPointsByGroupsType,
-  ProblemType,
-  SubmissionRunStatus,
-  UpsertProblemUIDTO,
-} from 'types';
+import { UpsertProblemUIDTO } from 'types';
 import { ProblemScoringModeInformation } from './Informations';
 
 interface TagsProps {
@@ -48,11 +20,11 @@ interface TagsProps {
 }
 
 export const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
-  
-  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO>>(jukiApiManager.API_V2.judge.getData({ params: { key: judgeKey } }).url);
-  
+
+  const { data } = useFetcher<ContentResponse<JudgeDataResponseDTO>>(jukiApiManager.apiV2.judge.getData({ params: { key: judgeKey } }).url);
+
   const allTags = Array.from(new Set([ ...(data?.success ? data.content.problemTags : []), ...tags ]));
-  
+
   return (
     <div className="jk-row nowrap gap extend">
       <div className="jk-row nowrap">
@@ -86,14 +58,14 @@ interface ProblemSettingsProps {
 }
 
 export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: ProblemSettingsProps) => {
-  
+
   const [ open, setOpen ] = useState(false);
   const [ source, _ ] = useState('');
-  
+
   const onCloseModal = () => setOpen(false);
-  
-  const fixPointsByGroups = (_pointsByGroups: ProblemSettingsPointsByGroupsType, toFilter?: number): ProblemSettingsPointsByGroupsType => {
-    const pointsByGroups: ProblemSettingsPointsByGroupsType = {};
+
+  const fixPointsByGroups = (_pointsByGroups: ProblemSettingsPointsByGroups, toFilter?: number): ProblemSettingsPointsByGroups => {
+    const pointsByGroups: ProblemSettingsPointsByGroups = {};
     let index = 1;
     Object.values(_pointsByGroups)
       .filter(a => !(a.group === 0 || a.group === toFilter))
@@ -126,7 +98,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
     }
     return pointsByGroups;
   };
-  
+
   return (
     <div className="jk-col left stretch gap nowrap">
       <div className="jk-br-ie bc-we jk-row left jk-pg-sm">
@@ -337,7 +309,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                   />
                 </div>
                 <div className="jk-row extend gap right">
-                  <Button type="text" onClick={onCloseModal}><T>close</T></Button>
+                  <Button type="ghost" onClick={onCloseModal}><T>close</T></Button>
                   <Button
                     onClick={() => {
                       setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource: source } });
@@ -408,7 +380,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
               value: language,
             }))}
             onChange={(values) => {
-              const byProgrammingLanguage: ProblemSettingsByProgrammingLanguageType = {};
+              const byProgrammingLanguage: ProblemSettingsByProgrammingLanguage = {};
               values.forEach((value) => {
                 const language = value.value;
                 byProgrammingLanguage[language] = {

@@ -1,5 +1,5 @@
-import { InformationPopoverProps } from 'types';
-import { InformationPopover, T } from '../index';
+import { type InformationPopoverProps } from '@juki-team/base-ui/types';
+import { InformationPopover, T } from '@juki-team/base-ui';
 
 const CAN_SEE_CONTEST = 'can see the problems, the scoreboard, the submission list, and the clarifications';
 const CAN_PARTICIPANT = 'can submit solutions to the problems and send clarifications if the contest allows it';

@@ -1,11 +1,6 @@
-import {
-  EntityMembersResponseDTO,
-  EntityState,
-  Judge,
-  ProblemSampleCasesType,
-  UpsertProblemDTO,
-  UserCompanyBasicInfoResponseDTO,
-} from './commons';
+import type { EntityMembersResponseDTO, UpsertProblemDTO, UserOrganizationBasicInfoResponseDTO as UserCompanyBasicInfoResponseDTO } from '@juki-team/commons/dto';
+import type { ProblemSampleCases } from '@juki-team/commons/types';
+import { EntityState, Judge } from '@juki-team/commons/enums';
 
 export type KeyFileType = 'input' | 'output';
 
@@ -26,5 +21,5 @@ export type StatementDTO = {
   input: string,
   output: string,
   note: string,
-  sampleCases: ProblemSampleCasesType,
+  sampleCases: ProblemSampleCases,
 }

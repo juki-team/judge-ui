@@ -1,8 +1,7 @@
 'use client';
 
-import { UserCodeEditor } from 'components';
-import { CODE_LANGUAGE, RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES } from 'config/constants';
-import { useCheckAndStartServices } from 'hooks';
+import { UserCodeEditor, useCheckAndStartServices } from '@juki-team/base-ui';
+import { CODE_LANGUAGE, RUNNER_ACCEPTED_PROGRAMMING_LANGUAGES } from '@juki-team/commons/constants';
 
 export default function IDEPage() {
   

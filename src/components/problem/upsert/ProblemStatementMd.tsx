@@ -1,9 +1,11 @@
 'use client';
 
-import { MdMathEditor, MdMathViewer, PlusIcon, T } from 'components';
-import { useUserStore } from 'hooks';
+import { PlusIcon } from '@juki-team/base-ui/server-components';
+import { MdMathEditor, MdMathViewer, T, useUserStore } from '@juki-team/base-ui';
 import { type Dispatch, type  SetStateAction, useState } from 'react';
-import { Language, MdMathEditorProps, ProblemScoringMode, ProfileSetting, UpsertProblemUIDTO } from 'types';
+import { UpsertProblemUIDTO } from 'types';
+import { type MdMathEditorProps } from '@juki-team/base-ui/types';
+import { Language, ProblemScoringMode, ProfileSetting } from '@juki-team/commons/enums';
 import { SampleTest } from '../SampleTest';
 
 interface ProblemStatementMdProps {

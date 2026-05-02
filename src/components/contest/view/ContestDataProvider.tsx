@@ -1,8 +1,8 @@
 'use client';
 
-import { useUserStore } from 'hooks';
+import { useUserStore } from '@juki-team/base-ui';
 import { createContext, useContext } from 'react';
-import type { ContestDataResponseDTO } from 'types';
+import type { ContestDataResponseDTO } from '@juki-team/commons/dto';
 import { useContestData } from './useContestData';
 
 const ContestDataContext = createContext<ReturnType<typeof useContestData> | null>(null);

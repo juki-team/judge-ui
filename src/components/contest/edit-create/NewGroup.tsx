@@ -1,8 +1,8 @@
 'use client';
 
-import { Button, Input, InputColor, Modal, T } from 'components';
-import { useSyncedState } from 'hooks';
-import { BasicModalProps, UpsertContestDTOUI } from 'types';
+import { Button, Input, InputColor, Modal, T, useSyncedState } from '@juki-team/base-ui';
+import { UpsertContestDTOUI } from 'types';
+import { type BasicModalProps } from '@juki-team/base-ui/types';
 
 type GroupType = UpsertContestDTOUI['groups'][string];
 
@@ -12,9 +12,9 @@ interface EditGroupProps extends BasicModalProps {
 }
 
 export const NewGroup = ({ group, onSave, isOpen, onClose }: EditGroupProps) => {
-  
+
   const [ newGroup, setNewGroup ] = useSyncedState<UpsertContestDTOUI['groups'][string]>(group);
-  
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="jk-pg jk-col gap stretch">
@@ -32,7 +32,7 @@ export const NewGroup = ({ group, onSave, isOpen, onClose }: EditGroupProps) => 
           onChange={color => setNewGroup(prevState => ({ ...prevState, color: color.hex }))}
         />
         <div className="jk-row gap right">
-          <Button type="light" onClick={() => onClose()}><T className="tt-se">cancel</T></Button>
+          <Button type="secondary" onClick={() => onClose()}><T className="tt-se">cancel</T></Button>
           <Button onClick={() => onSave(newGroup)}><T className="tt-se">save</T></Button>
         </div>
       </div>

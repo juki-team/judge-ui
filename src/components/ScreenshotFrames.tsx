@@ -1,13 +1,9 @@
 'use client';
 
-import { consoleInfo, isClientTrackWebSocketResponseEventDTO } from 'helpers';
-import { useSubscribe, useUserStore, useWebsocketStore } from 'hooks';
-import {
-  ClientTrackScreenshotWebSocketEventDTO,
-  SubscribeClientTrackWebSocketEventDTO,
-  WebSocketMessageEvent,
-  WebSocketSubscriptionEvent,
-} from 'types';
+import { type ClientTrackScreenshotWebSocketEventDTO, type SubscribeClientTrackWebSocketEventDTO } from '@juki-team/commons/dto';
+import { WebSocketMessageEvent, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
+import { consoleInfo, isClientTrackWebSocketResponseEventDTO } from '@juki-team/commons/helpers';
+import { useSubscribe, useUserStore, useWebsocketStore } from '@juki-team/base-ui';
 
 const toPng = async () => {
   if (typeof window === 'undefined') {

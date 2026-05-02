@@ -1,9 +1,14 @@
-import { jukiApiManager } from 'config';
-import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
-import type { ContentResponseType, UpsertContestDTO, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { FIFTEEN_MINUTES, FIVE_HOURS, ONE_HOUR } from 'config/constants';
+import { MAX_DATE, MIN_DATE } from '@juki-team/commons/constants';
+import type { UpsertContestDTO } from '@juki-team/commons/dto';
+import type { ContentResponse } from '@juki-team/commons/types';
 import { ContestTemplate } from 'types';
+import type { UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
 import type { ContestDataUI } from '../components/contest/view/types';
-import { cleanRequest, getMetaHeaders, isGlobalContest, roundTimestamp } from './index';
+import { cleanRequest, isGlobalContest } from '@juki-team/commons/helpers';
+import { getMetaHeaders } from '@juki-team/base-ui/helpers';
+import { roundTimestamp } from './index';
 
 export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertContestDTOUI): UpsertContestDTOUI => {
   const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
@@ -36,7 +41,7 @@ export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertCo
       endTimestamp: problemEndTimestamp,
     };
   });
-  
+
   return {
     ...contest,
     settings: {
@@ -106,7 +111,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataUI): UpsertContestDTOUI
       group: problem.group || '',
     };
   });
-  
+
   return {
     description: contest.description,
     members: contest.members,
@@ -121,7 +126,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataUI): UpsertContestDTOUI
 };
 
 export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO => {
-  
+
   const problems: UpsertContestDTO['problems'] = {};
   for (const problem of Object.values(entity.problems)) {
     problems[problem.key] = {
@@ -136,7 +141,7 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
       group: problem.group || '',
     };
   }
-  
+
   return {
     description: entity.description ?? '',
     members: {
@@ -172,14 +177,14 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
 };
 
 export async function getContestMetadata(contestKey: string) {
-  
+
   let result;
   try {
     const response = await fetch(
-      jukiApiManager.API_V2.contest.getMetadata({ params: { key: contestKey } }).url,
+      jukiApiManager.apiV2.contest.getMetadata({ params: { key: contestKey } }).url,
       { headers: getMetaHeaders() });
     const text = await response.text();
-    result = cleanRequest<ContentResponseType<{
+    result = cleanRequest<ContentResponse<{
       title: string,
       description: string,
       cover: string
@@ -187,8 +192,8 @@ export async function getContestMetadata(contestKey: string) {
   } catch (error) {
     console.error('error on generateMetadata', error);
   }
-  
+
   const { title, description, cover } = result?.success ? result.content : { title: '', description: '', cover: '' };
-  
+
   return { title, description, cover };
 }

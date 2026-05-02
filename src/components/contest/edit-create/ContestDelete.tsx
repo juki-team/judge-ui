@@ -1,11 +1,14 @@
 'use client';
 
-import { ButtonLoader, T } from 'components';
-import { jukiAppRoutes } from 'config';
-import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useRouterStore } from 'hooks';
+import { ButtonLoader, T, useJukiNotification, useRouterStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { type UserOrganizationBasicInfoResponseDTO as UserCompanyBasicInfoResponseDTO } from '@juki-team/commons/dto';
+import { HTTPMethod, Status } from '@juki-team/commons/enums';
+import { cleanRequest } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
 import { JUDGE_API_V1 } from 'src/constants';
-import { ContentResponseType, ContestsTab, HTTPMethod, Status, UserCompanyBasicInfoResponseDTO } from 'types';
+import { ContestsTab } from '@juki-team/base-ui/enums';
 
 interface ProblemStatementProps {
   documentOwner: UserCompanyBasicInfoResponseDTO,
@@ -14,10 +17,10 @@ interface ProblemStatementProps {
 }
 
 export const ContestDelete = ({ contestKey, deleted }: ProblemStatementProps) => {
-  
+
   const { notifyResponse } = useJukiNotification();
   const pushRoute = useRouterStore(state => state.pushRoute);
-  
+
   if (deleted) {
     return (
       <div className="jk-col gap jk-pg bc-we jk-br-ie cr-er">
@@ -25,7 +28,7 @@ export const ContestDelete = ({ contestKey, deleted }: ProblemStatementProps) =>
       </div>
     );
   }
-  
+
   return (
     <div className="jk-col gap jk-pg bc-we jk-br-ie cr-er">
       <T className="tt-se cr-er fw-bd">Are you sure you want to delete it?</T>
@@ -37,7 +40,7 @@ export const ContestDelete = ({ contestKey, deleted }: ProblemStatementProps) =>
         onClick={async (setLoaderStatus) => {
           setLoaderStatus(Status.LOADING);
           setLoaderStatus(Status.LOADING);
-          const response = cleanRequest<ContentResponseType<true>>(
+          const response = cleanRequest<ContentResponse<true>>(
             await authorizedRequest(JUDGE_API_V1.CONTEST.CONTEST(contestKey), {
               method: HTTPMethod.DELETE,
             }));

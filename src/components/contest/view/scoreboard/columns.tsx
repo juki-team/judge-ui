@@ -1,15 +1,12 @@
-import { BalloonIcon, Field, FitnessCenterIcon, InformationPopover, T, UserChip } from 'components';
-import { jukiAppRoutes } from 'config';
-import { classNames } from 'helpers';
+import { BalloonIcon, FitnessCenterIcon } from '@juki-team/base-ui/server-components';
+import { Field, InformationPopover, T, UserChip } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { classNames } from '@juki-team/base-ui/helpers';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
-import {
-  ContestProblemDataResponseDTO,
-  ContestTab,
-  DataViewerHeadersType,
-  LinkCmpProps,
-  TableHeadFieldProps,
-  TFunction,
-} from 'types';
+import { TFunction } from 'types';
+import { ContestTab } from '@juki-team/base-ui/enums';
+import { type DataViewerHeadersType, type LinkCmpProps, type TableHeadFieldProps } from '@juki-team/base-ui/types';
+import { type ContestProblemDataResponseDTO } from '@juki-team/commons/dto';
 import { ScoreboardResponseDTOFocus } from '../types';
 
 export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({

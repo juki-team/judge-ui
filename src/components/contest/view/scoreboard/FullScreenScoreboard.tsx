@@ -1,9 +1,9 @@
 'use client';
 
-import { Portal } from 'components';
-import { usePageStore, useResizeDetector, useUIStore, useUserStore } from 'hooks';
+import { Portal, usePageStore, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { useResizeDetector } from 'hooks';
 import { PropsWithChildren } from 'react';
-import { ContestDataResponseDTO } from 'types';
+import { type ContestDataResponseDTO } from '@juki-team/commons/dto';
 import { ContestTimeTimer } from '../ContestTimeTimer';
 
 export const FullScreenScoreboard = ({ contest, children, reloadContest }: PropsWithChildren<{

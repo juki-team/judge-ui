@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, PageNotFound, T } from 'components';
+import { Button, PageNotFound, T } from '@juki-team/base-ui';
 
 export default function DashboardError({ error, reset }: { error: Error; reset: () => void }) {
   

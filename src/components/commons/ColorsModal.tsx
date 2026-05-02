@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal } from 'components';
+import { Modal } from '@juki-team/base-ui';
 
 export const ColorsModal = () => {
   

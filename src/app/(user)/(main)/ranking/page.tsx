@@ -1,13 +1,17 @@
 'use client';
 
-import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { oneTab } from 'helpers';
-import { useDataViewerRequester, useMemo, usePageStore, useUIStore } from 'hooks';
-import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
+import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink, useDataViewerRequester, usePageStore, useUIStore } from '@juki-team/base-ui';
+import { JUDGE_API_V1 } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
+import { oneTab } from '@juki-team/base-ui/helpers';
+import { useMemo } from 'hooks';
+import { QueryParam } from 'types';
+import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
+import { type UserRankResponseDTO } from '@juki-team/commons/dto';
+import { type ContentsResponse } from '@juki-team/commons/types';
 
 function Ranking() {
-  
+
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const { Image } = useUIStore(store => store.components);
   const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
@@ -111,18 +115,18 @@ function Ranking() {
       minWidth: 200,
     },
   ], [ Image, isSmallScreen ]);
-  
+
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<UserRankResponseDTO>>(
+  } = useDataViewerRequester<ContentsResponse<UserRankResponseDTO>>(
     () => JUDGE_API_V1.RANKING.LIST(),
     { refreshInterval: 5 * 60 * 1000 },
   );
-  
+
   const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
-  
+
   return (
     <TwoContentLayout
       tabs={oneTab(

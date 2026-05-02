@@ -1,5 +1,5 @@
-import { PROBLEM_VERDICT } from 'src/constants';
-import { ProblemVerdict } from 'types';
+import { PROBLEM_VERDICT } from '@juki-team/commons/constants';
+import { ProblemVerdict } from '@juki-team/commons/enums';
 
 export const Verdict = ({ verdict }: { verdict: ProblemVerdict }) => {
   return (

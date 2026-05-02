@@ -1,4 +1,4 @@
-import { Language } from 'types';
+import { Language } from '@juki-team/commons/enums';
 
 export const PROBLEMS_INFO = {
   [Language.EN]: `Access problems from the judge itself, past competitions, and other online judges.

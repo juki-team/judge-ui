@@ -1,14 +1,18 @@
 'use client';
 
-import { AssignmentIcon, CodeIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, TrophyIcon } from 'components';
-import { jukiAppRoutes } from 'config';
-import { useRouterStore, useUIStore, useUserStore } from 'hooks';
+import { AssignmentIcon, CodeIcon, LeaderboardIcon, TrophyIcon } from '@juki-team/base-ui/server-components';
+import { LinkLastPath, MainMenu, T, useRouterStore, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { type PropsWithChildren } from 'react';
-import { JUKI_APP_COMPANY_KEY, ROUTES } from 'src/constants';
-import { ContestsTab, LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
+import { ROUTES } from 'src/constants';
+import { JUKI_APP_ORGANIZATION_KEY as JUKI_APP_COMPANY_KEY } from '@juki-team/commons/constants';
+import { ProfileSetting, Theme } from '@juki-team/commons/enums';
+import { LastPathKey } from 'types';
+import { ContestsTab } from '@juki-team/base-ui/enums';
+import { type MenuType } from '@juki-team/base-ui/types';
 
 export const NavigationBar = ({ children }: PropsWithChildren) => {
-  
+
   const pathname = useRouterStore(state => state.pathname);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const { Link, Image } = useUIStore(store => store.components);
@@ -23,7 +27,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
     : isProblemsPage
       ? jukiAppRoutes.JUDGE().problems.list()
       : '/';
-  
+
   const menu: MenuType[] = [
     {
       label: <T className="tt-se">contests</T>,
@@ -84,7 +88,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
     //   },
     // );
   }
-  
+
   menu.push(
     {
       label: <T className="tt-se">IDE</T>,
@@ -98,7 +102,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
       ),
     },
   );
-  
+
   return (
     <MainMenu
       onSeeMyProfile={(nickname, companyKey) => (

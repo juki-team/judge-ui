@@ -3,7 +3,7 @@
 .next
 node_modules
 .dockerignore
-.env.local
+.env
 .gitignore
 Dockerfile
 README.md

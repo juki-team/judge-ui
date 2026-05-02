@@ -1,4 +1,4 @@
-import { T } from 'components';
+import { T } from '@juki-team/base-ui';
 import Image from 'next/image';
 import { PropsWithChildren } from 'react';
 import { ButtonLogin } from './ButtonLogin';

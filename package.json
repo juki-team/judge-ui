@@ -4,39 +4,49 @@
   "version": "1.24.32",
   "scripts": {
     "caddy": "caddy run --config Caddyfile",
+    "dev:ssl": "NODE_EXTRA_CA_CERTS=\"$HOME/Library/Application Support/Caddy/pki/authorities/local/root.crt\" next dev -p 3070",
     "dev": "next dev -p 3070",
     "build": "next build",
     "build:analyze": "ANALYZE=true yarn build",
     "start": "next start",
     "lint": "eslint .",
-    "pull": "yarn add @juki-team/commons @juki-team/base-ui",
+    "env:load": "unset NPM_GITHUB_TOKEN && export $(grep NPM_GITHUB_TOKEN .env | xargs)",
+    "pull": "pnpm add @juki-team/commons@latest @juki-team/base-ui@latest",
     "push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn version --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f"
+  },
+  "engines": {
+    "node": ">=24"
   },
   "dependencies": {
     "@ably/spaces": "^0.5.2",
-    "@ai-sdk/react": "^3.0.81",
-    "@excalidraw/excalidraw": "^0.18.0",
-    "@juki-team/base-ui": "^1.4.31",
-    "@juki-team/commons": "^0.0.1062",
+    "@ai-sdk/react": "^3.0.176",
+    "@excalidraw/excalidraw": "^0.18.1",
+    "@juki-team/base-ui": "^1.4.111",
+    "@juki-team/commons": "^0.2.6",
     "@reactour/tour": "^3.8.0",
-    "@vercel/analytics": "^1.6.1",
-    "ably": "^2.17.1",
-    "ai": "^6.0.79",
-    "motion": "^12.34.0",
-    "next": "^16.1.6",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "swr": "^2.4.0",
-    "zod": "^4.3.6"
+    "@vercel/analytics": "^2.0.1",
+    "ably": "^2.21.0",
+    "ai": "^6.0.174",
+    "i18next": "^26.0.8",
+    "motion": "^12.38.0",
+    "next": "^16.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-resize-detector": "^12.3.0",
+    "recharts": "^3.8.1",
+    "swr": "^2.4.1",
+    "uuid": "^14.0.0",
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "^10.0.0",
-    "eslint-config-next": "^16.1.6",
+    "eslint": "^10.3.0",
+    "eslint-config-next": "^16.2.4",
     "next-compose-plugins": "^2.2.1",
-    "sass": "^1.97.3",
-    "typescript": "^5.9.3"
+    "prettier": "^3.8.3",
+    "sass": "^1.99.0",
+    "typescript": "^6.0.3"
   },
   "resolutions": {
     "@types/minimatch": "^5.0.0"

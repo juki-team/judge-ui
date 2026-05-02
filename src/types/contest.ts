@@ -1,12 +1,5 @@
-import { EntityState } from 'types';
-import {
-  ContestDataResponseDTO,
-  EntityCompanySummaryListResponseDTO,
-  EntityMembersResponseDTO,
-  ProblemJudgeSummaryListResponseDTO,
-  UpsertContestProblemDTO,
-} from './commons';
-import { UpsertContestDTO } from './index';
+import type { ContestDataResponseDTO, EntityOrganizationSummaryListResponseDTO as EntityCompanySummaryListResponseDTO, EntityMembersResponseDTO, ProblemJudgeSummaryListResponseDTO, UpsertContestDTO, UpsertContestProblemDTO } from '@juki-team/commons/dto';
+import { EntityState } from '@juki-team/commons/enums';
 
 export type UpsertContestProblemDTOUI = UpsertContestProblemDTO & {
   name: string,

@@ -28,9 +28,6 @@
     //    "noImplicitReturns": true,
     //    "noImplicitThis": true,
     "paths": {
-      "config": [
-        "./src/config"
-      ],
       "config/constants": [
         "./src/constants"
       ],

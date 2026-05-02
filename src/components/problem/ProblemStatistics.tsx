@@ -1,18 +1,15 @@
 'use client';
 
-import { BarChart, Button, LineChart, T } from 'components';
-import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
-import { classNames, showOfDateDisplayType } from 'helpers';
-import { useFetcher, useI18nStore, usePageStore, useState } from 'hooks';
-import { i18n } from 'i18next';
+import { BarChart, Button, LineChart, T, useFetcher, useI18nStore, usePageStore } from '@juki-team/base-ui';
+import { JUDGE_API_V1 } from 'config/constants';
+import { MONTH_NAMES } from '@juki-team/commons/constants';
+import { type GroupByTimestampKey, type ProblemDataResponseDTO, type StatisticsProblemResponseDTO } from '@juki-team/commons/dto';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { classNames, showOfDateDisplayType } from '@juki-team/base-ui/helpers';
+import { useState } from 'hooks';
+import { type i18n } from 'i18next';
 import type { ContentType } from 'recharts/types/component/Tooltip';
-import {
-  ContentResponseType,
-  DateLiteralProps,
-  GroupByTimestampKey,
-  ProblemDataResponseDTO,
-  StatisticsProblemResponseDTO,
-} from 'types';
+import { type DateLiteralProps } from '@juki-team/base-ui/types';
 
 const now = Date.now();
 
@@ -28,7 +25,7 @@ const CustomTooltip: ContentType<number, number> = ({ active, payload, label }) 
       </div>
     );
   }
-  
+
   return null;
 };
 
@@ -42,7 +39,7 @@ const CustomTooltipA: ContentType<number, number> = ({ active, payload, label })
       </div>
     );
   }
-  
+
   return null;
 };
 
@@ -65,7 +62,7 @@ const customizedAxisTick = (angle: number) => function Cmp({ x, y, payload }: { 
 };
 
 const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t: i18n['t']) => {
-  
+
   const {
     showYears,
     showMonths,
@@ -75,7 +72,7 @@ const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t:
     showSeconds,
     showMilliseconds,
   } = showOfDateDisplayType(show);
-  
+
   return (
     // withDayName && <><T>{DAY_NAMES[date.getDay()]}</T>,&nbsp;</>}
     (showDays ? date.getDate() : '') +
@@ -93,22 +90,22 @@ const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t:
 const groupBy: GroupByTimestampKey[] = [ 'day', 'month', 'year' ];
 
 export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO }) => {
-  
+
   const {
     data,
-  } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
+  } = useFetcher<ContentResponse<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
   const t = useI18nStore(store => store.i18n.t);
   const { screen: viewPortScreen, height: viewPortHeight } = usePageStore(store => store.viewPort);
   const [ dateType, setDateType ] = useState<GroupByTimestampKey>('day');
-  const languagesStats = data?.success ? data.content.language : {};
-  const verdictsStats = data?.success ? data.content.verdict : {};
-  const verdictsDate = data?.success ? data.content.date : {} as StatisticsProblemResponseDTO['date'];
+  const languagesStats: StatisticsProblemResponseDTO['language'] = data?.success ? data.content.language : {};
+  const verdictsStats: StatisticsProblemResponseDTO['verdict'] = data?.success ? data.content.verdict : {};
+  const verdictsDate: StatisticsProblemResponseDTO['date'] = data?.success ? data.content.date : {};
   const languagesData = [];
   const verdictsData = [];
   const dateData = [];
-  
+
   const oneColumn = viewPortHeight < 900 || viewPortScreen === 'sm';
-  
+
   const sum = Object.values(languagesStats).reduce((sum, language) => sum + language.value, 0);
   for (const { label, value } of Object.values(languagesStats)) {
     languagesData.push({ label: capitalized(label), value, percent: value * 100 / sum });
@@ -131,7 +128,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
       accum,
     });
   }
-  
+
   return (
     <div className="jk-col gap top ht-100 stretch nowrap">
       <div className="jk-col gap nowrap flex-1 bc-we jk-pg-sm" style={{ height: '80%' }}>
@@ -144,7 +141,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
           ].map(({ value, label }) => (
             <Button
               size="small"
-              type={dateType === value ? 'accent' : 'light'}
+              type={dateType === value ? 'primary' : 'secondary'}
               key={value}
               onClick={() => {
                 setDateType(value);

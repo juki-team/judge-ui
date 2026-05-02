@@ -1,57 +1,29 @@
 'use client';
 
-import {
-  ButtonLoader,
-  getSubmissionContestProblemHeader,
-  getSubmissionDateHeader,
-  getSubmissionLanguageHeader,
-  getSubmissionMemoryHeader,
-  getSubmissionNicknameHeader,
-  getSubmissionRejudgeHeader,
-  getSubmissionTimeHeader,
-  getSubmissionVerdictHeader,
-  PagedDataViewer,
-  T,
-} from 'components';
-import { jukiApiManager } from 'config';
-import { SEPARATOR_TOKEN } from 'config/constants';
-import {
-  authorizedRequest,
-  cleanRequest,
-  getParamsOfUserKey,
-  isSubmissionsCrawlWebSocketResponseEventDTO,
-  toFilterUrl,
-  toSortUrl,
-} from 'helpers';
-import { useFetcher, useJukiNotification, useMemo, useState, useSubscribe, useUserStore } from 'hooks';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  ContestDataResponseDTO,
-  DataViewerHeadersType,
-  DataViewerRequestPropsType,
-  DataViewerToolbarProps,
-  JudgeSummaryListResponseDTO,
-  LanguagesByJudge,
-  QueryParam,
-  Status,
-  SubmissionSummaryListResponseDTO,
-  SubscribeSubmissionsCrawlWebSocketEventDTO,
-  WebSocketSubscriptionEvent,
-} from 'types';
+import { ButtonLoader, getSubmissionContestProblemHeader, getSubmissionDateHeader, getSubmissionLanguageHeader, getSubmissionMemoryHeader, getSubmissionNicknameHeader, getSubmissionRejudgeHeader, getSubmissionTimeHeader, getSubmissionVerdictHeader, PagedDataViewer, T, useFetcher, useJukiNotification, useSubscribe, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { SEPARATOR_TOKEN } from '@juki-team/commons/constants';
+import { type ContestDataResponseDTO, type JudgeSummaryListResponseDTO, type SubmissionSummaryListResponseDTO, type SubscribeSubmissionsCrawlWebSocketEventDTO } from '@juki-team/commons/dto';
+import { Status, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
+import { cleanRequest, getParamsOfUserKey, isSubmissionsCrawlWebSocketResponseEventDTO } from '@juki-team/commons/helpers';
+import { type ContentResponse, type ContentsResponse } from '@juki-team/commons/types';
+import { authorizedRequest, toFilterUrl, toSortUrl } from '@juki-team/base-ui/helpers';
+import { useMemo, useState } from 'hooks';
+import { QueryParam } from 'types';
+import { type DataViewerHeadersType, type DataViewerRequestPropsType, type DataViewerToolbarProps, type LanguagesByJudge } from '@juki-team/base-ui/types';
 import { ContestDataUI } from '../types';
 
 const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
-  
+
   const [ dataCrawled, setDataCrawled ] = useState<{
     [key: string]: { submitId: string, isNewSubmission: boolean }[]
   }>({});
   const [ submissionsCount, setSubmissionsCount ] = useState(0);
   const { notifyResponse } = useJukiNotification();
-  
+
   const problemKeys = Object.values(contest.problems).map(problem => problem.key).join(SEPARATOR_TOKEN);
   const contestKey = contest.key;
-  
+
   const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDTO, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
     contestKey,
@@ -78,14 +50,14 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
       }
     },
   );
-  
+
   const newSubmissions = Object.values(dataCrawled)
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +isNewSubmission, 0);
   const oldSubmissions = Object.values(dataCrawled)
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
-  
+
   return (
     <ButtonLoader
       key="retrieve"
@@ -93,16 +65,16 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
         setLoaderStatus(Status.LOADING);
         setDataCrawled({});
         setSubmissionsCount(0);
-        const { url, ...options } = jukiApiManager.API_V2.contest.retrieve({
+        const { url, ...options } = jukiApiManager.apiV2.contest.retrieve({
           params: {
             key: contestKey,
           },
         });
-        const result = cleanRequest<ContentResponseType<{}>>(await authorizedRequest(url, options));
+        const result = cleanRequest<ContentResponse<{}>>(await authorizedRequest(url, options));
         notifyResponse(result, setLoaderStatus);
       }}
       size="tiny"
-      type="light"
+      type="secondary"
     >
       <T className="tt-se">retrieve submissions</T>
       {!!Object.values(dataCrawled).length && (
@@ -129,10 +101,10 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
 };
 
 export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
-  
+
   const userNickname = useUserStore(state => state.user.nickname);
   const companyKey = useUserStore(state => state.company.key);
-  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V2.judge.getSummaryList().url);
+  const { data: judgePublicList } = useFetcher<ContentsResponse<JudgeSummaryListResponseDTO>>(jukiApiManager.apiV2.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
@@ -148,7 +120,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
     }
     return result;
   }, [ contest.problems, judgePublicList ]);
-  
+
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => [
     getSubmissionNicknameHeader([
       ...(contest.user.isAdministrator || contest.user.isManager || contest.user.isParticipant
@@ -188,14 +160,14 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
   ], [ contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, contest.members.participants, contest.problems, contest.key, userNickname, languages, companyKey ]);
-  
+
   const downloads = useMemo(() => {
     const downloads: DataViewerToolbarProps<SubmissionSummaryListResponseDTO>['downloads'] = [
       {
         label: <T className="tt-se">download as csv</T>,
         value: 'csv',
         getUrl: ({ filter, sort }: DataViewerRequestPropsType) => (
-          jukiApiManager.API_V2.submission.getExportSummaryList({
+          jukiApiManager.apiV2.submission.getExportSummaryList({
             params: {
               page: 1,
               pageSize: 1000000,
@@ -212,7 +184,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
         label: <T className="tt-se">download as zip with source codes</T>,
         value: 'complete',
         getUrl: ({ filter, sort }: DataViewerRequestPropsType) => (
-          jukiApiManager.API_V2.submission.getExportSummaryList({
+          jukiApiManager.apiV2.submission.getExportSummaryList({
             params: {
               page: 1,
               pageSize: 1000000,
@@ -227,9 +199,9 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
     }
     return downloads;
   }, [ contest.key, contest.name, contest.user.isAdministrator, contest.user.isManager ]);
-  
+
   const hasNotSubmitSupported = Object.values(contest.problems).some(problem => !problem.judge.isSubmitSupported);
-  
+
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
       extraNodes={hasNotSubmitSupported ? [ <RetrieveButton key="retrieve-button" contest={contest} /> ] : []}
@@ -237,7 +209,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
       cards={{ width: 272, expanded: true }}
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-        return jukiApiManager.API_V2.submission.getSummaryList({
+        return jukiApiManager.apiV2.submission.getSummaryList({
           params: {
             page,
             pageSize,

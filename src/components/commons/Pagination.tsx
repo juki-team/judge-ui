@@ -1,9 +1,9 @@
-import { DoubleUpIcon, SpinIcon } from 'components';
-import { useI18nStore, usePageStore } from 'hooks';
+'use client';
+
+import { DoubleUpIcon, SpinIcon, NavigateBeforeIcon, NavigateNextIcon } from '@juki-team/base-ui/server-components';
+import { useI18nStore, usePageStore, Select, T } from '@juki-team/base-ui';
 import { useEffect } from 'react';
-import { classNames } from '../../helpers';
-import { NavigateBeforeIcon, NavigateNextIcon } from '../server';
-import { Select, T } from './commons';
+import { classNames } from '@juki-team/base-ui/helpers';
 
 const SIZE_PAGES = 3;
 

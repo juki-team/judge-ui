@@ -1,30 +1,27 @@
 'use client';
 
-import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, cleanRequest, isProblemCrawledWebSocketResponseEventDTO } from 'helpers';
-import { useJukiNotification, useRouterStore, useSubscribe } from 'hooks';
+import { PlusIcon } from '@juki-team/base-ui/server-components';
+import { ButtonLoader, Input, Modal, T, useJukiNotification, useRouterStore, useSubscribe } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { type SubscribeProblemCrawledWebSocketEventDTO } from '@juki-team/commons/dto';
+import { Judge, Status, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
+import { cleanRequest, isProblemCrawledWebSocketResponseEventDTO } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
 import { useState } from 'react';
-import {
-  BasicModalProps,
-  ContentResponseType,
-  Judge,
-  Status,
-  SubscribeProblemCrawledWebSocketEventDTO,
-  WebSocketSubscriptionEvent,
-} from 'types';
+import { type BasicModalProps } from '@juki-team/base-ui/types';
 
 interface CrawlLeetCodeProblemModalProps extends BasicModalProps {
 }
 
 export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProblemModalProps) => {
-  
+
   const [ slug, setSlug ] = useState('');
   const { notifyResponse } = useJukiNotification();
   const pushRoute = useRouterStore(store => store.pushRoute);
-  
+
   const problemKey = `PL-${slug}`;
-  
+
   const event: Omit<SubscribeProblemCrawledWebSocketEventDTO, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
     problemKey,
@@ -37,7 +34,7 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
       }
     },
   );
-  
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
       <div className="jk-col stretch gap jk-pg">
@@ -55,13 +52,13 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
           responsiveMobile
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V2.problem.crawl({
+            const { url, ...options } = jukiApiManager.apiV2.problem.crawl({
               body: {
                 judgeKey: Judge.LEETCODE,
                 key: slug,
               },
             });
-            const response = cleanRequest<ContentResponseType<{ key: string }>>(
+            const response = cleanRequest<ContentResponse<{ key: string }>>(
               await authorizedRequest(url, options),
             );
             notifyResponse(response);

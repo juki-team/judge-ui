@@ -1,5 +1,6 @@
-import { GroupByTimestampKey, KeyFileType } from 'types';
-import { JUKI_SERVICE_V2_URL } from './commons';
+import { KeyFileType } from 'types';
+import { type GroupByTimestampKey } from '@juki-team/commons/dto';
+import { JUKI_SERVICE_V2_URL } from '@juki-team/base-ui/constants';
 
 export const JUDGE_API_V1 = {
   STATISTICS: {

@@ -1,8 +1,7 @@
 'use client';
 
-import { SubmitView, T, TwoContentLayout } from 'components';
-import { oneTab } from 'helpers';
-import { useRouterStore } from 'hooks';
+import { SubmitView, T, TwoContentLayout, useRouterStore } from '@juki-team/base-ui';
+import { oneTab } from '@juki-team/base-ui/helpers';
 
 function Submit() {
   

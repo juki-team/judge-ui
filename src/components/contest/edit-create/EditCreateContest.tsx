@@ -1,20 +1,16 @@
 'use client';
 
-import { Input, LinkLastPath, MdMathEditor, T, TwoContentLayout } from 'components';
-import { jukiAppRoutes } from 'config';
-import { isGlobalContest, renderReactNodeOrFunctionP1 } from 'helpers';
-import { useEffect, useRouterStore, useState, useUIStore } from 'hooks';
+import { Input, LinkLastPath, MdMathEditor, T, TwoContentLayout, useRouterStore, useUIStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { renderReactNodeOrFunctionP1 } from '@juki-team/base-ui/helpers';
+import { EntityState } from '@juki-team/commons/enums';
+import { isGlobalContest } from '@juki-team/commons/helpers';
+import { useEffect, useState } from 'hooks';
 import { memo } from 'react';
 import { LS_INITIAL_CONTEST_KEY } from 'src/constants';
-import {
-  ContestTab,
-  EntityState,
-  LastPathKey,
-  TabsType,
-  TwoContentLayoutProps,
-  UpsertComponentEntityProps,
-  UpsertContestDTOUI,
-} from 'types';
+import { LastPathKey, UpsertContestDTOUI } from 'types';
+import { ContestTab } from '@juki-team/base-ui/enums';
+import { type TabsType, type TwoContentLayoutProps, type UpsertComponentEntityProps } from '@juki-team/base-ui/types';
 import { ContestDelete } from './ContestDelete';
 import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';

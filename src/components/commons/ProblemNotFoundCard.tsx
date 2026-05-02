@@ -1,7 +1,8 @@
 'use client';
 
 import { LastPathKey } from 'types';
-import { LinkLastPath, NotFoundCard, T } from '../index';
+import { LinkLastPath, T } from '@juki-team/base-ui';
+import { NotFoundCard } from './NotFoundCard';
 
 export const ProblemNotFoundCard = () => (
   <NotFoundCard

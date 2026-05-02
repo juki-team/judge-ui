@@ -1,31 +1,19 @@
 'use client';
 
-import {
-  AdminInformation,
-  ButtonLoader,
-  ContestantInformation,
-  FrozenInformation,
-  GuestInformation,
-  JudgeInformation,
-  MdMathViewer,
-  QuietInformation,
-  SpectatorInformation,
-  T,
-} from 'components';
-import { jukiApiManager } from 'config';
-import { CODE_LANGUAGE, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile } from 'helpers';
-import { useDateFormat, useI18nStore, useJukiNotification, usePageStore, useRouterStore, useUserStore } from 'hooks';
-import {
-  ContentResponseType,
-  ContestDataResponseDTO,
-  HTTPMethod,
-  KeyedMutator,
-  ProfileSetting,
-  QueryParamKey,
-  SetLoaderStatusOnClickType,
-  Status,
-} from 'types';
+import { AdminInformation, ContestantInformation, GuestInformation, JudgeInformation, SpectatorInformation } from 'components';
+import { ButtonLoader, FrozenInformation, MdMathViewer, QuietInformation, T, useI18nStore, useJukiNotification, usePageStore, useRouterStore, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { JUDGE_API_V1 } from 'config/constants';
+import { CODE_LANGUAGE } from '@juki-team/commons/constants';
+import { type ContestDataResponseDTO } from '@juki-team/commons/dto';
+import { HTTPMethod, ProfileSetting, Status } from '@juki-team/commons/enums';
+import { cleanRequest } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { authorizedRequest, classNames, downloadUrlAsFile } from '@juki-team/base-ui/helpers';
+import { useDateFormat } from 'hooks';
+import { KeyedMutator } from 'types';
+import { QueryParamKey } from '@juki-team/base-ui/enums';
+import { type SetLoaderStatusOnClickType } from '@juki-team/base-ui/types';
 
 interface ViewOverviewProps {
   contest: ContestDataResponseDTO,
@@ -34,7 +22,7 @@ interface ViewOverviewProps {
 }
 
 export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOverviewProps) => {
-  
+
   const { isManager, isAdministrator, isParticipant, isGuest, isSpectator } = contest.user;
   const userIsLogged = useUserStore(state => state.user.isLogged);
   const appendSearchParams = useRouterStore(state => state.appendSearchParams);
@@ -43,10 +31,10 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const t = useI18nStore(state => state.i18n.t);
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
-  
+
   const registerContest = async (setLoader: SetLoaderStatusOnClickType) => {
     setLoader(Status.LOADING);
-    const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(contest.key), {
+    const response = cleanRequest<ContentResponse<string>>(await authorizedRequest(JUDGE_API_V1.CONTEST.REGISTER(contest.key), {
       method: HTTPMethod.POST,
     }));
     if (notifyResponse(response, setLoader)) {
@@ -55,7 +43,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
       setLoader(Status.SUCCESS);
     }
   };
-  
+
   return (
     <div
       className={classNames('contest-overview gap nowrap left stretch', {
@@ -139,7 +127,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 <div className="ta-cr">{rlt(Math.floor((contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;</div>
                 <T className="ta-cr">from the start of the contest</T>
               </div>
-            
+
             </div>
           )}
           {contest.settings.endTimestamp !== contest.settings.quietTimestamp && (
@@ -190,7 +178,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 size="tiny"
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
-                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                  const response = cleanRequest<ContentResponse<string>>(await authorizedRequest(
                       contest?.settings.scoreboardLocked ? JUDGE_API_V1.CONTEST.UNLOCK_SCOREBOARD(contest.key) : JUDGE_API_V1.CONTEST.LOCK_SCOREBOARD(contest.key),
                       { method: HTTPMethod.POST },
                     ),
@@ -208,7 +196,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 size="tiny"
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
-                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                  const response = cleanRequest<ContentResponse<string>>(await authorizedRequest(
                       contest?.settings.upsolvingEnabled ? JUDGE_API_V1.CONTEST.DISABLE_UPSOLVING(contest.key) : JUDGE_API_V1.CONTEST.ENABLE_UPSOLVING(contest.key),
                       { method: HTTPMethod.POST },
                     ),
@@ -226,16 +214,16 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                 key="download-contest-problemset"
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
-                  const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
+                  const { url, ...options } = jukiApiManager.apiV2.export.contest.problems.statementsToPdf({
                     params: {
                       key: contest.key,
                       language: userPreferredLanguage,
                     },
                   });
-                  const response = cleanRequest<ContentResponseType<{ urlExportedPDF: string }>>(
+                  const response = cleanRequest<ContentResponse<{ urlExportedPDF: string }>>(
                     await authorizedRequest(url, options),
                   );
-                  
+
                   if (response.success) {
                     if (!response.content.urlExportedPDF) {
                       setLoaderStatus(Status.SUCCESS);
@@ -254,7 +242,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                   }
                 }}
                 size="tiny"
-                type="light"
+                type="secondary"
               >
                 <T className="tt-se">download problemset</T>
               </ButtonLoader>

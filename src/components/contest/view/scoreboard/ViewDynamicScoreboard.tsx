@@ -1,20 +1,17 @@
 'use client';
 
-import { Button, ButtonLoader, DataViewer, FullscreenExitIcon, FullscreenIcon, T, TimerDisplay } from 'components';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, cleanRequest, getUserKey } from 'helpers';
-import { useDataViewerRequester, useFetcher, useI18nStore, useJukiNotification, usePageStore, useUIStore } from 'hooks';
+import { FullscreenExitIcon, FullscreenIcon } from '@juki-team/base-ui/server-components';
+import { Button, ButtonLoader, DataViewer, T, TimerDisplay, useDataViewerRequester, useFetcher, useI18nStore, useJukiNotification, usePageStore, useUIStore } from '@juki-team/base-ui';
+import { JUDGE_API_V1 } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { type ContestDataResponseDTO, type ScoreboardResponseDTO } from '@juki-team/commons/dto';
+import { HTTPMethod, Status } from '@juki-team/commons/enums';
+import { cleanRequest, getUserKey } from '@juki-team/commons/helpers';
+import { type ContentResponse, type ContentsResponse } from '@juki-team/commons/types';
 import { useEffect, useMemo, useState } from 'react';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  ContestDataResponseDTO,
-  DataViewerHeadersType,
-  HTTPMethod,
-  QueryParam,
-  ScoreboardResponseDTO,
-  Status,
-} from 'types';
+import { QueryParam } from 'types';
+import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
 import { ScoreboardResponseDTOFocus, ScoreboardResponseDTOUI } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
@@ -30,7 +27,7 @@ const getKeyUser = (user: ScoreboardResponseDTOFocus['user']) => {
 };
 
 export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewDynamicScoreboardProps) => {
-  
+
   const contestKey = contest.key;
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
@@ -41,7 +38,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     // request: requestScoreboardFinal,
     // isLoading: isLoadingScoreboardFinal,
     // reload: reloadScoreboardFinal,
-  } = useFetcher<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, true, true));
+  } = useFetcher<ContentsResponse<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, true, true));
   const scoreboardResponseFinal: ScoreboardResponseDTO[] = useMemo(() => (responseScoreboardFinal?.success ? responseScoreboardFinal.contents : []), [ responseScoreboardFinal ]);
   const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
@@ -49,7 +46,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, contest.isEndless),
     ];
-    
+
     if (contest?.problems) {
       for (const problem of Object.values(contest?.problems)) {
         base.push(getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless, problem, t));
@@ -57,12 +54,12 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     }
     return base;
   }, [ viewPortScreen, contest.isEndless, contest?.problems, Link, contestKey, t ]);
-  
+
   const {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentResponseType<{ content: ScoreboardResponseDTO[], timestamp: number }[]>>(
+  } = useDataViewerRequester<ContentResponse<{ content: ScoreboardResponseDTO[], timestamp: number }[]>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key),
   );
   const [ trigger, setTrigger ] = useState(0);
@@ -70,7 +67,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   const [ data, setData ] = useState<ScoreboardResponseDTOFocus[]>([]);
   const [ timestamp, setTimestamp ] = useState(0);
   const { notifyResponse } = useJukiNotification();
-  
+
   useEffect(() => {
     if (response?.success && response.content[index]) {
       setData(prevState => {
@@ -141,9 +138,9 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     }
   }, [ index, response, scoreboardResponseFinal ]);
   const max = (response?.success ? response.content : []).length - 1;
-  
+
   const currentTimestamp = timestamp - contest.settings.startTimestamp;
-  
+
   const extraNodes = useMemo(() => [
     <Button key="exit" onClick={onClose} size="tiny">
       <T className="tt-se">exit</T>
@@ -161,7 +158,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
         : <FullscreenIcon className="clickable jk-br-ie" onClick={() => setFullscreen(prevState => !prevState)} />}
     </div>,
     <div className="jk-row gap" key="buttons">
-      <Button size="tiny" type="light" onClick={() => setIndex(0)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(0)}>
         <T className="tt-se">start</T>
       </Button>
       <Button size="tiny" onClick={() => setIndex(prevState => Math.max(prevState - 1, 0))}>
@@ -170,7 +167,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       <Button size="tiny" onClick={() => setIndex(prevState => Math.min(prevState + 1, max))}>
         <T className="tt-se">next</T>
       </Button>
-      <Button size="tiny" type="light" onClick={() => setIndex(max)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(max)}>
         <T className="tt-se">end</T>
       </Button>
     </div>,
@@ -186,7 +183,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       size="tiny"
       onClick={async (setLoaderStatus) => {
         setLoaderStatus(Status.LOADING);
-        const response = cleanRequest<ContentResponseType<string>>(
+        const response = cleanRequest<ContentResponse<string>>(
           await authorizedRequest(JUDGE_API_V1.CONTEST.RECALCULATE_SCOREBOARD_HISTORY(contest?.key), { method: HTTPMethod.POST }),
         );
         if (notifyResponse(response, setLoaderStatus)) {
@@ -197,7 +194,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       <T className="tt-se">recalculate</T>
     </ButtonLoader>,
   ], [ contest?.key, currentTimestamp, fullscreen, max, notifyResponse, onClose ]);
-  
+
   const score = (
     <DataViewer<ScoreboardResponseDTOFocus>
       headers={columns}
@@ -214,7 +211,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
-  
+
   if (fullscreen) {
     return (
       <FullScreenScoreboard contest={contest} reloadContest={reloadContest}>
@@ -222,6 +219,6 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       </FullScreenScoreboard>
     );
   }
-  
+
   return score;
 };

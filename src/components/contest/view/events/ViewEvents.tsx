@@ -1,19 +1,19 @@
 'use client';
 
-import { Button, CodeViewer, DateLiteral, Modal, T, UserChip } from 'components';
+import { Button, CodeViewer, DateLiteral, Modal, T, UserChip } from '@juki-team/base-ui';
 import { useState } from 'hooks';
-import { CodeLanguage } from 'types';
+import { CodeLanguage } from '@juki-team/commons/enums';
 import { ContestDataUI } from '../types';
 
 export const ViewEvents = ({ contest }: { contest: ContestDataUI }) => {
-  
+
   const [ selectedDetails, setSelectedDetails ] = useState<Record<string, any> | null>(null);
-  
+
   return (
     <div className="jk-col gap stretch left jk-pg-md nowrap jk-pg bc-we jk-br-ie">
       {/*<div className="jk-row">*/}
       {/*  <ButtonLoader*/}
-      {/*    type="light"*/}
+      {/*    type="secondary"*/}
       {/*    onClick={async (setLoader) => {*/}
       {/*      setLoader(Status.LOADING);*/}
       {/*      await mutate();*/}
@@ -39,7 +39,7 @@ export const ViewEvents = ({ contest }: { contest: ContestDataUI }) => {
                   <DateLiteral date={new Date(timestamp)} />
                 </div>
                 {contest.user.isAdministrator && Object.keys(details).length > 0 && (
-                  <Button onClick={() => setSelectedDetails(details)} size="small" type="light">
+                  <Button onClick={() => setSelectedDetails(details)} size="small" type="secondary">
                     <T>View details</T>
                   </Button>
                 )}

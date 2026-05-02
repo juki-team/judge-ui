@@ -1,5 +1,5 @@
-import { CheckIcon, PendingActionsIcon } from 'components';
-import { IconProps } from 'types';
+import { CheckIcon, PendingActionsIcon } from '@juki-team/base-ui/server-components';
+import { type IconProps } from '@juki-team/base-ui/types';
 
 interface ProblemStatusProps {
   solved: boolean,

@@ -1,6 +1,7 @@
 import { EMPTY_TEXT_LANGUAGES } from 'config/constants';
-import type { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
-import { ProblemScoringMode, ProblemType } from 'types';
+import type { UpsertProblemUIDTO } from 'types';
+import { ProblemScoringMode, ProblemType } from '@juki-team/commons/enums';
+import type { UpsertProblemDTO } from '@juki-team/commons/dto';
 
 export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO => ({
   members: {

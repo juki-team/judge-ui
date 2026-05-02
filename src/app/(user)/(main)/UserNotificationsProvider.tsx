@@ -1,10 +1,10 @@
 'use client';
 
-import { T } from 'components';
-import { PROBLEM_VERDICT } from 'config/constants';
-import { getUserKey, isUserNotificationSubmissionWebSocketResponseEventDTO } from 'helpers';
-import { useJukiNotification, useSubscribe, useUserStore } from 'hooks';
-import { ProblemVerdict, SubscribeUserNotificationWebsocketEventDTO, WebSocketSubscriptionEvent } from 'types';
+import { T, useJukiNotification, useSubscribe, useUserStore } from '@juki-team/base-ui';
+import { PROBLEM_VERDICT } from '@juki-team/commons/constants';
+import { type SubscribeUserNotificationWebsocketEventDTO } from '@juki-team/commons/dto';
+import { ProblemVerdict, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
+import { getUserKey, isUserNotificationSubmissionWebSocketResponseEventDTO } from '@juki-team/commons/helpers';
 
 export function UserNotificationProvider({}) {
   const userNickname = useUserStore(store => store.user.nickname);

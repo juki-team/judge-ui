@@ -1,11 +1,13 @@
 'use client';
 
-import { EditCreateProblem, EntityCreateLayout, PageNotFound } from 'components';
-import { jukiAppRoutes } from 'config';
+import { EditCreateProblem } from 'components';
+import { EntityCreateLayout, PageNotFound, useRouterStore, useUserStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1, PROBLEM_DEFAULT } from 'config/constants';
 import { toUpsertProblemDTO } from 'helpers';
-import { useMemo, useRouterStore, useUserStore } from 'hooks';
-import { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
+import { useMemo } from 'hooks';
+import { UpsertProblemUIDTO } from 'types';
+import { type UpsertProblemDTO } from '@juki-team/commons/dto';
 
 export default function ProblemsNewPage() {
   

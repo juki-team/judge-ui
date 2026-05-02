@@ -1,7 +1,7 @@
 'use client';
 
-import { ProblemView } from 'components';
-import { ProblemDataResponseDTO } from 'types';
+import { ProblemView } from '@juki-team/base-ui';
+import { type ProblemDataResponseDTO } from '@juki-team/commons/dto';
 
 export default function ProblemViewPage({ problem }: { problem: ProblemDataResponseDTO }) {
   

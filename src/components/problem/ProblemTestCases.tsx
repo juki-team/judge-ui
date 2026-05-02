@@ -1,44 +1,20 @@
 'use client';
 
-import {
-  Button,
-  ButtonLoader,
-  CheckIcon,
-  CloudDownloadIcon,
-  CloudUploadIcon,
-  CodeViewer,
-  DeleteIcon,
-  DraftIcon,
-  ErrorIcon,
-  FetcherLayer,
-  Input,
-  LoadingIcon,
-  Modal,
-  MultiSelect,
-  RefreshIcon,
-  SaveIcon,
-  T,
-  VisibilityIcon,
-} from 'components';
-import { jukiApiManager } from 'config';
-import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile, humanFileSize } from 'helpers';
-import { useEffect, useI18nStore, useJukiNotification, useMutate, useState } from 'hooks';
+import { CheckIcon, CloudDownloadIcon, CloudUploadIcon, DeleteIcon, DraftIcon, ErrorIcon, LoadingIcon, RefreshIcon, SaveIcon, VisibilityIcon } from '@juki-team/base-ui/server-components';
+import { Button, ButtonLoader, CodeViewer, FetcherLayer, Input, Modal, MultiSelect, T, useI18nStore, useJukiNotification, useMatchMutate } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { authorizedRequest, classNames, downloadUrlAsFile } from '@juki-team/base-ui/helpers';
+import { type ProblemTestCasesResponseDTO } from '@juki-team/commons/dto';
+import { CodeLanguage, HTTPMethod, ProblemScoringMode, Status } from '@juki-team/commons/enums';
+import { cleanRequest, humanFileSize } from '@juki-team/commons/helpers';
+import { type ContentResponse, type ContentsResponse } from '@juki-team/commons/types';
+import { useEffect, useState } from 'hooks';
 import { ReactNode } from 'react';
 import { JUDGE_API_V1 } from 'src/constants';
-import {
-  ButtonLoaderOnClickType,
-  CodeLanguage,
-  ContentResponseType,
-  ContentsResponseType,
-  HTTPMethod,
-  KeyFileType,
-  ProblemScoringMode,
-  ProblemTestCasesResponseDTO,
-  Status,
-  UpsertProblemUIDTO,
-} from 'types';
+import { KeyFileType, UpsertProblemUIDTO } from 'types';
+import { type ButtonLoaderOnClickType } from '@juki-team/base-ui/types';
 // import Custom404 from '../../../pages/404';
-import { TwoActionModal } from '../index';
+import { TwoActionModal } from '@juki-team/base-ui';
 
 enum UploadState {
   NO_FILE = 'NO_FILE',
@@ -55,7 +31,7 @@ type NewTestCaseType = {
   inputFileLastModified: Date,
   outputFileSize: number,
   outputFileLastModified: Date,
-  
+
   inputNewFile: File | null,
   inputNewFileState: UploadState,
   outputNewFile: File | null,
@@ -88,7 +64,7 @@ interface ProblemTestCasesPageProps {
 }
 
 const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJudgeKey }: ProblemTestCasesPageProps) => {
-  
+
   const [ testCases, setTestCases ] = useState<{ [key: string]: NewTestCaseType }>(transform(problemTestCases));
   const [ newGroups, setNewGroups ] = useState([ 1 ]);
   const [ lock, setLock ] = useState(false);
@@ -96,14 +72,14 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     setTestCases(transform(problemTestCases));
   }, [ problemTestCases ]);
   const { notifyResponse } = useJukiNotification();
-  const mutate = useMutate();
+  const mutate = useMatchMutate();
   const [ modal, setModal ] = useState<ReactNode>(null);
   const t = useI18nStore(state => state.i18n.t);
-  
+
   const handleServerDelete = (testCaseKey: string, keyFile: KeyFileType): ButtonLoaderOnClickType => async (setLoaderStatus) => {
     setLock(true);
     setLoaderStatus(Status.LOADING);
-    const response = cleanRequest<ContentsResponseType<{}>>(
+    const response = cleanRequest<ContentsResponse<{}>>(
       await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCaseKey, keyFile), {
         method: HTTPMethod.DELETE,
       }));
@@ -111,7 +87,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     notifyResponse(response, setLoaderStatus);
     setLock(false);
   };
-  
+
   const handleDelete = (testCase: NewTestCaseType, keyFile: KeyFileType) => () => {
     const newTestCases = { ...testCases };
     newTestCases[testCase.testCaseKey] = { ...newTestCases[testCase.testCaseKey], [keyFile + 'NewFile']: null };
@@ -120,7 +96,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     }
     setTestCases(newTestCases);
   };
-  
+
   const handleInputOutputFiles = (keyFile: KeyFileType) => (fileList: FileList) => {
     const newTestCases: { [key: string]: NewTestCaseType } = { ...testCases };
     for (const file of Array.from(fileList)) {
@@ -140,17 +116,17 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     }
     setTestCases(newTestCases);
   };
-  
+
   const groupsOptions = Object.values(problem.settings.pointsByGroups)
     .map(group => ({ value: group.group, label: group.group + '' }));
-  
+
   return (
     <div className="jk-col gap nowrap stretch">
       <div className="jk-row gap block bc-we jk-pg-sm jk-br-ie">
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="light"
+          type="secondary"
           icon={<RefreshIcon />}
           onClick={async (setLoaderStatus) => {
             setLock(true);
@@ -165,11 +141,11 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="light"
+          type="secondary"
           icon={<CloudDownloadIcon />}
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const response = cleanRequest<ContentResponseType<{ urlExportedZip: string }>>(
+            const response = cleanRequest<ContentResponse<{ urlExportedZip: string }>>(
               await authorizedRequest(
                 JUDGE_API_V1.PROBLEM.ALL_TEST_CASES(problemJudgeKey),
               ),
@@ -187,7 +163,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="light"
+          type="secondary"
           icon={<DeleteIcon className="cr-er" />}
           onClick={() => setModal(
             <TwoActionModal
@@ -203,7 +179,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                   for (const { testCaseKey } of Object.values(testCases)) {
                     setLoaderStatus(Status.LOADING);
                     await Promise.all([ 'input' as KeyFileType, 'output' as KeyFileType ].map(async (keyFile: KeyFileType) => {
-                      const response = cleanRequest<ContentsResponseType<{}>>(
+                      const response = cleanRequest<ContentsResponse<{}>>(
                         await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCaseKey, keyFile), {
                           method: HTTPMethod.DELETE,
                         }));
@@ -266,13 +242,13 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                   />
                   <ButtonLoader
                     size="small"
-                    type="text"
+                    type="ghost"
                     disabled={lock}
                     icon={<SaveIcon />}
                     onClick={async (setLoaderStatus) => {
                       setLock(true);
                       setLoaderStatus(Status.LOADING);
-                      const response = cleanRequest<ContentsResponseType<{}>>(
+                      const response = cleanRequest<ContentsResponse<{}>>(
                         await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASES_GROUPS(problemJudgeKey), {
                           method: HTTPMethod.PUT,
                           body: JSON.stringify({ testCases: { [testCase.testCaseKey]: { groups: testCase.groups } } }),
@@ -319,7 +295,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                             className="jk-row"
                           >
                             <ButtonLoader
-                              type="text"
+                              type="ghost"
                               size="small"
                               icon={<DeleteIcon />}
                               onClick={handleServerDelete(testCase.testCaseKey, keyPut)}
@@ -327,12 +303,12 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                             />
                           </div>
                           <ButtonLoader
-                            type="text"
+                            type="ghost"
                             size="small"
                             icon={<VisibilityIcon />}
                             onClick={async (setLoaderStatus) => {
                               setLoaderStatus(Status.LOADING);
-                              const response = cleanRequest<ContentResponseType<{ source: string }>>(
+                              const response = cleanRequest<ContentResponse<{ source: string }>>(
                                 await authorizedRequest(
                                   JUDGE_API_V1.PROBLEM.TEST_CASE_KEY_FILE(problemJudgeKey, testCase.testCaseKey, keyPut),
                                 ),
@@ -371,7 +347,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           <Button
                             data-tooltip-id="jk-tooltip"
                             data-tooltip-content="delete"
-                            type="text"
+                            type="ghost"
                             size="small"
                             icon={<DeleteIcon />}
                             onClick={handleDelete(testCase, keyPut)}
@@ -416,7 +392,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           [keyFile + 'NewFileState']: UploadState.UPLOADING,
                         },
                       }));
-                      const result = cleanRequest<ContentResponseType<{ signedUrl: string }>>(
+                      const result = cleanRequest<ContentResponse<{ signedUrl: string }>>(
                         await authorizedRequest(JUDGE_API_V1.PROBLEM.TEST_CASE(problemJudgeKey), {
                           method: HTTPMethod.POST,
                           body: JSON.stringify({
@@ -522,8 +498,8 @@ interface ProblemTestCasesProps {
 
 export const ProblemTestCases = ({ problem, problemJudgeKey }: ProblemTestCasesProps) => {
   return (
-    <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>
-      url={jukiApiManager.API_V2.problem.getTestCases({ params: { key: problemJudgeKey } }).url}
+    <FetcherLayer<ContentResponse<ProblemTestCasesResponseDTO>>
+      url={jukiApiManager.apiV2.problem.getTestCases({ params: { key: problemJudgeKey } }).url}
       // errorView={<Custom404 />}
       options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}
     >

@@ -1,7 +1,6 @@
 'use client';
 
-import { PresentationToolButtons } from 'components';
-import { usePageStore } from 'hooks';
+import { PresentationToolButtons, usePageStore } from '@juki-team/base-ui';
 
 export const ToolButtons = () => {
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);

@@ -1,8 +1,7 @@
 'use client';
 
-import { T } from 'components';
-import { JUKI_APP_COMPANY_KEY } from 'config/constants';
-import { useUIStore, useUserStore } from 'hooks';
+import { T, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { JUKI_APP_ORGANIZATION_KEY as JUKI_APP_COMPANY_KEY } from '@juki-team/commons/constants';
 
 export const SponsoredByTag = () => {
   

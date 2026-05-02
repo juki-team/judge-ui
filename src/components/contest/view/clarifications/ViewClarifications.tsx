@@ -1,29 +1,17 @@
 'use client';
 
-import {
-  Button,
-  ButtonLoader,
-  CommentIcon,
-  EditIcon,
-  Input,
-  InputSelect,
-  InputToggle,
-  MdMathEditor,
-  MdMathViewer,
-  Modal,
-  NotificationsActiveIcon,
-  ScheduleIcon,
-  T,
-  UserNicknameLink,
-} from 'components';
+import { CommentIcon, EditIcon, NotificationsActiveIcon, ScheduleIcon } from '@juki-team/base-ui/server-components';
+import { Button, ButtonLoader, Input, InputSelect, InputToggle, MdMathEditor, MdMathViewer, Modal, T, UserNicknameLink, useFetcher, useJukiNotification, useUIStore } from '@juki-team/base-ui';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, classNames, cleanRequest } from 'helpers';
-import { useDateFormat, useFetcher, useJukiNotification, useState, useUIStore } from 'hooks';
-import { ContentResponseType, HTTPMethod, Status } from 'types';
+import { authorizedRequest, classNames } from '@juki-team/base-ui/helpers';
+import { HTTPMethod, Status } from '@juki-team/commons/enums';
+import { cleanRequest } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { useDateFormat, useState } from 'hooks';
 import { ContestDataUI } from '../types';
 
 export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
-  
+
   const { dtf } = useDateFormat();
   const { isAdministrator, isParticipant, isManager } = contest.user;
   const [ clarification, setClarification ] = useState<null | {
@@ -37,7 +25,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
   const { mutate } = useFetcher(JUDGE_API_V1.CONTEST.CONTEST_DATA(contest.key));
   const { Image } = useUIStore(store => store.components);
   const isJudgeOrAdmin = isManager || isAdministrator;
-  
+
   return (
     <div className="jk-col top jk-pg-md nowrap">
       <div className="jk-row">
@@ -257,7 +245,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
               </div>
             )}
             <div className="jk-row right gap">
-              <Button type="light" onClick={() => setClarification(null)}><T>cancel</T></Button>
+              <Button type="secondary" onClick={() => setClarification(null)}><T>cancel</T></Button>
               <ButtonLoader
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);
@@ -275,7 +263,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                       question: clarification.question,
                     };
                   }
-                  const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(
+                  const response = cleanRequest<ContentResponse<string>>(await authorizedRequest(
                     clarification.clarificationId
                       ? JUDGE_API_V1.CONTEST.ANSWER_CLARIFICATION(contest.key + '', clarification.clarificationId)
                       : JUDGE_API_V1.CONTEST.CLARIFICATION(contest.key as string),

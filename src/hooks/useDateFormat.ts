@@ -1,4 +1,4 @@
-import { useJukiUserSettings } from 'hooks';
+import { useJukiUserSettings } from '@juki-team/base-ui';
 import { useCallback } from 'react';
 
 export const useDateFormat = () => {

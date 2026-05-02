@@ -1,10 +1,12 @@
 'use client';
 
-import { FrozenInformation, QuietInformation, SpinIcon, T, Timer, UpsolvingInformation } from 'components';
-import { ONE_MINUTE, ONE_SECOND } from 'config/constants';
-import { getContestState } from 'helpers';
-import { useEffect, useJukiNotification, useMemo, useState } from 'hooks';
-import { ContestTimeData, TimeDisplayType } from 'types';
+import { SpinIcon } from '@juki-team/base-ui/server-components';
+import { FrozenInformation, QuietInformation, T, Timer, UpsolvingInformation, useJukiNotification } from '@juki-team/base-ui';
+import { ONE_MINUTE, ONE_SECOND } from '@juki-team/commons/constants';
+import { type ContestTimeData } from '@juki-team/commons/types';
+import { getContestState } from '@juki-team/base-ui/helpers';
+import { useEffect, useMemo, useState } from 'hooks';
+import { type TimeDisplayType } from '@juki-team/base-ui/types';
 
 interface ContestTimeTimerProps {
   contest: ContestTimeData,

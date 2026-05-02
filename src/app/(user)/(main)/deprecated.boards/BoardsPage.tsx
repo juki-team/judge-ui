@@ -1,33 +1,17 @@
 'use client';
 
-import { Button, DataViewer, T, TwoContentLayout } from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1, ROUTES } from 'config/constants';
-import { toFilterUrl } from 'helpers';
-import {
-  useDataViewerRequester,
-  useFetcher,
-  useI18nStore,
-  useMemo,
-  usePageStore,
-  useRouterStore,
-  useTrackLastPath,
-  useUIStore,
-  useUserStore,
-} from 'hooks';
+import { Button, DataViewer, T, TwoContentLayout, useDataViewerRequester, useFetcher, useI18nStore, usePageStore, useRouterStore, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { JUDGE_API_V1, ROUTES } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
+import { toFilterUrl } from '@juki-team/base-ui/helpers';
+import { useMemo } from 'hooks';
 import { CSSProperties } from 'react';
-import {
-  ContentResponseType,
-  ContentsResponseType,
-  ContestDataResponseDTO,
-  ContestSummaryListResponseDTO,
-  DataViewerHeadersType,
-  EntityState,
-  LastPathKey,
-  QueryParam,
-  ScoreboardResponseDTO,
-  TabsType,
-} from 'types';
+import { LastPathKey, QueryParam } from 'types';
+import { type DataViewerHeadersType, type TabsType } from '@juki-team/base-ui/types';
+import { type ContestDataResponseDTO, type ContestSummaryListResponseDTO, type ScoreboardResponseDTO } from '@juki-team/commons/dto';
+import { EntityState } from '@juki-team/commons/enums';
+import { type ContentResponse, type ContentsResponse } from '@juki-team/commons/types';
 import {
   getNicknameColumn,
   getPointsColumn,
@@ -37,8 +21,8 @@ import {
 import { ScoreboardResponseDTOUI } from '../../../../components/contest/view/types';
 
 const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => {
-  
-  const { data: contestResponse } = useFetcher<ContentResponseType<ContestDataResponseDTO>>(jukiApiManager.API_V2.contest.getData({
+
+  const { data: contestResponse } = useFetcher<ContentResponse<ContestDataResponseDTO>>(jukiApiManager.apiV2.contest.getData({
     params: {
       key: contest.key,
     },
@@ -49,17 +33,17 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const t = useI18nStore(state => state.i18n.t);
   const contestTags = JSON.stringify(contest.tags ?? []);
-  
+
   const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
-    
+
     const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, true),
     ];
-    
+
     const tags = JSON.parse(contestTags);
-    
+
     for (const problem of Object.values(contestData?.problems ?? {})) {
       let group = '';
       for (const tag of problem.tags) {
@@ -89,7 +73,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     }
     return base;
   }, [ viewPortScreen, contestData?.problems, Link, contest.key, t, contestTags ]);
-  
+
   const {
     data: response,
     request,
@@ -97,18 +81,18 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     setLoaderStatusRef,
     // reload,
     // reloadRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(
+  } = useDataViewerRequester<ContentsResponse<ScoreboardResponseDTO>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD(contest.key, true, true), { refreshInterval: 60000 },
   );
-  
+
   const data: ScoreboardResponseDTOUI[] = useMemo(() => (response?.success ? response.contents : [])
     .map(d => ({ ...d, official: true })), [ response ]);
-  
+
   return (
     <DataViewer<ScoreboardResponseDTOUI>
       extraNodes={userCanAdministrateServices ? [
         <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key })} key="edit">
-          <Button size="tiny" type="light">
+          <Button size="tiny" type="secondary">
             <T className="tt-se">edit</T></Button>
         </Link>,
       ] : []}
@@ -130,10 +114,10 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
 };
 
 export function BoardsPage() {
-  
+
   useTrackLastPath(LastPathKey.BOARDS);
-  
-  const { data: globalContestsData } = useFetcher<ContentsResponseType<ContestSummaryListResponseDTO>>(jukiApiManager.API_V2.contest.getSummaryList({
+
+  const { data: globalContestsData } = useFetcher<ContentsResponse<ContestSummaryListResponseDTO>>(jukiApiManager.apiV2.contest.getSummaryList({
     params: {
       page: 1,
       pageSize: 100,
@@ -146,9 +130,9 @@ export function BoardsPage() {
   const globalContests = globalContestsData?.success ? globalContestsData.contents : [];
   const searchParams = useRouterStore(state => state.searchParams);
   const tab = searchParams.get('tab') as string || globalContests[0]?.key || '';
-  
+
   const tabs: TabsType<string> = {};
-  
+
   for (const globalContest of globalContests) {
     tabs[globalContest.key] = {
       body: <Scoreboard contest={globalContest} />,
@@ -156,7 +140,7 @@ export function BoardsPage() {
       header: <div className="ws-np">{globalContest.name}</div>,
     };
   }
-  
+
   return (
     <TwoContentLayout
       tabs={tabs}

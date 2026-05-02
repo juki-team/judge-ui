@@ -1,21 +1,17 @@
 'use client';
 
-import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, SpectatorInformation, T } from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, cleanRequest, isGlobalContest } from 'helpers';
-import { useJukiNotification, useRouterStore, useUIStore } from 'hooks';
+import { SpectatorInformation } from 'components';
+import { InfoIIcon } from '@juki-team/base-ui/server-components';
+import { ButtonLoader, FirstLoginWrapper, ProblemView, T, useJukiNotification, useRouterStore, useUIStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { type ContestDataResponseDTO, type ContestProblemDataResponseDTO } from '@juki-team/commons/dto';
+import { CodeLanguage, ContestProblemBlockedByType, EntityState, Status } from '@juki-team/commons/enums';
+import { cleanRequest, isGlobalContest } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
 import { type ReactNode } from 'react';
 import { KeyedMutator } from 'swr';
-import {
-  CodeLanguage,
-  ContentResponseType,
-  ContestDataResponseDTO,
-  ContestProblemBlockedByType,
-  ContestProblemDataResponseDTO,
-  ContestTab,
-  EntityState,
-  Status,
-} from 'types';
+import { ContestTab } from '@juki-team/base-ui/enums';
 import { ProblemRequisites } from '../ProblemRequisites';
 
 interface ViewProblemContestProps {
@@ -25,11 +21,11 @@ interface ViewProblemContestProps {
 }
 
 export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProblemContestProps) => {
-  
+
   const { addWarningNotification, notifyResponse } = useJukiNotification();
   const pushRoute = useRouterStore(state => state.pushRoute);
   const { Link } = useUIStore(store => store.components);
-  
+
   if (!contest.isPast && problem.blockedBy.filter(b => b.type !== ContestProblemBlockedByType.MAX_ACCEPTED_SUBMISSIONS_ACHIEVED).length > 0) {
     return (
       <div className="jk-pg jk-br-ie jk-row bc-we">
@@ -37,12 +33,12 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
       </div>
     );
   }
-  
+
   const isGlobal = isGlobalContest(contest.settings);
   const {
     user: { isAdministrator, isManager, isParticipant, isGuest, isSpectator },
   } = contest;
-  
+
   return (
     <ProblemView
       key="problem-view"
@@ -79,22 +75,22 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
               setLoaderStatus(Status.LOADING);
               let response;
               if (isGlobal) {
-                const { url, ...options } = jukiApiManager.API_V2.problem.submit({
+                const { url, ...options } = jukiApiManager.apiV2.problem.submit({
                   params: {
                     key: problem.key,
                   }, body: { language: language as string, source },
                 });
-                response = cleanRequest<ContentResponseType<any>>(
+                response = cleanRequest<ContentResponse<any>>(
                   await authorizedRequest(url, options),
                 );
               } else {
-                const { url, ...options } = jukiApiManager.API_V2.contest.submit({
+                const { url, ...options } = jukiApiManager.apiV2.contest.submit({
                   params: {
                     key: contest.key,
                     problemKey: problem.key,
                   }, body: { language: language as string, source },
                 });
-                response = cleanRequest<ContentResponseType<any>>(
+                response = cleanRequest<ContentResponse<any>>(
                   await authorizedRequest(url, options),
                 );
               }
@@ -181,7 +177,7 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
         if (isSpectator) {
           return <SpectatorInformation />;
         }
-        
+
         return null;
       }}
     >

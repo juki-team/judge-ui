@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams as useSearchParamsRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { AppendSearchParamsType, DeleteSearchParamsType, SetSearchParamsType } from 'types';
+import { type AppendSearchParamsType, type DeleteSearchParamsType, type SetSearchParamsType } from '@juki-team/base-ui/types';
 
 export const useSearchParams = () => {
   

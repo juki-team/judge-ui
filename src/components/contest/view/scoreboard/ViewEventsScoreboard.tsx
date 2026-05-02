@@ -1,50 +1,19 @@
 'use client';
 
-import {
-  AcUnitIcon,
-  Button,
-  ButtonLoader,
-  DataViewer,
-  FrozenInformation,
-  FullscreenExitIcon,
-  FullscreenIcon,
-  Input,
-  InputCheckbox,
-  LockIcon,
-  Pagination,
-  QuietInformation,
-  Select,
-  T,
-  TimerDisplay,
-} from 'components';
-import { jukiApiManager } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
-import {
-  authorizedRequest,
-  classNames,
-  cleanRequest,
-  downloadDataTableAsCsvFile,
-  downloadSheetDataAsXlsxFile,
-  getUserKey,
-} from 'helpers';
-import {
-  useDataViewerRequester,
-  useI18nStore,
-  useJukiNotification,
-  usePageStore,
-  useSyncedState,
-  useUIStore,
-} from 'hooks';
+import { Pagination } from 'components';
+import { AcUnitIcon, FullscreenExitIcon, FullscreenIcon, LockIcon } from '@juki-team/base-ui/server-components';
+import { Button, ButtonLoader, DataViewer, FrozenInformation, Input, InputCheckbox, QuietInformation, Select, T, TimerDisplay, useDataViewerRequester, useI18nStore, useJukiNotification, usePageStore, useSyncedState, useUIStore } from '@juki-team/base-ui';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { JUDGE_API_V1 } from 'config/constants';
+import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
+import { authorizedRequest, classNames, downloadDataTableAsCsvFile, downloadSheetDataAsXlsxFile } from '@juki-team/base-ui/helpers';
+import { type ContestDataResponseDTO, type ScoreboardHistoryResponseDTO, type ScoreboardResponseDTO } from '@juki-team/commons/dto';
+import { Status } from '@juki-team/commons/enums';
+import { cleanRequest, getUserKey } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
 import { useCallback, useMemo, useState } from 'react';
-import {
-  ContentResponseType,
-  ContestDataResponseDTO,
-  DataViewerHeadersType,
-  QueryParam,
-  ScoreboardHistoryResponseDTO,
-  ScoreboardResponseDTO,
-  Status,
-} from 'types';
+import { QueryParam } from 'types';
+import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
 import { ScoreboardResponseDTOFocus } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
@@ -57,12 +26,12 @@ interface DownloadButtonProps {
 
 const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
   const t = useI18nStore(state => state.i18n.t);
-  
+
   const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
   for (const problem of Object.values(contest?.problems)) {
     head.push(problem.index);
   }
-  
+
   const body = data.map(user => {
     const base = [
       user.position,
@@ -72,7 +41,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
       (user.totalPoints).toFixed(2),
       Math.round(user.totalPenalty),
     ];
-    
+
     if (contest?.problems) {
       for (const problem of Object.values(contest?.problems)) {
         const problemData = user.problems[problem.key];
@@ -90,7 +59,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
     return base;
   });
   const dataCsv = [ head, ...body ];
-  
+
   return (
     <Select
       disabled={disabled}
@@ -129,7 +98,7 @@ interface ViewScoreboardProps {
 }
 
 export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) => {
-  
+
   const { notifyResponse } = useJukiNotification();
   const [ dynamic, setDynamic ] = useState(false);
   const onClose = useCallback(() => setDynamic(false), []);
@@ -144,7 +113,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, contest.isEndless || contest.isGlobal),
     ];
-    
+
     for (const problem of Object.values(contest?.problems ?? {})) {
       base.push({
         ...getProblemScoreboardColumn(Link, contestKey as string, contest.isEndless || contest.isGlobal, problem, t),
@@ -153,14 +122,14 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
     }
     return base;
   }, [ viewPortScreen, contest, Link, contestKey, t ]);
-  
+
   const [ unfrozen, setUnfrozen ] = useState(false);
   const {
     data: response,
     request,
     isLoading,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentResponseType<ScoreboardHistoryResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key));
+  } = useDataViewerRequester<ContentResponse<ScoreboardHistoryResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key));
   const [ trigger, setTrigger ] = useState(0);
   const [ index, setIndex ] = useState(0);
   const max = Object.values(response?.success ? response.content.timelineEvents : []).length;
@@ -182,9 +151,9 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         indexAccepted,
         timestamp
       } of response.content.timelineEvents) {
-        
+
         if (response.content.participants[userKey]) {
-          
+
           finalDataByUsers[userKey] = {
             user: response.content.participants[userKey],
             totalPenalty: (finalDataByUsers[userKey]?.totalPenalty ?? 0),
@@ -225,7 +194,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         }
       }
     }
-    
+
     const problemKeys = Object.keys(contest.problems);
     const dataByUsers = dynamic ? currentDataByUsers : finalDataByUsers;
     nextDataByUsers = dynamic ? nextDataByUsers : finalDataByUsers;
@@ -279,16 +248,16 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
       })
       .sort((a, b) => a.totalPoints === b.totalPoints ? a.totalPenalty - b.totalPenalty : b.totalPoints - a.totalPoints)
       .map((scoreUser, index) => ({ ...scoreUser, position: index + 1 })) : [];
-    
+
     return { finalTimestamp, data };
   }, [ contest.problems, dynamic, index, response, max ]);
-  
+
   const currentTimestamp = finalTimestamp - contest.settings.startTimestamp;
   const focusedRow = data.find(({ focus }) => (focus?.length ?? 0) > 0);
   const [ focusUserKey, setFocusUserKey ] = useSyncedState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.company.key) : '');
-  
+
   const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
-  
+
   const extraNodes = useMemo(() => [
     ((contest?.user?.isAdministrator || contest?.user?.isManager) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
       <InputCheckbox
@@ -301,15 +270,15 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
     (contest?.user?.isAdministrator || contest?.user?.isManager) && (
       <ButtonLoader
         size="tiny"
-        type="light"
+        type="secondary"
         disabled={isLoading}
         onClick={async (setLoaderStatus) => {
           setLoaderStatus(Status.LOADING);
           const {
             url,
             ...options
-          } = jukiApiManager.API_V2.contest.recalculateScoreboard({ params: { key: contest.key, official: true } });
-          const response = cleanRequest<ContentResponseType<string>>(await authorizedRequest(url, options));
+          } = jukiApiManager.apiV2.contest.recalculateScoreboard({ params: { key: contest.key, official: true } });
+          const response = cleanRequest<ContentResponse<string>>(await authorizedRequest(url, options));
           if (notifyResponse(response, setLoaderStatus)) {
             setTrigger(Date.now());
           }
@@ -325,7 +294,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         key="dynamic"
         onClick={() => setDynamic(true)}
         size="tiny"
-        type="light"
+        type="secondary"
       >
         <T className="tt-se">dynamic</T>
       </Button>
@@ -343,7 +312,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
     </div>,
   ], [ contest, data, fullscreen, handleFullscreen, isLoading, notifyResponse, unfrozen ]);
   const [ focusDelay, setFocusDelay ] = useState(1000);
-  
+
   const extraNodesDynamic = useMemo(() => [
     <Button key="exit" onClick={onClose} size="tiny">
       <T className="tt-se">exit</T>
@@ -361,7 +330,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         : <FullscreenIcon className="clickable jk-br-ie" onClick={() => setFullscreen(prevState => !prevState)} />}
     </div>,
     <div className="jk-row gap" key="buttons">
-      <Button size="tiny" type="light" onClick={() => setIndex(0)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(0)}>
         <T className="tt-se">start</T>
       </Button>
       <Pagination
@@ -386,7 +355,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         isOnToolbar
         key="first-row-pagination"
       />
-      <Button size="tiny" type="light" onClick={() => setIndex(max)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(max)}>
         <T className="tt-se">end</T>
       </Button>
       <Input
@@ -442,14 +411,14 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
       placeholder="delay ms"
     />,
   ], [ contest.settings.frozenTimestamp, contest.settings.quietTimestamp, contest.settings.startTimestamp, currentTimestamp, data, focusDelay, fullscreen, index, max, onClose, setFocusUserKey ]);
-  
+
   const groups = useMemo(
     () => Object
       .values(contest.groups)
       .map(({ value, label }) => ({ value, label: <div className="jk-row fw-bd">{label}</div> })),
     [ contest.groups ],
   );
-  
+
   const score = (
     <DataViewer<ScoreboardResponseDTOFocus>
       headers={columns}
@@ -485,7 +454,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
       {...DEFAULT_DATA_VIEWER_PROPS}
     />
   );
-  
+
   if (fullscreen) {
     return (
       <FullScreenScoreboard contest={contest} reloadContest={reloadContest}>
@@ -493,6 +462,6 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
       </FullScreenScoreboard>
     );
   }
-  
+
   return score;
 };

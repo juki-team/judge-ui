@@ -2,6 +2,7 @@ import withPlugins from 'next-compose-plugins';
 
 const nextConfig = withPlugins([], {
   reactStrictMode: false,
+  transpilePackages: [ '@juki-team/base-ui' ],
   images: {
     remotePatterns: [
       {
@@ -29,6 +30,7 @@ const nextConfig = withPlugins([], {
       },
     ];
   },
+  allowedDevOrigins: [ 'judge.local.juki.app' ],
 });
 
 export default nextConfig;

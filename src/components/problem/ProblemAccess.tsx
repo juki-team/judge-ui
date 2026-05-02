@@ -1,6 +1,7 @@
-import { DocumentMembersContent, T } from 'components';
+import { DocumentMembersContent, T } from '@juki-team/base-ui';
 import { type Dispatch, type SetStateAction } from 'react';
-import { EntityAccess, EntityMembersResponseDTO, UserCompanyBasicInfoResponseDTO } from 'types';
+import { type EntityMembersResponseDTO, type UserOrganizationBasicInfoResponseDTO as UserCompanyBasicInfoResponseDTO } from '@juki-team/commons/dto';
+import { EntityAccess } from '@juki-team/commons/enums';
 
 interface ProblemStatementProps {
   members: EntityMembersResponseDTO,

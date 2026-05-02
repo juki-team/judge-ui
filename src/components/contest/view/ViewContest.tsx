@@ -1,45 +1,20 @@
 'use client';
 
-import {
-  contestAccessProps,
-  DocumentMembersButton,
-  EditIcon,
-  EditViewMembers,
-  FileCopyIcon,
-  LineLoader,
-  NavigateBeforeIcon,
-  NavigateNextIcon,
-  ShareIcon,
-  T,
-  TabsInlineButton,
-  TabsInlineButtonLoader,
-  TwoContentLayout,
-} from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
+import { contestAccessProps, EditViewMembers } from 'components';
+import { EditIcon, FileCopyIcon, LineLoader, NavigateBeforeIcon, NavigateNextIcon, ShareIcon } from '@juki-team/base-ui/server-components';
+import { DocumentMembersButton, T, TabsInlineButton, TabsInlineButtonLoader, TwoContentLayout, useI18nStore, usePageStore, useRouterStore, useSubscribe, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import { authorizedRequest, isContestChangesWebSocketResponseEventDTO, toUpsertContestDTOUI } from 'helpers';
-import {
-  useEffect,
-  useI18nStore,
-  usePageStore,
-  useRouterStore,
-  useSubscribe,
-  useTrackLastPath,
-  useUIStore,
-  useUserStore,
-} from 'hooks';
+import { toUpsertContestDTOUI } from 'helpers';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { type SubscribeContestChangesWebSocketEventDTO } from '@juki-team/commons/dto';
+import { ProfileSetting, Status, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
+import { isContestChangesWebSocketResponseEventDTO } from '@juki-team/commons/helpers';
+import { useEffect } from 'hooks';
 import { type CSSProperties, type ReactNode } from 'react';
-import {
-  ContestsTab,
-  ContestTab,
-  LastPathKey,
-  ProfileSetting,
-  Status,
-  SubscribeContestChangesWebSocketEventDTO,
-  TabsType,
-  UpsertContestDTOUI,
-  WebSocketSubscriptionEvent,
-} from 'types';
+import { LastPathKey, UpsertContestDTOUI } from 'types';
+import { ContestsTab, ContestTab } from '@juki-team/base-ui/enums';
+import { type TabsType } from '@juki-team/base-ui/types';
 import { ViewClarifications } from './clarifications/ViewClarifications';
 import { useContest } from './ContestDataProvider';
 import { ContestTimeProgress } from './ContestTimeProgress';
@@ -52,11 +27,11 @@ import { ViewScoreboard } from './scoreboard/ViewScoreboard';
 import { ViewSubmissions } from './submissions/ViewSubmissions';
 
 export function ContestViewLayout() {
-  
+
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
-  
+
   const { contest, isValidatingAny, isLoadingAny, reloadContest, isSuccess } = useContest();
-  
+
   const pushRoute = useRouterStore(state => state.pushRoute);
   const searchParams = useRouterStore(state => state.searchParams);
   const contestKey = contest.key;
@@ -67,7 +42,7 @@ export function ContestViewLayout() {
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
-  
+
   const event: Omit<SubscribeContestChangesWebSocketEventDTO, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
     contestKey: contestKey,
@@ -80,9 +55,9 @@ export function ContestViewLayout() {
       }
     },
   );
-  
+
   useEffect(() => {
-    const { url, ...options } = jukiApiManager.API_V2.export.contest.problems.statementsToPdf({
+    const { url, ...options } = jukiApiManager.apiV2.export.contest.problems.statementsToPdf({
       params: {
         key: contest.key,
         language: userPreferredLanguage,
@@ -90,9 +65,9 @@ export function ContestViewLayout() {
     });
     void authorizedRequest(url, options);
   }, [ contest.key, userPreferredLanguage ]);
-  
+
   const { user: { isAdministrator, isManager } } = contest;
-  
+
   const tabHeaders: TabsType<ContestTab> = {
     [ContestTab.OVERVIEW]: {
       key: ContestTab.OVERVIEW,
@@ -100,14 +75,14 @@ export function ContestViewLayout() {
       body: <ViewOverview contest={contest} reloadContest={reloadContest} />,
     },
   };
-  
+
   const problems = Object.values(contest.problems);
   problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
   const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
   const problem = problems[problemArrayIndex];
-  
+
   const canViewContest = isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless;
-  
+
   if (canViewContest) {
     if (problemArrayIndex !== -1) {
       const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
@@ -165,13 +140,13 @@ export function ContestViewLayout() {
       ),
     };
   }
-  
+
   tabHeaders[ContestTab.SUBMISSIONS] = {
     key: ContestTab.SUBMISSIONS,
     header: <T className="tt-ce ws-np">submissions</T>,
     body: <ViewSubmissions key="submissions" contest={contest} />,
   };
-  
+
   if (contest.settings.clarifications && !contest.isGlobal) {
     tabHeaders[ContestTab.CLARIFICATIONS] = {
       key: ContestTab.CLARIFICATIONS,
@@ -195,13 +170,13 @@ export function ContestViewLayout() {
       ),
     };
   }
-  
+
   const extraNodes: ReactNode[] = [];
-  
+
   if (isHugeScreen) {
     extraNodes.push(<ContestTimeTimer key="contest-timer" contest={contest} reloadContest={reloadContest} />);
   }
-  
+
   if (userCanCreateContest && (contest.isPast || contest.user.isAdministrator || contest.user.isManager)) {
     extraNodes.push(
       <TabsInlineButtonLoader
@@ -218,12 +193,12 @@ export function ContestViewLayout() {
           setLoaderStatus(Status.SUCCESS);
         }}
         icon={<FileCopyIcon />}
-        type="light"
+        type="secondary"
         label="copy"
       />,
     );
   }
-  
+
   extraNodes.push(
     <DocumentMembersButton
       key="contest-members"
@@ -239,7 +214,7 @@ export function ContestViewLayout() {
       <TabsInlineButton icon={<ShareIcon />} label="share" />
     </DocumentMembersButton>,
   );
-  
+
   if (isAdministrator) {
     extraNodes.push(
       <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contest.key })} className="jk-row">
@@ -247,7 +222,7 @@ export function ContestViewLayout() {
       </Link>,
     );
   }
-  
+
   const breadcrumbs: ReactNode[] = [
     <Link
       href={jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.CLASSICS })}
@@ -265,7 +240,7 @@ export function ContestViewLayout() {
       )}
     </div>,
   ];
-  
+
   return (
     <TwoContentLayout
       breadcrumbs={breadcrumbs}

@@ -1,14 +1,6 @@
-import {
-  DateLiteral,
-  FrozenInformation,
-  ProgressMultiBar,
-  ProgressSlide,
-  QuietInformation,
-  T,
-  TimerDisplay,
-} from 'components';
+import { DateLiteral, FrozenInformation, ProgressMultiBar, ProgressSlide, QuietInformation, T, TimerDisplay } from '@juki-team/base-ui';
 import { useEffect, useState } from 'hooks';
-import { ContestTimeData } from 'types';
+import { type ContestTimeData } from '@juki-team/commons/types';
 import { ContestTimeTimer } from './ContestTimeTimer';
 
 export const ContestTimeProgress = ({ contest, reloadContest, exact }: {

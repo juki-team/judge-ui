@@ -1,78 +1,49 @@
 'use client';
 
-import {
-  Button,
-  ButtonLoader,
-  CrawlCodeforcesProblemModal,
-  CrawlJvumsaProblemModal,
-  FieldText,
-  getProblemKeyHeader,
-  getProblemModeHeader,
-  getProblemNameHeader,
-  getProblemTagsHeader,
-  getProblemTypeHeader,
-  InfoIIcon,
-  PagedDataViewer,
-  PlusIcon,
-  Select,
-  T,
-  TwoContentLayout,
-} from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
-import { ENTITY_ACCESS } from 'config/constants';
-import { getDocumentAccess, oneTab, toFilterUrl, toSortUrl } from 'helpers';
-import {
-  useEffect,
-  useFetcher,
-  useMemo,
-  useRouterStore,
-  useState,
-  useTrackLastPath,
-  useUIStore,
-  useUserStore,
-} from 'hooks';
-import {
-  ContentResponseType,
-  DataViewerHeadersType,
-  EntityAccess,
-  Judge,
-  JudgeDataResponseDTO,
-  LastPathKey,
-  ProblemSummaryListResponseDTO,
-  QueryParam,
-  ReactNode,
-} from 'types';
+import { CrawlCodeforcesProblemModal, CrawlJvumsaProblemModal } from 'components';
+import { InfoIIcon, PlusIcon } from '@juki-team/base-ui/server-components';
+import { Button, ButtonLoader, FieldText, getProblemKeyHeader, getProblemModeHeader, getProblemNameHeader, getProblemTagsHeader, getProblemTypeHeader, PagedDataViewer, Select, T, TwoContentLayout, useFetcher, useRouterStore, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { ENTITY_ACCESS } from '@juki-team/commons/constants';
+import { type JudgeDataResponseDTO, type ProblemSummaryListResponseDTO } from '@juki-team/commons/dto';
+import { EntityAccess, Judge } from '@juki-team/commons/enums';
+import { getDocumentAccess } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { oneTab, toFilterUrl, toSortUrl } from '@juki-team/base-ui/helpers';
+import { useEffect, useMemo, useState } from 'hooks';
+import { LastPathKey, QueryParam, ReactNode } from 'types';
+import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
 import { CrawlLeetCodeProblemModal } from '../../../../components/problem/CrawlLeetCodeProblemModal';
 
 export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
-  
+
   useTrackLastPath(LastPathKey.PROBLEMS);
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
-  
+
   const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
   const setSearchParams = useRouterStore(state => state.setSearchParams);
-  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiManager.API_V2.company.getJudgeList().url);
+  const { data } = useFetcher<ContentResponse<JudgeDataResponseDTO[]>>(jukiApiManager.apiV2.company.getJudgeList().url);
   const tags = useMemo(() => (data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : []).map(tag => ({
     value: tag,
     label: <T>{tag}</T>,
   })), [ data, judgeKey ]);
   const isExternal = data?.success ? (data.content.find(j => j.key === judgeKey)?.isExternal ?? true) : true;
   const keyPrefix = data?.success ? (data.content.find(j => j.key === judgeKey)?.keyPrefix ?? '*') : '*';
-  
+
   const judges = (data?.success ? data.content : []).map(judge => ({
     value: judge.key,
     label: judge.name,
   }));
   const { Link } = useUIStore(store => store.components);
   const userIsLogged = useUserStore(state => state.user.isLogged);
-  
+
   const firstJudgeKey = judges[0]?.value;
   useEffect(() => {
     if (!judgeKey && firstJudgeKey) {
       setSearchParams({ name: QueryParam.JUDGE, value: firstJudgeKey });
     }
   }, [ judgeKey, setSearchParams, firstJudgeKey ]);
-  
+
   const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
     ...(isExternal ? [ getProblemKeyHeader() ] : []),
     getProblemNameHeader(false, { sticky: true, cardPosition: 'top' }),
@@ -104,7 +75,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     ] : []),
     // getProblemOwnerHeader(isExternal),
   ], [ tags, isExternal ]);
-  
+
   const extraNodes = [];
   if (userCanCreateProblem && judgeKey === judges[0]?.value) {
     extraNodes.push(
@@ -156,14 +127,14 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
       </ButtonLoader>,
     );
   }
-  
+
   return (
     <TwoContentLayout
       tabs={oneTab(judgeKey && (
         <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
-            return jukiApiManager.API_V2.problem.getSummaryList({
+            return jukiApiManager.apiV2.problem.getSummaryList({
               params: {
                 page,
                 pageSize,

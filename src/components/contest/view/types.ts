@@ -1,10 +1,4 @@
-import {
-  ContestClarificationsResponseDTO,
-  ContestDataResponseDTO,
-  ContestEventsResponseDTO,
-  ContestMembersResponseDTO,
-  ScoreboardResponseDTO,
-} from 'types';
+import { type ContestClarificationsResponseDTO, type ContestDataResponseDTO, type ContestEventsResponseDTO, type ContestMembersResponseDTO, type ScoreboardResponseDTO } from '@juki-team/commons/dto';
 
 export type ScoreboardResponseDTOUI = ScoreboardResponseDTO & { official: boolean };
 

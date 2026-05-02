@@ -1,15 +1,12 @@
 'use client';
 
-import { CheckIcon, CloseIcon, T, Timer, TimerDisplay } from 'components';
-import { classNames } from 'helpers';
+import { CheckIcon, CloseIcon } from '@juki-team/base-ui/server-components';
+import { T, Timer, TimerDisplay } from '@juki-team/base-ui';
+import { classNames } from '@juki-team/base-ui/helpers';
 import { CSSProperties, useState } from 'react';
 import { type KeyedMutator } from 'swr';
-import {
-  ContestDataResponseDTO,
-  ContestProblemBlockedByType,
-  ContestProblemDataResponseDTO,
-  ContestProblemPrerequisiteType,
-} from 'types';
+import { type ContestDataResponseDTO, type ContestProblemDataResponseDTO } from '@juki-team/commons/dto';
+import { ContestProblemBlockedByType, ContestProblemPrerequisiteType } from '@juki-team/commons/enums';
 
 interface ProblemRequisitesProps {
   problem: ContestProblemDataResponseDTO,

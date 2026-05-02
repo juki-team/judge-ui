@@ -1,20 +1,12 @@
 'use client';
 
-import {
-  AdminInformationContent,
-  Button,
-  ContestantInformationContent,
-  DocumentMembersContent,
-  GuestInformationContent,
-  JudgeInformationContent,
-  Modal,
-  SpectatorInformationContent,
-  T,
-  UserChip,
-  VisibilityIcon,
-} from 'components';
+import { AdminInformationContent, ContestantInformationContent, GuestInformationContent, JudgeInformationContent, SpectatorInformationContent } from 'components';
+import { VisibilityIcon } from '@juki-team/base-ui/server-components';
+import { Button, DocumentMembersContent, Modal, T, UserChip } from '@juki-team/base-ui';
 import { useState } from 'hooks';
-import { BasicModalProps, DocumentMemberResponseDTO, EntityAccess } from 'types';
+import { type BasicModalProps } from '@juki-team/base-ui/types';
+import { type DocumentMemberResponseDTO } from '@juki-team/commons/dto';
+import { EntityAccess } from '@juki-team/commons/enums';
 import { EditViewMembersContestProps } from '../types';
 
 export const contestAccessProps = (readOnly: boolean, onViewMember?: (member: DocumentMemberResponseDTO) => void) => ({

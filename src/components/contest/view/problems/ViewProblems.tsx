@@ -1,33 +1,19 @@
 'use client';
 
-import {
-  ButtonLoader,
-  CheckIcon,
-  CloseIcon,
-  DataViewer,
-  Field,
-  FieldText,
-  OpenInNewIcon,
-  T,
-  TextHeadCell,
-} from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
-import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
-import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
-import { useJukiNotification, useMemo, usePageStore, useState, useSubscribe, useUIStore } from 'hooks';
+import { CheckIcon, CloseIcon, OpenInNewIcon } from '@juki-team/base-ui/server-components';
+import { ButtonLoader, DataViewer, Field, FieldText, T, TextHeadCell, useJukiNotification, usePageStore, useSubscribe, useUIStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
+import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { type ContestDataResponseDTO, type SubscribeSubmissionsCrawlWebSocketEventDTO } from '@juki-team/commons/dto';
+import { ContestProblemBlockedByType, Status, SubmissionRunStatus, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
+import { cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from '@juki-team/commons/helpers';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { useMemo, useState } from 'hooks';
 import { KeyedMutator } from 'swr';
-import {
-  ContentResponseType,
-  ContestDataResponseDTO,
-  ContestProblemBlockedByType,
-  ContestTab,
-  DataViewerHeadersType,
-  QueryParam,
-  Status,
-  SubmissionRunStatus,
-  SubscribeSubmissionsCrawlWebSocketEventDTO,
-  WebSocketSubscriptionEvent,
-} from 'types';
+import { QueryParam } from 'types';
+import { ContestTab } from '@juki-team/base-ui/enums';
+import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
 import { ProblemRequisites } from '../ProblemRequisites';
 
 interface ProblemNameFieldProps {
@@ -37,7 +23,7 @@ interface ProblemNameFieldProps {
 }
 
 const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFieldProps) => {
-  
+
   const { Link } = useUIStore(store => store.components);
   const { addSuccessNotification, addErrorNotification, notifyResponse } = useJukiNotification();
   const [ dataCrawled, setDataCrawled ] = useState<{
@@ -50,7 +36,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
   const oldSubmissions = Object.values(dataCrawled)
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
-  
+
   const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDTO, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
     contestKey,
@@ -77,7 +63,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
       }
     },
   );
-  
+
   return (
     <div className="jk-col nowrap">
       <Link
@@ -93,14 +79,14 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
         <ButtonLoader
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V2.contest.problem.rejudge({
+            const { url, ...options } = jukiApiManager.apiV2.contest.problem.rejudge({
               params: {
                 key: contestKey,
                 problemKey: problem.key,
               },
             });
             const result = cleanRequest<
-              ContentResponseType<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>
+              ContentResponse<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>
             >(await authorizedRequest(url, options));
             if (result.success) {
               addSuccessNotification(
@@ -115,7 +101,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
             }
           }}
           size="tiny"
-          type="light"
+          type="secondary"
         >
           <T className="tt-se">rejudge problem</T>
         </ButtonLoader>
@@ -126,17 +112,17 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
             setLoaderStatus(Status.LOADING);
             setDataCrawled({});
             setSubmissionsCount(0);
-            const { url, ...options } = jukiApiManager.API_V2.contest.problem.retrieve({
+            const { url, ...options } = jukiApiManager.apiV2.contest.problem.retrieve({
               params: {
                 key: contestKey,
                 problemKey: problem.key,
               },
             });
-            const result = cleanRequest<ContentResponseType<{}>>(await authorizedRequest(url, options));
+            const result = cleanRequest<ContentResponse<{}>>(await authorizedRequest(url, options));
             notifyResponse(result, setLoaderStatus);
           }}
           size="tiny"
-          type="light"
+          type="secondary"
         >
           <T className="tt-se">retrieve new submissions</T>
           {!!Object.values(dataCrawled).length && (
@@ -170,14 +156,14 @@ interface ViewProblemsProps {
 }
 
 export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
-  
+
   const { problems, user, key: contestKey } = contest;
   const { isManager, isAdministrator } = user || {};
   const { notifyResponse } = useJukiNotification();
   const { Link } = useUIStore(store => store.components);
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const isJudgeOrAdmin = isManager || isAdministrator;
-  
+
   const columns = useMemo(() => [
     {
       head: <TextHeadCell text={<T>index</T>} />,
@@ -286,7 +272,7 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
     },
   ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest, Link, contestKey, reloadContest ]);
   const data = Object.values(problems);
-  
+
   return (
     <DataViewer<ContestDataResponseDTO['problems'][string]>
       extraNodes={isJudgeOrAdmin ? [
@@ -294,16 +280,16 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
           key="recalculate-prerequisites"
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
-            const { url, ...options } = jukiApiManager.API_V2.contest.recalculatePrerequisites({
+            const { url, ...options } = jukiApiManager.apiV2.contest.recalculatePrerequisites({
               params: {
                 key: contestKey,
               },
             });
-            const result = cleanRequest<ContentResponseType<{}>>(await authorizedRequest(url, options));
+            const result = cleanRequest<ContentResponse<{}>>(await authorizedRequest(url, options));
             notifyResponse(result, setLoaderStatus);
           }}
           size="tiny"
-          type="light"
+          type="secondary"
         >
           <T className="tt-se">recalculate prerequisites</T>
         </ButtonLoader>,

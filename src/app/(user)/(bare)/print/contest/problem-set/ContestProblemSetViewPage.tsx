@@ -1,8 +1,10 @@
 'use client';
 
-import { ProblemView, ViewOverview } from 'components';
+import { ViewOverview } from 'components';
+import { ProblemView } from '@juki-team/base-ui';
 import { Fragment } from 'react';
-import { ContestDataResponseDTO, EntityState } from 'types';
+import { type ContestDataResponseDTO } from '@juki-team/commons/dto';
+import { EntityState } from '@juki-team/commons/enums';
 
 export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataResponseDTO }) => {
   

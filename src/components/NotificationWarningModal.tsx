@@ -1,4 +1,4 @@
-import { Modal, T } from 'components';
+import { Modal, T } from '@juki-team/base-ui';
 import { useState } from 'react';
 
 const images = [

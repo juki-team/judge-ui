@@ -1,39 +1,15 @@
 'use client';
 
-import {
-  AddIcon,
-  Button,
-  DeleteIcon,
-  EditIcon,
-  FrozenInformation,
-  Input,
-  InputDate,
-  InputToggle,
-  MultiSelect,
-  QuietInformation,
-  Select,
-  T,
-  TimerDisplay,
-  WarningIcon,
-} from 'components';
-import {
-  adjustContest,
-  classNames,
-  disableOutOfRange,
-  getContestTemplate,
-  isEndlessContest,
-  isGlobalContest,
-} from 'helpers';
-import { useState, useUserStore } from 'hooks';
-import {
-  ACCEPTED_PROGRAMMING_LANGUAGES,
-  CODE_LANGUAGE,
-  CONTEST_DEFAULT,
-  CONTEST_TEMPLATE,
-  MAX_DATE,
-  MIN_DATE,
-} from 'src/constants';
-import { ContestTemplate, EntityMembersRank, UpsertContestDTOUI } from 'types';
+import { AddIcon, DeleteIcon, EditIcon, WarningIcon } from '@juki-team/base-ui/server-components';
+import { Button, FrozenInformation, Input, InputDate, InputToggle, MultiSelect, QuietInformation, Select, T, TimerDisplay, useUserStore } from '@juki-team/base-ui';
+import { adjustContest, disableOutOfRange, getContestTemplate, isEndlessContest } from 'helpers';
+import { classNames } from '@juki-team/base-ui/helpers';
+import { ACCEPTED_PROGRAMMING_LANGUAGES, CODE_LANGUAGE, MAX_DATE, MIN_DATE } from '@juki-team/commons/constants';
+import { EntityMembersRank } from '@juki-team/commons/enums';
+import { isGlobalContest } from '@juki-team/commons/helpers';
+import { useState } from 'hooks';
+import { CONTEST_DEFAULT, CONTEST_TEMPLATE } from 'src/constants';
+import { ContestTemplate, UpsertContestDTOUI } from 'types';
 import { v4 } from 'uuid';
 import { EditContestProps } from '../types';
 import { ContestTimeProgress } from '../view/ContestTimeProgress';

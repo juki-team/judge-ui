@@ -1,16 +1,19 @@
 'use client';
 
-import { ButtonLoader, FetcherLayer, Input, Modal, PlusIcon, T } from 'components';
-import { jukiApiManager, jukiAppRoutes } from 'config';
-import { useRouterStore } from 'hooks';
+import { PlusIcon } from '@juki-team/base-ui/server-components';
+import { ButtonLoader, FetcherLayer, Input, Modal, T, useRouterStore } from '@juki-team/base-ui';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { useState } from 'react';
-import { BasicModalProps, ContentResponseType, Judge, JudgeDataResponseDTO, Status } from 'types';
+import { type BasicModalProps } from '@juki-team/base-ui/types';
+import { type JudgeDataResponseDTO } from '@juki-team/commons/dto';
+import { Judge, Status } from '@juki-team/commons/enums';
+import { type ContentResponse } from '@juki-team/commons/types';
 
 const Content = ({ judge }: { judge: JudgeDataResponseDTO }) => {
-  
+
   const [ key, setKey ] = useState('');
   const pushRoute = useRouterStore(state => state.pushRoute);
-  
+
   return (
     <>
       <label className="jk-row nowrap">
@@ -41,7 +44,7 @@ export const CrawlJvumsaProblemModal = ({ onClose, isOpen }: BasicModalProps) =>
   return (
     <Modal isOpen={isOpen} onClose={onClose} closeIcon>
       <div className="jk-col gap jk-pg-md">
-        <FetcherLayer<ContentResponseType<JudgeDataResponseDTO>> url={jukiApiManager.API_V2.judge.getData({ params: { key: Judge.JV_UMSA as string } }).url}>
+        <FetcherLayer<ContentResponse<JudgeDataResponseDTO>> url={jukiApiManager.apiV2.judge.getData({ params: { key: Judge.JV_UMSA as string } }).url}>
           {({ data: { content } }) => (
             <Content judge={content} />
           )}

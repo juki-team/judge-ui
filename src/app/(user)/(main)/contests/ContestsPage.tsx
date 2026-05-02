@@ -1,9 +1,13 @@
 'use client';
 
-import { CreateContestButton, T, TwoContentLayout } from 'components';
-import { jukiAppRoutes } from 'config';
-import { useEffect, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
-import { ContestsTab, ContestSummaryListResponseDTO, LastPathKey, PagedDataViewerProps, TabsType } from 'types';
+import { CreateContestButton } from 'components';
+import { T, TwoContentLayout, useRouterStore, useTrackLastPath, useUserStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { useEffect } from 'hooks';
+import { LastPathKey } from 'types';
+import { ContestsTab } from '@juki-team/base-ui/enums';
+import { type PagedDataViewerProps, type TabsType } from '@juki-team/base-ui/types';
+import { type ContestSummaryListResponseDTO } from '@juki-team/commons/dto';
 import { ContestsClassicList } from '../../../../components/contest/list/ContestsClassicList';
 import { ContestsGlobalList } from '../../../../components/contest/list/ContestsGlobalList';
 

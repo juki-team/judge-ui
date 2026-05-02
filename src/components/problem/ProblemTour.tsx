@@ -1,7 +1,7 @@
 'use client';
 
 import { TourProvider } from '@reactour/tour';
-import { T } from 'components';
+import { T } from '@juki-team/base-ui';
 import { PropsWithChildren } from 'react';
 
 const ContentStatistics = () => {

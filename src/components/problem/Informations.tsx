@@ -1,8 +1,10 @@
 'use client';
 
-import { InfoIIcon, Modal, T } from 'components';
+import { InfoIIcon } from '@juki-team/base-ui/server-components';
+import { Modal, T } from '@juki-team/base-ui';
 import { useState } from 'hooks';
-import { InformationPopoverProps, ProblemVerdict } from 'types';
+import { type InformationPopoverProps } from '@juki-team/base-ui/types';
+import { ProblemVerdict } from '@juki-team/commons/enums';
 import { Verdict } from './Verdict';
 
 export const ProblemScoringModeInformation = ({ filledCircle }: InformationPopoverProps) => {

@@ -1,34 +1,18 @@
 'use client';
 
-import {
-  BalloonIcon,
-  DeleteIcon,
-  DragIndicatorIcon,
-  Input,
-  InputColor,
-  InputDate,
-  InputToggle,
-  OpenInNewIcon,
-  PlusIcon,
-  ProblemSelector,
-  Select,
-  SortableItems,
-  T,
-  TimerDisplay,
-} from 'components';
-import { jukiAppRoutes } from 'config';
-import { classNames, disableOutOfRange, getJudgeOrigin, indexToLetters, lettersToIndex, roundTimestamp } from 'helpers';
-import { useEffect, useSyncedState, useUIStore, useUserStore } from 'hooks';
+import { BalloonIcon, DeleteIcon, DragIndicatorIcon, OpenInNewIcon, PlusIcon } from '@juki-team/base-ui/server-components';
+import { Input, InputColor, InputDate, InputToggle, ProblemSelector, Select, SortableItems, T, TimerDisplay, useSyncedState, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { disableOutOfRange, roundTimestamp } from 'helpers';
+import { classNames, getJudgeOrigin } from '@juki-team/base-ui/helpers';
+import { PALETTE as PALLETE } from '@juki-team/commons/constants';
+import { type ContestProblemBasicDataResponseDTO } from '@juki-team/commons/dto';
+import { ContestProblemPrerequisiteType } from '@juki-team/commons/enums';
+import { indexToLetters, lettersToIndex } from '@juki-team/commons/helpers';
+import { useEffect } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
-import { PALLETE } from 'src/constants';
-import {
-  ContestProblemBasicDataResponseDTO,
-  ContestProblemPrerequisiteType,
-  SortableItem,
-  SortableItemComponent,
-  UpsertContestDTOUI,
-  UpsertContestProblemDTOUI,
-} from 'types';
+import { UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
+import { type SortableItem, type SortableItemComponent } from '@juki-team/base-ui/types';
 import { EditContestProps } from '../types';
 
 export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDTO, {
