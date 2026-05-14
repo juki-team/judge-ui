@@ -4,7 +4,6 @@ import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
 import { useFetcher, useI18nStore, usePageStore, useState } from 'hooks';
-import { i18n } from 'i18next';
 import type { ContentType } from 'recharts/types/component/Tooltip';
 import {
   ContentResponseType,
@@ -64,7 +63,7 @@ const customizedAxisTick = (angle: number) => function Cmp({ x, y, payload }: { 
   );
 };
 
-const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t: i18n['t']) => {
+const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t: (key: string) => string) => {
   
   const {
     showYears,
