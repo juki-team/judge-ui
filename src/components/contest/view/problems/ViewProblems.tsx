@@ -1,7 +1,7 @@
 'use client';
 
-import { CheckIcon, CloseIcon, OpenInNewIcon } from '@juki-team/base-ui/server-components';
-import { ButtonLoader, DataViewer, Field, FieldText, T, TextHeadCell, useJukiNotification, usePageStore, useSubscribe, useUIStore } from '@juki-team/base-ui';
+import { CheckIcon, CloseIcon, OpenInNewIcon, TextHeadCell } from '@juki-team/base-ui/server-components';
+import { ButtonLoader, DataViewer, Field, FieldText, T, useJukiNotification, usePageStore, useSubscribe, useUIStore } from '@juki-team/base-ui';
 import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
 import { authorizedRequest } from '@juki-team/base-ui/helpers';
@@ -86,7 +86,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
               },
             });
             const result = cleanRequest<
-              ContentResponse<{ listCount: number, status: SubmissionRunStatus.RECEIVED }>
+              ContentResponse<{ listCount: number, status: typeof SubmissionRunStatus.RECEIVED }>
             >(await authorizedRequest(url, options));
             if (result.success) {
               addSuccessNotification(

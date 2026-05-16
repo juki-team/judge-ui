@@ -114,7 +114,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                     </div>
                     <UserNicknameLink
                       nickname={clarification.questionUser.nickname}
-                      companyKey={clarification.questionUser.company.key}
+                      organizationKey={clarification.questionUser.organization.key}
                     >
                       <div
                         className="jk-row"

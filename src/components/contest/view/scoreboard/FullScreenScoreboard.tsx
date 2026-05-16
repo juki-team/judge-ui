@@ -13,8 +13,8 @@ export const FullScreenScoreboard = ({ contest, children, reloadContest }: Props
   
   const isSmallMediumScreen = usePageStore(store => store.viewPort.isSmallScreen || store.viewPort.isMediumScreen);
   const { Image } = useUIStore(store => store.components);
-  const companyName = useUserStore(state => state.company.name);
-  const companyImageUrl = useUserStore(state => state.company.imageUrl);
+  const companyName = useUserStore(state => state.organization.name);
+  const companyImageUrl = useUserStore(state => state.organization.imageUrl);
   
   const { height = 0, ref } = useResizeDetector();
   

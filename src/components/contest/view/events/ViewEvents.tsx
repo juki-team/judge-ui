@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, CodeViewer, DateLiteral, Modal, T, UserChip } from '@juki-team/base-ui';
+import { DateLiteral } from '@juki-team/base-ui/server-components';
+import { Button, CodeViewer, Modal, T, UserChip } from '@juki-team/base-ui';
 import { useState } from 'hooks';
 import { CodeLanguage } from '@juki-team/commons/enums';
 import { ContestDataUI } from '../types';
@@ -33,7 +34,7 @@ export const ViewEvents = ({ contest }: { contest: ContestDataUI }) => {
                   <T className="tt-se">{action?.toLowerCase().split('_').join(' ')}</T>
                 </div>
                 <div>
-                  <UserChip imageUrl={user.imageUrl} nickname={user.nickname} companyKey={user.company.key} />
+                  <UserChip imageUrl={user.imageUrl} nickname={user.nickname} organizationKey={user.organization.key} />
                 </div>
                 <div>
                   <DateLiteral date={new Date(timestamp)} />

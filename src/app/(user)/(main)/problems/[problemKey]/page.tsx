@@ -1,5 +1,5 @@
 import { ProblemNotFoundCard, ProblemTour, ProblemViewLayout } from 'components';
-import { TwoContentLayout } from '@juki-team/base-ui';
+import { TwoContentLayout } from 'src/components/jukiClientBoundary';
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { DEFAULT_METADATA } from 'config/constants';
 import { get } from 'helpers';

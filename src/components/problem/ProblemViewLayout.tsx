@@ -141,7 +141,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       documentOwner={problem.owner}
       documentName={<T>problem</T>}
       saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM_MEMBERS(problem.key)}
-      reloadDocument={reloadProblem}
+      reloadDocument={async () => { await reloadProblem(); return undefined; }}
       copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
       {...problemAccessProps}
     >

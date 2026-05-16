@@ -1,6 +1,7 @@
 'use client';
 
-import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNicknameLink, useDataViewerRequester, usePageStore, useUIStore } from '@juki-team/base-ui';
+import { TextHeadCell } from '@juki-team/base-ui/server-components';
+import { DataViewer, Field, FieldText, T, TwoContentLayout, UserNicknameLink, useDataViewerRequester, usePageStore, useUIStore } from '@juki-team/base-ui';
 import { JUDGE_API_V1 } from 'config/constants';
 import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
 import { oneTab } from '@juki-team/base-ui/helpers';
@@ -33,10 +34,10 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="tt-se">nickname</T>} className="left" />,
       index: 'nickname',
-      Field: ({ record: { nickname, imageUrl, company }, isCard, recordIndex }) => (
+      Field: ({ record: { nickname, imageUrl, organization }, isCard, recordIndex }) => (
         <Field className="jk-row link fw-bd gap">
           {isCard && <div className="fw-br jk-pg-sm">{recordIndex + 1}</div>}
-          <UserNicknameLink nickname={nickname} companyKey={company.key}>
+          <UserNicknameLink nickname={nickname} organizationKey={organization.key}>
             <div className="jk-row flex-1 gap left">
               <Image
                 src={imageUrl}

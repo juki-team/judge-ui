@@ -14,7 +14,7 @@ export function ContestDataProvider({
   fallbackData: ContestDataResponseDTO;
   children: React.ReactNode;
 }) {
-  const companyKey = useUserStore(s => s.company.key);
+  const companyKey = useUserStore(s => s.organization.key);
   const value = useContestData(fallbackData, companyKey);
   return <ContestDataContext.Provider value={value}>{children}</ContestDataContext.Provider>;
 }

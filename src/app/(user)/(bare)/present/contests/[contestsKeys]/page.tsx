@@ -1,5 +1,5 @@
 import { ContestDataProvider, ContestNotFoundCard } from 'components';
-import { TwoContentLayout, UserPreviewModal } from '@juki-team/base-ui';
+import { TwoContentLayout, UserPreviewModal } from 'src/components/jukiClientBoundary';
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { DEFAULT_METADATA } from 'config/constants';
 import { get } from 'helpers';

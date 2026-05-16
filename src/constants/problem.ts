@@ -39,7 +39,7 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judg
     },
     tags: [],
     members: EMPTY_ENTITY_MEMBERS(),
-    owner: { nickname, imageUrl, company: { key: companyKey } },
+    owner: { nickname, imageUrl, organization: { key: companyKey } },
     costs: {
       unlockEditorial: 0,
       unlockHint: 0,

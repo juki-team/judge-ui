@@ -5,7 +5,7 @@ import { JUKI_APP_ORGANIZATION_KEY as JUKI_APP_COMPANY_KEY } from '@juki-team/co
 
 export const SponsoredByTag = () => {
   
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.organization.key);
   const { Link } = useUIStore(store => store.components);
   
   if (companyKey === JUKI_APP_COMPANY_KEY) {

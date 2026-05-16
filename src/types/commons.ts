@@ -11,4 +11,4 @@ export type { PropsWithChildren, ReactNode, FC } from 'react';
 export type { AppProps } from 'next/app';
 export type { NextApiRequest, NextApiResponse } from 'next';
 export type { KeyedMutator } from 'swr';
-export type { TFunction } from 'i18next';
+export type TFunction = (key: string) => string;

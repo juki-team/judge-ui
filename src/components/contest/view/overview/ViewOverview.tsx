@@ -1,7 +1,7 @@
 'use client';
 
 import { AdminInformation, ContestantInformation, GuestInformation, JudgeInformation, SpectatorInformation } from 'components';
-import { ButtonLoader, FrozenInformation, MdMathViewer, QuietInformation, T, useI18nStore, useJukiNotification, usePageStore, useRouterStore, useUserStore } from '@juki-team/base-ui';
+import { ButtonLoader, FrozenInformation, MdMathViewer, QuietInformation, T, useT, useJukiNotification, usePageStore, useRouterStore, useUserStore } from '@juki-team/base-ui';
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1 } from 'config/constants';
 import { CODE_LANGUAGE } from '@juki-team/commons/constants';
@@ -29,7 +29,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
   const { dtf, rlt } = useDateFormat();
   const { notifyResponse, addWarningNotification } = useJukiNotification();
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
 
   const registerContest = async (setLoader: SetLoaderStatusOnClickType) => {

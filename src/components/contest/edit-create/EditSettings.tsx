@@ -1,12 +1,13 @@
 'use client';
 
 import { AddIcon, DeleteIcon, EditIcon, WarningIcon } from '@juki-team/base-ui/server-components';
-import { Button, FrozenInformation, Input, InputDate, InputToggle, MultiSelect, QuietInformation, Select, T, TimerDisplay, useUserStore } from '@juki-team/base-ui';
+import { TimerDisplay } from '@juki-team/base-ui/server-components';
+import { Button, FrozenInformation, Input, InputDate, InputToggle, MultiSelect, QuietInformation, Select, T, useUserStore } from '@juki-team/base-ui';
 import { adjustContest, disableOutOfRange, getContestTemplate, isEndlessContest } from 'helpers';
 import { classNames } from '@juki-team/base-ui/helpers';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, CODE_LANGUAGE, MAX_DATE, MIN_DATE } from '@juki-team/commons/constants';
 import { EntityMembersRank } from '@juki-team/commons/enums';
-import { isGlobalContest } from '@juki-team/commons/helpers';
+import { endOfDay, isDayBefore, isGlobalContest, isHoursBefore, isMillisecondsBefore, isMinutesBefore, isMonthBefore, isSecondsBefore, isWithinInterval, isYearBefore, startOfDay } from '@juki-team/commons/helpers';
 import { useState } from 'hooks';
 import { CONTEST_DEFAULT, CONTEST_TEMPLATE } from 'src/constants';
 import { ContestTemplate, UpsertContestDTOUI } from 'types';
@@ -27,9 +28,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const quietDate = new Date(contest.settings.quietTimestamp);
   const isSelected = (date: Date) => {
     return {
-      day: date.isWithinInterval({
-        start: startDate.startOfDay(),
-        end: endDate.endOfDay(),
+      day: isWithinInterval(date, {
+        start: startOfDay(startDate),
+        end: endOfDay(endDate),
       }, '[]'),
     };
   };
@@ -178,9 +179,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     type="year-month-day-hours-minutes"
                     date={new Date(contest.settings.frozenTimestamp)}
                     isSelected={(date) => ({
-                      day: date.isWithinInterval({
-                        start: frozenDate.startOfDay(),
-                        end: frozenDate.endOfDay(),
+                      day: isWithinInterval(date, {
+                        start: startOfDay(frozenDate),
+                        end: endOfDay(frozenDate),
                       }, '[]'),
                     })}
                     isDisabled={(date) => disableOutOfRange(date, startDate, endDate)}
@@ -267,9 +268,9 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     type="year-month-day-hours-minutes"
                     date={new Date(contest.settings.quietTimestamp)}
                     isSelected={(date) => ({
-                      day: date.isWithinInterval({
-                        start: quietDate.startOfDay(),
-                        end: quietDate.endOfDay(),
+                      day: isWithinInterval(date, {
+                        start: startOfDay(quietDate),
+                        end: endOfDay(quietDate),
                       }, '[]'),
                     })}
                     isDisabled={(date) => disableOutOfRange(date, frozenDate, endDate)}
@@ -357,13 +358,13 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     baseDate={endDate}
                     isSelected={isSelected}
                     isDisabled={(date) => ({
-                      year: date.isYearBefore(startDate),
-                      month: date.isMonthBefore(startDate),
-                      day: date.isDayBefore(startDate),
-                      hours: date.isHoursBefore(startDate),
-                      minutes: date.isMinutesBefore(startDate),
-                      seconds: date.isSecondsBefore(startDate),
-                      milliseconds: date.isMillisecondsBefore(startDate),
+                      year: isYearBefore(date, startDate),
+                      month: isMonthBefore(date, startDate),
+                      day: isDayBefore(date, startDate),
+                      hours: isHoursBefore(date, startDate),
+                      minutes: isMinutesBefore(date, startDate),
+                      seconds: isSecondsBefore(date, startDate),
+                      milliseconds: isMillisecondsBefore(date, startDate),
                     })}
                     onDatePick={(date) => setContest(prevState => adjustContest({
                       ...prevState,

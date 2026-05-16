@@ -16,7 +16,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
   const pathname = useRouterStore(state => state.pathname);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const { Link, Image } = useUIStore(store => store.components);
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.organization.key);
   const userPreferredTheme = useUserStore(state => state.user.settings[ProfileSetting.THEME]);
   const isContestsPage = ('/' + pathname).includes('//contest');
   const isProblemsPage = ('/' + pathname).includes('//problem');
@@ -105,8 +105,8 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
 
   return (
     <MainMenu
-      onSeeMyProfile={(nickname, companyKey) => (
-        pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname: nickname, companyKey }))
+      onSeeMyProfile={(nickname, organizationKey) => (
+        pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname, organizationKey }))
       )}
       menu={menu}
       profileSelected={pathname.includes('/profiles/')}

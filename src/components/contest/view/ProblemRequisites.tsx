@@ -1,7 +1,8 @@
 'use client';
 
 import { CheckIcon, CloseIcon } from '@juki-team/base-ui/server-components';
-import { T, Timer, TimerDisplay } from '@juki-team/base-ui';
+import { TimerDisplay } from '@juki-team/base-ui/server-components';
+import { T, Timer } from '@juki-team/base-ui';
 import { classNames } from '@juki-team/base-ui/helpers';
 import { CSSProperties, useState } from 'react';
 import { type KeyedMutator } from 'swr';
@@ -133,7 +134,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay
                     })}
                   >
                     <T className="tt-se">max accepted submissions achieved</T>:&nbsp;
-                    {block.details?.totalSuccess} / {block.details?.maxAcceptedUsers}
+                    {block.details?.totalSuccess as number} / {block.details?.maxAcceptedUsers as number}
                   </div>
                 </div>
               </div>
@@ -145,7 +146,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay
                 })}
               >
                 <T className="tt-se">max accepted submissions achieved</T>:&nbsp;
-                {block.details?.totalSuccess} / {block.details?.maxAcceptedUsers}
+                {block.details?.totalSuccess as number} / {block.details?.maxAcceptedUsers as number}
               </div>
           )}
         </div>

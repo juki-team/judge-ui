@@ -105,7 +105,7 @@ export const toUpsertContestDTOUI = (contest: ContestDataUI): UpsertContestDTOUI
       startTimestamp: problem.startTimestamp,
       endTimestamp: problem.endTimestamp,
       tags: problem.tags,
-      company: problem.company,
+      organization: problem.organization,
       prerequisites: problem.prerequisites,
       maxAcceptedUsers: problem.maxAcceptedUsers,
       group: problem.group || '',

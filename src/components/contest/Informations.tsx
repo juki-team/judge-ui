@@ -1,3 +1,5 @@
+'use client';
+
 import { type InformationPopoverProps } from '@juki-team/base-ui/types';
 import { InformationPopover, T } from '@juki-team/base-ui';
 

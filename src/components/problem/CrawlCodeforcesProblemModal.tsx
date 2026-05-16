@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { type BasicModalProps } from '@juki-team/base-ui/types';
 
 interface CrawlCodeforcesProblemModalProps extends BasicModalProps {
-  judge: Judge.CODEFORCES | Judge.CODEFORCES_GYM,
+  judge: typeof Judge.CODEFORCES | typeof Judge.CODEFORCES_GYM,
 }
 
 export const CrawlCodeforcesProblemModal = ({ onClose, isOpen }: CrawlCodeforcesProblemModalProps) => {

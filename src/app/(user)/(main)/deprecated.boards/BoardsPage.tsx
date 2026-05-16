@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, DataViewer, T, TwoContentLayout, useDataViewerRequester, useFetcher, useI18nStore, usePageStore, useRouterStore, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { Button, DataViewer, T, TwoContentLayout, useDataViewerRequester, useFetcher, useT, usePageStore, useRouterStore, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
 import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1, ROUTES } from 'config/constants';
 import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
@@ -31,7 +31,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
   const userCanAdministrateServices = useUserStore(state => state.user.permissions.services.administrate);
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   const contestTags = JSON.stringify(contest.tags ?? []);
 
   const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {

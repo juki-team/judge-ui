@@ -21,8 +21,9 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   useTrackLastPath(LastPathKey.SECTION_PROBLEM);
 
   const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
+  const organizationKey = useUserStore(state => state.organization.key);
   const setSearchParams = useRouterStore(state => state.setSearchParams);
-  const { data } = useFetcher<ContentResponse<JudgeDataResponseDTO[]>>(jukiApiManager.apiV2.company.getJudgeList().url);
+  const { data } = useFetcher<ContentResponse<JudgeDataResponseDTO[]>>(jukiApiManager.apiV2.organization.getJudgeList({ params: { organizationKey } }).url);
   const tags = useMemo(() => (data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : []).map(tag => ({
     value: tag,
     label: <T>{tag}</T>,

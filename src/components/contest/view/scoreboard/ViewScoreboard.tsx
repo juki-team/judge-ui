@@ -1,7 +1,7 @@
 'use client';
 
 import { FullscreenExitIcon, FullscreenIcon } from '@juki-team/base-ui/server-components';
-import { ButtonLoader, DataViewer, InputToggle, Select, T, useDataViewerRequester, useI18nStore, useJukiNotification, usePageStore, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { ButtonLoader, DataViewer, InputToggle, Select, T, useDataViewerRequester, useT, useJukiNotification, usePageStore, useUIStore, useUserStore } from '@juki-team/base-ui';
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1 } from 'config/constants';
 import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
@@ -25,7 +25,7 @@ interface DownloadButtonProps {
 }
 
 const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
 
   const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
   for (const problem of Object.values(contest?.problems)) {
@@ -106,7 +106,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
       getPositionColumn(),
@@ -253,13 +253,13 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       })}
       groups={groups}
       getRecordKey={({ data, index }) => (
-        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) + (data?.[index]?.official ? '' : '_')
+        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) + (data?.[index]?.official ? '' : '_')
       )}
       deps={[ unfrozen, trigger ]}
       getRecordStyle={({
                          data,
                          index,
-                       }) => (getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) === getUserKey(user.nickname, user.company.key) ? {
+                       }) => (getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) === getUserKey(user.nickname, user.organization.key) ? {
         borderBottom: '2px solid var(--cr-at)',
         borderTop: '2px solid var(--cr-at)',
         borderRadius: 'var(--border-radius-inline)',

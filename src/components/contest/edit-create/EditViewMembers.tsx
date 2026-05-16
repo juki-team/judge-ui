@@ -44,7 +44,7 @@ export const contestAccessProps = (readOnly: boolean, onViewMember?: (member: Do
             imageUrl={member.imageUrl}
             nickname={member.nickname}
             key={member.nickname}
-            companyKey={member.company.key}
+            organizationKey={member.organization.key}
           />
           {onViewMember && <VisibilityIcon onClick={() => onViewMember(member)} />}
         </div>
@@ -121,7 +121,7 @@ const ViewMemberModal = ({ member, ...modalProps }: ViewMemberModalProps) => {
             imageUrl={member.imageUrl}
             nickname={member.nickname}
             key={member.nickname}
-            companyKey={member.company.key}
+            organizationKey={member.organization.key}
           />
         </div>
         <div>

@@ -3,7 +3,7 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { CheckIcon, EditNoteIcon, ErrorIcon, ExclamationIcon, SmartToyIcon, SpinIcon } from '@juki-team/base-ui/server-components';
-import { Button, Input, MdMathViewer, T, useI18nStore } from '@juki-team/base-ui';
+import { Button, Input, MdMathViewer, T, useT } from '@juki-team/base-ui';
 import { classNames, upperFirst } from '@juki-team/base-ui/helpers';
 import { useRef } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -51,7 +51,7 @@ export const ProblemStatementAiRedactorChat = ({
       api: '/api/chat/statement-redactor',
     }),
   });
-  const t = useI18nStore(store => store.i18n.t);
+  const t = useT();
 
   useEffect(() => {
     for (const message of messages) {

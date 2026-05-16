@@ -1,7 +1,7 @@
 'use client';
 
 import { DoubleUpIcon, SpinIcon, NavigateBeforeIcon, NavigateNextIcon } from '@juki-team/base-ui/server-components';
-import { useI18nStore, usePageStore, Select, T } from '@juki-team/base-ui';
+import { useT, usePageStore, Select, T } from '@juki-team/base-ui';
 import { useEffect } from 'react';
 import { classNames } from '@juki-team/base-ui/helpers';
 
@@ -39,7 +39,7 @@ export const Pagination = (props: PaginationProps) => {
   const endPage = Math.max(Math.ceil(total / pageSize), startPage);
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   useEffect(() => {
     if (!initializing && (page < startPage || endPage < page)) {
       jumpToPage(startPage);

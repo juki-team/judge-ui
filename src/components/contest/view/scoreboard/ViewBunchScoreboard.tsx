@@ -1,7 +1,7 @@
 'use client';
 
 import { useContest } from 'components';
-import { DataViewer, InputToggle, Select, T, useDataViewerRequester, useI18nStore, usePageStore, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { DataViewer, InputToggle, Select, T, useDataViewerRequester, useT, usePageStore, useUIStore, useUserStore } from '@juki-team/base-ui';
 import { JUDGE_API_V1 } from 'config/constants';
 import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
 import { classNames, downloadDataTableAsCsvFile, downloadSheetDataAsXlsxFile } from '@juki-team/base-ui/helpers';
@@ -21,7 +21,7 @@ interface DownloadButtonProps {
 }
 
 const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
 
   const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
   for (const problem of Object.values(contest?.problems)) {
@@ -258,7 +258,7 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
   const user = useUserStore(store => store.user);
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
       getPositionColumn(),
@@ -333,7 +333,7 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
       })}
       groups={groups}
       getRecordKey={({ data, index }) => (
-        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) + (data?.[index]?.official ? '' : '_')
+        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) + (data?.[index]?.official ? '' : '_')
       )}
       deps={[ unfrozen ]}
       getRecordStyle={({
@@ -342,7 +342,7 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
                        }) => ({
 
         ...(
-          getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) === getUserKey(user.nickname, user.company.key) ? {
+          getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) === getUserKey(user.nickname, user.organization.key) ? {
             borderBottom: '2px solid var(--cr-at)',
             borderTop: '2px solid var(--cr-at)',
             borderRadius: 'var(--border-radius-inline)',

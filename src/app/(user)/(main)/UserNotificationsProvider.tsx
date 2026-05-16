@@ -8,7 +8,7 @@ import { getUserKey, isUserNotificationSubmissionWebSocketResponseEventDTO } fro
 
 export function UserNotificationProvider({}) {
   const userNickname = useUserStore(store => store.user.nickname);
-  const userCompanyKey = useUserStore(store => store.user.company.key);
+  const userCompanyKey = useUserStore(store => store.user.organization.key);
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
   const event: Omit<SubscribeUserNotificationWebsocketEventDTO, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_USER_NOTIFICATION,

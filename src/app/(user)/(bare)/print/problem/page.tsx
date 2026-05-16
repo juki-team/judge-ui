@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { ProblemView } from '@juki-team/base-ui';
+import { ProblemView } from 'src/components/jukiClientBoundary';
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { JUKI_INTERNAL_API_KEY } from 'config/constants';
 import { HEADER_JUKI_INTERNAL_API_KEY } from '@juki-team/commons/constants';

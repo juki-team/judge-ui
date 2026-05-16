@@ -4,13 +4,21 @@ import { ButtonLoader, getSubmissionContestProblemHeader, getSubmissionDateHeade
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { SEPARATOR_TOKEN } from '@juki-team/commons/constants';
 import { type ContestDataResponseDTO, type JudgeSummaryListResponseDTO, type SubmissionSummaryListResponseDTO, type SubscribeSubmissionsCrawlWebSocketEventDTO } from '@juki-team/commons/dto';
-import { Status, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
+import { type Judge, Status, WebSocketSubscriptionEvent } from '@juki-team/commons/enums';
 import { cleanRequest, getParamsOfUserKey, isSubmissionsCrawlWebSocketResponseEventDTO } from '@juki-team/commons/helpers';
 import { type ContentResponse, type ContentsResponse } from '@juki-team/commons/types';
 import { authorizedRequest, toFilterUrl, toSortUrl } from '@juki-team/base-ui/helpers';
 import { useMemo, useState } from 'hooks';
 import { QueryParam } from 'types';
-import { type DataViewerHeadersType, type DataViewerRequestPropsType, type DataViewerToolbarProps, type LanguagesByJudge } from '@juki-team/base-ui/types';
+import { type DataViewerHeadersType, type DataViewerRequestPropsType, type DataViewerToolbarProps } from '@juki-team/base-ui/types';
+
+type LanguagesByJudge = {
+  [key: string]: {
+    key: string | Judge;
+    name: string;
+    languages: { [key: string]: { label: string; value: string } };
+  };
+};
 import { ContestDataUI } from '../types';
 
 const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
@@ -103,7 +111,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
 export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
 
   const userNickname = useUserStore(state => state.user.nickname);
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.organization.key);
   const { data: judgePublicList } = useFetcher<ContentsResponse<JudgeSummaryListResponseDTO>>(jukiApiManager.apiV2.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
@@ -127,7 +135,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
         ? [ { value: userNickname, label: <T className="tt-se cr-ss fw-bd">my submissions</T> } ]
         : []),
       ...Object.keys(contest.members.participants).map(participant => {
-        const { userNickname, userCompanyKey } = getParamsOfUserKey(participant);
+        const { userNickname, userOrganizationKey: userCompanyKey } = getParamsOfUserKey(participant);
         return {
           value: participant,
           label: (

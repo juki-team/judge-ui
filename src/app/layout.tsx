@@ -1,4 +1,4 @@
-import { JukiI18nInitializer, StylesLazy } from 'components';
+import { StylesLazy } from 'components';
 import { DEFAULT_METADATA } from 'config/constants';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -21,7 +21,6 @@ export default async function Layout({ children }: PropsWithChildren) {
     <html lang="en" className={inter.variable}>
     <body className="jk-theme-light">
     {children}
-    <JukiI18nInitializer />
     <StylesLazy />
     </body>
     </html>

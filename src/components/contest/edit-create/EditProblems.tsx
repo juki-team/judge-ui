@@ -1,14 +1,15 @@
 'use client';
 
 import { BalloonIcon, DeleteIcon, DragIndicatorIcon, OpenInNewIcon, PlusIcon } from '@juki-team/base-ui/server-components';
-import { Input, InputColor, InputDate, InputToggle, ProblemSelector, Select, SortableItems, T, TimerDisplay, useSyncedState, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { TimerDisplay } from '@juki-team/base-ui/server-components';
+import { Input, InputColor, InputDate, InputToggle, ProblemSelector, Select, SortableItems, T, useSyncedState, useUIStore, useUserStore } from '@juki-team/base-ui';
 import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { disableOutOfRange, roundTimestamp } from 'helpers';
 import { classNames, getJudgeOrigin } from '@juki-team/base-ui/helpers';
 import { PALETTE as PALLETE } from '@juki-team/commons/constants';
 import { type ContestProblemBasicDataResponseDTO } from '@juki-team/commons/dto';
 import { ContestProblemPrerequisiteType } from '@juki-team/commons/enums';
-import { indexToLetters, lettersToIndex } from '@juki-team/commons/helpers';
+import { endOfDay, indexToLetters, isWithinInterval, lettersToIndex, startOfDay } from '@juki-team/commons/helpers';
 import { useEffect } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
@@ -83,7 +84,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
         </div>
         <div className="jk-row gap left">
           <Link
-            href={jukiAppRoutes.JUDGE(getJudgeOrigin(problem.company.key)).problems.view({ key: problem.key })}
+            href={jukiAppRoutes.JUDGE(getJudgeOrigin(problem.organization.key)).problems.view({ key: problem.key })}
             target="_blank"
             className="link jk-row tx-t"
             style={{ fontFamily: 'monospace' }}
@@ -169,9 +170,9 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 date={new Date(problem.startTimestamp)}
                 isSelected={(date) => (
                   {
-                    day: date.isWithinInterval({
-                      start: new Date(problem.startTimestamp).startOfDay(),
-                      end: new Date(problem.endTimestamp).endOfDay(),
+                    day: isWithinInterval(date, {
+                      start: startOfDay(new Date(problem.startTimestamp)),
+                      end: endOfDay(new Date(problem.endTimestamp)),
                     }),
                   }
                 )}
@@ -195,9 +196,9 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 date={new Date(problem.endTimestamp)}
                 isSelected={(date) => (
                   {
-                    day: date.isWithinInterval({
-                      start: new Date(problem.startTimestamp).startOfDay(),
-                      end: new Date(problem.endTimestamp).endOfDay(),
+                    day: isWithinInterval(date, {
+                      start: startOfDay(new Date(problem.startTimestamp)),
+                      end: endOfDay(new Date(problem.endTimestamp)),
                     }),
                   }
                 )}
@@ -294,7 +295,7 @@ const getContestPrerequisitesData = (contest: UpsertContestDTOUI) => {
   let withPrerequisites = false;
   let withTimeRestriction = false;
   let withMaxAcceptedUsers = false;
-  let typePrerequisite = ContestProblemPrerequisiteType.INDIVIDUALLY;
+  let typePrerequisite: ContestProblemPrerequisiteType = ContestProblemPrerequisiteType.INDIVIDUALLY;
   let delayPrerequisites = 0;
   Object.values(contest.problems).forEach(problem => {
     if (problem.startTimestamp !== contest.settings.startTimestamp
@@ -400,7 +401,7 @@ const fixProblem = (
     startTimestamp: cutDate(problem.startTimestamp),
     endTimestamp: cutDate(problem.endTimestamp),
     tags: problem.tags,
-    company: problem.company,
+    organization: problem.organization,
     prerequisites,
     maxAcceptedUsers: problem.maxAcceptedUsers,
     group: problem.group ?? '',
@@ -419,7 +420,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   } = getContestPrerequisitesData(contest);
   const [ withTime, setWithTime ] = useSyncedState<0 | 1 | 2>(withTimeRestriction ? 1 : 0);
   
-  const companyName = useUserStore(state => state.company.name);
+  const companyName = useUserStore(state => state.organization.name);
   const contestStartDate = useMemo(() => new Date(contest.settings.startTimestamp), [ contest.settings.startTimestamp ]);
   const contestEndDate = useMemo(() => new Date(contest.settings.endTimestamp), [ contest.settings.endTimestamp ]);
   const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDTOUI }) => {
@@ -687,12 +688,12 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
               <ProblemSelector
                 onSelect={(problem) => {
                   if (!problems.some(p => p.key === problem.key)) {
-                    let colors = PALLETE.VIVOS.filter(color => !problems.some(p => p.value.color === color.color));
+                    let colors = PALLETE.vivos.filter(color => !problems.some(p => p.value.color === color.color));
                     if (!colors.length) {
                       colors = [
-                        ...PALLETE.OSCUROS.filter(color => !problems.some(p => p.value.color === color.color)),
-                        ...PALLETE.AGRISADOS.filter(color => !problems.some(p => p.value.color === color.color)),
-                        ...PALLETE.CLAROS.filter(color => !problems.some(p => p.value.color === color.color)),
+                        ...PALLETE.oscuros.filter(color => !problems.some(p => p.value.color === color.color)),
+                        ...PALLETE.agrisados.filter(color => !problems.some(p => p.value.color === color.color)),
+                        ...PALLETE.claros.filter(color => !problems.some(p => p.value.color === color.color)),
                       ];
                     }
                     setContest(prevState => {
@@ -707,7 +708,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                         startTimestamp: contest.settings.startTimestamp,
                         endTimestamp: contest.settings.endTimestamp,
                         tags: problem.tags,
-                        company: problem.company,
+                        organization: problem.organization,
                         prerequisites: [],
                         maxAcceptedUsers: 0,
                         group: '',

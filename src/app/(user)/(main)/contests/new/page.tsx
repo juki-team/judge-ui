@@ -18,14 +18,14 @@ export default function ContestsNewPage() {
     imageUrl,
     permissions: { contests: { create: canCreateContest } },
   } = useUserStore(state => state.user);
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.organization.key);
   
   const localStorageInitialContest = localStorage.getItem(LS_INITIAL_CONTEST_KEY) || '{}';
   
   const newEntity = useMemo(() => () => CONTEST_DEFAULT({
     nickname,
     imageUrl,
-    company: { key: companyKey },
+    organization: { key: companyKey },
   }, isStringJson(localStorageInitialContest) ? JSON.parse(localStorageInitialContest) : {}), [ nickname, imageUrl, companyKey, localStorageInitialContest ]);
   
   if (!canCreateContest) {

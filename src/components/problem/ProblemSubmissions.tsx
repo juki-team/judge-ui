@@ -5,8 +5,17 @@ import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { toFilterUrl, toSortUrl } from '@juki-team/base-ui/helpers';
 import { useMemo } from 'hooks';
 import { QueryParam } from 'types';
-import { type DataViewerHeadersType, type LanguagesByJudge } from '@juki-team/base-ui/types';
+import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
 import { type JudgeSummaryListResponseDTO, type ProblemDataResponseDTO, type SubmissionSummaryListResponseDTO } from '@juki-team/commons/dto';
+import type { Judge } from '@juki-team/commons/enums';
+
+type LanguagesByJudge = {
+  [key: string]: {
+    key: string | Judge;
+    name: string;
+    languages: { [key: string]: { label: string; value: string } };
+  };
+};
 import { type ContentsResponse } from '@juki-team/commons/types';
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {

@@ -1,8 +1,8 @@
 'use client';
 
 import { Pagination } from 'components';
-import { AcUnitIcon, FullscreenExitIcon, FullscreenIcon, LockIcon } from '@juki-team/base-ui/server-components';
-import { Button, ButtonLoader, DataViewer, FrozenInformation, Input, InputCheckbox, QuietInformation, Select, T, TimerDisplay, useDataViewerRequester, useI18nStore, useJukiNotification, usePageStore, useSyncedState, useUIStore } from '@juki-team/base-ui';
+import { AcUnitIcon, FullscreenExitIcon, FullscreenIcon, LockIcon, TimerDisplay } from '@juki-team/base-ui/server-components';
+import { Button, ButtonLoader, DataViewer, FrozenInformation, Input, InputCheckbox, QuietInformation, Select, T, useDataViewerRequester, useT, useJukiNotification, usePageStore, useSyncedState, useUIStore } from '@juki-team/base-ui';
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1 } from 'config/constants';
 import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
@@ -25,7 +25,7 @@ interface DownloadButtonProps {
 }
 
 const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
 
   const head = [ '#', t('nickname'), t('given name'), t('family name'), t('points'), t('penalty') ];
   for (const problem of Object.values(contest?.problems)) {
@@ -106,7 +106,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
     const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
       getPositionColumn(),
@@ -254,7 +254,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
 
   const currentTimestamp = finalTimestamp - contest.settings.startTimestamp;
   const focusedRow = data.find(({ focus }) => (focus?.length ?? 0) > 0);
-  const [ focusUserKey, setFocusUserKey ] = useSyncedState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.company.key) : '');
+  const [ focusUserKey, setFocusUserKey ] = useSyncedState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.organization.key) : '');
 
   const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
 
@@ -344,7 +344,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         jumpToPage={(page) => {
           const focusedRow = data.find(({ diff }) => (diff || []).some(({ focus }) => focus));
           if (focusedRow) {
-            setFocusUserKey(getUserKey(focusedRow.user.nickname, focusedRow.user.company.key));
+            setFocusUserKey(getUserKey(focusedRow.user.nickname, focusedRow.user.organization.key));
           }
           setTimeout(() => {
             setIndex(page);
@@ -434,9 +434,9 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         'is-quiet': !dynamic && !unfrozen && contest.isQuietTime,
       })}
       groups={groups}
-      getRecordKey={({ data, index }) => getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key)}
+      getRecordKey={({ data, index }) => getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key)}
       getRecordStyle={({ data, index }) => {
-        const userKey = getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key);
+        const userKey = getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key);
         if (focusUserKey === userKey) {
           const dataUser = data[index];
           if (dataUser?.focus) {

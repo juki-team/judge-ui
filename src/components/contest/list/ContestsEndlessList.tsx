@@ -11,7 +11,7 @@ import { EntityState } from '@juki-team/commons/enums';
 
 export const ContestsEndlessList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
   
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.organization.key);
   const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
     getContestNameHeader(),
     getContestDateHeader(),

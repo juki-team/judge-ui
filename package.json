@@ -21,7 +21,7 @@
     "@ably/spaces": "^0.5.2",
     "@ai-sdk/react": "^3.0.176",
     "@excalidraw/excalidraw": "^0.18.1",
-    "@juki-team/base-ui": "^1.4.111",
+    "@juki-team/base-ui": "^1.4.121",
     "@juki-team/commons": "^0.2.6",
     "@reactour/tour": "^3.8.0",
     "@vercel/analytics": "^2.0.1",

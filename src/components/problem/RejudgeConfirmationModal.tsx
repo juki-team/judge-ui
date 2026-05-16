@@ -53,7 +53,7 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
               setLoaderStatus(Status.LOADING);
               const result = cleanRequest<ContentResponse<{
                 listCount: number,
-                status: SubmissionRunStatus.RECEIVED
+                status: typeof SubmissionRunStatus.RECEIVED
               }>>(
                 await authorizedRequest(
                   JUDGE_API_V1.REJUDGE.PROBLEM(problemKey), { method: HTTPMethod.POST },

@@ -2,7 +2,7 @@
 
 import { contestAccessProps, EditViewMembers } from 'components';
 import { EditIcon, FileCopyIcon, LineLoader, NavigateBeforeIcon, NavigateNextIcon, ShareIcon } from '@juki-team/base-ui/server-components';
-import { DocumentMembersButton, T, TabsInlineButton, TabsInlineButtonLoader, TwoContentLayout, useI18nStore, usePageStore, useRouterStore, useSubscribe, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
+import { DocumentMembersButton, T, TabsInlineButton, TabsInlineButtonLoader, TwoContentLayout, useT, usePageStore, useRouterStore, useSubscribe, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
 import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
 import { toUpsertContestDTOUI } from 'helpers';
@@ -40,7 +40,7 @@ export function ContestViewLayout() {
   const { isSmallScreen, isMediumScreen, isHugeScreen, isLargeScreen } = usePageStore(store => store.viewPort);
   const Link = useUIStore(store => store.components.Link);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
 
   const event: Omit<SubscribeContestChangesWebSocketEventDTO, 'clientId'> = {
@@ -207,7 +207,7 @@ export function ContestViewLayout() {
       documentOwner={contest.owner}
       documentName={<T>contest</T>}
       saveUrl={JUDGE_API_V1.CONTEST.CONTEST_MEMBERS(contest.key)}
-      reloadDocument={reloadContest}
+      reloadDocument={async () => { await reloadContest(); return undefined; }}
       copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').contests.view({ key: contest.key })}
       {...contestAccessProps(false)}
     >

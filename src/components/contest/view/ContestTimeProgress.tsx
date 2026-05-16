@@ -1,4 +1,5 @@
-import { DateLiteral, FrozenInformation, ProgressMultiBar, ProgressSlide, QuietInformation, T, TimerDisplay } from '@juki-team/base-ui';
+import { DateLiteral, TimerDisplay } from '@juki-team/base-ui/server-components';
+import { FrozenInformation, ProgressMultiBar, ProgressSlide, QuietInformation, T } from '@juki-team/base-ui';
 import { useEffect, useState } from 'hooks';
 import { type ContestTimeData } from '@juki-team/commons/types';
 import { ContestTimeTimer } from './ContestTimeTimer';

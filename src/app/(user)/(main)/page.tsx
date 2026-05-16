@@ -8,7 +8,7 @@ import { ProfileSetting } from '@juki-team/commons/enums';
 
 export default function Home() {
   
-  const companyName = useUserStore(state => state.company.name);
+  const companyName = useUserStore(state => state.organization.name);
   const preferredLanguage = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
   const { Link, Image } = useUIStore(store => store.components);
   const viewPortWidth = usePageStore(store => store.viewPort.width);

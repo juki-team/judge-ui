@@ -1,7 +1,7 @@
 'use client';
 
-import { FullscreenExitIcon, FullscreenIcon } from '@juki-team/base-ui/server-components';
-import { Button, ButtonLoader, DataViewer, T, TimerDisplay, useDataViewerRequester, useFetcher, useI18nStore, useJukiNotification, usePageStore, useUIStore } from '@juki-team/base-ui';
+import { FullscreenExitIcon, FullscreenIcon, TimerDisplay } from '@juki-team/base-ui/server-components';
+import { Button, ButtonLoader, DataViewer, T, useDataViewerRequester, useFetcher, useT, useJukiNotification, usePageStore, useUIStore } from '@juki-team/base-ui';
 import { JUDGE_API_V1 } from 'config/constants';
 import { DEFAULT_DATA_VIEWER_PROPS } from '@juki-team/base-ui/constants';
 import { authorizedRequest } from '@juki-team/base-ui/helpers';
@@ -23,7 +23,7 @@ interface ViewDynamicScoreboardProps {
 }
 
 const getKeyUser = (user: ScoreboardResponseDTOFocus['user']) => {
-  return getUserKey(user.nickname, user.company.key);
+  return getUserKey(user.nickname, user.organization.key);
 };
 
 export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewDynamicScoreboardProps) => {
@@ -32,7 +32,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
   const {
     data: responseScoreboardFinal,
     // request: requestScoreboardFinal,

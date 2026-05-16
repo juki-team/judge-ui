@@ -56,8 +56,8 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
           isLoadingRoute: isLoadingRoute || !loadingBasic,
         }}
         initialLastPath={initialLastPath}
-        multiCompanies={false}
-        onSeeMyProfile={(nickname, companyKey) => push(jukiAppRoutes.JUDGE().profiles.view({ nickname, companyKey }))}
+        multiOrganizations={false}
+        onSeeMyProfile={(nickname, organizationKey) => push(jukiAppRoutes.JUDGE().profiles.view({ nickname, organizationKey }))}
       >
         {children}
         <NewVersionAvailable apiVersionUrl="/api/version" />

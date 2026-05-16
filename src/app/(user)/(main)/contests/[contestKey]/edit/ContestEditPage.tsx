@@ -41,18 +41,18 @@ export function ContestEditPage({ contestKey }: { contestKey: string }) {
 }
 
 const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.organization.key);
   const { data: dataEvents, isLoading: isLoadingEvents } = useFetcher<ContentResponse<ContestEventsResponseDTO>>(
-    jukiApiManager.apiV2.contest.getDataEvents({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.apiV2.contest.getDataEvents({ params: { key: contest.key, organizationKey: companyKey } }).url,
   );
   const { data: dataMembers, isLoading: isLoadingMembers } = useFetcher<ContentResponse<ContestMembersResponseDTO>>(
-    jukiApiManager.apiV2.contest.getDataMembers({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.apiV2.contest.getDataMembers({ params: { key: contest.key, organizationKey: companyKey } }).url,
   );
   const {
     data: dataClarifications,
     isLoading: isLoadingClarifications,
   } = useFetcher<ContentResponse<ContestClarificationsResponseDTO>>(
-    jukiApiManager.apiV2.contest.getDataClarifications({ params: { key: contest.key, companyKey } }).url,
+    jukiApiManager.apiV2.contest.getDataClarifications({ params: { key: contest.key, organizationKey: companyKey } }).url,
   );
 
   const contestData: ContestDataUI = useMemo(() => {

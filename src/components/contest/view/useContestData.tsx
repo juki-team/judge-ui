@@ -15,23 +15,23 @@ import { ContestDataUI } from './types';
 export function useContestData(fallbackData: ContestDataResponseDTO, companyKey: string) {
   const { data: dataContest, isLoading: l1, isValidating: v1 } =
     useFetcher<ContentResponse<ContestDataResponseDTO>>(
-      jukiApiManager.apiV2.contest.getData({ params: { key: fallbackData.key as string, companyKey } }).url,
+      jukiApiManager.apiV2.contest.getData({ params: { key: fallbackData.key as string, organizationKey: companyKey } }).url,
       { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) },
     );
 
   const { data: dataEvents, isLoading: l2, isValidating: v2 } =
     useFetcher<ContentResponse<ContestEventsResponseDTO>>(
-      jukiApiManager.apiV2.contest.getDataEvents({ params: { key: fallbackData.key, companyKey } }).url,
+      jukiApiManager.apiV2.contest.getDataEvents({ params: { key: fallbackData.key, organizationKey: companyKey } }).url,
     );
 
   const { data: dataMembers, isLoading: l3, isValidating: v3 } =
     useFetcher<ContentResponse<ContestMembersResponseDTO>>(
-      jukiApiManager.apiV2.contest.getDataMembers({ params: { key: fallbackData.key, companyKey } }).url,
+      jukiApiManager.apiV2.contest.getDataMembers({ params: { key: fallbackData.key, organizationKey: companyKey } }).url,
     );
 
   const { data: dataClarifications, isLoading: l4, isValidating: v4 } =
     useFetcher<ContentResponse<ContestClarificationsResponseDTO>>(
-      jukiApiManager.apiV2.contest.getDataClarifications({ params: { key: fallbackData.key, companyKey } }).url,
+      jukiApiManager.apiV2.contest.getDataClarifications({ params: { key: fallbackData.key, organizationKey: companyKey } }).url,
     );
 
   const contestResponse = dataContest?.success ? dataContest.content : fallbackData;

@@ -21,7 +21,7 @@ export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTO
 
 const NicknameField = ({
                          record: {
-                           user: { nickname, imageUrl, company: { key: companyKey } },
+                           user: { nickname, imageUrl, organization: { key: companyKey } },
                            focus,
                            official,
                          },
@@ -33,7 +33,7 @@ const NicknameField = ({
         highlight: !!focus?.length,
       })}
     >
-      <UserChip imageUrl={imageUrl} nickname={nickname} companyKey={companyKey} className="tx-s" />
+      <UserChip imageUrl={imageUrl} nickname={nickname} organizationKey={companyKey} className="tx-s" />
       {!official && (
         <InformationPopover
           icon={
@@ -64,7 +64,7 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
       {!isEndless && (
         <div className="tx-s" style={{ fontFamily: 'monospace', paddingLeft: '3ch' }}>
           {Math.floor(+totalPenalty)}
-          <span className="tx-t cr-g5 to-active-on-hover">.{Math.floor((+totalPenalty - Math.floor(+totalPenalty)) * 100).padEnd(2, '0')}</span>
+          <span className="tx-t cr-g5 to-active-on-hover">.{String(Math.floor((+totalPenalty - Math.floor(+totalPenalty)) * 100)).padEnd(2, '0')}</span>
         </div>
       )}
     </Field>
@@ -159,7 +159,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
                 {problemData?.penalty
                   ? <>
                     {Math.floor(problemData.penalty)}
-                    <span className="tx-t cr-g5 to-active-on-hover">.{Math.floor((problemData.penalty - Math.floor(problemData.penalty)) * 1000).padEnd(3, '0')}</span>
+                    <span className="tx-t cr-g5 to-active-on-hover">.{String(Math.floor((problemData.penalty - Math.floor(problemData.penalty)) * 1000)).padEnd(3, '0')}</span>
                   </>
                   : '-'}
               </div>

@@ -1,11 +1,11 @@
-import type { ContestDataResponseDTO, EntityOrganizationSummaryListResponseDTO as EntityCompanySummaryListResponseDTO, EntityMembersResponseDTO, ProblemJudgeSummaryListResponseDTO, UpsertContestDTO, UpsertContestProblemDTO } from '@juki-team/commons/dto';
+import type { ContestDataResponseDTO, EntityOrganizationSummaryListResponseDTO, EntityMembersResponseDTO, ProblemJudgeSummaryListResponseDTO, UpsertContestDTO, UpsertContestProblemDTO } from '@juki-team/commons/dto';
 import { EntityState } from '@juki-team/commons/enums';
 
 export type UpsertContestProblemDTOUI = UpsertContestProblemDTO & {
   name: string,
   judge: ProblemJudgeSummaryListResponseDTO,
   tags: string[],
-  company: EntityCompanySummaryListResponseDTO,
+  organization: EntityOrganizationSummaryListResponseDTO,
 };
 
 export interface UpsertContestDTOUI extends Omit<UpsertContestDTO, 'members'> {

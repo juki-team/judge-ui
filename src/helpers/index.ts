@@ -1,3 +1,19 @@
+import {
+  endOfDay,
+  endOfHour,
+  endOfMinute,
+  endOfMonth,
+  endOfSecond,
+  endOfYear,
+  isWithinInterval,
+  startOfDay,
+  startOfHour,
+  startOfMinute,
+  startOfMonth,
+  startOfSecond,
+  startOfYear,
+} from '@juki-team/commons/helpers';
+
 export const roundTimestamp = (timestamp: number) => {
   const date = new Date(timestamp);
   date.setSeconds(0, 0);
@@ -5,29 +21,29 @@ export const roundTimestamp = (timestamp: number) => {
 };
 
 export const disableOutOfRange = (date: Date, start: Date, end: Date) => ({
-  year: !date.isWithinInterval({
-    start: start.startOfYear(),
-    end: end.endOfYear(),
+  year: !isWithinInterval(date, {
+    start: startOfYear(start),
+    end: endOfYear(end),
   }, '[]'),
-  month: !date.isWithinInterval({
-    start: start.startOfMonth(),
-    end: end.endOfMonth(),
+  month: !isWithinInterval(date, {
+    start: startOfMonth(start),
+    end: endOfMonth(end),
   }, '[]'),
-  day: !date.isWithinInterval({
-    start: start.startOfDay(),
-    end: end.endOfDay(),
+  day: !isWithinInterval(date, {
+    start: startOfDay(start),
+    end: endOfDay(end),
   }, '[]'),
-  hours: !date.isWithinInterval({
-    start: start.startOfHour(),
-    end: end.endOfHour(),
+  hours: !isWithinInterval(date, {
+    start: startOfHour(start),
+    end: endOfHour(end),
   }, '[]'),
-  minutes: !date.isWithinInterval({
-    start: start.startOfMinute(),
-    end: end.endOfMinute(),
+  minutes: !isWithinInterval(date, {
+    start: startOfMinute(start),
+    end: endOfMinute(end),
   }, '[]'),
-  seconds: !date.isWithinInterval({
-    start: start.startOfSecond(),
-    end: end.endOfSecond(),
+  seconds: !isWithinInterval(date, {
+    start: startOfSecond(start),
+    end: endOfSecond(end),
   }, '[]'),
 });
 

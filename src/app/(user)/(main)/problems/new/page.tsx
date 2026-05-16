@@ -11,7 +11,7 @@ import { type UpsertProblemDTO } from '@juki-team/commons/dto';
 
 export default function ProblemsNewPage() {
   
-  const companyKey = useUserStore(state => state.company.key);
+  const companyKey = useUserStore(state => state.organization.key);
   const userImageUrl = useUserStore(state => state.user.imageUrl);
   const userNickname = useUserStore(state => state.user.nickname);
   const userCanCreateProblems = useUserStore(state => state.user.permissions.problems.create);

@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckIcon, CloudDownloadIcon, CloudUploadIcon, DeleteIcon, DraftIcon, ErrorIcon, LoadingIcon, RefreshIcon, SaveIcon, VisibilityIcon } from '@juki-team/base-ui/server-components';
-import { Button, ButtonLoader, CodeViewer, FetcherLayer, Input, Modal, MultiSelect, T, useI18nStore, useJukiNotification, useMatchMutate } from '@juki-team/base-ui';
+import { Button, ButtonLoader, CodeViewer, FetcherLayer, Input, Modal, MultiSelect, T, useT, useJukiNotification, useMatchMutate } from '@juki-team/base-ui';
 import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { authorizedRequest, classNames, downloadUrlAsFile } from '@juki-team/base-ui/helpers';
 import { type ProblemTestCasesResponseDTO } from '@juki-team/commons/dto';
@@ -74,7 +74,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
   const { notifyResponse } = useJukiNotification();
   const mutate = useMatchMutate();
   const [ modal, setModal ] = useState<ReactNode>(null);
-  const t = useI18nStore(state => state.i18n.t);
+  const t = useT();
 
   const handleServerDelete = (testCaseKey: string, keyFile: KeyFileType): ButtonLoaderOnClickType => async (setLoaderStatus) => {
     setLock(true);
