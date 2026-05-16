@@ -29,6 +29,16 @@ const nextConfig = withPlugins([], {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'judge.ohsansi.umss.edu.bo' }],
+        destination: 'https://ohsansi.judge.juki.app/:path*',
+        permanent: false,
+      },
+    ];
+  },
 });
 
 export default nextConfig;
