@@ -1,14 +1,13 @@
 'use client';
 
 import { ButtonLoader, T, useJukiNotification, useRouterStore } from '@juki-team/base-ui';
-import { jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { ContestsTab } from '@juki-team/base-ui/enums';
 import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { type UserOrganizationBasicInfoResponseDTO as UserCompanyBasicInfoResponseDTO } from '@juki-team/commons/dto';
-import { HTTPMethod, Status } from '@juki-team/commons/enums';
+import { Status } from '@juki-team/commons/enums';
 import { cleanRequest } from '@juki-team/commons/helpers';
 import { type ContentResponse } from '@juki-team/commons/types';
-import { JUDGE_API_V1 } from 'src/constants';
-import { ContestsTab } from '@juki-team/base-ui/enums';
 
 interface ProblemStatementProps {
   documentOwner: UserCompanyBasicInfoResponseDTO,
@@ -39,11 +38,9 @@ export const ContestDelete = ({ contestKey, deleted }: ProblemStatementProps) =>
       <ButtonLoader
         onClick={async (setLoaderStatus) => {
           setLoaderStatus(Status.LOADING);
-          setLoaderStatus(Status.LOADING);
+          const { url, ...options } = jukiApiManager.apiV2.contest.delete({ params: { key: contestKey } });
           const response = cleanRequest<ContentResponse<true>>(
-            await authorizedRequest(JUDGE_API_V1.CONTEST.CONTEST(contestKey), {
-              method: HTTPMethod.DELETE,
-            }));
+            await authorizedRequest(url, options));
           if (notifyResponse(response, setLoaderStatus)) {
             pushRoute({ pathname: jukiAppRoutes.JUDGE().contests.list({ tab: ContestsTab.CLASSICS }) });
           }

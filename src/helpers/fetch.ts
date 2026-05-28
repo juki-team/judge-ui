@@ -1,11 +1,10 @@
-'use server';
-
+import 'server-only';
+import { getAuthorizedRequest } from '@juki-team/base-ui/helpers';
 import { HEADER_JUKI_FORWARDED_HOST } from '@juki-team/commons/constants';
 import { ErrorCode } from '@juki-team/commons/enums';
+import { cleanRequest } from '@juki-team/commons/helpers';
 import { type ContentResponse, type ContentsResponse, type ErrorResponse } from '@juki-team/commons/types';
 import { cookies, headers } from 'next/headers';
-import { cleanRequest } from '@juki-team/commons/helpers';
-import { getAuthorizedRequest } from '@juki-team/base-ui/helpers';
 
 export const get = async <T extends ContentResponse<any> | ContentsResponse<any>, >(url: string) => {
   try {

@@ -1,23 +1,32 @@
 'use client';
 
-import { useTour } from '@reactour/tour';
-import { AutorenewIcon, EditIcon, LineLoader } from '@juki-team/base-ui/server-components';
-import { DocumentMembersButton, LinkLastPath, ProblemInfo, T, TabsInlineButton, TwoContentLayout, useFetcher, usePageStore, useRouterStore, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
-import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
-import { JUDGE_API_V1 } from 'config/constants';
+import {
+  LinkLastPath,
+  ProblemInfo,
+  T,
+  TabsInlineButton,
+  TwoContentLayout,
+  useFetcher,
+  usePageStore,
+  useRouterStore,
+  useTrackLastPath,
+  useUIStore,
+  useUserStore,
+} from '@juki-team/base-ui';
+import { ProblemTab } from '@juki-team/base-ui/enums';
 import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { AutorenewIcon, EditIcon, LineLoader } from '@juki-team/base-ui/server-components';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { type TabsType, type TwoContentLayoutProps } from '@juki-team/base-ui/types';
 import { type ProblemDataResponseDTO } from '@juki-team/commons/dto';
-import { ProfileSetting } from '@juki-team/commons/enums';
+import { EntityRole, ProfileSetting } from '@juki-team/commons/enums';
 import { contentResponse } from '@juki-team/commons/helpers';
 import { type ContentResponse } from '@juki-team/commons/types';
+import { useTour } from '@reactour/tour';
 import { useEffect, useRef, useState } from 'hooks';
 import { CSSProperties } from 'react';
 import { LastPathKey } from 'types';
-import { ProblemTab } from '@juki-team/base-ui/enums';
-import { type TabsType, type TwoContentLayoutProps } from '@juki-team/base-ui/types';
-import { ShareIcon } from '@juki-team/base-ui/server-components';
 import { InfoTestCases } from './InfoTestCases';
-import { problemAccessProps } from './ProblemAccess';
 import { ProblemStatistics } from './ProblemStatistics';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
@@ -36,12 +45,11 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     data,
     isLoading,
     isValidating,
-    mutate: reloadProblem,
   } = useFetcher<ContentResponse<ProblemDataResponseDTO>>(
     jukiApiManager.apiV2.problem.getData({ params: { key: fallbackData.key as string } }).url,
     { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
   const problem = data?.success ? data.content : fallbackData;
-
+  console.log({ fallbackData, data, isLoading, isValidating });
   const reloadRoute = useRouterStore(store => store.reloadRoute);
   useEffect(() => {
     if (!data?.success) {
@@ -127,28 +135,29 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       </div>
       <div className="jk-tag bc-hl tx-t">{problem.judge?.name}</div>
       <ProblemInfo problem={problem} size="small" />
-      {problem.user.isManager && !problem.judge.isExternal && <InfoTestCases problem={problem} size="small" />}
+      {(problem.user.role === EntityRole.MANAGER || problem.user.role === EntityRole.ADMINISTRATOR) && !problem.judge.isExternal &&
+        <InfoTestCases problem={problem} size="small" />}
       <ProblemStatus {...problem.user} size="small" />
     </div>,
   ];
 
   const extraNodes = [];
-  extraNodes.push(
-    <DocumentMembersButton
-      key="problem-members"
-      isAdministrator={problem.user.isAdministrator}
-      members={problem.members}
-      documentOwner={problem.owner}
-      documentName={<T>problem</T>}
-      saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM_MEMBERS(problem.key)}
-      reloadDocument={async () => { await reloadProblem(); return undefined; }}
-      copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
-      {...problemAccessProps}
-    >
-      <TabsInlineButton icon={<ShareIcon />} label="share" />
-    </DocumentMembersButton>,
-  );
-  if (problem.user?.isAdministrator) {
+  // extraNodes.push(
+  //   <DocumentMembersButton
+  //     key="problem-members"
+  //     isAdministrator={problem.user.isAdministrator}
+  //     members={problem.members}
+  //     documentOwner={problem.owner}
+  //     documentName={<T>problem</T>}
+  //     saveUrl={JUDGE_API_V1.PROBLEM.PROBLEM_MEMBERS(problem.key)}
+  //     reloadDocument={async () => { await reloadProblem(); return undefined; }}
+  //     copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
+  //     {...problemAccessProps}
+  //   >
+  //     <TabsInlineButton icon={<ShareIcon />} label="share" />
+  //   </DocumentMembersButton>,
+  // );
+  if (problem.user?.role === EntityRole.ADMINISTRATOR) {
     if (!problem.judge.isExternal) {
       extraNodes.push(
         <TabsInlineButton

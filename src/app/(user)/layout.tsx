@@ -1,12 +1,12 @@
-import { JukiI18nBridge, UserLoaderLayout, UserStoreProvider } from 'src/components/jukiClientBoundary';
-import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { EMPTY_ORGANIZATION as EMPTY_COMPANY, EMPTY_USER } from '@juki-team/base-ui/constants';
 import { loadServerDicts, setServerDict } from '@juki-team/base-ui/server-components';
-import { get } from 'helpers';
-import { type ReactNode } from 'react';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
 import type { PingResponseDTO } from '@juki-team/commons/dto';
-import type { ContentResponse } from '@juki-team/commons/types';
 import { Language, ProfileSetting } from '@juki-team/commons/enums';
+import type { ContentResponse } from '@juki-team/commons/types';
+import { get } from 'helpers/fetch';
+import { type ReactNode } from 'react';
+import { JukiI18nBridge, UserLoaderLayout, UserStoreProvider } from 'src/components/jukiClientBoundary';
 import { RootLayout } from './RootLayout';
 
 export const dynamic = 'force-dynamic';

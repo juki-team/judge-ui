@@ -22,10 +22,10 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const [ checks, setChecks ] = useState({ duration: true, frozen: true, quiet: true });
   const [ newTag, setNewTag ] = useState('');
   const [ group, setGroup ] = useState<UpsertContestDTOUI['groups'][string] | null>(null);
-  const startDate = new Date(contest.settings.startTimestamp);
-  const endDate = new Date(contest.settings.endTimestamp);
-  const frozenDate = new Date(contest.settings.frozenTimestamp);
-  const quietDate = new Date(contest.settings.quietTimestamp);
+  const startDate = new Date(contest.settings.startsAt);
+  const endDate = new Date(contest.settings.endsAt);
+  const frozenDate = new Date(contest.settings.frozenAt);
+  const quietDate = new Date(contest.settings.silencedAt);
   const isSelected = (date: Date) => {
     return {
       day: isWithinInterval(date, {
@@ -38,12 +38,12 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
   const isGlobal = isGlobalContest(contest.settings);
   
   const contestTemplate = getContestTemplate(contest);
-  const contestDuration = Math.max(contest.settings.endTimestamp - contest.settings.startTimestamp, 0);
-  const frozenDuration = Math.max(contest.settings.quietTimestamp - contest.settings.frozenTimestamp, 0);
-  const quietDuration = Math.max(contest.settings.endTimestamp - contest.settings.quietTimestamp, 0);
+  const contestDuration = Math.max(contest.settings.endsAt - contest.settings.startsAt, 0);
+  const frozenDuration = Math.max(contest.settings.silencedAt - contest.settings.frozenAt, 0);
+  const quietDuration = Math.max(contest.settings.endsAt - contest.settings.silencedAt, 0);
   
-  const frozenAtMinutes = (contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (1000 * 60);
-  const quietAtMinutes = (contest.settings.quietTimestamp - contest.settings.startTimestamp) / (1000 * 60);
+  const frozenAtMinutes = (contest.settings.frozenAt - contest.settings.startsAt) / (1000 * 60);
+  const quietAtMinutes = (contest.settings.silencedAt - contest.settings.startsAt) / (1000 * 60);
   
   return (
     <div className="jk-col left top stretch gap nowrap">
@@ -65,10 +65,10 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   ...prevState,
                   settings: {
                     ...prevState.settings,
-                    startTimestamp: 0,
-                    frozenTimestamp: 0,
-                    quietTimestamp: 0,
-                    endTimestamp: 0,
+                    startsAt: 0,
+                    frozenAt: 0,
+                    silencedAt: 0,
+                    endsAt: 0,
                     penalty: 0,
                   },
                 }, prevState));
@@ -77,10 +77,10 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   ...prevState,
                   settings: {
                     ...prevState.settings,
-                    startTimestamp: MIN_DATE.getTime(),
-                    frozenTimestamp: MAX_DATE.getTime(),
-                    quietTimestamp: MAX_DATE.getTime(),
-                    endTimestamp: MAX_DATE.getTime(),
+                    startsAt: MIN_DATE.getTime(),
+                    frozenAt: MAX_DATE.getTime(),
+                    silencedAt: MAX_DATE.getTime(),
+                    endsAt: MAX_DATE.getTime(),
                     penalty: 0,
                   },
                   members: {
@@ -97,10 +97,10 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   ...prevState,
                   settings: {
                     ...prevState.settings,
-                    startTimestamp: contestDefault.settings.startTimestamp,
-                    frozenTimestamp: contestDefault.settings.frozenTimestamp,
-                    quietTimestamp: contestDefault.settings.quietTimestamp,
-                    endTimestamp: contestDefault.settings.endTimestamp,
+                    startsAt: contestDefault.settings.startsAt,
+                    frozenAt: contestDefault.settings.frozenAt,
+                    silencedAt: contestDefault.settings.silencedAt,
+                    endsAt: contestDefault.settings.endsAt,
                     penalty: contestDefault.settings.penalty,
                   },
                 }, prevState));
@@ -136,7 +136,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   isSelected={isSelected}
                   onDatePick={(date) => setContest(prevState => adjustContest({
                     ...prevState,
-                    settings: { ...prevState.settings, startTimestamp: date.getTime() },
+                    settings: { ...prevState.settings, startsAt: date.getTime() },
                   }, prevState))}
                   todayButton
                 />
@@ -167,7 +167,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                       ...prevState,
                       settings: {
                         ...prevState.settings,
-                        frozenTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
+                        frozenAt: contest.settings.startsAt + (value * 1000 * 60),
                       },
                     }, prevState))}
                   />
@@ -177,7 +177,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 <div className="jk-row left gap">
                   <InputDate
                     type="year-month-day-hours-minutes"
-                    date={new Date(contest.settings.frozenTimestamp)}
+                    date={new Date(contest.settings.frozenAt)}
                     isSelected={(date) => ({
                       day: isWithinInterval(date, {
                         start: startOfDay(frozenDate),
@@ -185,12 +185,12 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                       }, '[]'),
                     })}
                     isDisabled={(date) => disableOutOfRange(date, startDate, endDate)}
-                    baseDate={new Date(contest.settings.frozenTimestamp)}
+                    baseDate={new Date(contest.settings.frozenAt)}
                     onDatePick={(date) => setContest(prevState => adjustContest({
                       ...prevState,
                       settings: {
                         ...prevState.settings,
-                        frozenTimestamp: date.getTime(),
+                        frozenAt: date.getTime(),
                       },
                     }, prevState))}
                     todayButton
@@ -199,12 +199,12 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               )}
               {!!frozenDuration ? (
                 <>
-                  {contest.settings.frozenTimestamp - contest.settings.startTimestamp > 0 ? (
+                  {contest.settings.frozenAt - contest.settings.startsAt > 0 ? (
                     <div className="jk-row left fw-lt tx-s">
                       <T className="tt-se">_at</T>&nbsp;
                       <div className="jk-col left">
                         <TimerDisplay
-                          counter={contest.settings.frozenTimestamp - contest.settings.startTimestamp}
+                          counter={contest.settings.frozenAt - contest.settings.startsAt}
                           type="weeks-days-hours-minutes-seconds"
                           literal
                           ignoreLeadingZeros
@@ -255,8 +255,8 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                       ...prevState,
                       settings: {
                         ...prevState.settings,
-                        quietTimestamp: contest.settings.startTimestamp + (value * 1000 * 60),
-                        frozenTimestamp: Math.min(contest.settings.frozenTimestamp, contest.settings.startTimestamp + (value * 1000 * 60)),
+                        silencedAt: contest.settings.startsAt + (value * 1000 * 60),
+                        frozenAt: Math.min(contest.settings.frozenAt, contest.settings.startsAt + (value * 1000 * 60)),
                       },
                     }))}
                   />
@@ -266,7 +266,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                 <div className="jk-row left gap">
                   <InputDate
                     type="year-month-day-hours-minutes"
-                    date={new Date(contest.settings.quietTimestamp)}
+                    date={new Date(contest.settings.silencedAt)}
                     isSelected={(date) => ({
                       day: isWithinInterval(date, {
                         start: startOfDay(quietDate),
@@ -274,12 +274,12 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                       }, '[]'),
                     })}
                     isDisabled={(date) => disableOutOfRange(date, frozenDate, endDate)}
-                    baseDate={new Date(contest.settings.quietTimestamp)}
+                    baseDate={new Date(contest.settings.silencedAt)}
                     onDatePick={(date) => setContest(prevState => ({
                       ...prevState,
                       settings: {
                         ...prevState.settings,
-                        quietTimestamp: date.getTime(),
+                        silencedAt: date.getTime(),
                       },
                     }))}
                     todayButton
@@ -288,12 +288,12 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               )}
               {!!quietDuration ? (
                 <>
-                  {contest.settings.quietTimestamp - contest.settings.startTimestamp > 0 ? (
+                  {contest.settings.silencedAt - contest.settings.startsAt > 0 ? (
                     <div className="jk-row left tx-s fw-lt">
                       <T className="tt-se">_at</T>&nbsp;
                       <div className="jk-col left">
                         <TimerDisplay
-                          counter={contest.settings.quietTimestamp - contest.settings.startTimestamp}
+                          counter={contest.settings.silencedAt - contest.settings.startsAt}
                           type="weeks-days-hours-minutes-seconds"
                           literal
                           ignoreLeadingZeros
@@ -338,12 +338,12 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                   <Input
                     type="number"
                     size="auto"
-                    value={(contest.settings.endTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                    value={(contest.settings.endsAt - contest.settings.startsAt) / (1000 * 60)}
                     onChange={value => setContest(prevState => adjustContest({
                       ...prevState,
                       settings: {
                         ...prevState.settings,
-                        endTimestamp: prevState.settings.startTimestamp + (value * 1000 * 60),
+                        endsAt: prevState.settings.startsAt + (value * 1000 * 60),
                       },
                     }, prevState))}
                   />
@@ -370,7 +370,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                       ...prevState,
                       settings: {
                         ...prevState.settings,
-                        endTimestamp: date.getTime(),
+                        endsAt: date.getTime(),
                       },
                     }, prevState))}
                     todayButton
@@ -383,7 +383,7 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
                     <T className="tt-se">_at</T>&nbsp;
                     <div className="jk-col left">
                       <TimerDisplay
-                        counter={contest.settings.endTimestamp - contest.settings.startTimestamp}
+                        counter={contest.settings.endsAt - contest.settings.startsAt}
                         type="weeks-days-hours-minutes-seconds"
                         literal
                         ignoreLeadingZeros

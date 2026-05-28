@@ -110,40 +110,40 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
         <div className="flex-1 contest-content-side-right-bar-bottom jk-col top stretch gap">
           <div className="jk-col bc-we jk-br-ie jk-pg-sm">
             <T className="tt-se fw-bd ta-cr">start date</T>
-            <div className="ta-cr">{dtf(contest.settings.startTimestamp)}</div>
+            <div className="ta-cr">{dtf(contest.settings.startsAt)}</div>
           </div>
           <div className="jk-col bc-we jk-br-ie jk-pg-sm">
             <T className="tt-se fw-bd ta-cr">end date</T>
-            <div className="ta-cr">{dtf(contest.settings.endTimestamp)}</div>
+            <div className="ta-cr">{dtf(contest.settings.endsAt)}</div>
           </div>
-          {contest.settings.endTimestamp !== contest.settings.frozenTimestamp && (
+          {contest.settings.endsAt !== contest.settings.frozenAt && (
             <div className="jk-col bc-we jk-br-ie jk-pg-sm">
               <div className="jk-row gap nowrap">
                 <T className="tt-se fw-bd ta-cr">frozen date</T>
                 <FrozenInformation />
               </div>
-              <div className="ta-cr">{dtf(contest.settings.frozenTimestamp)}</div>
+              <div className="ta-cr">{dtf(contest.settings.frozenAt)}</div>
               <div className="jk-row center">
-                <div className="ta-cr">{rlt(Math.floor((contest.settings.frozenTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;</div>
+                <div className="ta-cr">{rlt(Math.floor((contest.settings.frozenAt - contest.settings.startsAt) / (60 * 1000)), 'minutes')}&nbsp;</div>
                 <T className="ta-cr">from the start of the contest</T>
               </div>
 
             </div>
           )}
-          {contest.settings.endTimestamp !== contest.settings.quietTimestamp && (
+          {contest.settings.endsAt !== contest.settings.silencedAt && (
             <div className="jk-col bc-we jk-br-ie jk-pg-sm">
               <div className="jk-row gap nowrap">
                 <T className="tt-se fw-bd ta-cr">quiet date</T>
                 <QuietInformation />
               </div>
-              <div className="ta-cr">{dtf(contest.settings.quietTimestamp)}</div>
+              <div className="ta-cr">{dtf(contest.settings.silencedAt)}</div>
               <div className="jk-row center">
-                <div className="ta-cr">{rlt(Math.floor((contest.settings.quietTimestamp - contest.settings.startTimestamp) / (60 * 1000)), 'minutes')}&nbsp;</div>
+                <div className="ta-cr">{rlt(Math.floor((contest.settings.silencedAt - contest.settings.startsAt) / (60 * 1000)), 'minutes')}&nbsp;</div>
                 <T className="ta-cr">from the start of the contest</T>
               </div>
             </div>
           )}
-          {/*{(contest.settings.endTimestamp - contest.settings.startTimestamp) !== contest.settings.timeToSolve && (*/}
+          {/*{(contest.settings.endsAt - contest.settings.startsAt) !== contest.settings.timeToSolve && (*/}
           {/*  <div className="jk-col bc-we jk-br-ie jk-pg-sm">*/}
           {/*    <T className="tt-se fw-bd ta-cr">time for solve</T>*/}
           {/*    <div>{Math.ceil(contest.settings.timeToSolve / 1000 / 60)} min</div>*/}

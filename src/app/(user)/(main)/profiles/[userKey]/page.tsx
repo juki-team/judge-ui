@@ -1,10 +1,10 @@
-import { PageNotFound, TwoContentLayout } from 'src/components/jukiClientBoundary';
-import { jukiApiManager } from '@juki-team/base-ui/settings';
-import { get } from 'helpers';
 import { oneTab } from '@juki-team/base-ui/helpers';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { type UserProfileResponseDTO } from '@juki-team/commons/dto';
 import { getParamsOfUserKey } from '@juki-team/commons/helpers';
 import { type ContentResponse } from '@juki-team/commons/types';
+import { get } from 'helpers/fetch';
+import { PageNotFound, TwoContentLayout } from 'src/components/jukiClientBoundary';
 import { ProfileViewPage } from './ProfileViewPage';
 
 type Props = {

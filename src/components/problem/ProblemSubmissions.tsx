@@ -7,7 +7,7 @@ import { useMemo } from 'hooks';
 import { QueryParam } from 'types';
 import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
 import { type JudgeSummaryListResponseDTO, type ProblemDataResponseDTO, type SubmissionSummaryListResponseDTO } from '@juki-team/commons/dto';
-import type { Judge } from '@juki-team/commons/enums';
+import { EntityRole, type Judge } from '@juki-team/commons/enums';
 
 type LanguagesByJudge = {
   [key: string]: {
@@ -36,18 +36,19 @@ export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDT
     return result;
   }, [ judgePublicList, problem.judge.key ]);
 
+  const canRejudge = problem.user.role === EntityRole.MANAGER || problem.user.role === EntityRole.ADMINISTRATOR;
   const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => {
     return [
       getSubmissionNicknameHeader(),
       getSubmissionContestProblemHeader(),
       getSubmissionDateHeader(),
       getSubmissionVerdictHeader(),
-      ...(problem.user.isManager ? [ getSubmissionRejudgeHeader() ] : []),
+      ...(canRejudge ? [ getSubmissionRejudgeHeader() ] : []),
       getSubmissionLanguageHeader(languages),
       getSubmissionTimeHeader(),
       getSubmissionMemoryHeader(),
     ];
-  }, [ languages, problem.user.isManager ]);
+  }, [ languages, canRejudge ]);
 
   return (
     <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>

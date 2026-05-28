@@ -1,13 +1,12 @@
 'use client';
 
 import { ButtonLoader, T, useJukiNotification, useRouterStore } from '@juki-team/base-ui';
-import { jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { authorizedRequest } from '@juki-team/base-ui/helpers';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { type UserOrganizationBasicInfoResponseDTO as UserCompanyBasicInfoResponseDTO } from '@juki-team/commons/dto';
-import { HTTPMethod, Status } from '@juki-team/commons/enums';
+import { Status } from '@juki-team/commons/enums';
 import { cleanRequest } from '@juki-team/commons/helpers';
 import { type ContentResponse } from '@juki-team/commons/types';
-import { JUDGE_API_V1 } from 'src/constants';
 
 interface ProblemStatementProps {
   documentOwner: UserCompanyBasicInfoResponseDTO,
@@ -38,11 +37,8 @@ export const ProblemDelete = ({ problemJudgeKey, deleted }: ProblemStatementProp
       <ButtonLoader
         onClick={async (setLoaderStatus) => {
           setLoaderStatus(Status.LOADING);
-          setLoaderStatus(Status.LOADING);
-          const response = cleanRequest<ContentResponse<true>>(
-            await authorizedRequest(JUDGE_API_V1.PROBLEM.PROBLEM(problemJudgeKey), {
-              method: HTTPMethod.DELETE,
-            }));
+          const { url, ...options } = jukiApiManager.apiV2.problem.delete({ params: { key: problemJudgeKey } });
+          const response = cleanRequest<ContentResponse<true>>(await authorizedRequest(url, options));
           if (notifyResponse(response, setLoaderStatus)) {
             pushRoute({ pathname: jukiAppRoutes.JUDGE().problems.list() });
           }

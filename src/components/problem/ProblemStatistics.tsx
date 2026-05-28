@@ -1,14 +1,30 @@
 'use client';
 
-import { BarChart, Button, LineChart, T, useFetcher, useT, usePageStore } from '@juki-team/base-ui';
-import { JUDGE_API_V1 } from 'config/constants';
-import { MONTH_NAMES } from '@juki-team/commons/constants';
-import { type GroupByTimestampKey, type ProblemDataResponseDTO, type StatisticsProblemResponseDTO } from '@juki-team/commons/dto';
-import { type ContentResponse } from '@juki-team/commons/types';
+import { BarChart, Button, LineChart, T, useFetcher, usePageStore, useT } from '@juki-team/base-ui';
 import { classNames, showOfDateDisplayType } from '@juki-team/base-ui/helpers';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
+import { MONTH_NAMES } from '@juki-team/commons/constants';
+import {
+  type GroupByTimestampKey,
+  type ProblemDataResponseDTO,
+  type StatisticsProblemResponseDTO,
+} from '@juki-team/commons/dto';
+import { type ContentResponse } from '@juki-team/commons/types';
 import { useState } from 'hooks';
 import type { ContentType } from 'recharts/types/component/Tooltip';
-type DateDisplayType = 'year' | 'year-month' | 'year-month-day' | 'year-month-day-hours' | 'year-month-day-hours-minutes' | 'year-month-day-hours-minutes-seconds' | 'year-month-day-hours-minutes-seconds-milliseconds' | 'hours' | 'hours-minutes' | 'hours-minutes-seconds' | 'hours-minutes-seconds-milliseconds';
+
+type DateDisplayType =
+  'year'
+  | 'year-month'
+  | 'year-month-day'
+  | 'year-month-day-hours'
+  | 'year-month-day-hours-minutes'
+  | 'year-month-day-hours-minutes-seconds'
+  | 'year-month-day-hours-minutes-seconds-milliseconds'
+  | 'hours'
+  | 'hours-minutes'
+  | 'hours-minutes-seconds'
+  | 'hours-minutes-seconds-milliseconds';
 
 const now = Date.now();
 
@@ -42,7 +58,11 @@ const CustomTooltipA: ContentType = ({ active, payload, label }) => {
   return null;
 };
 
-const customizedAxisTick = (angle: number) => function Cmp({ x, y, payload }: { x: string | number, y: string | number, payload: any }) {
+const customizedAxisTick = (angle: number) => function Cmp({ x, y, payload }: {
+  x: string | number,
+  y: string | number,
+  payload: any
+}) {
   return (
     <g transform={`translate(${x},${y})`}>
       <text
@@ -78,10 +98,10 @@ const getDateLiteral = (date: Date, show: DateDisplayType, t: (key: string) => s
     (showMonths ? ' ' + t(MONTH_NAMES[date.getMonth()]) : '') +
     (showYears ? ' ' + date.getFullYear() : '') +
     (showHours ? (
-      ', ' + String(date.getHours()).padStart(2, "0") +
-      (showMinutes ? ':' + String(date.getMinutes()).padStart(2, "0") : '') +
-      (showSeconds ? ':' + String(date.getSeconds()).padStart(2, "0") : '') +
-      (showMilliseconds ? '.' + String(date.getMilliseconds()).padStart(3, "0") : '')
+      ', ' + String(date.getHours()).padStart(2, '0') +
+      (showMinutes ? ':' + String(date.getMinutes()).padStart(2, '0') : '') +
+      (showSeconds ? ':' + String(date.getSeconds()).padStart(2, '0') : '') +
+      (showMilliseconds ? '.' + String(date.getMilliseconds()).padStart(3, '0') : '')
     ) : '')
   );
 };
@@ -90,9 +110,17 @@ const groupBy: GroupByTimestampKey[] = [ 'day', 'month', 'year' ];
 
 export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO }) => {
 
+  const { url } = jukiApiManager.apiV2.statistics.getProblemStats({
+    params: {
+      problemKey: problem.key,
+      startsAt: 0,
+      endsAt: now,
+      groupBy,
+    },
+  });
   const {
     data,
-  } = useFetcher<ContentResponse<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
+  } = useFetcher<ContentResponse<StatisticsProblemResponseDTO>>(url);
   const t = useT();
   const { screen: viewPortScreen, height: viewPortHeight } = usePageStore(store => store.viewPort);
   const [ dateType, setDateType ] = useState<GroupByTimestampKey>('day');
@@ -106,6 +134,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
   const oneColumn = viewPortHeight < 900 || viewPortScreen === 'sm';
 
   const sum = Object.values(languagesStats).reduce((sum, language) => sum + language.value, 0);
+  console.log({ languagesStats, verdictsStats });
   for (const { label, value } of Object.values(languagesStats)) {
     languagesData.push({ label: capitalized(label), value, percent: value * 100 / sum });
   }

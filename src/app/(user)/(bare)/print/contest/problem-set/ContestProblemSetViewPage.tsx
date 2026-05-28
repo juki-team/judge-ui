@@ -4,7 +4,7 @@ import { ViewOverview } from 'components';
 import { ProblemView } from '@juki-team/base-ui';
 import { Fragment } from 'react';
 import { type ContestDataResponseDTO } from '@juki-team/commons/dto';
-import { EntityState } from '@juki-team/commons/enums';
+import { EntityRole, EntityState } from '@juki-team/commons/enums';
 
 export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
@@ -18,14 +18,12 @@ export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataRes
             problem={{
               ...problem,
               user: {
-                isOwner: false,
-                isAdministrator: false,
-                isManager: false,
+                role: EntityRole.GUEST,
                 tried: false,
-                isSpectator: false,
                 solved: false,
               },
               state: EntityState.RELEASED,
+              sharing: { grants: [], links: [] },
             }}
             infoPlacement="none"
             codeEditorStoreKey={contest.key + '/' + problem.key}

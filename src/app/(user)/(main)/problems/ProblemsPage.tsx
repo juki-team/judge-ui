@@ -1,18 +1,33 @@
 'use client';
 
-import { CrawlCodeforcesProblemModal, CrawlJvumsaProblemModal } from 'components';
-import { InfoIIcon, PlusIcon } from '@juki-team/base-ui/server-components';
-import { Button, ButtonLoader, FieldText, getProblemKeyHeader, getProblemModeHeader, getProblemNameHeader, getProblemTagsHeader, getProblemTypeHeader, PagedDataViewer, Select, T, TwoContentLayout, useFetcher, useRouterStore, useTrackLastPath, useUIStore, useUserStore } from '@juki-team/base-ui';
-import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
-import { ENTITY_ACCESS } from '@juki-team/commons/constants';
-import { type JudgeDataResponseDTO, type ProblemSummaryListResponseDTO } from '@juki-team/commons/dto';
-import { EntityAccess, Judge } from '@juki-team/commons/enums';
-import { getDocumentAccess } from '@juki-team/commons/helpers';
-import { type ContentResponse } from '@juki-team/commons/types';
+import {
+  Button,
+  ButtonLoader,
+  getProblemKeyHeader,
+  getProblemModeHeader,
+  getProblemNameHeader,
+  getProblemTagsHeader,
+  getProblemTypeHeader,
+  PagedDataViewer,
+  Select,
+  T,
+  TwoContentLayout,
+  useFetcher,
+  useRouterStore,
+  useTrackLastPath,
+  useUIStore,
+  useUserStore,
+} from '@juki-team/base-ui';
 import { oneTab, toFilterUrl, toSortUrl } from '@juki-team/base-ui/helpers';
+import { InfoIIcon, PlusIcon } from '@juki-team/base-ui/server-components';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
+import { type JudgeDataResponseDTO, type ProblemSummaryListResponseDTO } from '@juki-team/commons/dto';
+import { Judge } from '@juki-team/commons/enums';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { CrawlCodeforcesProblemModal, CrawlJvumsaProblemModal } from 'components';
 import { useEffect, useMemo, useState } from 'hooks';
 import { LastPathKey, QueryParam, ReactNode } from 'types';
-import { type DataViewerHeadersType } from '@juki-team/base-ui/types';
 import { CrawlLeetCodeProblemModal } from '../../../../components/problem/CrawlLeetCodeProblemModal';
 
 export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
@@ -51,27 +66,6 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     ...(!isExternal ? [
       getProblemModeHeader(),
       getProblemTypeHeader(),
-      {
-        head: 'access',
-        index: 'access',
-        Field: ({ record: { members } }) => (
-          <FieldText
-            className="jk-row"
-            text={<T className="tt-se">{ENTITY_ACCESS[getDocumentAccess({ members })].label}</T>}
-            label={<T className="tt-se">type</T>}
-          />
-        ),
-        sort: true,
-        filter: {
-          type: 'select',
-          options: [ EntityAccess.PRIVATE, EntityAccess.RESTRICTED, EntityAccess.PUBLIC, EntityAccess.EXPOSED ].map((problemType) => ({
-            value: problemType,
-            label: ENTITY_ACCESS[problemType].label,
-          })),
-        },
-        cardPosition: 'upperLeft',
-        minWidth: 100,
-      } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
       getProblemTagsHeader(tags),
     ] : []),
     // getProblemOwnerHeader(isExternal),

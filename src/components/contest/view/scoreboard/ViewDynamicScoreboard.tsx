@@ -139,7 +139,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   }, [ index, response, scoreboardResponseFinal ]);
   const max = (response?.success ? response.content : []).length - 1;
 
-  const currentTimestamp = timestamp - contest.settings.startTimestamp;
+  const currentTimestamp = timestamp - contest.settings.startsAt;
 
   const extraNodes = useMemo(() => [
     <Button key="exit" onClick={onClose} size="tiny">

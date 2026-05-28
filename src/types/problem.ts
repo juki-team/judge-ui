@@ -12,10 +12,6 @@ export interface UpsertProblemUIDTO extends Omit<UpsertProblemDTO, 'members'> {
   state: EntityState,
 }
 
-export enum PrintMode {
-  AS_PROBLEM_SET = 'asProblemSet'
-}
-
 export type StatementDTO = {
   description: string,
   input: string,

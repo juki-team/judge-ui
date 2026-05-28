@@ -1,5 +1,6 @@
 import { StylesLazy } from 'components';
 import { DEFAULT_METADATA } from 'config/constants';
+import { MotionConfig } from 'motion/react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { type PropsWithChildren } from 'react';
@@ -20,7 +21,9 @@ export default async function Layout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className={inter.variable}>
     <body className="jk-theme-light">
-    {children}
+    <MotionConfig reducedMotion="user">
+      {children}
+    </MotionConfig>
     <StylesLazy />
     </body>
     </html>

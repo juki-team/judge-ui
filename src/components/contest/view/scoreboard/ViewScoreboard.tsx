@@ -156,6 +156,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const extraNodes = useMemo(() => [
     ((contest?.user?.isAdministrator || contest?.user?.isManager || !contest.settings.scoreboardLocked) && (contest?.isFrozenTime || contest?.isQuietTime)) && (
       <InputToggle
+        key="unfrozen-toggle"
         size="tiny"
         checked={unfrozen}
         onChange={setUnfrozen}

@@ -25,7 +25,7 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
       interval = 0;
       type = 'weeks';
     } else if (contest.isPast) {
-      timeInterval = Date.now() - contest.settings.endTimestamp;
+      timeInterval = Date.now() - contest.settings.endsAt;
       if (timeInterval < ONE_MINUTE) {
         type = 'weeks-days-hours-minutes-seconds';
         interval = ONE_SECOND;
@@ -34,9 +34,9 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
         interval = ONE_MINUTE;
       }
     } else if (contest.isFuture) {
-      timeInterval = contest.settings.startTimestamp - Date.now();
+      timeInterval = contest.settings.startsAt - Date.now();
     } else if (contest.isLive) {
-      timeInterval = contest.settings.endTimestamp - new Date().getTime();
+      timeInterval = contest.settings.endsAt - new Date().getTime();
     }
     
     if (contest.isFuture || contest.isLive) {
@@ -52,7 +52,7 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
       }
     }
     return { interval, type, timeInterval };
-  }, [ contest.isEndless, contest.isFuture, contest.isLive, contest.isPast, contest.settings.endTimestamp, contest.settings.startTimestamp ]);
+  }, [ contest.isEndless, contest.isFuture, contest.isLive, contest.isPast, contest.settings.endsAt, contest.settings.startsAt ]);
   
   const [ loadingTimer, setLoadingTimer ] = useState(false);
   const [ _, setTrigger ] = useState(0);

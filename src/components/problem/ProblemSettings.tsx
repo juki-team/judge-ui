@@ -19,7 +19,7 @@ interface TagsProps {
   judgeKey: string,
 }
 
-export const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
+const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
 
   const { data } = useFetcher<ContentResponse<JudgeDataResponseDTO>>(jukiApiManager.apiV2.judge.getData({ params: { key: judgeKey } }).url);
 
@@ -299,7 +299,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         err: '',
                         sample: false,
                         log: '',
-                        messageTimestamp: 0,
+                        createdAt: 0,
                       },
                     }}
                     // TODO:

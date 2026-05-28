@@ -6,7 +6,7 @@ import { ButtonLoader, FirstLoginWrapper, ProblemView, T, useJukiNotification, u
 import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
 import { authorizedRequest } from '@juki-team/base-ui/helpers';
 import { type ContestDataResponseDTO, type ContestProblemDataResponseDTO } from '@juki-team/commons/dto';
-import { CodeLanguage, ContestProblemBlockedByType, EntityState, Status } from '@juki-team/commons/enums';
+import { CodeLanguage, ContestProblemBlockedByType, EntityRole, EntityState, Status } from '@juki-team/commons/enums';
 import { cleanRequest, isGlobalContest } from '@juki-team/commons/helpers';
 import { type ContentResponse } from '@juki-team/commons/types';
 import { type ReactNode } from 'react';
@@ -53,14 +53,12 @@ export const ViewProblemContest = ({ problem, contest, reloadContest }: ViewProb
       problem={{
         ...problem,
         user: {
-          isOwner: false,
-          isAdministrator: false,
-          isManager: false,
+          role: EntityRole.GUEST,
           tried: false,
-          isSpectator: false,
           solved: false,
         },
         state: EntityState.RELEASED,
+        sharing: { grants: [], links: [] },
       }}
       infoPlacement="name"
       withoutDownloadButtons

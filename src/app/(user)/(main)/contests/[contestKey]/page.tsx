@@ -1,12 +1,12 @@
-import { ContestNotFoundCard, ContestViewLayout } from 'components';
-import { TwoContentLayout } from 'src/components/jukiClientBoundary';
-import { jukiApiManager } from '@juki-team/base-ui/settings';
-import { DEFAULT_METADATA } from 'config/constants';
-import { get } from 'helpers';
 import { oneTab } from '@juki-team/base-ui/helpers';
-import type { Metadata } from 'next';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { type ContestDataResponseDTO, type MetadataResponseDTO } from '@juki-team/commons/dto';
 import { type ContentResponse } from '@juki-team/commons/types';
+import { ContestNotFoundCard, ContestViewLayout } from 'components';
+import { DEFAULT_METADATA } from 'config/constants';
+import { get } from 'helpers/fetch';
+import type { Metadata } from 'next';
+import { TwoContentLayout } from 'src/components/jukiClientBoundary';
 import { ContestDataProvider } from '../../../../../components/contest/view/ContestDataProvider';
 
 type Props = {

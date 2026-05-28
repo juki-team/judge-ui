@@ -111,10 +111,10 @@ export const EditCreateProblem = (props: UpsertComponentEntityProps<UpsertProble
     <LinkLastPath lastPathKey={LastPathKey.PROBLEMS} key="problems"><T className="tt-se">problems</T></LinkLastPath>,
     editing
       ? (
-        <Link href={jukiAppRoutes.JUDGE().problems.view({ key: problemJudgeKey })} className="link">
+        <Link key="problem-name" href={jukiAppRoutes.JUDGE().problems.view({ key: problemJudgeKey })} className="link">
           <div className="ws-np">{problem.name}</div>
         </Link>
-      ) : <div className="ws-np">{problem.name}</div>,
+      ) : <div key="problem-name" className="ws-np">{problem.name}</div>,
     selectedTabKey && renderReactNodeOrFunctionP1(tabs[selectedTabKey]?.header, { selectedTabKey }),
   ];
   

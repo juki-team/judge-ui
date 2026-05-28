@@ -10,10 +10,10 @@ export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
   exact?: boolean,
 }) => {
   
-  const contestDuration = Math.max(contest.settings.endTimestamp - contest.settings.startTimestamp, 0);
-  const normalDuration = Math.max(contest.settings.frozenTimestamp - contest.settings.startTimestamp, 0);
-  const frozenDuration = Math.max(contest.settings.quietTimestamp - contest.settings.frozenTimestamp, 0);
-  const quietDuration = Math.max(contest.settings.endTimestamp - contest.settings.quietTimestamp, 0);
+  const contestDuration = Math.max(contest.settings.endsAt - contest.settings.startsAt, 0);
+  const normalDuration = Math.max(contest.settings.frozenAt - contest.settings.startsAt, 0);
+  const frozenDuration = Math.max(contest.settings.silencedAt - contest.settings.frozenAt, 0);
+  const quietDuration = Math.max(contest.settings.endsAt - contest.settings.silencedAt, 0);
   
   const quietPercentage = quietDuration * contestDuration === 0 ? 0 : Math.min(exact ? 99 : 80, Math.max(exact ? 1 : 10, quietDuration * 100 / contestDuration));
   const frozenPercentage = frozenDuration * contestDuration === 0 ? 0 : Math.min(exact ? 99 : 80, Math.max(exact ? 1 : 10, frozenDuration * 100 / contestDuration));
@@ -31,7 +31,7 @@ export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
       clearInterval(interval);
     };
   }, [ reloadContest, contest.isLive, contestDuration ]);
-  const nowDuration = Math.max(now.getTime() - contest.settings.startTimestamp, 0);
+  const nowDuration = Math.max(now.getTime() - contest.settings.startsAt, 0);
   const nowPercentage = Math.min(Math.max(nowDuration * 100 / contestDuration, 0), 100);
   
   const withLivePointer = contest.isLive && nowPercentage > 0 && nowPercentage < 100;
@@ -117,7 +117,7 @@ export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
             label: (
               <div className="jk-col jk-pg-xsm">
                 <T className="tt-se fw-bd">start date</T>
-                <DateLiteral date={new Date(contest.settings.startTimestamp)} />
+                <DateLiteral date={new Date(contest.settings.startsAt)} />
               </div>
             ),
             percentage: 0,
@@ -129,7 +129,7 @@ export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
                 <div className="jk-row">
                   <T className="tt-se fw-bd">frozen date</T>
                 </div>
-                <DateLiteral date={new Date(contest.settings.frozenTimestamp)} />
+                <DateLiteral date={new Date(contest.settings.frozenAt)} />
               </div>
             ),
             percentage: normalPercentage,
@@ -139,7 +139,7 @@ export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
             label: (
               <div className="jk-col jk-pg-xsm">
                 <T className="tt-se fw-bd">quiet date</T>
-                <DateLiteral date={new Date(contest.settings.quietTimestamp)} />
+                <DateLiteral date={new Date(contest.settings.silencedAt)} />
               </div>
             ),
             percentage: normalPercentage + frozenPercentage,
@@ -149,7 +149,7 @@ export const ContestTimeProgress = ({ contest, reloadContest, exact }: {
             label: (
               <div className="jk-col jk-pg-xsm">
                 <T className="tt-se fw-bd">end date</T>
-                <DateLiteral date={new Date(contest.settings.endTimestamp)} />
+                <DateLiteral date={new Date(contest.settings.endsAt)} />
               </div>
             ),
             percentage: 100,

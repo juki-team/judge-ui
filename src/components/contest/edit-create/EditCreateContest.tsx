@@ -127,12 +127,13 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
     editing
       ? (
         <Link
+          key="contest-name"
           href={jukiAppRoutes.JUDGE().contests.view({ key: contestKey })}
           className="link"
         >
           <div>{contest.name}</div>
         </Link>
-      ) : <div>{contest.name}</div>,
+      ) : <div key="contest-name">{contest.name}</div>,
     selectedTabKey && renderReactNodeOrFunctionP1(tabHeaders[selectedTabKey]?.header, { selectedTabKey }),
   ];
   

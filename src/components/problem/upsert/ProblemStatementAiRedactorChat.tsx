@@ -110,7 +110,7 @@ export const ProblemStatementAiRedactorChat = ({
                       );
                     case 'tool-suggestStatement':
                       return (
-                        <div className="jk-row left fw-lr">
+                        <div key={`${message.id}-${i}`} className="jk-row left fw-lr">
                           {part?.state === 'input-streaming' ?
                             <><T className="tt-se">applying changes</T>&nbsp;<SpinIcon
                               filledCircle

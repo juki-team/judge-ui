@@ -1,23 +1,8 @@
-import { KeyFileType } from 'types';
-import { type GroupByTimestampKey } from '@juki-team/commons/dto';
 import { JUKI_SERVICE_V2_URL } from '@juki-team/base-ui/constants';
+import { KeyFileType } from 'types';
 
 export const JUDGE_API_V1 = {
-  STATISTICS: {
-    PROBLEM: (problemKey: string) => {
-      return `${JUKI_SERVICE_V2_URL}/statistics/problem/${problemKey}/recalculate`;
-    },
-  },
   PROBLEM: {
-    PROBLEM: (key: string) => {
-      return `${JUKI_SERVICE_V2_URL}/problem/${key}`;
-    },
-    PROBLEM_MEMBERS: (key: string) => {
-      return `${JUKI_SERVICE_V2_URL}/problem/${key}/members`;
-    },
-    CREATE: () => {
-      return `${JUKI_SERVICE_V2_URL}/problem`;
-    },
     TEST_CASES: (problemKey: string) => {
       return `${JUKI_SERVICE_V2_URL}/problem/${problemKey}/test-cases`;
     },
@@ -33,26 +18,11 @@ export const JUDGE_API_V1 = {
     TEST_CASE_KEY_FILE: (problemKey: string, testCaseKey: string, keyFile: KeyFileType) => {
       return `${JUKI_SERVICE_V2_URL}/problem/${problemKey}/test-case/${testCaseKey}/key-file/${keyFile}`;
     },
-    STATISTICS: (key: string, startTimestamp: number, endTimestamp: number, groupBy: GroupByTimestampKey[]) => {
-      return `${JUKI_SERVICE_V2_URL}/statistics/problem/${key}?startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}&groupBy=${groupBy.join(',')}`;
-    },
     POST_PDF: () => {
       return `${JUKI_SERVICE_V2_URL}/problem/statement-pdf`;
     },
   },
   CONTEST: {
-    CREATE: () => {
-      return `${JUKI_SERVICE_V2_URL}/contest`;
-    },
-    CONTEST: (key: string) => {
-      return `${JUKI_SERVICE_V2_URL}/contest/${encodeURIComponent(key)}`;
-    },
-    GLOBAL: (key: string) => {
-      return `${JUKI_SERVICE_V2_URL}/contest/${encodeURIComponent(key)}/global`;
-    },
-    CONTEST_DATA: (key: string) => {
-      return `${JUKI_SERVICE_V2_URL}/contest/${key}/data`;
-    },
     REGISTER: (key: string) => {
       return `${JUKI_SERVICE_V2_URL}/contest/${key}/register`;
     },
@@ -93,9 +63,6 @@ export const JUDGE_API_V1 = {
     },
     PROBLEM: (problemJudgeKey: string) => {
       return `${JUKI_SERVICE_V2_URL}/rejudge/problem/${problemJudgeKey}`;
-    },
-    CONTEST_PROBLEM: (contestKey: string, problemJudgeKey: string) => {
-      return `${JUKI_SERVICE_V2_URL}/rejudge/contest/${contestKey}/problem/${problemJudgeKey}`;
     },
   },
   RANKING: {

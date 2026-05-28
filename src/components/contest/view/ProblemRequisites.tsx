@@ -18,7 +18,7 @@ interface ProblemRequisitesProps {
 
 export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay }: ProblemRequisitesProps) => {
   
-  const { prerequisites, blockedBy, startTimestamp, endTimestamp } = problem;
+  const { prerequisites, blockedBy, startsAt, endsAt } = problem;
   
   const { user: { isAdministrator, isManager } } = contest;
   
@@ -27,13 +27,13 @@ export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay
   
   return (
     <div className="jk-col gap">
-      {(isAdministrator || isManager) && (problem.startTimestamp !== contest.settings.startTimestamp || problem.endTimestamp !== contest.settings.endTimestamp) && (
+      {(isAdministrator || isManager) && (problem.startsAt !== contest.settings.startsAt || problem.endsAt !== contest.settings.endsAt) && (
         <div className="jk-col tx-t">
-          {problem.startTimestamp !== contest.settings.startTimestamp && (
+          {problem.startsAt !== contest.settings.startsAt && (
             <div className="jk-row center">
               <T className="tt-se">starts at</T>:&nbsp;
               <TimerDisplay
-                counter={problem.startTimestamp - contest.settings.startTimestamp}
+                counter={problem.startsAt - contest.settings.startsAt}
                 type="weeks-days-hours-minutes-seconds"
                 ignoreLeadingZeros
                 ignoreTrailingZeros
@@ -43,11 +43,11 @@ export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay
               />
             </div>
           )}
-          {problem.endTimestamp !== contest.settings.endTimestamp && (
+          {problem.endsAt !== contest.settings.endsAt && (
             <div className="jk-row center">
               <T className="tt-se">ends at</T>:&nbsp;
               <TimerDisplay
-                counter={problem.endTimestamp - contest.settings.startTimestamp}
+                counter={problem.endsAt - contest.settings.startsAt}
                 type="weeks-days-hours-minutes-seconds"
                 ignoreLeadingZeros
                 ignoreTrailingZeros
@@ -91,7 +91,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay
             <div className="jk-row br-hl jk-br-ie jk-pg-xsm tx-t bc-wl">
               <T className="tt-se">problem will be released in</T>&nbsp;
               <Timer
-                remaining={startTimestamp - now.getTime()}
+                remaining={startsAt - now.getTime()}
                 interval={-1000}
                 ignoreLeadingZeros
                 ignoreTrailingZeros
@@ -107,7 +107,7 @@ export const ProblemRequisites = ({ problem, reloadContest, contest, withOverlay
             <div className="jk-row br-hl jk-br-ie jk-pg-xsm tx-t bc-wl">
               <T className="tt-se">problem was closed ago</T>&nbsp;
               <TimerDisplay
-                counter={now.getTime() - endTimestamp}
+                counter={now.getTime() - endsAt}
                 ignoreLeadingZeros
                 ignoreTrailingZeros
                 type="weeks-days-hours-minutes"

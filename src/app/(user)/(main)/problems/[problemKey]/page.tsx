@@ -1,12 +1,12 @@
-import { ProblemNotFoundCard, ProblemTour, ProblemViewLayout } from 'components';
-import { TwoContentLayout } from 'src/components/jukiClientBoundary';
-import { jukiApiManager } from '@juki-team/base-ui/settings';
-import { DEFAULT_METADATA } from 'config/constants';
-import { get } from 'helpers';
 import { oneTab } from '@juki-team/base-ui/helpers';
-import { type  Metadata } from 'next';
+import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { type MetadataResponseDTO, type ProblemDataResponseDTO } from '@juki-team/commons/dto';
 import { type ContentResponse } from '@juki-team/commons/types';
+import { ProblemNotFoundCard, ProblemTour, ProblemViewLayout } from 'components';
+import { DEFAULT_METADATA } from 'config/constants';
+import { get } from 'helpers/fetch';
+import { type  Metadata } from 'next';
+import { TwoContentLayout } from 'src/components/jukiClientBoundary';
 
 type Props = {
   params: Promise<{ problemKey: string }>
@@ -52,6 +52,7 @@ export default async function ProblemViewPage({ params }: Props) {
 
   const problemResponse = await get<ContentResponse<ProblemDataResponseDTO>>(jukiApiManager.apiV2.problem.getData({ params: { key: problemKey } }).url);
 
+  console.log({ problemResponse });
   if (problemResponse.success) {
     return (
       <ProblemTour>

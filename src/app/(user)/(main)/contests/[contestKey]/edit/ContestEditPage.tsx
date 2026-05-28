@@ -1,14 +1,27 @@
 'use client';
 
-import { EditCreateContest } from 'components';
-import { EntityUpdateLayout, FetcherLayer, LinkLastPath, PageNotFound, T, TwoContentLayout, useFetcher, useUserStore } from '@juki-team/base-ui';
-import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
-import { JUDGE_API_V1 } from 'config/constants';
-import { EMPTY_ENTITY_MEMBERS } from '@juki-team/commons/constants';
-import { type ContestClarificationsResponseDTO, type ContestDataResponseDTO, type ContestEventsResponseDTO, type ContestMembersResponseDTO } from '@juki-team/commons/dto';
-import { type ContentResponse } from '@juki-team/commons/types';
-import { toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
+import {
+  EntityUpdateLayout,
+  FetcherLayer,
+  LinkLastPath,
+  PageNotFound,
+  T,
+  TwoContentLayout,
+  useFetcher,
+  useUserStore,
+} from '@juki-team/base-ui';
 import { oneTab } from '@juki-team/base-ui/helpers';
+import { jukiApiManager, jukiAppRoutes } from '@juki-team/base-ui/settings';
+import { EMPTY_ENTITY_MEMBERS } from '@juki-team/commons/constants';
+import {
+  type ContestClarificationsResponseDTO,
+  type ContestDataResponseDTO,
+  type ContestEventsResponseDTO,
+  type ContestMembersResponseDTO,
+} from '@juki-team/commons/dto';
+import { type ContentResponse } from '@juki-team/commons/types';
+import { EditCreateContest } from 'components';
+import { toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
 import { useMemo } from 'hooks';
 import { LastPathKey } from 'types';
 import { ContestDataUI } from '../../../../../../components/contest/view/types';
@@ -52,7 +65,12 @@ const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
     data: dataClarifications,
     isLoading: isLoadingClarifications,
   } = useFetcher<ContentResponse<ContestClarificationsResponseDTO>>(
-    jukiApiManager.apiV2.contest.getDataClarifications({ params: { key: contest.key, organizationKey: companyKey } }).url,
+    jukiApiManager.apiV2.contest.getDataClarifications({
+      params: {
+        key: contest.key,
+        organizationKey: companyKey,
+      },
+    }).url,
   );
 
   const contestData: ContestDataUI = useMemo(() => {
@@ -81,7 +99,7 @@ const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
       entityKey={contest.key}
       Cmp={EditCreateContest}
       viewRoute={(entityKey) => jukiAppRoutes.JUDGE().contests.view({ key: entityKey })}
-      updateApiURL={() => JUDGE_API_V1.CONTEST.CONTEST}
+      updateApiURL={() => (key) => jukiApiManager.apiV2.contest.update({ params: { key } }).url}
       viewApiURL={entityKey => jukiApiManager.apiV2.contest.getData({ params: { key: entityKey } }).url}
       toEntityUpsert={toUpsertContestDTO}
     />

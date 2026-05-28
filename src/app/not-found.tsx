@@ -6,12 +6,13 @@ import { useEffect } from 'hooks';
 import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
-  
-  const router = useRouter();
-  
+
+  const { replace } = useRouter();
+
   useEffect(() => {
-    setTimeout(() => router.replace(jukiAppRoutes.COACH().home()), 1000);
-  }, [ router ]);
+    const id = setTimeout(() => replace(jukiAppRoutes.COACH().home()), 1000);
+    return () => clearTimeout(id);
+  }, [ replace ]);
   
   return (
     <PageNotFound style={{ height: 'var(--100VH) !important' }}>

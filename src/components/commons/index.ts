@@ -1,4 +1,3 @@
-export * from './ColorsModal';
 export * from './ContestNotFoundCard';
 export * from './Pagination';
 export * from './NotFoundCard';

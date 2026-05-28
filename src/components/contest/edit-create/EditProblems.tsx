@@ -16,7 +16,7 @@ import { UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
 import { type SortableItem, type SortableItemComponent } from '@juki-team/base-ui/types';
 import { EditContestProps } from '../types';
 
-export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDTO, {
+const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDTO, {
   setContest: Dispatch<SetStateAction<UpsertContestDTOUI>>,
   withTime: 0 | 1 | 2,
   withPrerequisites: boolean,
@@ -127,14 +127,14 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 type="number"
                 disabled={withPrerequisites}
                 label={<T className="tx-t tt-se">starts at the minute</T>}
-                value={(problem.startTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                value={(problem.startsAt - contest.settings.startsAt) / (1000 * 60)}
                 onChange={v => {
                   setProblemProp({
-                    startTimestamp: Math.min(
-                      contest.settings.endTimestamp,
+                    startsAt: Math.min(
+                      contest.settings.endsAt,
                       Math.max(
-                        contest.settings.startTimestamp,
-                        roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
+                        contest.settings.startsAt,
+                        roundTimestamp(contest.settings.startsAt + (v * 1000 * 60)),
                       ),
                     ),
                   });
@@ -145,14 +145,14 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 label={<T className="tx-t tt-se">ends at the minute</T>}
                 type="number"
                 disabled={withPrerequisites}
-                value={(problem.endTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                value={(problem.endsAt - contest.settings.startsAt) / (1000 * 60)}
                 onChange={v => {
                   setProblemProp({
-                    endTimestamp: Math.min(
-                      contest.settings.endTimestamp,
+                    endsAt: Math.min(
+                      contest.settings.endsAt,
                       Math.max(
-                        problem.startTimestamp,
-                        roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
+                        problem.startsAt,
+                        roundTimestamp(contest.settings.startsAt + (v * 1000 * 60)),
                       ),
                     ),
                   });
@@ -167,22 +167,22 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
               <InputDate
                 type="year-month-day-hours-minutes"
                 disabled={withPrerequisites}
-                date={new Date(problem.startTimestamp)}
+                date={new Date(problem.startsAt)}
                 isSelected={(date) => (
                   {
                     day: isWithinInterval(date, {
-                      start: startOfDay(new Date(problem.startTimestamp)),
-                      end: endOfDay(new Date(problem.endTimestamp)),
+                      start: startOfDay(new Date(problem.startsAt)),
+                      end: endOfDay(new Date(problem.endsAt)),
                     }),
                   }
                 )}
                 isDisabled={(date) => disableOutOfRange(date, contestStartDate, contestEndDate)}
-                baseDate={new Date(problem.startTimestamp)}
+                baseDate={new Date(problem.startsAt)}
                 onDatePick={(date) => {
                   setProblemProp({
-                    startTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(contest.settings.startTimestamp, roundTimestamp(date.getTime())),
+                    startsAt: Math.min(
+                      contest.settings.endsAt,
+                      Math.max(contest.settings.startsAt, roundTimestamp(date.getTime())),
                     ),
                   });
                 }}
@@ -193,22 +193,22 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
               <InputDate
                 type="year-month-day-hours-minutes"
                 disabled={withPrerequisites}
-                date={new Date(problem.endTimestamp)}
+                date={new Date(problem.endsAt)}
                 isSelected={(date) => (
                   {
                     day: isWithinInterval(date, {
-                      start: startOfDay(new Date(problem.startTimestamp)),
-                      end: endOfDay(new Date(problem.endTimestamp)),
+                      start: startOfDay(new Date(problem.startsAt)),
+                      end: endOfDay(new Date(problem.endsAt)),
                     }),
                   }
                 )}
-                isDisabled={(date) => disableOutOfRange(date, new Date(problem.startTimestamp), contestEndDate)}
-                baseDate={new Date(problem.endTimestamp)}
+                isDisabled={(date) => disableOutOfRange(date, new Date(problem.startsAt), contestEndDate)}
+                baseDate={new Date(problem.endsAt)}
                 onDatePick={(date) => {
                   setProblemProp({
-                    endTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(problem.startTimestamp, roundTimestamp(date.getTime())),
+                    endsAt: Math.min(
+                      contest.settings.endsAt,
+                      Math.max(problem.startsAt, roundTimestamp(date.getTime())),
                     ),
                   });
                 }}
@@ -220,7 +220,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
           <div className="jk-row tx-t">
             <T className="tt-se">duration</T>:&nbsp;
             <TimerDisplay
-              counter={problem.endTimestamp - problem.startTimestamp}
+              counter={problem.endsAt - problem.startsAt}
               literal
               ignoreTrailingZeros
               ignoreLeadingZeros
@@ -298,8 +298,8 @@ const getContestPrerequisitesData = (contest: UpsertContestDTOUI) => {
   let typePrerequisite: ContestProblemPrerequisiteType = ContestProblemPrerequisiteType.INDIVIDUALLY;
   let delayPrerequisites = 0;
   Object.values(contest.problems).forEach(problem => {
-    if (problem.startTimestamp !== contest.settings.startTimestamp
-      || problem.endTimestamp !== contest.settings.endTimestamp) {
+    if (problem.startsAt !== contest.settings.startsAt
+      || problem.endsAt !== contest.settings.endsAt) {
       withTimeRestriction = true;
     }
     if (problem.prerequisites?.length > 0) {
@@ -338,24 +338,24 @@ const fixOrder = (contest: UpsertContestDTOUI) => {
     ...contest,
     settings: {
       ...contest.settings,
-      startTimestamp: Math.max(0, cutDate(contest.settings.startTimestamp)),
-      endTimestamp: cutDate(contest.settings.endTimestamp),
-      frozenTimestamp: cutDate(contest.settings.frozenTimestamp),
-      quietTimestamp: cutDate(contest.settings.quietTimestamp),
+      startsAt: Math.max(0, cutDate(contest.settings.startsAt)),
+      endsAt: cutDate(contest.settings.endsAt),
+      frozenAt: cutDate(contest.settings.frozenAt),
+      silencedAt: cutDate(contest.settings.silencedAt),
     },
   };
   
   response.settings = {
     ...contest.settings,
-    endTimestamp: Math.max(contest.settings.endTimestamp, contest.settings.startTimestamp),
+    endsAt: Math.max(contest.settings.endsAt, contest.settings.startsAt),
   };
   response.settings = {
     ...contest.settings,
-    frozenTimestamp: Math.min(Math.max(contest.settings.frozenTimestamp, contest.settings.startTimestamp), contest.settings.endTimestamp),
+    frozenAt: Math.min(Math.max(contest.settings.frozenAt, contest.settings.startsAt), contest.settings.endsAt),
   };
   response.settings = {
     ...contest.settings,
-    quietTimestamp: Math.min(Math.max(contest.settings.quietTimestamp, contest.settings.frozenTimestamp), contest.settings.endTimestamp),
+    silencedAt: Math.min(Math.max(contest.settings.silencedAt, contest.settings.frozenAt), contest.settings.endsAt),
   };
   
   const newProblems = Object.values(contest.problems)
@@ -398,8 +398,8 @@ const fixProblem = (
     name: problem.name,
     points: problem.points,
     color: problem.color,
-    startTimestamp: cutDate(problem.startTimestamp),
-    endTimestamp: cutDate(problem.endTimestamp),
+    startsAt: cutDate(problem.startsAt),
+    endsAt: cutDate(problem.endsAt),
     tags: problem.tags,
     organization: problem.organization,
     prerequisites,
@@ -421,8 +421,9 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   const [ withTime, setWithTime ] = useSyncedState<0 | 1 | 2>(withTimeRestriction ? 1 : 0);
   
   const companyName = useUserStore(state => state.organization.name);
-  const contestStartDate = useMemo(() => new Date(contest.settings.startTimestamp), [ contest.settings.startTimestamp ]);
-  const contestEndDate = useMemo(() => new Date(contest.settings.endTimestamp), [ contest.settings.endTimestamp ]);
+  const organizationKey = useUserStore(state => state.organization.key);
+  const contestStartDate = useMemo(() => new Date(contest.settings.startsAt), [ contest.settings.startsAt ]);
+  const contestEndDate = useMemo(() => new Date(contest.settings.endsAt), [ contest.settings.endsAt ]);
   const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDTOUI }) => {
     return Object.values(problems)
       .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
@@ -446,8 +447,8 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         for (const problem of Object.values(prevState.problems)) {
           problems[problem.key] = {
             ...problem,
-            startTimestamp: contest.settings.startTimestamp,
-            endTimestamp: contest.settings.endTimestamp,
+            startsAt: contest.settings.startsAt,
+            endsAt: contest.settings.endsAt,
           };
         }
         
@@ -457,7 +458,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
     }
-  }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, withTime, setContest ]);
+  }, [ contest.settings.endsAt, contest.settings.startsAt, withTime, setContest ]);
   
   useEffect(() => {
     const newContest = fixOrder(contest);
@@ -705,10 +706,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                         color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
                         points: 1,
                         judge: problem.judge,
-                        startTimestamp: contest.settings.startTimestamp,
-                        endTimestamp: contest.settings.endTimestamp,
+                        startsAt: contest.settings.startsAt,
+                        endsAt: contest.settings.endsAt,
                         tags: problem.tags,
-                        organization: problem.organization,
+                        organization: { key: organizationKey },
                         prerequisites: [],
                         maxAcceptedUsers: 0,
                         group: '',
