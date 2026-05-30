@@ -19,5 +19,5 @@ export const ProblemEditorial = ({ editorial, setEditorial }: ProblemStatementPr
       text={editorial}
       setText={(description) => setEditorial(description)}
     />
-  ) : <MdMathViewer source={editorial?.[userPreferredLanguage]} />;
+  ) : <MdMathViewer source={editorial?.[userPreferredLanguage?.toLowerCase() as keyof TextLanguage]} />;
 };

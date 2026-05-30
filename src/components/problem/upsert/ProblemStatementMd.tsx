@@ -6,6 +6,7 @@ import { type Dispatch, type  SetStateAction, useState } from 'react';
 import { UpsertProblemUIDTO } from 'types';
 import { type MdMathEditorProps } from '@juki-team/base-ui/types';
 import { Language, ProblemScoringMode, ProfileSetting } from '@juki-team/commons/enums';
+import { type TextLanguage } from '@juki-team/commons/types';
 import { SampleTest } from '../SampleTest';
 
 interface ProblemStatementMdProps {
@@ -39,6 +40,8 @@ const EditorOnClick = (props: MdMathEditorProps) => {
 };
 
 export const ProblemStatementMd = ({ problem, setProblem, language, recordHistory }: ProblemStatementMdProps) => {
+
+  const langKey = language.toLowerCase() as keyof TextLanguage;
   
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
@@ -52,14 +55,14 @@ export const ProblemStatementMd = ({ problem, setProblem, language, recordHistor
             informationButton
             enableTextPlain
             enableImageUpload
-            value={problem.statement.description?.[language]}
+            value={problem.statement.description?.[langKey]}
             onChange={value => {
               recordHistory();
               setProblem(prevState => ({
                 ...prevState,
                 statement: {
                   ...prevState.statement,
-                  description: { ...prevState.statement.description, [language]: value },
+                  description: { ...prevState.statement.description, [langKey]: value },
                 },
               }));
             }}
@@ -74,14 +77,14 @@ export const ProblemStatementMd = ({ problem, setProblem, language, recordHistor
             informationButton
             enableTextPlain
             enableImageUpload
-            value={problem.statement.input?.[language]}
+            value={problem.statement.input?.[langKey]}
             onChange={value => {
               recordHistory();
               setProblem(prevState => ({
                 ...prevState,
                 statement: {
                   ...prevState.statement,
-                  input: { ...prevState.statement.input, [language]: value },
+                  input: { ...prevState.statement.input, [langKey]: value },
                 },
               }));
             }}
@@ -96,14 +99,14 @@ export const ProblemStatementMd = ({ problem, setProblem, language, recordHistor
             informationButton
             enableTextPlain
             enableImageUpload
-            value={problem.statement.output?.[language]}
+            value={problem.statement.output?.[langKey]}
             onChange={value => {
               recordHistory();
               setProblem(prevState => ({
                 ...prevState,
                 statement: {
                   ...prevState.statement,
-                  output: { ...prevState.statement.output, [language]: value },
+                  output: { ...prevState.statement.output, [langKey]: value },
                 },
               }));
             }}
@@ -133,7 +136,7 @@ export const ProblemStatementMd = ({ problem, setProblem, language, recordHistor
                         enableTextPlain
                         enableImageUpload
                         enableIA
-                        value={pointsByGroup.description?.[language]}
+                        value={pointsByGroup.description?.[langKey]}
                         onChange={value => setProblem(prevState => ({
                           ...prevState,
                           settings: {
@@ -144,7 +147,7 @@ export const ProblemStatementMd = ({ problem, setProblem, language, recordHistor
                                 ...prevState.settings.pointsByGroups[pointsByGroup.group],
                                 description: {
                                   ...prevState.settings.pointsByGroups[pointsByGroup.group]?.description,
-                                  [language]: value,
+                                  [langKey]: value,
                                 },
                               },
                             },
@@ -163,7 +166,7 @@ export const ProblemStatementMd = ({ problem, setProblem, language, recordHistor
                         : <T className="tt-se">points</T>})
                     </div>
                     <MdMathViewer
-                      source={pointsByGroup.description?.[userPreferredLanguage] || pointsByGroup.description?.[Language.ES] || pointsByGroup.description?.[Language.EN]}
+                      source={pointsByGroup.description?.[userPreferredLanguage?.toLowerCase() as 'es' | 'en'] || pointsByGroup.description?.es || pointsByGroup.description?.en}
                     />
                   </div>
                 )}
@@ -219,14 +222,14 @@ export const ProblemStatementMd = ({ problem, setProblem, language, recordHistor
             informationButton
             enableTextPlain
             enableImageUpload
-            value={problem.statement.note?.[language]}
+            value={problem.statement.note?.[langKey]}
             onChange={value => {
               recordHistory();
               setProblem(prevState => ({
                 ...prevState,
                 statement: {
                   ...prevState.statement,
-                  note: { ...prevState.statement.note, [language]: value },
+                  note: { ...prevState.statement.note, [langKey]: value },
                 },
               }));
             }}

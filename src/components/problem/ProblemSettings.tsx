@@ -6,7 +6,7 @@ import { jukiApiManager } from '@juki-team/base-ui/settings';
 import { EMPTY_TEXT_LANGUAGES, ONE_HOUR } from 'config/constants';
 import { ACCEPTED_PROGRAMMING_LANGUAGES, CODE_LANGUAGE, PROBLEM_MODE, PROBLEM_TYPE, RUNNER_ACCEPTED_PROBLEM_MODES, RUNNER_ACCEPTED_PROBLEM_TYPES } from '@juki-team/commons/constants';
 import { type JudgeDataResponseDTO } from '@juki-team/commons/dto';
-import { CodeLanguage, Language, ProblemScoringMode, ProblemType, SubmissionRunStatus } from '@juki-team/commons/enums';
+import { CodeLanguage, ProblemScoringMode, ProblemType, SubmissionRunStatus } from '@juki-team/commons/enums';
 import { type ContentResponse, type ProblemSettingsByProgrammingLanguage, type ProblemSettingsPointsByGroups } from '@juki-team/commons/types';
 import { classNames } from '@juki-team/base-ui/helpers';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -77,8 +77,8 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
             points: +group.points,
             partial: +group.partial,
             description: {
-              [Language.EN]: group.description?.[Language.EN] || '',
-              [Language.ES]: group.description?.[Language.ES] || '',
+              en: group.description?.en || '',
+              es: group.description?.es || '',
             },
           };
           index++;
@@ -89,8 +89,8 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
       partial: 0,
       points: 0,
       description: {
-        [Language.EN]: 'Group 0 are the sample test cases which have no score.',
-        [Language.ES]: 'El grupo 0 son los casos de ejemplo los cuales no tienen puntaje.',
+        en: 'Group 0 are the sample test cases which have no score.',
+        es: 'El grupo 0 son los casos de ejemplo los cuales no tienen puntaje.',
       },
     };
     if (index === 1) {

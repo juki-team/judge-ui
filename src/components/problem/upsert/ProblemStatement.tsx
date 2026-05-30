@@ -6,6 +6,7 @@ import { useMultiDeepHistory, useState } from 'hooks';
 import { type Dispatch, type ReactNode, type SetStateAction } from 'react';
 import { UpsertProblemUIDTO } from 'types';
 import { CodeLanguage, Language } from '@juki-team/commons/enums';
+import { type TextLanguage } from '@juki-team/commons/types';
 import { ProblemStatementAiRedactorChat } from './ProblemStatementAiRedactorChat';
 import { ProblemStatementMd } from './ProblemStatementMd';
 import { ProblemStatementPdf } from './ProblemStatementPdf';
@@ -22,6 +23,7 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
   const { judgeKey, statement, judgeIsExternal } = problem;
   
   const [ language, setLanguage ] = useState<Language>(Language.ES);
+  const langKey = language.toLowerCase() as keyof TextLanguage;
   const [ type, setType ] = useState<'md' | 'html' | 'pdf'>(judgeIsExternal ? 'html' : 'md');
   const { Image } = useUIStore(store => store.components);
   
@@ -111,14 +113,14 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
                 <div style={{ width: '50%' }} className="ht-100">
                   <CodeEditor
                     language={CodeLanguage.HTML}
-                    source={statement.html[language]}
+                    source={statement.html[langKey]}
                     onChange={({ source }) => {
                       recordHistory();
                       setProblem(prevState => ({
                         ...prevState,
                         statement: {
                           ...prevState.statement,
-                          html: { ...prevState.statement.html, [language]: source },
+                          html: { ...prevState.statement.html, [langKey]: source },
                         },
                       }));
                     }}
@@ -131,7 +133,7 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
                   >
                     <div
                       className={`${judgeKey}-statement`}
-                      dangerouslySetInnerHTML={{ __html: statement.html[language] }}
+                      dangerouslySetInnerHTML={{ __html: statement.html[langKey] }}
                     />
                   </div>
                 </div>
@@ -144,10 +146,10 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
       {(type === 'md' || type === 'html') && (
         <ProblemStatementAiRedactorChat
           statement={{
-            description: type === 'html' ? problem.statement.html[language] : problem.statement.description[language],
-            input: type === 'html' ? '' : problem.statement.input[language],
-            output: type === 'html' ? '' : problem.statement.output[language],
-            note: type === 'html' ? '' : problem.statement.note[language],
+            description: type === 'html' ? problem.statement.html[langKey] : problem.statement.description[langKey],
+            input: type === 'html' ? '' : problem.statement.input[langKey],
+            output: type === 'html' ? '' : problem.statement.output[langKey],
+            note: type === 'html' ? '' : problem.statement.note[langKey],
             sampleCases: problem.statement.sampleCases,
           }}
           recordHistory={recordHistory}
@@ -156,11 +158,11 @@ export const ProblemStatement = ({ problem, setProblem }: ProblemStatementProps)
               ...prevState,
               statement: {
                 ...prevState.statement,
-                description: { ...prevState.statement.description, [language]: statement.description },
-                input: { ...prevState.statement.description, [language]: statement.input },
-                output: { ...prevState.statement.description, [language]: statement.output },
+                description: { ...prevState.statement.description, [langKey]: statement.description },
+                input: { ...prevState.statement.description, [langKey]: statement.input },
+                output: { ...prevState.statement.description, [langKey]: statement.output },
                 sampleCases: statement.sampleCases,
-                note: { ...prevState.statement.note, [language]: statement.note },
+                note: { ...prevState.statement.note, [langKey]: statement.note },
               },
             }));
           }}

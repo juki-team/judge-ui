@@ -3,7 +3,7 @@ import { JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest } from '@juki-team/base-ui/helpers';
 import { HTTPMethod, Language, Status } from '@juki-team/commons/enums';
 import { cleanRequest } from '@juki-team/commons/helpers';
-import { type ContentResponse } from '@juki-team/commons/types';
+import { type ContentResponse, type TextLanguage } from '@juki-team/commons/types';
 import { useState } from 'hooks';
 import { type Dispatch, type SetStateAction } from 'react';
 import { UpsertProblemUIDTO } from 'types';
@@ -16,6 +16,7 @@ interface ProblemStatementPdfProps {
 
 export const ProblemStatementPdf = ({ problem, setProblem, language }: ProblemStatementPdfProps) => {
 
+  const langKey = language.toLowerCase() as keyof TextLanguage;
   const { addErrorNotification, addSuccessNotification } = useJukiNotification();
   const [ file, setFile ] = useState<FileList[number] | null>(null);
 
@@ -56,7 +57,7 @@ export const ProblemStatementPdf = ({ problem, setProblem, language }: ProblemSt
                 ...prevState,
                 statement: {
                   ...prevState.statement,
-                  pdfUrl: { ...prevState.statement.pdfUrl, [language]: response.content.pdfUrl },
+                  pdfUrl: { ...prevState.statement.pdfUrl, [langKey]: response.content.pdfUrl },
                 },
               }));
               addSuccessNotification(<T className="tt-se">pdf uploaded successfully</T>);
@@ -73,7 +74,7 @@ export const ProblemStatementPdf = ({ problem, setProblem, language }: ProblemSt
       </div>
       <div className="wh-100 ht-100">
         <iframe
-          src={problem.statement.pdfUrl[language]}
+          src={problem.statement.pdfUrl[langKey]}
           width="100%"
           height="800px"
           style={{ border: 'none' }}

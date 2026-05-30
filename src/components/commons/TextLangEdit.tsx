@@ -25,8 +25,8 @@ export const TextLangEdit = ({ text, setText }: TextLangEditProps) => {
                 enableTextPlain
                 enableImageUpload
                 enableIA
-                value={text?.[Language.ES]}
-                onChange={value => setText({ ...text, [Language.ES]: value })}
+                value={text?.es}
+                onChange={value => setText({ ...text, es: value })}
               />
             ),
             header: (
@@ -49,8 +49,8 @@ export const TextLangEdit = ({ text, setText }: TextLangEditProps) => {
                 enableTextPlain
                 enableImageUpload
                 enableIA
-                value={text?.[Language.EN]}
-                onChange={value => setText({ ...text, [Language.EN]: value })}
+                value={text?.en}
+                onChange={value => setText({ ...text, en: value })}
               />
             ),
             header: (
