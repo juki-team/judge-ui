@@ -9,10 +9,6 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* ./
-ARG GITHUB_AUTH_TOKEN
-RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_AUTH_TOKEN}" >> .npmrc
-RUN cat .npmrc
-RUN npm config set @juki-team:registry https://npm.pkg.github.com
 RUN yarn --frozen-lockfile
 
 # 2. Rebuild the source code only when needed
