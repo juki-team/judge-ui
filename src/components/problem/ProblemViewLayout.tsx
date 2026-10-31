@@ -14,7 +14,7 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
-import { authorizedRequest, contentResponse } from 'helpers';
+import { authorizedRequest, contentResponse, hasEditorial } from 'helpers';
 import {
   useEffect,
   useFetcher,
@@ -39,7 +39,7 @@ import {
 import { ShareIcon } from '../index';
 import { InfoTestCases } from './InfoTestCases';
 import { problemAccessProps } from './ProblemAccess';
-import { hasEditorial, ProblemEditorial } from './ProblemEditorial';
+import { ProblemEditorial } from './ProblemEditorial';
 import { ProblemStatistics } from './ProblemStatistics';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';

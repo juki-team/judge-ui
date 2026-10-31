@@ -1,6 +1,10 @@
 import { EMPTY_TEXT_LANGUAGES } from 'config/constants';
-import type { UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
+import type { TextLanguageType, UpsertProblemDTO, UpsertProblemUIDTO } from 'types';
 import { ProblemScoringMode, ProblemType } from 'types';
+
+export const hasEditorial = (editorial?: TextLanguageType) => (
+  Object.values(editorial ?? {}).some(text => !!text?.trim())
+);
 
 export const toUpsertProblemDTO = (entity: UpsertProblemUIDTO): UpsertProblemDTO => ({
   members: {

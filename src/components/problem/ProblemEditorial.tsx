@@ -9,10 +9,6 @@ interface ProblemStatementProps {
   setEditorial?: (editorial: TextLanguageType) => void,
 }
 
-export const hasEditorial = (editorial?: TextLanguageType) => (
-  Object.values(editorial ?? {}).some(text => !!text?.trim())
-);
-
 export const ProblemEditorial = ({ editorial, setEditorial }: ProblemStatementProps) => {
 
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
