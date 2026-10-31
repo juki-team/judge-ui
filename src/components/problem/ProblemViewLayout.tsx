@@ -134,7 +134,8 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     header: <T className="ws-np tt-ce tab-statistics">statistics</T>,
     body: <ProblemStatistics problem={problem} />,
   };
-  if (hasEditorial(problem.editorial)) {
+  // only the problem judges (managers) and administrators can see the editorial (the api also blanks it for the rest)
+  if ((problem.user?.isManager || problem.user?.isAdministrator) && hasEditorial(problem.editorial)) {
     tabs[ProblemTab.EDITORIAL] = {
       key: ProblemTab.EDITORIAL,
       header: <T className="ws-np tt-ce">editorial</T>,
