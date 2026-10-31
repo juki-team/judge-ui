@@ -337,7 +337,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                   />
                 </div>
                 <div className="jk-row extend gap right">
-                  <Button type="text" onClick={onCloseModal}><T>close</T></Button>
+                  <Button type="secondary" onClick={onCloseModal}><T>close</T></Button>
                   <Button
                     onClick={() => {
                       setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource: source } });

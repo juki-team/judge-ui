@@ -161,7 +161,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
         : <FullscreenIcon className="clickable jk-br-ie" onClick={() => setFullscreen(prevState => !prevState)} />}
     </div>,
     <div className="jk-row gap" key="buttons">
-      <Button size="tiny" type="light" onClick={() => setIndex(0)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(0)}>
         <T className="tt-se">start</T>
       </Button>
       <Button size="tiny" onClick={() => setIndex(prevState => Math.max(prevState - 1, 0))}>
@@ -170,7 +170,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
       <Button size="tiny" onClick={() => setIndex(prevState => Math.min(prevState + 1, max))}>
         <T className="tt-se">next</T>
       </Button>
-      <Button size="tiny" type="light" onClick={() => setIndex(max)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(max)}>
         <T className="tt-se">end</T>
       </Button>
     </div>,

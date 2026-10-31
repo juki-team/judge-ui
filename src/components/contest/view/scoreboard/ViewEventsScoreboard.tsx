@@ -301,7 +301,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
     (contest?.user?.isAdministrator || contest?.user?.isManager) && (
       <ButtonLoader
         size="tiny"
-        type="light"
+        type="secondary"
         disabled={isLoading}
         onClick={async (setLoaderStatus) => {
           setLoaderStatus(Status.LOADING);
@@ -325,7 +325,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         key="dynamic"
         onClick={() => setDynamic(true)}
         size="tiny"
-        type="light"
+        type="secondary"
       >
         <T className="tt-se">dynamic</T>
       </Button>
@@ -361,7 +361,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         : <FullscreenIcon className="clickable jk-br-ie" onClick={() => setFullscreen(prevState => !prevState)} />}
     </div>,
     <div className="jk-row gap" key="buttons">
-      <Button size="tiny" type="light" onClick={() => setIndex(0)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(0)}>
         <T className="tt-se">start</T>
       </Button>
       <Pagination
@@ -386,7 +386,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         isOnToolbar
         key="first-row-pagination"
       />
-      <Button size="tiny" type="light" onClick={() => setIndex(max)}>
+      <Button size="tiny" type="secondary" onClick={() => setIndex(max)}>
         <T className="tt-se">end</T>
       </Button>
       <Input

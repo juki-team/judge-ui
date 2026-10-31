@@ -115,7 +115,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
             }
           }}
           size="tiny"
-          type="light"
+          type="secondary"
         >
           <T className="tt-se">rejudge problem</T>
         </ButtonLoader>
@@ -136,7 +136,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
             notifyResponse(result, setLoaderStatus);
           }}
           size="tiny"
-          type="light"
+          type="secondary"
         >
           <T className="tt-se">retrieve new submissions</T>
           {!!Object.values(dataCrawled).length && (
@@ -303,7 +303,7 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
             notifyResponse(result, setLoaderStatus);
           }}
           size="tiny"
-          type="light"
+          type="secondary"
         >
           <T className="tt-se">recalculate prerequisites</T>
         </ButtonLoader>,

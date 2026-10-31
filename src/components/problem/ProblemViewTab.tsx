@@ -2,7 +2,7 @@ import { ButtonLoader, FirstLoginWrapper, InfoIIcon, ProblemView, T } from 'comp
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUKI_SERVICE_V2_URL, ONE_MINUTE } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useJukiNotification, useMutate, useRouterStore, useUIStore } from 'hooks';
+import { useJukiNotification, useMatchMutate, useRouterStore, useUIStore } from 'hooks';
 import { RefObject } from 'react';
 import { CodeLanguage, ContentResponseType, ProblemDataResponseDTO, ProblemTab, Status } from 'types';
 
@@ -22,7 +22,7 @@ export const ProblemViewTab = ({
   
   const { notifyResponse, addWarningNotification } = useJukiNotification();
   const { Link } = useUIStore(store => store.components);
-  const mutate = useMutate();
+  const mutate = useMatchMutate();
   const pushRoute = useRouterStore(store => store.pushRoute);
   
   return (

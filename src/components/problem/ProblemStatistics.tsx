@@ -5,6 +5,7 @@ import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
 import { classNames, showOfDateDisplayType } from 'helpers';
 import { useFetcher, useI18nStore, usePageStore, useState } from 'hooks';
 import { i18n } from 'i18next';
+import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import type { ContentType } from 'recharts/types/component/Tooltip';
 import {
   ContentResponseType,
@@ -18,7 +19,7 @@ const now = Date.now();
 
 const capitalized = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-const CustomTooltip: ContentType<number, number> = ({ active, payload, label }) => {
+const CustomTooltip: ContentType<ValueType, NameType> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="jk-pg-xsm bc-we jk-br-ie elevation-1">
@@ -32,7 +33,7 @@ const CustomTooltip: ContentType<number, number> = ({ active, payload, label }) 
   return null;
 };
 
-const CustomTooltipA: ContentType<number, number> = ({ active, payload, label }) => {
+const CustomTooltipA: ContentType<ValueType, NameType> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="jk-pg-xsm bc-we jk-br-ie elevation-1">
@@ -144,7 +145,7 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
           ].map(({ value, label }) => (
             <Button
               size="small"
-              type={dateType === value ? 'accent' : 'light'}
+              type={dateType === value ? 'primary' : 'secondary'}
               key={value}
               onClick={() => {
                 setDateType(value);

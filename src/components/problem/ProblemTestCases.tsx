@@ -22,7 +22,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { authorizedRequest, classNames, cleanRequest, downloadUrlAsFile, humanFileSize } from 'helpers';
-import { useEffect, useI18nStore, useJukiNotification, useMutate, useState } from 'hooks';
+import { useEffect, useI18nStore, useJukiNotification, useMatchMutate, useState } from 'hooks';
 import { ReactNode } from 'react';
 import { JUDGE_API_V1 } from 'src/constants';
 import {
@@ -96,7 +96,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     setTestCases(transform(problemTestCases));
   }, [ problemTestCases ]);
   const { notifyResponse } = useJukiNotification();
-  const mutate = useMutate();
+  const mutate = useMatchMutate();
   const [ modal, setModal ] = useState<ReactNode>(null);
   const t = useI18nStore(state => state.i18n.t);
   
@@ -150,7 +150,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="light"
+          type="secondary"
           icon={<RefreshIcon />}
           onClick={async (setLoaderStatus) => {
             setLock(true);
@@ -165,7 +165,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="light"
+          type="secondary"
           icon={<CloudDownloadIcon />}
           onClick={async (setLoaderStatus) => {
             setLoaderStatus(Status.LOADING);
@@ -187,7 +187,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         <ButtonLoader
           size="small"
           disabled={lock}
-          type="light"
+          type="secondary"
           icon={<DeleteIcon className="cr-er" />}
           onClick={() => setModal(
             <TwoActionModal
@@ -266,7 +266,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                   />
                   <ButtonLoader
                     size="small"
-                    type="text"
+                    type="secondary"
                     disabled={lock}
                     icon={<SaveIcon />}
                     onClick={async (setLoaderStatus) => {
@@ -319,7 +319,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                             className="jk-row"
                           >
                             <ButtonLoader
-                              type="text"
+                              type="secondary"
                               size="small"
                               icon={<DeleteIcon />}
                               onClick={handleServerDelete(testCase.testCaseKey, keyPut)}
@@ -327,7 +327,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                             />
                           </div>
                           <ButtonLoader
-                            type="text"
+                            type="secondary"
                             size="small"
                             icon={<VisibilityIcon />}
                             onClick={async (setLoaderStatus) => {
@@ -371,7 +371,7 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           <Button
                             data-tooltip-id="jk-tooltip"
                             data-tooltip-content="delete"
-                            type="text"
+                            type="secondary"
                             size="small"
                             icon={<DeleteIcon />}
                             onClick={handleDelete(testCase, keyPut)}

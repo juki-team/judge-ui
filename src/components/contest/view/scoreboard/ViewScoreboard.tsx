@@ -190,7 +190,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
     (contest?.user?.isAdministrator || contest?.user?.isManager) && (
       <ButtonLoader
         size="tiny"
-        type="light"
+        type="secondary"
         disabled={isLoading}
         onClick={async (setLoaderStatus) => {
           setLoaderStatus(Status.LOADING);

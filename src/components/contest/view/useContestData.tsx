@@ -3,7 +3,7 @@
 import { jukiApiManager } from 'config';
 import { EMPTY_ENTITY_MEMBERS, JUKI_SERVICE_V2_URL } from 'config/constants';
 import { consoleInfo, contentResponse } from 'helpers';
-import { useFetcher, useJukiNotification, useMutate, useRef, useRouterStore } from 'hooks';
+import { useFetcher, useJukiNotification, useMatchMutate, useRef, useRouterStore } from 'hooks';
 import { useCallback, useEffect, useMemo } from 'react';
 import {
   ContentResponseType,
@@ -53,7 +53,7 @@ export function useContestData(fallbackData: ContestDataResponseDTO, companyKey:
     clarifications: dataClarifications?.success ? dataClarifications.content.clarifications : [],
   }), [ contestResponse, dataEvents, dataMembers, dataClarifications ]);
   
-  const mutate = useMutate();
+  const mutate = useMatchMutate();
   
   const reloadContest = useCallback(async () => {
     consoleInfo('reloading all contest');

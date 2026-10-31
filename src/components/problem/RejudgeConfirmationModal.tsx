@@ -39,7 +39,7 @@ export const RejudgeConfirmationModal = ({ problemKey, ...props }: RejudgeConfir
           <T>Are you sure you want to rejudge all of those submissions?</T>
         </div>
         <div className="jk-row-col gap right wh-100">
-          <Button type="light" onClick={props.onClose}>
+          <Button type="secondary" onClick={props.onClose}>
             <T className="tt-se">cancel</T>
           </Button>
           <ButtonLoader

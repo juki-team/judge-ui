@@ -218,7 +218,7 @@ export function ContestViewLayout() {
           setLoaderStatus(Status.SUCCESS);
         }}
         icon={<FileCopyIcon />}
-        type="light"
+        type="secondary"
         label="copy"
       />,
     );

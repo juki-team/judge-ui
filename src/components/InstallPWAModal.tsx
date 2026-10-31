@@ -91,7 +91,7 @@ export function InstallPWAModal() {
               <T className="tt-se">how to install on iOS</T>
             </Button>
             <Button
-              type="light"
+              type="secondary"
               onClick={() => {
                 setIsOpen(false);
                 localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
@@ -118,7 +118,7 @@ export function InstallPWAModal() {
           <T className="tt-ce">install app</T>
         </Button>
         <Button
-          type="light"
+          type="secondary"
           size="small"
           onClick={() => {
             setIsOpen(false);

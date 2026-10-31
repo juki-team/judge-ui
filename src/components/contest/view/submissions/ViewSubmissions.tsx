@@ -102,7 +102,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
         notifyResponse(result, setLoaderStatus);
       }}
       size="tiny"
-      type="light"
+      type="secondary"
     >
       <T className="tt-se">retrieve submissions</T>
       {!!Object.values(dataCrawled).length && (

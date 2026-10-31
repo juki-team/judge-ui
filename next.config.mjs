@@ -1,7 +1,7 @@
-import withPlugins from 'next-compose-plugins';
-
-const nextConfig = withPlugins([], {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: false,
+  allowedDevOrigins: ['judge.local.juki.app'],
   images: {
     remotePatterns: [
       {
@@ -39,6 +39,6 @@ const nextConfig = withPlugins([], {
       },
     ];
   },
-});
+};
 
 export default nextConfig;

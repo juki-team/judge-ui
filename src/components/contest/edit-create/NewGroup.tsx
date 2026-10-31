@@ -32,7 +32,7 @@ export const NewGroup = ({ group, onSave, isOpen, onClose }: EditGroupProps) => 
           onChange={color => setNewGroup(prevState => ({ ...prevState, color: color.hex }))}
         />
         <div className="jk-row gap right">
-          <Button type="light" onClick={() => onClose()}><T className="tt-se">cancel</T></Button>
+          <Button type="secondary" onClick={() => onClose()}><T className="tt-se">cancel</T></Button>
           <Button onClick={() => onSave(newGroup)}><T className="tt-se">save</T></Button>
         </div>
       </div>

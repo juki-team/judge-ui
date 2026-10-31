@@ -175,7 +175,7 @@ export const ProblemStatementAiRedactorChat = ({
                   }}
                   icon={sug.icon}
                   size="tiny"
-                  type="light"
+                  type="secondary"
                 >
                   <T className="tt-se">{sug.label}</T>
                 </Button>

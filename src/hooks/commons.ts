@@ -1,5 +1,5 @@
 export {
-  useOutsideAlerter,
+  useClickOutside,
   useJukiUser,
   useFetcher,
   usePrevious,
@@ -8,7 +8,7 @@ export {
   useEntityDiff,
   useJukiNotification,
   useCheckAndStartServices,
-  useMutate,
+  useMatchMutate,
   usePreload,
   usePreloadComponents,
   useI18nStore,

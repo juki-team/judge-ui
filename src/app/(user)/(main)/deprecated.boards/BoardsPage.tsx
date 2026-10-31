@@ -108,7 +108,7 @@ const Scoreboard = ({ contest }: { contest: ContestSummaryListResponseDTO }) => 
     <DataViewer<ScoreboardResponseDTOUI>
       extraNodes={userCanAdministrateServices ? [
         <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key })} key="edit">
-          <Button size="tiny" type="light">
+          <Button size="tiny" type="secondary">
             <T className="tt-se">edit</T></Button>
         </Link>,
       ] : []}

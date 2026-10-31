@@ -177,7 +177,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
           data-tooltip-content={`${isSmallMediumScreen ? 'rejudge, ' : ''}only submissions that are not in a contest will be judged`}
           icon={<AutorenewIcon />}
           onClick={() => setIsOpenRejudgeModal(true)}
-          type="light"
+          type="secondary"
           label="rejudge"
         >
         </TabsInlineButton>,

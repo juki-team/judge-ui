@@ -257,7 +257,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
               </div>
             )}
             <div className="jk-row right gap">
-              <Button type="light" onClick={() => setClarification(null)}><T>cancel</T></Button>
+              <Button type="secondary" onClick={() => setClarification(null)}><T>cancel</T></Button>
               <ButtonLoader
                 onClick={async (setLoaderStatus) => {
                   setLoaderStatus(Status.LOADING);

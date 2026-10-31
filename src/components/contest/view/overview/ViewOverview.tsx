@@ -254,7 +254,7 @@ export const ViewOverview = ({ contest, reloadContest, forPrinting }: ViewOvervi
                   }
                 }}
                 size="tiny"
-                type="light"
+                type="secondary"
               >
                 <T className="tt-se">download problemset</T>
               </ButtonLoader>

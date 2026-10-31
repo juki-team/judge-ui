@@ -30,11 +30,13 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@tanstack/virtual-core": "^3.19.6",
     "@types/react": "^19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "^10.0.0",
     "eslint-config-next": "^16.1.6",
-    "next-compose-plugins": "^2.2.1",
+    "i18next": "^26.4.7",
+    "recharts": "^3.10.1",
     "sass": "^1.97.3",
     "typescript": "^5.9.3"
   },
