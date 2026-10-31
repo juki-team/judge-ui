@@ -4,5 +4,12 @@ allowBuilds:
   sharp: false
   unrs-resolver: false
 minimumReleaseAgeExclude:
-  - '@juki-team/base-ui@1.5.1 || 1.5.2 || 1.5.3'
+  - '@juki-team/base-ui@1.5.1 || 1.5.2 || 1.5.3 || 1.5.4'
   - '@juki-team/commons@0.1.40 || 0.1.41'
+  - '@ai-sdk/gateway@4.0.132'
+  - '@ai-sdk/mcp@2.0.88'
+  - '@ai-sdk/provider-utils@5.0.72'
+  - '@ai-sdk/provider@4.0.35'
+  - '@ai-sdk/react@4.0.163'
+  - ai@7.0.159
+  - prosemirror-view@1.42.9
