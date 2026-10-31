@@ -45,7 +45,6 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
           isJudgeOrAdmin ? (
             <Button
               icon={<NotificationsActiveIcon />}
-              size="small"
               onClick={() => setClarification({
                 clarificationId: '',
                 problemJudgeKey: '',
@@ -59,7 +58,6 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
           ) : isParticipant && (
             <Button
               icon={<NotificationsActiveIcon />}
-              size="small"
               onClick={() => setClarification({
                 clarificationId: '',
                 problemJudgeKey: '',
@@ -94,7 +92,6 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                 {isJudgeOrAdmin && (
                   <div style={{ position: 'absolute', top: 0, right: 0 }}>
                     <Button
-                      size="small"
                       style={{ borderTopLeftRadius: 0, borderBottomRightRadius: 0 }}
                       onClick={() => {
                         setClarification({

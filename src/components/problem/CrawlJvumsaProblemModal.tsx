@@ -22,7 +22,6 @@ const Content = ({ judge }: { judge: JudgeDataResponseDTO }) => {
         />
       </label>
       <ButtonLoader
-        size="small"
         icon={<PlusIcon />}
         responsiveMobile
         onClick={async (setLoaderStatus) => {

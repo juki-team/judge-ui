@@ -148,7 +148,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
     <div className="jk-col gap nowrap stretch">
       <div className="jk-row gap block bc-we jk-pg-sm jk-br-ie">
         <ButtonLoader
-          size="small"
           disabled={lock}
           type="secondary"
           icon={<RefreshIcon />}
@@ -163,7 +162,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
           <T className="tt-se">reload test cases</T>&nbsp;(<T>the changes will be lost</T>)
         </ButtonLoader>
         <ButtonLoader
-          size="small"
           disabled={lock}
           type="secondary"
           icon={<CloudDownloadIcon />}
@@ -185,7 +183,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
         </ButtonLoader>
         {modal}
         <ButtonLoader
-          size="small"
           disabled={lock}
           type="secondary"
           icon={<DeleteIcon className="cr-er" />}
@@ -265,7 +262,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                     }}
                   />
                   <ButtonLoader
-                    size="small"
                     type="secondary"
                     disabled={lock}
                     icon={<SaveIcon />}
@@ -320,7 +316,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           >
                             <ButtonLoader
                               type="secondary"
-                              size="small"
                               icon={<DeleteIcon />}
                               onClick={handleServerDelete(testCase.testCaseKey, keyPut)}
                               disabled={lock}
@@ -328,7 +323,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                           </div>
                           <ButtonLoader
                             type="secondary"
-                            size="small"
                             icon={<VisibilityIcon />}
                             onClick={async (setLoaderStatus) => {
                               setLoaderStatus(Status.LOADING);
@@ -372,7 +366,6 @@ const ProblemTestCasesPage = ({ problem, testCases: problemTestCases, problemJud
                             data-tooltip-id="jk-tooltip"
                             data-tooltip-content="delete"
                             type="secondary"
-                            size="small"
                             icon={<DeleteIcon />}
                             onClick={handleDelete(testCase, keyPut)}
                             disabled={lock}

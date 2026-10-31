@@ -40,7 +40,6 @@ export const CrawlCodeforcesProblemModal = ({ onClose, isOpen }: CrawlCodeforces
           expand
         />
         <ButtonLoader
-          size="small"
           icon={<PlusIcon />}
           responsiveMobile
           onClick={async (setLoaderStatus) => {

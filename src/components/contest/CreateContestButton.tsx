@@ -11,7 +11,6 @@ export const CreateContestButton = () => {
   return (
     <Link href={jukiAppRoutes.JUDGE().contests.new()}>
       <Button
-        size="small"
         icon={<PlusIcon />}
         responsiveMobile
       >

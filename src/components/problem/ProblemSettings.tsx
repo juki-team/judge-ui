@@ -300,7 +300,6 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
           <div className="jk-row left gap">
             <div className="fw-bd tt-se"><T>evaluator source</T>:</div>
             <Button
-              size="small"
               onClick={() => {
                 setSource(problem.settings.evaluatorSource);
                 setOpen(true);

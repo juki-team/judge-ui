@@ -110,7 +110,6 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     extraNodes.push(
       <Link href={jukiAppRoutes.JUDGE().problems.new({ judge: judgeKey })}>
         <Button
-          size="small"
           icon={<PlusIcon />}
           responsiveMobile
         >
@@ -123,7 +122,6 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   if (isExternal && userIsLogged) {
     extraNodes.push(
       <ButtonLoader
-        size="small"
         icon={<PlusIcon />}
         responsiveMobile
         onClick={() => {

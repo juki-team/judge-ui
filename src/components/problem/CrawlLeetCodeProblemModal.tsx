@@ -50,7 +50,6 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
           expand
         />
         <ButtonLoader
-          size="small"
           icon={<PlusIcon />}
           responsiveMobile
           onClick={async (setLoaderStatus) => {
