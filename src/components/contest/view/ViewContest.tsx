@@ -242,7 +242,7 @@ export function ContestViewLayout() {
   
   if (isAdministrator) {
     extraNodes.push(
-      <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contest.key })} className="jk-row">
+      <Link key="contest-edit" href={jukiAppRoutes.JUDGE().contests.edit({ key: contest.key })}>
         <TabsInlineButton icon={<EditIcon />} label="edit" />
       </Link>,
     );
