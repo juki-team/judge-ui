@@ -26,7 +26,7 @@ import {
 } from 'config/constants';
 import { classNames } from 'helpers';
 import { useFetcher } from 'hooks';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import {
   CodeLanguage,
   ContentResponseType,
@@ -79,6 +79,8 @@ export const Tags = ({ tags, judgeKey, onChange }: TagsProps) => {
   );
 };
 
+const EVALUATOR_FILE_NAME = 'evaluator.cpp';
+
 interface ProblemSettingsProps {
   problem: UpsertProblemUIDTO,
   setProblem: Dispatch<SetStateAction<UpsertProblemUIDTO>>,
@@ -88,8 +90,22 @@ interface ProblemSettingsProps {
 export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: ProblemSettingsProps) => {
   
   const [ open, setOpen ] = useState(false);
-  const [ source, _ ] = useState('');
-  
+  const [ source, setSource ] = useState(problem.settings.evaluatorSource);
+  const initialFiles = useMemo(() => ({
+    [EVALUATOR_FILE_NAME]: {
+      name: EVALUATOR_FILE_NAME,
+      source: problem.settings.evaluatorSource,
+      language: CodeLanguage.CPP17,
+      index: 0,
+      hidden: false,
+      protected: false,
+      readonly: false,
+      folderPath: '',
+      description: '',
+      active: false,
+    },
+  }), [ problem.settings.evaluatorSource ]);
+
   const onCloseModal = () => setOpen(false);
   
   const fixPointsByGroups = (_pointsByGroups: ProblemSettingsPointsByGroupsType, toFilter?: number): ProblemSettingsPointsByGroupsType => {
@@ -283,7 +299,13 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
         {problem.settings.type === ProblemType.DYNAMIC && (
           <div className="jk-row left gap">
             <div className="fw-bd tt-se"><T>evaluator source</T>:</div>
-            <Button size="small" onClick={() => setOpen(true)}><T>save / view evaluator source</T></Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setSource(problem.settings.evaluatorSource);
+                setOpen(true);
+              }}
+            ><T>save / view evaluator source</T></Button>
             <Modal isOpen={open} onClose={onCloseModal}>
               <div className="jk-pg-md jk-col gap nowrap">
                 <div
@@ -312,8 +334,9 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         label: CODE_LANGUAGE[CodeLanguage.CPP17].label,
                       },
                     ]}
-                    // TODO:
-                    // onSourceChange={setSource}
+                    initialFiles={initialFiles}
+                    initialFileName={EVALUATOR_FILE_NAME}
+                    onFilesChange={files => setSource(files[EVALUATOR_FILE_NAME]?.source ?? '')}
                     initialTestCases={{
                       'custom-0': {
                         in: '',
@@ -330,8 +353,6 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                         messageTimestamp: 0,
                       },
                     }}
-                    // TODO:
-                    // initialSource={{ [CodeLanguage.CPP17]: problem.settings.evaluatorSource }}
                     enableAddSampleCases
                     enableAddCustomSampleCases
                   />
