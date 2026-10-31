@@ -1,4 +1,5 @@
-FROM node:18-alpine AS base
+FROM node:22-alpine AS base
+RUN corepack enable
 
 # 1. Install dependencies only when needed
 FROM base AS deps
@@ -8,8 +9,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* ./
-RUN yarn --frozen-lockfile
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
@@ -27,8 +28,7 @@ RUN cp ./.env.sample ./.env \
     && sed -i 's/^NEXT_PUBLIC_NODE_ENV=.*$/NEXT_PUBLIC_NODE_ENV=${NODE_ENV}/g' ./.env \
     && sed -i 's/^NEXT_PUBLIC_JUKI_SERVICE_BASE_URL=.*$/NEXT_PUBLIC_JUKI_SERVICE_BASE_URL=${JUKI_SERVICE_BASE_URL}/g' ./.env \
     && sed -i 's/^NEXT_PUBLIC_JUKI_TOKEN_NAME=.*$/NEXT_PUBLIC_JUKI_TOKEN_NAME=${JUKI_TOKEN_NAME}/g' ./.env
-RUN yarn build
-RUN SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --arch=x64 --platform=linux --libc=glibc sharp
+RUN pnpm build
 
 # 3. Production image, copy all the files and run next
 FROM base AS runner

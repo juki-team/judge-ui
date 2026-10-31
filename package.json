@@ -2,15 +2,16 @@
   "name": "judge-ui",
   "private": true,
   "version": "1.24.32",
+  "packageManager": "pnpm@11.15.0",
   "scripts": {
     "caddy": "caddy run --config Caddyfile",
     "dev": "next dev -p 3070",
     "build": "next build",
-    "build:analyze": "ANALYZE=true yarn build",
+    "build:analyze": "ANALYZE=true pnpm build",
     "start": "next start",
     "lint": "eslint .",
-    "pull": "yarn add @juki-team/commons@release-0.1 @juki-team/base-ui@release-0.1",
-    "push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; yarn version --patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f"
+    "pull": "pnpm add --save-exact @juki-team/commons@release-0.1 @juki-team/base-ui@release-0.1",
+    "push": "f() { param=${1}; message=${param:-chore}; echo ${message}; git add .; echo $message | git commit -F -; npm version patch --no-git-tag-version; version=\"v$(node -p \"require('./package.json').version\")\"; git add .; echo $version | git commit -F -; git push origin main; echo $version | git tag -a $(echo $version) -F -; git push origin --tags; }; f"
   },
   "dependencies": {
     "@ably/spaces": "^0.5.2",
