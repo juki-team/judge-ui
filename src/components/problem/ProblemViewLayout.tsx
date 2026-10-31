@@ -116,14 +116,6 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       />,
     },
   };
-  
-  if (hasEditorial(problem.editorial)) {
-    tabs[ProblemTab.EDITORIAL] = {
-      key: ProblemTab.EDITORIAL,
-      header: <T className="ws-np tt-ce">editorial</T>,
-      body: <div className="jk-pg bc-we jk-br-ie"><ProblemEditorial editorial={problem.editorial} /></div>,
-    };
-  }
 
   // if (userIsLogged) {
   //   tabs[ProblemTab.MY_SUBMISSIONS] = {
@@ -142,6 +134,13 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     header: <T className="ws-np tt-ce tab-statistics">statistics</T>,
     body: <ProblemStatistics problem={problem} />,
   };
+  if (hasEditorial(problem.editorial)) {
+    tabs[ProblemTab.EDITORIAL] = {
+      key: ProblemTab.EDITORIAL,
+      header: <T className="ws-np tt-ce">editorial</T>,
+      body: <div className="jk-pg bc-we jk-br-ie"><ProblemEditorial editorial={problem.editorial} /></div>,
+    };
+  }
   
   const breadcrumbs: TwoContentLayoutProps<ProblemTab>['breadcrumbs'] = () => [
     <LinkLastPath
