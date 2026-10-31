@@ -166,7 +166,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       copyLink={() => jukiAppRoutes.JUDGE(typeof window !== 'undefined' ? window.location.origin : '').problems.view({ key: problem.key })}
       {...problemAccessProps}
     >
-      <TabsInlineButton icon={<ShareIcon />} label="share" />
+      <TabsInlineButton size="regular" icon={<ShareIcon />} label="share" />
     </DocumentMembersButton>,
   );
   if (problem.user?.isAdministrator) {
@@ -174,6 +174,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
       extraNodes.push(
         <TabsInlineButton
           key="problem-rejudge"
+          size="regular"
           data-tooltip-content={`${isSmallMediumScreen ? 'rejudge, ' : ''}only submissions that are not in a contest will be judged`}
           icon={<AutorenewIcon />}
           onClick={() => setIsOpenRejudgeModal(true)}
@@ -185,7 +186,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     }
     extraNodes.push(
       <Link key="problem-edit" href={jukiAppRoutes.JUDGE().problems.edit({ key: problem.key as string })}>
-        <TabsInlineButton icon={<EditIcon />} label="edit" />
+        <TabsInlineButton size="regular" icon={<EditIcon />} label="edit" />
       </Link>,
     );
   } else if (problem.judge?.isExternal && userIsLogged) {
