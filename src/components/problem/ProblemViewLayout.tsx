@@ -39,6 +39,7 @@ import {
 import { ShareIcon } from '../index';
 import { InfoTestCases } from './InfoTestCases';
 import { problemAccessProps } from './ProblemAccess';
+import { hasEditorial, ProblemEditorial } from './ProblemEditorial';
 import { ProblemStatistics } from './ProblemStatistics';
 import { ProblemStatus } from './ProblemStatus';
 import { ProblemSubmissions } from './ProblemSubmissions';
@@ -116,6 +117,14 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     },
   };
   
+  if (hasEditorial(problem.editorial)) {
+    tabs[ProblemTab.EDITORIAL] = {
+      key: ProblemTab.EDITORIAL,
+      header: <T className="ws-np tt-ce">editorial</T>,
+      body: <div className="jk-pg bc-we jk-br-ie"><ProblemEditorial editorial={problem.editorial} /></div>,
+    };
+  }
+
   // if (userIsLogged) {
   //   tabs[ProblemTab.MY_SUBMISSIONS] = {
   //     key: ProblemTab.MY_SUBMISSIONS,
