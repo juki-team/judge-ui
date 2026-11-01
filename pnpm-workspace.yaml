@@ -13,3 +13,5 @@ minimumReleaseAgeExclude:
   - '@ai-sdk/react@4.0.163'
   - ai@7.0.159
   - prosemirror-view@1.42.9
+  - '@tanstack/virtual-core@3.19.10'
+  - i18next@26.6.0

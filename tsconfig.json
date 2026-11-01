@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
     "allowJs": true,
-    "baseUrl": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
@@ -28,6 +27,9 @@
     //    "noImplicitReturns": true,
     //    "noImplicitThis": true,
     "paths": {
+      "src/*": [
+        "./src/*"
+      ],
       "config": [
         "./src/config"
       ],
