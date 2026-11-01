@@ -26,7 +26,7 @@ import {
 } from 'config/constants';
 import { classNames } from 'helpers';
 import { useFetcher } from 'hooks';
-import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
 import {
   CodeLanguage,
   ContentResponseType,
@@ -38,6 +38,7 @@ import {
   ProblemType,
   SubmissionRunStatus,
   UpsertProblemUIDTO,
+  UserCodeEditorHandle,
 } from 'types';
 import { ProblemScoringModeInformation } from './Informations';
 
@@ -90,7 +91,8 @@ interface ProblemSettingsProps {
 export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: ProblemSettingsProps) => {
   
   const [ open, setOpen ] = useState(false);
-  const [ source, setSource ] = useState(problem.settings.evaluatorSource);
+  // the evaluator source is read from the editor only on save: no re-render of these settings per keystroke
+  const evaluatorEditorRef = useRef<UserCodeEditorHandle<CodeLanguage>>(null);
   const initialFiles = useMemo(() => ({
     [EVALUATOR_FILE_NAME]: {
       name: EVALUATOR_FILE_NAME,
@@ -300,10 +302,7 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
           <div className="jk-row left gap">
             <div className="fw-bd tt-se"><T>evaluator source</T>:</div>
             <Button
-              onClick={() => {
-                setSource(problem.settings.evaluatorSource);
-                setOpen(true);
-              }}
+              onClick={() => setOpen(true)}
             ><T>save / view evaluator source</T></Button>
             <Modal isOpen={open} onClose={onCloseModal}>
               <div className="jk-pg-md jk-col gap nowrap">
@@ -315,7 +314,8 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                     border: '1px solid var(--cr-gy-6)',
                   }}
                 >
-                  <UserCodeEditor
+                  <UserCodeEditor<CodeLanguage>
+                    ref={evaluatorEditorRef}
                     storeKey={problemJudgeKey + '/evaluator'}
                     expandPosition={{
                       // width: 'var(--screen-content-width)',
@@ -335,7 +335,6 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                     ]}
                     initialFiles={initialFiles}
                     initialFileName={EVALUATOR_FILE_NAME}
-                    onFilesChange={files => setSource(files[EVALUATOR_FILE_NAME]?.source ?? '')}
                     initialTestCases={{
                       'custom-0': {
                         in: '',
@@ -360,7 +359,12 @@ export const ProblemSettings = ({ problem, setProblem, problemJudgeKey }: Proble
                   <Button type="secondary" onClick={onCloseModal}><T>close</T></Button>
                   <Button
                     onClick={() => {
-                      setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource: source } });
+                      const editor = evaluatorEditorRef.current;
+                      // same as before: a missing evaluator file saves an empty source
+                      const evaluatorSource = editor
+                        ? (editor.getFiles()[EVALUATOR_FILE_NAME]?.source ?? '')
+                        : problem.settings.evaluatorSource;
+                      setProblem({ ...problem, settings: { ...problem.settings, evaluatorSource } });
                       onCloseModal();
                     }}
                   >

@@ -30,8 +30,7 @@ export const ProblemViewTab = ({
       problem={problem}
       infoPlacement="name"
       codeEditorStoreKey={problem.key}
-      codeEditorCenterButtons={({ files, currentFileName }) => {
-        const { source = '', language = CodeLanguage.TEXT } = files[currentFileName] || {};
+      codeEditorCenterButtons={({ hasSource, getCurrentFile }) => {
         // if (problem.judge.isExternal && false) {
         //   return (
         //     <div className="jk-row">
@@ -50,8 +49,10 @@ export const ProblemViewTab = ({
             <FirstLoginWrapper>
               <ButtonLoader
                 size="tiny"
-                disabled={source === ''}
+                disabled={!hasSource}
                 onClick={async setLoaderStatus => {
+                  // read the code at click time: this slot isn't re-rendered on every keystroke
+                  const { source = '', language = CodeLanguage.TEXT } = getCurrentFile() || {};
                   
                   const now = Date.now();
                   submissionTimestampsRef.current = submissionTimestampsRef.current.filter(ts => now - ts < ONE_MINUTE);

@@ -149,6 +149,7 @@ export type {
   OnRecordClickType,
   GetRecordStyleType,
   UserCodeEditorProps,
+  UserCodeEditorHandle,
   UpsertComponentEntityProps,
   SortableItemComponent,
   TableHeadFieldProps,
