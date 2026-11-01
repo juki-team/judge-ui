@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // the Dockerfile sets NEXT_OUTPUT=standalone to build a self-contained server
+  output: process.env.NEXT_OUTPUT === 'standalone' ? 'standalone' : undefined,
   reactStrictMode: false,
   allowedDevOrigins: ['judge.local.juki.app'],
   images: {

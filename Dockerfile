@@ -17,7 +17,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN sed -i 's~  // output.*$~  output: "standalone",~g' ./next.config.js
+ENV NEXT_OUTPUT=standalone
 
 # This will do the trick, use the corresponding env file for each environment.
 ARG NODE_ENV
