@@ -42,8 +42,5 @@
     "recharts": "^3.10.1",
     "sass": "^1.107.1",
     "typescript": "^7.0.2"
-  },
-  "resolutions": {
-    "@types/minimatch": "^5.0.0"
   }
 }
