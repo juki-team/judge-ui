@@ -17,12 +17,13 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import { authorizedRequest, isContestChangesWebSocketResponseEventDto, toUpsertContestDtoUI } from 'helpers';
+import { authorizedRequest, isContestChangesWebSocketResponseEventDto, toFilterUrl, toUpsertContestDtoUI } from 'helpers';
 import {
   useEffect,
   useI18nStore,
   useMemo,
   usePageStore,
+  usePreload,
   useRouterStore,
   useSubscribe,
   useTrackLastPath,
@@ -97,6 +98,10 @@ export function ContestViewLayout() {
   
   const { user: { isAdministrator, isManager } } = contest;
   
+  // the tabs not opened yet preload their data when the browser is idle (see TabsInlineBody), so they open instantly;
+  // the other tabs use the data useContestData already loads
+  const preload = usePreload();
+  
   // the tabs (and their bodies) only change with the contest data or the selected problem
   const tabHeaders = useMemo(() => {
     const tabHeaders: TabsType<ContestTab> = {
@@ -161,6 +166,11 @@ export function ContestViewLayout() {
       }
       tabHeaders[ContestTab.SCOREBOARD] = {
         key: ContestTab.SCOREBOARD,
+        preload: () => {
+          const unfrozen = !contest.settings.scoreboardLocked;
+          void preload(JUDGE_API_V1.CONTEST.SCOREBOARD(contest.key, unfrozen, true));
+          void preload(JUDGE_API_V1.CONTEST.SCOREBOARD(contest.key, unfrozen, false));
+        },
         header: <T className="tt-ce ws-np">scoreboard</T>,
         body: (
           <ViewScoreboard
@@ -174,6 +184,12 @@ export function ContestViewLayout() {
   
     tabHeaders[ContestTab.SUBMISSIONS] = {
       key: ContestTab.SUBMISSIONS,
+      // first page with the default sort and filters (the URL ViewSubmissions requests when nothing was changed)
+      preload: () => {
+        void preload(jukiApiManager.API_V2.submission.getSummaryList({
+          params: { page: 1, pageSize: 25, filterUrl: toFilterUrl({ contestKeys: contest.key }), sortUrl: '' },
+        }).url);
+      },
       header: <T className="tt-ce ws-np">submissions</T>,
       body: <ViewSubmissions key="submissions" contest={contest} />,
     };
@@ -202,7 +218,7 @@ export function ContestViewLayout() {
       };
     }
     return tabHeaders;
-  }, [ contest, problemIndex, reloadContest, Link, isAdministrator, isManager ]);
+  }, [ contest, problemIndex, reloadContest, Link, isAdministrator, isManager, preload ]);
   
   const extraNodes: ReactNode[] = [];
   
