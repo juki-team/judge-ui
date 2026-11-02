@@ -62,7 +62,6 @@ export const RootLayout = ({ children }: PropsWithChildren) => {
         <InstallPWAModal />
         <Analytics />
         {/*<NotificationWarningModal />*/}
-        {/*<ScreenshotFrames />*/}
       </JukiProviders>
     </SWRConfig>
   );

@@ -31,7 +31,6 @@ export {
   ContestProblemPrerequisiteType,
   ContestProblemBlockedByType,
   WebSocketSubscriptionEvent,
-  WebSocketMessageEvent,
 } from '@juki-team/commons';
 
 export type {
@@ -102,10 +101,6 @@ export type {
   ContestMembersResponseDTO,
   ContestClarificationsResponseDTO,
   MetadataResponseDTO,
-  SubscribeClientTrackWebSocketEventDTO,
-  ClientTrackLocationWebSocketEventDTO,
-  ClientTrackScreenshotWebSocketEventDTO,
-  ClientTrackDeviceWebSocketEventDTO,
   ScoreboardHistoryResponseDTO,
   GroupByTimestampKey,
   SubscribeUserNotificationWebsocketEventDTO,
