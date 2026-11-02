@@ -21,12 +21,11 @@ ENV NEXT_OUTPUT=standalone
 
 # This will do the trick, use the corresponding env file for each environment.
 ARG NODE_ENV
-ARG JUKI_SERVICE_BASE_URL
+ARG NEXT_PUBLIC_JUKI_SERVICE_V2_URL
 ARG JUKI_TOKEN_NAME
 RUN cp ./.env.sample ./.env \
     && sed -i 's/^NODE_ENV=.*$/NODE_ENV=${NODE_ENV}/g' ./.env \
     && sed -i 's/^NEXT_PUBLIC_NODE_ENV=.*$/NEXT_PUBLIC_NODE_ENV=${NODE_ENV}/g' ./.env \
-    && sed -i 's/^NEXT_PUBLIC_JUKI_SERVICE_BASE_URL=.*$/NEXT_PUBLIC_JUKI_SERVICE_BASE_URL=${JUKI_SERVICE_BASE_URL}/g' ./.env \
     && sed -i 's/^NEXT_PUBLIC_JUKI_TOKEN_NAME=.*$/NEXT_PUBLIC_JUKI_TOKEN_NAME=${JUKI_TOKEN_NAME}/g' ./.env
 RUN pnpm build
 
@@ -49,6 +48,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
 CMD ["node", "server.js"]
