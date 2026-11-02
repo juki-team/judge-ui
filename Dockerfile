@@ -22,11 +22,9 @@ ENV NEXT_OUTPUT=standalone
 # This will do the trick, use the corresponding env file for each environment.
 ARG NODE_ENV
 ARG NEXT_PUBLIC_JUKI_SERVICE_V2_URL
-ARG JUKI_TOKEN_NAME
+ARG NEXT_PUBLIC_JUKI_TOKEN_NAME
 RUN cp ./.env.sample ./.env \
-    && sed -i 's/^NODE_ENV=.*$/NODE_ENV=${NODE_ENV}/g' ./.env \
-    && sed -i 's/^NEXT_PUBLIC_NODE_ENV=.*$/NEXT_PUBLIC_NODE_ENV=${NODE_ENV}/g' ./.env \
-    && sed -i 's/^NEXT_PUBLIC_JUKI_TOKEN_NAME=.*$/NEXT_PUBLIC_JUKI_TOKEN_NAME=${JUKI_TOKEN_NAME}/g' ./.env
+    && sed -i 's/^NODE_ENV=.*$/NODE_ENV=${NODE_ENV}/g' ./.env
 RUN pnpm build
 
 # 3. Production image, copy all the files and run next
