@@ -58,10 +58,10 @@ export function ContestViewLayout() {
   const { contest, isValidatingAny, isLoadingAny, reloadContest, isSuccess } = useContest();
   
   const pushRoute = useRouterStore(state => state.pushRoute);
-  const searchParams = useRouterStore(state => state.searchParams);
+  // only the params this view uses: any other URL change (filters, pages of the tables...) re-rendered every tab
+  const contestTab = useRouterStore(state => (state.searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab);
+  const problemIndex = useRouterStore(state => state.searchParams.get('subTab') || '');
   const contestKey = contest.key;
-  const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
-  const problemIndex = searchParams.get('subTab') || '';
   // select the flags, not the whole viewPort object (a new one is set on every resize event)
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const isMediumScreen = usePageStore(store => store.viewPort.isMediumScreen);
