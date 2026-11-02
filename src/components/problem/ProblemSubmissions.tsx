@@ -13,7 +13,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useMemo } from 'hooks';
+import { useFetcher, useMemo, useSubmissionsJudging } from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -25,6 +25,8 @@ import {
 } from 'types';
 
 export const ProblemSubmissions = ({ problem }: { problem: ProblemDataResponseDto }) => {
+  
+  useSubmissionsJudging({ problemKey: problem.key });
   
   const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDto>>(jukiApiManager.API_V2.judge.getSummaryList().url);
   const languages = useMemo(() => {

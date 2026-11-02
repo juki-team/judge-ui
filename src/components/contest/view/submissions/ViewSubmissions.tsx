@@ -23,7 +23,7 @@ import {
   toFilterUrl,
   toSortUrl,
 } from 'helpers';
-import { useFetcher, useJukiNotification, useMemo, useState, useSubscribe, useUserStore } from 'hooks';
+import { useFetcher, useJukiNotification, useMemo, useState, useSubmissionsJudging, useSubscribe, useUserStore } from 'hooks';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -129,6 +129,8 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDto }) => {
 };
 
 export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
+  
+  useSubmissionsJudging({ contestKey: contest.key });
   
   const userNickname = useUserStore(state => state.user.nickname);
   const organizationKey = useUserStore(state => state.organization.key);

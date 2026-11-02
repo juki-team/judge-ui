@@ -20,6 +20,7 @@ export {
   useUIStore,
   usePageStore,
   useSubscribe,
+  useSubmissionsJudging,
   useInjectTheme,
   useJukiUserSettings,
 } from '@juki-team/base-ui';

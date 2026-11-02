@@ -12,7 +12,7 @@ import {
 } from 'components';
 import { jukiApiManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
-import { useFetcher, useMemo, useUserStore } from 'hooks';
+import { useFetcher, useMemo, useSubmissionsJudging, useUserStore } from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
@@ -24,6 +24,8 @@ import {
 } from 'types';
 
 export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponseDto }) => {
+  
+  useSubmissionsJudging({ problemKey: problem.key });
   
   const userNickname = useUserStore(state => state.user.nickname);
   const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDto>>(jukiApiManager.API_V2.judge.getSummaryList().url);

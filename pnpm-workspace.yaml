@@ -4,8 +4,8 @@ allowBuilds:
   sharp: false
   unrs-resolver: false
 minimumReleaseAgeExclude:
-  - '@juki-team/base-ui@1.5.1 || 1.5.2 || 1.5.3 || 1.5.4 || 1.5.11 || 1.5.13 || 1.5.14 || 1.5.15'
-  - '@juki-team/commons@0.1.40 || 0.1.41 || 0.1.42 || 0.1.43 || 0.1.45'
+  - '@juki-team/base-ui@1.5.1 || 1.5.2 || 1.5.3 || 1.5.4 || 1.5.11 || 1.5.13 || 1.5.14 || 1.5.15 || 1.5.16'
+  - '@juki-team/commons@0.1.40 || 0.1.41 || 0.1.42 || 0.1.43 || 0.1.45 || 0.1.47'
   - '@ai-sdk/gateway@4.0.132'
   - '@ai-sdk/mcp@2.0.88'
   - '@ai-sdk/provider-utils@5.0.72'
