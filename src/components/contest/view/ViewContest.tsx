@@ -21,6 +21,7 @@ import { authorizedRequest, isContestChangesWebSocketResponseEventDto, toUpsertC
 import {
   useEffect,
   useI18nStore,
+  useMemo,
   usePageStore,
   useRouterStore,
   useSubscribe,
@@ -37,7 +38,6 @@ import {
   Status,
   SubscribeContestChangesWebSocketEventDto,
   TabsType,
-  UpsertContestDtoUI,
   WebSocketSubscriptionEvent,
 } from 'types';
 import { ViewClarifications } from './clarifications/ViewClarifications';
@@ -97,108 +97,112 @@ export function ContestViewLayout() {
   
   const { user: { isAdministrator, isManager } } = contest;
   
-  const tabHeaders: TabsType<ContestTab> = {
-    [ContestTab.OVERVIEW]: {
-      key: ContestTab.OVERVIEW,
-      header: <T className="tt-ce ws-np">overview</T>,
-      body: <ViewOverview contest={contest} reloadContest={reloadContest} />,
-    },
-  };
+  // the tabs (and their bodies) only change with the contest data or the selected problem
+  const tabHeaders = useMemo(() => {
+    const tabHeaders: TabsType<ContestTab> = {
+      [ContestTab.OVERVIEW]: {
+        key: ContestTab.OVERVIEW,
+        header: <T className="tt-ce ws-np">overview</T>,
+        body: <ViewOverview contest={contest} reloadContest={reloadContest} />,
+      },
+    };
   
-  const problems = Object.values(contest.problems);
-  problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
-  const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
-  const problem = problems[problemArrayIndex];
+    const problems = Object.values(contest.problems);
+    problems.sort((problemA, problemB) => problemA.index.localeCompare(problemB.index));
+    const problemArrayIndex = problems.findIndex(problem => problem.index === problemIndex);
+    const problem = problems[problemArrayIndex];
   
-  const canViewContest = isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless;
+    const canViewContest = isAdministrator || isManager || contest.isLive || contest.isPast || contest.isEndless;
   
-  if (canViewContest) {
-    if (problemArrayIndex !== -1) {
-      const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
-      const prevUrl = jukiAppRoutes.JUDGE().contests.view({
-        key: contest.key,
-        tab: ContestTab.PROBLEMS,
-        subTab: previousProblemIndex,
-      });
-      const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
-      const nextUrl = jukiAppRoutes.JUDGE().contests.view({
-        key: contest.key,
-        tab: ContestTab.PROBLEMS,
-        subTab: nextProblemIndex,
-      });
-      tabHeaders[ContestTab.PROBLEMS] = {
-        key: ContestTab.PROBLEMS,
-        header: (
-          <div className="jk-row gap nowrap left">
-            <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key, tab: ContestTab.PROBLEMS })}>
-              <T className="tt-ce ws-np clickable jk-br-ie" style={{ padding: '2px 4px' }}>problems</T>
-            </Link>
-            <Link href={prevUrl} style={{ display: 'contents' }}>
-              <NavigateBeforeIcon style={{ padding: 0 }} className="clickable jk-br-ie" />
-            </Link>
-            {problemIndex}
-            <Link href={nextUrl} style={{ display: 'contents' }}>
-              <NavigateNextIcon style={{ padding: 0 }} className="clickable jk-br-ie" />
-            </Link>
-          </div>
-        ),
+    if (canViewContest) {
+      if (problemArrayIndex !== -1) {
+        const previousProblemIndex = problems[(problemArrayIndex - 1 + problems.length) % problems.length]?.index;
+        const prevUrl = jukiAppRoutes.JUDGE().contests.view({
+          key: contest.key,
+          tab: ContestTab.PROBLEMS,
+          subTab: previousProblemIndex,
+        });
+        const nextProblemIndex = problems[(problemArrayIndex + 1) % problems.length]?.index;
+        const nextUrl = jukiAppRoutes.JUDGE().contests.view({
+          key: contest.key,
+          tab: ContestTab.PROBLEMS,
+          subTab: nextProblemIndex,
+        });
+        tabHeaders[ContestTab.PROBLEMS] = {
+          key: ContestTab.PROBLEMS,
+          header: (
+            <div className="jk-row gap nowrap left">
+              <Link href={jukiAppRoutes.JUDGE().contests.view({ key: contest.key, tab: ContestTab.PROBLEMS })}>
+                <T className="tt-ce ws-np clickable jk-br-ie" style={{ padding: '2px 4px' }}>problems</T>
+              </Link>
+              <Link href={prevUrl} style={{ display: 'contents' }}>
+                <NavigateBeforeIcon style={{ padding: 0 }} className="clickable jk-br-ie" />
+              </Link>
+              {problemIndex}
+              <Link href={nextUrl} style={{ display: 'contents' }}>
+                <NavigateNextIcon style={{ padding: 0 }} className="clickable jk-br-ie" />
+              </Link>
+            </div>
+          ),
+          body: (
+            <ViewProblemContest problem={problem} contest={contest} reloadContest={reloadContest} />
+          ),
+        };
+      } else {
+        tabHeaders[ContestTab.PROBLEMS] = {
+          key: ContestTab.PROBLEMS,
+          header: (
+            <div className="jk-row gap nowrap left">
+              <T className="tt-ce ws-np">problems</T>
+            </div>
+          ),
+          body: <ViewProblems key="problems-view" contest={contest} reloadContest={reloadContest} />,
+        };
+      }
+      tabHeaders[ContestTab.SCOREBOARD] = {
+        key: ContestTab.SCOREBOARD,
+        header: <T className="tt-ce ws-np">scoreboard</T>,
         body: (
-          <ViewProblemContest problem={problem} contest={contest} reloadContest={reloadContest} />
+          <ViewScoreboard
+            key="scoreboard"
+            contest={contest}
+            reloadContest={reloadContest}
+          />
         ),
-      };
-    } else {
-      tabHeaders[ContestTab.PROBLEMS] = {
-        key: ContestTab.PROBLEMS,
-        header: (
-          <div className="jk-row gap nowrap left">
-            <T className="tt-ce ws-np">problems</T>
-          </div>
-        ),
-        body: <ViewProblems key="problems-view" contest={contest} reloadContest={reloadContest} />,
       };
     }
-    tabHeaders[ContestTab.SCOREBOARD] = {
-      key: ContestTab.SCOREBOARD,
-      header: <T className="tt-ce ws-np">scoreboard</T>,
+  
+    tabHeaders[ContestTab.SUBMISSIONS] = {
+      key: ContestTab.SUBMISSIONS,
+      header: <T className="tt-ce ws-np">submissions</T>,
+      body: <ViewSubmissions key="submissions" contest={contest} />,
+    };
+  
+    if (contest.settings.clarifications && !contest.isGlobal) {
+      tabHeaders[ContestTab.CLARIFICATIONS] = {
+        key: ContestTab.CLARIFICATIONS,
+        header: <T className="tt-ce ws-np">clarifications</T>,
+        body: <ViewClarifications key="clarifications" contest={contest} />,
+      };
+    }
+    tabHeaders[ContestTab.MEMBERS] = {
+      key: ContestTab.MEMBERS,
+      header: <T className="tt-ce">members</T>,
       body: (
-        <ViewScoreboard
-          key="scoreboard"
-          contest={contest}
-          reloadContest={reloadContest}
-        />
+        <EditViewMembers key="members" contest={contest} />
       ),
     };
-  }
-  
-  tabHeaders[ContestTab.SUBMISSIONS] = {
-    key: ContestTab.SUBMISSIONS,
-    header: <T className="tt-ce ws-np">submissions</T>,
-    body: <ViewSubmissions key="submissions" contest={contest} />,
-  };
-  
-  if (contest.settings.clarifications && !contest.isGlobal) {
-    tabHeaders[ContestTab.CLARIFICATIONS] = {
-      key: ContestTab.CLARIFICATIONS,
-      header: <T className="tt-ce ws-np">clarifications</T>,
-      body: <ViewClarifications key="clarifications" contest={contest} />,
-    };
-  }
-  tabHeaders[ContestTab.MEMBERS] = {
-    key: ContestTab.MEMBERS,
-    header: <T className="tt-ce">members</T>,
-    body: (
-      <EditViewMembers key="members" contest={contest as unknown as UpsertContestDtoUI} />
-    ),
-  };
-  if ((isAdministrator || isManager || contest.isPast || contest.isEndless || contest.isGlobal)) {
-    tabHeaders[ContestTab.EVENTS] = {
-      key: ContestTab.EVENTS,
-      header: <T className="tt-ce">events</T>,
-      body: (
-        <ViewEvents key="events" contest={contest} />
-      ),
-    };
-  }
+    if ((isAdministrator || isManager || contest.isPast || contest.isEndless || contest.isGlobal)) {
+      tabHeaders[ContestTab.EVENTS] = {
+        key: ContestTab.EVENTS,
+        header: <T className="tt-ce">events</T>,
+        body: (
+          <ViewEvents key="events" contest={contest} />
+        ),
+      };
+    }
+    return tabHeaders;
+  }, [ contest, problemIndex, reloadContest, Link, isAdministrator, isManager ]);
   
   const extraNodes: ReactNode[] = [];
   

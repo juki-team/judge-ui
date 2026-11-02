@@ -8,7 +8,8 @@ export interface EditContestProps {
 }
 
 export interface EditViewMembersContestProps {
-  contest: UpsertContestDtoUI,
+  // only what it uses: the contest view passes its ContestDataUI, the editor its UpsertContestDtoUI
+  contest: Pick<UpsertContestDtoUI, 'members' | 'owner'>,
   setContest?: Dispatch<SetStateAction<UpsertContestDtoUI>>,
   editing?: boolean
 }
