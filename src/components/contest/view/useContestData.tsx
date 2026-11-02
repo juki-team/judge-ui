@@ -7,34 +7,34 @@ import { useFetcher, useJukiNotification, useMatchMutate, useRef, useRouterStore
 import { useCallback, useEffect, useMemo } from 'react';
 import {
   ContentResponseType,
-  ContestClarificationsResponseDTO,
-  ContestDataResponseDTO,
-  ContestEventsResponseDTO,
-  ContestMembersResponseDTO,
+  ContestClarificationsResponseDto,
+  ContestDataResponseDto,
+  ContestEventsResponseDto,
+  ContestMembersResponseDto,
 } from 'types';
 import { T } from '../../commons';
 import { ContestDataUI } from './types';
 
-export function useContestData(fallbackData: ContestDataResponseDTO, companyKey: string) {
+export function useContestData(fallbackData: ContestDataResponseDto, organizationKey: string) {
   const { data: dataContest, isLoading: l1, isValidating: v1 } =
-    useFetcher<ContentResponseType<ContestDataResponseDTO>>(
-      jukiApiManager.API_V2.contest.getData({ params: { key: fallbackData.key as string, companyKey } }).url,
+    useFetcher<ContentResponseType<ContestDataResponseDto>>(
+      jukiApiManager.API_V2.contest.getData({ params: { key: fallbackData.key as string, organizationKey } }).url,
       { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) },
     );
   
   const { data: dataEvents, isLoading: l2, isValidating: v2 } =
-    useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
-      jukiApiManager.API_V2.contest.getDataEvents({ params: { key: fallbackData.key, companyKey } }).url,
+    useFetcher<ContentResponseType<ContestEventsResponseDto>>(
+      jukiApiManager.API_V2.contest.getDataEvents({ params: { key: fallbackData.key, organizationKey } }).url,
     );
   
   const { data: dataMembers, isLoading: l3, isValidating: v3 } =
-    useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
-      jukiApiManager.API_V2.contest.getDataMembers({ params: { key: fallbackData.key, companyKey } }).url,
+    useFetcher<ContentResponseType<ContestMembersResponseDto>>(
+      jukiApiManager.API_V2.contest.getDataMembers({ params: { key: fallbackData.key, organizationKey } }).url,
     );
   
   const { data: dataClarifications, isLoading: l4, isValidating: v4 } =
-    useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
-      jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: fallbackData.key, companyKey } }).url,
+    useFetcher<ContentResponseType<ContestClarificationsResponseDto>>(
+      jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: fallbackData.key, organizationKey } }).url,
     );
   
   const contestResponse = dataContest?.success ? dataContest.content : fallbackData;

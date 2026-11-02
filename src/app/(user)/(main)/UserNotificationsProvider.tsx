@@ -2,23 +2,23 @@
 
 import { T } from 'components';
 import { PROBLEM_VERDICT } from 'config/constants';
-import { getUserKey, isUserNotificationSubmissionWebSocketResponseEventDTO } from 'helpers';
+import { getUserKey, isUserNotificationSubmissionWebSocketResponseEventDto } from 'helpers';
 import { useJukiNotification, useSubscribe, useUserStore } from 'hooks';
-import { ProblemVerdict, SubscribeUserNotificationWebsocketEventDTO, WebSocketSubscriptionEvent } from 'types';
+import { ProblemVerdict, SubscribeUserNotificationWebsocketEventDto, WebSocketSubscriptionEvent } from 'types';
 
 export function UserNotificationProvider({}) {
   const userNickname = useUserStore(store => store.user.nickname);
-  const userCompanyKey = useUserStore(store => store.user.company.key);
+  const userOrganizationKey = useUserStore(store => store.user.organization.key);
   const { addSuccessNotification, addErrorNotification } = useJukiNotification();
-  const event: Omit<SubscribeUserNotificationWebsocketEventDTO, 'clientId'> = {
+  const event: Omit<SubscribeUserNotificationWebsocketEventDto, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_USER_NOTIFICATION,
-    userKey: getUserKey(userNickname, userCompanyKey),
+    userKey: getUserKey(userNickname, userOrganizationKey),
   };
   
   useSubscribe(
     event,
     (data) => {
-      if (isUserNotificationSubmissionWebSocketResponseEventDTO(data)) {
+      if (isUserNotificationSubmissionWebSocketResponseEventDto(data)) {
         const contest = data.content.contest;
         const verdict = data.content.verdict;
         const problem = data.content.problem;

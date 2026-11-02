@@ -8,25 +8,25 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
-  ContestDataResponseDTO,
+  ContestDataResponseDto,
   DataViewerHeadersType,
   HTTPMethod,
   QueryParam,
-  ScoreboardResponseDTO,
+  ScoreboardResponseDto,
   Status,
 } from 'types';
-import { ScoreboardResponseDTOFocus, ScoreboardResponseDTOUI } from '../types';
+import { ScoreboardResponseDtoFocus, ScoreboardResponseDtoUI } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
 
 interface ViewDynamicScoreboardProps {
-  contest: ContestDataResponseDTO,
+  contest: ContestDataResponseDto,
   onClose: () => void,
   reloadContest: () => Promise<void>,
 }
 
-const getKeyUser = (user: ScoreboardResponseDTOFocus['user']) => {
-  return getUserKey(user.nickname, user.company.key);
+const getKeyUser = (user: ScoreboardResponseDtoFocus['user']) => {
+  return getUserKey(user.nickname, user.organization.key);
 };
 
 export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewDynamicScoreboardProps) => {
@@ -41,10 +41,10 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     // request: requestScoreboardFinal,
     // isLoading: isLoadingScoreboardFinal,
     // reload: reloadScoreboardFinal,
-  } = useFetcher<ContentsResponseType<ScoreboardResponseDTO>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, true, true));
-  const scoreboardResponseFinal: ScoreboardResponseDTO[] = useMemo(() => (responseScoreboardFinal?.success ? responseScoreboardFinal.contents : []), [ responseScoreboardFinal ]);
-  const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
+  } = useFetcher<ContentsResponseType<ScoreboardResponseDto>>(JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, true, true));
+  const scoreboardResponseFinal: ScoreboardResponseDto[] = useMemo(() => (responseScoreboardFinal?.success ? responseScoreboardFinal.contents : []), [ responseScoreboardFinal ]);
+  const columns: DataViewerHeadersType<ScoreboardResponseDtoUI>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDtoUI>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, contest.isEndless),
@@ -62,26 +62,26 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentResponseType<{ content: ScoreboardResponseDTO[], timestamp: number }[]>>(
+  } = useDataViewerRequester<ContentResponseType<{ content: ScoreboardResponseDto[], timestamp: number }[]>>(
     () => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key),
   );
   const [ trigger, setTrigger ] = useState(0);
   const [ index, setIndex ] = useState(0);
-  const [ data, setData ] = useState<ScoreboardResponseDTOFocus[]>([]);
+  const [ data, setData ] = useState<ScoreboardResponseDtoFocus[]>([]);
   const [ timestamp, setTimestamp ] = useState(0);
   const { notifyResponse } = useJukiNotification();
   
   useEffect(() => {
     if (response?.success && response.content[index]) {
       setData(prevState => {
-        const prevByUsers: { [key: string]: ScoreboardResponseDTOUI } = {};
+        const prevByUsers: { [key: string]: ScoreboardResponseDtoUI } = {};
         prevState.forEach(user => prevByUsers[getKeyUser(user.user)] = user);
         const nextBoard = (response.content[index + 1]?.content || []).map(scoreboard => {
           const finalUserScoreboard = scoreboardResponseFinal.find(s =>
             getKeyUser(s.user) === getKeyUser(scoreboard.user),
           );
-          const focus: ScoreboardResponseDTOFocus['focus'] = [];
-          const diff: ScoreboardResponseDTOFocus['diff'] = [];
+          const focus: ScoreboardResponseDtoFocus['focus'] = [];
+          const diff: ScoreboardResponseDtoFocus['diff'] = [];
           const problemKeys = new Set([ ...Object.keys(scoreboard.problems), ...Object.keys(finalUserScoreboard?.problems ?? {}) ]);
           for (const problemKey of Array.from(problemKeys)) {
             const problem = scoreboard.problems[problemKey];
@@ -107,8 +107,8 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
           const finalUserScoreboard = scoreboardResponseFinal.find(s =>
             getKeyUser(s.user) === getKeyUser(scoreboard.user),
           );
-          const focus: ScoreboardResponseDTOFocus['focus'] = [];
-          const diff: ScoreboardResponseDTOFocus['diff'] = [];
+          const focus: ScoreboardResponseDtoFocus['focus'] = [];
+          const diff: ScoreboardResponseDtoFocus['diff'] = [];
           const problemKeys = new Set([ ...Object.keys(scoreboard.problems), ...Object.keys(finalUserScoreboard?.problems ?? {}) ]);
           for (const problemKey of Array.from(problemKeys)) {
             const problem = scoreboard.problems[problemKey];
@@ -142,7 +142,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   }, [ index, response, scoreboardResponseFinal ]);
   const max = (response?.success ? response.content : []).length - 1;
   
-  const currentTimestamp = timestamp - contest.settings.startTimestamp;
+  const currentTimestamp = timestamp - contest.settings.startsAt;
   
   const extraNodes = useMemo(() => [
     <Button key="exit" onClick={onClose} size="tiny">
@@ -199,7 +199,7 @@ export const ViewDynamicScoreboard = ({ contest, onClose, reloadContest }: ViewD
   ], [ contest?.key, currentTimestamp, fullscreen, max, notifyResponse, onClose ]);
   
   const score = (
-    <DataViewer<ScoreboardResponseDTOFocus>
+    <DataViewer<ScoreboardResponseDtoFocus>
       headers={columns}
       data={data}
       rows={{ height: 68 }}

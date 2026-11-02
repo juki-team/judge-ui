@@ -3,7 +3,7 @@ import { jukiApiManager } from 'config';
 import { DEFAULT_METADATA } from 'config/constants';
 import { get, oneTab } from 'helpers';
 import type { Metadata } from 'next';
-import { ContentResponseType, ContestDataResponseDTO, MetadataResponseDTO } from 'types';
+import { ContentResponseType, ContestDataResponseDto, MetadataResponseDto } from 'types';
 import { ContestDataProvider } from '../../../../../components/contest/view/ContestDataProvider';
 
 type Props = {
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   const contestKey = (await params).contestKey;
   
-  const result = await get<ContentResponseType<MetadataResponseDTO>>(jukiApiManager.API_V2.contest.getMetadata({ params: { key: contestKey } }).url);
+  const result = await get<ContentResponseType<MetadataResponseDto>>(jukiApiManager.API_V2.contest.getMetadata({ params: { key: contestKey } }).url);
   
   const { title, description } = result?.success ? result.content : { title: '', description: '' };
   
@@ -48,7 +48,7 @@ export default async function Page({ params }: Props) {
   
   const { contestKey } = await params;
   
-  const contestResponse = await get<ContentResponseType<ContestDataResponseDTO>>(jukiApiManager.API_V2.contest.getData({ params: { key: contestKey } }).url);
+  const contestResponse = await get<ContentResponseType<ContestDataResponseDto>>(jukiApiManager.API_V2.contest.getData({ params: { key: contestKey } }).url);
   
   if (contestResponse.success) {
     return (

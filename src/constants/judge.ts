@@ -32,8 +32,8 @@ export const JUDGE_API_V1 = {
     TEST_CASE_KEY_FILE: (problemKey: string, testCaseKey: string, keyFile: KeyFileType) => {
       return `${JUKI_SERVICE_V2_URL}/problem/${problemKey}/test-case/${testCaseKey}/key-file/${keyFile}`;
     },
-    STATISTICS: (key: string, startTimestamp: number, endTimestamp: number, groupBy: GroupByTimestampKey[]) => {
-      return `${JUKI_SERVICE_V2_URL}/statistics/problem/${key}?startTimestamp=${startTimestamp}&endTimestamp=${endTimestamp}&groupBy=${groupBy.join(',')}`;
+    STATISTICS: (key: string, startsAt: number, endsAt: number, groupBy: GroupByTimestampKey[]) => {
+      return `${JUKI_SERVICE_V2_URL}/statistics/problem/${key}?startsAt=${startsAt}&endsAt=${endsAt}&groupBy=${groupBy.join(',')}`;
     },
     POST_PDF: () => {
       return `${JUKI_SERVICE_V2_URL}/problem/statement-pdf`;

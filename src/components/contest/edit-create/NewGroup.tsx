@@ -2,9 +2,9 @@
 
 import { Button, Input, InputColor, Modal, T } from 'components';
 import { useSyncedState } from 'hooks';
-import { BasicModalProps, UpsertContestDTOUI } from 'types';
+import { BasicModalProps, UpsertContestDtoUI } from 'types';
 
-type GroupType = UpsertContestDTOUI['groups'][string];
+type GroupType = UpsertContestDtoUI['groups'][string];
 
 interface EditGroupProps extends BasicModalProps {
   group: GroupType,
@@ -13,7 +13,7 @@ interface EditGroupProps extends BasicModalProps {
 
 export const NewGroup = ({ group, onSave, isOpen, onClose }: EditGroupProps) => {
   
-  const [ newGroup, setNewGroup ] = useSyncedState<UpsertContestDTOUI['groups'][string]>(group);
+  const [ newGroup, setNewGroup ] = useSyncedState<UpsertContestDtoUI['groups'][string]>(group);
   
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

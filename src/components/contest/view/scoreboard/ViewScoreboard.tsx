@@ -23,20 +23,20 @@ import { useCallback, useMemo, useState } from 'react';
 import {
   ContentResponseType,
   ContentsResponseType,
-  ContestDataResponseDTO,
+  ContestDataResponseDto,
   DataViewerHeadersType,
   QueryParam,
-  ScoreboardResponseDTO,
+  ScoreboardResponseDto,
   Status,
 } from 'types';
-import { ScoreboardResponseDTOUI } from '../types';
+import { ScoreboardResponseDtoUI } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
 import { ViewDynamicScoreboard } from './ViewDynamicScoreboard';
 
 interface DownloadButtonProps {
-  data: ScoreboardResponseDTO[],
-  contest: ContestDataResponseDTO,
+  data: ScoreboardResponseDto[],
+  contest: ContestDataResponseDto,
   disabled: boolean
 }
 
@@ -109,7 +109,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
 };
 
 interface ViewScoreboardProps {
-  contest: ContestDataResponseDTO,
+  contest: ContestDataResponseDto,
   reloadContest: () => Promise<void>,
 }
 
@@ -123,8 +123,8 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
-  const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
+  const columns: DataViewerHeadersType<ScoreboardResponseDtoUI>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDtoUI>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, contest.isEndless || contest.isGlobal),
@@ -145,16 +145,16 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
     request,
     isLoading,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen, true));
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen, true));
   const {
     data: responseUnofficial,
     request: requestUnofficial,
     // isLoading: isLoadingUnofficial,
     // setLoaderStatusRef: setLoaderUnofficial,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen, false));
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen, false));
   const [ trigger, setTrigger ] = useState(0);
   
-  const data: ScoreboardResponseDTOUI[] = useMemo(() => [
+  const data: ScoreboardResponseDtoUI[] = useMemo(() => [
       ...(response?.success ? response.contents : []).map(d => ({ ...d, official: true })),
       ...(responseUnofficial?.success ? responseUnofficial.contents : [])
         .filter(d => !!d.totalPoints)
@@ -251,7 +251,7 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   );
   
   const score = (
-    <DataViewer<ScoreboardResponseDTOUI>
+    <DataViewer<ScoreboardResponseDtoUI>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
@@ -269,13 +269,13 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
       })}
       groups={groups}
       getRecordKey={({ data, index }) => (
-        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) + (data?.[index]?.official ? '' : '_')
+        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) + (data?.[index]?.official ? '' : '_')
       )}
       deps={[ unfrozen, trigger ]}
       getRecordStyle={({
                          data,
                          index,
-                       }) => (getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) === getUserKey(user.nickname, user.company.key) ? {
+                       }) => (getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) === getUserKey(user.nickname, user.organization.key) ? {
         borderBottom: '2px solid var(--cr-at)',
         borderTop: '2px solid var(--cr-at)',
         borderRadius: 'var(--border-radius-inline)',

@@ -3,11 +3,11 @@
 import { EditCreateProblem, EntityUpdateLayout, FetcherLayer, ProblemNotFoundCard } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1 } from 'config/constants';
-import { toUpsertProblemDTO } from 'helpers';
+import { toUpsertProblemDto } from 'helpers';
 import { useRouterStore } from 'hooks';
-import type { ContentResponseType, ProblemDataResponseDTO, UpsertProblemUIDTO } from 'types';
+import type { ContentResponseType, ProblemDataResponseDto, UpsertProblemUIDTO } from 'types';
 
-function toUpsertProblemUIDTO(problem: ProblemDataResponseDTO): UpsertProblemUIDTO {
+function toUpsertProblemUIDTO(problem: ProblemDataResponseDto): UpsertProblemUIDTO {
   return {
     author: problem.author,
     editorial: problem.editorial,
@@ -39,7 +39,7 @@ function ProblemEdit() {
   const problemKey = useRouterStore(state => state.routeParams.problemKey);
   
   return (
-    <FetcherLayer<ContentResponseType<ProblemDataResponseDTO>>
+    <FetcherLayer<ContentResponseType<ProblemDataResponseDto>>
       url={jukiApiManager.API_V2.problem.getData({ params: { key: problemKey as string } }).url}
       errorView={<ProblemNotFoundCard />}
     >
@@ -53,7 +53,7 @@ function ProblemEdit() {
               viewRoute={(entityKey) => jukiAppRoutes.JUDGE().problems.view({ key: entityKey })}
               updateApiURL={() => JUDGE_API_V1.PROBLEM.PROBLEM}
               viewApiURL={entityKey => jukiApiManager.API_V2.problem.getData({ params: { key: entityKey } }).url}
-              toEntityUpsert={toUpsertProblemDTO}
+              toEntityUpsert={toUpsertProblemDto}
             />
           );
         }

@@ -4,7 +4,7 @@ import { AssignmentIcon, CodeIcon, LeaderboardIcon, LinkLastPath, MainMenu, T, T
 import { jukiAppRoutes } from 'config';
 import { useRouterStore, useUIStore, useUserStore } from 'hooks';
 import { type PropsWithChildren, useMemo } from 'react';
-import { JUKI_APP_COMPANY_KEY, ROUTES } from 'src/constants';
+import { JUKI_APP_ORGANIZATION_KEY, ROUTES } from 'src/constants';
 import { ContestsTab, LastPathKey, MenuType, ProfileSetting, Theme } from 'types';
 
 export const NavigationBar = ({ children }: PropsWithChildren) => {
@@ -12,7 +12,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
   const pathname = useRouterStore(state => state.pathname);
   const pushRoute = useRouterStore(state => state.pushRoute);
   const { Link, Image } = useUIStore(store => store.components);
-  const companyKey = useUserStore(state => state.company.key);
+  const organizationKey = useUserStore(state => state.organization.key);
   const userPreferredTheme = useUserStore(state => state.user.settings[ProfileSetting.THEME]);
   const isContestsPage = ('/' + pathname).includes('//contest');
   const isProblemsPage = ('/' + pathname).includes('//problem');
@@ -57,7 +57,7 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
         ),
       },
     ];
-    if (companyKey === JUKI_APP_COMPANY_KEY) {
+    if (organizationKey === JUKI_APP_ORGANIZATION_KEY) {
       menu.push(
         {
           label: <T className="tt-se">ranking</T>,
@@ -100,10 +100,10 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
       },
     );
     return menu;
-  }, [ Link, companyKey, isContestsPage, isIDEPage, isProblemsPage, isRankingPage ]);
+  }, [ Link, organizationKey, isContestsPage, isIDEPage, isProblemsPage, isRankingPage ]);
   
   // stable element: lets the memoized settings section skip re-rendering on every navigation
-  const moreApps = useMemo(() => companyKey == JUKI_APP_COMPANY_KEY && <>
+  const moreApps = useMemo(() => organizationKey == JUKI_APP_ORGANIZATION_KEY && <>
     <Link href="https://utils.juki.app">
       <div className="jk-row gap left">
         <Image
@@ -128,12 +128,12 @@ export const NavigationBar = ({ children }: PropsWithChildren) => {
         </div>
       </div>
     </Link>
-  </>, [ Image, Link, companyKey, userPreferredTheme ]);
+  </>, [ Image, Link, organizationKey, userPreferredTheme ]);
   
   return (
     <MainMenu
-      onSeeMyProfile={(nickname, companyKey) => (
-        pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname: nickname, companyKey }))
+      onSeeMyProfile={(nickname, organizationKey) => (
+        pushRoute(jukiAppRoutes.JUDGE().profiles.view({ nickname: nickname, organizationKey }))
       )}
       menu={menu}
       profileSelected={pathname.includes('/profiles/')}

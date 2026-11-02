@@ -1,11 +1,11 @@
 import { DocumentMembersContent, T } from 'components';
 import { type Dispatch, type SetStateAction } from 'react';
-import { EntityAccess, EntityMembersResponseDTO, UserCompanyBasicInfoResponseDTO } from 'types';
+import { EntityAccess, EntityMembersResponseDto, UserOrganizationBasicInfoResponseDto } from 'types';
 
 interface ProblemStatementProps {
-  members: EntityMembersResponseDTO,
-  setMembers?: Dispatch<SetStateAction<EntityMembersResponseDTO>>,
-  documentOwner: UserCompanyBasicInfoResponseDTO,
+  members: EntityMembersResponseDto,
+  setMembers?: Dispatch<SetStateAction<EntityMembersResponseDto>>,
+  documentOwner: UserOrganizationBasicInfoResponseDto,
 }
 
 export const problemAccessProps = {

@@ -30,7 +30,7 @@ import { CSSProperties } from 'react';
 import {
   ContentResponseType,
   LastPathKey,
-  ProblemDataResponseDTO,
+  ProblemDataResponseDto,
   ProblemTab,
   ProfileSetting,
   TabsType,
@@ -47,7 +47,7 @@ import { ProblemViewTab } from './ProblemViewTab';
 import { RejudgeConfirmationModal } from './RejudgeConfirmationModal';
 
 interface ProblemViewLayoutProps {
-  problem: ProblemDataResponseDTO,
+  problem: ProblemDataResponseDto,
 }
 
 export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutProps) => {
@@ -59,7 +59,7 @@ export const ProblemViewLayout = ({ problem: fallbackData }: ProblemViewLayoutPr
     isLoading,
     isValidating,
     mutate: reloadProblem,
-  } = useFetcher<ContentResponseType<ProblemDataResponseDTO>>(
+  } = useFetcher<ContentResponseType<ProblemDataResponseDto>>(
     jukiApiManager.API_V2.problem.getData({ params: { key: fallbackData.key as string } }).url,
     { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });
   const problem = data?.success ? data.content : fallbackData;

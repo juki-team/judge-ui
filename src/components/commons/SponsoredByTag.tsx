@@ -1,15 +1,15 @@
 'use client';
 
 import { T } from 'components';
-import { JUKI_APP_COMPANY_KEY } from 'config/constants';
+import { JUKI_APP_ORGANIZATION_KEY } from 'config/constants';
 import { useUIStore, useUserStore } from 'hooks';
 
 export const SponsoredByTag = () => {
   
-  const companyKey = useUserStore(state => state.company.key);
+  const organizationKey = useUserStore(state => state.organization.key);
   const { Link } = useUIStore(store => store.components);
   
-  if (companyKey === JUKI_APP_COMPANY_KEY) {
+  if (organizationKey === JUKI_APP_ORGANIZATION_KEY) {
     return null;
   }
   

@@ -7,18 +7,18 @@ import { useDataViewerRequester, useI18nStore, usePageStore, useUIStore, useUser
 import { useMemo, useState } from 'react';
 import {
   ContentsResponseType,
-  ContestDataResponseDTO,
+  ContestDataResponseDto,
   DataViewerHeadersType,
   DataViewerRequestType,
   QueryParam,
-  ScoreboardResponseDTO,
+  ScoreboardResponseDto,
 } from 'types';
-import { BunchScoreboardResponseDTOUI, ScoreboardResponseDTOUI } from '../types';
+import { BunchScoreboardResponseDtoUI, ScoreboardResponseDtoUI } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 
 interface DownloadButtonProps {
-  data: ScoreboardResponseDTO[],
-  contest: ContestDataResponseDTO,
+  data: ScoreboardResponseDto[],
+  contest: ContestDataResponseDto,
   disabled: boolean
 }
 
@@ -99,91 +99,91 @@ const useScores = (contestsKeys: string[], unfrozen: boolean) => {
     data: response1,
     request: request1,
     isLoading: isLoading1,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[0] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[0], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[0] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[0], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial1,
   //   request: requestUnofficial1,
   //   isLoading: isLoadingUnofficial1,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[0] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[0], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[0] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[0], unfrozen, false) : null);
   
   const {
     data: response2,
     request: request2,
     isLoading: isLoading2,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[1] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[1], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[1] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[1], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial2,
   //   request: requestUnofficial2,
   //   isLoading: isLoadingUnofficial2,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[1] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[1], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[1] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[1], unfrozen, false) : null);
   
   const {
     data: response3,
     request: request3,
     isLoading: isLoading3,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[2] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[2], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[2] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[2], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial3,
   //   request: requestUnofficial3,
   //   isLoading: isLoadingUnofficial3,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[2] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[2], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[2] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[2], unfrozen, false) : null);
   
   const {
     data: response4,
     request: request4,
     isLoading: isLoading4,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[3] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[3], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[3] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[3], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial4,
   //   request: requestUnofficial4,
   //   isLoading: isLoadingUnofficial4,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[3] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[3], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[3] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[3], unfrozen, false) : null);
   
   const {
     data: response5,
     request: request5,
     isLoading: isLoading5,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[4] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[4], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[4] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[4], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial5,
   //   request: requestUnofficial5,
   //   isLoading: isLoadingUnofficial5,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[4] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[4], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[4] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[4], unfrozen, false) : null);
   
   const {
     data: response6,
     request: request6,
     isLoading: isLoading6,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[5] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[5], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[5] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[5], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial6,
   //   request: requestUnofficial6,
   //   isLoading: isLoadingUnofficial6,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[5] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[5], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[5] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[5], unfrozen, false) : null);
   
   const {
     data: response7,
     request: request7,
     isLoading: isLoading7,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[6] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[6], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[6] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[6], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial7,
   //   request: requestUnofficial7,
   //   isLoading: isLoadingUnofficial7,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[6] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[6], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[6] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[6], unfrozen, false) : null);
   
   const {
     data: response8,
     request: request8,
     isLoading: isLoading8,
-  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[7] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[7], unfrozen, true) : null);
+  } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[7] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[7], unfrozen, true) : null);
   // const {
   //   data: responseUnofficial8,
   //   request: requestUnofficial8,
   //   isLoading: isLoadingUnofficial8,
-  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDTO>>(() => contestsKeys[7] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[7], unfrozen, false) : null);
+  // } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => contestsKeys[7] ? JUDGE_API_V1.CONTEST.SCOREBOARD(contestsKeys[7], unfrozen, false) : null);
   
-  const data: BunchScoreboardResponseDTOUI[] = useMemo(() => [
+  const data: BunchScoreboardResponseDtoUI[] = useMemo(() => [
       ...([
         ...(response1?.success ? response1.contents : [])
           .map(a => ({ ...a, order: 1, label: 'Grupo 1', color: '#0062FF' })), // Rosa Neón Potente
@@ -261,8 +261,8 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
   const { Link } = useUIStore(store => store.components);
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const t = useI18nStore(state => state.i18n.t);
-  const columns: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ScoreboardResponseDTOUI>[] = [
+  const columns: DataViewerHeadersType<ScoreboardResponseDtoUI>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDtoUI>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, false),
@@ -320,8 +320,8 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
   );
   
   return (
-    <DataViewer<BunchScoreboardResponseDTOUI>
-      headers={columns as [] as DataViewerHeadersType<BunchScoreboardResponseDTOUI>[]}
+    <DataViewer<BunchScoreboardResponseDtoUI>
+      headers={columns as [] as DataViewerHeadersType<BunchScoreboardResponseDtoUI>[]}
       data={data}
       rows={{ height: 68 }}
       requestRef={request}
@@ -335,7 +335,7 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
       })}
       groups={groups}
       getRecordKey={({ data, index }) => (
-        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) + (data?.[index]?.official ? '' : '_')
+        getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) + (data?.[index]?.official ? '' : '_')
       )}
       deps={[ unfrozen ]}
       getRecordStyle={({
@@ -344,7 +344,7 @@ export const ViewBunchScoreboard = ({ contestKeys }: ViewScoreboardProps) => {
                        }) => ({
         
         ...(
-          getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key) === getUserKey(user.nickname, user.company.key) ? {
+          getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key) === getUserKey(user.nickname, user.organization.key) ? {
             borderBottom: '2px solid var(--cr-at)',
             borderTop: '2px solid var(--cr-at)',
             borderRadius: 'var(--border-radius-inline)',

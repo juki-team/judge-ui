@@ -1,24 +1,24 @@
 import { EntityState } from 'types';
 import {
-  ContestDataResponseDTO,
-  EntityCompanySummaryListResponseDTO,
-  EntityMembersResponseDTO,
-  ProblemJudgeSummaryListResponseDTO,
-  UpsertContestProblemDTO,
+  ContestDataResponseDto,
+  EntityOrganizationSummaryListResponseDto,
+  EntityMembersResponseDto,
+  ProblemJudgeSummaryListResponseDto,
+  UpsertContestProblemDto,
 } from './commons';
-import { UpsertContestDTO } from './index';
+import { UpsertContestDto } from './index';
 
-export type UpsertContestProblemDTOUI = UpsertContestProblemDTO & {
+export type UpsertContestProblemDtoUI = UpsertContestProblemDto & {
   name: string,
-  judge: ProblemJudgeSummaryListResponseDTO,
+  judge: ProblemJudgeSummaryListResponseDto,
   tags: string[],
-  company: EntityCompanySummaryListResponseDTO,
+  organization: EntityOrganizationSummaryListResponseDto,
 };
 
-export interface UpsertContestDTOUI extends Omit<UpsertContestDTO, 'members'> {
-  owner: ContestDataResponseDTO['owner'],
-  members: EntityMembersResponseDTO,
-  problems: { [key: string]: UpsertContestProblemDTOUI },
+export interface UpsertContestDtoUI extends Omit<UpsertContestDto, 'members'> {
+  owner: ContestDataResponseDto['owner'],
+  members: EntityMembersResponseDto,
+  problems: { [key: string]: UpsertContestProblemDtoUI },
   state: EntityState,
 }
 

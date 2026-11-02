@@ -4,10 +4,10 @@ import { JUKI_SERVICE_V2_URL, ONE_MINUTE } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useMatchMutate, useRouterStore, useUIStore } from 'hooks';
 import { RefObject } from 'react';
-import { CodeLanguage, ContentResponseType, ProblemDataResponseDTO, ProblemTab, Status } from 'types';
+import { CodeLanguage, ContentResponseType, ProblemDataResponseDto, ProblemTab, Status } from 'types';
 
 interface ProblemViewTabProps {
-  problem: ProblemDataResponseDTO,
+  problem: ProblemDataResponseDto,
   historyRefs: {
     lastLanguageRef: RefObject<string>,
     lastSourceRef: RefObject<string>,

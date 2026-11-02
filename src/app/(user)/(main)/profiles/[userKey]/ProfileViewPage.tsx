@@ -4,18 +4,18 @@ import { UserViewLayout } from 'components';
 import { jukiApiManager } from 'config';
 import { contentResponse } from 'helpers';
 import { useFetcher } from 'hooks';
-import { ContentResponseType, UserProfileResponseDTO } from 'types';
+import { ContentResponseType, UserProfileResponseDto } from 'types';
 
-export function ProfileViewPage({ profile: fallbackData }: { profile: UserProfileResponseDTO }) {
+export function ProfileViewPage({ profile: fallbackData }: { profile: UserProfileResponseDto }) {
   
   const {
     data: dataContest,
     mutate,
-  } = useFetcher<ContentResponseType<UserProfileResponseDTO>>(
+  } = useFetcher<ContentResponseType<UserProfileResponseDto>>(
     jukiApiManager.API_V2.user.getProfile({
       params: {
         nickname: fallbackData.nickname,
-        companyKey: fallbackData.company?.key,
+        organizationKey: fallbackData.organization?.key,
       },
     }).url,
     { fallbackData: JSON.stringify(contentResponse('fallback data', fallbackData)) });

@@ -1,19 +1,19 @@
 import {
-  EntityMembersResponseDTO,
+  EntityMembersResponseDto,
   EntityState,
   Judge,
   ProblemSampleCasesType,
-  UpsertProblemDTO,
-  UserCompanyBasicInfoResponseDTO,
+  UpsertProblemDto,
+  UserOrganizationBasicInfoResponseDto,
 } from './commons';
 
 export type KeyFileType = 'input' | 'output';
 
-export interface UpsertProblemUIDTO extends Omit<UpsertProblemDTO, 'members'> {
+export interface UpsertProblemUIDTO extends Omit<UpsertProblemDto, 'members'> {
   judgeKey: Judge | string,
   judgeIsExternal: boolean,
-  members: EntityMembersResponseDTO,
-  owner: UserCompanyBasicInfoResponseDTO,
+  members: EntityMembersResponseDto,
+  owner: UserOrganizationBasicInfoResponseDto,
   state: EntityState,
 }
 
@@ -21,7 +21,7 @@ export enum PrintMode {
   AS_PROBLEM_SET = 'asProblemSet'
 }
 
-export type StatementDTO = {
+export type StatementDto = {
   description: string,
   input: string,
   output: string,

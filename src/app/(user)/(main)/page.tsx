@@ -8,7 +8,7 @@ import { ContestsTab, ProfileSetting } from 'types';
 
 export default function Home() {
   
-  const companyName = useUserStore(state => state.company.name);
+  const organizationName = useUserStore(state => state.organization.name);
   const preferredLanguage = useUserStore(state => state.user.settings[ProfileSetting.LANGUAGE]);
   const { Link, Image } = useUIStore(store => store.components);
   const viewPortWidth = usePageStore(store => store.viewPort.width);
@@ -19,14 +19,14 @@ export default function Home() {
       <div className="jk-col gap jk-pg-lg nowrap extend stretch  pn-re bc-we" style={{ width: '100%' }}>
         <h1 className="jk-pg-t ta-cr">
           <T className="tt-se">welcome to</T>&nbsp;
-          <span className="fw-br cr-sy ws-np">{companyName}</span>
+          <span className="fw-br cr-sy ws-np">{organizationName}</span>
           &nbsp;
           <span className="fw-br cr-py">judge</span>
         </h1>
         <div className="jk-row pn-re">
           <div className="jk-col gap ta-cr">
             <h3><T className="tt-se">competitive programmers home</T></h3>
-            <p>{companyName} judge <T>is designed to make people improve their programming skills</T></p>
+            <p>{organizationName} judge <T>is designed to make people improve their programming skills</T></p>
           </div>
           <div className="jk-row pn-re wh-100">
             <Image

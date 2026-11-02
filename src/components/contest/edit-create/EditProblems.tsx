@@ -1,4 +1,5 @@
 'use client';
+import { endOfDay, isWithinInterval, startOfDay } from '@juki-team/commons';
 
 import {
   BalloonIcon,
@@ -22,24 +23,24 @@ import { useEffect, useSyncedState, useUIStore, useUserStore } from 'hooks';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { PALLETE } from 'src/constants';
 import {
-  ContestProblemBasicDataResponseDTO,
+  ContestProblemBasicDataResponseDto,
   ContestProblemPrerequisiteType,
   SortableItem,
   SortableItemComponent,
-  UpsertContestDTOUI,
-  UpsertContestProblemDTOUI,
+  UpsertContestDtoUI,
+  UpsertContestProblemDtoUI,
 } from 'types';
 import { EditContestProps } from '../types';
 
-export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDTO, {
-  setContest: Dispatch<SetStateAction<UpsertContestDTOUI>>,
+export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDto, {
+  setContest: Dispatch<SetStateAction<UpsertContestDtoUI>>,
   withTime: 0 | 1 | 2,
   withPrerequisites: boolean,
   withMaxAcceptedUsers: boolean,
-  contest: UpsertContestDTOUI,
+  contest: UpsertContestDtoUI,
   contestEndDate: Date,
   contestStartDate: Date,
-  companyName: string
+  organizationName: string
 }> = ({ item: { value: problem }, style, listeners, attributes, setNodeRef, isDragging, props }) => {
   
   const {
@@ -54,9 +55,9 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
   
   const { Link } = useUIStore(store => store.components);
   
-  const setProblemProp = (props: Partial<UpsertContestProblemDTOUI>) => {
+  const setProblemProp = (props: Partial<UpsertContestProblemDtoUI>) => {
     setContest(prevState => {
-      const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+      const problems: { [key: string]: UpsertContestProblemDtoUI } = {};
       for (const p of Object.values(prevState.problems)) {
         problems[p.key] = { ...p };
         if (p.key === problem.key) {
@@ -71,7 +72,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
     });
   };
   const contestProblems = Object.values(contest.problems);
-  const getPreProblem = (prerequisite: UpsertContestDTOUI['problems'][string]['prerequisites'][number]) => contestProblems.find(p => p.index === prerequisite.problemIndex);
+  const getPreProblem = (prerequisite: UpsertContestDtoUI['problems'][string]['prerequisites'][number]) => contestProblems.find(p => p.index === prerequisite.problemIndex);
   const withGroups = !!Object.values(contest.groups).length;
   
   return (
@@ -99,7 +100,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
         </div>
         <div className="jk-row gap left">
           <Link
-            href={jukiAppRoutes.JUDGE(getJudgeOrigin(problem.company.key)).problems.view({ key: problem.key })}
+            href={jukiAppRoutes.JUDGE(getJudgeOrigin(problem.organization.key)).problems.view({ key: problem.key })}
             target="_blank"
             className="link jk-row tx-t"
             style={{ fontFamily: 'monospace' }}
@@ -142,14 +143,14 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 type="number"
                 disabled={withPrerequisites}
                 label={<T className="tx-t tt-se">starts at the minute</T>}
-                value={(problem.startTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                value={(problem.startsAt - contest.settings.startsAt) / (1000 * 60)}
                 onChange={v => {
                   setProblemProp({
-                    startTimestamp: Math.min(
-                      contest.settings.endTimestamp,
+                    startsAt: Math.min(
+                      contest.settings.endsAt,
                       Math.max(
-                        contest.settings.startTimestamp,
-                        roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
+                        contest.settings.startsAt,
+                        roundTimestamp(contest.settings.startsAt + (v * 1000 * 60)),
                       ),
                     ),
                   });
@@ -160,14 +161,14 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
                 label={<T className="tx-t tt-se">ends at the minute</T>}
                 type="number"
                 disabled={withPrerequisites}
-                value={(problem.endTimestamp - contest.settings.startTimestamp) / (1000 * 60)}
+                value={(problem.endsAt - contest.settings.startsAt) / (1000 * 60)}
                 onChange={v => {
                   setProblemProp({
-                    endTimestamp: Math.min(
-                      contest.settings.endTimestamp,
+                    endsAt: Math.min(
+                      contest.settings.endsAt,
                       Math.max(
-                        problem.startTimestamp,
-                        roundTimestamp(contest.settings.startTimestamp + (v * 1000 * 60)),
+                        problem.startsAt,
+                        roundTimestamp(contest.settings.startsAt + (v * 1000 * 60)),
                       ),
                     ),
                   });
@@ -182,22 +183,22 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
               <InputDate
                 type="year-month-day-hours-minutes"
                 disabled={withPrerequisites}
-                date={new Date(problem.startTimestamp)}
+                date={new Date(problem.startsAt)}
                 isSelected={(date) => (
                   {
-                    day: date.isWithinInterval({
-                      start: new Date(problem.startTimestamp).startOfDay(),
-                      end: new Date(problem.endTimestamp).endOfDay(),
+                    day: isWithinInterval(date, {
+                      start: startOfDay(new Date(problem.startsAt)),
+                      end: endOfDay(new Date(problem.endsAt)),
                     }),
                   }
                 )}
                 isDisabled={(date) => disableOutOfRange(date, contestStartDate, contestEndDate)}
-                baseDate={new Date(problem.startTimestamp)}
+                baseDate={new Date(problem.startsAt)}
                 onDatePick={(date) => {
                   setProblemProp({
-                    startTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(contest.settings.startTimestamp, roundTimestamp(date.getTime())),
+                    startsAt: Math.min(
+                      contest.settings.endsAt,
+                      Math.max(contest.settings.startsAt, roundTimestamp(date.getTime())),
                     ),
                   });
                 }}
@@ -208,22 +209,22 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
               <InputDate
                 type="year-month-day-hours-minutes"
                 disabled={withPrerequisites}
-                date={new Date(problem.endTimestamp)}
+                date={new Date(problem.endsAt)}
                 isSelected={(date) => (
                   {
-                    day: date.isWithinInterval({
-                      start: new Date(problem.startTimestamp).startOfDay(),
-                      end: new Date(problem.endTimestamp).endOfDay(),
+                    day: isWithinInterval(date, {
+                      start: startOfDay(new Date(problem.startsAt)),
+                      end: endOfDay(new Date(problem.endsAt)),
                     }),
                   }
                 )}
-                isDisabled={(date) => disableOutOfRange(date, new Date(problem.startTimestamp), contestEndDate)}
-                baseDate={new Date(problem.endTimestamp)}
+                isDisabled={(date) => disableOutOfRange(date, new Date(problem.startsAt), contestEndDate)}
+                baseDate={new Date(problem.endsAt)}
                 onDatePick={(date) => {
                   setProblemProp({
-                    endTimestamp: Math.min(
-                      contest.settings.endTimestamp,
-                      Math.max(problem.startTimestamp, roundTimestamp(date.getTime())),
+                    endsAt: Math.min(
+                      contest.settings.endsAt,
+                      Math.max(problem.startsAt, roundTimestamp(date.getTime())),
                     ),
                   });
                 }}
@@ -235,7 +236,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
           <div className="jk-row tx-t">
             <T className="tt-se">duration</T>:&nbsp;
             <TimerDisplay
-              counter={problem.endTimestamp - problem.startTimestamp}
+              counter={problem.endsAt - problem.startsAt}
               literal
               ignoreTrailingZeros
               ignoreLeadingZeros
@@ -287,7 +288,7 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
           className="cursor-pointer"
           onClick={() => {
             setContest(prevState => {
-              const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+              const problems: { [key: string]: UpsertContestProblemDtoUI } = {};
               for (const p of Object.values(prevState.problems)) {
                 if (p.key !== problem.key) {
                   problems[p.key] = { ...p };
@@ -306,15 +307,15 @@ export const RowProblem: SortableItemComponent<ContestProblemBasicDataResponseDT
   );
 };
 
-const getContestPrerequisitesData = (contest: UpsertContestDTOUI) => {
+const getContestPrerequisitesData = (contest: UpsertContestDtoUI) => {
   let withPrerequisites = false;
   let withTimeRestriction = false;
   let withMaxAcceptedUsers = false;
   let typePrerequisite = ContestProblemPrerequisiteType.INDIVIDUALLY;
   let delayPrerequisites = 0;
   Object.values(contest.problems).forEach(problem => {
-    if (problem.startTimestamp !== contest.settings.startTimestamp
-      || problem.endTimestamp !== contest.settings.endTimestamp) {
+    if (problem.startsAt !== contest.settings.startsAt
+      || problem.endsAt !== contest.settings.endsAt) {
       withTimeRestriction = true;
     }
     if (problem.prerequisites?.length > 0) {
@@ -347,30 +348,30 @@ const cutDate = (timestamp: number) => {
   return rounded.getTime();
 };
 
-const fixOrder = (contest: UpsertContestDTOUI) => {
+const fixOrder = (contest: UpsertContestDtoUI) => {
   const prerequisitesData = getContestPrerequisitesData(contest);
-  const response: UpsertContestDTOUI = {
+  const response: UpsertContestDtoUI = {
     ...contest,
     settings: {
       ...contest.settings,
-      startTimestamp: Math.max(0, cutDate(contest.settings.startTimestamp)),
-      endTimestamp: cutDate(contest.settings.endTimestamp),
-      frozenTimestamp: cutDate(contest.settings.frozenTimestamp),
-      quietTimestamp: cutDate(contest.settings.quietTimestamp),
+      startsAt: Math.max(0, cutDate(contest.settings.startsAt)),
+      endsAt: cutDate(contest.settings.endsAt),
+      frozenAt: cutDate(contest.settings.frozenAt),
+      silencedAt: cutDate(contest.settings.silencedAt),
     },
   };
   
   response.settings = {
     ...contest.settings,
-    endTimestamp: Math.max(contest.settings.endTimestamp, contest.settings.startTimestamp),
+    endsAt: Math.max(contest.settings.endsAt, contest.settings.startsAt),
   };
   response.settings = {
     ...contest.settings,
-    frozenTimestamp: Math.min(Math.max(contest.settings.frozenTimestamp, contest.settings.startTimestamp), contest.settings.endTimestamp),
+    frozenAt: Math.min(Math.max(contest.settings.frozenAt, contest.settings.startsAt), contest.settings.endsAt),
   };
   response.settings = {
     ...contest.settings,
-    quietTimestamp: Math.min(Math.max(contest.settings.quietTimestamp, contest.settings.frozenTimestamp), contest.settings.endTimestamp),
+    silencedAt: Math.min(Math.max(contest.settings.silencedAt, contest.settings.frozenAt), contest.settings.endsAt),
   };
   
   const newProblems = Object.values(contest.problems)
@@ -387,9 +388,9 @@ const fixOrder = (contest: UpsertContestDTOUI) => {
 };
 
 const fixProblem = (
-  problem: UpsertContestProblemDTOUI,
+  problem: UpsertContestProblemDtoUI,
   index: number,
-  problems: UpsertContestProblemDTOUI[],
+  problems: UpsertContestProblemDtoUI[],
   { delayPrerequisites, isTypePrerequisiteIndividually, withPrerequisites }: {
     delayPrerequisites: number,
     isTypePrerequisiteIndividually: boolean,
@@ -406,17 +407,17 @@ const fixProblem = (
     delay: delayPrerequisites,
   } ] : [];
   
-  const value: ContestProblemBasicDataResponseDTO = {
+  const value: ContestProblemBasicDataResponseDto = {
     index: problemIndex,
     key: problem.key,
     judge: problem.judge,
     name: problem.name,
     points: problem.points,
     color: problem.color,
-    startTimestamp: cutDate(problem.startTimestamp),
-    endTimestamp: cutDate(problem.endTimestamp),
+    startsAt: cutDate(problem.startsAt),
+    endsAt: cutDate(problem.endsAt),
     tags: problem.tags,
-    company: problem.company,
+    organization: problem.organization,
     prerequisites,
     maxAcceptedUsers: problem.maxAcceptedUsers,
     group: problem.group ?? '',
@@ -435,10 +436,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
   } = getContestPrerequisitesData(contest);
   const [ withTime, setWithTime ] = useSyncedState<0 | 1 | 2>(withTimeRestriction ? 1 : 0);
   
-  const companyName = useUserStore(state => state.company.name);
-  const contestStartDate = useMemo(() => new Date(contest.settings.startTimestamp), [ contest.settings.startTimestamp ]);
-  const contestEndDate = useMemo(() => new Date(contest.settings.endTimestamp), [ contest.settings.endTimestamp ]);
-  const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDTOUI }) => {
+  const organizationName = useUserStore(state => state.organization.name);
+  const contestStartDate = useMemo(() => new Date(contest.settings.startsAt), [ contest.settings.startsAt ]);
+  const contestEndDate = useMemo(() => new Date(contest.settings.endsAt), [ contest.settings.endsAt ]);
+  const parseProblems = useCallback((problems: { [key: string]: UpsertContestProblemDtoUI }) => {
     return Object.values(problems)
       .sort((a, b) => lettersToIndex(a.index) - lettersToIndex(b.index))
       .map((problem, index, problems) => {
@@ -453,16 +454,16 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
   }, [ delayPrerequisites, isTypePrerequisiteIndividually, withPrerequisites ]);
-  const [ problems ] = useSyncedState<SortableItem<ContestProblemBasicDataResponseDTO>[]>(parseProblems(contest.problems));
+  const [ problems ] = useSyncedState<SortableItem<ContestProblemBasicDataResponseDto>[]>(parseProblems(contest.problems));
   useEffect(() => {
     if (!withTime) {
       setContest(prevState => {
-        const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+        const problems: { [key: string]: UpsertContestProblemDtoUI } = {};
         for (const problem of Object.values(prevState.problems)) {
           problems[problem.key] = {
             ...problem,
-            startTimestamp: contest.settings.startTimestamp,
-            endTimestamp: contest.settings.endTimestamp,
+            startsAt: contest.settings.startsAt,
+            endsAt: contest.settings.endsAt,
           };
         }
         
@@ -472,7 +473,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
         };
       });
     }
-  }, [ contest.settings.endTimestamp, contest.settings.startTimestamp, withTime, setContest ]);
+  }, [ contest.settings.endsAt, contest.settings.startsAt, withTime, setContest ]);
   
   useEffect(() => {
     const newContest = fixOrder(contest);
@@ -505,7 +506,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             onChange={value => {
               setContest(prevState => {
                 const problems = Object.values(prevState.problems);
-                const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                const newProblems: { [key: string]: UpsertContestProblemDtoUI } = { ...prevState.problems };
                 for (const problem of problems) {
                   if (value) {
                     const preIndex = indexToLetters(lettersToIndex(problem.index) - 1);
@@ -544,7 +545,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             onChange={value => {
               setContest(prevState => {
                 const problems = Object.values(prevState.problems);
-                const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                const newProblems: { [key: string]: UpsertContestProblemDtoUI } = { ...prevState.problems };
                 for (const problem of problems) {
                   newProblems[problem.key] = {
                     ...newProblems[problem.key],
@@ -576,7 +577,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
             onChange={value => {
               setContest(prevState => {
                 const problems = Object.values(prevState.problems);
-                const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                const newProblems: { [key: string]: UpsertContestProblemDtoUI } = { ...prevState.problems };
                 for (const problem of problems) {
                   newProblems[problem.key] = {
                     ...newProblems[problem.key],
@@ -604,7 +605,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           onChange={value => {
             setContest(prevState => {
               const problems = Object.values(prevState.problems);
-              const newProblems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+              const newProblems: { [key: string]: UpsertContestProblemDtoUI } = { ...prevState.problems };
               for (const problem of problems) {
                 newProblems[problem.key] = {
                   ...newProblems[problem.key],
@@ -671,7 +672,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
           <SortableItems
             items={problems}
             onChange={(items) => {
-              const newProblems: UpsertContestDTOUI['problems'] = {};
+              const newProblems: UpsertContestDtoUI['problems'] = {};
               let index = 1;
               for (const item of items) {
                 newProblems[item.value.key] = { ...item.value, index: indexToLetters(index) };
@@ -684,7 +685,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
               contest,
               contestEndDate,
               contestStartDate,
-              companyName,
+              organizationName,
               withPrerequisites,
               withMaxAcceptedUsers,
             }}
@@ -712,7 +713,7 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                       ];
                     }
                     setContest(prevState => {
-                      const problems: { [key: string]: UpsertContestProblemDTOUI } = { ...prevState.problems };
+                      const problems: { [key: string]: UpsertContestProblemDtoUI } = { ...prevState.problems };
                       problems[problem.key] = {
                         name: problem.name,
                         index: indexToLetters(Object.keys(problems).length + 1),
@@ -720,10 +721,10 @@ export const EditProblems = ({ contest, setContest }: EditContestProps) => {
                         color: colors.length ? colors[Math.floor(Math.random() * colors.length)].color : '#000000',
                         points: 1,
                         judge: problem.judge,
-                        startTimestamp: contest.settings.startTimestamp,
-                        endTimestamp: contest.settings.endTimestamp,
+                        startsAt: contest.settings.startsAt,
+                        endsAt: contest.settings.endsAt,
                         tags: problem.tags,
-                        company: problem.company,
+                        organization: problem.organization,
                         prerequisites: [],
                         maxAcceptedUsers: 0,
                         group: '',

@@ -5,10 +5,10 @@ import { jukiAppRoutes } from 'config';
 import { authorizedRequest, cleanRequest } from 'helpers';
 import { useJukiNotification, useRouterStore } from 'hooks';
 import { JUDGE_API_V1 } from 'src/constants';
-import { ContentResponseType, ContestsTab, HTTPMethod, Status, UserCompanyBasicInfoResponseDTO } from 'types';
+import { ContentResponseType, ContestsTab, HTTPMethod, Status, UserOrganizationBasicInfoResponseDto } from 'types';
 
 interface ProblemStatementProps {
-  documentOwner: UserCompanyBasicInfoResponseDTO,
+  documentOwner: UserOrganizationBasicInfoResponseDto,
   contestKey: string,
   deleted: boolean,
 }

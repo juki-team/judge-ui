@@ -3,18 +3,18 @@
 import { Portal } from 'components';
 import { usePageStore, useResizeDetector, useUIStore, useUserStore } from 'hooks';
 import { PropsWithChildren } from 'react';
-import { ContestDataResponseDTO } from 'types';
+import { ContestDataResponseDto } from 'types';
 import { ContestTimeTimer } from '../ContestTimeTimer';
 
 export const FullScreenScoreboard = ({ contest, children, reloadContest }: PropsWithChildren<{
-  contest: ContestDataResponseDTO,
+  contest: ContestDataResponseDto,
   reloadContest: () => Promise<void>
 }>) => {
   
   const isSmallMediumScreen = usePageStore(store => store.viewPort.isSmallScreen || store.viewPort.isMediumScreen);
   const { Image } = useUIStore(store => store.components);
-  const companyName = useUserStore(state => state.company.name);
-  const companyImageUrl = useUserStore(state => state.company.imageUrl);
+  const organizationName = useUserStore(state => state.organization.name);
+  const organizationImageUrl = useUserStore(state => state.organization.imageUrl);
   
   const { height = 0, ref } = useResizeDetector();
   
@@ -25,8 +25,8 @@ export const FullScreenScoreboard = ({ contest, children, reloadContest }: Props
           <div className="jk-col stretch" ref={ref}>
             <div className="jk-row nowrap gap center bc-pd jk-pg-xsm">
               <Image
-                src={companyImageUrl}
-                alt={companyName}
+                src={organizationImageUrl}
+                alt={organizationName}
                 height={isSmallMediumScreen ? 40 : 46}
                 width={isSmallMediumScreen ? 80 : 92}
               />

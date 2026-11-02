@@ -3,12 +3,12 @@ export const dynamic = 'force-dynamic';
 import { jukiApiManager } from 'config';
 import { HEADER_JUKI_INTERNAL_API_KEY, JUKI_INTERNAL_API_KEY } from 'config/constants';
 import { cleanRequest, getHeaders } from 'helpers';
-import { ContentResponseType, ContestDataResponseDTO } from 'types';
+import { ContentResponseType, ContestDataResponseDto } from 'types';
 import { ContestProblemSetViewPage } from './ContestProblemSetViewPage';
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
   
-  let contestData: ContestDataResponseDTO | null = null;
+  let contestData: ContestDataResponseDto | null = null;
   
   try {
     
@@ -22,7 +22,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
       },
     });
     const text = await response.text();
-    const result = cleanRequest<ContentResponseType<ContestDataResponseDTO>>(text);
+    const result = cleanRequest<ContentResponseType<ContestDataResponseDto>>(text);
     if (result.success) {
       contestData = result.content;
     } else {

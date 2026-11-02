@@ -1,9 +1,9 @@
 'use client';
 
 import { ProblemView } from 'components';
-import { ProblemDataResponseDTO } from 'types';
+import { ProblemDataResponseDto } from 'types';
 
-export default function ProblemViewPage({ problem }: { problem: ProblemDataResponseDTO }) {
+export default function ProblemViewPage({ problem }: { problem: ProblemDataResponseDto }) {
   
   return (
     <ProblemView

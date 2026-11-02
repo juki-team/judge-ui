@@ -16,17 +16,17 @@ import { useFetcher, useMemo, useUserStore } from 'hooks';
 import {
   ContentsResponseType,
   DataViewerHeadersType,
-  JudgeSummaryListResponseDTO,
+  JudgeSummaryListResponseDto,
   LanguagesByJudge,
-  ProblemDataResponseDTO,
+  ProblemDataResponseDto,
   QueryParam,
-  SubmissionSummaryListResponseDTO,
+  SubmissionSummaryListResponseDto,
 } from 'types';
 
-export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponseDTO }) => {
+export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponseDto }) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
-  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V2.judge.getSummaryList().url);
+  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDto>>(jukiApiManager.API_V2.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
@@ -42,7 +42,7 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
     return result;
   }, [ judgePublicList, problem.judge.key ]);
   
-  const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => {
+  const columns: DataViewerHeadersType<SubmissionSummaryListResponseDto>[] = useMemo(() => {
     return [
       getSubmissionContestProblemHeader(),
       getSubmissionDateHeader(),
@@ -55,7 +55,7 @@ export const ProblemMySubmissions = ({ problem }: { problem: ProblemDataResponse
   }, [ languages, problem.user.isManager ]);
   
   return (
-    <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
+    <PagedDataViewer<SubmissionSummaryListResponseDto, SubmissionSummaryListResponseDto>
       rows={{ height: 80 }}
       cards={{ expanded: true }}
       headers={columns}

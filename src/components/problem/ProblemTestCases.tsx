@@ -33,7 +33,7 @@ import {
   HTTPMethod,
   KeyFileType,
   ProblemScoringMode,
-  ProblemTestCasesResponseDTO,
+  ProblemTestCasesResponseDto,
   Status,
   UpsertProblemUIDTO,
 } from 'types';
@@ -62,7 +62,7 @@ type NewTestCaseType = {
   outputNewFileState: UploadState,
 };
 
-const transform = (problemTestCases: ProblemTestCasesResponseDTO) => {
+const transform = (problemTestCases: ProblemTestCasesResponseDto) => {
   const initialTestCases: { [key: string]: NewTestCaseType } = {};
   problemTestCases.forEach(testCase => {
     initialTestCases[testCase.testCaseKey] = {
@@ -83,7 +83,7 @@ const transform = (problemTestCases: ProblemTestCasesResponseDTO) => {
 
 interface ProblemTestCasesPageProps {
   problem: UpsertProblemUIDTO,
-  testCases: ProblemTestCasesResponseDTO,
+  testCases: ProblemTestCasesResponseDto,
   problemJudgeKey: string,
 }
 
@@ -515,7 +515,7 @@ interface ProblemTestCasesProps {
 
 export const ProblemTestCases = ({ problem, problemJudgeKey }: ProblemTestCasesProps) => {
   return (
-    <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDTO>>
+    <FetcherLayer<ContentResponseType<ProblemTestCasesResponseDto>>
       url={jukiApiManager.API_V2.problem.getTestCases({ params: { key: problemJudgeKey } }).url}
       // errorView={<Custom404 />}
       options={{ refreshInterval: 0, revalidateIfStale: false, revalidateOnFocus: false, revalidateOnReconnect: false }}

@@ -2,7 +2,7 @@
 
 import { ButtonLoader, Input, Modal, PlusIcon, T } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
-import { authorizedRequest, cleanRequest, isProblemCrawledWebSocketResponseEventDTO } from 'helpers';
+import { authorizedRequest, cleanRequest, isProblemCrawledWebSocketResponseEventDto } from 'helpers';
 import { useJukiNotification, useRouterStore, useSubscribe } from 'hooks';
 import { useState } from 'react';
 import {
@@ -10,7 +10,7 @@ import {
   ContentResponseType,
   Judge,
   Status,
-  SubscribeProblemCrawledWebSocketEventDTO,
+  SubscribeProblemCrawledWebSocketEventDto,
   WebSocketSubscriptionEvent,
 } from 'types';
 
@@ -25,14 +25,14 @@ export const CrawlLeetCodeProblemModal = ({ onClose, isOpen }: CrawlLeetCodeProb
   
   const problemKey = `PL-${slug}`;
   
-  const event: Omit<SubscribeProblemCrawledWebSocketEventDTO, 'clientId'> = {
+  const event: Omit<SubscribeProblemCrawledWebSocketEventDto, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_PROBLEM_CRAWLED,
     problemKey,
   };
   useSubscribe(
     event,
     (data) => {
-      if (isProblemCrawledWebSocketResponseEventDTO(data)) {
+      if (isProblemCrawledWebSocketResponseEventDto(data)) {
         void pushRoute(jukiAppRoutes.JUDGE().problems.view({ key: problemKey }));
       }
     },

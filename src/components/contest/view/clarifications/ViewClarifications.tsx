@@ -74,16 +74,16 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
       <div className="jk-pg-md jk-col stretch gap">
         {contest?.clarifications
           ?.sort((c1, c2) => {
-            if (c2?.answerTimestamp === c1?.answerTimestamp) {
+            if (c2?.answeredAt === c1?.answeredAt) {
               return 0;
             }
-            if (!c1?.answerTimestamp) {
+            if (!c1?.answeredAt) {
               return -1;
             }
-            if (!c2?.answerTimestamp) {
+            if (!c2?.answeredAt) {
               return 1;
             }
-            return c2?.answerTimestamp - c1?.answerTimestamp;
+            return c2?.answeredAt - c1?.answeredAt;
           })
           ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
@@ -102,9 +102,9 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                           public: clarification.public,
                         });
                       }}
-                      icon={!!clarification.answerTimestamp ? <EditIcon /> : <CommentIcon />}
+                      icon={!!clarification.answeredAt ? <EditIcon /> : <CommentIcon />}
                     >
-                      {!!clarification.answerTimestamp
+                      {!!clarification.answeredAt
                         ? <T className="tt-se">edit</T>
                         : <T className="tt-se">answer</T>}
                     </Button>
@@ -115,7 +115,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                   <div className="jk-row gap">
                     <div
                       data-tooltip-id="jk-tooltip"
-                      data-tooltip-content={dtf(clarification.questionTimestamp)}
+                      data-tooltip-content={dtf(clarification.askedAt)}
                       data-tooltip-t-class-name="ws-np"
                       className="jk-row"
                     >
@@ -123,7 +123,7 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                     </div>
                     <UserNicknameLink
                       nickname={clarification.questionUser.nickname}
-                      companyKey={clarification.questionUser.company.key}
+                      organizationKey={clarification.questionUser.organization.key}
                     >
                       <div
                         className="jk-row"
@@ -160,16 +160,16 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
                           <T className="tt-se">only for you</T>
                       }
                     </div>
-                    {!clarification.answerTimestamp && (
+                    {!clarification.answeredAt && (
                       <div className="jk-tag bc-er cr-we"><T className="tt-se">not answered yet</T></div>
                     )}
                   </div>
                 </div>
-                {!!clarification.answerTimestamp && (
+                {!!clarification.answeredAt && (
                   <div className="jk-row gap left top stretch nowrap">
                     <div
                       data-tooltip-id="jk-tooltip"
-                      data-tooltip-content={dtf(clarification.answerTimestamp)}
+                      data-tooltip-content={dtf(clarification.answeredAt)}
                       data-tooltip-t-class-name="ws-np"
                       className="jk-row"
                     >

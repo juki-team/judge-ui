@@ -14,10 +14,10 @@ import {
   VisibilityIcon,
 } from 'components';
 import { useState } from 'hooks';
-import { BasicModalProps, DocumentMemberResponseDTO, EntityAccess } from 'types';
+import { BasicModalProps, DocumentMemberResponseDto, EntityAccess } from 'types';
 import { EditViewMembersContestProps } from '../types';
 
-export const contestAccessProps = (readOnly: boolean, onViewMember?: (member: DocumentMemberResponseDTO) => void) => ({
+export const contestAccessProps = (readOnly: boolean, onViewMember?: (member: DocumentMemberResponseDto) => void) => ({
   administrators: {
     closeable: true,
     description: (
@@ -45,14 +45,14 @@ export const contestAccessProps = (readOnly: boolean, onViewMember?: (member: Do
       </div>
     ),
     readOnly,
-    renderMember: (member: DocumentMemberResponseDTO) => {
+    renderMember: (member: DocumentMemberResponseDto) => {
       return (
         <div className="jk-row gap">
           <UserChip
             imageUrl={member.imageUrl}
             nickname={member.nickname}
             key={member.nickname}
-            companyKey={member.company.key}
+            organizationKey={member.organization.key}
           />
           {onViewMember && <VisibilityIcon onClick={() => onViewMember(member)} />}
         </div>
@@ -94,7 +94,7 @@ export const contestAccessProps = (readOnly: boolean, onViewMember?: (member: Do
 
 export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestProps) => {
   
-  const [ viewMember, setViewMember ] = useState<DocumentMemberResponseDTO | null>(null);
+  const [ viewMember, setViewMember ] = useState<DocumentMemberResponseDto | null>(null);
   
   return (
     <div className="bc-we jk-br-ie jk-pg-sm">
@@ -116,7 +116,7 @@ export const EditViewMembers = ({ setContest, contest }: EditViewMembersContestP
 };
 
 interface ViewMemberModalProps extends BasicModalProps {
-  member: DocumentMemberResponseDTO,
+  member: DocumentMemberResponseDto,
 }
 
 const ViewMemberModal = ({ member, ...modalProps }: ViewMemberModalProps) => {
@@ -129,7 +129,7 @@ const ViewMemberModal = ({ member, ...modalProps }: ViewMemberModalProps) => {
             imageUrl={member.imageUrl}
             nickname={member.nickname}
             key={member.nickname}
-            companyKey={member.company.key}
+            organizationKey={member.organization.key}
           />
         </div>
         <div>

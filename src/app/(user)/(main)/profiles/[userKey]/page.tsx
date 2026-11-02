@@ -1,7 +1,7 @@
 import { PageNotFound, TwoContentLayout } from 'components';
 import { jukiApiManager } from 'config';
 import { get, getParamsOfUserKey, oneTab } from 'helpers';
-import { ContentResponseType, UserProfileResponseDTO } from 'types';
+import { ContentResponseType, UserProfileResponseDto } from 'types';
 import { ProfileViewPage } from './ProfileViewPage';
 
 type Props = {
@@ -11,12 +11,12 @@ type Props = {
 export default async function Page({ params }: Props) {
   
   const { userKey } = await params;
-  const { userNickname, userCompanyKey } = getParamsOfUserKey(decodeURIComponent(userKey));
+  const { userNickname, userOrganizationKey } = getParamsOfUserKey(decodeURIComponent(userKey));
   
-  const profileResponse = await get<ContentResponseType<UserProfileResponseDTO>>(jukiApiManager.API_V2.user.getProfile({
+  const profileResponse = await get<ContentResponseType<UserProfileResponseDto>>(jukiApiManager.API_V2.user.getProfile({
     params: {
       nickname: userNickname,
-      companyKey: userCompanyKey,
+      organizationKey: userOrganizationKey,
     },
   }).url);
   

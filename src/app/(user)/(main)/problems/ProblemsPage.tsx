@@ -36,9 +36,9 @@ import {
   DataViewerHeadersType,
   EntityAccess,
   Judge,
-  JudgeDataResponseDTO,
+  JudgeDataResponseDto,
   LastPathKey,
-  ProblemSummaryListResponseDTO,
+  ProblemSummaryListResponseDto,
   QueryParam,
   ReactNode,
 } from 'types';
@@ -51,7 +51,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   
   const userCanCreateProblem = useUserStore(state => state.user.permissions.problems.create);
   const setSearchParams = useRouterStore(state => state.setSearchParams);
-  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDTO[]>>(jukiApiManager.API_V2.company.getJudgeList().url);
+  const { data } = useFetcher<ContentResponseType<JudgeDataResponseDto[]>>(jukiApiManager.API_V2.organization.getJudgeList().url);
   const tags = useMemo(() => (data?.success ? (data.content.find(j => j.key === judgeKey)?.problemTags || []) : []).map(tag => ({
     value: tag,
     label: <T>{tag}</T>,
@@ -73,7 +73,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
     }
   }, [ judgeKey, setSearchParams, firstJudgeKey ]);
   
-  const columns: DataViewerHeadersType<ProblemSummaryListResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<ProblemSummaryListResponseDto>[] = useMemo(() => [
     ...(isExternal ? [ getProblemKeyHeader() ] : []),
     getProblemNameHeader(false, { sticky: true, cardPosition: 'top' }),
     ...(!isExternal ? [
@@ -99,7 +99,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
         },
         cardPosition: 'upperLeft',
         minWidth: 100,
-      } as DataViewerHeadersType<ProblemSummaryListResponseDTO>,
+      } as DataViewerHeadersType<ProblemSummaryListResponseDto>,
       getProblemTagsHeader(tags),
     ] : []),
     // getProblemOwnerHeader(isExternal),
@@ -158,7 +158,7 @@ export function ProblemsPage({ judgeKey }: { judgeKey?: Judge }) {
   return (
     <TwoContentLayout
       tabs={oneTab(judgeKey && (
-        <PagedDataViewer<ProblemSummaryListResponseDTO, ProblemSummaryListResponseDTO>
+        <PagedDataViewer<ProblemSummaryListResponseDto, ProblemSummaryListResponseDto>
           headers={columns}
           getUrl={({ pagination: { page, pageSize }, filter, sort }) => {
             return jukiApiManager.API_V2.problem.getSummaryList({

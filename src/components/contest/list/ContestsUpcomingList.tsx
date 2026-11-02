@@ -6,24 +6,24 @@ import { toFilterUrl, toSortUrl } from 'helpers';
 import { useUserStore } from 'hooks';
 import { useMemo } from 'react';
 import {
-  ContestSummaryListResponseDTO,
+  ContestSummaryListResponseDto,
   DataViewerHeadersType,
   EntityState,
   PagedDataViewerProps,
   QueryParam,
 } from 'types';
 
-export const ContestsUpcomingList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
+export const ContestsUpcomingList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDto, ContestSummaryListResponseDto>>) => {
   
-  const companyKey = useUserStore(state => state.company.key);
-  const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
+  const organizationKey = useUserStore(state => state.organization.key);
+  const columns: DataViewerHeadersType<ContestSummaryListResponseDto>[] = useMemo(() => [
     getContestNameHeader(),
     getContestDateHeader(),
     // getContestContestantsHeader(),
   ], []);
   
   return (
-    <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
+    <PagedDataViewer<ContestSummaryListResponseDto, ContestSummaryListResponseDto>
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
         jukiApiManager.API_V2.contest.getSummaryList({
@@ -32,7 +32,7 @@ export const ContestsUpcomingList = (props: Partial<PagedDataViewerProps<Contest
             pageSize,
             filterUrl: toFilterUrl({
               ...filter,
-              companyKeys: companyKey,
+              companyKeys: organizationKey,
               state: EntityState.RELEASED,
               status: 'upcoming',
             }),

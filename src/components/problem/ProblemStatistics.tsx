@@ -1,4 +1,5 @@
 'use client';
+import { padStart } from '@juki-team/commons';
 
 import { BarChart, Button, LineChart, T } from 'components';
 import { JUDGE_API_V1, MONTH_NAMES } from 'config/constants';
@@ -11,8 +12,8 @@ import {
   ContentResponseType,
   DateLiteralProps,
   GroupByTimestampKey,
-  ProblemDataResponseDTO,
-  StatisticsProblemResponseDTO,
+  ProblemDataResponseDto,
+  StatisticsProblemResponseDto,
 } from 'types';
 
 const now = Date.now();
@@ -83,28 +84,28 @@ const getDateLiteral = (date: Date, show: Required<DateLiteralProps>['show'], t:
     (showMonths ? ' ' + t(MONTH_NAMES[date.getMonth()]) : '') +
     (showYears ? ' ' + date.getFullYear() : '') +
     (showHours ? (
-      ', ' + date.getHours().padStart(2) +
-      (showMinutes ? ':' + date.getMinutes().padStart(2) : '') +
-      (showSeconds ? ':' + date.getSeconds().padStart(2) : '') +
-      (showMilliseconds ? '.' + date.getMilliseconds().padStart(3) : '')
+      ', ' + padStart(date.getHours(), 2) +
+      (showMinutes ? ':' + padStart(date.getMinutes(), 2) : '') +
+      (showSeconds ? ':' + padStart(date.getSeconds(), 2) : '') +
+      (showMilliseconds ? '.' + padStart(date.getMilliseconds(), 3) : '')
     ) : '')
   );
 };
 
 const groupBy: GroupByTimestampKey[] = [ 'day', 'month', 'year' ];
 
-export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO }) => {
+export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDto }) => {
   
   const {
     data,
-  } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
+  } = useFetcher<ContentResponseType<StatisticsProblemResponseDto>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
   const t = useI18nStore(store => store.i18n.t);
   // derived in the selector: re-render only when the layout flips, not on every resize event
   const oneColumn = usePageStore(store => store.viewPort.height < 900 || store.viewPort.screen === 'sm');
   const [ dateType, setDateType ] = useState<GroupByTimestampKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};
-  const verdictsDate = data?.success ? data.content.date : {} as StatisticsProblemResponseDTO['date'];
+  const verdictsDate = data?.success ? data.content.date : {} as StatisticsProblemResponseDto['date'];
   const languagesData = [];
   const verdictsData = [];
   const dateData = [];

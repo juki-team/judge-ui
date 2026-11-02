@@ -1,9 +1,9 @@
 import { convertToModelMessages, stepCountIs, streamText, tool, UIMessage } from 'ai';
-import { StatementDTO } from 'types';
+import { StatementDto } from 'types';
 import z from 'zod';
 
 export async function POST(req: Request) {
-  const { messages, statement }: { messages: UIMessage[], statement: StatementDTO } = await req.json();
+  const { messages, statement }: { messages: UIMessage[], statement: StatementDto } = await req.json();
   
   const result = streamText({
     model: 'anthropic/claude-sonnet-4.5',

@@ -1,18 +1,19 @@
+import { padStart } from '@juki-team/commons';
 import { BalloonIcon, Field, FitnessCenterIcon, InformationPopover, T, UserChip } from 'components';
 import { jukiAppRoutes } from 'config';
 import { classNames } from 'helpers';
 import { CSSProperties, FC, PropsWithChildren } from 'react';
 import {
-  ContestProblemDataResponseDTO,
+  ContestProblemDataResponseDto,
   ContestTab,
   DataViewerHeadersType,
   LinkCmpProps,
   TableHeadFieldProps,
   TFunction,
 } from 'types';
-import { ScoreboardResponseDTOFocus } from '../types';
+import { ScoreboardResponseDtoFocus } from '../types';
 
-export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
+export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDtoFocus> => ({
   head: '#',
   index: 'position',
   Field: ({ record: { position, focus } }) => (
@@ -24,11 +25,11 @@ export const getPositionColumn = (): DataViewerHeadersType<ScoreboardResponseDTO
 
 const NicknameField = ({
                          record: {
-                           user: { nickname, imageUrl, company: { key: companyKey } },
+                           user: { nickname, imageUrl, organization: { key: organizationKey } },
                            focus,
                            official,
                          },
-                       }: TableHeadFieldProps<ScoreboardResponseDTOFocus>) => {
+                       }: TableHeadFieldProps<ScoreboardResponseDtoFocus>) => {
   
   return (
     <Field
@@ -36,7 +37,7 @@ const NicknameField = ({
         highlight: !!focus?.length,
       })}
     >
-      <UserChip imageUrl={imageUrl} nickname={nickname} companyKey={companyKey} className="tx-s" />
+      <UserChip imageUrl={imageUrl} nickname={nickname} organizationKey={organizationKey} className="tx-s" />
       {!official && (
         <InformationPopover
           icon={
@@ -50,7 +51,7 @@ const NicknameField = ({
   );
 };
 
-export const getNicknameColumn = (viewPortSize: string): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
+export const getNicknameColumn = (viewPortSize: string): DataViewerHeadersType<ScoreboardResponseDtoFocus> => ({
   head: 'nickname',
   index: 'nickname',
   Field: NicknameField,
@@ -58,7 +59,7 @@ export const getNicknameColumn = (viewPortSize: string): DataViewerHeadersType<S
   sticky: viewPortSize !== 'sm',
 });
 
-export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
+export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataViewerHeadersType<ScoreboardResponseDtoFocus> => ({
   head: 'points',
   index: 'points',
   Field: ({ record: { focus, totalPenalty, totalPoints } }) => (
@@ -67,7 +68,7 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
       {!isEndless && (
         <div className="tx-s" style={{ fontFamily: 'monospace', paddingLeft: '3ch' }}>
           {Math.floor(+totalPenalty)}
-          <span className="tx-t cr-g5 to-active-on-hover">.{Math.floor((+totalPenalty - Math.floor(+totalPenalty)) * 100).padStart(2, '0')}</span>
+          <span className="tx-t cr-g5 to-active-on-hover">.{padStart(Math.floor((+totalPenalty - Math.floor(+totalPenalty)) * 100), 2, '0')}</span>
         </div>
       )}
     </Field>
@@ -76,7 +77,7 @@ export const getPointsColumn = (viewPortSize: string, isEndless: boolean): DataV
   sticky: viewPortSize !== 'sm',
 });
 
-export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, contestKey: string, isEndless: boolean, problem: ContestProblemDataResponseDTO, t: TFunction): DataViewerHeadersType<ScoreboardResponseDTOFocus> => ({
+export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpProps>>, contestKey: string, isEndless: boolean, problem: ContestProblemDataResponseDto, t: TFunction): DataViewerHeadersType<ScoreboardResponseDtoFocus> => ({
   head: (
     <div
       data-tooltip-id="jk-tooltip"
@@ -162,7 +163,7 @@ export const getProblemScoreboardColumn = (Link: FC<PropsWithChildren<LinkCmpPro
                 {problemData?.penalty
                   ? <>
                     {Math.floor(problemData.penalty)}
-                    <span className="tx-t cr-g5 to-active-on-hover">.{Math.floor((problemData.penalty - Math.floor(problemData.penalty)) * 1000).padStart(3, '0')}</span>
+                    <span className="tx-t cr-g5 to-active-on-hover">.{padStart(Math.floor((problemData.penalty - Math.floor(problemData.penalty)) * 1000), 3, '0')}</span>
                   </>
                   : '-'}
               </div>

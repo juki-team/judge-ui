@@ -2,8 +2,8 @@ import {
   CodeLanguage,
   ContestTemplate,
   EntityState,
-  UpsertContestDTOUI,
-  UserCompanyBasicInfoResponseDTO,
+  UpsertContestDtoUI,
+  UserOrganizationBasicInfoResponseDto,
 } from 'types';
 import { EMPTY_ENTITY_MEMBERS } from './commons';
 
@@ -13,7 +13,7 @@ export const FIFTEEN_MINUTES = 1000 * 60 * 15;
 
 export const LS_INITIAL_CONTEST_KEY = 'jk-initial-contest';
 
-export const CONTEST_DEFAULT = (owner: UserCompanyBasicInfoResponseDTO, initialContest?: Partial<UpsertContestDTOUI>): UpsertContestDTOUI => {
+export const CONTEST_DEFAULT = (owner: UserOrganizationBasicInfoResponseDto, initialContest?: Partial<UpsertContestDtoUI>): UpsertContestDtoUI => {
   const now = (new Date(Date.now() + 1000 * 60 * 5));
   now.setSeconds(0, 0);
   
@@ -57,10 +57,10 @@ Oscar Arias | Problem Setter`,
       languages: [ CodeLanguage.C_11, CodeLanguage.CPP_20, CodeLanguage.JAVA_21, CodeLanguage.PYTHON_PYPY_3, CodeLanguage.JAVASCRIPT_NODE_JS_22 ],
       penalty: 20,
       timeToSolve: 0,
-      startTimestamp: now.getTime(),
-      frozenTimestamp: now.getTime() + FIVE_HOURS - ONE_HOUR,
-      quietTimestamp: now.getTime() + FIVE_HOURS - FIFTEEN_MINUTES,
-      endTimestamp: now.getTime() + FIVE_HOURS,
+      startsAt: now.getTime(),
+      frozenAt: now.getTime() + FIVE_HOURS - ONE_HOUR,
+      silencedAt: now.getTime() + FIVE_HOURS - FIFTEEN_MINUTES,
+      endsAt: now.getTime() + FIVE_HOURS,
       scoreboardLocked: true,
       upsolvingEnabled: false,
     },

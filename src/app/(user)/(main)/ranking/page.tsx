@@ -4,13 +4,13 @@ import { DataViewer, Field, FieldText, T, TextHeadCell, TwoContentLayout, UserNi
 import { DEFAULT_DATA_VIEWER_PROPS, JUDGE_API_V1 } from 'config/constants';
 import { oneTab } from 'helpers';
 import { useDataViewerRequester, useMemo, usePageStore, useUIStore } from 'hooks';
-import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDTO } from 'types';
+import { ContentsResponseType, DataViewerHeadersType, QueryParam, UserRankResponseDto } from 'types';
 
 function Ranking() {
   
   const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
   const { Image } = useUIStore(store => store.components);
-  const columns: DataViewerHeadersType<UserRankResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<UserRankResponseDto>[] = useMemo(() => [
     {
       head: 'position',
       index: 'key',
@@ -29,10 +29,10 @@ function Ranking() {
     {
       head: <TextHeadCell text={<T className="tt-se">nickname</T>} className="left" />,
       index: 'nickname',
-      Field: ({ record: { nickname, imageUrl, company }, isCard, recordIndex }) => (
+      Field: ({ record: { nickname, imageUrl, organization }, isCard, recordIndex }) => (
         <Field className="jk-row link fw-bd gap">
           {isCard && <div className="fw-br jk-pg-sm">{recordIndex + 1}</div>}
-          <UserNicknameLink nickname={nickname} companyKey={company.key}>
+          <UserNicknameLink nickname={nickname} organizationKey={organization.key}>
             <div className="jk-row flex-1 gap left">
               <Image
                 src={imageUrl}
@@ -116,17 +116,17 @@ function Ranking() {
     data: response,
     request,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentsResponseType<UserRankResponseDTO>>(
+  } = useDataViewerRequester<ContentsResponseType<UserRankResponseDto>>(
     () => JUDGE_API_V1.RANKING.LIST(),
     { refreshInterval: 5 * 60 * 1000 },
   );
   
-  const data: UserRankResponseDTO[] = (response?.success ? response.contents : []);
+  const data: UserRankResponseDto[] = (response?.success ? response.contents : []);
   
   return (
     <TwoContentLayout
       tabs={oneTab(
-        <DataViewer<UserRankResponseDTO>
+        <DataViewer<UserRankResponseDto>
           headers={columns}
           data={data}
           rowsView={!isSmallScreen}

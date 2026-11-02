@@ -2,7 +2,7 @@
 
 import { useUserStore } from 'hooks';
 import { createContext, useContext } from 'react';
-import type { ContestDataResponseDTO } from 'types';
+import type { ContestDataResponseDto } from 'types';
 import { useContestData } from './useContestData';
 
 const ContestDataContext = createContext<ReturnType<typeof useContestData> | null>(null);
@@ -11,11 +11,11 @@ export function ContestDataProvider({
                                       fallbackData,
                                       children,
                                     }: {
-  fallbackData: ContestDataResponseDTO;
+  fallbackData: ContestDataResponseDto;
   children: React.ReactNode;
 }) {
-  const companyKey = useUserStore(s => s.company.key);
-  const value = useContestData(fallbackData, companyKey);
+  const organizationKey = useUserStore(s => s.organization.key);
+  const value = useContestData(fallbackData, organizationKey);
   return <ContestDataContext.Provider value={value}>{children}</ContestDataContext.Provider>;
 }
 

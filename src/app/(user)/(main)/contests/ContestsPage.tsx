@@ -3,7 +3,7 @@
 import { CreateContestButton, T, TwoContentLayout } from 'components';
 import { jukiAppRoutes } from 'config';
 import { useEffect, useRouterStore, useTrackLastPath, useUserStore } from 'hooks';
-import { ContestsTab, ContestSummaryListResponseDTO, LastPathKey, PagedDataViewerProps, TabsType } from 'types';
+import { ContestsTab, ContestSummaryListResponseDto, LastPathKey, PagedDataViewerProps, TabsType } from 'types';
 import { ContestsClassicList } from '../../../../components/contest/list/ContestsClassicList';
 import { ContestsGlobalList } from '../../../../components/contest/list/ContestsGlobalList';
 
@@ -29,7 +29,7 @@ export function ContestsPage({ tab }: { tab?: ContestsTab }) {
     extraNodes.push(<CreateContestButton />);
   }
   
-  const props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>> = {
+  const props: Partial<PagedDataViewerProps<ContestSummaryListResponseDto, ContestSummaryListResponseDto>> = {
     refreshInterval: 60000,
     cards: { width: 320, expanded: true },
     extraNodes,

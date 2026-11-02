@@ -1,39 +1,39 @@
 import { jukiApiManager } from 'config';
 import { FIFTEEN_MINUTES, FIVE_HOURS, MAX_DATE, MIN_DATE, ONE_HOUR } from 'config/constants';
-import type { ContentResponseType, UpsertContestDTO, UpsertContestDTOUI, UpsertContestProblemDTOUI } from 'types';
+import type { ContentResponseType, UpsertContestDto, UpsertContestDtoUI, UpsertContestProblemDtoUI } from 'types';
 import { ContestTemplate } from 'types';
 import type { ContestDataUI } from '../components/contest/view/types';
 import { cleanRequest, getMetaHeaders, isGlobalContest, roundTimestamp } from './index';
 
-export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertContestDTOUI): UpsertContestDTOUI => {
-  const startTimestamp = roundTimestamp(contest.settings.startTimestamp);
-  const endTimestamp = Math.max(roundTimestamp(contest.settings.endTimestamp), startTimestamp);
-  const frozenTimestamp = Math.min(
-    Math.max(roundTimestamp(contest.settings.frozenTimestamp), startTimestamp),
-    endTimestamp,
+export const adjustContest = (contest: UpsertContestDtoUI, prevContest: UpsertContestDtoUI): UpsertContestDtoUI => {
+  const startsAt = roundTimestamp(contest.settings.startsAt);
+  const endsAt = Math.max(roundTimestamp(contest.settings.endsAt), startsAt);
+  const frozenAt = Math.min(
+    Math.max(roundTimestamp(contest.settings.frozenAt), startsAt),
+    endsAt,
   );
-  const quietTimestamp = Math.min(
-    Math.max(roundTimestamp(contest.settings.quietTimestamp), frozenTimestamp),
-    endTimestamp,
+  const silencedAt = Math.min(
+    Math.max(roundTimestamp(contest.settings.silencedAt), frozenAt),
+    endsAt,
   );
-  const problems: UpsertContestDTOUI['problems'] = {};
+  const problems: UpsertContestDtoUI['problems'] = {};
   Object.entries(contest.problems).forEach(([ problemJudgeKey, problem ]) => {
-    let problemStartTimestamp = prevContest.problems[problemJudgeKey].startTimestamp
-    === prevContest.settings.startTimestamp ? startTimestamp : problem.startTimestamp;
+    let problemStartTimestamp = prevContest.problems[problemJudgeKey].startsAt
+    === prevContest.settings.startsAt ? startsAt : problem.startsAt;
     problemStartTimestamp = Math.min(
-      Math.max(roundTimestamp(problemStartTimestamp), contest.settings.startTimestamp),
-      contest.settings.endTimestamp,
+      Math.max(roundTimestamp(problemStartTimestamp), contest.settings.startsAt),
+      contest.settings.endsAt,
     );
-    let problemEndTimestamp = prevContest.problems[problemJudgeKey].endTimestamp
-    === prevContest.settings.endTimestamp ? endTimestamp : problem.endTimestamp;
+    let problemEndTimestamp = prevContest.problems[problemJudgeKey].endsAt
+    === prevContest.settings.endsAt ? endsAt : problem.endsAt;
     problemEndTimestamp = Math.min(
       Math.max(roundTimestamp(problemEndTimestamp), problemStartTimestamp),
-      contest.settings.endTimestamp,
+      contest.settings.endsAt,
     );
     problems[problem.key] = {
       ...problem,
-      startTimestamp: problemStartTimestamp,
-      endTimestamp: problemEndTimestamp,
+      startsAt: problemStartTimestamp,
+      endsAt: problemEndTimestamp,
     };
   });
   
@@ -41,10 +41,10 @@ export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertCo
     ...contest,
     settings: {
       ...contest.settings,
-      startTimestamp,
-      frozenTimestamp,
-      quietTimestamp,
-      endTimestamp,
+      startsAt,
+      frozenAt,
+      silencedAt,
+      endsAt,
     },
     problems,
   };
@@ -52,25 +52,25 @@ export const adjustContest = (contest: UpsertContestDTOUI, prevContest: UpsertCo
 
 type ContestForTemplate = {
   settings: {
-    startTimestamp: number,
-    endTimestamp: number,
-    frozenTimestamp: number,
-    quietTimestamp: number,
+    startsAt: number,
+    endsAt: number,
+    frozenAt: number,
+    silencedAt: number,
     penalty: number
   }
 };
 export const isEndlessContest = (contest: ContestForTemplate) => (
-  contest.settings.startTimestamp === MIN_DATE.getTime() &&
-  contest.settings.frozenTimestamp === MAX_DATE.getTime() &&
-  contest.settings.quietTimestamp === MAX_DATE.getTime() &&
-  contest.settings.endTimestamp === MAX_DATE.getTime() &&
+  contest.settings.startsAt === MIN_DATE.getTime() &&
+  contest.settings.frozenAt === MAX_DATE.getTime() &&
+  contest.settings.silencedAt === MAX_DATE.getTime() &&
+  contest.settings.endsAt === MAX_DATE.getTime() &&
   contest.settings.penalty === 0
 );
 
 export const isClassicContest = (contest: ContestForTemplate) => (
-  contest.settings.frozenTimestamp === contest.settings.startTimestamp + FIVE_HOURS - ONE_HOUR &&
-  contest.settings.quietTimestamp === contest.settings.startTimestamp + FIVE_HOURS - FIFTEEN_MINUTES &&
-  contest.settings.endTimestamp === contest.settings.startTimestamp + FIVE_HOURS &&
+  contest.settings.frozenAt === contest.settings.startsAt + FIVE_HOURS - ONE_HOUR &&
+  contest.settings.silencedAt === contest.settings.startsAt + FIVE_HOURS - FIFTEEN_MINUTES &&
+  contest.settings.endsAt === contest.settings.startsAt + FIVE_HOURS &&
   contest.settings.penalty === 20
 );
 
@@ -87,8 +87,8 @@ export const getContestTemplate = (contest: ContestForTemplate): ContestTemplate
   return ContestTemplate.CUSTOMIZED;
 };
 
-export const toUpsertContestDTOUI = (contest: ContestDataUI): UpsertContestDTOUI => {
-  const problems: { [key: string]: UpsertContestProblemDTOUI } = {};
+export const toUpsertContestDtoUI = (contest: ContestDataUI): UpsertContestDtoUI => {
+  const problems: { [key: string]: UpsertContestProblemDtoUI } = {};
   Object.values(contest.problems).forEach(problem => {
     problems[problem.key] = {
       key: problem.key,
@@ -97,10 +97,10 @@ export const toUpsertContestDTOUI = (contest: ContestDataUI): UpsertContestDTOUI
       name: problem.name,
       points: problem.points,
       color: problem.color,
-      startTimestamp: problem.startTimestamp,
-      endTimestamp: problem.endTimestamp,
+      startsAt: problem.startsAt,
+      endsAt: problem.endsAt,
       tags: problem.tags,
-      company: problem.company,
+      organization: problem.organization,
       prerequisites: problem.prerequisites,
       maxAcceptedUsers: problem.maxAcceptedUsers,
       group: problem.group || '',
@@ -120,17 +120,17 @@ export const toUpsertContestDTOUI = (contest: ContestDataUI): UpsertContestDTOUI
   };
 };
 
-export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO => {
+export const toUpsertContestDto = (entity: UpsertContestDtoUI): UpsertContestDto => {
   
-  const problems: UpsertContestDTO['problems'] = {};
+  const problems: UpsertContestDto['problems'] = {};
   for (const problem of Object.values(entity.problems)) {
     problems[problem.key] = {
       color: problem.color,
-      endTimestamp: problem.endTimestamp,
+      endsAt: problem.endsAt,
       index: problem.index,
       key: problem.key,
       points: problem.points,
-      startTimestamp: problem.startTimestamp,
+      startsAt: problem.startsAt,
       prerequisites: problem.prerequisites?.map(prerequisite => ({ ...prerequisite })) || [],
       maxAcceptedUsers: problem.maxAcceptedUsers || 0,
       group: problem.group || '',
@@ -159,10 +159,10 @@ export const toUpsertContestDTO = (entity: UpsertContestDTOUI): UpsertContestDTO
       languages: entity.settings?.languages ?? [],
       penalty: entity.settings?.penalty ?? 0,
       timeToSolve: entity.settings?.timeToSolve ?? 0,
-      startTimestamp: entity.settings?.startTimestamp ?? 0,
-      frozenTimestamp: entity.settings?.frozenTimestamp ?? 0,
-      quietTimestamp: entity.settings?.quietTimestamp ?? 0,
-      endTimestamp: entity.settings?.endTimestamp ?? 0,
+      startsAt: entity.settings?.startsAt ?? 0,
+      frozenAt: entity.settings?.frozenAt ?? 0,
+      silencedAt: entity.settings?.silencedAt ?? 0,
+      endsAt: entity.settings?.endsAt ?? 0,
       scoreboardLocked: entity.settings?.scoreboardLocked ?? true,
       upsolvingEnabled: entity.settings?.upsolvingEnabled ?? false,
     },

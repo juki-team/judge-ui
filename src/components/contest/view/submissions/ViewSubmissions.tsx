@@ -19,7 +19,7 @@ import {
   authorizedRequest,
   cleanRequest,
   getParamsOfUserKey,
-  isSubmissionsCrawlWebSocketResponseEventDTO,
+  isSubmissionsCrawlWebSocketResponseEventDto,
   toFilterUrl,
   toSortUrl,
 } from 'helpers';
@@ -27,21 +27,21 @@ import { useFetcher, useJukiNotification, useMemo, useState, useSubscribe, useUs
 import {
   ContentResponseType,
   ContentsResponseType,
-  ContestDataResponseDTO,
+  ContestDataResponseDto,
   DataViewerHeadersType,
   DataViewerRequestPropsType,
   DataViewerToolbarProps,
-  JudgeSummaryListResponseDTO,
+  JudgeSummaryListResponseDto,
   LanguagesByJudge,
   QueryParam,
   Status,
-  SubmissionSummaryListResponseDTO,
-  SubscribeSubmissionsCrawlWebSocketEventDTO,
+  SubmissionSummaryListResponseDto,
+  SubscribeSubmissionsCrawlWebSocketEventDto,
   WebSocketSubscriptionEvent,
 } from 'types';
 import { ContestDataUI } from '../types';
 
-const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
+const RetrieveButton = ({ contest }: { contest: ContestDataResponseDto }) => {
   
   const [ dataCrawled, setDataCrawled ] = useState<{
     [key: string]: { submitId: string, isNewSubmission: boolean }[]
@@ -52,7 +52,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   const problemKeys = Object.values(contest.problems).map(problem => problem.key).join(SEPARATOR_TOKEN);
   const contestKey = contest.key;
   
-  const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDTO, 'clientId'> = {
+  const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDto, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
     contestKey,
     problemKeys,
@@ -60,7 +60,7 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
   useSubscribe(
     event,
     (data) => {
-      if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+      if (isSubmissionsCrawlWebSocketResponseEventDto(data)) {
         if (data.content.submitId) {
           setDataCrawled(prevState => ({
             ...prevState,
@@ -131,8 +131,8 @@ const RetrieveButton = ({ contest }: { contest: ContestDataResponseDTO }) => {
 export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
   
   const userNickname = useUserStore(state => state.user.nickname);
-  const companyKey = useUserStore(state => state.company.key);
-  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDTO>>(jukiApiManager.API_V2.judge.getSummaryList().url);
+  const organizationKey = useUserStore(state => state.organization.key);
+  const { data: judgePublicList } = useFetcher<ContentsResponseType<JudgeSummaryListResponseDto>>(jukiApiManager.API_V2.judge.getSummaryList().url);
   const languages = useMemo(() => {
     const result: LanguagesByJudge = {};
     const judges = judgePublicList?.success ? judgePublicList.contents : [];
@@ -149,20 +149,20 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
     return result;
   }, [ contest.problems, judgePublicList ]);
   
-  const columns: DataViewerHeadersType<SubmissionSummaryListResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<SubmissionSummaryListResponseDto>[] = useMemo(() => [
     getSubmissionNicknameHeader([
       ...(contest.user.isAdministrator || contest.user.isManager || contest.user.isParticipant
         ? [ { value: userNickname, label: <T className="tt-se cr-ss fw-bd">my submissions</T> } ]
         : []),
       ...Object.keys(contest.members.participants).map(participant => {
-        const { userNickname, userCompanyKey } = getParamsOfUserKey(participant);
+        const { userNickname, userOrganizationKey } = getParamsOfUserKey(participant);
         return {
           value: participant,
           label: (
             <div className="jk-row gap">
               {userNickname}
-              {userCompanyKey && companyKey !== userCompanyKey
-                ? <div className="tx-t jk-tag">{userCompanyKey}</div>
+              {userOrganizationKey && organizationKey !== userOrganizationKey
+                ? <div className="tx-t jk-tag">{userOrganizationKey}</div>
                 : null}
             </div>
           ),
@@ -187,10 +187,10 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
     getSubmissionLanguageHeader(languages),
     getSubmissionTimeHeader(),
     getSubmissionMemoryHeader(),
-  ], [ contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, contest.members.participants, contest.problems, contest.key, userNickname, languages, companyKey ]);
+  ], [ contest.user.isAdministrator, contest.user.isManager, contest.user.isParticipant, contest.members.participants, contest.problems, contest.key, userNickname, languages, organizationKey ]);
   
   const downloads = useMemo(() => {
-    const downloads: DataViewerToolbarProps<SubmissionSummaryListResponseDTO>['downloads'] = [
+    const downloads: DataViewerToolbarProps<SubmissionSummaryListResponseDto>['downloads'] = [
       {
         label: <T className="tt-se">download as csv</T>,
         value: 'csv',
@@ -231,7 +231,7 @@ export const ViewSubmissions = ({ contest }: { contest: ContestDataUI }) => {
   const hasNotSubmitSupported = Object.values(contest.problems).some(problem => !problem.judge.isSubmitSupported);
   
   return (
-    <PagedDataViewer<SubmissionSummaryListResponseDTO, SubmissionSummaryListResponseDTO>
+    <PagedDataViewer<SubmissionSummaryListResponseDto, SubmissionSummaryListResponseDto>
       extraNodes={hasNotSubmitSupported ? [ <RetrieveButton key="retrieve-button" contest={contest} /> ] : []}
       rows={{ height: 80 }}
       cards={{ width: 272, expanded: true }}

@@ -4,11 +4,11 @@ import { ProblemView } from 'components';
 import { jukiApiManager } from 'config';
 import { HEADER_JUKI_INTERNAL_API_KEY, JUKI_INTERNAL_API_KEY } from 'config/constants';
 import { cleanRequest, getHeaders } from 'helpers';
-import { ContentResponseType, ProblemDataResponseDTO } from 'types';
+import { ContentResponseType, ProblemDataResponseDto } from 'types';
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
   
-  let problemData: ProblemDataResponseDTO | null = null;
+  let problemData: ProblemDataResponseDto | null = null;
   
   try {
     
@@ -23,7 +23,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
       },
     });
     const text = await response.text();
-    const result = cleanRequest<ContentResponseType<ProblemDataResponseDTO>>(text);
+    const result = cleanRequest<ContentResponseType<ProblemDataResponseDto>>(text);
     if (result.success) {
       problemData = result.content;
     } else {

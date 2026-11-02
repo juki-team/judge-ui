@@ -38,20 +38,20 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import {
   ContentResponseType,
-  ContestDataResponseDTO,
+  ContestDataResponseDto,
   DataViewerHeadersType,
   QueryParam,
-  ScoreboardHistoryResponseDTO,
-  ScoreboardResponseDTO,
+  ScoreboardHistoryResponseDto,
+  ScoreboardResponseDto,
   Status,
 } from 'types';
-import { ScoreboardResponseDTOFocus } from '../types';
+import { ScoreboardResponseDtoFocus } from '../types';
 import { getNicknameColumn, getPointsColumn, getPositionColumn, getProblemScoreboardColumn } from './columns';
 import { FullScreenScoreboard } from './FullScreenScoreboard';
 
 interface DownloadButtonProps {
-  data: ScoreboardResponseDTO[],
-  contest: ContestDataResponseDTO,
+  data: ScoreboardResponseDto[],
+  contest: ContestDataResponseDto,
   disabled: boolean
 }
 
@@ -124,7 +124,7 @@ const DownloadButton = ({ data, contest, disabled }: DownloadButtonProps) => {
 };
 
 interface ViewScoreboardProps {
-  contest: ContestDataResponseDTO,
+  contest: ContestDataResponseDto,
   reloadContest: () => Promise<void>,
 }
 
@@ -138,8 +138,8 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
   const viewPortScreen = usePageStore(store => store.viewPort.screen);
   const [ fullscreen, setFullscreen ] = useState(false);
   const t = useI18nStore(state => state.i18n.t);
-  const columns: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = useMemo(() => {
-    const base: DataViewerHeadersType<ScoreboardResponseDTOFocus>[] = [
+  const columns: DataViewerHeadersType<ScoreboardResponseDtoFocus>[] = useMemo(() => {
+    const base: DataViewerHeadersType<ScoreboardResponseDtoFocus>[] = [
       getPositionColumn(),
       getNicknameColumn(viewPortScreen),
       getPointsColumn(viewPortScreen, contest.isEndless || contest.isGlobal),
@@ -160,16 +160,16 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
     request,
     isLoading,
     setLoaderStatusRef,
-  } = useDataViewerRequester<ContentResponseType<ScoreboardHistoryResponseDTO>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key));
+  } = useDataViewerRequester<ContentResponseType<ScoreboardHistoryResponseDto>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD_HISTORY(contest?.key));
   const [ trigger, setTrigger ] = useState(0);
   const [ index, setIndex ] = useState(0);
   const max = Object.values(response?.success ? response.content.timelineEvents : []).length;
   const { finalTimestamp, data } = useMemo(() => {
     let finalTimestamp = 0;
-    const finalDataByUsers: Record<string, ScoreboardResponseDTO> = {};
-    let currentDataByUsers: Record<string, ScoreboardResponseDTO> = {};
-    let nextDataByUsers: Record<string, ScoreboardResponseDTO> = {};
-    let prevDataByUsers: Record<string, ScoreboardResponseDTO> = {};
+    const finalDataByUsers: Record<string, ScoreboardResponseDto> = {};
+    let currentDataByUsers: Record<string, ScoreboardResponseDto> = {};
+    let nextDataByUsers: Record<string, ScoreboardResponseDto> = {};
+    let prevDataByUsers: Record<string, ScoreboardResponseDto> = {};
     if (response?.success) {
       let i = 1;
       for (const {
@@ -229,7 +229,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
     const problemKeys = Object.keys(contest.problems);
     const dataByUsers = dynamic ? currentDataByUsers : finalDataByUsers;
     nextDataByUsers = dynamic ? nextDataByUsers : finalDataByUsers;
-    const data: ScoreboardResponseDTOFocus[] = response?.success ? Object.keys(response.content.participants)
+    const data: ScoreboardResponseDtoFocus[] = response?.success ? Object.keys(response.content.participants)
       .map(userKey => {
         const scoreUser = dataByUsers[userKey] || {
           user: response.content.participants[userKey],
@@ -240,8 +240,8 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         };
         let totalPenalty = 0;
         let totalPoints = 0;
-        const focus: ScoreboardResponseDTOFocus['focus'] = [];
-        const diff: ScoreboardResponseDTOFocus['diff'] = [];
+        const focus: ScoreboardResponseDtoFocus['focus'] = [];
+        const diff: ScoreboardResponseDtoFocus['diff'] = [];
         for (const problemKey of problemKeys) {
           const problem = scoreUser?.problems[problemKey];
           if (JSON.stringify(problem) !== JSON.stringify(prevDataByUsers[userKey]?.problems[problemKey])) {
@@ -283,9 +283,9 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
     return { finalTimestamp, data };
   }, [ contest.problems, dynamic, index, response, max ]);
   
-  const currentTimestamp = finalTimestamp - contest.settings.startTimestamp;
+  const currentTimestamp = finalTimestamp - contest.settings.startsAt;
   const focusedRow = data.find(({ focus }) => (focus?.length ?? 0) > 0);
-  const [ focusUserKey, setFocusUserKey ] = useSyncedState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.company.key) : '');
+  const [ focusUserKey, setFocusUserKey ] = useSyncedState(focusedRow ? getUserKey(focusedRow.user.nickname, focusedRow.user.organization.key) : '');
   
   const handleFullscreen = useCallback(() => setFullscreen(fullscreen => !fullscreen), []);
   
@@ -375,7 +375,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         jumpToPage={(page) => {
           const focusedRow = data.find(({ diff }) => (diff || []).some(({ focus }) => focus));
           if (focusedRow) {
-            setFocusUserKey(getUserKey(focusedRow.user.nickname, focusedRow.user.company.key));
+            setFocusUserKey(getUserKey(focusedRow.user.nickname, focusedRow.user.organization.key));
           }
           setTimeout(() => {
             setIndex(page);
@@ -408,7 +408,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         type="hours-minutes"
         literal
       />
-      {contest.settings.startTimestamp + currentTimestamp >= contest.settings.quietTimestamp ?
+      {contest.settings.startsAt + currentTimestamp >= contest.settings.silencedAt ?
         <QuietInformation
           icon={
             <div className="jk-row jk-tag bc-el">
@@ -416,7 +416,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
             </div>
           }
         />
-        : contest.settings.startTimestamp + currentTimestamp >= contest.settings.frozenTimestamp && (
+        : contest.settings.startsAt + currentTimestamp >= contest.settings.frozenAt && (
         <FrozenInformation
           icon={
             <div className="jk-row jk-tag bc-io">
@@ -441,7 +441,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
       className="tiny"
       placeholder="delay ms"
     />,
-  ], [ contest.settings.frozenTimestamp, contest.settings.quietTimestamp, contest.settings.startTimestamp, currentTimestamp, data, focusDelay, fullscreen, index, max, onClose, setFocusUserKey ]);
+  ], [ contest.settings.frozenAt, contest.settings.silencedAt, contest.settings.startsAt, currentTimestamp, data, focusDelay, fullscreen, index, max, onClose, setFocusUserKey ]);
   
   const groups = useMemo(
     () => Object
@@ -451,7 +451,7 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
   );
   
   const score = (
-    <DataViewer<ScoreboardResponseDTOFocus>
+    <DataViewer<ScoreboardResponseDtoFocus>
       headers={columns}
       data={data}
       rows={{ height: 68 }}
@@ -465,9 +465,9 @@ export const ViewEventsScoreboard = ({ contest, reloadContest }: ViewScoreboardP
         'is-quiet': !dynamic && !unfrozen && contest.isQuietTime,
       })}
       groups={groups}
-      getRecordKey={({ data, index }) => getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key)}
+      getRecordKey={({ data, index }) => getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key)}
       getRecordStyle={({ data, index }) => {
-        const userKey = getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.company.key);
+        const userKey = getUserKey(data?.[index]?.user.nickname, data?.[index]?.user.organization.key);
         if (focusUserKey === userKey) {
           const dataUser = data[index];
           if (dataUser?.focus) {

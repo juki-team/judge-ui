@@ -13,15 +13,15 @@ export {
   contentResponse,
   isGlobalContest,
   getParamsOfUserKey,
-  isProblemCrawledWebSocketResponseEventDTO,
+  isProblemCrawledWebSocketResponseEventDto,
   getDocumentAccess,
   cleanRequest,
-  isSubmissionsCrawlWebSocketResponseEventDTO,
-  isContestChangesWebSocketResponseEventDTO,
+  isSubmissionsCrawlWebSocketResponseEventDto,
+  isContestChangesWebSocketResponseEventDto,
   consoleError,
   consoleInfo,
   getUserKey,
-  isUserNotificationSubmissionWebSocketResponseEventDTO,
+  isUserNotificationSubmissionWebSocketResponseEventDto,
 } from '@juki-team/commons';
 
 export {

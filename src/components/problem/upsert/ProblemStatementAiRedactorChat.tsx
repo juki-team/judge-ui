@@ -17,11 +17,11 @@ import {
 import { classNames, upperFirst } from 'helpers';
 import { useI18nStore, useRef } from 'hooks';
 import { useEffect, useState } from 'react';
-import { StatementDTO } from 'types';
+import { StatementDto } from 'types';
 
 interface ProblemStatementAiRedactorChatProps {
-  statement: StatementDTO,
-  setStatement: (statement: StatementDTO) => void,
+  statement: StatementDto,
+  setStatement: (statement: StatementDto) => void,
   recordHistory: () => void,
 }
 
@@ -65,7 +65,7 @@ export const ProblemStatementAiRedactorChat = ({
   
   useEffect(() => {
     for (const message of messages) {
-      for (const part of message.parts as { type: string, input: StatementDTO, state: string }[]) {
+      for (const part of message.parts as { type: string, input: StatementDto, state: string }[]) {
         if (part?.type === 'tool-suggestStatement' && part?.state === 'input-streaming') {
           setStatement({
             description: typeof part?.input?.description === 'string' ? part?.input?.description : statement.description,

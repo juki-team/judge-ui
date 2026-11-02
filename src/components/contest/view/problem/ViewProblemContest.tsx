@@ -9,9 +9,9 @@ import { KeyedMutator } from 'swr';
 import {
   CodeLanguage,
   ContentResponseType,
-  ContestDataResponseDTO,
+  ContestDataResponseDto,
   ContestProblemBlockedByType,
-  ContestProblemDataResponseDTO,
+  ContestProblemDataResponseDto,
   ContestTab,
   EntityState,
   Status,
@@ -19,8 +19,8 @@ import {
 import { ProblemRequisites } from '../ProblemRequisites';
 
 interface ViewProblemContestProps {
-  problem: ContestProblemDataResponseDTO,
-  contest: ContestDataResponseDTO,
+  problem: ContestProblemDataResponseDto,
+  contest: ContestDataResponseDto,
   reloadContest: KeyedMutator<any>,
 }
 

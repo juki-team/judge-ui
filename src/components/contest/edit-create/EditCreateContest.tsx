@@ -13,14 +13,14 @@ import {
   TabsType,
   TwoContentLayoutProps,
   UpsertComponentEntityProps,
-  UpsertContestDTOUI,
+  UpsertContestDtoUI,
 } from 'types';
 import { ContestDelete } from './ContestDelete';
 import { EditProblems } from './EditProblems';
 import { EditSettings } from './EditSettings';
 import { EditViewMembers } from './EditViewMembers';
 
-export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityProps<UpsertContestDTOUI, ContestTab>) {
+export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityProps<UpsertContestDtoUI, ContestTab>) {
   
   const { entity: initialContest, entityKey: contestKey, tabButtons } = props;
   
@@ -28,7 +28,7 @@ export const EditCreateContest = memo(function Cmp(props: UpsertComponentEntityP
   
   // const { addWarningNotification } = useJukiNotification();
   const { Link } = useUIStore(store => store.components);
-  const [ contest, setContest ] = useState<UpsertContestDTOUI>(initialContest);
+  const [ contest, setContest ] = useState<UpsertContestDtoUI>(initialContest);
   const isGlobal = isGlobalContest(contest.settings);
   const searchParams = useRouterStore(store => store.searchParams);
   const tab = searchParams.get('tab') as ContestTab || ContestTab.OVERVIEW;

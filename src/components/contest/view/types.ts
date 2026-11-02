@@ -1,27 +1,27 @@
 import {
-  ContestClarificationsResponseDTO,
-  ContestDataResponseDTO,
-  ContestEventsResponseDTO,
-  ContestMembersResponseDTO,
-  ScoreboardResponseDTO,
+  ContestClarificationsResponseDto,
+  ContestDataResponseDto,
+  ContestEventsResponseDto,
+  ContestMembersResponseDto,
+  ScoreboardResponseDto,
 } from 'types';
 
-export type ScoreboardResponseDTOUI = ScoreboardResponseDTO & { official: boolean };
+export type ScoreboardResponseDtoUI = ScoreboardResponseDto & { official: boolean };
 
-export type BunchScoreboardResponseDTOUI = ScoreboardResponseDTO & {
+export type BunchScoreboardResponseDtoUI = ScoreboardResponseDto & {
   official: boolean,
   order: number,
   label: string,
   color: string
 };
 
-export interface ScoreboardResponseDTOFocus extends ScoreboardResponseDTOUI {
+export interface ScoreboardResponseDtoFocus extends ScoreboardResponseDtoUI {
   focus?: { problemKey: string, success: boolean, points: number }[],
   diff?: { problemKey: string, pendingAttempts: number, focus: boolean }[],
 }
 
 export type ContestDataUI =
-  ContestDataResponseDTO
-  & ContestEventsResponseDTO
-  & ContestClarificationsResponseDTO
-  & ContestMembersResponseDTO;
+  ContestDataResponseDto
+  & ContestEventsResponseDto
+  & ContestClarificationsResponseDto
+  & ContestMembersResponseDto;

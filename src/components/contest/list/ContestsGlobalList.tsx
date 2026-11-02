@@ -5,16 +5,16 @@ import { jukiApiManager } from 'config';
 import { toFilterUrl, toSortUrl } from 'helpers';
 import { useMemo } from 'react';
 import {
-  ContestSummaryListResponseDTO,
+  ContestSummaryListResponseDto,
   DataViewerHeadersType,
   EntityState,
   PagedDataViewerProps,
   QueryParam,
 } from 'types';
 
-export const ContestsGlobalList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>>) => {
+export const ContestsGlobalList = (props: Partial<PagedDataViewerProps<ContestSummaryListResponseDto, ContestSummaryListResponseDto>>) => {
   
-  const columns: DataViewerHeadersType<ContestSummaryListResponseDTO>[] = useMemo(() => [
+  const columns: DataViewerHeadersType<ContestSummaryListResponseDto>[] = useMemo(() => [
     getContestNameHeader(),
     // getContestDateHeader(),
     // getContestContestantsHeader(),
@@ -22,7 +22,7 @@ export const ContestsGlobalList = (props: Partial<PagedDataViewerProps<ContestSu
   ], []);
   
   return (
-    <PagedDataViewer<ContestSummaryListResponseDTO, ContestSummaryListResponseDTO>
+    <PagedDataViewer<ContestSummaryListResponseDto, ContestSummaryListResponseDto>
       headers={columns}
       getUrl={({ pagination: { page, pageSize }, filter, sort }) => (
         jukiApiManager.API_V2.contest.getSummaryList({

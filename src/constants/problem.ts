@@ -1,10 +1,10 @@
 import { EntityState, ProblemScoringMode, ProblemType, UpsertProblemUIDTO } from 'types';
 import { EMPTY_ENTITY_MEMBERS, EMPTY_TEXT_LANGUAGES } from './commons';
 
-export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judgeIsExternal }: {
+export const PROBLEM_DEFAULT = ({ nickname, imageUrl, organizationKey, judgeKey, judgeIsExternal }: {
   nickname: string,
   imageUrl: string,
-  companyKey: string,
+  organizationKey: string,
   judgeKey: string,
   judgeIsExternal: boolean,
 }): UpsertProblemUIDTO => {
@@ -37,7 +37,7 @@ export const PROBLEM_DEFAULT = ({ nickname, imageUrl, companyKey, judgeKey, judg
     },
     tags: [],
     members: EMPTY_ENTITY_MEMBERS(),
-    owner: { nickname, imageUrl, company: { key: companyKey } },
+    owner: { nickname, imageUrl, organization: { key: organizationKey } },
     costs: {
       unlockEditorial: 0,
       unlockHint: 0,

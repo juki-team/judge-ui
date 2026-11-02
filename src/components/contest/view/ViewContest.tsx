@@ -17,7 +17,7 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { JUDGE_API_V1, LS_INITIAL_CONTEST_KEY } from 'config/constants';
-import { authorizedRequest, isContestChangesWebSocketResponseEventDTO, toUpsertContestDTOUI } from 'helpers';
+import { authorizedRequest, isContestChangesWebSocketResponseEventDto, toUpsertContestDtoUI } from 'helpers';
 import {
   useEffect,
   useI18nStore,
@@ -35,9 +35,9 @@ import {
   LastPathKey,
   ProfileSetting,
   Status,
-  SubscribeContestChangesWebSocketEventDTO,
+  SubscribeContestChangesWebSocketEventDto,
   TabsType,
-  UpsertContestDTOUI,
+  UpsertContestDtoUI,
   WebSocketSubscriptionEvent,
 } from 'types';
 import { ViewClarifications } from './clarifications/ViewClarifications';
@@ -72,14 +72,14 @@ export function ContestViewLayout() {
   const t = useI18nStore(state => state.i18n.t);
   const userPreferredLanguage = useUserStore(state => state.user.settings?.[ProfileSetting.LANGUAGE]);
   
-  const event: Omit<SubscribeContestChangesWebSocketEventDTO, 'clientId'> = {
+  const event: Omit<SubscribeContestChangesWebSocketEventDto, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_CONTEST_CHANGES,
     contestKey: contestKey,
   };
   useSubscribe(
     event,
     (data) => {
-      if (isContestChangesWebSocketResponseEventDTO(data)) {
+      if (isContestChangesWebSocketResponseEventDto(data)) {
         void reloadContest();
       }
     },
@@ -187,7 +187,7 @@ export function ContestViewLayout() {
     key: ContestTab.MEMBERS,
     header: <T className="tt-ce">members</T>,
     body: (
-      <EditViewMembers key="members" contest={contest as unknown as UpsertContestDTOUI} />
+      <EditViewMembers key="members" contest={contest as unknown as UpsertContestDtoUI} />
     ),
   };
   if ((isAdministrator || isManager || contest.isPast || contest.isEndless || contest.isGlobal)) {
@@ -212,7 +212,7 @@ export function ContestViewLayout() {
         key="contest-copy"
         onClick={async setLoaderStatus => {
           setLoaderStatus(Status.LOADING);
-          const { name, ...parsedContest } = toUpsertContestDTOUI(contest);
+          const { name, ...parsedContest } = toUpsertContestDtoUI(contest);
           localStorage.setItem(LS_INITIAL_CONTEST_KEY, JSON.stringify({
             ...parsedContest,
             key: `${contest.key}-${t('copy')}`,

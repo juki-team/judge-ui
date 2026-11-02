@@ -2,9 +2,9 @@
 
 import { ProblemView, ViewOverview } from 'components';
 import { Fragment } from 'react';
-import { ContestDataResponseDTO, EntityState } from 'types';
+import { ContestDataResponseDto, EntityState } from 'types';
 
-export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataResponseDTO }) => {
+export const ContestProblemSetViewPage = ({ contest }: { contest: ContestDataResponseDto }) => {
   
   return (
     <>

@@ -11,14 +11,14 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { EMPTY_ENTITY_MEMBERS, JUDGE_API_V1 } from 'config/constants';
-import { oneTab, toUpsertContestDTO, toUpsertContestDTOUI } from 'helpers';
+import { oneTab, toUpsertContestDto, toUpsertContestDtoUI } from 'helpers';
 import { useFetcher, useMemo, useUserStore } from 'hooks';
 import {
   ContentResponseType,
-  ContestClarificationsResponseDTO,
-  ContestDataResponseDTO,
-  ContestEventsResponseDTO,
-  ContestMembersResponseDTO,
+  ContestClarificationsResponseDto,
+  ContestDataResponseDto,
+  ContestEventsResponseDto,
+  ContestMembersResponseDto,
   LastPathKey,
 } from 'types';
 import { ContestDataUI } from '../../../../../../components/contest/view/types';
@@ -36,7 +36,7 @@ export function ContestEditPage({ contestKey }: { contestKey: string }) {
   );
   
   return (
-    <FetcherLayer<ContentResponseType<ContestDataResponseDTO>>
+    <FetcherLayer<ContentResponseType<ContestDataResponseDto>>
       url={jukiApiManager.API_V2.contest.getData({ params: { key: contestKey as string } }).url}
       errorView={Error}
     >
@@ -50,19 +50,19 @@ export function ContestEditPage({ contestKey }: { contestKey: string }) {
   );
 }
 
-const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
-  const companyKey = useUserStore(state => state.company.key);
-  const { data: dataEvents, isLoading: isLoadingEvents } = useFetcher<ContentResponseType<ContestEventsResponseDTO>>(
-    jukiApiManager.API_V2.contest.getDataEvents({ params: { key: contest.key, companyKey } }).url,
+const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDto }) => {
+  const organizationKey = useUserStore(state => state.organization.key);
+  const { data: dataEvents, isLoading: isLoadingEvents } = useFetcher<ContentResponseType<ContestEventsResponseDto>>(
+    jukiApiManager.API_V2.contest.getDataEvents({ params: { key: contest.key, organizationKey } }).url,
   );
-  const { data: dataMembers, isLoading: isLoadingMembers } = useFetcher<ContentResponseType<ContestMembersResponseDTO>>(
-    jukiApiManager.API_V2.contest.getDataMembers({ params: { key: contest.key, companyKey } }).url,
+  const { data: dataMembers, isLoading: isLoadingMembers } = useFetcher<ContentResponseType<ContestMembersResponseDto>>(
+    jukiApiManager.API_V2.contest.getDataMembers({ params: { key: contest.key, organizationKey } }).url,
   );
   const {
     data: dataClarifications,
     isLoading: isLoadingClarifications,
-  } = useFetcher<ContentResponseType<ContestClarificationsResponseDTO>>(
-    jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: contest.key, companyKey } }).url,
+  } = useFetcher<ContentResponseType<ContestClarificationsResponseDto>>(
+    jukiApiManager.API_V2.contest.getDataClarifications({ params: { key: contest.key, organizationKey } }).url,
   );
   
   const contestData: ContestDataUI = useMemo(() => {
@@ -87,13 +87,13 @@ const ContestDataEdit = ({ contest }: { contest: ContestDataResponseDTO }) => {
   
   return (
     <EntityUpdateLayout
-      entity={toUpsertContestDTOUI(contestData)}
+      entity={toUpsertContestDtoUI(contestData)}
       entityKey={contest.key}
       Cmp={EditCreateContest}
       viewRoute={(entityKey) => jukiAppRoutes.JUDGE().contests.view({ key: entityKey })}
       updateApiURL={() => JUDGE_API_V1.CONTEST.CONTEST}
       viewApiURL={entityKey => jukiApiManager.API_V2.contest.getData({ params: { key: entityKey } }).url}
-      toEntityUpsert={toUpsertContestDTO}
+      toEntityUpsert={toUpsertContestDto}
     />
   );
 };

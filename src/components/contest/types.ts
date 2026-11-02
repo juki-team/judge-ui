@@ -1,14 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
-import { UpsertContestDTOUI } from 'types';
+import { UpsertContestDtoUI } from 'types';
 
 export interface EditContestProps {
-  contest: UpsertContestDTOUI,
-  setContest: Dispatch<SetStateAction<UpsertContestDTOUI>>,
+  contest: UpsertContestDtoUI,
+  setContest: Dispatch<SetStateAction<UpsertContestDtoUI>>,
   editing?: boolean
 }
 
 export interface EditViewMembersContestProps {
-  contest: UpsertContestDTOUI,
-  setContest?: Dispatch<SetStateAction<UpsertContestDTOUI>>,
+  contest: UpsertContestDtoUI,
+  setContest?: Dispatch<SetStateAction<UpsertContestDtoUI>>,
   editing?: boolean
 }

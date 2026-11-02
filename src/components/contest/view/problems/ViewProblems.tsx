@@ -13,25 +13,25 @@ import {
 } from 'components';
 import { jukiApiManager, jukiAppRoutes } from 'config';
 import { DEFAULT_DATA_VIEWER_PROPS } from 'config/constants';
-import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDTO, lettersToIndex } from 'helpers';
+import { authorizedRequest, cleanRequest, isSubmissionsCrawlWebSocketResponseEventDto, lettersToIndex } from 'helpers';
 import { useJukiNotification, useMemo, usePageStore, useState, useSubscribe, useUIStore } from 'hooks';
 import { KeyedMutator } from 'swr';
 import {
   ContentResponseType,
-  ContestDataResponseDTO,
+  ContestDataResponseDto,
   ContestProblemBlockedByType,
   ContestTab,
   DataViewerHeadersType,
   QueryParam,
   Status,
   SubmissionRunStatus,
-  SubscribeSubmissionsCrawlWebSocketEventDTO,
+  SubscribeSubmissionsCrawlWebSocketEventDto,
   WebSocketSubscriptionEvent,
 } from 'types';
 import { ProblemRequisites } from '../ProblemRequisites';
 
 interface ProblemNameFieldProps {
-  problem: ContestDataResponseDTO['problems'][string],
+  problem: ContestDataResponseDto['problems'][string],
   contestKey: string,
   isJudgeOrAdmin: boolean,
 }
@@ -51,7 +51,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
     .flat()
     .reduce((sum, { isNewSubmission }) => sum + +!isNewSubmission, 0);
   
-  const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDTO, 'clientId'> = {
+  const event: Omit<SubscribeSubmissionsCrawlWebSocketEventDto, 'clientId'> = {
     event: WebSocketSubscriptionEvent.SUBSCRIBE_SUBMISSIONS_CRAWL,
     contestKey,
     problemKeys: problem.key,
@@ -59,7 +59,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
   useSubscribe(
     event,
     (data) => {
-      if (isSubmissionsCrawlWebSocketResponseEventDTO(data)) {
+      if (isSubmissionsCrawlWebSocketResponseEventDto(data)) {
         if (data.content.submitId) {
           setDataCrawled(prevState => ({
             ...prevState,
@@ -165,7 +165,7 @@ const ProblemNameField = ({ problem, contestKey, isJudgeOrAdmin }: ProblemNameFi
 };
 
 interface ViewProblemsProps {
-  contest: ContestDataResponseDTO,
+  contest: ContestDataResponseDto,
   reloadContest: KeyedMutator<any>,
 }
 
@@ -284,11 +284,11 @@ export const ViewProblems = ({ contest, reloadContest }: ViewProblemsProps) => {
       cardPosition: 'bottomRight',
       minWidth: 128,
     },
-  ] as DataViewerHeadersType<ContestDataResponseDTO['problems'][string]>[], [ isJudgeOrAdmin, contest, Link, contestKey, reloadContest ]);
+  ] as DataViewerHeadersType<ContestDataResponseDto['problems'][string]>[], [ isJudgeOrAdmin, contest, Link, contestKey, reloadContest ]);
   const data = Object.values(problems);
   
   return (
-    <DataViewer<ContestDataResponseDTO['problems'][string]>
+    <DataViewer<ContestDataResponseDto['problems'][string]>
       extraNodes={isJudgeOrAdmin ? [
         <ButtonLoader
           key="recalculate-prerequisites"
