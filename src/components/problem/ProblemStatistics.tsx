@@ -99,7 +99,8 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
     data,
   } = useFetcher<ContentResponseType<StatisticsProblemResponseDTO>>(JUDGE_API_V1.PROBLEM.STATISTICS(problem.key, 0, now, groupBy));
   const t = useI18nStore(store => store.i18n.t);
-  const { screen: viewPortScreen, height: viewPortHeight } = usePageStore(store => store.viewPort);
+  // derived in the selector: re-render only when the layout flips, not on every resize event
+  const oneColumn = usePageStore(store => store.viewPort.height < 900 || store.viewPort.screen === 'sm');
   const [ dateType, setDateType ] = useState<GroupByTimestampKey>('day');
   const languagesStats = data?.success ? data.content.language : {};
   const verdictsStats = data?.success ? data.content.verdict : {};
@@ -108,7 +109,6 @@ export const ProblemStatistics = ({ problem }: { problem: ProblemDataResponseDTO
   const verdictsData = [];
   const dateData = [];
   
-  const oneColumn = viewPortHeight < 900 || viewPortScreen === 'sm';
   
   const sum = Object.values(languagesStats).reduce((sum, language) => sum + language.value, 0);
   for (const { label, value } of Object.values(languagesStats)) {

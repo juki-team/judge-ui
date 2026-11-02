@@ -62,7 +62,11 @@ export function ContestViewLayout() {
   const contestKey = contest.key;
   const contestTab = (searchParams.get('tab') || ContestTab.OVERVIEW) as ContestTab;
   const problemIndex = searchParams.get('subTab') || '';
-  const { isSmallScreen, isMediumScreen, isHugeScreen, isLargeScreen } = usePageStore(store => store.viewPort);
+  // select the flags, not the whole viewPort object (a new one is set on every resize event)
+  const isSmallScreen = usePageStore(store => store.viewPort.isSmallScreen);
+  const isMediumScreen = usePageStore(store => store.viewPort.isMediumScreen);
+  const isHugeScreen = usePageStore(store => store.viewPort.isHugeScreen);
+  const isLargeScreen = usePageStore(store => store.viewPort.isLargeScreen);
   const Link = useUIStore(store => store.components.Link);
   const userCanCreateContest = useUserStore(state => state.user.permissions.contests.create);
   const t = useI18nStore(state => state.i18n.t);
