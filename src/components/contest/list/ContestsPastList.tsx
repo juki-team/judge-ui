@@ -30,7 +30,7 @@ export const ContestsPastList = (props: Partial<PagedDataViewerProps<ContestSumm
           params: {
             page,
             pageSize,
-            filterUrl: toFilterUrl({ ...filter, companyKeys: organizationKey, state: EntityState.RELEASED, status: 'past' }),
+            filterUrl: toFilterUrl({ ...filter, organizationKeys: organizationKey, state: EntityState.RELEASED, status: 'past' }),
             sortUrl: toSortUrl(sort),
           },
         }).url

@@ -30,7 +30,7 @@ export const ContestsLiveList = (props: Partial<PagedDataViewerProps<ContestSumm
           params: {
             page,
             pageSize,
-            filterUrl: toFilterUrl({ ...filter, companyKeys: organizationKey, state: EntityState.RELEASED, status: 'live' }),
+            filterUrl: toFilterUrl({ ...filter, organizationKeys: organizationKey, state: EntityState.RELEASED, status: 'live' }),
             sortUrl: toSortUrl(sort),
           },
         }).url

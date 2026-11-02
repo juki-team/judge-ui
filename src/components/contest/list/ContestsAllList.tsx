@@ -31,7 +31,7 @@ export const ContestsAllList = (props: Partial<PagedDataViewerProps<ContestSumma
           params: {
             page,
             pageSize,
-            filterUrl: toFilterUrl({ ...filter, companyKeys: organizationKey, state: EntityState.RELEASED }),
+            filterUrl: toFilterUrl({ ...filter, organizationKeys: organizationKey, state: EntityState.RELEASED }),
             sortUrl: toSortUrl(sort),
           },
         }).url

@@ -32,7 +32,7 @@ export const ContestsUpcomingList = (props: Partial<PagedDataViewerProps<Contest
             pageSize,
             filterUrl: toFilterUrl({
               ...filter,
-              companyKeys: organizationKey,
+              organizationKeys: organizationKey,
               state: EntityState.RELEASED,
               status: 'upcoming',
             }),

@@ -32,7 +32,7 @@ export const ContestsEndlessList = (props: Partial<PagedDataViewerProps<ContestS
             pageSize,
             filterUrl: toFilterUrl({
               ...filter,
-              companyKeys: organizationKey,
+              organizationKeys: organizationKey,
               state: EntityState.RELEASED,
               status: 'endless',
             }),
