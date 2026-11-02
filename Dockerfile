@@ -19,12 +19,12 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_OUTPUT=standalone
 
-# This will do the trick, use the corresponding env file for each environment.
+# NEXT_PUBLIC_* values are inlined into the client bundle at build time, so they must be passed as
+# build args (Dokploy: "Build-time Arguments", see .env.example). The ARGs are visible to `pnpm build`
+# as environment variables under their real names.
 ARG NODE_ENV
 ARG NEXT_PUBLIC_JUKI_SERVICE_V2_URL
 ARG NEXT_PUBLIC_JUKI_TOKEN_NAME
-RUN cp ./.env.sample ./.env \
-    && sed -i 's/^NODE_ENV=.*$/NODE_ENV=${NODE_ENV}/g' ./.env
 RUN pnpm build
 
 # 3. Production image, copy all the files and run next
