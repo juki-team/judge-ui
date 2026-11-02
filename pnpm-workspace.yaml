@@ -15,3 +15,18 @@ minimumReleaseAgeExclude:
   - prosemirror-view@1.42.9
   - '@tanstack/virtual-core@3.19.10'
   - i18next@26.6.0
+overrides:
+  # security floors (pnpm audit, Nov 2026); remove when the dependents ship fixed versions
+  dompurify: ^3.4.17
+  vue: ^3.5.42
+  'zod@>=4 <5': ^4.6.6
+  lodash-es: ^4.18.1
+  fast-uri: ^3.1.9
+  'immutable@<5': ^4.3.9
+  'immutable@>=5 <6': ^5.1.8
+  browserslist: ^4.28.7
+  'brace-expansion@<2': ^1.1.21
+  source-map-js: ^1.2.2
+  'brace-expansion@>=5 <6': ^5.0.12
+  'nanoid@<4': ^3.3.18
+  'nanoid@>=4 <6': ^5.1.16
