@@ -201,11 +201,11 @@ importers:
         specifier: ^0.18.1
         version: 0.18.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.1.21)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@juki-team/base-ui':
-        specifier: 1.5.13
-        version: 1.5.13(9466f1226b2ee35c324330c5b05ce8fa)
+        specifier: 1.5.14
+        version: 1.5.14(9466f1226b2ee35c324330c5b05ce8fa)
       '@juki-team/commons':
-        specifier: 0.1.42
-        version: 0.1.42
+        specifier: 0.1.43
+        version: 0.1.43
       '@reactour/tour':
         specifier: ^3.8.0
         version: 3.8.0(react@19.3.1)
@@ -954,20 +954,20 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@juki-team/base-ui@1.5.13':
-    resolution: {integrity: sha512-3vQn+9tlPX5JMQc3HlaJtsGfyviCoUVZgIKriqA5E2pIRCp7zjKcZQEj+5kQ/5WCIFCAng9f8pIjxvC1UVvpRw==}
+  '@juki-team/base-ui@1.5.14':
+    resolution: {integrity: sha512-zI/dZ3R8I7zfwlNJMKLOV3cCwYyjVH294idMeUAQIyjgV7IUpU+zLog6ju1K7fHtOPxqPHS976t6XquKmjI5Vw==}
     engines: {node: '>=24'}
     peerDependencies:
       '@ably/spaces': ^0.5.2
       '@excalidraw/excalidraw': ^0
       ably: ^2.17.0
-      motion: ^12
+      motion: ^14
       react: ^19
       react-dom: ^19
       swr: ^2
 
-  '@juki-team/commons@0.1.42':
-    resolution: {integrity: sha512-SUFTsHNP66hH10wZd7xivSWoa2XJKPZum62yJ1LvH1YNghgFLk8DiizhE8hkmn5sgflHUxUsfeXA0kexAcB0GQ==}
+  '@juki-team/commons@0.1.43':
+    resolution: {integrity: sha512-rW8gWWYq3AQBCWHdXtr3VXKR4bqycIdazIGEaid0ACjpMEhMsOHaPgK+U+XP796jO+t1YsujmhsR/ztFMuPW/A==}
 
   '@keyv/bigmap@1.3.1':
     resolution: {integrity: sha512-WbzE9sdmQtKy8vrNPa9BRnwZh5UF4s1KTmSK0KUVLo3eff5BlQNNWDnFOouNpKfPKDnms9xynJjsMYjMaT/aFQ==}
@@ -6108,7 +6108,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@juki-team/base-ui@1.5.13(9466f1226b2ee35c324330c5b05ce8fa)':
+  '@juki-team/base-ui@1.5.14(9466f1226b2ee35c324330c5b05ce8fa)':
     dependencies:
       '@ably/spaces': 0.5.2(ably@2.30.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ai-sdk/react': 4.0.163(react@19.3.1)(zod@4.6.7)
@@ -6136,7 +6136,7 @@ snapshots:
       '@floating-ui/react': 0.27.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@handsontable/react-wrapper': 18.1.2(handsontable@18.1.2)
       '@hookform/resolvers': 6.0.2(@standard-schema/spec@1.1.0)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(yup@1.7.1)(zod@4.6.7)
-      '@juki-team/commons': 0.1.42
+      '@juki-team/commons': 0.1.43
       '@mdx-js/mdx': 3.1.1
       '@milkdown/components': 7.23.0(@codemirror/language@6.13.1)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(typescript@6.0.3)
       '@milkdown/core': 7.23.0
@@ -6229,7 +6229,7 @@ snapshots:
       - vest
       - zod
 
-  '@juki-team/commons@0.1.42':
+  '@juki-team/commons@0.1.43':
     dependencies:
       uuid: 14.0.3
 
