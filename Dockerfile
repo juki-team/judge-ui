@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 RUN npm install -g pnpm@12.16.1
 
 # 1. Install dependencies only when needed
