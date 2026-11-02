@@ -15,6 +15,8 @@ import {
 import { T } from '../../commons';
 import { ContestDataUI } from './types';
 
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 export function useContestData(fallbackData: ContestDataResponseDto, organizationKey: string) {
   const { data: dataContest, isLoading: l1, isValidating: v1 } =
     useFetcher<ContentResponseType<ContestDataResponseDto>>(
@@ -55,11 +57,17 @@ export function useContestData(fallbackData: ContestDataResponseDto, organizatio
   
   const mutate = useMatchMutate();
   
+  // Everything of THIS contest (data, events, members, clarifications, scoreboard, problems...) and its submissions
+  // lists; it used to revalidate every cached contest and submission request (other contests, problem pages...).
+  const contestKey = fallbackData.key;
   const reloadContest = useCallback(async () => {
-    consoleInfo('reloading all contest');
-    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/contest`));
-    void mutate(new RegExp(`${JUKI_SERVICE_V2_URL}/submission`));
-  }, [ mutate ]);
+    consoleInfo('reloading all contest', contestKey);
+    const base = escapeRegExp(JUKI_SERVICE_V2_URL);
+    const key = escapeRegExp(contestKey);
+    const encodedKey = escapeRegExp(encodeURIComponent(contestKey));
+    void mutate(new RegExp(`${base}/contest/(${key}|${encodedKey})([/?"]|$)`));
+    void mutate(new RegExp(`${base}/submission/[^"]*[?&]contestKeys=${encodedKey}(&|"|$)`));
+  }, [ contestKey, mutate ]);
   
   const reloadRoute = useRouterStore(store => store.reloadRoute);
   useEffect(() => {
