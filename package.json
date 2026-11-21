@@ -1,7 +1,7 @@
 {
   "name": "judge-ui",
   "private": true,
-  "version": "1.24.33",
+  "version": "1.24.34",
   "packageManager": "pnpm@12.16.1",
   "scripts": {
     "caddy": "caddy run --config Caddyfile",
