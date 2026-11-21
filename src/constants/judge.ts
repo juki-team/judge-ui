@@ -113,6 +113,14 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_V2_URL}/access-token/${accessTokenId}`;
     },
   },
+  OAUTH: {
+    CLIENT: (clientId: string) => {
+      return `${JUKI_SERVICE_V2_URL}/oauth/client/${encodeURIComponent(clientId)}`;
+    },
+    AUTHORIZE: () => {
+      return `${JUKI_SERVICE_V2_URL}/oauth/authorize`;
+    },
+  },
 };
 
 // MCP server of JUKI (juki-service/apps/mcp, on Dokploy): Claude Desktop, Claude Code... use it with an access token

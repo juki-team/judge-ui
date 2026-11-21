@@ -8,6 +8,8 @@ import { CodeLanguage, ContentResponseType, HTTPMethod, Status } from 'types';
 
 type AccessTokenResponseDto = {
   id: string,
+  // PERSONAL: created here; OAUTH: an application connected with its "Connect" button (OAuth)
+  kind: 'PERSONAL' | 'OAUTH',
   name: string,
   tokenPrefix: string,
   createdAt: number,
@@ -30,8 +32,8 @@ const claudeDesktopConfig = (token: string) => JSON.stringify({
 }, null, 2);
 
 /**
- * Personal access tokens of the user, for the MCP server of JUKI (Claude Desktop, Claude Code...).
- * The token is shown only once, when it's created.
+ * Access of the AI assistants to the account, through the MCP server of JUKI (Claude Desktop, Claude Code...):
+ * the applications connected with OAuth and the personal access tokens (shown only once, when they're created).
  */
 export const AccessTokens = () => {
 
@@ -44,9 +46,17 @@ export const AccessTokens = () => {
   return (
     <div className="jk-col gap stretch jk-pg">
       <div className="jk-col gap stretch bc-pd jk-br-ie jk-pg-sm">
-        <T className="tt-se fw-bd">access tokens</T>
+        <T className="tt-se fw-bd">AI assistants</T>
         <T className="tt-se">
-          use them to connect AI assistants (Claude Desktop, Claude Code) to JUKI through its MCP server: they can view and edit your problems, upload test cases and submit solutions with your permissions
+          connect AI assistants (Claude Desktop, Claude Code) to JUKI through its MCP server: they can view and edit your problems, upload test cases and submit solutions with your permissions
+        </T>
+        <div className="jk-row gap left">
+          <T className="tt-se">add this URL as a connector in your assistant and sign in when it asks</T>
+          <code className="jk-pg-xsm bc-pl jk-br-ie">{JUKI_MCP_URL}</code>
+          <CopyToClipboard text={JUKI_MCP_URL} />
+        </div>
+        <T className="tt-se cr-g4">
+          or create a personal access token, for scripts or clients without sign in
         </T>
         <div className="jk-row gap left nowrap">
           <Input
@@ -104,12 +114,17 @@ export const AccessTokens = () => {
       )}
 
       <div className="jk-col gap stretch">
-        {!accessTokens.length && <T className="tt-se cr-g4">you don&apos;t have access tokens</T>}
-        {accessTokens.map(({ id, name, tokenPrefix, createdAt, lastUsedAt }) => (
+        {!accessTokens.length && <T className="tt-se cr-g4">no assistant has access to your account</T>}
+        {accessTokens.map(({ id, kind, name, tokenPrefix, createdAt, lastUsedAt }) => (
           <div key={id} className="jk-row gap space-between nowrap bc-we jk-br-ie jk-pg-sm">
             <div className="jk-col left">
-              <div className="fw-bd">{name}</div>
-              <code>{tokenPrefix}…</code>
+              <div className="jk-row gap left">
+                <span className="fw-bd">{name}</span>
+                <span className="jk-tag bc-io">
+                  <T className="tt-se">{kind === 'OAUTH' ? 'connected app' : 'personal token'}</T>
+                </span>
+              </div>
+              {kind !== 'OAUTH' && <code>{tokenPrefix}…</code>}
               <div className="jk-row gap left">
                 <T className="tt-se">created</T>
                 <DateLiteral date={new Date(createdAt)} />
@@ -131,7 +146,7 @@ export const AccessTokens = () => {
                 }
               }}
             >
-              <T className="tt-se ws-np">revoke</T>
+              <T className="tt-se ws-np">{kind === 'OAUTH' ? 'disconnect' : 'revoke'}</T>
             </ButtonLoader>
           </div>
         ))}
