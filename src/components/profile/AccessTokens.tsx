@@ -30,12 +30,10 @@ const Copyable = ({ text, language = CodeLanguage.BASH }: { text: string, langua
   </div>
 );
 
-const HowToCard = ({ title, steps }: { title: ReactNode, steps: ReactNode[] }) => (
+const HowToCard = ({ title, children }: { title: ReactNode, children: ReactNode }) => (
   <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
     <div className="fw-bd">{title}</div>
-    <ol className="jk-col gap stretch" style={{ margin: 0, paddingLeft: 20 }}>
-      {steps.map((step, index) => <li key={index}>{step}</li>)}
-    </ol>
+    <ol className="jk-col gap stretch" style={{ margin: 0, paddingLeft: 20 }}>{children}</ol>
   </div>
 );
 
@@ -71,30 +69,29 @@ export const AccessTokens = () => {
       <T className="tt-se fw-bd">how to connect</T>
       <HowToCard
         title={<>Claude Desktop <span className="cr-g4">(Windows, Mac)</span></>}
-        steps={[
-          <T key="1" className="tt-se">open Settings → Connectors → Add custom connector</T>,
-          <span key="2"><T className="tt-se">name: JUKI, URL: your MCP URL</T></span>,
-          <T key="3" className="tt-se">click Connect, sign in to JUKI and click Allow</T>,
-        ]}
-      />
+      >
+        <li><T className="tt-se">open Settings → Connectors → Add custom connector</T></li>
+        <li><T className="tt-se">name: JUKI, URL: your MCP URL</T></li>
+        <li><T className="tt-se">click Connect, sign in to JUKI and click Allow</T></li>
+      </HowToCard>
       <HowToCard
         title={<>Claude Code <span className="cr-g4">(Linux, Mac, Windows, with a browser)</span></>}
-        steps={[
-          <div key="1" className="jk-col gap stretch">
+      >
+        <li>
+          <div className="jk-col gap stretch">
             <T className="tt-se">run in your terminal</T>
             <Copyable text={claudeCodeCommand(mcpUrl)} />
-          </div>,
-          <T key="2" className="tt-se">inside Claude Code, type /mcp, choose juki and then Authenticate</T>,
-          <T key="3" className="tt-se">the browser opens: sign in to JUKI and click Allow</T>,
-        ]}
-      />
+          </div>
+        </li>
+        <li><T className="tt-se">inside Claude Code, type /mcp, choose juki and then Authenticate</T></li>
+        <li><T className="tt-se">the browser opens: sign in to JUKI and click Allow</T></li>
+      </HowToCard>
       <HowToCard
         title={<>Claude Code <span className="cr-g4">(server without a browser, SSH)</span></>}
-        steps={[
-          <T key="1" className="tt-se">create a personal access token below</T>,
-          <T key="2" className="tt-se">run the command it shows you (it includes the token)</T>,
-        ]}
-      />
+      >
+        <li><T className="tt-se">create a personal access token below</T></li>
+        <li><T className="tt-se">run the command it shows you (it includes the token)</T></li>
+      </HowToCard>
 
       <div className="jk-col gap stretch bc-pd jk-br-ie jk-pg-sm">
         <T className="tt-se fw-bd">personal access tokens</T>
