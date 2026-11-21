@@ -102,4 +102,18 @@ export const JUDGE_API_V1 = {
       return `${JUKI_SERVICE_V2_URL}/rank/list`;
     },
   },
+  ACCESS_TOKEN: {
+    LIST: () => {
+      return `${JUKI_SERVICE_V2_URL}/access-token`;
+    },
+    CREATE: () => {
+      return `${JUKI_SERVICE_V2_URL}/access-token`;
+    },
+    REVOKE: (accessTokenId: string) => {
+      return `${JUKI_SERVICE_V2_URL}/access-token/${accessTokenId}`;
+    },
+  },
 };
+
+// MCP server of JUKI (juki-service/apps/mcp, on Dokploy): Claude Desktop, Claude Code... use it with an access token
+export const JUKI_MCP_URL = 'https://mcp.juki.app/mcp';

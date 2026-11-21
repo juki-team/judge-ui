@@ -2,6 +2,7 @@ export * from './NavigationBar';
 export * from './commons';
 export * from './contest';
 export * from './problem';
+export * from './profile';
 export * from './server';
 export * from './InstallPWAModal';
 export * from './JukiI18nInitializer';
