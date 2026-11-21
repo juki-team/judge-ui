@@ -50,6 +50,10 @@ import { ViewOverview } from './overview/ViewOverview';
 import { ViewProblemContest } from './problem/ViewProblemContest';
 import { ViewProblems } from './problems/ViewProblems';
 import { ViewScoreboard } from './scoreboard/ViewScoreboard';
+import { ViewStatistics } from './statistics/ViewStatistics';
+
+// not in the ContestTab enum of base-ui yet
+const CONTEST_STATISTICS_TAB = 'statistics' as ContestTab;
 import { ViewSubmissions } from './submissions/ViewSubmissions';
 
 export function ContestViewLayout() {
@@ -215,6 +219,16 @@ export function ContestViewLayout() {
         body: (
           <ViewEvents key="events" contest={contest} />
         ),
+      };
+    }
+    // the last tab: while the contest is future or live only its judges (owner, administrators, managers) see it; once
+    // past (or global, endless) everyone (the API counts only the submissions before the freeze while the scoreboard is
+    // locked). The tab key is not in the ContestTab enum of base-ui yet.
+    if (isAdministrator || isManager || contest.isPast || contest.isGlobal || contest.isEndless) {
+      tabHeaders[CONTEST_STATISTICS_TAB] = {
+        key: CONTEST_STATISTICS_TAB,
+        header: <T className="tt-ce ws-np">statistics</T>,
+        body: <ViewStatistics key="statistics" contest={contest} />,
       };
     }
     return tabHeaders;

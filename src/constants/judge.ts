@@ -58,6 +58,26 @@ export const JUDGE_API_V1 = {
     SCOREBOARD: (key: string, unfrozen: boolean, official: boolean) => {
       return `${JUKI_SERVICE_V2_URL}/contest/${key}/scoreboard${official ? '?official=true' : ''}${unfrozen ? `${official ? '&' : '?'}state=unfrozen` : ''}`;
     },
+    STATISTICS: (key: string, filters: { problemKeys: string[], languages: string[], from: number, to: number, participantsOnly: boolean }) => {
+      const params = new URLSearchParams();
+      if (filters.problemKeys.length) {
+        params.set('problemKeys', filters.problemKeys.join(','));
+      }
+      if (filters.languages.length) {
+        params.set('languages', filters.languages.join(','));
+      }
+      if (filters.from) {
+        params.set('from', `${filters.from}`);
+      }
+      if (filters.to) {
+        params.set('to', `${filters.to}`);
+      }
+      if (!filters.participantsOnly) {
+        params.set('participantsOnly', 'false');
+      }
+      const query = params.toString();
+      return `${JUKI_SERVICE_V2_URL}/contest/${key}/statistics${query ? `?${query}` : ''}`;
+    },
     SCOREBOARD_HISTORY: (key: string) => {
       return `${JUKI_SERVICE_V2_URL}/contest/${key}/scoreboard-history`;
     },
