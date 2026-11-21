@@ -1,9 +1,10 @@
 'use client';
 
 import { ButtonLoader, CodeViewer, CopyToClipboard, DateLiteral, Input, T } from 'components';
-import { JUDGE_API_V1, JUKI_MCP_URL } from 'config/constants';
+import { getJukiMcpUrl, JUDGE_API_V1 } from 'config/constants';
 import { authorizedRequest, cleanRequest } from 'helpers';
-import { useFetcher, useJukiNotification, useState } from 'hooks';
+import { useFetcher, useJukiNotification, useState, useUserStore } from 'hooks';
+import type { ReactNode } from 'react';
 import { CodeLanguage, ContentResponseType, HTTPMethod, Status } from 'types';
 
 type AccessTokenResponseDto = {
@@ -18,53 +19,93 @@ type AccessTokenResponseDto = {
 
 type CreatedAccessTokenResponseDto = AccessTokenResponseDto & { token: string };
 
-const claudeCodeCommand = (token: string) => (
-  `claude mcp add --transport http juki ${JUKI_MCP_URL} --header "Authorization: Bearer ${token}"`
+const claudeCodeCommand = (mcpUrl: string, token?: string) => (
+  `claude mcp add --transport http juki ${mcpUrl}${token ? ` --header "Authorization: Bearer ${token}"` : ''}`
 );
 
-const claudeDesktopConfig = (token: string) => JSON.stringify({
-  mcpServers: {
-    juki: {
-      command: 'npx',
-      args: [ '-y', 'mcp-remote', JUKI_MCP_URL, '--header', `Authorization: Bearer ${token}` ],
-    },
-  },
-}, null, 2);
+const Copyable = ({ text, language = CodeLanguage.BASH }: { text: string, language?: CodeLanguage }) => (
+  <div className="jk-row gap left nowrap">
+    <CodeViewer code={text} language={language} />
+    <CopyToClipboard text={text} />
+  </div>
+);
+
+const HowToCard = ({ title, steps }: { title: ReactNode, steps: ReactNode[] }) => (
+  <div className="jk-col gap stretch bc-we jk-br-ie jk-pg-sm">
+    <div className="fw-bd">{title}</div>
+    <ol className="jk-col gap stretch" style={{ margin: 0, paddingLeft: 20 }}>
+      {steps.map((step, index) => <li key={index}>{step}</li>)}
+    </ol>
+  </div>
+);
 
 /**
  * Access of the AI assistants to the account, through the MCP server of JUKI (Claude Desktop, Claude Code...):
- * the applications connected with OAuth and the personal access tokens (shown only once, when they're created).
+ * how to connect them, the applications connected with OAuth and the personal access tokens (shown only once).
  */
 export const AccessTokens = () => {
 
   const { notifyResponse } = useJukiNotification();
+  const organizationKey = useUserStore(state => state.user.organization.key);
   const [ name, setName ] = useState('');
   const [ created, setCreated ] = useState<CreatedAccessTokenResponseDto | null>(null);
   const { data, mutate } = useFetcher<ContentResponseType<AccessTokenResponseDto[]>>(JUDGE_API_V1.ACCESS_TOKEN.LIST());
   const accessTokens = data?.success ? data.content : [];
+  // the MCP server of the organization: its users sign in on its own platform
+  const mcpUrl = getJukiMcpUrl(organizationKey);
 
   return (
     <div className="jk-col gap stretch jk-pg">
       <div className="jk-col gap stretch bc-pd jk-br-ie jk-pg-sm">
         <T className="tt-se fw-bd">AI assistants</T>
         <T className="tt-se">
-          connect AI assistants (Claude Desktop, Claude Code) to JUKI through its MCP server: they can view and edit your problems, upload test cases and submit solutions with your permissions
+          connect Claude to JUKI: it will be able to view and edit your problems, upload test cases and submit solutions, with your permissions
         </T>
         <div className="jk-row gap left">
-          <T className="tt-se">add this URL as a connector in your assistant and sign in when it asks</T>
-          <code className="jk-pg-xsm bc-pl jk-br-ie">{JUKI_MCP_URL}</code>
-          <CopyToClipboard text={JUKI_MCP_URL} />
+          <T className="tt-se fw-bd ws-np">your MCP URL</T>
+          <code className="jk-pg-xsm bc-pl jk-br-ie" style={{ wordBreak: 'break-all' }}>{mcpUrl}</code>
+          <CopyToClipboard text={mcpUrl} />
         </div>
-        <T className="tt-se cr-g4">
-          or create a personal access token, for scripts or clients without sign in
-        </T>
+      </div>
+
+      <T className="tt-se fw-bd">how to connect</T>
+      <HowToCard
+        title={<>Claude Desktop <span className="cr-g4">(Windows, Mac)</span></>}
+        steps={[
+          <T key="1" className="tt-se">open Settings → Connectors → Add custom connector</T>,
+          <span key="2"><T className="tt-se">name: JUKI, URL: your MCP URL</T></span>,
+          <T key="3" className="tt-se">click Connect, sign in to JUKI and click Allow</T>,
+        ]}
+      />
+      <HowToCard
+        title={<>Claude Code <span className="cr-g4">(Linux, Mac, Windows, with a browser)</span></>}
+        steps={[
+          <div key="1" className="jk-col gap stretch">
+            <T className="tt-se">run in your terminal</T>
+            <Copyable text={claudeCodeCommand(mcpUrl)} />
+          </div>,
+          <T key="2" className="tt-se">inside Claude Code, type /mcp, choose juki and then Authenticate</T>,
+          <T key="3" className="tt-se">the browser opens: sign in to JUKI and click Allow</T>,
+        ]}
+      />
+      <HowToCard
+        title={<>Claude Code <span className="cr-g4">(server without a browser, SSH)</span></>}
+        steps={[
+          <T key="1" className="tt-se">create a personal access token below</T>,
+          <T key="2" className="tt-se">run the command it shows you (it includes the token)</T>,
+        ]}
+      />
+
+      <div className="jk-col gap stretch bc-pd jk-br-ie jk-pg-sm">
+        <T className="tt-se fw-bd">personal access tokens</T>
+        <T className="tt-se cr-g4">for servers without a browser, scripts or other MCP clients</T>
         <div className="jk-row gap left nowrap">
           <Input
             label={<T className="tt-se ws-np fw-bd">name</T>}
             labelPlacement="top"
             value={name}
             onChange={setName}
-            placeholder="e.g. Claude Desktop (laptop)"
+            placeholder="e.g. Claude Code (server)"
             expand
           />
           <ButtonLoader
@@ -96,15 +137,10 @@ export const AccessTokens = () => {
             <CopyToClipboard text={created.token} />
           </div>
           <T className="tt-se fw-bd">Claude Code</T>
-          <div className="jk-row gap left nowrap">
-            <CodeViewer code={claudeCodeCommand(created.token)} language={CodeLanguage.BASH} />
-            <CopyToClipboard text={claudeCodeCommand(created.token)} />
-          </div>
-          <T className="tt-se fw-bd">Claude Desktop (claude_desktop_config.json)</T>
-          <div className="jk-row gap left nowrap top">
-            <CodeViewer code={claudeDesktopConfig(created.token)} language={CodeLanguage.JSON} />
-            <CopyToClipboard text={claudeDesktopConfig(created.token)} />
-          </div>
+          <Copyable text={claudeCodeCommand(mcpUrl, created.token)} />
+          <T className="tt-se fw-bd">other MCP clients</T>
+          <T className="tt-se">URL: your MCP URL, and this header:</T>
+          <Copyable text={`Authorization: Bearer ${created.token}`} language={CodeLanguage.TEXT} />
           <div>
             <ButtonLoader type="secondary" size="small" onClick={() => setCreated(null)}>
               <T className="tt-se">done</T>
@@ -113,6 +149,7 @@ export const AccessTokens = () => {
         </div>
       )}
 
+      <T className="tt-se fw-bd">with access to your account</T>
       <div className="jk-col gap stretch">
         {!accessTokens.length && <T className="tt-se cr-g4">no assistant has access to your account</T>}
         {accessTokens.map(({ id, kind, name, tokenPrefix, createdAt, lastUsedAt }) => (

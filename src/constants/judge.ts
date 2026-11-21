@@ -123,5 +123,8 @@ export const JUDGE_API_V1 = {
   },
 };
 
-// MCP server of JUKI (juki-service/apps/mcp, on Dokploy): Claude Desktop, Claude Code... use it with an access token
-export const JUKI_MCP_URL = 'https://mcp.juki.app/mcp';
+// MCP server of JUKI (juki-service/apps/mcp, on Dokploy): Claude Desktop, Claude Code... connect to it
+export const JUKI_MCP_BASE_URL = 'https://mcp.juki.app';
+
+// one MCP server per organization: its users sign in (OAuth) on the platform of their organization
+export const getJukiMcpUrl = (organizationKey: string) => `${JUKI_MCP_BASE_URL}/o/${encodeURIComponent(organizationKey)}/mcp`;
