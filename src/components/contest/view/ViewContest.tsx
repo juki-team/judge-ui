@@ -56,7 +56,7 @@ export function ContestViewLayout() {
   
   useTrackLastPath(LastPathKey.SECTION_CONTEST);
   
-  const { contest, isValidatingAny, isLoadingAny, reloadContest, isSuccess } = useContest();
+  const { contest, isValidatingAny, isLoadingAny, reloadContest, reloadContestLive, isSuccess } = useContest();
   
   const pushRoute = useRouterStore(state => state.pushRoute);
   // only the params this view uses: any other URL change (filters, pages of the tables...) re-rendered every tab
@@ -81,7 +81,7 @@ export function ContestViewLayout() {
     event,
     (data) => {
       if (isContestChangesWebSocketResponseEventDto(data)) {
-        void reloadContest();
+        reloadContestLive();
       }
     },
   );

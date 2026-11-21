@@ -6,6 +6,15 @@ import { getContestState } from 'helpers';
 import { useEffect, useJukiNotification, useMemo, useState } from 'hooks';
 import { ContestTimeData, TimeDisplayType } from 'types';
 
+// When the countdown ends the contest is reloaded until the server reports the new state (started, ended). The countdown
+// runs on the clock of the computer: one that is ahead reached zero before the server, and the spinner stayed forever.
+// The first reload waits a random delay (every open tab reaches zero at the same time); then it is retried every 3s,
+// and every 15s after a minute.
+const TIMEOUT_RELOAD_MAX_DELAY_MS = ONE_SECOND * 2;
+const TIMEOUT_RELOAD_RETRY_MS = ONE_SECOND * 3;
+const TIMEOUT_RELOAD_SLOW_RETRY_MS = ONE_SECOND * 15;
+const TIMEOUT_RELOAD_FAST_RETRIES = 20;
+
 interface ContestTimeTimerProps {
   contest: ContestTimeData,
   reloadContest?: () => void,
@@ -63,6 +72,22 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
   useEffect(() => {
     setLoadingTimer(false);
   }, [ contest.isGlobal, contest.isEndless, contest.isPast, contest.isLive, contest.isFuture ]);
+  useEffect(() => {
+    if (!loadingTimer) {
+      return;
+    }
+    let retries = 0;
+    let timeout: ReturnType<typeof setTimeout>;
+    const reload = () => {
+      void reloadContest?.();
+      retries++;
+      timeout = setTimeout(reload, retries < TIMEOUT_RELOAD_FAST_RETRIES ? TIMEOUT_RELOAD_RETRY_MS : TIMEOUT_RELOAD_SLOW_RETRY_MS);
+    };
+    timeout = setTimeout(reload, Math.random() * TIMEOUT_RELOAD_MAX_DELAY_MS);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [ loadingTimer, reloadContest ]);
   
   if (loadingTimer) {
     return <SpinIcon />;
@@ -97,7 +122,6 @@ export const ContestTimeTimer = ({ contest, reloadContest }: ContestTimeTimerPro
                     maxSplit={2}
                     onTimeout={() => {
                       setLoadingTimer(true);
-                      void reloadContest?.();
                       addWarningNotification(<T className="tt-se">reloading contest</T>);
                     }}
                   />

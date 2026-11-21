@@ -85,7 +85,8 @@ export const ViewClarifications = ({ contest }: { contest: ContestDataUI }) => {
             }
             return c2?.answeredAt - c1?.answeredAt;
           })
-          ?.filter(clarification => isJudgeOrAdmin ? true : !!contest?.problems?.[clarification.problemJudgeKey]?.index)
+          // a general clarification has no problem (problemJudgeKey === '')
+          ?.filter(clarification => isJudgeOrAdmin || !clarification.problemJudgeKey || !!contest?.problems?.[clarification.problemJudgeKey]?.index)
           ?.map(clarification => {
             return (
               <div className="jk-pg-md jk-br-ie pn-re bc-we jk-col gap stretch" key={clarification.key}>

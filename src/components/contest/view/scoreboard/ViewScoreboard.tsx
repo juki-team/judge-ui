@@ -20,6 +20,7 @@ import {
   useUserStore,
 } from 'hooks';
 import { useCallback, useMemo, useState } from 'react';
+import { useLastSuccessfulResponse } from '../useContestData';
 import {
   ContentResponseType,
   ContentsResponseType,
@@ -141,17 +142,20 @@ export const ViewScoreboard = ({ contest, reloadContest }: ViewScoreboardProps) 
   
   const [ unfrozen, setUnfrozen ] = useState(!contest.settings.scoreboardLocked);
   const {
-    data: response,
+    data: fetchedResponse,
     request,
     isLoading,
     setLoaderStatusRef,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen, true));
   const {
-    data: responseUnofficial,
+    data: fetchedResponseUnofficial,
     request: requestUnofficial,
     // isLoading: isLoadingUnofficial,
     // setLoaderStatusRef: setLoaderUnofficial,
   } = useDataViewerRequester<ContentsResponseType<ScoreboardResponseDto>>(() => JUDGE_API_V1.CONTEST.SCOREBOARD(contest?.key, unfrozen, false));
+  // a failed refetch (5xx, timeout) keeps the last scoreboard instead of an empty table
+  const response = useLastSuccessfulResponse(fetchedResponse);
+  const responseUnofficial = useLastSuccessfulResponse(fetchedResponseUnofficial);
   const [ trigger, setTrigger ] = useState(0);
   
   const data: ScoreboardResponseDtoUI[] = useMemo(() => [
