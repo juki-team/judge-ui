@@ -1,5 +1,19 @@
 'use client';
-import { endOfDay, isDayBefore, isHoursBefore, isMillisecondsBefore, isMinutesBefore, isMonthBefore, isSecondsBefore, isWithinInterval, isYearBefore, startOfDay } from '@juki-team/commons';
+import {
+  CONTEST_PENALTY_VERDICTS_OPTIONS,
+  endOfDay,
+  getContestPenaltyVerdicts,
+  isDayBefore,
+  isHoursBefore,
+  isMillisecondsBefore,
+  isMinutesBefore,
+  isMonthBefore,
+  isSecondsBefore,
+  isWithinInterval,
+  isYearBefore,
+  PROBLEM_VERDICT,
+  startOfDay,
+} from '@juki-team/commons';
 
 import {
   AddIcon,
@@ -449,6 +463,23 @@ export const EditSettings = ({ contest, setContest }: EditContestProps) => {
               <T>minutes of penalty by incorrect answer</T>
             </div>
           </div>
+          <div className="jk-row left gap nowrap">
+            <div className="jk-row nowrap fw-bd tt-se cr-py"><T className="tt-se">verdicts with penalty</T>:</div>
+            {/* the unchecked verdicts are not an attempt and add no penalty; by default every one but the compilation error */}
+            <MultiSelect
+              options={CONTEST_PENALTY_VERDICTS_OPTIONS.map(verdict => ({
+                label: <><span className="fw-bd">{verdict}</span>&nbsp;<T className="tt-se">{PROBLEM_VERDICT[verdict].label}</T></>,
+                value: verdict,
+              }))}
+              selectedOptions={getContestPenaltyVerdicts(contest.settings).map(verdict => ({ value: verdict }))}
+              onChange={options => setContest(prevState => ({
+                ...prevState,
+                settings: { ...prevState.settings, penaltyVerdicts: options.map(option => option.value) },
+              }))}
+              expand
+            />
+          </div>
+          <T className="tt-se tx-s cr-g3">only the selected verdicts count as an attempt and add the penalty</T>
         </div>
       )}
       {!isGlobal && (

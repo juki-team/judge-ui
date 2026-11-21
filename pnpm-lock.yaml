@@ -219,8 +219,8 @@ importers:
         specifier: 1.5.24
         version: 1.5.24(9466f1226b2ee35c324330c5b05ce8fa)
       '@juki-team/commons':
-        specifier: 0.1.50
-        version: 0.1.50
+        specifier: 0.1.51
+        version: 0.1.51
       '@reactour/tour':
         specifier: ^3.8.0
         version: 3.8.0(react@19.3.1)
@@ -983,6 +983,9 @@ packages:
 
   '@juki-team/commons@0.1.50':
     resolution: {integrity: sha512-ATp3jHDTDef9Ivtb5jDNAbazJbgXZoPai5lt5vNTkBd+XdwcB22kX+DH8Mx70OvIMoNCCjbLyNZXAprVb8IZQQ==}
+
+  '@juki-team/commons@0.1.51':
+    resolution: {integrity: sha512-rHq80ciKWo6PYRm+65eJ7copSipWfMOGr4Kbsj24p0mqCM6FIJKhvQHQ3Z0uY2ukblf1mWS4EsJ+vT86TtTdyw==}
 
   '@keyv/bigmap@1.3.1':
     resolution: {integrity: sha512-WbzE9sdmQtKy8vrNPa9BRnwZh5UF4s1KTmSK0KUVLo3eff5BlQNNWDnFOouNpKfPKDnms9xynJjsMYjMaT/aFQ==}
@@ -6237,6 +6240,10 @@ snapshots:
       - zod
 
   '@juki-team/commons@0.1.50':
+    dependencies:
+      uuid: 14.0.3
+
+  '@juki-team/commons@0.1.51':
     dependencies:
       uuid: 14.0.3
 
