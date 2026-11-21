@@ -87,7 +87,7 @@ export default function OAuthAuthorizePage() {
           </ButtonLoader>
         </div>
         <div className="cr-g4 fs-sm" style={{ wordBreak: 'break-all' }}>
-          <T className="tt-se">you will be redirected to</T> {new URL(redirectUri).origin}
+          <T className="tt-se">you will be redirected to</T> {URL.canParse(redirectUri) ? new URL(redirectUri).origin : redirectUri}
         </div>
       </>
     );
