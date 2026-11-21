@@ -216,8 +216,8 @@ importers:
         specifier: ^0.18.1
         version: 0.18.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(immer@11.1.21)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@juki-team/base-ui':
-        specifier: 1.5.22
-        version: 1.5.22(9466f1226b2ee35c324330c5b05ce8fa)
+        specifier: 1.5.23
+        version: 1.5.23(9466f1226b2ee35c324330c5b05ce8fa)
       '@juki-team/commons':
         specifier: 0.1.50
         version: 0.1.50
@@ -969,8 +969,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@juki-team/base-ui@1.5.22':
-    resolution: {integrity: sha512-UMh9SAk7yf35c/ROlI4rYWzTMPNaPbxGY59xlFf9lpF6FEKNyGEq+gl77uZmtcEZrO6xAQ7ZOZXPdaWlkjwLYg==}
+  '@juki-team/base-ui@1.5.23':
+    resolution: {integrity: sha512-RloXTQGEX4Vhq+aKsdEuD4h/2KEDWF8V9aNAWNFnOUDpBH7qX65k5zpGYmSvPQFO3s+987TF4uQ19/D06yZlsA==}
     engines: {node: '>=24'}
     peerDependencies:
       '@ably/spaces': ^0.5.2
@@ -6115,7 +6115,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@juki-team/base-ui@1.5.22(9466f1226b2ee35c324330c5b05ce8fa)':
+  '@juki-team/base-ui@1.5.23(9466f1226b2ee35c324330c5b05ce8fa)':
     dependencies:
       '@ably/spaces': 0.5.2(ably@2.30.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@ai-sdk/react': 4.0.163(react@19.3.1)(zod@4.6.7)
